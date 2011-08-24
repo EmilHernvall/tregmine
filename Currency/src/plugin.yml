@@ -1,0 +1,11 @@
+name: Currency
+main: info.tregmine.currency.Main
+version: 33
+website: http://tregmine.info
+author: Ein Andersson
+description: Tregmine.info Currency
+
+commands:
+  wallet:
+    description: wallet commands
+    -usage: /<command>

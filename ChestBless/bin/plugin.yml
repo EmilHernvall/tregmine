@@ -1,0 +1,11 @@
+name: Bless
+main: info.tregmine.chestbless.ChestBless
+version: 1
+website: http://tregmine.info
+author: Ein Andersson
+description: Tregmine.info chest protection
+
+commands:
+  chestbless:
+    description: command to protect chests
+    -usage: /<command>

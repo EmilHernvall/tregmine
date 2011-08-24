@@ -1,0 +1,62 @@
+package info.tregmine.basiccommands;
+
+
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+//import org.bukkit.block.BlockFace;
+import org.bukkit.entity.Player;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerListener;
+
+public class BasicCommandsBlock extends PlayerListener {
+	private final BasicCommands plugin;
+
+	public BasicCommandsBlock(BasicCommands instance) {
+		this.plugin = instance;
+		plugin.getServer();
+	}
+
+	public void onPlayerInteract(PlayerInteractEvent event) {
+		if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+			Player player = event.getPlayer();
+			Block block = event.getClickedBlock();
+			Location loc = block.getLocation();
+
+			if (player.getItemInHand().getType() == Material.BOOK) {
+				
+				player.sendMessage(ChatColor.DARK_AQUA + "Typ: " + ChatColor.AQUA + block.getType().toString() + " ("+ ChatColor.BLUE + block.getType().getId() + ChatColor.DARK_AQUA + ")" );
+				player.sendMessage(ChatColor.DARK_AQUA +"Data: " + ChatColor.AQUA + (int) block.getData() );
+				player.sendMessage(
+						ChatColor.RED +"X" +
+						ChatColor.WHITE + ", " +
+						ChatColor.GREEN + "Y" +
+						ChatColor.WHITE + ", " +
+						ChatColor.BLUE + "Z" +
+						ChatColor.WHITE + ": " +
+						ChatColor.RED + loc.getBlockX() +
+						ChatColor.WHITE + ", " +
+						ChatColor.GREEN + loc.getBlockY() +
+						ChatColor.WHITE + ", " +
+						ChatColor.BLUE + loc.getBlockZ()
+				);
+
+					try {
+						player.sendMessage(ChatColor.DARK_AQUA +"BioMe: " + ChatColor.AQUA + block.getBiome().toString() );
+					} catch (Exception e) {
+						player.sendMessage(ChatColor.DARK_AQUA +"BioMe: " + ChatColor.AQUA + "NULL" );
+					}
+				
+					
+//				player.sendMessage(ChatColor.DARK_AQUA +"Light: " + ChatColor.AQUA + (int) block.getFace(BlockFace.UP).getLightLevel() );
+				player.sendMessage(ChatColor.DARK_AQUA +"Hash2d: " + ChatColor.AQUA + info.tregmine.api.math.Checksum.flat(block) );
+				player.sendMessage(ChatColor.DARK_AQUA +"Hash3d: " + ChatColor.AQUA + info.tregmine.api.math.Checksum.block(block) );
+				plugin.log.info("BlockHash2d: " +  info.tregmine.api.math.Checksum.flat(block) );
+				plugin.log.info("BlockHash3d: " +  info.tregmine.api.math.Checksum.block(block) );
+				plugin.log.info("POS: " +  loc.getBlockX() + ", " + loc.getBlockY() + ", " + loc.getBlockZ());
+			}
+		}
+	}    
+}

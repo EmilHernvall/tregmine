@@ -1,0 +1,37 @@
+name: Chat
+main: info.tregmine.chat.Chat
+version: 51
+
+website: http://tregmine.info
+author: Ein Andersson
+description: Tregmine.info items
+
+commands:
+  me:
+    description: gives you a out put like * name text
+    -usage: /me text
+  msg:
+    description: sends a private message to someone
+    -usage: /msg [name] text 
+  m:
+    description: sends a private message to someone
+    -usage: /msg [name] text 
+  tell:
+    description: sends a private message to someone
+    -usage: /msg [name] text 
+  all:
+    description: sends a private message to someone
+    -usage: /msg [name] text 
+  facepalm:
+    description: sends a private message to someone
+    -usage: /msg [name] text
+  say:
+    description: sends a private message to someone
+    -usage: /msg [name] text    
+  force:
+    description: sends a private message to someone
+    -usage: /msg [name] text    
+  channel:
+    description: sends a private message to someone
+    -usage: /msg [name] text    
+    

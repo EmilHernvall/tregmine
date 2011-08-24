@@ -1,0 +1,14 @@
+name: Who
+main: info.tregmine.who.Who
+version: 6
+website: http://tregmine.info
+author: Ein Andersson
+description: Tregmine.info items
+
+commands:
+  who:
+    description: show who is online and not
+    -usage: /who [name]
+  playerlist:
+    description: show who is online and not
+    -usage: /who [name]

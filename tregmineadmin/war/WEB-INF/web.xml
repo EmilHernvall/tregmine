@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE web-app
+    PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+    "http://java.sun.com/dtd/web-app_2_3.dtd">
+
+<web-app>
+  
+  <!--
+  <security-constraint>
+    <web-resource-collection>
+        <web-resource-name>tregmine</web-resource-name>
+        <url-pattern>/*</url-pattern>
+    </web-resource-collection>
+    <auth-constraint>
+        <role-name>tregmine</role-name>
+    </auth-constraint>
+</security-constraint>
+<login-config>
+    <auth-method>DIGEST</auth-method>
+    <realm-name>tregmine</realm-name>
+</login-config>
+ -->
+  
+  <!-- Servlets -->
+  <servlet>
+    <servlet-name>playerlist</servlet-name>
+    <servlet-class>info.tregmine.server.playerlist.PlayerListServiceImpl</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>playerlist</servlet-name>
+    <url-pattern>/tregmine_info/playerlist</url-pattern>
+  </servlet-mapping>
+  
+  <!-- Default page to serve -->
+  <welcome-file-list>
+    <welcome-file>Tregmine_info.html</welcome-file>
+  </welcome-file-list>
+
+</web-app>

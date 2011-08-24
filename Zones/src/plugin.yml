@@ -1,0 +1,11 @@
+name: Zones
+main: info.tregmine.zones.ZonesPlugin
+version: 15
+website: http://tregmine.info
+author: Ein Andersson
+description: Tregmine.info Zones
+
+commands:
+  zone:
+    description: show who is online and not
+    -usage: /who [name]

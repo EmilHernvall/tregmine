@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="run">
+	
+    <target name="init">
+    	<echo>host=${host}</echo>
+    	<echo message="ant.file = ${ant.file}"/>
+    	<echo message="ant.home = ${ant.home}"/>
+    	<echo message="ant.java.version = ${ant.java.version}"/>
+    	<echo>basedir = ${basedir}</echo>
+    	<echo message="user.name = ${user.name}"/>
+    	<echo message="user.home = ${user.home}"/>
+    	<echo message="java.home = ${java.home}"/>
+    	
+    	<tstamp>
+    	<format property="buildtime" pattern="yyyy-MM-dd HH:mm:ss"/>
+    	</tstamp>
+    	<echo message="It is ${buildtime}"/>
+    	
+    	<mkdir dir="jar"></mkdir>
+    </target>
+
+    <target name="run" depends="init">
+
+<!--    	
+        <javadoc
+        	access="public"
+        	author="true"
+        	classpath="../AA-Global/lib/ebean-2.7.0.jar;../AA-Global/lib/bukkit-0.0.1-SNAPSHOT.jar;../AA-Global/lib/craftbukkit-0.0.1-SNAPSHOT.jar;../AA-Global/lib/mysql-connector-java-bin.jar"
+        	destdir="../Tregmine/doc"
+        	doctitle="Tregmine"
+        	nodeprecated="false"
+        	nodeprecatedlist="false"
+        	noindex="false"
+        	nonavbar="false"
+        	notree="false"
+        	packagenames="info.tregmine.listeners,info.tregmine,info.tregmine.stats,info.tregmine.user,info.tregmine.api.math,info.tregmine.api,info.tregmine.database"
+        	source="1.6"
+        	sourcepath="../Tregmine/src"
+        	splitindex="true"
+        	use="true"
+        	version="true"/>
+-->
+    	
+        <jar destfile="./jar/Tregmine.jar" filesetmanifest="mergewithoutmain">
+            <manifest>
+            </manifest>
+            <fileset dir="../Tregmine/bin"/>
+            <zipfileset excludes="META-INF/*.SF" src="../AA-Global/lib/mysql-connector-java-bin.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="../AA-Global/lib/sqlitejdbc-v056.jar"/>
+        </jar>
+
+        <jar destfile="./jar/BoxFill.jar" filesetmanifest="mergewithoutmain">
+            <manifest>
+            </manifest>
+            <fileset dir="../BoxFill/bin"/>
+        </jar>
+ 
+        <jar destfile="./jar/Zones.jar" filesetmanifest="mergewithoutmain">
+            <manifest>
+            </manifest>
+            <fileset dir="../Zones/bin"/>
+        </jar>
+    	
+        <jar destfile="./jar/Chat.jar" filesetmanifest="mergewithoutmain">
+            <manifest>
+            </manifest>
+            <fileset dir="../Chat/bin"/>
+        </jar>
+    	
+           <jar destfile="./jar/Who.jar" filesetmanifest="mergewithoutmain">
+            <manifest>
+            </manifest>
+            <fileset dir="../Who/bin"/>
+        </jar>
+    	
+        <jar destfile="./jar/Lookup.jar" filesetmanifest="mergewithoutmain">
+            <manifest>
+            </manifest>
+            <fileset dir="../Lookup/bin"/>
+        </jar>
+    	
+        <jar destfile="./jar/AntiCheat.jar" filesetmanifest="mergewithoutmain">
+            <manifest>
+            </manifest>
+            <fileset dir="../AntiCheat/bin"/>
+        </jar>
+    	
+        <jar destfile="./jar/Death.jar" filesetmanifest="mergewithoutmain">
+            <manifest>
+            </manifest>
+            <fileset dir="../Death/bin"/>
+        </jar>
+    	
+        <jar destfile="./jar/BasicCommands.jar" filesetmanifest="mergewithoutmain">
+            <manifest>
+            </manifest>
+            <fileset dir="../BasicCommands/bin"/>
+        </jar>
+
+        <jar destfile="./jar/Compass.jar" filesetmanifest="mergewithoutmain">
+            <manifest>
+            </manifest>
+            <fileset dir="../Compass2/bin"/>
+        </jar>
+    	
+        <jar destfile="./jar/Teleport.jar" filesetmanifest="mergewithoutmain">
+            <manifest>
+            </manifest>
+            <fileset dir="../Teleport/bin"/>
+        </jar>
+    	
+        <jar destfile="./jar/Item.jar" filesetmanifest="mergewithoutmain">
+            <manifest>
+            </manifest>
+            <fileset dir="../Item/bin"/>
+        </jar>
+
+        <jar destfile="./jar/SignColours.jar" filesetmanifest="mergewithoutmain">
+            <manifest>
+            </manifest>
+            <fileset dir="../SignColours/bin"/>
+        </jar>
+
+        <jar destfile="./jar/Currency.jar" filesetmanifest="mergewithoutmain">
+            <manifest>
+            </manifest>
+            <fileset dir="../Currency/bin"/>
+        </jar>
+    	
+        <jar destfile="./jar/WallOfStats.jar" filesetmanifest="mergewithoutmain">
+            <manifest>
+            </manifest>
+            <fileset dir="../WallOfStats/bin"/>
+        </jar>
+
+        <jar destfile="./jar/ChildsPlay.jar" filesetmanifest="mergewithoutmain">
+            <manifest>
+            </manifest>
+            <fileset dir="../ChildsPlay/bin"/>
+        </jar>
+    	
+        <jar destfile="./jar/InventorySpy.jar" filesetmanifest="mergewithoutmain">
+            <manifest>
+            </manifest>
+            <fileset dir="../InventorySpy/bin"/>
+        </jar>
+
+        <jar destfile="./jar/ChestBless.jar" filesetmanifest="mergewithoutmain">
+            <manifest>
+            </manifest>
+            <fileset dir="../ChestBless/bin"/>
+        </jar>
+    	
+        <jar destfile="./jar/Surprise.jar" filesetmanifest="mergewithoutmain">
+            <manifest>
+            </manifest>
+            <fileset dir="../Surprise/bin"/>
+        </jar>
+
+        <jar destfile="./jar/Invis.jar" filesetmanifest="mergewithoutmain">
+            <manifest>
+            </manifest>
+            <fileset dir="../Invis/bin"/>
+        </jar>
+    	
+        <jar destfile="./jar/extAPI.jar" filesetmanifest="mergewithoutmain">
+            <manifest>
+            </manifest>
+            <fileset dir="../extAPI/bin"/>
+        </jar>
+
+        <jar destfile="./jar/miscButton.jar" filesetmanifest="mergewithoutmain">
+            <manifest>
+            </manifest>
+            <fileset dir="../miscButton/bin"/>
+        </jar>
+    	
+    	<jar destfile="./jarrunable/MakeResidents.jar" filesetmanifest="mergewithoutmain">
+                <manifest>
+                    <attribute name="Main-Class" value="info.tregmine.makeresidents.Main"/>
+                    <attribute name="Class-Path" value="."/>
+                </manifest>
+            <zipfileset excludes="META-INF/*.SF" src="../AA-Global/lib/mysql-connector-java-bin.jar"/>
+            <fileset dir="../MakeResidents/bin"/>
+        </jar>
+        	
+    	  <copy todir="../tregmineadmin/war/WEB-INF/lib">
+      	    <fileset dir="../AA-Global/jar/"/>
+      	    <globmapper from="Tregmine.jar" to="Tregmine.jar"/>
+   	    </copy>
+
+    	<copy todir="../tregmineadmin/war/WEB-INF/lib">
+      	    <fileset dir="../AA-Global/lib/"/>
+      	    <globmapper from="*.jar" to="*.jar"/>
+   	    </copy>
+        	
+        <jar destfile="./war/tregmineadmin.war" filesetmanifest="mergewithoutmain">
+        	<manifest>
+            </manifest>
+            <fileset dir="../tregmineadmin/war"/>
+        </jar>    	
+    	
+	</target>
+	
+</project>

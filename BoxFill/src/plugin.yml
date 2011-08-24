@@ -1,0 +1,32 @@
+name: Fill
+main: info.tregmine.boxfill.BoxFill
+version: 23
+website: http://tregmine.info
+author: Ein Andersson
+description: Tregmine.info items
+
+commands:
+  fill:
+    description: as admin spawn items
+    -usage: §4/<command> stuff
+  testfill:
+    description: as admin spawn items
+    -usage: §4/<command> stuff
+  crestore:
+    description: as admin spawn items
+    -usage: §4/<command> stuff
+  timemachine:
+    description: as admin spawn items
+    -usage: §4/<command> stuff
+  blockhere:
+    description: as admin spawn items
+    -usage: §4/<command> stuff
+  timerestore:
+    description: as admin spawn items
+    -usage: §4/<command> stuff    
+  hugehole:
+    description: as admin spawn items
+    -usage: §4/<command> stuff
+  undofill:
+    description: as admin spawn items
+    -usage: §4/<command> stuff        
