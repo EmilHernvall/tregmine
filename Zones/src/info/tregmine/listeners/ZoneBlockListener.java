@@ -37,10 +37,13 @@ public class ZoneBlockListener extends BlockListener
     		player.setCurrentZone(currentZone);
     	}
     	
-    	if (currentZone != null && !currentZone.isBuilder(player.getName())) {
-    		player.setFireTicks(50);
-    		event.setCancelled(true);
-    		player.sendMessage("You are not allowed to break blocks in " + currentZone.getName() + ".");
+    	if (currentZone != null) {
+	    	Zone.Permission perm = currentZone.getUser(player.getName());
+	    	if (perm == null || (perm != Zone.Permission.Builder && perm != Zone.Permission.Owner)) {
+	    		player.setFireTicks(50);
+	    		event.setCancelled(true);
+	    		player.sendMessage("You are not allowed to break blocks in " + currentZone.getName() + ".");
+	    	}
     	}
     }
     
@@ -57,11 +60,13 @@ public class ZoneBlockListener extends BlockListener
     		player.setCurrentZone(currentZone);
     	}
     	
-    	if (currentZone != null && !currentZone.isBuilder(player.getName())) {
-    		player.setFireTicks(50);
-    		block.setType(Material.AIR);
-    		event.setCancelled(true);
-    		player.sendMessage("You are not allowed to place blocks in " + currentZone.getName() + ".");
+    	if (currentZone != null) {
+	    	Zone.Permission perm = currentZone.getUser(player.getName());
+	    	if (perm == null || (perm != Zone.Permission.Builder && perm != Zone.Permission.Owner)) {
+	    		player.setFireTicks(50);
+	    		event.setCancelled(true);
+	    		player.sendMessage("You are not allowed to place blocks in " + currentZone.getName() + ".");
+	    	}
     	}
 	}
 }

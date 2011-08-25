@@ -17,7 +17,6 @@ public class TregminePlayer extends PlayerDelegate
 	//	private HashMap<String,Location> location = new HashMap<String,Location>();
 
 	private String name;
-//	private int uid;
 	private final Mysql mysql = new Mysql();
 	private Zone currentZone = null;
 
@@ -62,7 +61,6 @@ public class TregminePlayer extends PlayerDelegate
 				this.mysql.connect();
 				this.mysql.statement.executeQuery("SELECT * FROM user JOIN  (user_settings) WHERE uid=id and player = '" + name + "';");
 				ResultSet rs = this.mysql.statement.getResultSet();
-
 
 				while (rs.next()) {
 					//TODO: Make this much nicer, this is bad code

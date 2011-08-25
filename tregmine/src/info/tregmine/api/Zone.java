@@ -1,7 +1,9 @@
 package info.tregmine.api;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import info.tregmine.quadtree.Point;
 import info.tregmine.quadtree.Rectangle;
@@ -10,26 +12,44 @@ public class Zone
 {
 	public enum Permission
 	{
-		FullRights,
-		CanEnterNoBuild,
-		NoEnterNoBuild;
+		// can modify the zone in any way
+		Owner,
+		// can build in the zone
+		Builder,
+		// is allowed in the zone, if this isn't the default
+		Allowed,
+		// banned from the zone
+		Banned;
+		
+		public static Permission fromString(String type)
+		{
+			if ("owner".equalsIgnoreCase(type)) {
+				return Permission.Owner;
+			} else if ("builder".equalsIgnoreCase(type)) {
+				return Permission.Builder;
+			} else if ("allowed".equalsIgnoreCase(type)) {
+				return Permission.Allowed;
+			} else if ("banned".equalsIgnoreCase(type)) {
+				return Permission.Banned;
+			}
+			
+			return null;
+		}
 	}
 	
 	private int id;
 	private String name;
-	private String owner;
-	private Rectangle rect;
+	private List<Rectangle> rects;
 	
 	private String textEnter;
 	private String textExit;
 	
-	private Set<String> builders;
-	private Set<String> banned;
+	private Map<String, Permission> users;
 	
 	public Zone()
 	{
-		builders = new HashSet<String>();
-		banned = new HashSet<String>();
+		rects = new ArrayList<Rectangle>();
+		users = new HashMap<String, Permission>();
 	}
 
 	public int getId() {
@@ -48,22 +68,18 @@ public class Zone
 		this.name = name;
 	}
 
-	public String getOwner() {
-		return owner;
+	public List<Rectangle> getRects() {
+		return rects;
 	}
 
-	public void setOwner(String owner) {
-		this.owner = owner;
+	public void addRect(Rectangle rect) {
+		rects.add(rect);
 	}
 
-	public Rectangle getRect() {
-		return rect;
+	public void setRects(List<Rectangle> rects) {
+		this.rects = rects;
 	}
-
-	public void setRect(Rectangle rect) {
-		this.rect = rect;
-	}
-
+	
 	public String getTextEnter() {
 		return textEnter;
 	}
@@ -80,28 +96,26 @@ public class Zone
 		this.textExit = textExit;
 	}
 	
-	public boolean contains(Point p)
-	{
-		return rect.contains(p);
+	public void setUsers(Map<String, Permission> v) {
+		this.users = v;
 	}
 	
-	public void addBuilder(String name)
-	{
-		builders.add(name);
+	public void addUser(String name, Permission perm) {
+		users.put(name, perm);
 	}
 	
-	public boolean isBuilder(String name)
-	{
-		return builders.contains(name);
+	public Permission getUser(String name) {
+		return users.get(name);
 	}
 	
-	public void addBan(String name)
-	{
-		banned.add(name);
+	public boolean contains(Point p) {
+		for (Rectangle rect : rects) {
+			if (rect.contains(p)) {
+				return true;
+			}
+		}
+		
+		return false;
 	}
 	
-	public boolean isBanned(String name)
-	{
-		return banned.contains(name);
-	}
 }

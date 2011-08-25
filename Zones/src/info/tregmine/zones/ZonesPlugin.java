@@ -2,6 +2,8 @@ package info.tregmine.zones;
 
 import info.tregmine.api.TregminePlayer;
 import info.tregmine.api.Zone;
+import info.tregmine.api.Zone.Permission;
+import info.tregmine.database.Mysql;
 import info.tregmine.listeners.ZoneBlockListener;
 import info.tregmine.listeners.ZoneEntityListener;
 import info.tregmine.listeners.ZonePlayerListener;
@@ -9,7 +11,9 @@ import info.tregmine.quadtree.IntersectionException;
 import info.tregmine.quadtree.QuadTree;
 import info.tregmine.quadtree.Rectangle;
 
+import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -25,6 +29,7 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import info.tregmine.Tregmine; 
+import info.tregmine.ZonesDAO;
 
 public class ZonesPlugin extends JavaPlugin 
 {
@@ -54,12 +59,36 @@ public class ZonesPlugin extends JavaPlugin
 		}
 		
 		pluginMgm.registerEvent(Event.Type.BLOCK_BREAK, new ZoneBlockListener(this), Priority.High, this);
+		pluginMgm.registerEvent(Event.Type.BLOCK_PLACE, new ZoneBlockListener(this), Priority.High, this);
 		pluginMgm.registerEvent(Event.Type.PLAYER_INTERACT, new ZonePlayerListener(this), Priority.High, this);
 		pluginMgm.registerEvent(Event.Type.PLAYER_MOVE, new ZonePlayerListener(this), Priority.High, this);
+		pluginMgm.registerEvent(Event.Type.PLAYER_TELEPORT, new ZonePlayerListener(this), Priority.High, this);
 		pluginMgm.registerEvent(Event.Type.CREATURE_SPAWN, new ZoneEntityListener(this), Priority.High, this);
 		
 		zonesLookup = new QuadTree<Zone>(0);
 		zoneNameLookup = new HashMap<String, Zone>();
+		
+		Mysql mysql = null;
+		try {
+			mysql = new Mysql();
+			mysql.connect();
+			ZonesDAO dao = new ZonesDAO(mysql.connect);
+			List<Zone> zones = dao.getZones();
+			for (Zone zone : zones) {
+				for (Rectangle rect : zone.getRects()) {
+					try {
+						zonesLookup.insert(rect, zone);
+					} catch (IntersectionException e) {
+						throw new RuntimeException(e);
+					}
+					zoneNameLookup.put(zone.getName(), zone);
+				}
+			}
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		} finally {
+			mysql.close();
+		}
 	}
 
 	public void onDisable()
@@ -87,12 +116,8 @@ public class ZonesPlugin extends JavaPlugin
 				createZone(player, args);
 				return true;
 			}
-			else if ("addbuilder".equals(args[0])) {
-				addBuilder(player, args);
-				return true;
-			}
-			else if ("addban".equals(args[0])) {
-				addBan(player, args);
+			else if ("adduser".equals(args[0])) {
+				addUser(player, args);
 				return true;
 			}
 		}
@@ -116,21 +141,39 @@ public class ZonesPlugin extends JavaPlugin
 		Block b1 = player.getBlock("b1");
 		Block b2 = player.getBlock("b2");
 		
-		player.sendMessage("" + b1.getLocation());
-		player.sendMessage("" + b2.getLocation());
+		Rectangle rect = new Rectangle(b1.getX(), b1.getZ(), b2.getX(), b2.getZ());
 		
 		Zone zone = new Zone();
 		zone.setName(name);
-		zone.setOwner(player.getName());
-		zone.setRect(new Rectangle(b1.getX(), b1.getZ(), b2.getX(), b2.getZ()));
+		zone.addRect(rect);
 		zone.setTextEnter("Welcome to " + name + "!");
 		zone.setTextExit("Now leaving " + name + ".");
-		zone.addBuilder(player.getName());
+		zone.addUser(player.getName(), Zone.Permission.Owner);
 		
-		player.sendMessage("Creating zone at " + zone.getRect());
+		player.sendMessage("Creating zone at " + rect);
+		
+		Mysql mysql = null;
+		try {
+			mysql = new Mysql();
+			mysql.connect();
+			ZonesDAO dao = new ZonesDAO(mysql.connect);
+			int userId = dao.getUserId(player.getName());
+			if (userId == -1) {
+				player.sendMessage("Player " + player.getName() + " was not found.");
+				return;
+			}
+			
+			dao.createZone(zone);
+			dao.addRectangle(zone.getId(), rect);
+			dao.addUser(zone.getId(), userId, Zone.Permission.Owner);
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		} finally {
+			mysql.close();
+		}
 		
 		try {
-			zonesLookup.insert(zone.getRect(), zone);
+			zonesLookup.insert(rect, zone);
 			zoneNameLookup.put(zone.getName(), zone);
 			player.sendMessage("Zone created successfully.");
 		} catch (IntersectionException e) {
@@ -138,15 +181,16 @@ public class ZonesPlugin extends JavaPlugin
 		}
 	}
 	
-	public void addBuilder(TregminePlayer player, String[] args)
+	public void addUser(TregminePlayer player, String[] args)
 	{
-		if (args.length < 3) {
-			player.sendMessage("syntax: /zone addbuilder [zone] [player]");
+		if (args.length < 4) {
+			player.sendMessage("syntax: /zone adduser [zone] [player] [perm]");
 			return;
 		}
 		
 		String zoneName = args[1];
-		String builder = args[2];
+		String userName = args[2];
+		Zone.Permission perm = Zone.Permission.fromString(args[3]);
 		
 		Zone zone = zoneNameLookup.get(zoneName);
 		if (zone == null) {
@@ -154,45 +198,42 @@ public class ZonesPlugin extends JavaPlugin
 			return;
 		}
 		
-		if (!player.getName().equals(zone.getOwner())) {
+		if (zone.getUser(player.getName()) != Permission.Owner) {
 			player.sendMessage("You do not have permission to add new builders.");
 			return;
 		}
 		
-		zone.addBuilder(builder);
-		player.sendMessage(builder + " can now build in " + zoneName + ".");
-		Player builderPlayer = tregmine.getPlayer(builder);
-		if (builderPlayer != null) {
-			builderPlayer.sendMessage("You can now build in " + zoneName + ".");
-		}
-	}
-	
-	public void addBan(TregminePlayer player, String[] args)
-	{
-		if (args.length < 3) {
-			player.sendMessage("syntax: /zone addban [zone] [player]");
+		if (perm == null) {
+			player.sendMessage("Unknown permission " + args[3] + ".");
 			return;
 		}
 		
-		String zoneName = args[1];
-		String bannedPlayer = args[2];
-		
-		Zone zone = zoneNameLookup.get(zoneName);
-		if (zone == null) {
-			player.sendMessage("Specified zone does not exist.");
-			return;
+		// store permission change in db
+		Mysql mysql = null;
+		try {
+			mysql = new Mysql();
+			mysql.connect();
+			ZonesDAO dao = new ZonesDAO(mysql.connect);
+			int userId = dao.getUserId(userName);
+			if (userId == -1) {
+				player.sendMessage("Player " + userName + " was not found.");
+				return;
+			}
+			
+			dao.deleteUser(zone.getId(), userId);
+			dao.addUser(zone.getId(), userId, perm);
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		} finally {
+			mysql.close();
 		}
 		
-		if (!player.getName().equals(zone.getOwner())) {
-			player.sendMessage("You do not have permission to add new builders.");
-			return;
-		}
+		zone.addUser(userName, perm);
+		player.sendMessage(userName + " can now build in " + zoneName + ".");
 		
-		zone.addBan(bannedPlayer);
-		player.sendMessage(bannedPlayer + " is now banned from " + zoneName + ".");
-		Player builderPlayer = tregmine.getPlayer(bannedPlayer);
-		if (builderPlayer != null) {
-			builderPlayer.sendMessage("You have been banned from " + zoneName + ".");
+		TregminePlayer player2 = tregmine.getPlayer(userName);
+		if (player2 != null) {
+			player2.sendMessage("You can now build in " + zoneName + ".");
 		}
 	}
 }
