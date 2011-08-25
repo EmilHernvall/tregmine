@@ -32,7 +32,7 @@ public class ZoneBlockListener extends BlockListener
     	Point pos = new Point(location.getBlockX(), location.getBlockZ());
     	
     	Zone currentZone = player.getCurrentZone();
-    	if (currentZone != null && !currentZone.contains(pos)) {
+    	if (currentZone == null || !currentZone.contains(pos)) {
     		currentZone = plugin.zonesLookup.find(pos);
     		player.setCurrentZone(currentZone);
     	}
@@ -55,7 +55,7 @@ public class ZoneBlockListener extends BlockListener
     	Point pos = new Point(location.getBlockX(), location.getBlockZ());
     	
     	Zone currentZone = player.getCurrentZone();
-    	if (currentZone != null && !currentZone.contains(pos)) {
+    	if (currentZone == null || !currentZone.contains(pos)) {
     		currentZone = plugin.zonesLookup.find(pos);
     		player.setCurrentZone(currentZone);
     	}
