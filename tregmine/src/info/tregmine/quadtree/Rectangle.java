@@ -2,10 +2,11 @@ package info.tregmine.quadtree;
 
 public class Rectangle
 {
-    // top left, top right
-    Point tl, tr;
-    // bottom left, bottom right
-    Point bl, br;
+    int x1, y1;
+    int x2, y2;
+    
+    long width, height;
+    int centerX, centerY;
 
     public Rectangle(int x1, int y1, int x2, int y2)
     {
@@ -25,21 +26,33 @@ public class Rectangle
             y1 = tmp;
         }
     
-        this.tl = new Point(x1, y1);
-        this.tr = new Point(x2, y1);
-        this.bl = new Point(x1, y2);
-        this.br = new Point(x2, y2);
+        this.x1 = x1;
+        this.y1 = y1;
+        this.x2 = x2;
+        this.y2 = y2;
+        
+        this.width = (long)x2 - (long)x1;
+        this.height = (long)y1 - (long)y2;
+        
+        this.centerX = (int)(x1 + width/2);
+        this.centerY = (int)(y1 - height/2);
     }
     
-    public int getLeft() { return tl.x; }
-    public int getRight() { return tr.x; }
-    public int getTop() { return tl.y; }
-    public int getBottom() { return bl.y; }
+    public int getLeft() { return x1; }
+    public int getRight() { return x2; }
+    public int getTop() { return y1; }
+    public int getBottom() { return y2; }
+    
+    public long getWidth() { return width; }
+    public long getHeight() { return height; }
+    
+    public int getCenterX() { return centerX; }
+    public int getCenterY() { return centerY; }
     
     public boolean contains(Point p)
     {
-        return (p.x >= tl.x && p.x <= br.x) &&
-            (p.y <= tl.y && p.y >= br.y);
+        return (p.x >= x1 && p.x <= x2) &&
+            (p.y <= y1 && p.y >= y2);
     }
     
     public boolean intersects(Rectangle rect)
@@ -52,13 +65,17 @@ public class Rectangle
     
     public Point[] getPoints()
     {
+        Point tl = new Point(x1, y1);
+        Point tr = new Point(x2, y1);
+        Point bl = new Point(x1, y2);
+        Point br = new Point(x2, y2);
         return new Point[] { tl, tr, bl, br };
     }
     
     @Override
     public String toString()
     {
-        return String.format("(%s),(%s),(%s),(%s)", tl, tr, bl, br);
+        return String.format("(%d, %d),(%d, %d)", x1, y1, x2, y2);
     }
     
     @Override
@@ -69,15 +86,17 @@ public class Rectangle
         }
         
         Rectangle b = (Rectangle)obj;
-        return tl.equals(b.tl) && br.equals(b.br);
+        return b.x1 == x1 && b.y1 == y1 && b.x2 == x2 && b.y2 == y2;
     }
     
     @Override
     public int hashCode()
     {
         int code = 17;
-        code = 31 * code + tl.hashCode();
-        code = 31 * code + br.hashCode();
+        code = 31 * code + x1;
+        code = 31 * code + y1;
+        code = 31 * code + x2;
+        code = 31 * code + y2;
         
         return code;
     }

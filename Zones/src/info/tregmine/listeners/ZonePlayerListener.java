@@ -48,6 +48,7 @@ public class ZonePlayerListener extends PlayerListener
 	public void onPlayerMove(PlayerMoveEvent event)
 	{
 		TregminePlayer player = tregmine.getPlayer(event.getPlayer());
+		ZonesPlugin.ZoneWorld world = plugin.getWorld(player.getWorld());
 		
 		Location movingFrom = event.getFrom();
 		Point oldPos = new Point(movingFrom.getBlockX(), movingFrom.getBlockZ());
@@ -62,14 +63,17 @@ public class ZonePlayerListener extends PlayerListener
 				player.sendMessage(ChatColor.RED + "[" + currentZone.getName() + "] " + currentZone.getTextExit());
 			}
 			
-			currentZone = plugin.zonesLookup.find(currentPos);
+			currentZone = world.findZone(currentPos);
 			if (currentZone != null) {
 				Zone.Permission perm = currentZone.getUser(player.getName());
 				
 				// if anyone is allowed to enter by default...
 				if (currentZone.getEnterDefault()) {
 					// ...we only need to reject banned players
-			    	if (perm != null && perm == Zone.Permission.Banned) {
+					if (player.isAdmin()) {
+						// never applies to admins
+					}
+					else if (perm != null && perm == Zone.Permission.Banned) {
 			    		bannedMessage(currentZone, player);
 						movePlayerBack(player, movingFrom, movingTo);
 						return;
@@ -78,7 +82,10 @@ public class ZonePlayerListener extends PlayerListener
 				// if this is a whitelist zone...
 				else {
 					// ...reject people not in the user list, as well as banned people
-			    	if (perm == null) {
+					if (player.isAdmin()) {
+						// never applies to admins
+					}
+					else if (perm == null) {
 			    		disallowedMessage(currentZone, player);
 						movePlayerBack(player, movingFrom, movingTo);
 						return;
@@ -100,6 +107,7 @@ public class ZonePlayerListener extends PlayerListener
 	public void onPlayerTeleport(PlayerTeleportEvent event)
 	{
 		TregminePlayer player = tregmine.getPlayer(event.getPlayer());
+		ZonesPlugin.ZoneWorld world = plugin.getWorld(player.getWorld());
 		
 		Location movingFrom = event.getFrom();
 		Point oldPos = new Point(movingFrom.getBlockX(), movingFrom.getBlockZ());
@@ -114,18 +122,24 @@ public class ZonePlayerListener extends PlayerListener
 				player.sendMessage(currentZone.getTextExit());
 			}
 			
-			currentZone = plugin.zonesLookup.find(currentPos);
+			currentZone = world.findZone(currentPos);
 			if (currentZone != null) {
 				Zone.Permission perm = currentZone.getUser(player.getName());
 				
 				if (currentZone.getEnterDefault()) {
-			    	if (perm != null && perm == Zone.Permission.Banned) {
+					if (player.isAdmin()) {
+						// never applies to admins
+					}
+					else if (perm != null && perm == Zone.Permission.Banned) {
 			    		bannedMessage(currentZone, player);
 						event.setCancelled(true);
 						return;
 					}
 				} else {
-			    	if (perm == null) {
+					if (player.isAdmin()) {
+						// never applies to admins
+					}
+					else if (perm == null) {
 			    		disallowedMessage(currentZone, player);
 						event.setCancelled(true);
 						return;

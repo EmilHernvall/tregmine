@@ -7,9 +7,8 @@ import info.tregmine.quadtree.Point;
 import info.tregmine.zones.ZonesPlugin;
 
 import org.bukkit.Location;
-import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityListener;
 
@@ -31,9 +30,12 @@ public class ZoneEntityListener extends EntityListener
 	
 	public void onEntityDamage(EntityDamageEvent event)
 	{
-		if (!(event.getEntity() instanceof Player)) {
+		Entity entity = event.getEntity();
+		if (!(entity instanceof Player)) {
 			return;
 		}
+		
+		ZonesPlugin.ZoneWorld world = plugin.getWorld(entity.getWorld());
 		
     	TregminePlayer player = tregmine.getPlayer((Player)event.getEntity());
     	Location location = player.getLocation();
@@ -41,7 +43,7 @@ public class ZoneEntityListener extends EntityListener
     	
     	Zone currentZone = player.getCurrentZone();
     	if (currentZone == null || !currentZone.contains(pos)) {
-    		currentZone = plugin.zonesLookup.find(pos);
+    		currentZone = world.findZone(pos);
     		player.setCurrentZone(currentZone);
     	}
     	

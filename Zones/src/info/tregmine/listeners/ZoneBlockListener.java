@@ -8,7 +8,6 @@ import info.tregmine.zones.ZonesPlugin;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockListener;
@@ -28,13 +27,19 @@ public class ZoneBlockListener extends BlockListener
     public void onBlockBreak (BlockBreakEvent event) 
     {
     	TregminePlayer player = tregmine.getPlayer(event.getPlayer());
+    	if (player.isAdmin()) {
+    		return;
+    	}
+    	
+    	ZonesPlugin.ZoneWorld world = plugin.getWorld(player.getWorld());
+    	
     	Block block = event.getBlock();
     	Location location = block.getLocation();
     	Point pos = new Point(location.getBlockX(), location.getBlockZ());
     	
     	Zone currentZone = player.getCurrentZone();
     	if (currentZone == null || !currentZone.contains(pos)) {
-    		currentZone = plugin.zonesLookup.find(pos);
+    		currentZone = world.findZone(pos);
     		player.setCurrentZone(currentZone);
     	}
     	
@@ -42,7 +47,7 @@ public class ZoneBlockListener extends BlockListener
 	    	Zone.Permission perm = currentZone.getUser(player.getName());
 	    	
 	    	// if everyone is allowed to build in this zone...
-	    	if (currentZone.getBuildDefault()) {
+	    	if (currentZone.getDestroyDefault()) {
 	    		// ...the only people that can't build are those that are banned
 	    		if (perm != null && perm == Zone.Permission.Banned) {
 		    		event.setCancelled(true);
@@ -63,16 +68,22 @@ public class ZoneBlockListener extends BlockListener
     	}
     }
     
-	public void onBlockPlace (BlockPlaceEvent event)
+	public void onBlockPlace(BlockPlaceEvent event)
 	{
     	TregminePlayer player = tregmine.getPlayer(event.getPlayer());
+    	if (player.isAdmin()) {
+    		return;
+    	}
+    	
+    	ZonesPlugin.ZoneWorld world = plugin.getWorld(player.getWorld());
+    	
     	Block block = event.getBlock();
     	Location location = block.getLocation();
     	Point pos = new Point(location.getBlockX(), location.getBlockZ());
     	
     	Zone currentZone = player.getCurrentZone();
     	if (currentZone == null || !currentZone.contains(pos)) {
-    		currentZone = plugin.zonesLookup.find(pos);
+    		currentZone = world.findZone(pos);
     		player.setCurrentZone(currentZone);
     	}
     	
@@ -80,7 +91,7 @@ public class ZoneBlockListener extends BlockListener
 	    	Zone.Permission perm = currentZone.getUser(player.getName());
 	    	
 	    	// if everyone is allowed to build in this zone...
-	    	if (currentZone.getBuildDefault()) {
+	    	if (currentZone.getPlaceDefault()) {
 	    		// ...the only people that can't build are those that are banned
 	    		if (perm != null && perm == Zone.Permission.Banned) {
 		    		event.setCancelled(true);

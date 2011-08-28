@@ -4,16 +4,37 @@ import java.util.Random;
 import java.util.Map;
 import java.util.HashMap;
 
+/**
+ * A datastructure for efficiently assigning a rectangle
+ * in space to a specific value, that allows quick lookup
+ * for any point. Any lookup can be accomplished in O(log(n))
+ * where n is the size of the space covered by the tree.
+ *
+ * This tree heavily trades insert performance for lookup
+ * performance. Lookups can be made in a few microseconds,
+ * while inserts take on the order of 50 microseconds.
+ *
+ * Delete is currently unsupported, although it wouldn't
+ * be very hard to add.
+ */
 public class QuadTree<V>
 {
     public static class Node<V>
     {
-        Rectangle sectorRect;
+        // The rectangle covered by this node.
+        Rectangle nodeRect;
         
         // the sub rectangle that is associated
-        // with the value. might span multiple sectors.
-        Point valuePoint;
+        // with the value. might span multiple nodes.
         Rectangle valueRect;
+        // The corner of an rectangle that lies within
+        // this node. Used by insert when subdividing
+        // space further.
+        Point valuePoint;
+        // All values present in this node. Several 
+        // rectangles can overlap a single node without
+        // ever overlapping each other, which forces us
+        // to keep track of several possible values.
         Map<Rectangle, V> values;
         
         // top left, top right
@@ -21,12 +42,19 @@ public class QuadTree<V>
         // bottom left, bottom right
         Node<V> bl, br;
         
+        // Indicates whether or not this node has been further
+        // divided or not. If this value is true, this node will
+        // never contain a value itself, so it's used as a criteria
+        // for continuing searching.
         boolean split;
+        
+        // Flag used to indicate to the visualizer that this Node 
+        // contains an assigned value.
         boolean color = false;
         
         public Node(Rectangle rect)
         {
-            this.sectorRect = rect;
+            this.nodeRect = rect;
             
             this.valuePoint = null;
             this.valueRect = null;
@@ -40,16 +68,26 @@ public class QuadTree<V>
             this.split = false;
         }
         
+        /**
+         * Checks whether or not a point is contained in this node.
+         */
         public boolean contains(Point p)
         {
-            return sectorRect.contains(p);
+            return nodeRect.contains(p);
         }
         
+        /**
+         * Checks whether or not a rectangle intersects this node.
+         */
         public boolean intersects(Rectangle rect)
         {
-            return sectorRect.intersects(rect);
+            return nodeRect.intersects(rect);
         }
         
+        /**
+         * Recursively find the matching rectangle of a point.
+         * No longer used in favor of a faster iterative approach.
+         */
         public V find(Point p)
         {
             if (!split) {
@@ -76,14 +114,16 @@ public class QuadTree<V>
             }
         }
         
+        /**
+         * Insert a new rectangle and corresponding value. Recursively
+         * splits space as needed.
+         */
         public void insert(Point p, Rectangle rect, V v, int depth)
         throws IntersectionException
         {
-            //System.out.println("inserting " + p + " in " + sectorRect + " at depth " + depth);
-        
             // this node doesn't matche the point
-            if (!sectorRect.contains(p)) {
-                //System.out.println(sectorRect + " does not match " + p);
+            if (!nodeRect.contains(p)) {
+                //System.out.println(nodeRect + " does not match " + p);
                 return;
             }
             
@@ -97,15 +137,16 @@ public class QuadTree<V>
             }
             
             if (p.equals(valuePoint)) {
-                throw new IntersectionException("Specified point " + p + " is already in use.");
+                throw new IntersectionException("Specified point " + p + 
+                    " is already in use.");
             }
 
-            // initialize subsectors
+            // initialize subnodes
             if (!split) {
                 //System.out.println("splitting");
             
-                long totalWidth = (long)sectorRect.tr.x - (long)sectorRect.tl.x;
-                long totalHeight = (long)sectorRect.tl.y - (long)sectorRect.bl.y;
+                long totalWidth = nodeRect.getWidth();
+                long totalHeight = nodeRect.getHeight();
                 int w1 = (int)(totalWidth / 2);
                 int h1 = (int)(totalHeight / 2);
                 int w2 = (int)(totalWidth - w1);
@@ -114,18 +155,18 @@ public class QuadTree<V>
                 //System.out.println("w: " + w);
                 //System.out.println("h: " + h);
                 
-                tl = new Node<V>(new Rectangle(sectorRect.tl.x, sectorRect.tl.y, 
-                    sectorRect.tl.x + w1, sectorRect.tl.y - h1));
-                //System.out.println(tl.sectorRect);
-                tr = new Node<V>(new Rectangle(sectorRect.tl.x + w1, sectorRect.tl.y, 
-                    sectorRect.tl.x + w1 + w2, sectorRect.tl.y - h1));
-                //System.out.println(tr.sectorRect);
-                bl = new Node<V>(new Rectangle(sectorRect.tl.x, sectorRect.tl.y - h1,
-                    sectorRect.tl.x + w1, sectorRect.tl.y - h1 - h2));
-                //System.out.println(bl.sectorRect);
-                br = new Node<V>(new Rectangle(sectorRect.tl.x + w1, sectorRect.tl.y - h1,
-                    sectorRect.tl.x + w1 + w2, sectorRect.tl.y - h1 - h2));
-                //System.out.println(br.sectorRect);
+                tl = new Node<V>(new Rectangle(nodeRect.x1, nodeRect.y1, 
+                    nodeRect.x1 + w1, nodeRect.y1 - h1));
+                //System.out.println(tl.nodeRect);
+                tr = new Node<V>(new Rectangle(nodeRect.x1 + w1, nodeRect.y1, 
+                    nodeRect.x1 + w1 + w2, nodeRect.y1 - h1));
+                //System.out.println(tr.nodeRect);
+                bl = new Node<V>(new Rectangle(nodeRect.x1, nodeRect.y1 - h1,
+                    nodeRect.x1 + w1, nodeRect.y1 - h1 - h2));
+                //System.out.println(bl.nodeRect);
+                br = new Node<V>(new Rectangle(nodeRect.x1 + w1, nodeRect.y1 - h1,
+                    nodeRect.x1 + w1 + w2, nodeRect.y1 - h1 - h2));
+                //System.out.println(br.nodeRect);
                     
                 this.split = true;
 
@@ -140,14 +181,15 @@ public class QuadTree<V>
                 } else if (br.contains(valuePoint)) {
                     br.insert(this.valuePoint, this.valueRect, value, depth+1);
                 } else {
-                    throw new IllegalStateException(this.valuePoint + " is not in " + tl.sectorRect + ";\n" + 
-                        "or " + tr.sectorRect + ";\n" + 
-                        "or " + bl.sectorRect + ";\n" + 
-                        "or " + br.sectorRect);
+                    throw new IllegalStateException(this.valuePoint + " is not " + 
+                        "in " + tl.nodeRect + ";\n" + 
+                        "or " + tr.nodeRect + ";\n" + 
+                        "or " + bl.nodeRect + ";\n" + 
+                        "or " + br.nodeRect);
                 }
                 
-                // transfer all rectangles that intersect this sector and
-                // their corresponding values to the new subsectors
+                // transfer all rectangles that intersect this node and
+                // their corresponding values to the new subnodes
                 for (Map.Entry<Rectangle, V> entry : values.entrySet()) {
                     Rectangle candidate = entry.getKey();
                     if (tl.intersects(candidate)) {
@@ -179,10 +221,10 @@ public class QuadTree<V>
             } else if (br.contains(p)) {
                 br.insert(p, rect, v, depth+1);
             } else {
-                throw new IllegalStateException(p + " is not in " + tl.sectorRect + ";\n" + 
-                    "or " + tr.sectorRect + ";\n" + 
-                    "or " + bl.sectorRect + ";\n" + 
-                    "or " + br.sectorRect);
+                throw new IllegalStateException(p + " is not in " + tl.nodeRect + ";\n" + 
+                    "or " + tr.nodeRect + ";\n" + 
+                    "or " + bl.nodeRect + ";\n" + 
+                    "or " + br.nodeRect);
             }
             
             values.clear();
@@ -190,6 +232,11 @@ public class QuadTree<V>
             valuePoint = null;
         }
         
+        /**
+         * Find out if any rectangle currently in the tree intersects
+         * the passed rectangle. Used by insert() to prevent overlapping
+         * rectangles from being inserted.
+         */
         public boolean findIntersections(Rectangle rect)
         {
             if (!split) {
@@ -215,6 +262,12 @@ public class QuadTree<V>
             return false;
         }
         
+        /**
+         * Find all nodes/nodes within a specified rectangle, and assign
+         * a specified value to them. This is used to speed up lookup for
+         * nodes that completely lies inside a rectangle, and thus won't
+         * have their value set by Node.insert().
+         */
         public void assign(Rectangle rect, V value)
         {
             if (!split) {
@@ -240,6 +293,18 @@ public class QuadTree<V>
 
     Node<V> root;
     
+    /**
+     * Construct a tree covering the entirety of integer 2d space.
+     */
+    public QuadTree()
+    {
+        this(0);
+    }
+    
+    /**
+     * Construct a tree covering a specified sub space defined by
+     * -size < x < size, -size < y < size.
+     */
     public QuadTree(int size)
     {
         if (size == 0) {
@@ -250,30 +315,90 @@ public class QuadTree<V>
         }
     }
     
+    /**
+     * Insert a rectangle and a value into space.
+     */
     public void insert(Rectangle rect, V value)
     throws IntersectionException
     {
-        // look for an intersecting rectangle
+        // look for an intersecting rectangle, and complain
+        // loudly if one is found.
         if (root.findIntersections(rect)) {
             throw new IntersectionException();
         }
     
+        // insert all corners of the rectangle into the grid.
         for (Point p : rect.getPoints()) {
             root.insert(p, rect, value, 0);
         }
+        
+        // assign the current value to all nodes that lie within
+        // or intersect the current rectangle.
         root.assign(rect, value);
     }
     
-    public V find(Point point)
+    /**
+     * Find the value corresponding to a point in space.
+     *
+     * @return The value if found, otherwise null.
+     */
+    public V find(Point p)
     {
-        return root.find(point);
+        // Find the target node by iteration rather
+        // than recursion, saving a lot of time by
+        // eliminating method calls and stack allocations.
+        Node<V> current = root;
+        while (current.split) {
+            if (!current.contains(p)) {
+                return null;
+            }
+        
+            // This approach reduces the worst case number of 
+            // comparisons needed from 16 to 2, which has to
+            // be considered as a rather nice optimization. :)
+            Rectangle rect = current.nodeRect;
+            if (p.x > rect.centerX) {
+                if (p.y < rect.centerY) {
+                    current = current.br;
+                } else {
+                    current = current.tr;
+                }
+            } else {
+                if (p.y < rect.centerY) {
+                    current = current.bl;
+                } else {
+                    current = current.tl;
+                }            
+            }
+        
+            /*if (current.tl.contains(p)) {
+                current = current.tl;
+            } else if (current.tr.contains(p)) {
+                current = current.tr;
+            } else if (current.bl.contains(p)) {
+                current = current.bl;
+            } else if (current.br.contains(p)) {
+                current = current.br;
+            } else {
+                return null;
+            }*/
+        }
+        
+        // Figure out which of the rectangles that intersect
+        // this node contains the requested value.
+        for (Map.Entry<Rectangle, V> entry : current.values.entrySet()) {
+            Rectangle rect = entry.getKey();
+            if (rect.contains(p)) {
+                return entry.getValue();
+            }
+        }
+        
+        return null;
     }
     
-    public void delete(Rectangle rect)
-    {
-        throw new UnsupportedOperationException();
-    }
-    
+    /**
+     * Linear search used for speed comparison.
+     */
     private static Integer linearSearch(Map<Rectangle, Integer> data, Point p)
     {
         for (Map.Entry<Rectangle, Integer> entry : data.entrySet()) {
@@ -286,25 +411,31 @@ public class QuadTree<V>
         return null;
     }
     
+    /**
+     * Perform a stress test of the tree by randomly generating rectangles,
+     * inserting them into the tree and then looking up random points known
+     * to lie within the rectangles.
+     */
     public static void main(String[] args)
     throws Exception
     {
-        int size = 500;
-        int points = 100;
+        int size = 0;
+        int points = 10000;
         QuadTree<Integer> tree = new QuadTree<Integer>(size);
         
         if (size == 0) {
             size = Integer.MAX_VALUE/2;
         }
         
+        // Generate random rectangles and values
         Map<Rectangle, Integer> values = new HashMap<Rectangle, Integer>();
         Random rand = new Random();
         float avgInsertTime = 0.0f;
         for (int i = 0; i < points; i++) {
             int x1 = rand.nextInt(2*size) - size;
             int y1 = rand.nextInt(2*size) - size;
-            int w = Math.abs(rand.nextInt(size/10));
-            int h = Math.abs(rand.nextInt(size/10));
+            int w = Math.abs(rand.nextInt(size/1000));
+            int h = Math.abs(rand.nextInt(size/1000));
             
             Rectangle rect = new Rectangle(x1, y1, x1 + w, y1 - h);
             if (rect.getLeft() < -size || rect.getRight() > size ||
@@ -335,6 +466,8 @@ public class QuadTree<V>
             System.out.println("Some inserts failed.");
         }
         
+        // Perform quad tree lookups and linear searches for points
+        // that lie within the previously generated rectangles.
         float avgFindTime = 0.0f, avgLinearSearchTime = 0.0f;
         for (Map.Entry<Rectangle, Integer> entry : values.entrySet()) {
             Rectangle rect = entry.getKey();
@@ -375,11 +508,7 @@ public class QuadTree<V>
         avgLinearSearchTime /= values.size();
         System.out.println(String.format("Average linear search time: %.2f ns", avgLinearSearchTime));
         
-        if (size < 1000) {
-            System.out.println("Generating visualization.");
-            QuadTreeVisualizer.drawQuadTree(tree, "tree.png");
-        }
-        
+        // Memory benchmark
         System.out.println("total memory: " + Runtime.getRuntime().totalMemory()/1024/1024 + " mb");
         System.out.println("free memory: " + Runtime.getRuntime().freeMemory()/1024/1024 + " mb");
     }

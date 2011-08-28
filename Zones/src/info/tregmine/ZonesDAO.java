@@ -113,23 +113,26 @@ public class ZonesDAO
 		return permissions;
 	}
 	
-	public List<Zone> getZones()
+	public List<Zone> getZones(String world)
 	throws SQLException
 	{
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		List<Zone> zones = new ArrayList<Zone>();
 		try {
-			stmt = conn.prepareStatement("SELECT * FROM zone");
+			stmt = conn.prepareStatement("SELECT * FROM zone WHERE zone_world = ?");
+			stmt.setString(1, world);
 			stmt.execute();
 			
 			rs = stmt.getResultSet();
 			while (rs.next()) {
 				Zone zone = new Zone();
 				zone.setId(rs.getInt("zone_id"));
+				zone.setWorld(rs.getString("zone_world"));
 				zone.setName(rs.getString("zone_name"));
 				zone.setEnterDefault("1".equals(rs.getString("zone_enterdefault")));
-				zone.setBuildDefault("1".equals(rs.getString("zone_builddefault")));
+				zone.setPlaceDefault("1".equals(rs.getString("zone_placedefault")));
+				zone.setDestroyDefault("1".equals(rs.getString("zone_destroydefault")));
 				zone.setPvp("1".equals(rs.getString("zone_pvp")));
 				zone.setTextEnter(rs.getString("zone_entermessage"));
 				zone.setTextExit(rs.getString("zone_exitmessage"));
@@ -161,16 +164,18 @@ public class ZonesDAO
 		ResultSet rs = null;
 		int id = 0;
 		try {
-			String sql = "INSERT INTO zone (zone_name, zone_enterdefault, zone_builddefault, " + 
-					"zone_pvp, zone_entermessage, zone_exitmessage) VALUES (?,?,?,?,?,?)";
+			String sql = "INSERT INTO zone (zone_world, zone_name, zone_enterdefault, zone_placedefault, " + 
+					"zone_destroydefault, zone_pvp, zone_entermessage, zone_exitmessage) VALUES (?,?,?,?,?,?,?,?)";
 			
 			stmt = conn.prepareStatement(sql);
-			stmt.setString(1, zone.getName());
-			stmt.setString(2, zone.getEnterDefault() ? "1" : "0");
-			stmt.setString(3, zone.getBuildDefault() ? "1" : "0");
-			stmt.setString(4, zone.isPvp() ? "1" : "0");
-			stmt.setString(5, zone.getTextEnter());
-			stmt.setString(6, zone.getTextExit());
+			stmt.setString(1, zone.getWorld());
+			stmt.setString(2, zone.getName());
+			stmt.setString(3, zone.getEnterDefault() ? "1" : "0");
+			stmt.setString(4, zone.getPlaceDefault() ? "1" : "0");
+			stmt.setString(5, zone.getDestroyDefault() ? "1" : "0");
+			stmt.setString(6, zone.isPvp() ? "1" : "0");
+			stmt.setString(7, zone.getTextEnter());
+			stmt.setString(8, zone.getTextExit());
 			stmt.execute();
 			
 			stmt.execute("SELECT LAST_INSERT_ID()");
@@ -199,17 +204,64 @@ public class ZonesDAO
 	{
 		PreparedStatement stmt = null;
 		try {
-			String sql = "UPDATE zone SET zone_name = ?, zone_enterdefault = ?, zone_builddefault = ?, " + 
-					"zone_pvp = ?, zone_entermessage = ?, zone_exitmessage = ? WHERE zone_id = ?";
+			String sql = "UPDATE zone SET zone_world = ?, zone_name = ?, zone_enterdefault = ?, " +
+					"zone_placedefault = ?, zone_destroydefault = ?, zone_pvp = ?, zone_entermessage = ?, " +
+					"zone_exitmessage = ? WHERE zone_id = ?";
 			
 			stmt = conn.prepareStatement(sql);
-			stmt.setString(1, zone.getName());
-			stmt.setString(2, zone.getEnterDefault() ? "1" : "0");
-			stmt.setString(3, zone.getBuildDefault() ? "1" : "0");
-			stmt.setString(4, zone.isPvp() ? "1" : "0");
-			stmt.setString(5, zone.getTextEnter());
-			stmt.setString(6, zone.getTextExit());
-			stmt.setInt(7, zone.getId());
+			stmt.setString(1, zone.getWorld());
+			stmt.setString(2, zone.getName());
+			stmt.setString(3, zone.getEnterDefault() ? "1" : "0");
+			stmt.setString(4, zone.getPlaceDefault() ? "1" : "0");
+			stmt.setString(5, zone.getDestroyDefault() ? "1" : "0");
+			stmt.setString(6, zone.isPvp() ? "1" : "0");
+			stmt.setString(7, zone.getTextEnter());
+			stmt.setString(8, zone.getTextExit());
+			stmt.setInt(9, zone.getId());
+			stmt.execute();
+		}
+		finally {
+			if (stmt != null) {
+				try { stmt.close(); } catch (SQLException e) {}
+			}
+		}
+	}
+	
+	public void deleteZone(int id)
+	throws SQLException
+	{
+		PreparedStatement stmt = null;
+		try {
+			String sql = "DELETE FROM zone WHERE zone_id = ?";
+			
+			stmt = conn.prepareStatement(sql);
+			stmt.setInt(1, id);
+			stmt.execute();
+		}
+		finally {
+			if (stmt != null) {
+				try { stmt.close(); } catch (SQLException e) {}
+			}
+		}
+		
+		try {
+			String sql = "DELETE FROM zone_rect WHERE zone_id = ?";
+			
+			stmt = conn.prepareStatement(sql);
+			stmt.setInt(1, id);
+			stmt.execute();
+		}
+		finally {
+			if (stmt != null) {
+				try { stmt.close(); } catch (SQLException e) {}
+			}
+		}
+		
+		try {
+			String sql = "DELETE FROM zone_user WHERE zone_id = ?";
+			
+			stmt = conn.prepareStatement(sql);
+			stmt.setInt(1, id);
 			stmt.execute();
 		}
 		finally {

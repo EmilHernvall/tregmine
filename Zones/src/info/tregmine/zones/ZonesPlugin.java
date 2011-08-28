@@ -8,6 +8,7 @@ import info.tregmine.listeners.ZoneBlockListener;
 import info.tregmine.listeners.ZoneEntityListener;
 import info.tregmine.listeners.ZonePlayerListener;
 import info.tregmine.quadtree.IntersectionException;
+import info.tregmine.quadtree.Point;
 import info.tregmine.quadtree.QuadTree;
 import info.tregmine.quadtree.Rectangle;
 
@@ -19,6 +20,7 @@ import java.util.logging.Logger;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Server;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -34,11 +36,73 @@ import info.tregmine.ZonesDAO;
 
 public class ZonesPlugin extends JavaPlugin 
 {
+	public static class ZoneWorld
+	{
+		private World world;
+		private QuadTree<Zone> zonesLookup;
+		private Map<String, Zone> zoneNameLookup;
+		
+		public ZoneWorld(World world)
+		{
+			this.world = world;
+			this.zonesLookup = new QuadTree<Zone>(0);
+			this.zoneNameLookup = new HashMap<String, Zone>();
+		}
+		
+		public String getName()
+		{
+			return world.getName();
+		}
+		
+		public void addZone(Zone zone)
+		throws IntersectionException
+		{
+			for (Rectangle rect : zone.getRects()) {
+				zonesLookup.insert(rect, zone);
+			}	
+			zoneNameLookup.put(zone.getName(), zone);
+		}
+		
+		public boolean zoneExists(String name)
+		{
+			return zoneNameLookup.containsKey(name);
+		}
+		
+		public Zone getZone(String name)
+		{
+			return zoneNameLookup.get(name);
+		}
+		
+		public Zone findZone(Point p)
+		{
+			return zonesLookup.find(p);
+		}
+		
+		public void deleteZone(String name)
+		{
+			if (!zoneNameLookup.containsKey(name)) {
+				return;
+			}
+			
+			zoneNameLookup.remove(name);
+			
+			this.zonesLookup = new QuadTree<Zone>(0);
+			for (Zone zone : zoneNameLookup.values()) {
+				try {
+					for (Rectangle rect: zone.getRects()) {
+						zonesLookup.insert(rect, zone);
+					}
+				} catch (IntersectionException e) {
+					throw new RuntimeException(e);
+				}
+			}
+		}
+	}
+	
 	public final Logger log = Logger.getLogger("Minecraft");
 	
 	public Tregmine tregmine = null;
-	public QuadTree<Zone> zonesLookup;
-	public Map<String, Zone> zoneNameLookup;
+	public Map<String, ZoneWorld> worlds;
 	
 	public void onLoad() 
 	{
@@ -67,25 +131,26 @@ public class ZonesPlugin extends JavaPlugin
 		//pluginMgm.registerEvent(Event.Type.CREATURE_SPAWN, new ZoneEntityListener(this), Priority.High, this);
 		pluginMgm.registerEvent(Event.Type.ENTITY_DAMAGE, new ZoneEntityListener(this), Priority.High, this);
 		
-		zonesLookup = new QuadTree<Zone>(0);
-		zoneNameLookup = new HashMap<String, Zone>();
+		worlds = new HashMap<String, ZoneWorld>();
 		
 		Mysql mysql = null;
 		try {
 			mysql = new Mysql();
 			mysql.connect();
 			ZonesDAO dao = new ZonesDAO(mysql.connect);
-			List<Zone> zones = dao.getZones();
-			for (Zone zone : zones) {
-				for (Rectangle rect : zone.getRects()) {
-					try {
-						zonesLookup.insert(rect, zone);
-					} catch (IntersectionException e) {
-						throw new RuntimeException(e);
-					}
-					zoneNameLookup.put(zone.getName(), zone);
+			
+			for (World world : server.getWorlds()) {
+				ZoneWorld zoneWorld = new ZoneWorld(world);
+				
+				List<Zone> zones = dao.getZones(world.getName());
+				for (Zone zone : zones) {
+					zoneWorld.addZone(zone);
 				}
+				
+				worlds.put(world.getName(), zoneWorld);
 			}
+		} catch (IntersectionException e) {
+			throw new RuntimeException(e);
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		} finally {
@@ -97,6 +162,10 @@ public class ZonesPlugin extends JavaPlugin
 	{
 	}
 
+	public ZoneWorld getWorld(World world)
+	{
+		return worlds.get(world.getName());
+	}
 
 	public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args) 
 	{
@@ -114,8 +183,12 @@ public class ZonesPlugin extends JavaPlugin
 				return true;
 			}
 			
-			if ("create".equals(args[0]) && player.isAdmin()) {
+			if ("create".equals(args[0]) && player.getMetaBoolean("zones")) {
 				createZone(player, args);
+				return true;
+			}
+			else if ("delete".equals(args[0]) && player.getMetaBoolean("zones")) {
+				deleteZone(player, args);
 				return true;
 			}
 			else if ("adduser".equals(args[0])) {
@@ -134,7 +207,7 @@ public class ZonesPlugin extends JavaPlugin
 				changeValue(player, args);
 				return true;
 			}
-			else if ("pvp".equals(args[0]) && player.isAdmin()) {
+			else if ("pvp".equals(args[0]) && player.getMetaBoolean("zones")) {
 				changeValue(player, args);
 				return true;
 			}
@@ -142,7 +215,11 @@ public class ZonesPlugin extends JavaPlugin
 				changeValue(player, args);
 				return true;				
 			}
-			else if ("build".equals(args[0])) {
+			else if ("place".equals(args[0])) {
+				changeValue(player, args);
+				return true;				
+			}
+			else if ("destroy".equals(args[0])) {
 				changeValue(player, args);
 				return true;				
 			}
@@ -157,13 +234,18 @@ public class ZonesPlugin extends JavaPlugin
 	
 	public void createZone(TregminePlayer player, String[] args)
 	{
+		ZoneWorld world = getWorld(player.getWorld());
+		if (world == null) {
+			return;
+		}
+		
 		if (args.length < 2) {
 			player.sendMessage("syntax: /zone create [name]");
 			return;
 		}
 		
 		String name = args[1];
-		if (zoneNameLookup.containsKey(name)) {
+		if (world.zoneExists(name)) {
 			player.sendMessage(ChatColor.RED + "A zone named " + name + " does already exist.");
 			return;
 		}
@@ -174,6 +256,7 @@ public class ZonesPlugin extends JavaPlugin
 		Rectangle rect = new Rectangle(b1.getX(), b1.getZ(), b2.getX(), b2.getZ());
 		
 		Zone zone = new Zone();
+		zone.setWorld(world.getName());
 		zone.setName(name);
 		zone.addRect(rect);
 		zone.setTextEnter("Welcome to " + name + "!");
@@ -183,8 +266,7 @@ public class ZonesPlugin extends JavaPlugin
 		player.sendMessage(ChatColor.RED + "Creating zone at " + rect);
 		
 		try {
-			zonesLookup.insert(rect, zone);
-			zoneNameLookup.put(zone.getName(), zone);
+			world.addZone(zone);
 			player.sendMessage(ChatColor.RED + "[" + zone.getName() + "] " + "Zone created successfully.");
 		} catch (IntersectionException e) {
 			player.sendMessage(ChatColor.RED + "The zone you tried to create overlaps an existing zone.");
@@ -211,8 +293,49 @@ public class ZonesPlugin extends JavaPlugin
 		}
 	}
 	
+	public void deleteZone(TregminePlayer player, String[] args)
+	{
+		ZoneWorld world = getWorld(player.getWorld());
+		if (world == null) {
+			return;
+		}
+		
+		if (args.length < 2) {
+			player.sendMessage("syntax: /zone delete [name]");
+			return;
+		}
+		
+		String name = args[1];
+		
+		Zone zone = world.getZone(name);
+		if (zone == null) {
+			player.sendMessage(ChatColor.RED + "A zone named " + name + " does not exist.");
+			return;
+		}
+		
+		world.deleteZone(name);
+		player.sendMessage(ChatColor.RED + "[" + name + "] " + "Zone deleted.");
+		
+		Mysql mysql = null;
+		try {
+			mysql = new Mysql();
+			mysql.connect();
+			ZonesDAO dao = new ZonesDAO(mysql.connect);
+			dao.deleteZone(zone.getId());
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		} finally {
+			mysql.close();
+		}
+	}
+	
 	public void addUser(TregminePlayer player, String[] args)
 	{
+		ZoneWorld world = getWorld(player.getWorld());
+		if (world == null) {
+			return;
+		}
+		
 		if (args.length < 4) {
 			player.sendMessage(ChatColor.RED + "syntax: /zone adduser [zone] [player] [perm]");
 			return;
@@ -222,7 +345,7 @@ public class ZonesPlugin extends JavaPlugin
 		String userName = args[2];
 		Zone.Permission perm = Zone.Permission.fromString(args[3]);
 		
-		Zone zone = zoneNameLookup.get(zoneName);
+		Zone zone = world.getZone(zoneName);
 		if (zone == null) {
 			player.sendMessage(ChatColor.RED + "Specified zone does not exist.");
 			return;
@@ -271,6 +394,11 @@ public class ZonesPlugin extends JavaPlugin
 	
 	public void delUser(TregminePlayer player, String[] args)
 	{
+		ZoneWorld world = getWorld(player.getWorld());
+		if (world == null) {
+			return;
+		}
+		
 		if (args.length < 3) {
 			player.sendMessage(ChatColor.RED + "syntax: /zone deluser [zone] [player]");
 			return;
@@ -279,7 +407,7 @@ public class ZonesPlugin extends JavaPlugin
 		String zoneName = args[1];
 		String userName = args[2];
 		
-		Zone zone = zoneNameLookup.get(zoneName);
+		Zone zone = world.getZone(zoneName);
 		if (zone == null) {
 			player.sendMessage(ChatColor.RED + "Specified zone does not exist.");
 			return;
@@ -329,6 +457,11 @@ public class ZonesPlugin extends JavaPlugin
 	
 	public void changeValue(TregminePlayer player, String[] args)
 	{
+		ZoneWorld world = getWorld(player.getWorld());
+		if (world == null) {
+			return;
+		}
+		
 		// entermsg [zone] [message]
 		if (args.length < 3) {
 			player.sendMessage(ChatColor.RED + "unknown command");
@@ -337,7 +470,7 @@ public class ZonesPlugin extends JavaPlugin
 		
 		String zoneName = args[1];
 		
-		Zone zone = zoneNameLookup.get(zoneName);
+		Zone zone = world.getZone(zoneName);
 		if (zone == null) {
 			player.sendMessage(ChatColor.RED + "Specified zone does not exist.");
 			return;
@@ -374,10 +507,15 @@ public class ZonesPlugin extends JavaPlugin
 			zone.setEnterDefault(status);
 			player.sendMessage(ChatColor.RED + "[" + zone.getName() + "] " + "Enter default changed to \"" + (status ? "everyone" : "whitelisted") + "\".");			
 		}
-		else if ("build".equals(args[0])) {
+		else if ("place".equals(args[0])) {
 			boolean status = Boolean.parseBoolean(args[2]);
-			zone.setBuildDefault(status);
-			player.sendMessage(ChatColor.RED + "[" + zone.getName() + "] " + "Build default changed to \"" + (status ? "everyone" : "whitelisted") + "\".");			
+			zone.setPlaceDefault(status);
+			player.sendMessage(ChatColor.RED + "[" + zone.getName() + "] " + "Place default changed to \"" + (status ? "everyone" : "whitelisted") + "\".");			
+		}
+		else if ("destroy".equals(args[0])) {
+			boolean status = Boolean.parseBoolean(args[2]);
+			zone.setDestroyDefault(status);
+			player.sendMessage(ChatColor.RED + "[" + zone.getName() + "] " + "Destroy default changed to \"" + (status ? "everyone" : "whitelisted") + "\".");			
 		}
 		
 		Mysql mysql = null;
@@ -395,6 +533,11 @@ public class ZonesPlugin extends JavaPlugin
 	
 	public void zoneInfo(TregminePlayer player, String[] args)
 	{
+		ZoneWorld world = getWorld(player.getWorld());
+		if (world == null) {
+			return;
+		}
+		
 		if (args.length < 2) {
 			player.sendMessage(ChatColor.RED + "unknown command");
 			return;
@@ -402,7 +545,7 @@ public class ZonesPlugin extends JavaPlugin
 		
 		String zoneName = args[1];
 		
-		Zone zone = zoneNameLookup.get(zoneName);
+		Zone zone = world.getZone(zoneName);
 		if (zone == null) {
 			player.sendMessage(ChatColor.RED + "Specified zone does not exist.");
 			return;
@@ -415,11 +558,13 @@ public class ZonesPlugin extends JavaPlugin
 
 		player.sendMessage(ChatColor.RED + "Info about " + zone.getName());
 		player.sendMessage(ChatColor.RED + "ID: " + zone.getId());
+		player.sendMessage(ChatColor.RED + "World: " + zone.getWorld());
 		for (Rectangle rect : zone.getRects()) {
 			player.sendMessage(ChatColor.RED + "Rect: " + rect);
 		}
 		player.sendMessage(ChatColor.RED + "Enter: " + (zone.getEnterDefault() ? "Everyone (true)" : "Only allowed (false)"));
-		player.sendMessage(ChatColor.RED + "Build: " + (zone.getBuildDefault() ? "Everyone (true)" : "Only makers (false)"));
+		player.sendMessage(ChatColor.RED + "Place: " + (zone.getPlaceDefault() ? "Everyone (true)" : "Only makers (false)"));
+		player.sendMessage(ChatColor.RED + "Destroy: " + (zone.getDestroyDefault() ? "Everyone (true)" : "Only makers (false)"));
 		player.sendMessage(ChatColor.RED + "PVP: " + zone.isPvp());
 		player.sendMessage(ChatColor.RED + "Enter message: " + zone.getTextEnter());
 		player.sendMessage(ChatColor.RED + "Exit message: " + zone.getTextExit());

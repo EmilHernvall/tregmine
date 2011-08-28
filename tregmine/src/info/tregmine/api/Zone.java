@@ -85,11 +85,13 @@ public class Zone
 	}
 	
 	private int id;
+	private String world;
 	private String name;
 	private List<Rectangle> rects;
 	
 	private boolean enterDefault = true;
-	private boolean buildDefault = false;
+	private boolean placeDefault = true;
+	private boolean destroyDefault = true;
 	private boolean pvp = false;
 	
 	private String textEnter;
@@ -111,6 +113,14 @@ public class Zone
 		this.id = id;
 	}
 
+	public String getWorld() {
+		return world;
+	}
+	
+	public void setWorld(String world) {
+		this.world = world;
+	}
+	
 	public String getName() {
 		return name;
 	}
@@ -139,12 +149,20 @@ public class Zone
 		this.enterDefault = enterDefault;
 	}
 
-	public boolean getBuildDefault() {
-		return buildDefault;
+	public boolean getPlaceDefault() {
+		return placeDefault;
 	}
 
-	public void setBuildDefault(boolean buildDefault) {
-		this.buildDefault = buildDefault;
+	public void setPlaceDefault(boolean placeDefault) {
+		this.placeDefault = placeDefault;
+	}
+
+	public boolean getDestroyDefault() {
+		return destroyDefault;
+	}
+
+	public void setDestroyDefault(boolean destroyDefault) {
+		this.destroyDefault = destroyDefault;
 	}
 
 	public boolean isPvp() {
