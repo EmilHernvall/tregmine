@@ -1,6 +1,7 @@
 package info.tregmine.api;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,20 +14,66 @@ public class Zone
 	public enum Permission
 	{
 		// can modify the zone in any way
-		Owner,
+		Owner(
+				"%s is now an owner of %s.", 
+				"You are now an owner of %s.",
+				"%s is no longer an owner of %s.", 
+				"You are no longer an owner of %s.", 
+				"You are an owner in this zone."
+			),
 		// can build in the zone
-		Builder,
+		Maker(
+				"%s is now a maker in %s.", 
+				"You are now a maker in %s.",
+				"%s is no longer a maker in %s.", 
+				"You are no longer a maker in %s.",
+				"You are a maker in this zone."
+			),
 		// is allowed in the zone, if this isn't the default
-		Allowed,
+		Allowed(
+				"%s is now allowed in %s.", 
+				"You are now allowed in %s.",
+				"%s is no longer allowed in %s.", 
+				"You are no longer allowd in %s.",
+				"You are allowed in this zone."
+			),
 		// banned from the zone
-		Banned;
+		Banned(
+				"%s is now banned from %s.", 
+				"You have been banned from %s.",
+				"%s is no longer banned in %s.", 
+				"You are no longer banned in %s.",
+				"You are banned from this zone."
+			);
+		
+		private String addedConfirmation;
+		private String addedNotification;
+		private String delConfirmation;
+		private String delNotification;
+		private String permNotification;
+		
+		private Permission(String addedConfirmation, String addedNotification, 
+				String delConfirmation, String delNotification, String permNotification)
+		{
+			this.addedConfirmation = addedConfirmation;
+			this.addedNotification = addedNotification;
+			this.delConfirmation = delConfirmation;
+			this.delNotification = delNotification;
+			this.permNotification = permNotification;
+		}
+		
+		public String getAddedConfirmation() { return addedConfirmation; }
+		public String getAddedNotification() { return addedNotification; }
+		public String getDeletedConfirmation() { return delConfirmation; }
+		public String getDeletedNotification() { return delNotification; }
+		public String getPermissionNotification() { return permNotification; }
 		
 		public static Permission fromString(String type)
 		{
 			if ("owner".equalsIgnoreCase(type)) {
 				return Permission.Owner;
-			} else if ("builder".equalsIgnoreCase(type)) {
-				return Permission.Builder;
+			} else if ("maker".equalsIgnoreCase(type)) {
+				return Permission.Maker;
 			} else if ("allowed".equalsIgnoreCase(type)) {
 				return Permission.Allowed;
 			} else if ("banned".equalsIgnoreCase(type)) {
@@ -40,6 +87,10 @@ public class Zone
 	private int id;
 	private String name;
 	private List<Rectangle> rects;
+	
+	private boolean enterDefault = true;
+	private boolean buildDefault = false;
+	private boolean pvp = false;
 	
 	private String textEnter;
 	private String textExit;
@@ -80,6 +131,30 @@ public class Zone
 		this.rects = rects;
 	}
 	
+	public boolean getEnterDefault() {
+		return enterDefault;
+	}
+
+	public void setEnterDefault(boolean enterDefault) {
+		this.enterDefault = enterDefault;
+	}
+
+	public boolean getBuildDefault() {
+		return buildDefault;
+	}
+
+	public void setBuildDefault(boolean buildDefault) {
+		this.buildDefault = buildDefault;
+	}
+
+	public boolean isPvp() {
+		return pvp;
+	}
+
+	public void setPvp(boolean pvp) {
+		this.pvp = pvp;
+	}
+
 	public String getTextEnter() {
 		return textEnter;
 	}
@@ -102,6 +177,16 @@ public class Zone
 	
 	public void addUser(String name, Permission perm) {
 		users.put(name, perm);
+	}
+	
+	public void deleteUser(String name)
+	{
+		users.remove(name);
+	}
+	
+	public Collection<String> getUsers()
+	{
+		return users.keySet();
 	}
 	
 	public Permission getUser(String name) {

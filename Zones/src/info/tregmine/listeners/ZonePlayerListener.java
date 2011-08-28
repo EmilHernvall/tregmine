@@ -6,6 +6,7 @@ import info.tregmine.api.Zone;
 import info.tregmine.quadtree.Point;
 import info.tregmine.zones.ZonesPlugin;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerListener;
@@ -30,6 +31,19 @@ public class ZonePlayerListener extends PlayerListener
 		//TregminePlayer player = tregmine.getPlayer(event.getPlayer());
 	}
 	
+	private void movePlayerBack(TregminePlayer player, Location movingFrom, Location movingTo)
+	{
+		Vector a = new Vector(movingFrom.getX(), movingFrom.getY(), movingFrom.getZ());
+		Vector b = new Vector(movingTo.getX(), movingTo.getY(), movingTo.getZ());
+		
+		Vector diff = b.subtract(a);
+		diff = diff.multiply(-5);
+		
+		Vector newPosVector = a.add(diff);
+		Location newPos = new Location(player.getWorld(), newPosVector.getX(), newPosVector.getY(), newPosVector.getZ());
+		player.teleport(newPos);
+	}
+	
 	@Override
 	public void onPlayerMove(PlayerMoveEvent event)
 	{
@@ -45,29 +59,38 @@ public class ZonePlayerListener extends PlayerListener
 		if (currentZone == null || !currentZone.contains(currentPos)) {
 			
 			if (currentZone != null && currentZone.contains(oldPos)) {
-				player.sendMessage(currentZone.getTextExit());
+				player.sendMessage(ChatColor.RED + "[" + currentZone.getName() + "] " + currentZone.getTextExit());
 			}
 			
 			currentZone = plugin.zonesLookup.find(currentPos);
 			if (currentZone != null) {
 				Zone.Permission perm = currentZone.getUser(player.getName());
-		    	if (perm != null && perm == Zone.Permission.Banned) {
-					player.sendMessage("You are banned from " + currentZone.getName() + ".");
-					
-					Vector a = new Vector(movingFrom.getX(), movingFrom.getY(), movingFrom.getZ());
-					Vector b = new Vector(movingTo.getX(), movingTo.getY(), movingTo.getZ());
-					
-					Vector diff = b.subtract(a);
-					diff = diff.multiply(-5);
-					
-					Vector newPosVector = a.add(diff);
-					Location newPos = new Location(player.getWorld(), newPosVector.getX(), newPosVector.getY(), newPosVector.getZ());
-					player.teleport(newPos);
-					
-					return;
+				
+				// if anyone is allowed to enter by default...
+				if (currentZone.getEnterDefault()) {
+					// ...we only need to reject banned players
+			    	if (perm != null && perm == Zone.Permission.Banned) {
+			    		bannedMessage(currentZone, player);
+						movePlayerBack(player, movingFrom, movingTo);
+						return;
+					}
+				}
+				// if this is a whitelist zone...
+				else {
+					// ...reject people not in the user list, as well as banned people
+			    	if (perm == null) {
+			    		disallowedMessage(currentZone, player);
+						movePlayerBack(player, movingFrom, movingTo);
+						return;
+					}
+			    	else if (perm == Zone.Permission.Banned) {
+			    		bannedMessage(currentZone, player);
+						movePlayerBack(player, movingFrom, movingTo);
+						return;			    		
+			    	}
 				}
 				
-				player.sendMessage(currentZone.getTextEnter());
+				welcomeMessage(currentZone, player, perm);
 			}
 			player.setCurrentZone(currentZone);
 		}
@@ -94,15 +117,56 @@ public class ZonePlayerListener extends PlayerListener
 			currentZone = plugin.zonesLookup.find(currentPos);
 			if (currentZone != null) {
 				Zone.Permission perm = currentZone.getUser(player.getName());
-		    	if (perm != null && perm == Zone.Permission.Banned) {
-					player.sendMessage("You are banned from " + currentZone.getName() + ".");
-					event.setCancelled(true);
-					return;
+				
+				if (currentZone.getEnterDefault()) {
+			    	if (perm != null && perm == Zone.Permission.Banned) {
+			    		bannedMessage(currentZone, player);
+						event.setCancelled(true);
+						return;
+					}
+				} else {
+			    	if (perm == null) {
+			    		disallowedMessage(currentZone, player);
+						event.setCancelled(true);
+						return;
+					}
+			    	else if (perm == Zone.Permission.Banned) {
+						bannedMessage(currentZone, player);
+						event.setCancelled(true);
+						return;			    		
+			    	}
 				}
 				
-				player.sendMessage(currentZone.getTextEnter());
+				welcomeMessage(currentZone, player, perm);
 			}
 			player.setCurrentZone(currentZone);
+		}
+	}
+	
+	private void disallowedMessage(Zone currentZone, TregminePlayer player)
+	{
+		player.sendMessage(ChatColor.RED + "[" + currentZone.getName() + "] " + 
+				"You are not allowed in this zone. Contact the zone owner.");
+	}
+	
+	private void bannedMessage(Zone currentZone, TregminePlayer player)
+	{
+		player.sendMessage(ChatColor.RED + "[" + currentZone.getName() + "] " + 
+				"You are banned from " + currentZone.getName() + ".");
+	}
+	
+	private void welcomeMessage(Zone currentZone, TregminePlayer player, Zone.Permission perm)
+	{
+		player.sendMessage(ChatColor.RED + "[" + currentZone.getName() + "] " + 
+				currentZone.getTextEnter());
+		if (currentZone.isPvp()) {
+			player.sendMessage(ChatColor.RED + "[" + currentZone.getName() + "] " + 
+					"Warning! This is a PVP zone! Other players can damage or kill you here.");
+		}
+		if (perm != null) {
+			String permNotification = perm.getPermissionNotification();
+			player.sendMessage(ChatColor.RED + "[" + currentZone.getName() + "] " + 
+					permNotification);
 		}
 	}
 }

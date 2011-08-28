@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.command.Command;
@@ -63,7 +64,8 @@ public class ZonesPlugin extends JavaPlugin
 		pluginMgm.registerEvent(Event.Type.PLAYER_INTERACT, new ZonePlayerListener(this), Priority.High, this);
 		pluginMgm.registerEvent(Event.Type.PLAYER_MOVE, new ZonePlayerListener(this), Priority.High, this);
 		pluginMgm.registerEvent(Event.Type.PLAYER_TELEPORT, new ZonePlayerListener(this), Priority.High, this);
-		pluginMgm.registerEvent(Event.Type.CREATURE_SPAWN, new ZoneEntityListener(this), Priority.High, this);
+		//pluginMgm.registerEvent(Event.Type.CREATURE_SPAWN, new ZoneEntityListener(this), Priority.High, this);
+		pluginMgm.registerEvent(Event.Type.ENTITY_DAMAGE, new ZoneEntityListener(this), Priority.High, this);
 		
 		zonesLookup = new QuadTree<Zone>(0);
 		zoneNameLookup = new HashMap<String, Zone>();
@@ -107,17 +109,45 @@ public class ZonesPlugin extends JavaPlugin
 			return false;
 		}
 		
-		if (commandName.equals("zone") && player.isAdmin()) {
+		if (commandName.equals("zone")) {
 			if (args.length == 0) {
 				return true;
 			}
 			
-			if ("create".equals(args[0])) {
+			if ("create".equals(args[0]) && player.isAdmin()) {
 				createZone(player, args);
 				return true;
 			}
 			else if ("adduser".equals(args[0])) {
 				addUser(player, args);
+				return true;
+			}
+			else if ("deluser".equals(args[0])) {
+				delUser(player, args);
+				return true;
+			}
+			else if ("entermsg".equals(args[0])) {
+				changeValue(player, args);
+				return true;
+			}
+			else if ("exitmsg".equals(args[0])) {
+				changeValue(player, args);
+				return true;
+			}
+			else if ("pvp".equals(args[0]) && player.isAdmin()) {
+				changeValue(player, args);
+				return true;
+			}
+			else if ("enter".equals(args[0])) {
+				changeValue(player, args);
+				return true;				
+			}
+			else if ("build".equals(args[0])) {
+				changeValue(player, args);
+				return true;				
+			}
+			else if ("info".equals(args[0])) {
+				zoneInfo(player, args);
 				return true;
 			}
 		}
@@ -134,7 +164,7 @@ public class ZonesPlugin extends JavaPlugin
 		
 		String name = args[1];
 		if (zoneNameLookup.containsKey(name)) {
-			player.sendMessage("A zone named " + name + " does already exist.");
+			player.sendMessage(ChatColor.RED + "A zone named " + name + " does already exist.");
 			return;
 		}
 		
@@ -150,7 +180,15 @@ public class ZonesPlugin extends JavaPlugin
 		zone.setTextExit("Now leaving " + name + ".");
 		zone.addUser(player.getName(), Zone.Permission.Owner);
 		
-		player.sendMessage("Creating zone at " + rect);
+		player.sendMessage(ChatColor.RED + "Creating zone at " + rect);
+		
+		try {
+			zonesLookup.insert(rect, zone);
+			zoneNameLookup.put(zone.getName(), zone);
+			player.sendMessage(ChatColor.RED + "[" + zone.getName() + "] " + "Zone created successfully.");
+		} catch (IntersectionException e) {
+			player.sendMessage(ChatColor.RED + "The zone you tried to create overlaps an existing zone.");
+		}
 		
 		Mysql mysql = null;
 		try {
@@ -171,20 +209,12 @@ public class ZonesPlugin extends JavaPlugin
 		} finally {
 			mysql.close();
 		}
-		
-		try {
-			zonesLookup.insert(rect, zone);
-			zoneNameLookup.put(zone.getName(), zone);
-			player.sendMessage("Zone created successfully.");
-		} catch (IntersectionException e) {
-			player.sendMessage("The zone you tried to create overlaps an existing zone.");
-		}
 	}
 	
 	public void addUser(TregminePlayer player, String[] args)
 	{
 		if (args.length < 4) {
-			player.sendMessage("syntax: /zone adduser [zone] [player] [perm]");
+			player.sendMessage(ChatColor.RED + "syntax: /zone adduser [zone] [player] [perm]");
 			return;
 		}
 		
@@ -194,17 +224,17 @@ public class ZonesPlugin extends JavaPlugin
 		
 		Zone zone = zoneNameLookup.get(zoneName);
 		if (zone == null) {
-			player.sendMessage("Specified zone does not exist.");
+			player.sendMessage(ChatColor.RED + "Specified zone does not exist.");
 			return;
 		}
 		
 		if (zone.getUser(player.getName()) != Permission.Owner) {
-			player.sendMessage("You do not have permission to add new builders.");
+			player.sendMessage(ChatColor.RED + "[" + zone.getName() + "] " + "You do not have permission to add users to this zone.");
 			return;
 		}
 		
 		if (perm == null) {
-			player.sendMessage("Unknown permission " + args[3] + ".");
+			player.sendMessage(ChatColor.RED + "[" + zone.getName() + "] " + "Unknown permission " + args[3] + ".");
 			return;
 		}
 		
@@ -216,7 +246,7 @@ public class ZonesPlugin extends JavaPlugin
 			ZonesDAO dao = new ZonesDAO(mysql.connect);
 			int userId = dao.getUserId(userName);
 			if (userId == -1) {
-				player.sendMessage("Player " + userName + " was not found.");
+				player.sendMessage(ChatColor.RED + "[" + zone.getName() + "] " + "Player " + userName + " was not found.");
 				return;
 			}
 			
@@ -229,11 +259,174 @@ public class ZonesPlugin extends JavaPlugin
 		}
 		
 		zone.addUser(userName, perm);
-		player.sendMessage(userName + " can now build in " + zoneName + ".");
+		String addedConfirmation = perm.getAddedConfirmation();
+		player.sendMessage(ChatColor.RED + "[" + zone.getName() + "] " + String.format(addedConfirmation, userName, zoneName));
 		
 		TregminePlayer player2 = tregmine.getPlayer(userName);
 		if (player2 != null) {
-			player2.sendMessage("You can now build in " + zoneName + ".");
+			String addedNotification = perm.getAddedNotification();
+			player2.sendMessage(ChatColor.RED + "[" + zone.getName() + "] " + String.format(addedNotification, zoneName));
+		}
+	}
+	
+	public void delUser(TregminePlayer player, String[] args)
+	{
+		if (args.length < 3) {
+			player.sendMessage(ChatColor.RED + "syntax: /zone deluser [zone] [player]");
+			return;
+		}
+		
+		String zoneName = args[1];
+		String userName = args[2];
+		
+		Zone zone = zoneNameLookup.get(zoneName);
+		if (zone == null) {
+			player.sendMessage(ChatColor.RED + "Specified zone does not exist.");
+			return;
+		}
+		
+		if (zone.getUser(player.getName()) != Permission.Owner) {
+			player.sendMessage(ChatColor.RED + "[" + zone.getName() + "] " + "You do not have permission to add users to this zone.");
+			return;
+		}
+		
+		Zone.Permission oldPerm = zone.getUser(userName);
+		if (oldPerm == null) {
+			player.sendMessage(ChatColor.RED + "[" + zone.getName() + "]" +
+					userName + " doesn't have any permissions.");
+			return;
+		}
+		
+		// store permission change in db
+		Mysql mysql = null;
+		try {
+			mysql = new Mysql();
+			mysql.connect();
+			ZonesDAO dao = new ZonesDAO(mysql.connect);
+			int userId = dao.getUserId(userName);
+			if (userId == -1) {
+				player.sendMessage(ChatColor.RED + "[" + zone.getName() + "] " + "Player " + userName + " was not found.");
+				return;
+			}
+			
+			dao.deleteUser(zone.getId(), userId);
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		} finally {
+			mysql.close();
+		}
+		
+		zone.deleteUser(userName);
+		String delConfirmation = oldPerm.getDeletedConfirmation();
+		player.sendMessage(ChatColor.RED + "[" + zone.getName() + "] " + String.format(delConfirmation, userName, zoneName));
+		
+		TregminePlayer player2 = tregmine.getPlayer(userName);
+		if (player2 != null) {
+			String delNotification = oldPerm.getDeletedNotification();
+			player2.sendMessage(ChatColor.RED + "[" + zone.getName() + "] " + String.format(delNotification, zoneName));
+		}
+	}
+	
+	public void changeValue(TregminePlayer player, String[] args)
+	{
+		// entermsg [zone] [message]
+		if (args.length < 3) {
+			player.sendMessage(ChatColor.RED + "unknown command");
+			return;
+		}
+		
+		String zoneName = args[1];
+		
+		Zone zone = zoneNameLookup.get(zoneName);
+		if (zone == null) {
+			player.sendMessage(ChatColor.RED + "Specified zone does not exist.");
+			return;
+		}
+		
+		if (zone.getUser(player.getName()) != Permission.Owner) {
+			player.sendMessage(ChatColor.RED + "[" + zone.getName() + "] " + "You do not have permission to change settings for this zone.");
+			return;
+		}
+		
+		if ("entermsg".equals(args[0]) || "exitmsg".equals(args[0])) {
+			StringBuilder buf = new StringBuilder();
+			for (int i = 2; i < args.length; i++) {
+				buf.append(args[i]);
+				buf.append(" ");
+			}
+			
+			String message = buf.toString().trim();
+			if ("entermsg".equals(args[0])) {
+				zone.setTextEnter(message);
+				player.sendMessage(ChatColor.RED + "[" + zone.getName() + "] " + "Welcome message changed to \"" + message + "\".");
+			} else if ("exitmsg".equals(args[0])) {
+				zone.setTextExit(message);
+				player.sendMessage(ChatColor.RED + "[" + zone.getName() + "] " + "Exit message changed to \"" + message + "\".");
+			}
+		}
+		else if ("pvp".equals(args[0])) {
+			boolean status = Boolean.parseBoolean(args[2]);
+			zone.setPvp(status);
+			player.sendMessage(ChatColor.RED + "[" + zone.getName() + "] " + "PVP changed to \"" + (status ? "allowed" : "disallowed") + "\".");
+		}
+		else if ("enter".equals(args[0])) {
+			boolean status = Boolean.parseBoolean(args[2]);
+			zone.setEnterDefault(status);
+			player.sendMessage(ChatColor.RED + "[" + zone.getName() + "] " + "Enter default changed to \"" + (status ? "everyone" : "whitelisted") + "\".");			
+		}
+		else if ("build".equals(args[0])) {
+			boolean status = Boolean.parseBoolean(args[2]);
+			zone.setBuildDefault(status);
+			player.sendMessage(ChatColor.RED + "[" + zone.getName() + "] " + "Build default changed to \"" + (status ? "everyone" : "whitelisted") + "\".");			
+		}
+		
+		Mysql mysql = null;
+		try {
+			mysql = new Mysql();
+			mysql.connect();
+			ZonesDAO dao = new ZonesDAO(mysql.connect);
+			dao.updateZone(zone);
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		} finally {
+			mysql.close();
+		}
+	}
+	
+	public void zoneInfo(TregminePlayer player, String[] args)
+	{
+		if (args.length < 2) {
+			player.sendMessage(ChatColor.RED + "unknown command");
+			return;
+		}
+		
+		String zoneName = args[1];
+		
+		Zone zone = zoneNameLookup.get(zoneName);
+		if (zone == null) {
+			player.sendMessage(ChatColor.RED + "Specified zone does not exist.");
+			return;
+		}
+		
+		if (zone.getUser(player.getName()) != Permission.Owner && !player.isAdmin()) {
+			player.sendMessage(ChatColor.RED + "[" + zone.getName() + "] " + "You do not have permission to change settings for this zone.");
+			return;
+		}
+
+		player.sendMessage(ChatColor.RED + "Info about " + zone.getName());
+		player.sendMessage(ChatColor.RED + "ID: " + zone.getId());
+		for (Rectangle rect : zone.getRects()) {
+			player.sendMessage(ChatColor.RED + "Rect: " + rect);
+		}
+		player.sendMessage(ChatColor.RED + "Enter: " + (zone.getEnterDefault() ? "Everyone (true)" : "Only allowed (false)"));
+		player.sendMessage(ChatColor.RED + "Build: " + (zone.getBuildDefault() ? "Everyone (true)" : "Only makers (false)"));
+		player.sendMessage(ChatColor.RED + "PVP: " + zone.isPvp());
+		player.sendMessage(ChatColor.RED + "Enter message: " + zone.getTextEnter());
+		player.sendMessage(ChatColor.RED + "Exit message: " + zone.getTextExit());
+
+		for (String user : zone.getUsers()) {
+			Zone.Permission perm = zone.getUser(user);
+			player.sendMessage(ChatColor.RED + user + " - " + perm);
 		}
 	}
 }

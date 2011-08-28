@@ -26,7 +26,6 @@ public class ZonesDAO
 	{
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
-		List<Rectangle> rects = new ArrayList<Rectangle>();
 		try {
 			stmt = conn.prepareStatement("SELECT uid FROM user WHERE player = ?");
 			stmt.setString(1, player);
@@ -129,6 +128,9 @@ public class ZonesDAO
 				Zone zone = new Zone();
 				zone.setId(rs.getInt("zone_id"));
 				zone.setName(rs.getString("zone_name"));
+				zone.setEnterDefault("1".equals(rs.getString("zone_enterdefault")));
+				zone.setBuildDefault("1".equals(rs.getString("zone_builddefault")));
+				zone.setPvp("1".equals(rs.getString("zone_pvp")));
 				zone.setTextEnter(rs.getString("zone_entermessage"));
 				zone.setTextExit(rs.getString("zone_exitmessage"));
 				
@@ -159,13 +161,16 @@ public class ZonesDAO
 		ResultSet rs = null;
 		int id = 0;
 		try {
-			String sql = "INSERT INTO zone (zone_name, zone_entermessage, zone_exitmessage) ";
-			sql += "VALUES (?,?,?)";
+			String sql = "INSERT INTO zone (zone_name, zone_enterdefault, zone_builddefault, " + 
+					"zone_pvp, zone_entermessage, zone_exitmessage) VALUES (?,?,?,?,?,?)";
 			
 			stmt = conn.prepareStatement(sql);
 			stmt.setString(1, zone.getName());
-			stmt.setString(2, zone.getTextEnter());
-			stmt.setString(3, zone.getTextExit());
+			stmt.setString(2, zone.getEnterDefault() ? "1" : "0");
+			stmt.setString(3, zone.getBuildDefault() ? "1" : "0");
+			stmt.setString(4, zone.isPvp() ? "1" : "0");
+			stmt.setString(5, zone.getTextEnter());
+			stmt.setString(6, zone.getTextExit());
 			stmt.execute();
 			
 			stmt.execute("SELECT LAST_INSERT_ID()");
@@ -187,6 +192,31 @@ public class ZonesDAO
 		zone.setId(id);
 		
 		return id;
+	}
+	
+	public void updateZone(Zone zone)
+	throws SQLException
+	{
+		PreparedStatement stmt = null;
+		try {
+			String sql = "UPDATE zone SET zone_name = ?, zone_enterdefault = ?, zone_builddefault = ?, " + 
+					"zone_pvp = ?, zone_entermessage = ?, zone_exitmessage = ? WHERE zone_id = ?";
+			
+			stmt = conn.prepareStatement(sql);
+			stmt.setString(1, zone.getName());
+			stmt.setString(2, zone.getEnterDefault() ? "1" : "0");
+			stmt.setString(3, zone.getBuildDefault() ? "1" : "0");
+			stmt.setString(4, zone.isPvp() ? "1" : "0");
+			stmt.setString(5, zone.getTextEnter());
+			stmt.setString(6, zone.getTextExit());
+			stmt.setInt(7, zone.getId());
+			stmt.execute();
+		}
+		finally {
+			if (stmt != null) {
+				try { stmt.close(); } catch (SQLException e) {}
+			}
+		}
 	}
 	
 	public void addRectangle(int zoneId, Rectangle rect)
