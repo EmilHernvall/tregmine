@@ -45,7 +45,23 @@ public class ChatPlayer extends PlayerListener {
 						if (this.plugin.channel.get(sender.getName()).matches("GLOBAL")) {
 							channel = "";
 						}
-						player.sendMessage(channel+"<" + tregminePlayer.getChatName() + ChatColor.WHITE + "> " + txtColor + event.getMessage());
+						if (event.getMessage().length() > 53) {
+							int nameLenght = event.getPlayer().getName().length()+5 + channel.length();
+							String firstMessage = event.getMessage().substring(0, 54 - nameLenght);
+							String spaces = "";
+							int firstInt = firstMessage.lastIndexOf(" ");
+							firstMessage = event.getMessage().substring(0, firstInt);
+							String lastMessage = event.getMessage().substring (firstInt+1);
+							
+							for (int i=0; i<nameLenght; i++) {
+								spaces = spaces + " ";
+							}
+							 
+							player.sendMessage(channel+"<" + tregminePlayer.getChatName() + ChatColor.WHITE + "> "+ txtColor + firstMessage );
+							player.sendMessage(txtColor + spaces + lastMessage);
+						} else {
+							player.sendMessage(channel+"<" + tregminePlayer.getChatName() + ChatColor.WHITE + "> " + txtColor + event.getMessage().replace("  ", ""));
+						}
 					}
 		}
 

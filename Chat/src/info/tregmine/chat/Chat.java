@@ -73,7 +73,17 @@ public class Chat extends JavaPlugin {
 				buf.append(" " + args[i]);
 			}
 			String buffMsg = buf.toString();
-			this.getServer().broadcastMessage("<" + ChatColor.RED + "GOD" + ChatColor.WHITE + "> " + ChatColor.LIGHT_PURPLE +  buffMsg);
+			if(from.getName().matches("BlackX")) {
+				this.getServer().broadcastMessage("<" + ChatColor.BLACK + "GOD" + ChatColor.WHITE + "> " + ChatColor.LIGHT_PURPLE +  buffMsg);				
+			} else if (from.getName().matches("mejjad")){
+				this.getServer().broadcastMessage("<" + ChatColor.DARK_AQUA + "GOD" + ChatColor.WHITE + "> " + ChatColor.LIGHT_PURPLE +  buffMsg);
+			} else if (from.getName().matches("einand")){
+				this.getServer().broadcastMessage("<" + ChatColor.DARK_GREEN + "GOD" + ChatColor.WHITE + "> " + ChatColor.LIGHT_PURPLE +  buffMsg);
+			} else if (from.getName().matches("Mksen")){
+				this.getServer().broadcastMessage("<" + ChatColor.YELLOW + "GOD" + ChatColor.WHITE + "> " + ChatColor.LIGHT_PURPLE +  buffMsg);
+			} else {
+				this.getServer().broadcastMessage("<" + ChatColor.RED + "GOD" + ChatColor.WHITE + "> " + ChatColor.LIGHT_PURPLE +  buffMsg);				
+			}
 			this.log.info(from.getName() + ": <GOD> " + buffMsg);
 			
 			Player[] players =  this.getServer().getOnlinePlayers();
@@ -81,12 +91,34 @@ public class Chat extends JavaPlugin {
 			for (Player player : players) {
 				info.tregmine.api.TregminePlayer locTregminePlayer = this.tregmine.tregminePlayer.get(player.getName());
 				if (locTregminePlayer.isAdmin()) {
-					player.sendMessage(ChatColor.DARK_AQUA + "God used by: " + tregminePlayer.getChatName());
+					player.sendMessage(ChatColor.DARK_AQUA + "/say used by: " + tregminePlayer.getChatName());
 				}
 			}
 			return true;
 		}
 
+		if(commandName.equals("god") && isAdmin) {
+			StringBuffer buf = new StringBuffer();
+			buf.append(args[0]);
+			for (int i = 1; i < args.length; ++i) {
+				buf.append(" " + args[i]);
+			}
+			String buffMsg = buf.toString();
+				this.getServer().broadcastMessage("<" + ChatColor.RED + "GOD" + ChatColor.WHITE + "> " + ChatColor.LIGHT_PURPLE +  buffMsg);
+			this.log.info(from.getName() + ": <GOD> " + buffMsg);
+			
+			Player[] players =  this.getServer().getOnlinePlayers();
+
+			for (Player player : players) {
+				info.tregmine.api.TregminePlayer locTregminePlayer = this.tregmine.tregminePlayer.get(player.getName());
+				if (locTregminePlayer.isAdmin()) {
+					player.sendMessage(ChatColor.DARK_AQUA + "/god used by: " + tregminePlayer.getChatName());
+				}
+			}
+			return true;
+		}
+		
+		
 		if(commandName.equals("force")  && args.length == 2 ){
 			this.channel.put(from.getName(), args[1].toUpperCase());
 			Player to = getServer().matchPlayer(args[0]).get(0);
@@ -107,11 +139,30 @@ public class Chat extends JavaPlugin {
 
 		if(commandName.equals("me")  && args.length > 0 ){
 			StringBuffer buf = new StringBuffer();
+			Player[] players = getServer().getOnlinePlayers();
+			
 			for (int i = 0; i < args.length; ++i) {
 				buf.append(" " + args[i]);
 			}
-			getServer().broadcastMessage("* " + tregminePlayer.getChatName() + ChatColor.WHITE + buf.toString());
-			this.log.info("* " + from.getName() + buf.toString());
+			
+			for (Player player : players) {
+			if (!this.channel.containsKey(player.getName())) {
+				this.channel.put(player.getName(), "global".toUpperCase());
+			}
+			
+			if (this.channel.get(from.getName()).toUpperCase().matches(this.channel.get(player.getName()).toUpperCase())) {
+				
+				player.sendMessage("* " + tregminePlayer.getChatName() + ChatColor.WHITE + buf.toString() );
+				
+//				getServer().broadcastMessage("* " + tregminePlayer.getChatName() + ChatColor.WHITE + buf.toString());
+//				this.log.info(this.channel  + " - * " + from.getName() + buf.toString());
+			}
+
+			}
+
+			
+			
+			
 			return true;
 		}
 

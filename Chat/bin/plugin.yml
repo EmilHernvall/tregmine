@@ -22,6 +22,9 @@ commands:
   all:
     description: sends a private message to someone
     -usage: /msg [name] text 
+  god:
+    description: sends a private message to someone
+    -usage: /msg [name] text 
   facepalm:
     description: sends a private message to someone
     -usage: /msg [name] text
