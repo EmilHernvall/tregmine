@@ -2,7 +2,12 @@ package info.tregmine.quadtree;
 
 public class IntersectionException extends Exception
 {
-    public IntersectionException(String message)
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -3877477189996381216L;
+
+	public IntersectionException(String message)
     {
         super(message);
     }
