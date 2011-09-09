@@ -15,7 +15,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 //import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityDamageByBlockEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageByProjectileEvent;
+//import org.bukkit.event.entity.EntityDamageByProjectileEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 //import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityExplodeEvent;
@@ -48,26 +48,6 @@ public class TregmineEntityListener extends EntityListener  {
 		}
 
 //		event.setCancelled(true);
-	}
-
-	public void onEntityDamageByProjectile (EntityDamageByProjectileEvent event) {
-
-		if(event.getEntity() instanceof Player) {
-			Player player = (Player) event.getEntity();
-			info.tregmine.api.TregminePlayer tregminePlayer = this.plugin.tregminePlayer.get(player.getName());
-			if (tregminePlayer.isAdmin() || tregminePlayer.isImmortal()) {
-				event.setCancelled(true);
-			} else {
-				int newHealth = player.getHealth() - event.getDamage();
-				if (newHealth <= 0) {
-					player.setHealth(20);
-					player.teleport(player.getWorld().getSpawnLocation());
-				} else {
-					player.setHealth(newHealth);
-				}
-			}
-			event.setCancelled(true);
-		}    
 	}
 
 	public void onEntityDamageByBlock (EntityDamageByBlockEvent event){

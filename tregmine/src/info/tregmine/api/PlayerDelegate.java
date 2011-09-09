@@ -314,18 +314,6 @@ public abstract class PlayerDelegate implements Player
 		return delegate.teleport(arg0);
 	}
 
-	@SuppressWarnings("deprecation")
-	@Override
-	public void teleportTo(Location arg0) {
-		delegate.teleportTo(arg0);
-	}
-
-	@SuppressWarnings("deprecation")
-	@Override
-	public void teleportTo(Entity arg0) {
-		delegate.teleportTo(arg0);
-	}
-
 	@Override
 	public PermissionAttachment addAttachment(Plugin arg0) {
 		return delegate.addAttachment(arg0);

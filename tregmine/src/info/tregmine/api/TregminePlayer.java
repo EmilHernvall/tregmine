@@ -6,8 +6,10 @@ import java.sql.ResultSet;
 import java.util.HashMap;
 
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.map.MapView;
 
 public class TregminePlayer extends PlayerDelegate
 {
@@ -279,5 +281,41 @@ public class TregminePlayer extends PlayerDelegate
 	public Zone getCurrentZone()
 	{
 		return currentZone;
+	}
+
+	@Override
+	public void sendMap(MapView arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public GameMode getGameMode() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setGameMode(GameMode arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean isWhitelisted() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void setBanned(boolean arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setWhitelisted(boolean arg0) {
+		// TODO Auto-generated method stub
+		
 	}
 }
