@@ -5,9 +5,13 @@ import info.tregmine.api.TregminePlayer;
 import info.tregmine.api.Zone;
 import info.tregmine.quadtree.Point;
 import info.tregmine.zones.ZonesPlugin;
+import info.tregmine.zones.ZonesPlugin.ZoneWorld;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerListener;
 import org.bukkit.event.player.PlayerMoveEvent;
@@ -28,7 +32,61 @@ public class ZonePlayerListener extends PlayerListener
 	@Override
 	public void onPlayerInteract(PlayerInteractEvent event) 
 	{
-		//TregminePlayer player = tregmine.getPlayer(event.getPlayer());
+		if (event.getAction() != Action.RIGHT_CLICK_BLOCK) {
+			return;
+		}
+		
+		if (event.getPlayer().getItemInHand().getType() != Material.STICK) {
+			return;
+		}
+		
+		TregminePlayer player = tregmine.getPlayer(event.getPlayer());
+		
+		Block block = event.getClickedBlock();
+		Point currentPos = new Point(block.getX(), block.getZ());
+
+		ZoneWorld world = plugin.getWorld(block.getWorld());
+		Zone zone = world.findZone(currentPos);
+		
+		// within a zone, lots can be created by zone owners or people with
+		// the zones permission.
+		String type = null;
+		if (zone != null) {
+			Zone.Permission perm = zone.getUser(player.getName());
+			if (perm != Zone.Permission.Owner && !player.getMetaBoolean("zones")) {
+				return;
+			}
+			type = "lot";
+		}
+		// outside of a zone 
+		else {
+			// outside of any existing zone, this can only be used by people
+			// with zones permission.
+			if (!player.getMetaBoolean("zones")) {
+				return;
+			}
+			type = "zone";
+		}
+		
+		int count;
+		try {
+			count = player.getMetaInt("zcf");
+		} catch (Exception  e) {
+			count = 0;
+		}
+
+		if (count == 0) {
+			player.setBlock("zb1", block);
+			player.setBlock("zb2", null);
+			event.getPlayer().sendMessage("First block set of new " + type + ".");
+			player.setMetaInt("zcf", 1);
+		}
+
+		if (count == 1) {
+			player.setBlock("zb2", block);
+			event.getPlayer().sendMessage("Second block set of new " + type + ".");
+			player.setMetaInt("zcf", 0);
+		}
 	}
 	
 	private void movePlayerBack(TregminePlayer player, Location movingFrom, Location movingTo)
@@ -159,19 +217,19 @@ public class ZonePlayerListener extends PlayerListener
 	
 	private void disallowedMessage(Zone currentZone, TregminePlayer player)
 	{
-		player.sendMessage(ChatColor.RED + "[" + currentZone.getName() + "] " + 
+		player.sendMessage(ChatColor.YELLOW + "[" + currentZone.getName() + "] " + 
 				"You are not allowed in this zone. Contact the zone owner.");
 	}
 	
 	private void bannedMessage(Zone currentZone, TregminePlayer player)
 	{
-		player.sendMessage(ChatColor.RED + "[" + currentZone.getName() + "] " + 
+		player.sendMessage(ChatColor.YELLOW + "[" + currentZone.getName() + "] " + 
 				"You are banned from " + currentZone.getName() + ".");
 	}
 	
 	private void welcomeMessage(Zone currentZone, TregminePlayer player, Zone.Permission perm)
 	{
-		player.sendMessage(ChatColor.RED + "[" + currentZone.getName() + "] " + 
+		player.sendMessage(ChatColor.YELLOW + "[" + currentZone.getName() + "] " + 
 				currentZone.getTextEnter());
 		if (currentZone.isPvp()) {
 			player.sendMessage(ChatColor.RED + "[" + currentZone.getName() + "] " + 
@@ -179,7 +237,7 @@ public class ZonePlayerListener extends PlayerListener
 		}
 		if (perm != null) {
 			String permNotification = perm.getPermissionNotification();
-			player.sendMessage(ChatColor.RED + "[" + currentZone.getName() + "] " + 
+			player.sendMessage(ChatColor.YELLOW + "[" + currentZone.getName() + "] " + 
 					permNotification);
 		}
 	}

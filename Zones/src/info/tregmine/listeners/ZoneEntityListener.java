@@ -1,5 +1,7 @@
 package info.tregmine.listeners;
 
+import java.util.logging.Logger;
+
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
 import info.tregmine.api.Zone;
@@ -30,6 +32,10 @@ public class ZoneEntityListener extends EntityListener
 	
 	public void onEntityDamage(EntityDamageEvent event)
 	{
+		if (event.getCause() != EntityDamageEvent.DamageCause.ENTITY_ATTACK) {
+			return;
+		}
+		
 		Entity entity = event.getEntity();
 		if (!(entity instanceof Player)) {
 			return;
@@ -48,6 +54,7 @@ public class ZoneEntityListener extends EntityListener
     	}
     	
     	if (currentZone == null || !currentZone.isPvp()) {
+    		Logger.getLogger("Minecraft").info("damage cancelled.");
     		event.setCancelled(true);
     		return;
     	}

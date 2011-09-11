@@ -1,4 +1,4 @@
-package info.tregmine;
+package info.tregmine.zones;
 
 import info.tregmine.api.Zone;
 import info.tregmine.quadtree.Rectangle;

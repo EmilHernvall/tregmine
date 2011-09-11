@@ -18,8 +18,11 @@ import org.bukkit.event.Event.Priority;
 import org.bukkit.plugin.java.JavaPlugin;
 
 
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * @author Ein Andersson - www.tregmine.info
@@ -35,7 +38,11 @@ public class Tregmine extends JavaPlugin
 	private final TregmineWeatherListener weather = new TregmineWeatherListener(this);
 	public final BlockStats blockStats = new BlockStats(this);
 
-	public Map<String, TregminePlayer> tregminePlayer = new HashMap<String, TregminePlayer>();
+	public Map<String, TregminePlayer> tregminePlayer = new TreeMap<String, TregminePlayer>(new Comparator<String>() {
+			public int compare(String a, String b) {
+				return a.compareToIgnoreCase(b);
+			}
+		});
 	
 	public int version = 0;
 	public int amount = 0;
@@ -82,6 +89,17 @@ public class Tregmine extends JavaPlugin
 			tregPlayer.load();
 			this.tregminePlayer.put(onlineName, tregPlayer);
 		}
+	}
+	
+	public TregminePlayer matchPlayer(String name)
+	{
+		List<Player> players = getServer().matchPlayer(name);
+		if (players.size() != 1) {
+			return null;
+		}
+		
+		Player player = players.get(0);
+		return getPlayer(player);
 	}
 	
 	public TregminePlayer getPlayer(String name)

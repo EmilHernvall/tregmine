@@ -12,9 +12,12 @@ public class Mysql {
 	public Statement statement = null;
 //	private PreparedStatement preparedStatement = null;
 	public ResultSet resultSet = null;
-	private String url = "jdbc:mysql://192.168.0.21/minecraft";
-	private String user = "root";
-	private String pw = "c0a3j3l4f5e7--";
+	private String url = "jdbc:mysql://mc.tregmine.info:3306/minecraft"; 
+	private String user = "minecraft"; 
+	private String pw = "cUqeWemUGeYaquxUpHaye8rUcrAteWre";
+	//private String url = "jdbc:mysql://192.168.0.21/minecraft";
+	//private String user = "root";
+	//private String pw = "c0a3j3l4f5e7--";
 	// cUqeWemUGeYaquxUpHaye8rUcrAteWre
 	
     public Mysql() {

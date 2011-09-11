@@ -13,9 +13,10 @@ import info.tregmine.quadtree.QuadTree;
 import info.tregmine.quadtree.Rectangle;
 
 import java.sql.SQLException;
-import java.util.HashMap;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.logging.Logger;
 
 import org.bukkit.ChatColor;
@@ -32,7 +33,6 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import info.tregmine.Tregmine; 
-import info.tregmine.ZonesDAO;
 
 public class ZonesPlugin extends JavaPlugin 
 {
@@ -40,13 +40,25 @@ public class ZonesPlugin extends JavaPlugin
 	{
 		private World world;
 		private QuadTree<Zone> zonesLookup;
+		private QuadTree<Lot> lotLookup;
 		private Map<String, Zone> zoneNameLookup;
+		private Map<String, Lot> lotNameLookup;
 		
 		public ZoneWorld(World world)
 		{
 			this.world = world;
-			this.zonesLookup = new QuadTree<Zone>(0);
-			this.zoneNameLookup = new HashMap<String, Zone>();
+			this.zonesLookup = new QuadTree<Zone>();
+			this.zoneNameLookup = new TreeMap<String, Zone>(new Comparator<String>() {
+					public int compare(String a, String b) {
+						return a.compareToIgnoreCase(b);
+					}
+				});
+			this.lotLookup = new QuadTree<Lot>();
+			this.lotNameLookup = new TreeMap<String, Lot>(new Comparator<String>() {
+				public int compare(String a, String b) {
+					return a.compareToIgnoreCase(b);
+				}
+			});
 		}
 		
 		public String getName()
@@ -131,31 +143,11 @@ public class ZonesPlugin extends JavaPlugin
 		//pluginMgm.registerEvent(Event.Type.CREATURE_SPAWN, new ZoneEntityListener(this), Priority.High, this);
 		pluginMgm.registerEvent(Event.Type.ENTITY_DAMAGE, new ZoneEntityListener(this), Priority.High, this);
 		
-		worlds = new HashMap<String, ZoneWorld>();
-		
-		Mysql mysql = null;
-		try {
-			mysql = new Mysql();
-			mysql.connect();
-			ZonesDAO dao = new ZonesDAO(mysql.connect);
-			
-			for (World world : server.getWorlds()) {
-				ZoneWorld zoneWorld = new ZoneWorld(world);
-				
-				List<Zone> zones = dao.getZones(world.getName());
-				for (Zone zone : zones) {
-					zoneWorld.addZone(zone);
-				}
-				
-				worlds.put(world.getName(), zoneWorld);
+		worlds = new TreeMap<String, ZoneWorld>(new Comparator<String>() {
+			public int compare(String a, String b) {
+				return a.compareToIgnoreCase(b);
 			}
-		} catch (IntersectionException e) {
-			throw new RuntimeException(e);
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
-		} finally {
-			mysql.close();
-		}
+		});
 	}
 
 	public void onDisable()
@@ -164,7 +156,33 @@ public class ZonesPlugin extends JavaPlugin
 
 	public ZoneWorld getWorld(World world)
 	{
-		return worlds.get(world.getName());
+		ZoneWorld zoneWorld = worlds.get(world.getName());
+		
+		// lazy load zone worlds as required
+		if (zoneWorld == null) {
+			Mysql mysql = null;
+			try {
+				mysql = new Mysql();
+				mysql.connect();
+				ZonesDAO dao = new ZonesDAO(mysql.connect);
+				
+				zoneWorld = new ZoneWorld(world);
+				List<Zone> zones = dao.getZones(world.getName());
+				for (Zone zone : zones) {
+					zoneWorld.addZone(zone);
+				}
+				
+				worlds.put(world.getName(), zoneWorld);
+			} catch (IntersectionException e) {
+				throw new RuntimeException(e);
+			} catch (SQLException e) {
+				throw new RuntimeException(e);
+			} finally {
+				mysql.close();
+			}
+		}
+		
+		return zoneWorld;
 	}
 
 	public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args) 
@@ -250,8 +268,8 @@ public class ZonesPlugin extends JavaPlugin
 			return;
 		}
 		
-		Block b1 = player.getBlock("b1");
-		Block b2 = player.getBlock("b2");
+		Block b1 = player.getBlock("zb1");
+		Block b2 = player.getBlock("zb2");
 		
 		Rectangle rect = new Rectangle(b1.getX(), b1.getZ(), b2.getX(), b2.getZ());
 		
@@ -267,9 +285,9 @@ public class ZonesPlugin extends JavaPlugin
 		
 		try {
 			world.addZone(zone);
-			player.sendMessage(ChatColor.RED + "[" + zone.getName() + "] " + "Zone created successfully.");
+			player.sendMessage(ChatColor.YELLOW + "[" + zone.getName() + "] " + "Zone created successfully.");
 		} catch (IntersectionException e) {
-			player.sendMessage(ChatColor.RED + "The zone you tried to create overlaps an existing zone.");
+			player.sendMessage(ChatColor.YELLOW + "The zone you tried to create overlaps an existing zone.");
 		}
 		
 		Mysql mysql = null;
@@ -314,7 +332,7 @@ public class ZonesPlugin extends JavaPlugin
 		}
 		
 		world.deleteZone(name);
-		player.sendMessage(ChatColor.RED + "[" + name + "] " + "Zone deleted.");
+		player.sendMessage(ChatColor.YELLOW + "[" + name + "] " + "Zone deleted.");
 		
 		Mysql mysql = null;
 		try {
@@ -383,12 +401,12 @@ public class ZonesPlugin extends JavaPlugin
 		
 		zone.addUser(userName, perm);
 		String addedConfirmation = perm.getAddedConfirmation();
-		player.sendMessage(ChatColor.RED + "[" + zone.getName() + "] " + String.format(addedConfirmation, userName, zoneName));
+		player.sendMessage(ChatColor.YELLOW + "[" + zone.getName() + "] " + String.format(addedConfirmation, userName, zoneName));
 		
 		TregminePlayer player2 = tregmine.getPlayer(userName);
 		if (player2 != null) {
 			String addedNotification = perm.getAddedNotification();
-			player2.sendMessage(ChatColor.RED + "[" + zone.getName() + "] " + String.format(addedNotification, zoneName));
+			player2.sendMessage(ChatColor.YELLOW + "[" + zone.getName() + "] " + String.format(addedNotification, zoneName));
 		}
 	}
 	
@@ -446,12 +464,12 @@ public class ZonesPlugin extends JavaPlugin
 		
 		zone.deleteUser(userName);
 		String delConfirmation = oldPerm.getDeletedConfirmation();
-		player.sendMessage(ChatColor.RED + "[" + zone.getName() + "] " + String.format(delConfirmation, userName, zoneName));
+		player.sendMessage(ChatColor.YELLOW + "[" + zone.getName() + "] " + String.format(delConfirmation, userName, zoneName));
 		
 		TregminePlayer player2 = tregmine.getPlayer(userName);
 		if (player2 != null) {
 			String delNotification = oldPerm.getDeletedNotification();
-			player2.sendMessage(ChatColor.RED + "[" + zone.getName() + "] " + String.format(delNotification, zoneName));
+			player2.sendMessage(ChatColor.YELLOW + "[" + zone.getName() + "] " + String.format(delNotification, zoneName));
 		}
 	}
 	
@@ -491,31 +509,31 @@ public class ZonesPlugin extends JavaPlugin
 			String message = buf.toString().trim();
 			if ("entermsg".equals(args[0])) {
 				zone.setTextEnter(message);
-				player.sendMessage(ChatColor.RED + "[" + zone.getName() + "] " + "Welcome message changed to \"" + message + "\".");
+				player.sendMessage(ChatColor.YELLOW + "[" + zone.getName() + "] " + "Welcome message changed to \"" + message + "\".");
 			} else if ("exitmsg".equals(args[0])) {
 				zone.setTextExit(message);
-				player.sendMessage(ChatColor.RED + "[" + zone.getName() + "] " + "Exit message changed to \"" + message + "\".");
+				player.sendMessage(ChatColor.YELLOW + "[" + zone.getName() + "] " + "Exit message changed to \"" + message + "\".");
 			}
 		}
 		else if ("pvp".equals(args[0])) {
 			boolean status = Boolean.parseBoolean(args[2]);
 			zone.setPvp(status);
-			player.sendMessage(ChatColor.RED + "[" + zone.getName() + "] " + "PVP changed to \"" + (status ? "allowed" : "disallowed") + "\".");
+			player.sendMessage(ChatColor.YELLOW + "[" + zone.getName() + "] " + "PVP changed to \"" + (status ? "allowed" : "disallowed") + "\".");
 		}
 		else if ("enter".equals(args[0])) {
 			boolean status = Boolean.parseBoolean(args[2]);
 			zone.setEnterDefault(status);
-			player.sendMessage(ChatColor.RED + "[" + zone.getName() + "] " + "Enter default changed to \"" + (status ? "everyone" : "whitelisted") + "\".");			
+			player.sendMessage(ChatColor.YELLOW + "[" + zone.getName() + "] " + "Enter default changed to \"" + (status ? "everyone" : "whitelisted") + "\".");			
 		}
 		else if ("place".equals(args[0])) {
 			boolean status = Boolean.parseBoolean(args[2]);
 			zone.setPlaceDefault(status);
-			player.sendMessage(ChatColor.RED + "[" + zone.getName() + "] " + "Place default changed to \"" + (status ? "everyone" : "whitelisted") + "\".");			
+			player.sendMessage(ChatColor.YELLOW + "[" + zone.getName() + "] " + "Place default changed to \"" + (status ? "everyone" : "whitelisted") + "\".");			
 		}
 		else if ("destroy".equals(args[0])) {
 			boolean status = Boolean.parseBoolean(args[2]);
 			zone.setDestroyDefault(status);
-			player.sendMessage(ChatColor.RED + "[" + zone.getName() + "] " + "Destroy default changed to \"" + (status ? "everyone" : "whitelisted") + "\".");			
+			player.sendMessage(ChatColor.YELLOW + "[" + zone.getName() + "] " + "Destroy default changed to \"" + (status ? "everyone" : "whitelisted") + "\".");			
 		}
 		
 		Mysql mysql = null;
@@ -556,22 +574,22 @@ public class ZonesPlugin extends JavaPlugin
 			return;
 		}
 
-		player.sendMessage(ChatColor.RED + "Info about " + zone.getName());
-		player.sendMessage(ChatColor.RED + "ID: " + zone.getId());
-		player.sendMessage(ChatColor.RED + "World: " + zone.getWorld());
+		player.sendMessage(ChatColor.YELLOW + "Info about " + zone.getName());
+		player.sendMessage(ChatColor.YELLOW + "ID: " + zone.getId());
+		player.sendMessage(ChatColor.YELLOW + "World: " + zone.getWorld());
 		for (Rectangle rect : zone.getRects()) {
 			player.sendMessage(ChatColor.RED + "Rect: " + rect);
 		}
-		player.sendMessage(ChatColor.RED + "Enter: " + (zone.getEnterDefault() ? "Everyone (true)" : "Only allowed (false)"));
-		player.sendMessage(ChatColor.RED + "Place: " + (zone.getPlaceDefault() ? "Everyone (true)" : "Only makers (false)"));
-		player.sendMessage(ChatColor.RED + "Destroy: " + (zone.getDestroyDefault() ? "Everyone (true)" : "Only makers (false)"));
-		player.sendMessage(ChatColor.RED + "PVP: " + zone.isPvp());
-		player.sendMessage(ChatColor.RED + "Enter message: " + zone.getTextEnter());
-		player.sendMessage(ChatColor.RED + "Exit message: " + zone.getTextExit());
+		player.sendMessage(ChatColor.YELLOW + "Enter: " + (zone.getEnterDefault() ? "Everyone (true)" : "Only allowed (false)"));
+		player.sendMessage(ChatColor.YELLOW + "Place: " + (zone.getPlaceDefault() ? "Everyone (true)" : "Only makers (false)"));
+		player.sendMessage(ChatColor.YELLOW + "Destroy: " + (zone.getDestroyDefault() ? "Everyone (true)" : "Only makers (false)"));
+		player.sendMessage(ChatColor.YELLOW + "PVP: " + zone.isPvp());
+		player.sendMessage(ChatColor.YELLOW + "Enter message: " + zone.getTextEnter());
+		player.sendMessage(ChatColor.YELLOW + "Exit message: " + zone.getTextExit());
 
 		for (String user : zone.getUsers()) {
 			Zone.Permission perm = zone.getUser(user);
-			player.sendMessage(ChatColor.RED + user + " - " + perm);
+			player.sendMessage(ChatColor.YELLOW + user + " - " + perm);
 		}
 	}
 }

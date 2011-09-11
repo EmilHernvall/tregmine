@@ -43,7 +43,7 @@ public class TregminePlayer extends PlayerDelegate
 					return true;
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
+				throw new RuntimeException(e);
 			}
 		}
 		this.mysql.close();
@@ -69,7 +69,7 @@ public class TregminePlayer extends PlayerDelegate
 				}
 				this.mysql.close();	
 			} catch (Exception e) {
-				e.printStackTrace();
+				throw new RuntimeException(e);
 			}
 		}
 //		this.uid = Integer.getInteger(settings.get(uid));
@@ -153,7 +153,7 @@ public class TregminePlayer extends PlayerDelegate
 			this.mysql.statement.execute(SQLU);
 			this.mysql.close();
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
 	}
 
@@ -162,7 +162,7 @@ public class TregminePlayer extends PlayerDelegate
 		try {
 			this.settings.put(_key, _value);
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
 	}	
 	
