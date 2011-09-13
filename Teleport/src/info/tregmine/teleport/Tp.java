@@ -17,7 +17,7 @@ public class Tp {
 			}
 
 			
-			if (tregminePlayerTo.getMetaBoolean("tpblock") && !tregminePlayerFrom.isAdmin()) {
+			if (tregminePlayerTo.getMetaBoolean("tpblock") && !tregminePlayerFrom.isAdmin() ) {
 				from.sendMessage(ChatColor.RED + "FFS! Annoy someone else -- TP to them is prohibited.");
 				to.sendMessage(from.getName() + ChatColor.AQUA + " tried to tp to you, laugh at him, as he failed and hurt im self hard.");
 				return;

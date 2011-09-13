@@ -1,5 +1,5 @@
 name: Bless
-main: info.tregmine.chestbless.ChestBless
+main: info.tregmine.chestbless.Bless
 version: 1
 website: http://tregmine.info
 author: Ein Andersson
