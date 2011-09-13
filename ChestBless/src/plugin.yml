@@ -6,6 +6,6 @@ author: Ein Andersson
 description: Tregmine.info chest protection
 
 commands:
-  chestbless:
+  bless:
     description: command to protect chests
     -usage: /<command>

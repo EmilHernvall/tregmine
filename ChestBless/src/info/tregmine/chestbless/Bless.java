@@ -21,12 +21,12 @@ import org.bukkit.plugin.java.JavaPlugin;
 import info.tregmine.Tregmine; 
 
 
-public class ChestBless extends JavaPlugin {
+public class Bless extends JavaPlugin {
 
 	public final Logger log = Logger.getLogger("Minecraft");
 	public Tregmine tregmine = null;
-	public final ChestBlessPlayer player = new ChestBlessPlayer(this);
-	public final ChestBlessBlock block = new ChestBlessBlock(this);
+	public final BlessPlayer player = new BlessPlayer(this);
+	public final BlessBlock block = new BlessBlock(this);
 	
 	public HashMap<Integer, String> chests = new HashMap<Integer, String>();
 	
@@ -62,7 +62,7 @@ public class ChestBless extends JavaPlugin {
 		boolean isAdmin = tregminePlayer.isAdmin();
 		boolean bless = tregminePlayer.getMetaBoolean("bless");
 		
-		if (commandName.matches("chestbless") && ( isAdmin || bless)) {
+		if (commandName.matches("bless") && ( isAdmin || bless)) {
 			try {
 				String name = getServer().matchPlayer(args[0]).get(0).getName();
 				info.tregmine.api.TregminePlayer toPlayer = this.tregmine.tregminePlayer.get(getServer().matchPlayer(args[0]).get(0).getName());
@@ -79,12 +79,12 @@ public class ChestBless extends JavaPlugin {
 	}
 
 	public void onLoad() {
-		this.getServer().broadcastMessage(ChatColor.YELLOW + "Start loading chestbless, it may be a lag spike");
+//		this.getServer().broadcastMessage(ChatColor.YELLOW + "Start loading chestbless, it may be a lag spike");
 		info.tregmine.database.Mysql mysql = new info.tregmine.database.Mysql(); 
 		mysql.connect();
 		this.chests = info.tregmine.chestbless.Store.loadbless(mysql);
 		mysql.close();
-		this.getServer().broadcastMessage(ChatColor.YELLOW + "Loading chestsbless complete using " + chests.size()*30/1024/1024 + "MB of ram");		
+//		this.getServer().broadcastMessage(ChatColor.YELLOW + "Loading chestsbless complete using " + chests.size()*30/1024/1024 + "MB of ram");		
 
 	
 	}
