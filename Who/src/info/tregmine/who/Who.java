@@ -53,7 +53,7 @@ public class Who extends JavaPlugin {
 		}
 		info.tregmine.api.TregminePlayer tregminePlayer = this.tregmine.tregminePlayer.get(from.getName());
 
-		if(commandName.equals("who") || commandName.equals("playerlist")){
+		if(commandName.equals("who") || commandName.equals("playerlist") || commandName.equals("list")){
 
 			int i = 0;
 			int x = 0;
