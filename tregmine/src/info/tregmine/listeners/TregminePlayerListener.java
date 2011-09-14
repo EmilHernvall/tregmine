@@ -41,11 +41,25 @@ public class TregminePlayerListener extends PlayerListener {
 
 	
 	public void onPlayerBucketFill(PlayerBucketFillEvent event) {
-		event.setCancelled(true);
+		
+		if (event.getBucket() == Material.LAVA_BUCKET) {
+			 event.setCancelled(true);
+		}
+		
+		if (event.getBlockClicked().getType() == Material.LAVA) {
+			event.setCancelled(true);
+		}
+		
+		if (event.getBlockClicked().getType() == Material.STATIONARY_LAVA) {
+			event.setCancelled(true);
+		}
+		
 	}
 
 	public void onPlayerBucketEmpty(PlayerBucketEmptyEvent event){
-		event.setCancelled(true);
+		if (event.getBucket() == Material.LAVA_BUCKET) {
+		 event.setCancelled(true);
+		}
 	}
 
 	
