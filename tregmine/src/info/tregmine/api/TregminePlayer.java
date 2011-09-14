@@ -16,6 +16,7 @@ public class TregminePlayer extends PlayerDelegate
 	private HashMap<String,Integer> integer = new HashMap<String,Integer>();
 	//	private HashMap<String,Location> location = new HashMap<String,Location>();
 
+	private int id = 0;
 	private String name;
 	private final Mysql mysql = new Mysql();
 	private Zone currentZone = null;
@@ -64,6 +65,7 @@ public class TregminePlayer extends PlayerDelegate
 
 				while (rs.next()) {
 					//TODO: Make this much nicer, this is bad code
+					this.id = rs.getInt("uid");
 					settings.put("uid", rs.getString("uid"));
 					settings.put(rs.getString("key"), rs.getString("value"));
 				}
@@ -72,7 +74,6 @@ public class TregminePlayer extends PlayerDelegate
 				throw new RuntimeException(e);
 			}
 		}
-//		this.uid = Integer.getInteger(settings.get(uid));
 		mysql.close();
 	}
 
@@ -105,6 +106,11 @@ public class TregminePlayer extends PlayerDelegate
 		}
 	}
 
+	public int getId()
+	{
+		return id;
+	}
+	
 	public boolean isAdmin() 
 	{
 		return getBoolean("admin");

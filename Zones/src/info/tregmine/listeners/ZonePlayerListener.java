@@ -4,8 +4,8 @@ import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
 import info.tregmine.api.Zone;
 import info.tregmine.quadtree.Point;
+import info.tregmine.zones.ZoneWorld;
 import info.tregmine.zones.ZonesPlugin;
-import info.tregmine.zones.ZonesPlugin.ZoneWorld;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -46,6 +46,10 @@ public class ZonePlayerListener extends PlayerListener
 		Point currentPos = new Point(block.getX(), block.getZ());
 
 		ZoneWorld world = plugin.getWorld(block.getWorld());
+    	if (world == null) {
+    		return;
+    	}
+    	
 		Zone zone = world.findZone(currentPos);
 		
 		// within a zone, lots can be created by zone owners or people with
@@ -80,11 +84,22 @@ public class ZonePlayerListener extends PlayerListener
 			player.setBlock("zb2", null);
 			event.getPlayer().sendMessage("First block set of new " + type + ".");
 			player.setMetaInt("zcf", 1);
+			if (zone != null) {
+				player.setMetaInt("zone", zone.getId());
+			} else {
+				player.setMetaInt("zone", 0);
+			}
 		}
 
 		if (count == 1) {
+			int zf = player.getMetaInt("zone");
+			if (zf != 0 && zf != zone.getId()) {
+				player.sendMessage("The full extent of the lot must be in the same zone.");
+				return;
+			}
+			
 			player.setBlock("zb2", block);
-			event.getPlayer().sendMessage("Second block set of new " + type + ".");
+			player.sendMessage("Second block set of new " + type + ".");
 			player.setMetaInt("zcf", 0);
 		}
 	}
@@ -106,7 +121,10 @@ public class ZonePlayerListener extends PlayerListener
 	public void onPlayerMove(PlayerMoveEvent event)
 	{
 		TregminePlayer player = tregmine.getPlayer(event.getPlayer());
-		ZonesPlugin.ZoneWorld world = plugin.getWorld(player.getWorld());
+		ZoneWorld world = plugin.getWorld(player.getWorld());
+    	if (world == null) {
+    		return;
+    	}
 		
 		Location movingFrom = event.getFrom();
 		Point oldPos = new Point(movingFrom.getBlockX(), movingFrom.getBlockZ());
@@ -115,10 +133,12 @@ public class ZonePlayerListener extends PlayerListener
 		Point currentPos = new Point(movingTo.getBlockX(), movingTo.getBlockZ());
 		
 		Zone currentZone = player.getCurrentZone();
-		if (currentZone == null || !currentZone.contains(currentPos)) {
+		if (currentZone == null || !currentZone.contains(world.getName(), currentPos)) {
 			
-			if (currentZone != null && currentZone.contains(oldPos)) {
-				player.sendMessage(ChatColor.RED + "[" + currentZone.getName() + "] " + currentZone.getTextExit());
+			if (currentZone != null && currentZone.contains(world.getName(), oldPos)) {
+				if (!"".equals(currentZone.getTextExit())) {
+					player.sendMessage(ChatColor.RED + "[" + currentZone.getName() + "] " + currentZone.getTextExit());
+				}	
 			}
 			
 			currentZone = world.findZone(currentPos);
@@ -165,7 +185,10 @@ public class ZonePlayerListener extends PlayerListener
 	public void onPlayerTeleport(PlayerTeleportEvent event)
 	{
 		TregminePlayer player = tregmine.getPlayer(event.getPlayer());
-		ZonesPlugin.ZoneWorld world = plugin.getWorld(player.getWorld());
+		ZoneWorld world = plugin.getWorld(player.getWorld());
+    	if (world == null) {
+    		return;
+    	}
 		
 		Location movingFrom = event.getFrom();
 		Point oldPos = new Point(movingFrom.getBlockX(), movingFrom.getBlockZ());
@@ -174,10 +197,12 @@ public class ZonePlayerListener extends PlayerListener
 		Point currentPos = new Point(movingTo.getBlockX(), movingTo.getBlockZ());
 		
 		Zone currentZone = player.getCurrentZone();
-		if (currentZone == null || !currentZone.contains(currentPos)) {
+		if (currentZone == null || !currentZone.contains(world.getName(), currentPos)) {
 			
-			if (currentZone != null && currentZone.contains(oldPos)) {
-				player.sendMessage(currentZone.getTextExit());
+			if (currentZone != null && currentZone.contains(world.getName(), oldPos)) {
+				if (!"".equals(currentZone.getTextExit())) {
+					player.sendMessage(currentZone.getTextExit());
+				}
 			}
 			
 			currentZone = world.findZone(currentPos);
@@ -229,8 +254,10 @@ public class ZonePlayerListener extends PlayerListener
 	
 	private void welcomeMessage(Zone currentZone, TregminePlayer player, Zone.Permission perm)
 	{
-		player.sendMessage(ChatColor.YELLOW + "[" + currentZone.getName() + "] " + 
-				currentZone.getTextEnter());
+		if (!"".equals(currentZone.getTextEnter())) {
+			player.sendMessage(ChatColor.YELLOW + "[" + currentZone.getName() + "] " + 
+					currentZone.getTextEnter());
+		}
 		if (currentZone.isPvp()) {
 			player.sendMessage(ChatColor.RED + "[" + currentZone.getName() + "] " + 
 					"Warning! This is a PVP zone! Other players can damage or kill you here.");

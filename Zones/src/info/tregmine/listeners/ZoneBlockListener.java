@@ -4,6 +4,8 @@ import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
 import info.tregmine.api.Zone;
 import info.tregmine.quadtree.Point;
+import info.tregmine.zones.Lot;
+import info.tregmine.zones.ZoneWorld;
 import info.tregmine.zones.ZonesPlugin;
 
 import org.bukkit.ChatColor;
@@ -31,20 +33,33 @@ public class ZoneBlockListener extends BlockListener
     		return;
     	}
     	
-    	ZonesPlugin.ZoneWorld world = plugin.getWorld(player.getWorld());
+    	ZoneWorld world = plugin.getWorld(player.getWorld());
+    	if (world == null) {
+    		return;
+    	}
     	
     	Block block = event.getBlock();
     	Location location = block.getLocation();
     	Point pos = new Point(location.getBlockX(), location.getBlockZ());
     	
     	Zone currentZone = player.getCurrentZone();
-    	if (currentZone == null || !currentZone.contains(pos)) {
+    	if (currentZone == null || !currentZone.contains(world.getName(), pos)) {
     		currentZone = world.findZone(pos);
     		player.setCurrentZone(currentZone);
     	}
     	
     	if (currentZone != null) {
 	    	Zone.Permission perm = currentZone.getUser(player.getName());
+	    	
+	    	Lot lot = world.findLot(pos);
+	    	if (lot != null) {
+	    		if (perm != Zone.Permission.Owner && player.getId() != lot.getUserId()) {
+		    		player.sendMessage(ChatColor.RED + "[" + currentZone.getName() + "] " + 
+		    				"You are not allowed to break blocks in lot " + lot.getName() + ".");
+		    		event.setCancelled(true);
+		    		return;
+	    		}
+	    	}
 	    	
 	    	// if everyone is allowed to build in this zone...
 	    	if (currentZone.getDestroyDefault()) {
@@ -71,24 +86,38 @@ public class ZoneBlockListener extends BlockListener
 	public void onBlockPlace(BlockPlaceEvent event)
 	{
     	TregminePlayer player = tregmine.getPlayer(event.getPlayer());
-    	if (player.isAdmin()) {
+    	/*if (player.isAdmin()) {
+    		return;
+    	}*/
+    	
+    	ZoneWorld world = plugin.getWorld(player.getWorld());
+    	if (world == null) {
     		return;
     	}
-    	
-    	ZonesPlugin.ZoneWorld world = plugin.getWorld(player.getWorld());
     	
     	Block block = event.getBlock();
     	Location location = block.getLocation();
     	Point pos = new Point(location.getBlockX(), location.getBlockZ());
     	
     	Zone currentZone = player.getCurrentZone();
-    	if (currentZone == null || !currentZone.contains(pos)) {
+    	if (currentZone == null || !currentZone.contains(world.getName(), pos)) {
     		currentZone = world.findZone(pos);
     		player.setCurrentZone(currentZone);
     	}
     	
     	if (currentZone != null) {
 	    	Zone.Permission perm = currentZone.getUser(player.getName());
+	    	
+	    	Lot lot = world.findLot(pos);
+	    	if (lot != null) {
+	    		player.sendMessage("Block placed in lot " + lot.getName() + ".");
+	    		if (perm != Zone.Permission.Owner && player.getId() != lot.getUserId()) {
+		    		player.sendMessage(ChatColor.RED + "[" + currentZone.getName() + "] " + 
+		    				"You are not allowed to break blocks in lot " + lot.getName() + ".");
+		    		event.setCancelled(true);
+		    		return;
+	    		}
+	    	}
 	    	
 	    	// if everyone is allowed to build in this zone...
 	    	if (currentZone.getPlaceDefault()) {

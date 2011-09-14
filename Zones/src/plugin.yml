@@ -2,10 +2,17 @@ name: Zones
 main: info.tregmine.zones.ZonesPlugin
 version: 15
 website: http://tregmine.info
-author: Ein Andersson
+author: Ein Andersson and Emil Hernvall
 description: Tregmine.info Zones
 
 commands:
   zone:
-    description: show who is online and not
-    -usage: /who [name]
+    description: manipulate zones
+    -usage: /zone [command]
+  town:
+    description: synonym for /zone
+    -usage: /town [command]
+  lot:
+    description: manipulate lots
+    -usage: /lot [command]
+

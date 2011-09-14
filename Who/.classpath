@@ -6,5 +6,6 @@
 	<classpathentry kind="lib" path="/AA-Global/lib/ebean-2.7.0.jar"/>
 	<classpathentry kind="lib" path="/AA-Global/jar/Currency.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Tregmine"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Currency"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.bukkit.World;
+
 import info.tregmine.quadtree.Point;
 import info.tregmine.quadtree.Rectangle;
 
@@ -211,7 +213,11 @@ public class Zone
 		return users.get(name);
 	}
 	
-	public boolean contains(Point p) {
+	public boolean contains(String w, Point p) {
+		if (!world.equalsIgnoreCase(w)) {
+			return false;
+		}
+		
 		for (Rectangle rect : rects) {
 			if (rect.contains(p)) {
 				return true;
