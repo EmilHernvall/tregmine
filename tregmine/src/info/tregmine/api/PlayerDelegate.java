@@ -8,6 +8,7 @@ import java.util.UUID;
 
 import org.bukkit.Achievement;
 import org.bukkit.Effect;
+import org.bukkit.GameMode;
 import org.bukkit.Instrument;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -25,6 +26,7 @@ import org.bukkit.entity.Vehicle;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.map.MapView;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionAttachment;
 import org.bukkit.permissions.PermissionAttachmentInfo;
@@ -548,5 +550,101 @@ public abstract class PlayerDelegate implements Player
 	@Override
 	public void updateInventory() {
 		delegate.updateInventory();
+	}
+	
+	@Override
+	public void setWhitelisted(boolean arg0)
+	{
+		delegate.setWhitelisted(arg0);
+	}
+	
+	@Override
+	public void setExhaustion(float arg0)
+	{
+		delegate.setExhaustion(arg0);
+	}
+	
+	@Override
+	public int getExperience()
+	{
+		return delegate.getExperience();
+	}
+	
+	@Override
+	public void setLevel(int arg0)
+	{
+		delegate.setLevel(arg0);
+	}
+	
+	@Override
+	public int getFoodLevel()
+	{
+		return delegate.getFoodLevel();
+	}
+	
+	@Override
+	public void sendMap(MapView arg0)
+	{
+		delegate.sendMap(arg0);
+	}
+	
+	@Override
+	public float getExhaustion() {
+		return delegate.getExhaustion();
+	}
+
+	@Override
+	public int getLevel() {
+		return delegate.getLevel();
+	}
+
+	@Override
+	public float getSaturation() {
+		return delegate.getSaturation();
+	}
+
+	@Override
+	public int getTotalExperience() {
+		return delegate.getTotalExperience();
+	}
+
+	@Override
+	public void setExperience(int arg0) {
+		delegate.setExperience(arg0);
+	}
+
+	@Override
+	public void setFoodLevel(int arg0) {
+		delegate.setFoodLevel(arg0);
+	}
+
+	@Override
+	public void setSaturation(float arg0) {
+		delegate.setSaturation(arg0);
+	}
+
+	@Override
+	public void setTotalExperience(int arg0) {
+		delegate.setTotalExperience(arg0);
+	}
+
+	@Override
+	public GameMode getGameMode() {
+		return delegate.getGameMode();
+	}
+
+	@Override
+	public void setGameMode(GameMode arg0) {
+		delegate.setGameMode(arg0);
+	}
+
+	@Override
+	public boolean isWhitelisted() {
+		return delegate.isWhitelisted();
+	}
+
+	@Override
+	public void setBanned(boolean arg0) {
+		delegate.setBanned(arg0);
 	}
 }

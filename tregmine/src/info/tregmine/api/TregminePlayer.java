@@ -18,6 +18,7 @@ public class TregminePlayer extends PlayerDelegate
 	private HashMap<String,Integer> integer = new HashMap<String,Integer>();
 	//	private HashMap<String,Location> location = new HashMap<String,Location>();
 
+	private int id = 0;
 	private String name;
 	private final Mysql mysql = new Mysql();
 	private Zone currentZone = null;
@@ -45,7 +46,7 @@ public class TregminePlayer extends PlayerDelegate
 					return true;
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
+				throw new RuntimeException(e);
 			}
 		}
 		this.mysql.close();
@@ -66,15 +67,15 @@ public class TregminePlayer extends PlayerDelegate
 
 				while (rs.next()) {
 					//TODO: Make this much nicer, this is bad code
+					this.id = rs.getInt("uid");
 					settings.put("uid", rs.getString("uid"));
 					settings.put(rs.getString("key"), rs.getString("value"));
 				}
 				this.mysql.close();	
 			} catch (Exception e) {
-				e.printStackTrace();
+				throw new RuntimeException(e);
 			}
 		}
-//		this.uid = Integer.getInteger(settings.get(uid));
 		mysql.close();
 	}
 
@@ -107,6 +108,11 @@ public class TregminePlayer extends PlayerDelegate
 		}
 	}
 
+	public int getId()
+	{
+		return id;
+	}
+	
 	public boolean isAdmin() 
 	{
 		return getBoolean("admin");
@@ -155,7 +161,7 @@ public class TregminePlayer extends PlayerDelegate
 			this.mysql.statement.execute(SQLU);
 			this.mysql.close();
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
 	}
 
@@ -164,7 +170,7 @@ public class TregminePlayer extends PlayerDelegate
 		try {
 			this.settings.put(_key, _value);
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
 	}	
 	
