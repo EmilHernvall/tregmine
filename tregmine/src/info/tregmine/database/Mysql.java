@@ -14,7 +14,7 @@ public class Mysql {
 	public ResultSet resultSet = null;
 	private String url = "jdbc:mysql://192.168.0.21/minecraft";
 	private String user = "root";
-	private String pw = "c0a3j3l4f5e7--";
+	private String pw = "cUqeWemUGeYaquxUpHaye8rUcrAteWre";
 	// cUqeWemUGeYaquxUpHaye8rUcrAteWre
 	
     public Mysql() {
