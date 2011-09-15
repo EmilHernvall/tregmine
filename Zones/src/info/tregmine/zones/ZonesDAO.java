@@ -333,4 +333,99 @@ public class ZonesDAO
 			}
 		}
 	}
+	
+	public void addLot(Lot lot)
+	throws SQLException
+	{
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		try {
+			String sql = "INSERT INTO zone_lot (zone_id, lot_name, lot_x1, lot_y1, lot_x2, lot_y2) ";
+			sql += "VALUES (?,?,?,?,?,?)";
+			
+			stmt = conn.prepareStatement(sql);
+			stmt.setInt(1, lot.getZoneId());
+			stmt.setString(2, lot.getName());
+			
+			Rectangle rect = lot.getRect();
+			stmt.setInt(3, rect.getLeft());
+			stmt.setInt(4, rect.getTop());
+			stmt.setInt(5, rect.getRight());
+			stmt.setInt(6, rect.getBottom());
+			
+			stmt.execute();
+			
+			stmt.execute("SELECT LAST_INSERT_ID()");
+			
+			rs = stmt.getResultSet();
+			if (rs.next()) {
+				lot.setId(rs.getInt(1));
+			}
+		}
+		finally {
+			if (rs != null) {
+				try { rs.close(); } catch (SQLException e) {}
+			}
+			if (stmt != null) {
+				try { stmt.close(); } catch (SQLException e) {}
+			}
+		}
+	}
+	
+	public void deleteLot(int lotId)
+	throws SQLException
+	{
+		PreparedStatement stmt = null;
+		try {
+			String sql = "DELETE FROM zone_lot WHERE lot_id = ?";
+			
+			stmt = conn.prepareStatement(sql);
+			stmt.setInt(1, lotId);
+			stmt.execute();
+		}
+		finally {
+			if (stmt != null) {
+				try { stmt.close(); } catch (SQLException e) {}
+			}
+		}
+	}
+	
+	public void addLotUser(int lotId, int userId)
+	throws SQLException
+	{
+		PreparedStatement stmt = null;
+		try {
+			String sql = "INSERT INTO zone_lotuser (lot_id, user_id) ";
+			sql += "VALUES (?,?)";
+			
+			stmt = conn.prepareStatement(sql);
+			stmt.setInt(1, lotId);
+			stmt.setInt(2, userId);
+			stmt.execute();
+		}
+		finally {
+			if (stmt != null) {
+				try { stmt.close(); } catch (SQLException e) {}
+			}
+		}
+	}
+	
+	public void deleteLotUser(int lotId, int userId)
+	throws SQLException
+	{
+		PreparedStatement stmt = null;
+		try {
+			String sql = "DELETE FROM zone_lotuser WHERE lot_id = ? AND user_id = ?";
+			
+			stmt = conn.prepareStatement(sql);
+			stmt.setInt(1, lotId);
+			stmt.setInt(2, userId);
+			stmt.execute();
+		}
+		finally {
+			if (stmt != null) {
+				try { stmt.close(); } catch (SQLException e) {}
+			}
+		}
+	}
 }

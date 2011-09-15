@@ -538,57 +538,62 @@ public class ZonesPlugin extends JavaPlugin
 			return;
 		}
 		
+		String playerName = args[2];
+		
 		Mysql mysql = null;
 		int userId;
 		try {
 			mysql = new Mysql();
 			mysql.connect();
 			ZonesDAO dao = new ZonesDAO(mysql.connect);
-			userId = dao.getUserId(args[2]);
+			userId = dao.getUserId(playerName);
+		
+			if (userId == -1) {
+				player.sendMessage(ChatColor.RED + "Player " + args[2] + " was not found.");
+				return;			
+			}
+			
+			Block b1 = player.getBlock("zb1");
+			Block b2 = player.getBlock("zb2");
+			
+			Zone zone = world.findZone(new Point(b1.getX(), b1.getZ()));
+			
+			Zone.Permission perm = zone.getUser(playerName);
+			if (perm != Zone.Permission.Owner) {
+				player.sendMessage(ChatColor.RED + "You are not allowed to create lots in zone " + zone.getName() + ".");
+				return;
+			}
+			
+			Zone checkZone = world.findZone(new Point(b2.getX(), b2.getZ()));
+			
+			// identity check. both lookups should return exactly the same object
+			if (zone != checkZone) {
+				return;
+			}
+			
+			Rectangle rect = new Rectangle(b1.getX(), b1.getZ(), b2.getX(), b2.getZ());
+			
+			Lot lot = new Lot();
+			lot.setZoneId(zone.getId());
+			lot.setRect(rect);
+			lot.setName(args[1]);
+			lot.addOwner(playerName);
+			
+			try {
+				world.addLot(lot);
+			} catch (IntersectionException e) {
+				player.sendMessage(ChatColor.RED + "The specified rectangle intersects an existing lot.");
+				return;
+			}
+			
+			dao.addLot(lot);
+			dao.addLotUser(lot.getId(), userId);
+			
+			player.sendMessage(ChatColor.YELLOW + "[" + zone.getName() + "] Lot " + args[1] + " created for player " + playerName + ".");
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		} finally {
 			mysql.close();
 		}
-		
-		if (userId == -1) {
-			player.sendMessage(ChatColor.RED + "Player " + args[2] + " was not found.");
-			return;			
-		}
-		
-		Block b1 = player.getBlock("zb1");
-		Block b2 = player.getBlock("zb2");
-		
-		Zone zone = world.findZone(new Point(b1.getX(), b1.getZ()));
-		
-		Zone.Permission perm = zone.getUser(player.getName());
-		if (perm != Zone.Permission.Owner) {
-			player.sendMessage(ChatColor.RED + "You are not allowed to create lots in zone " + zone.getName() + ".");
-			return;
-		}
-		
-		Zone checkZone = world.findZone(new Point(b2.getX(), b2.getZ()));
-		
-		// identity check. both lookups should return exactly the same object
-		if (zone != checkZone) {
-			return;
-		}
-		
-		Rectangle rect = new Rectangle(b1.getX(), b1.getZ(), b2.getX(), b2.getZ());
-		
-		Lot lot = new Lot();
-		lot.setZoneId(zone.getId());
-		lot.setRect(rect);
-		lot.setUserId(userId);
-		lot.setName(args[1]);
-		
-		try {
-			world.addLot(lot);
-		} catch (IntersectionException e) {
-			player.sendMessage(ChatColor.RED + "The specified rectangle intersects an existing lot.");
-			return;
-		}
-		
-		player.sendMessage(ChatColor.YELLOW + "[" + zone.getName() + "] Lot " + args[1] + " created for player " + args[2] + ".");
 	}
 }

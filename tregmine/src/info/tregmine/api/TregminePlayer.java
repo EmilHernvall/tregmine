@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.util.HashMap;
 
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 

@@ -53,7 +53,7 @@ public class ZoneBlockListener extends BlockListener
 	    	
 	    	Lot lot = world.findLot(pos);
 	    	if (lot != null) {
-	    		if (perm != Zone.Permission.Owner && player.getId() != lot.getUserId()) {
+	    		if (perm != Zone.Permission.Owner && lot.isOwner(player.getName())) {
 		    		player.sendMessage(ChatColor.RED + "[" + currentZone.getName() + "] " + 
 		    				"You are not allowed to break blocks in lot " + lot.getName() + ".");
 		    		event.setCancelled(true);
@@ -111,7 +111,7 @@ public class ZoneBlockListener extends BlockListener
 	    	Lot lot = world.findLot(pos);
 	    	if (lot != null) {
 	    		player.sendMessage("Block placed in lot " + lot.getName() + ".");
-	    		if (perm != Zone.Permission.Owner && player.getId() != lot.getUserId()) {
+	    		if (perm != Zone.Permission.Owner && lot.isOwner(player.getName())) {
 		    		player.sendMessage(ChatColor.RED + "[" + currentZone.getName() + "] " + 
 		    				"You are not allowed to break blocks in lot " + lot.getName() + ".");
 		    		event.setCancelled(true);

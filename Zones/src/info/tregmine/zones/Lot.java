@@ -1,17 +1,21 @@
 package info.tregmine.zones;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import info.tregmine.quadtree.Rectangle;
 
 public class Lot 
 {
 	private int id;
 	private int zoneId;
-	private int userId;
 	private String name;
 	private Rectangle rect;
+	private Set<String> owners;
 	
 	public Lot()
 	{
+		this.owners = new HashSet<String>();
 	}
 
 	public int getId() {
@@ -30,12 +34,12 @@ public class Lot
 		this.zoneId = zoneId;
 	}
 
-	public int getUserId() {
-		return userId;
+	public boolean isOwner(String player) {
+		return owners.contains(player);
 	}
 
-	public void setUserId(int userId) {
-		this.userId = userId;
+	public void addOwner(String player) {
+		owners.add(player);
 	}
 
 	public String getName() {
