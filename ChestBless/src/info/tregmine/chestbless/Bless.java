@@ -79,13 +79,9 @@ public class Bless extends JavaPlugin {
 	}
 
 	public void onLoad() {
-//		this.getServer().broadcastMessage(ChatColor.YELLOW + "Start loading chestbless, it may be a lag spike");
 		info.tregmine.database.Mysql mysql = new info.tregmine.database.Mysql(); 
 		mysql.connect();
 		this.chests = info.tregmine.chestbless.Store.loadbless(mysql);
 		mysql.close();
-//		this.getServer().broadcastMessage(ChatColor.YELLOW + "Loading chestsbless complete using " + chests.size()*30/1024/1024 + "MB of ram");		
-
-	
 	}
 }
