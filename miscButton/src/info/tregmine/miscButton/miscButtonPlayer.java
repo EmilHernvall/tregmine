@@ -131,25 +131,22 @@ public class miscButtonPlayer extends PlayerListener {
 			fill(lb1,lb2, Material.LAVA);
 		}
 
-		// Stick Piston (temporary)
-		if (button == 1286909852 && event.getPlayer().getName().matches("jamlord")) {
-			ItemStack item = new ItemStack(Material.PISTON_STICKY_BASE, 12, (byte) 0);
-			event.getPlayer().sendMessage(ChatColor.AQUA + "You have reviced 12 sticky pistons in your inventory");
+		// (temporary)
+		if (button == 388828234 && event.getPlayer().getName().matches("_Senna_")) {
+			ItemStack item = new ItemStack(Material.COBBLESTONE, 64, (byte) 0);
 			event.getPlayer().getInventory().addItem(item);
 		}
 
-		// Piston (temporary)
-		if (button == 1580312859 && event.getPlayer().getName().matches("jamlord")) {
-			ItemStack item = new ItemStack(Material.PISTON_BASE, 12, (byte) 0);
+		// (temporary)
+		if (button == 781855244 && event.getPlayer().getName().matches("_Senna_")) {
+			ItemStack item = new ItemStack(Material.DIRT, 64, (byte) 0);
 			event.getPlayer().getInventory().addItem(item);
-			event.getPlayer().sendMessage(ChatColor.AQUA + "You have reviced 12 normal pistons in your inventory");
 		}
-
-		// Redstone (temporary)
-		if (button == 1472040954 && event.getPlayer().getName().matches("jamlord")) {
-			ItemStack item = new ItemStack(Material.REDSTONE, 64, (byte) 0);
+				
+		// (temporary)
+		if (button == -425775511 && event.getPlayer().getName().matches("_Senna_")) {
+			ItemStack item = new ItemStack(Material.SAND, 64, (byte) 0);
 			event.getPlayer().getInventory().addItem(item);
-			event.getPlayer().sendMessage(ChatColor.AQUA + "You have reviced 64 normal pistons in your inventory");
 		}
 		
 

@@ -12,3 +12,6 @@ commands:
   playerlist:
     description: show who is online and not
     -usage: /who [name]
+  list:
+    description: show who is online and not
+    -usage: /who [name]

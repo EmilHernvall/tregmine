@@ -41,11 +41,25 @@ public class TregminePlayerListener extends PlayerListener {
 
 	
 	public void onPlayerBucketFill(PlayerBucketFillEvent event) {
-		event.setCancelled(true);
+		
+		if (event.getBucket() == Material.LAVA_BUCKET) {
+			 event.setCancelled(true);
+		}
+		
+		if (event.getBlockClicked().getType() == Material.LAVA) {
+			event.setCancelled(true);
+		}
+		
+		if (event.getBlockClicked().getType() == Material.STATIONARY_LAVA) {
+			event.setCancelled(true);
+		}
+		
 	}
 
 	public void onPlayerBucketEmpty(PlayerBucketEmptyEvent event){
-		event.setCancelled(true);
+		if (event.getBucket() == Material.LAVA_BUCKET) {
+		 event.setCancelled(true);
+		}
 	}
 
 	
@@ -115,16 +129,16 @@ public class TregminePlayerListener extends PlayerListener {
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		event.setJoinMessage(null);
 		
-		Player player = event.getPlayer();
-		player.sendMessage(ChatColor.DARK_AQUA + "************* IMPORTANT *****************");
-		player.sendMessage(ChatColor.DARK_PURPLE + "Mobs is still disabled due to preformance issues");
-		player.sendMessage(ChatColor.DARK_PURPLE + "I have done some major preformance changes, so enjoy");
-		player.sendMessage(ChatColor.DARK_PURPLE + "Paper sunday, today (swedish time) everyone got access to papper");
+//		Player player = event.getPlayer();
+//		player.sendMessage(ChatColor.DARK_AQUA + "************* IMPORTANT *****************");
+//		player.sendMessage(ChatColor.DARK_PURPLE + "Mobs is still disabled due to preformance issues");
+//		player.sendMessage(ChatColor.DARK_PURPLE + "I have done some major preformance changes, so enjoy");
+//		player.sendMessage(ChatColor.DARK_PURPLE + "Paper sunday, today (swedish time) everyone got access to papper");
 		
-		String playerName = event.getPlayer().getName();
-		TregminePlayer tregPlayer = new TregminePlayer(player, playerName);
+//		String playerName = event.getPlayer().getName();
+//		TregminePlayer tregPlayer = new TregminePlayer(player, playerName);
 		
-		event.getPlayer().sendMessage("" + tregPlayer.getMetaBoolean("nationcake"));
+//		event.getPlayer().sendMessage("" + tregPlayer.getMetaBoolean("nationcake"));
 		
 //		if (!tregPlayer.getMetaBoolean("nationcake")) {
 //			event.getPlayer().sendMessage(ChatColor.RED + "Sweden nationday - Free cake" );

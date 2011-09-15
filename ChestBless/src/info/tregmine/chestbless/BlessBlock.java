@@ -9,11 +9,11 @@ import org.bukkit.event.block.BlockListener;
 import org.bukkit.event.block.BlockPlaceEvent;
 
 
-public class ChestBlessBlock extends BlockListener {
-	private final ChestBless plugin;
+public class BlessBlock extends BlockListener {
+	private final Bless plugin;
 
 
-	public  ChestBlessBlock(ChestBless instance) {
+	public  BlessBlock(Bless instance) {
 		plugin = instance;
 		plugin.getServer();
 	}

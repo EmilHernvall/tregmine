@@ -17,7 +17,7 @@ public class Tp {
 			}
 
 			
-			if (tregminePlayerTo.getMetaBoolean("tpblock") && !tregminePlayerFrom.isAdmin()) {
+			if (tregminePlayerTo.getMetaBoolean("tpblock") && !tregminePlayerFrom.isAdmin() ) {
 				from.sendMessage(ChatColor.RED + "FFS! Annoy someone else -- TP to them is prohibited.");
 				to.sendMessage(from.getName() + ChatColor.AQUA + " tried to tp to you, laugh at him, as he failed and hurt im self hard.");
 				return;
@@ -34,7 +34,15 @@ public class Tp {
 					from.teleport(to.getLocation());
 					succeed = true;
 				}
-				
+
+				//TODO uglu soltution but it will change with the new permisson system
+				if (tregminePlayerFrom.getMetaBoolean("mentor") && !succeed) {
+					from.sendMessage(ChatColor.AQUA + "You teleported to " + to.getName() + ChatColor.AQUA + " in " + ChatColor.BLUE + to.getWorld().getName());
+					from.setNoDamageTicks(200);
+					from.teleport(to.getLocation());
+					succeed = true;
+				}
+
 				if(from.getWorld().getName().matches("matrix")) {
 					from.sendMessage("Sorry you can't teleport in matrix");
 					return;

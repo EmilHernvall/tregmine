@@ -79,6 +79,10 @@ public class Chat extends JavaPlugin {
 				this.getServer().broadcastMessage("<" + ChatColor.DARK_AQUA + "GOD" + ChatColor.WHITE + "> " + ChatColor.LIGHT_PURPLE +  buffMsg);
 			} else if (from.getName().matches("einand")){
 				this.getServer().broadcastMessage("<" + ChatColor.DARK_GREEN + "GOD" + ChatColor.WHITE + "> " + ChatColor.LIGHT_PURPLE +  buffMsg);
+			} else if (from.getName().matches("LilKiw")){
+				this.getServer().broadcastMessage("<" + ChatColor.AQUA + "GOD" + ChatColor.WHITE + "> " + ChatColor.LIGHT_PURPLE +  buffMsg);
+			} else if (from.getName().matches("Camrenn")){
+				this.getServer().broadcastMessage("<" + ChatColor.LIGHT_PURPLE + "GOD" + ChatColor.WHITE + "> " + ChatColor.LIGHT_PURPLE +  buffMsg);
 			} else if (from.getName().matches("Mksen")){
 				this.getServer().broadcastMessage("<" + ChatColor.YELLOW + "GOD" + ChatColor.WHITE + "> " + ChatColor.LIGHT_PURPLE +  buffMsg);
 			} else {
@@ -184,6 +188,17 @@ public class Chat extends JavaPlugin {
 					buf.append(" " + args[i]);
 				}
 				String buffMsg = buf.toString();
+				
+				if(from.getName().matches("LilKiw") && toPlayer.getName().matches("Camrenn")) {
+					from.sendMessage(ChatColor.GREEN + "(to) " + toPlayer.getChatName() + ChatColor.GREEN + ": "  + buffMsg);
+					return true;
+				}
+				
+				if(from.getName().matches("Camrenn") && toPlayer.getName().matches("LilKiw")) {
+					from.sendMessage(ChatColor.GREEN + "(to) " + toPlayer.getChatName() + ChatColor.GREEN + ": "  + buffMsg);
+					return true;
+				}
+				
 				if (!toPlayer.getMetaBoolean("invis")) {
 					from.sendMessage(ChatColor.GREEN + "(to) " + toPlayer.getChatName() + ChatColor.GREEN + ": "  + buffMsg);
 				}

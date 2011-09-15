@@ -14,10 +14,10 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerListener;
 
-public class ChestBlessPlayer extends PlayerListener {
-	private final ChestBless plugin;
+public class BlessPlayer extends PlayerListener {
+	private final Bless plugin;
 
-	public ChestBlessPlayer(ChestBless instance) {
+	public BlessPlayer(Bless instance) {
 		this.plugin = instance;
 		plugin.getServer();
 	}
@@ -31,6 +31,12 @@ public class ChestBlessPlayer extends PlayerListener {
 				(		block.getType() == Material.CHEST || 
 						block.getType() == Material.FURNACE ||
 						block.getType() == Material.BURNING_FURNACE ||
+						block.getType() == Material.WOOD_DOOR ||
+						block.getType() == Material.WOODEN_DOOR ||
+						block.getType() == Material.LEVER ||
+						block.getType() == Material.STONE_BUTTON ||
+						block.getType() == Material.STONE_SPADE ||
+						block.getType() == Material.WOOD_PLATE ||
 						block.getType() == Material.WORKBENCH)	
 				) {
 			Location loc = block.getLocation();

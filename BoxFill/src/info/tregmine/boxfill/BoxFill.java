@@ -187,7 +187,7 @@ public class BoxFill extends JavaPlugin {
 				}
 				
 				// regular fills
-				if (mat != null && toMat == null && mat.getItemTypeId() <= 89) {
+				if (mat != null && toMat == null) {
 					player.sendMessage("You filled with " + ChatColor.DARK_AQUA  + mat.toString() + "("+ mat.getItemTypeId() + ")");
 					
 					if (commandName.equals("fill")) {
@@ -204,7 +204,7 @@ public class BoxFill extends JavaPlugin {
 				}
 	
 				// replacers
-				if (mat != null && toMat != null && toMat.getItemTypeId() <= 89) {
+				if (mat != null && toMat != null) {
 					player.sendMessage("You replaced " + ChatColor.DARK_AQUA + mat.toString() + "("+ mat.getItemTypeId() + ")" + 
 							ChatColor.BLUE + "with" + ChatColor.DARK_AQUA + toMat.toString() + "("+ toMat.getItemTypeId() + ")" );
 					

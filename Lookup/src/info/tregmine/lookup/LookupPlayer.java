@@ -47,5 +47,9 @@ public class LookupPlayer extends PlayerListener {
 		catch (IOException e) {
 			e.printStackTrace();
 		}
+		if (!tregminePlayer.isDonator()) {
+			event.getPlayer().sendMessage(ChatColor.YELLOW + "Remember because you play for free, its not free to play,");
+			event.getPlayer().sendMessage(ChatColor.YELLOW + "just that someone else paid for you.");			
+		}
 	}    
 }

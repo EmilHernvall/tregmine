@@ -23,6 +23,8 @@ public class Main extends JavaPlugin {
 		this.getServer().createWorld("skyland", Environment.SKYLANDS);
 		World matrix = this.getServer().createWorld("matrix", Environment.NORMAL);
 		matrix.setPVP(true);
+		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_MOVE, listener, Priority.Highest, this);
+		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_TELEPORT, listener, Priority.Highest, this);
 		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_INTERACT, listener, Priority.Highest, this);
 		getServer().getPluginManager().registerEvent(Event.Type.CREATURE_SPAWN, el, Priority.Lowest, this);
 	}

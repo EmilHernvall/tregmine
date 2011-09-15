@@ -14,7 +14,7 @@ public class EntityListner extends EntityListener {
 
 
 	public void onCreatureSpawn (CreatureSpawnEvent event) {
-			event.setCancelled(true);			
+//			event.setCancelled(true);			
 	}
 
 }
