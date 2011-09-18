@@ -12,8 +12,8 @@ public class Mysql {
 	public Statement statement = null;
 //	private PreparedStatement preparedStatement = null;
 	public ResultSet resultSet = null;
-	private String url = "jdbc:mysql://192.168.0.21/minecraft";
-	private String user = "root";
+	private String url = "jdbc:mysql://mc.tregmine.info/minecraft";
+	private String user = "minecraft";
 	private String pw = "cUqeWemUGeYaquxUpHaye8rUcrAteWre";
 	// cUqeWemUGeYaquxUpHaye8rUcrAteWre
 	
