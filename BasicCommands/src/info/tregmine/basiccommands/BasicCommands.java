@@ -94,7 +94,7 @@ public class BasicCommands extends JavaPlugin {
 			//			mysql.close();
 		}
 
-		if (commandName.matches("admin")) {
+		if (commandName.matches("admin") && tregminePlayer.isAdmin() ) {
 	    	final TregminePlayer tregPlayer = tregmine.getPlayer(player);
 	    	tregPlayer.setGameMode(GameMode.CREATIVE);
 	    	tregPlayer.sendMessage(ChatColor.YELLOW + "You are now in admin mode for 10 minutes");
@@ -273,16 +273,6 @@ public class BasicCommands extends JavaPlugin {
 					player.sendMessage(ChatColor.RED + "Please use /user make settler name");
 				}
 
-				if (args[1].matches("broker")) {
-					vtregPlayer.setMetaString("color", "broker");
-					vtregPlayer.setMetaString("broker", "true");
-
-					player.sendMessage(ChatColor.AQUA + "You made " + victimPlayer.getChatName() + ChatColor.AQUA + " a broker" );
-					victim.sendMessage("Congratulation, you are now a broker!");
-					this.log.info(victim.getName() + " was given broker right by " + player.getName());
-					return true;
-				}
-
 				if (args[1].matches("fora")) {
 					vtregPlayer.setMetaString("fora", "true");
 					player.sendMessage(ChatColor.AQUA + "You made " + victimPlayer.getChatName() + ChatColor.AQUA + " a fora builder" );
@@ -290,7 +280,7 @@ public class BasicCommands extends JavaPlugin {
 					return true;
 				}
 
-				if (args[1].matches("resident")) {
+				if (args[1].matches("resident") && player.isOp() ) {
 					vtregPlayer.setMetaString("color", "trusted");
 					vtregPlayer.setMetaString("trusted", "true");
 					this.log.info(victim.getName() + " was given trusted rights by " + tregminePlayer.getChatName());
@@ -299,7 +289,7 @@ public class BasicCommands extends JavaPlugin {
 					return true;
 				}
 
-				if (args[1].matches("donator")) {
+				if (args[1].matches("donator") && player.isOp() ) {
 					vtregPlayer.setMetaString("donator", "true");
 					vtregPlayer.setMetaString("compass", "true");
 					vtregPlayer.setMetaString("color", "donator");
@@ -309,7 +299,7 @@ public class BasicCommands extends JavaPlugin {
 					return true;
 				}
 
-				if (args[1].matches("police")) {
+				if (args[1].matches("police") && player.isOp() ) {
 					if(vtregPlayer.isDonator()) {
 						vtregPlayer.setMetaString("police", "true");
 						vtregPlayer.setMetaString("color", "police");
