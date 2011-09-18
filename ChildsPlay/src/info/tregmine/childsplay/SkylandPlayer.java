@@ -6,8 +6,8 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.player.PlayerInteractEvent;
+//import org.bukkit.event.block.Action;
+//import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerListener;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
@@ -28,7 +28,7 @@ public class SkylandPlayer extends PlayerListener {
 		if (event.getPlayer().getWorld().getName().matches("citadel")) {		
 			Player p = event.getPlayer();
 
-			if(event.getTo().getBlockX() > 1024) {
+			if(event.getTo().getBlockX() > 2048) {
 				Location glLoc = new Location (p.getWorld(), p.getEyeLocation().getBlockX()+1,  p.getEyeLocation().getBlockY(),  p.getEyeLocation().getBlockZ() );
 				event.getPlayer().sendBlockChange(glLoc, Material.GLASS, (byte) 0);
 				movePlayerBack(event.getPlayer(), event.getFrom(), event.getTo());
@@ -36,7 +36,7 @@ public class SkylandPlayer extends PlayerListener {
 				event.setCancelled(true);
 			}
 
-			if(event.getTo().getBlockX() < -1024) {
+			if(event.getTo().getBlockX() < -2048) {
 				Location glLoc = new Location (p.getWorld(), p.getEyeLocation().getBlockX()-1,  p.getEyeLocation().getBlockY(),  p.getEyeLocation().getBlockZ() );
 				event.getPlayer().sendBlockChange(glLoc, Material.GLASS, (byte) 0);
 				movePlayerBack(event.getPlayer(), event.getFrom(), event.getTo());
@@ -45,7 +45,7 @@ public class SkylandPlayer extends PlayerListener {
 			}
 
 
-			if(event.getTo().getBlockZ() > 1024) {
+			if(event.getTo().getBlockZ() > 2048) {
 				Location glLoc = new Location (p.getWorld(), p.getEyeLocation().getBlockX(),  p.getEyeLocation().getBlockY(),  p.getEyeLocation().getBlockZ()+1 );
 				event.getPlayer().sendBlockChange(glLoc, Material.GLASS, (byte) 0);
 				event.getPlayer().sendBlockChange(event.getPlayer().getEyeLocation(), Material.GLASS, (byte) 0);
@@ -54,7 +54,7 @@ public class SkylandPlayer extends PlayerListener {
 				event.setCancelled(true);
 			}
 
-			if(event.getTo().getBlockZ() < -1024) {
+			if(event.getTo().getBlockZ() < -2048) {
 				Location glLoc = new Location (p.getWorld(), p.getEyeLocation().getBlockX(),  p.getEyeLocation().getBlockY(),  p.getEyeLocation().getBlockZ()-1 );
 				event.getPlayer().sendBlockChange(glLoc, Material.GLASS, (byte) 0);
 				event.getPlayer().sendBlockChange(event.getPlayer().getEyeLocation(), Material.GLASS, (byte) 0);
@@ -69,22 +69,22 @@ public class SkylandPlayer extends PlayerListener {
 	public void onPlayerTeleport(PlayerTeleportEvent event) {
 		if (event.getPlayer().getWorld().getName().matches("citadel")) {		
 
-			if(event.getTo().getBlockX() > 1024) {
+			if(event.getTo().getBlockX() > 2048) {
 				event.getPlayer().sendMessage(ChatColor.YELLOW + "Sorry but your world is limited!");
 				event.setCancelled(true);
 			}
 
-			if(event.getTo().getBlockX() < -1024) {
+			if(event.getTo().getBlockX() < -2048) {
 				event.getPlayer().sendMessage(ChatColor.YELLOW + "Sorry but your world is limited!");
 				event.setCancelled(true);
 			}
 
-			if(event.getTo().getBlockZ() > 1024) {
+			if(event.getTo().getBlockZ() > 2048) {
 				event.getPlayer().sendMessage(ChatColor.YELLOW + "Sorry but your world is limited!");
 				event.setCancelled(true);
 			}
 
-			if(event.getTo().getBlockZ() < -1024) {
+			if(event.getTo().getBlockZ() < -2048) {
 				event.getPlayer().sendMessage(ChatColor.YELLOW + "Sorry but your world is limited!");
 				event.setCancelled(true);
 			}
@@ -105,7 +105,7 @@ public class SkylandPlayer extends PlayerListener {
 		player.teleport(newPos);
 	}
 
-
+/*
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		if(
 				event.getAction() == Action.PHYSICAL &&
@@ -143,4 +143,5 @@ public class SkylandPlayer extends PlayerListener {
 		}
 
 	}
+*/
 }

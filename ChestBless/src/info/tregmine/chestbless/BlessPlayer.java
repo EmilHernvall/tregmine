@@ -37,7 +37,9 @@ public class BlessPlayer extends PlayerListener {
 						block.getType() == Material.STONE_BUTTON ||
 						block.getType() == Material.STONE_SPADE ||
 						block.getType() == Material.WOOD_PLATE ||
-						block.getType() == Material.WORKBENCH)	
+						block.getType() == Material.WORKBENCH ||
+						block.getType() == Material.SIGN_POST ||
+						block.getType() == Material.SIGN)	
 				) {
 			Location loc = block.getLocation();
  			int checksum = (loc.getBlockX() + "," + loc.getBlockZ() +"," + loc.getWorld().getName()).hashCode();
@@ -46,7 +48,7 @@ public class BlessPlayer extends PlayerListener {
 			if (this.plugin.chests.containsKey(checksum)) {
 				
 				String name = this.plugin.chests.get(checksum);
-				player.sendMessage(ChatColor.AQUA + "You reblessed a chest for " + name);
+				player.sendMessage(ChatColor.AQUA + "You reblessed a block for " + name);
 				this.plugin.chests.put(newchecksum, name);
 				this.plugin.chests.remove(checksum);
 				info.tregmine.database.Mysql mysql = new info.tregmine.database.Mysql();

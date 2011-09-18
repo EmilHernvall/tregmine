@@ -44,6 +44,7 @@ public class Bless extends JavaPlugin {
 		}
 		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_INTERACT, player, Priority.Highest, this);
 		getServer().getPluginManager().registerEvent(Event.Type.BLOCK_PLACE, block, Priority.Highest, this);
+		getServer().getPluginManager().registerEvent(Event.Type.BLOCK_BREAK, block, Priority.Highest, this);
 	}
 
 	public void onDisable(){
@@ -66,7 +67,7 @@ public class Bless extends JavaPlugin {
 			try {
 				String name = getServer().matchPlayer(args[0]).get(0).getName();
 				info.tregmine.api.TregminePlayer toPlayer = this.tregmine.tregminePlayer.get(getServer().matchPlayer(args[0]).get(0).getName());
-				player.sendMessage(ChatColor.AQUA + "You will bless following chests to " + toPlayer.getChatName());
+				player.sendMessage(ChatColor.AQUA + "You will bless following blocks to " + toPlayer.getChatName());
 				tregminePlayer.setMetaString("chestbless", name);
 			} catch (Exception e) {
 				player.sendMessage(ChatColor.RED + "Something went wrong, player not online?");
