@@ -33,7 +33,7 @@ public class Death extends JavaPlugin {
 				this.getServer().getPluginManager().disablePlugin(this);
 		    }
 		}
-		  getServer().getPluginManager().registerEvent(Event.Type.ENTITY_DAMAGE, entity, Priority.Normal, this);
+//		  getServer().getPluginManager().registerEvent(Event.Type.ENTITY_DAMAGE, entity, Priority.Normal, this);
 		  getServer().getPluginManager().registerEvent(Event.Type.ENTITY_EXPLODE, entity, Priority.Normal, this);
 		  getServer().getPluginManager().registerEvent(Event.Type.ENTITY_DEATH, entity, Priority.Normal, this);
 		  getServer().getPluginManager().registerEvent(Event.Type.PLAYER_RESPAWN, player, Priority.Normal, this);

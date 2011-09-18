@@ -3,6 +3,7 @@ package info.tregmine.basiccommands;
 import java.util.logging.Logger;
 
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -93,6 +94,19 @@ public class BasicCommands extends JavaPlugin {
 			//			mysql.close();
 		}
 
+		if (commandName.matches("admin")) {
+	    	final TregminePlayer tregPlayer = tregmine.getPlayer(player);
+	    	tregPlayer.setGameMode(GameMode.CREATIVE);
+	    	tregPlayer.sendMessage(ChatColor.YELLOW + "You are now in admin mode for 10 minutes");
+	    	
+			this.getServer().getScheduler().scheduleSyncDelayedTask(this,new Runnable() {
+				public void run() {
+					tregPlayer.sendMessage(ChatColor.YELLOW + "You are now back to survivalmode");
+			    	tregPlayer.setGameMode(GameMode.SURVIVAL);
+				}},60L);
+		}
+
+		
 		if (commandName.matches("pos")) {
 			Location loc = player.getLocation();
 			Location spawn = player.getWorld().getSpawnLocation();

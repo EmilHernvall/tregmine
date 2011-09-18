@@ -33,30 +33,30 @@ public class DeathEntity extends EntityListener  {
 
 	public void onEntityExplode (EntityExplodeEvent event) {
 		if(event.getEntity() instanceof Player) {
-			Player player = (Player) event.getEntity();
-			info.tregmine.api.TregminePlayer tregminePlayer = this.plugin.tregmine.tregminePlayer.get(player.getName());
+//			Player player = (Player) event.getEntity();
+//			info.tregmine.api.TregminePlayer tregminePlayer = this.plugin.tregmine.tregminePlayer.get(player.getName());
 
-			boolean isAdmin = tregminePlayer.isAdmin();
-			boolean isImmortal = tregminePlayer.isImmortal();
-			if (isAdmin || isImmortal) {				
-				event.setCancelled(true);
-				return;
-			}
+//			boolean isAdmin = tregminePlayer.isAdmin();
+//			boolean isImmortal = tregminePlayer.isImmortal();
+//			if (isAdmin || isImmortal) {				
+//				event.setCancelled(true);
+//				return;
+//			}
 		}
 	}
 
 	public void onEntityDamage (EntityDamageEvent event) {
 		if(event.getEntity() instanceof Player) {
-			Player player = (Player) event.getEntity();
-			info.tregmine.api.TregminePlayer tregminePlayer = this.plugin.tregmine.tregminePlayer.get(player.getName());
+//			Player player = (Player) event.getEntity();
+//			info.tregmine.api.TregminePlayer tregminePlayer = this.plugin.tregmine.tregminePlayer.get(player.getName());
 
-			boolean isAdmin = tregminePlayer.isAdmin();
-			boolean isImmortal = tregminePlayer.isImmortal();
+//			boolean isAdmin = tregminePlayer.isAdmin();
+//			boolean isImmortal = tregminePlayer.isImmortal();
 			
-			if (isAdmin || isImmortal) {
-				event.setCancelled(true);
-				return;
-			}
+//			if (isAdmin || isImmortal) {
+//				event.setCancelled(true);
+//				return;
+//			}
 		}
 	}
 }

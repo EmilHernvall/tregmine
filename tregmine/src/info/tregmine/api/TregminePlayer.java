@@ -6,10 +6,8 @@ import java.sql.ResultSet;
 import java.util.HashMap;
 
 import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
-import org.bukkit.map.MapView;
 
 public class TregminePlayer extends PlayerDelegate
 {
@@ -124,8 +122,31 @@ public class TregminePlayer extends PlayerDelegate
 	}
 
 	public boolean isBanned() 
-	{
-		return getBoolean("banned");
+	{	
+		/*
+		long bantime = 0;
+		
+		if ("true".matches( this.settings.get("banned")) ) {
+			return true;
+		} else {
+			long time = System.currentTimeMillis();
+			
+			if (this.settings.containsKey("banned")) {
+				try {
+					bantime = 	Long.parseLong(this.settings.get("banned"));
+				} catch (NumberFormatException e) {
+					System.console().printf("BAN ERROR: %s",  this.settings.get("banned") );
+					return false; 
+				}
+			}
+			
+			if (time > bantime)  {
+				return false;
+			}
+		}
+		*/
+		return false;
+		
 	}
 
 	public boolean isTrusted() 
@@ -204,7 +225,7 @@ public class TregminePlayer extends PlayerDelegate
 		return this.integer.get(_key);
 	}
 
-	public void setMetaInt(String _key, Integer _value) 
+	public void setTempMetaInt(String _key, Integer _value) 
 	{
 		this.integer.put(_key, _value);
 	}
@@ -289,39 +310,4 @@ public class TregminePlayer extends PlayerDelegate
 		return currentZone;
 	}
 
-	@Override
-	public void sendMap(MapView arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public GameMode getGameMode() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void setGameMode(GameMode arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public boolean isWhitelisted() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public void setBanned(boolean arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void setWhitelisted(boolean arg0) {
-		// TODO Auto-generated method stub
-		
-	}
 }

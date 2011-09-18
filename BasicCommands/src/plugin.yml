@@ -80,4 +80,7 @@ commands:
     -usage: /<command>
   td:
     description: spawn mobs
-    -usage: /<command>         
+    -usage: /<command>
+  admin:
+    description: spawn mobs
+    -usage: /<command>

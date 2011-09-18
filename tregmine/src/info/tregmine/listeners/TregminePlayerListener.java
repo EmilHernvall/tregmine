@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.TimeZone;
 
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 //import org.bukkit.entity.Player;
@@ -128,27 +129,7 @@ public class TregminePlayerListener extends PlayerListener {
 
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		event.setJoinMessage(null);
-		
-//		Player player = event.getPlayer();
-//		player.sendMessage(ChatColor.DARK_AQUA + "************* IMPORTANT *****************");
-//		player.sendMessage(ChatColor.DARK_PURPLE + "Mobs is still disabled due to preformance issues");
-//		player.sendMessage(ChatColor.DARK_PURPLE + "I have done some major preformance changes, so enjoy");
-//		player.sendMessage(ChatColor.DARK_PURPLE + "Paper sunday, today (swedish time) everyone got access to papper");
-		
-//		String playerName = event.getPlayer().getName();
-//		TregminePlayer tregPlayer = new TregminePlayer(player, playerName);
-		
-//		event.getPlayer().sendMessage("" + tregPlayer.getMetaBoolean("nationcake"));
-		
-//		if (!tregPlayer.getMetaBoolean("nationcake")) {
-//			event.getPlayer().sendMessage(ChatColor.RED + "Sweden nationday - Free cake" );
-//			event.getPlayer().sendMessage(ChatColor.GREEN + "Sweden nationday - Free cake" );
-//			event.getPlayer().sendMessage(ChatColor.BLUE + "Sweden nationday - Free cake" );
-//			ItemStack item = new ItemStack(Material.CAKE_BLOCK, 1);
-//			event.getPlayer().getInventory().addItem(item);
-//			tregPlayer.setMetaString("nationcake", "true");
-//		}
-
+		event.getPlayer().setGameMode(GameMode.SURVIVAL);
 	}    	
 
 	public void onPlayerLogin(PlayerLoginEvent event)
