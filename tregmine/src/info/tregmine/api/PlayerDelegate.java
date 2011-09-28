@@ -647,4 +647,19 @@ public abstract class PlayerDelegate implements Player
 	public void setBanned(boolean arg0) {
 		delegate.setBanned(arg0);
 	}
+	
+	@Override
+	public Location getBedSpawnLocation() {
+		return delegate.getBedSpawnLocation();
+	}
+
+	@Override
+	public boolean isSprinting() {
+		return delegate.isSprinting();
+	}
+
+	@Override
+	public void setSprinting(boolean arg0) {
+		delegate.setSprinting(arg0);
+	}
 }

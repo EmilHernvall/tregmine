@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.util.HashMap;
 
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
@@ -122,31 +123,8 @@ public class TregminePlayer extends PlayerDelegate
 	}
 
 	public boolean isBanned() 
-	{	
-		/*
-		long bantime = 0;
-		
-		if ("true".matches( this.settings.get("banned")) ) {
-			return true;
-		} else {
-			long time = System.currentTimeMillis();
-			
-			if (this.settings.containsKey("banned")) {
-				try {
-					bantime = 	Long.parseLong(this.settings.get("banned"));
-				} catch (NumberFormatException e) {
-					System.console().printf("BAN ERROR: %s",  this.settings.get("banned") );
-					return false; 
-				}
-			}
-			
-			if (time > bantime)  {
-				return false;
-			}
-		}
-		*/
-		return false;
-		
+	{
+		return getBoolean("banned");
 	}
 
 	public boolean isTrusted() 
@@ -225,7 +203,7 @@ public class TregminePlayer extends PlayerDelegate
 		return this.integer.get(_key);
 	}
 
-	public void setTempMetaInt(String _key, Integer _value) 
+	public void setMetaInt(String _key, Integer _value) 
 	{
 		this.integer.put(_key, _value);
 	}
@@ -309,5 +287,4 @@ public class TregminePlayer extends PlayerDelegate
 	{
 		return currentZone;
 	}
-
 }

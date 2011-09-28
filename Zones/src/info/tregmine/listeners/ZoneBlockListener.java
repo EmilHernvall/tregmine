@@ -4,6 +4,8 @@ import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
 import info.tregmine.api.Zone;
 import info.tregmine.quadtree.Point;
+import info.tregmine.zones.Lot;
+import info.tregmine.zones.ZoneWorld;
 import info.tregmine.zones.ZonesPlugin;
 
 import org.bukkit.ChatColor;
@@ -31,7 +33,7 @@ public class ZoneBlockListener extends BlockListener
     		return;
     	}
     	
-    	ZonesPlugin.ZoneWorld world = plugin.getWorld(player.getWorld());
+    	ZoneWorld world = plugin.getWorld(player.getWorld());
     	
     	Block block = event.getBlock();
     	Location location = block.getLocation();
@@ -45,6 +47,16 @@ public class ZoneBlockListener extends BlockListener
     	
     	if (currentZone != null) {
 	    	Zone.Permission perm = currentZone.getUser(player.getName());
+	    	
+	    	Lot lot = world.findLot(pos);
+	    	if (lot != null) {
+	    		if (perm != Zone.Permission.Owner && !lot.isOwner(player.getName())) {
+		    		player.sendMessage(ChatColor.RED + "[" + currentZone.getName() + "] " + 
+		    				"You are not allowed to break blocks in lot " + lot.getName() + ".");
+		    		event.setCancelled(true);
+		    		return;
+	    		}
+	    	}
 	    	
 	    	// if everyone is allowed to build in this zone...
 	    	if (currentZone.getDestroyDefault()) {
@@ -75,7 +87,7 @@ public class ZoneBlockListener extends BlockListener
     		return;
     	}
     	
-    	ZonesPlugin.ZoneWorld world = plugin.getWorld(player.getWorld());
+    	ZoneWorld world = plugin.getWorld(player.getWorld());
     	
     	Block block = event.getBlock();
     	Location location = block.getLocation();
@@ -89,6 +101,17 @@ public class ZoneBlockListener extends BlockListener
     	
     	if (currentZone != null) {
 	    	Zone.Permission perm = currentZone.getUser(player.getName());
+	    	
+	    	Lot lot = world.findLot(pos);
+	    	if (lot != null) {
+	    		player.sendMessage("Block placed in lot " + lot.getName() + ".");
+	    		if (perm != Zone.Permission.Owner && !lot.isOwner(player.getName())) {
+		    		player.sendMessage(ChatColor.RED + "[" + currentZone.getName() + "] " + 
+		    				"You are not allowed to break blocks in lot " + lot.getName() + ".");
+		    		event.setCancelled(true);
+		    		return;
+	    		}
+	    	}
 	    	
 	    	// if everyone is allowed to build in this zone...
 	    	if (currentZone.getPlaceDefault()) {

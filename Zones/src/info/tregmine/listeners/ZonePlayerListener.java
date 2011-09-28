@@ -4,10 +4,14 @@ import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
 import info.tregmine.api.Zone;
 import info.tregmine.quadtree.Point;
+import info.tregmine.zones.ZoneWorld;
 import info.tregmine.zones.ZonesPlugin;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerListener;
 import org.bukkit.event.player.PlayerMoveEvent;
@@ -28,7 +32,76 @@ public class ZonePlayerListener extends PlayerListener
 	@Override
 	public void onPlayerInteract(PlayerInteractEvent event) 
 	{
-		//TregminePlayer player = tregmine.getPlayer(event.getPlayer());
+		if (event.getAction() != Action.RIGHT_CLICK_BLOCK) {
+			return;
+		}
+		
+		if (event.getPlayer().getItemInHand().getType() != Material.STICK) {
+			return;
+		}
+		
+		TregminePlayer player = tregmine.getPlayer(event.getPlayer());
+		
+		Block block = event.getClickedBlock();
+		Point currentPos = new Point(block.getX(), block.getZ());
+
+		ZoneWorld world = plugin.getWorld(block.getWorld());
+    	if (world == null) {
+    		return;
+    	}
+    	
+		Zone zone = world.findZone(currentPos);
+		
+		// within a zone, lots can be created by zone owners or people with
+		// the zones permission.
+		String type = null;
+		if (zone != null) {
+			Zone.Permission perm = zone.getUser(player.getName());
+			if (perm != Zone.Permission.Owner && !player.getMetaBoolean("zones")) {
+				return;
+			}
+			type = "lot";
+		}
+		// outside of a zone 
+		else {
+			// outside of any existing zone, this can only be used by people
+			// with zones permission.
+			if (!player.getMetaBoolean("zones")) {
+				return;
+			}
+			type = "zone";
+		}
+		
+		int count;
+		try {
+			count = player.getMetaInt("zcf");
+		} catch (Exception  e) {
+			count = 0;
+		}
+
+		if (count == 0) {
+			player.setBlock("zb1", block);
+			player.setBlock("zb2", null);
+			event.getPlayer().sendMessage("First block set of new " + type + ".");
+			player.setMetaInt("zcf", 1);
+			if (zone != null) {
+				player.setMetaInt("zone", zone.getId());
+			} else {
+				player.setMetaInt("zone", 0);
+			}
+		}
+
+		if (count == 1) {
+			int zf = player.getMetaInt("zone");
+			if (zf != 0 && zf != zone.getId()) {
+				player.sendMessage("The full extent of the lot must be in the same zone.");
+				return;
+			}
+			
+			player.setBlock("zb2", block);
+			player.sendMessage("Second block set of new " + type + ".");
+			player.setMetaInt("zcf", 0);
+		}
 	}
 	
 	private void movePlayerBack(TregminePlayer player, Location movingFrom, Location movingTo)
@@ -48,7 +121,7 @@ public class ZonePlayerListener extends PlayerListener
 	public void onPlayerMove(PlayerMoveEvent event)
 	{
 		TregminePlayer player = tregmine.getPlayer(event.getPlayer());
-		ZonesPlugin.ZoneWorld world = plugin.getWorld(player.getWorld());
+		ZoneWorld world = plugin.getWorld(player.getWorld());
 		
 		Location movingFrom = event.getFrom();
 		Point oldPos = new Point(movingFrom.getBlockX(), movingFrom.getBlockZ());
@@ -107,7 +180,7 @@ public class ZonePlayerListener extends PlayerListener
 	public void onPlayerTeleport(PlayerTeleportEvent event)
 	{
 		TregminePlayer player = tregmine.getPlayer(event.getPlayer());
-		ZonesPlugin.ZoneWorld world = plugin.getWorld(player.getWorld());
+		ZoneWorld world = plugin.getWorld(player.getWorld());
 		
 		Location movingFrom = event.getFrom();
 		Point oldPos = new Point(movingFrom.getBlockX(), movingFrom.getBlockZ());

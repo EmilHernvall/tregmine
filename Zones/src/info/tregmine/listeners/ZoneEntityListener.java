@@ -4,6 +4,7 @@ import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
 import info.tregmine.api.Zone;
 import info.tregmine.quadtree.Point;
+import info.tregmine.zones.ZoneWorld;
 import info.tregmine.zones.ZonesPlugin;
 
 import org.bukkit.ChatColor;
@@ -38,7 +39,7 @@ public class ZoneEntityListener extends EntityListener
 			return;
 		}
 
-		ZonesPlugin.ZoneWorld world = plugin.getWorld(entity.getWorld());
+		ZoneWorld world = plugin.getWorld(entity.getWorld());
 
 		TregminePlayer player = tregmine.getPlayer((Player)event.getEntity());
 		Location location = player.getLocation();

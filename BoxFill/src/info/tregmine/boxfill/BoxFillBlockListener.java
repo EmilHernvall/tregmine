@@ -38,13 +38,13 @@ public class BoxFillBlockListener extends PlayerListener {
 						tregminePlayer.setBlock("b1", block);
 						tregminePlayer.setBlock("b2", null);
 						event.getPlayer().sendMessage("First block set");
-						tregminePlayer.setTempMetaInt("bcf", 1);
+						tregminePlayer.setMetaInt("bcf", 1);
 					}
 
 					if (count == 1) {
 						tregminePlayer.setBlock("b2", block);
 						event.getPlayer().sendMessage("Second block set");
-						tregminePlayer.setTempMetaInt("bcf", 0);
+						tregminePlayer.setMetaInt("bcf", 0);
 					}
 				}
 			}

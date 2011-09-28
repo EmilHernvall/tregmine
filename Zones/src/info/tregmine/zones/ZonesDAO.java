@@ -1,4 +1,4 @@
-package info.tregmine;
+package info.tregmine.zones;
 
 import info.tregmine.api.Zone;
 import info.tregmine.quadtree.Rectangle;
@@ -324,6 +324,197 @@ public class ZonesDAO
 			
 			stmt = conn.prepareStatement(sql);
 			stmt.setInt(1, zoneId);
+			stmt.setInt(2, userId);
+			stmt.execute();
+		}
+		finally {
+			if (stmt != null) {
+				try { stmt.close(); } catch (SQLException e) {}
+			}
+		}
+	}
+	
+	public List<Lot> getLots(String world)
+	throws SQLException
+	{
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		List<Lot> lots = new ArrayList<Lot>();
+		try {
+			stmt = conn.prepareStatement("SELECT zone_lot.* FROM zone_lot " +
+					"INNER JOIN zone USING (zone_id) " +
+					"WHERE zone_world = ?");
+			
+			stmt.setString(1, world);
+			stmt.execute();
+			
+			rs = stmt.getResultSet();
+			while (rs.next()) {
+				Lot lot = new Lot();
+				lot.setId(rs.getInt("lot_id"));
+				lot.setName(rs.getString("lot_name"));
+				lot.setZoneId(rs.getInt("zone_id"));
+				
+				int x1 = rs.getInt("lot_x1");
+				int y1 = rs.getInt("lot_y1");
+				int x2 = rs.getInt("lot_x2");
+				int y2 = rs.getInt("lot_y2");
+				
+				lot.setRect(new Rectangle(x1, y1, x2, y2));
+				
+				lots.add(lot);
+			}
+		}
+		finally {
+			if (rs != null) { 
+				try { rs.close(); } catch (SQLException e) {}
+			}
+			if (stmt != null) {
+				try { stmt.close(); } catch (SQLException e) {}
+			}
+		}
+		
+		for (Lot lot : lots) {
+			lot.setOwner(getLotOwners(lot.getId()));
+		}
+		
+		return lots;
+	}
+	
+	public List<String> getLotOwners(int lotId)
+	throws SQLException
+	{
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		List<String> owners = new ArrayList<String>();
+		try {
+			stmt = conn.prepareStatement("SELECT * FROM zone_lotuser " +
+					"INNER JOIN user ON uid = user_id " +
+					"WHERE lot_id = ?");
+			
+			stmt.setInt(1, lotId);
+			stmt.execute();
+			
+			rs = stmt.getResultSet();
+			while (rs.next()) {
+				owners.add(rs.getString("player"));
+			}
+		}
+		finally {
+			if (rs != null) { 
+				try { rs.close(); } catch (SQLException e) {}
+			}
+			if (stmt != null) {
+				try { stmt.close(); } catch (SQLException e) {}
+			}
+		}
+		
+		return owners;
+	}
+	
+	public void addLot(Lot lot)
+	throws SQLException
+	{
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		try {
+			String sql = "INSERT INTO zone_lot (zone_id, lot_name, lot_x1, lot_y1, lot_x2, lot_y2) ";
+			sql += "VALUES (?,?,?,?,?,?)";
+			
+			stmt = conn.prepareStatement(sql);
+			stmt.setInt(1, lot.getZoneId());
+			stmt.setString(2, lot.getName());
+			
+			Rectangle rect = lot.getRect();
+			stmt.setInt(3, rect.getLeft());
+			stmt.setInt(4, rect.getTop());
+			stmt.setInt(5, rect.getRight());
+			stmt.setInt(6, rect.getBottom());
+			
+			stmt.execute();
+			
+			stmt.execute("SELECT LAST_INSERT_ID()");
+			
+			rs = stmt.getResultSet();
+			if (rs.next()) {
+				lot.setId(rs.getInt(1));
+			}
+		}
+		finally {
+			if (rs != null) {
+				try { rs.close(); } catch (SQLException e) {}
+			}
+			if (stmt != null) {
+				try { stmt.close(); } catch (SQLException e) {}
+			}
+		}
+	}
+	
+	public void deleteLot(int lotId)
+	throws SQLException
+	{
+		PreparedStatement stmt = null;
+		try {
+			String sql = "DELETE FROM zone_lot WHERE lot_id = ?";
+			
+			stmt = conn.prepareStatement(sql);
+			stmt.setInt(1, lotId);
+			stmt.execute();
+		}
+		finally {
+			if (stmt != null) {
+				try { stmt.close(); } catch (SQLException e) {}
+			}
+		}
+	}
+	
+	public void addLotUser(int lotId, int userId)
+	throws SQLException
+	{
+		PreparedStatement stmt = null;
+		try {
+			String sql = "INSERT INTO zone_lotuser (lot_id, user_id) ";
+			sql += "VALUES (?,?)";
+			
+			stmt = conn.prepareStatement(sql);
+			stmt.setInt(1, lotId);
+			stmt.setInt(2, userId);
+			stmt.execute();
+		}
+		finally {
+			if (stmt != null) {
+				try { stmt.close(); } catch (SQLException e) {}
+			}
+		}
+	}
+	
+	public void deleteLotUsers(int lotId)
+	throws SQLException
+	{
+		PreparedStatement stmt = null;
+		try {
+			String sql = "DELETE FROM zone_lotuser WHERE lot_id = ?";
+			
+			stmt = conn.prepareStatement(sql);
+			stmt.setInt(1, lotId);
+			stmt.execute();
+		}
+		finally {
+			if (stmt != null) {
+				try { stmt.close(); } catch (SQLException e) {}
+			}
+		}
+	}
+	
+	public void deleteLotUser(int lotId, int userId)
+	throws SQLException
+	{
+		PreparedStatement stmt = null;
+		try {
+			String sql = "DELETE FROM zone_lotuser WHERE lot_id = ? AND user_id = ?";
+			
+			stmt = conn.prepareStatement(sql);
+			stmt.setInt(1, lotId);
 			stmt.setInt(2, userId);
 			stmt.execute();
 		}

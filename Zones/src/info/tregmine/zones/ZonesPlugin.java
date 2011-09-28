@@ -13,6 +13,8 @@ import info.tregmine.quadtree.QuadTree;
 import info.tregmine.quadtree.Rectangle;
 
 import java.sql.SQLException;
+import java.util.Comparator;
+import java.util.TreeMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,77 +34,14 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import info.tregmine.Tregmine; 
-import info.tregmine.ZonesDAO;
 
 public class ZonesPlugin extends JavaPlugin 
 {
-	public static class ZoneWorld
-	{
-		private World world;
-		private QuadTree<Zone> zonesLookup;
-		private Map<String, Zone> zoneNameLookup;
-		
-		public ZoneWorld(World world)
-		{
-			this.world = world;
-			this.zonesLookup = new QuadTree<Zone>(0);
-			this.zoneNameLookup = new HashMap<String, Zone>();
-		}
-		
-		public String getName()
-		{
-			return world.getName();
-		}
-		
-		public void addZone(Zone zone)
-		throws IntersectionException
-		{
-			for (Rectangle rect : zone.getRects()) {
-				zonesLookup.insert(rect, zone);
-			}	
-			zoneNameLookup.put(zone.getName(), zone);
-		}
-		
-		public boolean zoneExists(String name)
-		{
-			return zoneNameLookup.containsKey(name);
-		}
-		
-		public Zone getZone(String name)
-		{
-			return zoneNameLookup.get(name);
-		}
-		
-		public Zone findZone(Point p)
-		{
-			return zonesLookup.find(p);
-		}
-		
-		public void deleteZone(String name)
-		{
-			if (!zoneNameLookup.containsKey(name)) {
-				return;
-			}
-			
-			zoneNameLookup.remove(name);
-			
-			this.zonesLookup = new QuadTree<Zone>(0);
-			for (Zone zone : zoneNameLookup.values()) {
-				try {
-					for (Rectangle rect: zone.getRects()) {
-						zonesLookup.insert(rect, zone);
-					}
-				} catch (IntersectionException e) {
-					throw new RuntimeException(e);
-				}
-			}
-		}
-	}
-	
-	public final Logger log = Logger.getLogger("Minecraft");
+	private final Logger log = Logger.getLogger("Minecraft");
 	
 	public Tregmine tregmine = null;
-	public Map<String, ZoneWorld> worlds;
+	private Map<String, ZoneWorld> worlds;
+	private Map<Integer, Zone> zones;
 	
 	public void onLoad() 
 	{
@@ -131,31 +70,12 @@ public class ZonesPlugin extends JavaPlugin
 		//pluginMgm.registerEvent(Event.Type.CREATURE_SPAWN, new ZoneEntityListener(this), Priority.High, this);
 		pluginMgm.registerEvent(Event.Type.ENTITY_DAMAGE, new ZoneEntityListener(this), Priority.High, this);
 		
-		worlds = new HashMap<String, ZoneWorld>();
-		
-		Mysql mysql = null;
-		try {
-			mysql = new Mysql();
-			mysql.connect();
-			ZonesDAO dao = new ZonesDAO(mysql.connect);
-			
-			for (World world : server.getWorlds()) {
-				ZoneWorld zoneWorld = new ZoneWorld(world);
-				
-				List<Zone> zones = dao.getZones(world.getName());
-				for (Zone zone : zones) {
-					zoneWorld.addZone(zone);
-				}
-				
-				worlds.put(world.getName(), zoneWorld);
+		worlds = new TreeMap<String, ZoneWorld>(new Comparator<String>() {
+			public int compare(String a, String b) {
+				return a.compareToIgnoreCase(b);
 			}
-		} catch (IntersectionException e) {
-			throw new RuntimeException(e);
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
-		} finally {
-			mysql.close();
-		}
+		});
+		zones = new HashMap<Integer, Zone>();
 	}
 
 	public void onDisable()
@@ -164,7 +84,40 @@ public class ZonesPlugin extends JavaPlugin
 
 	public ZoneWorld getWorld(World world)
 	{
-		return worlds.get(world.getName());
+		ZoneWorld zoneWorld = worlds.get(world.getName());
+		
+		// lazy load zone worlds as required
+		if (zoneWorld == null) {
+			Mysql mysql = null;
+			try {
+				mysql = new Mysql();
+				mysql.connect();
+				ZonesDAO dao = new ZonesDAO(mysql.connect);
+				
+				List<Zone> zones = dao.getZones(world.getName());
+				for (Zone zone : zones) {
+					log.info("Loading zone " + zone.getName());
+					zoneWorld.addZone(zone);
+					this.zones.put(zone.getId(), zone);
+				}
+				
+				List<Lot> lots = dao.getLots(world.getName());
+				for (Lot lot : lots) {
+					log.info("Loading " + lot.getName());
+					zoneWorld.addLot(lot);
+				}
+				
+				worlds.put(world.getName(), zoneWorld);
+			} catch (IntersectionException e) {
+				throw new RuntimeException(e);
+			} catch (SQLException e) {
+				throw new RuntimeException(e);
+			} finally {
+				mysql.close();
+			}
+		}
+		
+		return zoneWorld;
 	}
 
 	public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args) 
@@ -178,7 +131,24 @@ public class ZonesPlugin extends JavaPlugin
 			return false;
 		}
 		
-		if (commandName.equals("zone")) {
+		if ("town".equals(commandName)) {
+			Zone zone = player.getCurrentZone();
+			if (zone == null) {
+				player.sendMessage(ChatColor.RED + "You are not currently in any zone.");
+				return true;
+			}
+			
+			commandName = "zone";
+			String[] args2 = new String[args.length + 1];
+			args2[0] = args[0];
+			args2[1] = zone.getName();
+			for (int i = 1; i < args.length; i++) {
+				args2[i+1] = args[i];
+			}
+			args = args2;
+		}
+		
+		if ("zone".equals(commandName)) {
 			if (args.length == 0) {
 				return true;
 			}
@@ -225,6 +195,24 @@ public class ZonesPlugin extends JavaPlugin
 			}
 			else if ("info".equals(args[0])) {
 				zoneInfo(player, args);
+				return true;
+			}
+		}
+		else if ("lot".equals(commandName)) {
+			if ("create".equals(args[0])) {
+				createLot(player, args);
+				return true;
+			}
+			else if ("addowner".equals(args[0])) {
+				setLotOwner(player, args);
+				return true;
+			}
+			else if ("delowner".equals(args[0])) {
+				setLotOwner(player, args);
+				return true;
+			}
+			else if ("delete".equals(args[0])) {
+				deleteLot(player, args);
 				return true;
 			}
 		}
@@ -571,7 +559,193 @@ public class ZonesPlugin extends JavaPlugin
 
 		for (String user : zone.getUsers()) {
 			Zone.Permission perm = zone.getUser(user);
-			player.sendMessage(ChatColor.RED + user + " - " + perm);
+			player.sendMessage(ChatColor.YELLOW + user + " - " + perm);
+		}
+	}
+	
+	public void createLot(TregminePlayer player, String[] args)
+	{
+		ZoneWorld world = getWorld(player.getWorld());
+		if (world == null) {
+			return;
+		}
+		
+		if (args.length < 3) {
+			player.sendMessage("syntax: /lot create [name] [owner]");
+			return;
+		}
+		
+		String name = args[1];
+		if (world.lotExists(name)) {
+			player.sendMessage(ChatColor.RED + "A lot named " + name + " does already exist.");
+			return;
+		}
+		
+		String playerName = args[2];
+		
+		Mysql mysql = null;
+		int userId;
+		try {
+			mysql = new Mysql();
+			mysql.connect();
+			ZonesDAO dao = new ZonesDAO(mysql.connect);
+			userId = dao.getUserId(playerName);
+		
+			if (userId == -1) {
+				player.sendMessage(ChatColor.RED + "Player " + args[2] + " was not found.");
+				return;			
+			}
+			
+			Block b1 = player.getBlock("zb1");
+			Block b2 = player.getBlock("zb2");
+			
+			Zone zone = world.findZone(new Point(b1.getX(), b1.getZ()));
+			
+			Zone.Permission perm = zone.getUser(player.getName());
+			if (perm != Zone.Permission.Owner) {
+				player.sendMessage(ChatColor.RED + "You are not allowed to create lots in zone " + zone.getName() + " (" + perm + ").");
+				return;
+			}
+			
+			Zone checkZone = world.findZone(new Point(b2.getX(), b2.getZ()));
+			
+			// identity check. both lookups should return exactly the same object
+			if (zone != checkZone) {
+				return;
+			}
+			
+			Rectangle rect = new Rectangle(b1.getX(), b1.getZ(), b2.getX(), b2.getZ());
+			
+			Lot lot = new Lot();
+			lot.setZoneId(zone.getId());
+			lot.setRect(rect);
+			lot.setName(args[1]);
+			lot.addOwner(playerName);
+			
+			try {
+				world.addLot(lot);
+			} catch (IntersectionException e) {
+				player.sendMessage(ChatColor.RED + "The specified rectangle intersects an existing lot.");
+				return;
+			}
+			
+			dao.addLot(lot);
+			dao.addLotUser(lot.getId(), userId);
+			
+			player.sendMessage(ChatColor.YELLOW + "[" + zone.getName() + "] Lot " + args[1] + " created for player " + playerName + ".");
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		} finally {
+			mysql.close();
+		}
+	}
+	
+	public void setLotOwner(TregminePlayer player, String[] args)
+	{
+		ZoneWorld world = getWorld(player.getWorld());
+		if (world == null) {
+			return;
+		}
+		
+		if (args.length < 3) {
+			player.sendMessage("syntax: /lot addowner [name] [player]");
+			return;
+		}
+		
+		String name = args[1];
+		
+		Lot lot = world.getLot(name);
+		if (lot == null) {
+			player.sendMessage(ChatColor.RED + "No lot named " + name + " found.");
+			return;
+		}
+		
+		Zone zone = zones.get(lot.getZoneId());
+		Zone.Permission perm = zone.getUser(player.getName());
+		if (perm != Zone.Permission.Owner && !lot.isOwner(player.getName())) {
+			player.sendMessage(ChatColor.RED + "You are not allowed to add owners to this lot.");
+			return;
+		}
+		
+		String playerName = args[2];
+		if (lot.isOwner(playerName)) {
+			player.sendMessage(ChatColor.RED + playerName + " is already an owner of lot " + name + ".");
+			return;
+		}
+		
+		Mysql mysql = null;
+		try {
+			mysql = new Mysql();
+			mysql.connect();
+			ZonesDAO dao = new ZonesDAO(mysql.connect);
+			int userId = dao.getUserId(playerName);
+			
+			if (userId == -1) {
+				player.sendMessage(ChatColor.RED + "Player " + args[2] + " was not found.");
+				return;
+			}
+			
+			if ("addowner".equals(args[0])) {
+				lot.addOwner(playerName);
+				dao.addLotUser(lot.getId(), userId);
+				
+				player.sendMessage(ChatColor.YELLOW + playerName + " has been added as owner of " + lot.getName() + ".");
+			} else {
+				lot.deleteOwner(playerName);
+				dao.deleteLotUser(lot.getId(), userId);
+				
+				player.sendMessage(ChatColor.YELLOW + playerName + " is no longer an owner of " + lot.getName() + ".");
+			}
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		} finally {
+			mysql.close();
+		}
+	}
+	
+	public void deleteLot(TregminePlayer player, String[] args)
+	{
+		ZoneWorld world = getWorld(player.getWorld());
+		if (world == null) {
+			return;
+		}
+		
+		if (args.length < 2) {
+			player.sendMessage("syntax: /lot delete [name]");
+			return;
+		}
+		
+		String name = args[1];
+		
+		Lot lot = world.getLot(name);
+		if (lot == null) {
+			player.sendMessage(ChatColor.RED + "No lot named " + name + " found.");
+			return;
+		}
+		
+		Zone zone = zones.get(lot.getZoneId());
+		Zone.Permission perm = zone.getUser(player.getName());
+		if (perm != Zone.Permission.Owner) {
+			player.sendMessage(ChatColor.RED + "You are not allowed to delete lots in zone " + zone.getName() + " (" + perm + ").");
+			return;
+		}
+		
+		Mysql mysql = null;
+		try {
+			mysql = new Mysql();
+			mysql.connect();
+			ZonesDAO dao = new ZonesDAO(mysql.connect);
+			
+			dao.deleteLot(lot.getId());
+			dao.deleteLotUsers(lot.getId());
+			
+			world.deleteLot(lot.getName());
+			
+			player.sendMessage(ChatColor.YELLOW + lot.getName() + " has been deleted.");
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		} finally {
+			mysql.close();
 		}
 	}
 }
