@@ -9,6 +9,7 @@
 	<target name="init">
 		<tstamp />
 		<mkdir dir="${build}" />
+        <copy file="${src}/plugin.yml" todir="${build}" />
 	</target>
 	
 	<target name="compile" depends="init">
