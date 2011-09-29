@@ -94,6 +94,7 @@ public class ZonesPlugin extends JavaPlugin
 				mysql.connect();
 				ZonesDAO dao = new ZonesDAO(mysql.connect);
 				
+				zoneWorld = new ZoneWorld(world);
 				List<Zone> zones = dao.getZones(world.getName());
 				for (Zone zone : zones) {
 					log.info("Loading zone " + zone.getName());
