@@ -20,7 +20,7 @@
 		<ant dir="../Invis" target="clean" inheritAll="false" />
 		<ant dir="../Item" target="clean" inheritAll="false" />
 		<ant dir="../Lookup" target="clean" inheritAll="false" />
-		<ant dir="../MakeResidents" target="clean" inheritAll="false" />
+		<!--<ant dir="../MakeResidents" target="clean" inheritAll="false" />-->
 		<ant dir="../miscButton" target="clean" inheritAll="false" />
 		<ant dir="../SignColours" target="clean" inheritAll="false" />
 		<ant dir="../Surprise" target="clean" inheritAll="false" />
@@ -48,7 +48,7 @@
 		<ant dir="../Invis" target="jar" inheritAll="false" />
 		<ant dir="../Item" target="jar" inheritAll="false" />
 		<ant dir="../Lookup" target="jar" inheritAll="false" />
-		<ant dir="../MakeResidents" target="jar" inheritAll="false" />
+		<!--<ant dir="../MakeResidents" target="jar" inheritAll="false" />-->
 		<ant dir="../miscButton" target="jar" inheritAll="false" />
 		<ant dir="../SignColours" target="jar" inheritAll="false" />
 		<ant dir="../Surprise" target="jar" inheritAll="false" />
@@ -60,28 +60,28 @@
 	</target>
     
     <target name="copy" depends="build">
-    	<copy file="../tregmine/tregmine.jar" tofile="jar/tregmine.jar" />
-    	<copy file="../AntiCheat/AntiCheat.jar" tofile="jar/AntiCheat.jar" />
+    	<copy file="../tregmine/tregmine.jar" tofile="jar/Tregmine.jar" />
+    	<!--<copy file="../AntiCheat/AntiCheat.jar" tofile="jar/AntiCheat.jar" />-->
     	<copy file="../BasicCommands/BasicCommands.jar" tofile="jar/BasicCommands.jar" />
     	<copy file="../BoxFill/BoxFill.jar" tofile="jar/BoxFill.jar" />
     	<copy file="../Chat/Chat.jar" tofile="jar/Chat.jar" />
     	<copy file="../ChestBless/ChestBless.jar" tofile="jar/ChestBless.jar" />
     	<copy file="../ChildsPlay/ChildsPlay.jar" tofile="jar/ChildsPlay.jar" />
-    	<copy file="../Compass2/Compass2.jar" tofile="jar/Compass2.jar" />
+    	<copy file="../Compass2/Compass2.jar" tofile="jar/Compass.jar" />
     	<copy file="../Currency/Currency.jar" tofile="jar/Currency.jar" />
     	<copy file="../Death/Death.jar" tofile="jar/Death.jar" />
-    	<copy file="../extAPI/extAPI.jar" tofile="jar/extAPI.jar" />
+    	<!--<copy file="../extAPI/extAPI.jar" tofile="jar/extAPI.jar" />-->
     	<copy file="../InventorySpy/InventorySpy.jar" tofile="jar/InventorySpy.jar" />
     	<copy file="../Invis/Invis.jar" tofile="jar/Invis.jar" />
     	<copy file="../Item/Item.jar" tofile="jar/Item.jar" />
     	<copy file="../Lookup/Lookup.jar" tofile="jar/Lookup.jar" />
-    	<copy file="../MakeResidents/MakeResidents.jar" tofile="jar/MakeResidents.jar" />
+    	<!--<copy file="../MakeResidents/MakeResidents.jar" tofile="jar/MakeResidents.jar" />-->
     	<copy file="../miscButton/miscButton.jar" tofile="jar/miscButton.jar" />
     	<copy file="../SignColours/SignColours.jar" tofile="jar/SignColours.jar" />
-    	<copy file="../Surprise/Surprise.jar" tofile="jar/Surprise.jar" />
+    	<!--<copy file="../Surprise/Surprise.jar" tofile="jar/Surprise.jar" />-->
     	<copy file="../Teleport/Teleport.jar" tofile="jar/Teleport.jar" />
-    	<copy file="../UserStats/UserStats.jar" tofile="jar/UserStats.jar" />
-    	<copy file="../WallOfStats/WallOfStats.jar" tofile="jar/WallOfStats.jar" />
+    	<!--<copy file="../UserStats/UserStats.jar" tofile="jar/UserStats.jar" />-->
+    	<!--<copy file="../WallOfStats/WallOfStats.jar" tofile="jar/WallOfStats.jar" />-->
     	<copy file="../Who/Who.jar" tofile="jar/Who.jar" />
     	<copy file="../Zones/Zones.jar" tofile="jar/Zones.jar" />
     </target>	
