@@ -1,6 +1,7 @@
 package info.tregmine.inventoryspy;
 
 
+import org.bukkit.Material;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInventoryEvent;
 import org.bukkit.event.player.PlayerListener;
@@ -29,6 +30,12 @@ public class SpyPlayerListener extends PlayerListener {
 
 	public void onPlayerPickupItem (PlayerPickupItemEvent event){
 
+		if (event.getItem().getItemStack().getType() == Material.MOB_SPAWNER) {
+			event.setCancelled(true);
+			return;
+		}
+		
+		
 		if (this.plugin.whoDropedItem.containsKey(event.getItem().hashCode())) {
 
 			if (event.isCancelled()) {
