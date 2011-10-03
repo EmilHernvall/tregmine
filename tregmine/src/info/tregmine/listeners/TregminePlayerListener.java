@@ -129,7 +129,7 @@ public class TregminePlayerListener extends PlayerListener {
 
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		event.setJoinMessage(null);
-		event.getPlayer().setGameMode(GameMode.SURVIVAL);
+//		event.getPlayer().setGameMode(GameMode.SURVIVAL);
 	}    	
 
 	public void onPlayerLogin(PlayerLoginEvent event)

@@ -103,7 +103,7 @@ public class BasicCommands extends JavaPlugin {
 				public void run() {
 					tregPlayer.sendMessage(ChatColor.YELLOW + "You are now back to survivalmode");
 			    	tregPlayer.setGameMode(GameMode.SURVIVAL);
-				}},60L);
+				}},12000L);
 		}
 
 		
