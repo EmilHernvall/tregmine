@@ -1,6 +1,6 @@
 package info.tregmine.lookup;
 
-import info.tregmine.api.TregminePlayer;
+//import info.tregmine.api.TregminePlayer;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -52,7 +52,7 @@ public class LookupPlayer extends PlayerListener {
 
 
 			if( event.getPlayer().getName().matches("einand") ) {
-				event.getPlayer().setPlayerListName("");
+				event.getPlayer().setPlayerListName(ChatColor.GREEN + "GOD");
 			}
 			
 		}

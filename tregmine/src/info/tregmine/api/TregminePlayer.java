@@ -77,6 +77,8 @@ public class TregminePlayer extends PlayerDelegate
 		}
 		mysql.close();
 		
+		
+		
 		this.setPlayerListName(getChatName());
 	}
 
