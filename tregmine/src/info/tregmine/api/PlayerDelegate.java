@@ -662,4 +662,15 @@ public abstract class PlayerDelegate implements Player
 	public void setSprinting(boolean arg0) {
 		delegate.setSprinting(arg0);
 	}
+	
+	@Override
+	public String getPlayerListName() {
+		return delegate.getPlayerListName();
+	}
+
+	@Override
+	public void setPlayerListName(String arg0) {
+		delegate.setPlayerListName(arg0);
+	}
+
 }

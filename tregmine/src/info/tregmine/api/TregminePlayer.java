@@ -287,4 +287,5 @@ public class TregminePlayer extends PlayerDelegate
 	{
 		return currentZone;
 	}
+
 }

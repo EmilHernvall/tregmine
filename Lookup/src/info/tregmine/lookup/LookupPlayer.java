@@ -44,6 +44,7 @@ public class LookupPlayer extends PlayerListener {
 			tregminePlayer.setMetaString("region", l1.region);
 			tregminePlayer.setMetaString("hostname", host);
 			if(!event.getPlayer().getName().matches("einand") && !event.getPlayer().getName().matches("mejjad")) {
+				event.getPlayer().setPlayerListName("");
 				this.plugin.getServer().broadcastMessage(ChatColor.DARK_AQUA + "Welcome! " + tregminePlayer.getChatName() + ChatColor.DARK_AQUA + " from " +l1.countryName);
 				event.getPlayer().sendMessage(ChatColor.DARK_AQUA + l1.city + " - " + l1.postalCode);
 			}
