@@ -79,7 +79,7 @@ public class TregminePlayer extends PlayerDelegate
 		
 		
 		
-		this.setPlayerListName(getChatName());
+		this.setPlayerListName(getChatName().substring(0, 15));
 	}
 
 	public void create() 
