@@ -6,7 +6,7 @@
     
 	<target name="clean" depends="init">
 		<ant dir="../tregmine" target="clean" inheritAll="false" />
-		<ant dir="../AntiCheat" target="clean" inheritAll="false" />
+		<!--<ant dir="../AntiCheat" target="clean" inheritAll="false" />-->
 		<ant dir="../BasicCommands" target="clean" inheritAll="false" />
 		<ant dir="../BoxFill" target="clean" inheritAll="false" />
 		<ant dir="../Chat" target="clean" inheritAll="false" />
@@ -35,7 +35,7 @@
 		<ant dir="../tregmine" target="jar" inheritAll="false" />
 		<ant dir="../Currency" target="jar" inheritAll="false" />
         
-		<ant dir="../AntiCheat" target="jar" inheritAll="false" />
+		<!--<ant dir="../AntiCheat" target="jar" inheritAll="false" />-->
 		<ant dir="../BasicCommands" target="jar" inheritAll="false" />
 		<ant dir="../BoxFill" target="jar" inheritAll="false" />
 		<ant dir="../Chat" target="jar" inheritAll="false" />
