@@ -76,8 +76,12 @@ public class TregminePlayer extends PlayerDelegate
 			}
 		}
 		mysql.close();
-		
-		this.setPlayerListName(getChatName().substring(0, 15));
+
+		if (getChatName().length() > 16) {
+			this.setPlayerListName(getChatName().substring(0, 15));
+		} else {
+			this.setPlayerListName(getChatName());
+		}
 	}
 
 	public void create() 

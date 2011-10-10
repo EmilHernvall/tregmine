@@ -14,10 +14,10 @@
 	<target name="compile" depends="init">
 		
 		<javac 
+                        includeantruntime="false"
 			srcdir="${src}" 
 			destdir="${build}"
 			debug="on"
-			deprecation="on"
 			debuglevel="lines,vars,source">
 			
 			<compilerarg value="-Xlint:unchecked"/>
@@ -38,7 +38,11 @@
 	</target>
     
 	<target name="jar" depends="compile">
-		<jar destfile="${ant.project.name}.jar" basedir="${build}" />
+		<jar destfile="${ant.project.name}.jar" basedir="${build}">
+                    <manifest>
+                        <attribute name="Class-Path" value="lib/quadtree.jar" />
+                    </manifest>
+                </jar>
 	</target>
 	
 </project>
