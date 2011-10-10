@@ -62,6 +62,7 @@ public class BlessPlayer extends PlayerListener {
 
 		}
 
+		
 		if (event.getAction() == Action.RIGHT_CLICK_BLOCK && player.getItemInHand().getType() == Material.BONE && (tregminePlayer.isAdmin() || tregminePlayer.getMetaBoolean("bless") &&
 				(		block.getType() == Material.CHEST || 
 				block.getType() == Material.FURNACE ||
