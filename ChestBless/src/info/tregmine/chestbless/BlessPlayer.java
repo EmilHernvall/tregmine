@@ -35,7 +35,7 @@ public class BlessPlayer extends PlayerListener {
 						block.getType() == Material.WOODEN_DOOR ||
 						block.getType() == Material.LEVER ||
 						block.getType() == Material.STONE_BUTTON ||
-						block.getType() == Material.STONE_SPADE ||
+						block.getType() == Material.STONE_PLATE ||
 						block.getType() == Material.WOOD_PLATE ||
 						block.getType() == Material.WORKBENCH ||
 						block.getType() == Material.SIGN_POST ||
@@ -62,23 +62,32 @@ public class BlessPlayer extends PlayerListener {
 
 		}
 
+		
 		if (event.getAction() == Action.RIGHT_CLICK_BLOCK && player.getItemInHand().getType() == Material.BONE && (tregminePlayer.isAdmin() || tregminePlayer.getMetaBoolean("bless") &&
 				(		block.getType() == Material.CHEST || 
-						block.getType() == Material.FURNACE ||
-						block.getType() == Material.BURNING_FURNACE ||
-						block.getType() == Material.WORKBENCH)	
+				block.getType() == Material.FURNACE ||
+				block.getType() == Material.BURNING_FURNACE ||
+				block.getType() == Material.WOOD_DOOR ||
+				block.getType() == Material.WOODEN_DOOR ||
+				block.getType() == Material.LEVER ||
+				block.getType() == Material.STONE_BUTTON ||
+				block.getType() == Material.STONE_PLATE ||
+				block.getType() == Material.WOOD_PLATE ||
+				block.getType() == Material.WORKBENCH ||
+				block.getType() == Material.SIGN_POST ||
+				block.getType() == Material.SIGN)	
 				)) {
 			Location loc = block.getLocation();
 			int checksum = (loc.getBlockX() + "," + loc.getBlockZ() + "," + loc.getBlockY() + "," + loc.getWorld().getName()).hashCode();
 			
 			String name = tregminePlayer.getMetaString("chestbless");
-			this.plugin.getServer().getPlayer(name).sendMessage(ChatColor.AQUA + "Your god blessed a chest in your name!");
-			player.sendMessage(ChatColor.AQUA + "You blessed a chest for " + name);
+			this.plugin.getServer().getPlayer(name).sendMessage(ChatColor.AQUA + "Your god blessed in your name!");
+			player.sendMessage(ChatColor.AQUA + "You blessed for " + name);
 			this.plugin.chests.put(checksum, name);
 			info.tregmine.database.Mysql mysql = new info.tregmine.database.Mysql();
 			mysql.connect();
 			info.tregmine.chestbless.Store.savebless(checksum, name, player.getWorld().getName(), mysql);
-			this.plugin.log.info(player.getName() + " Blessed a chest " + checksum + " to " + name);
+			this.plugin.log.info(player.getName() + " Blessed a block " + checksum + " to " + name);
 			mysql.close();
 
 			event.setCancelled(true);
@@ -88,10 +97,18 @@ public class BlessPlayer extends PlayerListener {
 
 		if ((event.getAction() == Action.RIGHT_CLICK_BLOCK  || event.getAction() == Action.LEFT_CLICK_BLOCK) && 
 				(		block.getType() == Material.CHEST || 
-						block.getType() == Material.FURNACE ||
-						block.getType() == Material.BURNING_FURNACE ||
-						block.getType() == Material.WORKBENCH)	
-				) {
+				block.getType() == Material.FURNACE ||
+				block.getType() == Material.BURNING_FURNACE ||
+				block.getType() == Material.WOOD_DOOR ||
+				block.getType() == Material.WOODEN_DOOR ||
+				block.getType() == Material.LEVER ||
+				block.getType() == Material.STONE_BUTTON ||
+				block.getType() == Material.STONE_PLATE ||
+				block.getType() == Material.WOOD_PLATE ||
+				block.getType() == Material.WORKBENCH ||
+				block.getType() == Material.SIGN_POST ||
+				block.getType() == Material.SIGN)	
+		) {
 			Location loc = block.getLocation();
 			int checksum = (loc.getBlockX() + "," + loc.getBlockZ() + "," + loc.getBlockY() + "," + loc.getWorld().getName()).hashCode();
 			
