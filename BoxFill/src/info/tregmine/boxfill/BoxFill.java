@@ -24,12 +24,40 @@ import info.tregmine.api.TregminePlayer;
 public class BoxFill extends JavaPlugin {
 	
 	private static final Material[] disallowedMaterials = {
-			Material.APPLE,	Material.ARROW,	Material.BED, Material.BED_BLOCK,
-			Material.BOAT, Material.BONE, Material.BOOK, Material.BOW, Material.BOWL,
-			Material.BREAD, Material.BROWN_MUSHROOM, Material.BUCKET, Material.BURNING_FURNACE,
-			Material.CACTUS, Material.CAKE,	Material.CHEST,	Material.IRON_DOOR,	
-			Material.IRON_DOOR_BLOCK, Material.MUSHROOM_SOUP, Material.RED_MUSHROOM,
-			Material.YELLOW_FLOWER, Material.RED_ROSE, Material.SPONGE,	Material.SAPLING
+			Material.APPLE,
+			Material.ARROW,
+			Material.BED,
+			Material.BED_BLOCK,
+			Material.BOAT,
+			Material.BONE,
+			Material.BOOK,
+			Material.BOW,
+			Material.BOWL,
+			Material.BREAD,
+			Material.BROWN_MUSHROOM,
+			Material.BUCKET,
+			Material.BURNING_FURNACE,
+			Material.CACTUS,
+			Material.CAKE,
+			Material.CHEST,
+			Material.IRON_DOOR,	
+			Material.IRON_DOOR_BLOCK,
+			Material.MUSHROOM_SOUP,
+			Material.RED_MUSHROOM,
+			Material.YELLOW_FLOWER,
+			Material.RED_ROSE,
+			Material.SPONGE,
+			Material.SAPLING,
+			Material.BEDROCK,
+			Material.CACTUS,
+			Material.CLAY,
+			Material.CLAY_BRICK,
+			Material.COAL_ORE,
+			Material.DIAMOND_ORE,
+			Material.GOLD_ORE,
+			Material.IRON_ORE,
+			Material.LAPIS_ORE,
+			Material.REDSTONE_ORE
 		};
 	
 	private static int MAX_FILL_SIZE = (10 * 16) * (10 * 16) * 128; 

@@ -9,7 +9,7 @@ import info.tregmine.listeners.ZoneEntityListener;
 import info.tregmine.listeners.ZonePlayerListener;
 import info.tregmine.quadtree.IntersectionException;
 import info.tregmine.quadtree.Point;
-import info.tregmine.quadtree.QuadTree;
+//import info.tregmine.quadtree.QuadTree;
 import info.tregmine.quadtree.Rectangle;
 
 import java.sql.SQLException;

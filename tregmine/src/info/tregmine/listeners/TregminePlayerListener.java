@@ -9,7 +9,7 @@ import java.util.Date;
 import java.util.TimeZone;
 
 import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
+//import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 //import org.bukkit.entity.Player;
@@ -129,7 +129,7 @@ public class TregminePlayerListener extends PlayerListener {
 
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		event.setJoinMessage(null);
-		event.getPlayer().setGameMode(GameMode.SURVIVAL);
+//		event.getPlayer().setGameMode(GameMode.SURVIVAL);
 	}    	
 
 	public void onPlayerLogin(PlayerLoginEvent event)

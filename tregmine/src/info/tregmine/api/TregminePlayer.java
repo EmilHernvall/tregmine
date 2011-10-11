@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.util.HashMap;
 
 import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
+//import org.bukkit.GameMode;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
@@ -76,6 +76,8 @@ public class TregminePlayer extends PlayerDelegate
 			}
 		}
 		mysql.close();
+		
+		this.setPlayerListName(getChatName().substring(0, 15));
 	}
 
 	public void create() 
@@ -287,4 +289,5 @@ public class TregminePlayer extends PlayerDelegate
 	{
 		return currentZone;
 	}
+
 }

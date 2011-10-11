@@ -1,5 +1,7 @@
 package info.tregmine.lookup;
 
+//import info.tregmine.api.TregminePlayer;
+
 import java.io.IOException;
 import java.net.InetSocketAddress;
 
@@ -46,7 +48,13 @@ public class LookupPlayer extends PlayerListener {
 			if(!event.getPlayer().getName().matches("einand") && !event.getPlayer().getName().matches("mejjad")) {
 				this.plugin.getServer().broadcastMessage(ChatColor.DARK_AQUA + "Welcome! " + tregminePlayer.getChatName() + ChatColor.DARK_AQUA + " from " +l1.countryName);
 				event.getPlayer().sendMessage(ChatColor.DARK_AQUA + l1.city + " - " + l1.postalCode);
+			} 
+
+
+			if( event.getPlayer().getName().matches("einand") ) {
+				event.getPlayer().setPlayerListName(ChatColor.GREEN + "GOD");
 			}
+			
 		}
 	}    
 }
