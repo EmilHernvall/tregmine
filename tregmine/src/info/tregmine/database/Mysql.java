@@ -13,7 +13,7 @@ public class Mysql {
 //	private PreparedStatement preparedStatement = null;
 	public ResultSet resultSet = null;
 
-	private String url = "jdbc:mysql://mc.tregmine.info/minecraft";
+	private String url = "jdbc:mysql://127.0.0.1/minecraft";
 	private String user = "minecraft";
 	private String pw = "cUqeWemUGeYaquxUpHaye8rUcrAteWre";
 	//private String url = "jdbc:mysql://mc.tregmine.info:3306/minecraft"; 
