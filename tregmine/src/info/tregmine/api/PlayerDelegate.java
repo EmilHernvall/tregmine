@@ -4,6 +4,7 @@ import java.net.InetSocketAddress;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.Map;
 import java.util.UUID;
 
 import org.bukkit.Achievement;
@@ -673,4 +674,18 @@ public abstract class PlayerDelegate implements Player
 		delegate.setPlayerListName(arg0);
 	}
 
+	@Override
+	public void setTicksLived(int arg0) {
+		delegate.setTicksLived(arg0);
+	}
+
+	@Override
+	public int getTicksLived() {
+		return delegate.getTicksLived();
+	}
+
+	@Override
+	public Map<String, Object> serialize() {
+		return delegate.serialize();
+	}
 }
