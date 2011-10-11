@@ -56,6 +56,8 @@ public class ZoneBlockListener extends BlockListener
 		    		event.setCancelled(true);
 		    		return;
 	    		}
+
+                        return;
 	    	}
 	    	
 	    	// if everyone is allowed to build in this zone...
@@ -111,6 +113,10 @@ public class ZoneBlockListener extends BlockListener
 		    		event.setCancelled(true);
 		    		return;
 	    		}
+
+                        // we should only get here if the event is allowed, in which case we don't need
+                        // any more checks.
+			return;
 	    	}
 	    	
 	    	// if everyone is allowed to build in this zone...

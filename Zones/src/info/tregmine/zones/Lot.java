@@ -34,6 +34,10 @@ public class Lot
 	public void setZoneId(int zoneId) {
 		this.zoneId = zoneId;
 	}
+
+        public Set<String> getOwners() {
+            return owners;
+        }
 	
 	public void setOwner(List<String> owners) {
 		this.owners.addAll(owners);

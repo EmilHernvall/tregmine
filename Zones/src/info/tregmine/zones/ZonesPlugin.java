@@ -340,7 +340,7 @@ public class ZonesPlugin extends JavaPlugin
 			return;
 		}
 		
-		if (zone.getUser(player.getName()) != Permission.Owner) {
+		if (zone.getUser(player.getName()) != Permission.Owner && !player.isAdmin()) {
 			player.sendMessage(ChatColor.RED + "[" + zone.getName() + "] " + "You do not have permission to add users to this zone.");
 			return;
 		}
