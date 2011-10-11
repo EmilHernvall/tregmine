@@ -85,6 +85,8 @@ public class Chat extends JavaPlugin {
 				this.getServer().broadcastMessage("<" + ChatColor.LIGHT_PURPLE + "GOD" + ChatColor.WHITE + "> " + ChatColor.LIGHT_PURPLE +  buffMsg);
 			} else if (from.getName().matches("Mksen")){
 				this.getServer().broadcastMessage("<" + ChatColor.YELLOW + "GOD" + ChatColor.WHITE + "> " + ChatColor.LIGHT_PURPLE +  buffMsg);
+			} else if (from.getName().matches("knipil")){
+				this.getServer().broadcastMessage("<" + ChatColor.DARK_PURPLE + "GOD" + ChatColor.WHITE + "> " + ChatColor.LIGHT_PURPLE +  buffMsg);
 			} else {
 				this.getServer().broadcastMessage("<" + ChatColor.RED + "GOD" + ChatColor.WHITE + "> " + ChatColor.LIGHT_PURPLE +  buffMsg);				
 			}
@@ -150,23 +152,19 @@ public class Chat extends JavaPlugin {
 			}
 			
 			for (Player player : players) {
-			if (!this.channel.containsKey(player.getName())) {
-				this.channel.put(player.getName(), "global".toUpperCase());
-			}
-			
-			if (this.channel.get(from.getName()).toUpperCase().matches(this.channel.get(player.getName()).toUpperCase())) {
+				if (!this.channel.containsKey(player.getName())) {
+					this.channel.put(player.getName(), "global".toUpperCase());
+				}
 				
-				player.sendMessage("* " + tregminePlayer.getChatName() + ChatColor.WHITE + buf.toString() );
-				
-//				getServer().broadcastMessage("* " + tregminePlayer.getChatName() + ChatColor.WHITE + buf.toString());
-//				this.log.info(this.channel  + " - * " + from.getName() + buf.toString());
+				if (this.channel.get(from.getName()).toUpperCase().matches(this.channel.get(player.getName()).toUpperCase())) {
+					
+					player.sendMessage("* " + tregminePlayer.getChatName() + ChatColor.WHITE + buf.toString() );
+					
+	//				getServer().broadcastMessage("* " + tregminePlayer.getChatName() + ChatColor.WHITE + buf.toString());
+	//				this.log.info(this.channel  + " - * " + from.getName() + buf.toString());
+				}
 			}
 
-			}
-
-			
-			
-			
 			return true;
 		}
 
@@ -188,16 +186,6 @@ public class Chat extends JavaPlugin {
 					buf.append(" " + args[i]);
 				}
 				String buffMsg = buf.toString();
-				
-				if(from.getName().matches("LilKiw") && toPlayer.getName().matches("Camrenn")) {
-					from.sendMessage(ChatColor.GREEN + "(to) " + toPlayer.getChatName() + ChatColor.GREEN + ": "  + buffMsg);
-					return true;
-				}
-				
-				if(from.getName().matches("Camrenn") && toPlayer.getName().matches("LilKiw")) {
-					from.sendMessage(ChatColor.GREEN + "(to) " + toPlayer.getChatName() + ChatColor.GREEN + ": "  + buffMsg);
-					return true;
-				}
 				
 				if (!toPlayer.getMetaBoolean("invis")) {
 					from.sendMessage(ChatColor.GREEN + "(to) " + toPlayer.getChatName() + ChatColor.GREEN + ": "  + buffMsg);

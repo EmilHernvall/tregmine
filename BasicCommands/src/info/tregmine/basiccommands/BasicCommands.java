@@ -332,7 +332,6 @@ public class BasicCommands extends JavaPlugin {
 					return true;
 				}
 
-
 				this.getServer().broadcastMessage(tregminePlayer.getChatName() + ChatColor.AQUA + " kicked " + victimPlayer.getChatName() + ChatColor.AQUA + " for 1 min");
 				this.log.info(victim.getName() + " kicked by " + player.getName());
 				victim.kickPlayer("kicked by " + player.getName());
