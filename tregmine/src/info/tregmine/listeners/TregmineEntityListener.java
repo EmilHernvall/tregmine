@@ -34,16 +34,11 @@ public class TregmineEntityListener extends EntityListener  {
 
 	public void onEntityExplode (EntityExplodeEvent event) {
 		
-		if(event.getLocation().getWorld().getName().matches("ChildsPlay")) {
-			event.setCancelled(true);
-		}
-
-		
 		if(event.getLocation().getWorld().getName().matches("world")) {
 			event.setCancelled(true);
 		}
 
-		if(event.getLocation().getWorld().getName().matches("alpha")) {
+		if(event.getLocation().getWorld().getName().matches("citadel")) {
 			event.setCancelled(true);
 		}
 

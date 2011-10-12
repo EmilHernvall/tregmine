@@ -203,13 +203,13 @@ public class BoxFill extends JavaPlugin {
 			// otherwise, try regular fills
 			else {
 				MaterialData mat = parseMaterial(args[0]);
-				if (mat != null && Arrays.binarySearch(disallowedMaterials, mat.getItemType()) > 0) {
+				if (mat != null && Arrays.binarySearch(disallowedMaterials, mat.getItemType()) > 0 && args.length < 1 ) {
 					player.sendMessage(ChatColor.RED + "Disabled!");
 					return true;
 				}
 				
 				MaterialData toMat = args.length > 1 ? parseMaterial(args[1]) : null;
-				if (toMat != null && Arrays.binarySearch(disallowedMaterials, toMat.getItemType()) > 0) {
+				if (toMat != null && Arrays.binarySearch(disallowedMaterials, toMat.getItemType()) > 0 && args.length < 1) {
 					player.sendMessage(ChatColor.RED + "Disabled!");
 					return true;
 				}

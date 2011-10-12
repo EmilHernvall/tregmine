@@ -64,10 +64,11 @@ public List<Player> invisible = new ArrayList<Player>();
 			}
 		}
 
-	  
-    this.RANGE = getConfiguration().getInt("range", 512);
-    this.TOTAL_REFRESHES = getConfiguration().getInt("total_refreshes", 10);
-    this.REFRESH_TIMER = getConfiguration().getInt("refresh_timer", 2);
+
+		//TODO: Not sure if this work
+    this.RANGE = 512;           // getConfiguration().getInt("range", 512);
+    this.TOTAL_REFRESHES = 10;  // getConfiguration().getInt("total_refreshes", 10);
+    this.REFRESH_TIMER = 2;     // getConfiguration().getInt("refresh_timer", 2);
 
     PluginManager pm = getServer().getPluginManager();
     

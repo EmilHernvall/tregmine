@@ -3,6 +3,7 @@ package info.tregmine.api;
 import java.net.InetSocketAddress;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -672,5 +673,23 @@ public abstract class PlayerDelegate implements Player
 	public void setPlayerListName(String arg0) {
 		delegate.setPlayerListName(arg0);
 	}
+	@Override
+	public int getTicksLived() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 
+	@Override
+	public void setTicksLived(int arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Map<String, Object> serialize() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	
 }
