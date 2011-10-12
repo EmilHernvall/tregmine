@@ -40,7 +40,7 @@ public class ChatPlayer extends PlayerListener {
 						this.plugin.channel.put(player.getName(), "global".toUpperCase());
 					}
 					
-					if (this.plugin.channel.get(sender.getName()).toUpperCase().matches(this.plugin.channel.get(player.getName()).toUpperCase())) {
+					if (this.plugin.channel.get(sender.getName()).toUpperCase().equals(this.plugin.channel.get(player.getName()).toUpperCase())) {
 						String channel = this.plugin.channel.get(sender.getName()) + " ";
 						if (this.plugin.channel.get(sender.getName()).matches("GLOBAL")) {
 							channel = "";
