@@ -239,6 +239,7 @@ public class BasicCommands extends JavaPlugin {
 				if (args[1].matches("settler")) {
 					vtregPlayer.setMetaString("color", "trial");
 					vtregPlayer.setMetaString("trusted", "true");
+					vtregPlayer.setTemporaryChatName(vtregPlayer.getChatName() + vtregPlayer.getName());
 
 					player.sendMessage(ChatColor.AQUA + "You made " + victimPlayer.getChatName() + ChatColor.AQUA + " settler of this server" );
 					victim.sendMessage("Welcome! You are now made settler");
@@ -251,6 +252,7 @@ public class BasicCommands extends JavaPlugin {
 					player.sendMessage(ChatColor.AQUA + "You warned " + victimPlayer.getChatName() );
 					victim.sendMessage("You are now warned");
 					this.log.info(victim.getName() + " was warned by " + player.getName());
+					vtregPlayer.setTemporaryChatName(vtregPlayer.getChatName() + vtregPlayer.getName());
 					return true;
 				}
 
@@ -260,18 +262,9 @@ public class BasicCommands extends JavaPlugin {
 					player.sendMessage(ChatColor.AQUA + "You warned " + victimPlayer.getChatName() + " and removed his building rights" );
 					victim.sendMessage("You are now warned and removed building right");
 					this.log.info(victim.getName() + " was hardwarned by " + player.getName());
+					vtregPlayer.setTemporaryChatName(vtregPlayer.getChatName() + vtregPlayer.getName());
 					return true;
 				}
-				
-				if (args[1].matches("skyland")) {
-					vtregPlayer.setMetaString("skyland", "true");
-
-					player.sendMessage(ChatColor.AQUA + "You invited " + victimPlayer.getChatName() + ChatColor.AQUA + " to skyland" );
-					victim.sendMessage(ChatColor.YELLOW + "Welcome! You are herby invited to build in skyland say " + ChatColor.BLUE + "/skyland" + ChatColor.YELLOW +  " to go there");
-					this.log.info(victim.getName() + " was given skyland rights by " + player.getName());
-					return true;
-				}
-
 
 				if (args[1].matches("trial")) {
 					player.sendMessage(ChatColor.RED + "Please use /user make settler name");
@@ -281,6 +274,7 @@ public class BasicCommands extends JavaPlugin {
 					vtregPlayer.setMetaString("fora", "true");
 					player.sendMessage(ChatColor.AQUA + "You made " + victimPlayer.getChatName() + ChatColor.AQUA + " a fora builder" );
 					this.log.info(victim.getName() + " was made resident by " + tregminePlayer.getChatName());
+					vtregPlayer.setTemporaryChatName(vtregPlayer.getChatName() + vtregPlayer.getName());
 					return true;
 				}
 
@@ -290,6 +284,7 @@ public class BasicCommands extends JavaPlugin {
 					this.log.info(victim.getName() + " was given trusted rights by " + tregminePlayer.getChatName());
 					player.sendMessage(ChatColor.AQUA + "You made " + victimPlayer.getChatName() + ChatColor.AQUA + " a resident" );
 					victim.sendMessage("Welcome! You are now a resident");
+					vtregPlayer.setTemporaryChatName(vtregPlayer.getChatName() + vtregPlayer.getName());
 					return true;
 				}
 
@@ -300,10 +295,11 @@ public class BasicCommands extends JavaPlugin {
 					player.sendMessage(ChatColor.AQUA + "You made  " + vtregPlayer.getChatName() + " a donator" );
 					this.log.info(victim.getName() + " was made donator by" + tregminePlayer.getChatName());
 					victim.sendMessage("Congratulation, you are now a donator!");
+					vtregPlayer.setTemporaryChatName(vtregPlayer.getChatName() + vtregPlayer.getName());
 					return true;
 				}
 
-				if (args[1].matches("police") && player.isOp() ) {
+				if (args[1].matches("guardian") && player.isOp() ) {
 					if(vtregPlayer.isDonator()) {
 						vtregPlayer.setMetaString("police", "true");
 						vtregPlayer.setMetaString("color", "police");
@@ -314,6 +310,7 @@ public class BasicCommands extends JavaPlugin {
 					} else {
 						player.sendMessage(ChatColor.AQUA + "Sorry this person is not a  " + ChatColor.GOLD + " donator." );
 					}
+					vtregPlayer.setTemporaryChatName(vtregPlayer.getChatName() + vtregPlayer.getName());
 					return true;
 				}
 
