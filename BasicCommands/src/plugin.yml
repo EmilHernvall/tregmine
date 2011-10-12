@@ -84,3 +84,6 @@ commands:
   admin:
     description: spawn mobs
     -usage: /<command>
+  cname:
+    description: spawn mobs
+    -usage: /<command>

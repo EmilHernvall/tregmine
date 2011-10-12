@@ -128,6 +128,11 @@ public class BasicCommands extends JavaPlugin {
 			player.sendMessage(ChatColor.DARK_AQUA + "Blocks from spawn: " + ChatColor.WHITE + distance);
 			return true;
 		}
+
+		if (commandName.matches("cname") && tregminePlayer.isAdmin()) {
+			ChatColor color = ChatColor.getByCode(Integer.parseInt(args[0]));
+			tregminePlayer.setTemporaryChatName(color + args[1]);
+		}
 		
 		if (commandName.matches("t") && tregminePlayer.isAdmin()) {
 			Player victim = this.getServer().matchPlayer(args[0]).get(0);
