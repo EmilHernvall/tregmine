@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Map;
 import java.util.UUID;
 
 import org.bukkit.Achievement;
@@ -686,10 +687,26 @@ public abstract class PlayerDelegate implements Player
 	}
 
 	@Override
+<<<<<<< HEAD
 	public Map<String, Object> serialize() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	
+=======
+	public void setTicksLived(int arg0) {
+		delegate.setTicksLived(arg0);
+	}
+
+	@Override
+	public int getTicksLived() {
+		return delegate.getTicksLived();
+	}
+
+	@Override
+	public Map<String, Object> serialize() {
+		return delegate.serialize();
+	}
+>>>>>>> 29643b4ea597ac423b111675f7f00169f53543f5
 }
