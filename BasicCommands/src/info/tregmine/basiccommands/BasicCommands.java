@@ -186,7 +186,7 @@ public class BasicCommands extends JavaPlugin {
 		if (commandName.matches("removeadmin") && isAdmin) {
 			info.tregmine.api.TregminePlayer tregPlayer = this.tregmine.tregminePlayer.get(player.getName());
 			tregPlayer.setTempMetaString("admin", "false");
-			tregPlayer.setTempMetaString("color", "donator");
+			tregPlayer.setTemporaryChatName(ChatColor.GOLD + tregPlayer.getName());
 			player.sendMessage(ChatColor.YELLOW + "You are no longer admin, until you reconnect!");
 			return true;
 		}
@@ -194,8 +194,7 @@ public class BasicCommands extends JavaPlugin {
 		info.tregmine.api.TregminePlayer tregPlayer = this.tregmine.tregminePlayer.get(player.getName());
 		if (commandName.matches("removebuilder") && tregPlayer.getMetaBoolean("builder") ) {
 			tregPlayer.setTempMetaString("builder", "false");
-			tregPlayer.setTempMetaString("color", "donator");
-			tregPlayer.setTempMetaString("immortal", "false");
+			tregPlayer.setTemporaryChatName(ChatColor.GOLD + tregPlayer.getName());
 			player.sendMessage(ChatColor.YELLOW + "You are no longer builder, until you reconnect!");
 			return true;
 		}

@@ -280,9 +280,14 @@ public class TregminePlayer extends PlayerDelegate
 		return ChatColor.WHITE;
 	}
 
-	public String getChatName() 
-	{
+	public String getChatName() 	{
 		return getNameColor() + name;
+	}
+
+	
+	public void setTemporaryChatName(String _name)	{
+		name = _name;
+		this.setDisplayName(name);
 	}
 	
 	public void setCurrentZone(Zone zone)
