@@ -56,7 +56,7 @@ public class TregminePlayer extends PlayerDelegate
 	public void load() 
 	{
 		settings.clear();
-		System.out.println("Loading settings for " + name);
+//		System.out.println("Loading settings for " + name);
 
 		mysql.connect();
 		if (this.mysql.connect != null) {
@@ -77,12 +77,7 @@ public class TregminePlayer extends PlayerDelegate
 			}
 		}
 		mysql.close();
-
-		if (getChatName().length() > 16) {
-			this.setPlayerListName(getChatName().substring(0, 15));
-		} else {
-			this.setPlayerListName(getChatName());
-		}
+		this.setTemporaryChatName(getNameColor() + name);
 	}
 
 	public void create() 
@@ -281,13 +276,18 @@ public class TregminePlayer extends PlayerDelegate
 	}
 
 	public String getChatName() 	{
-		return getNameColor() + name;
+		return name;
 	}
 
 	
 	public void setTemporaryChatName(String _name)	{
 		name = _name;
-		this.setDisplayName(name);
+		
+		if (getChatName().length() > 16) {
+			this.setPlayerListName(name.substring(0, 15));
+		} else {
+			this.setPlayerListName(name);
+		}
 	}
 	
 	public void setCurrentZone(Zone zone)
