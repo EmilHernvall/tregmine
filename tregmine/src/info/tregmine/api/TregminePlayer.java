@@ -158,7 +158,7 @@ public class TregminePlayer extends PlayerDelegate
 			this.mysql.statement.execute(SQLD);
 
 			
-			String SQLU = "INSERT INTO user_settings (id,`key`,`value`) VALUE ((SELECT uid FROM user WHERE player='" + this.name + "'),'"+ _key +"','"+ _value +"')";
+			String SQLU = "INSERT INTO user_settings (id,`key`,`value`) VALUE ((SELECT uid FROM user WHERE player='" + this.getName() + "'),'"+ _key +"','"+ _value +"')";
 			this.settings.put(_key, _value);
 			this.mysql.statement.execute(SQLU);
 			this.mysql.close();
