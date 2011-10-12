@@ -14,8 +14,8 @@ public class TregmineWeatherListener extends WeatherListener {
 
 	
 	public void	onWeatherChange(WeatherChangeEvent event)  {
-		if (event.toWeatherState()) {
-			event.setCancelled(true);
-		}
+//		if (event.toWeatherState()) {
+//			event.setCancelled(true);
+//		}
 	}
 }

@@ -4,6 +4,7 @@ import info.tregmine.database.Mysql;
 
 import java.sql.ResultSet;
 import java.util.HashMap;
+//import java.util.Map;
 
 import org.bukkit.ChatColor;
 //import org.bukkit.GameMode;
@@ -293,5 +294,4 @@ public class TregminePlayer extends PlayerDelegate
 	{
 		return currentZone;
 	}
-
 }

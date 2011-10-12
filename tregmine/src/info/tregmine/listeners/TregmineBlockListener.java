@@ -27,18 +27,6 @@ public class TregmineBlockListener extends BlockListener {
 	public void onBlockPlace (BlockPlaceEvent event)	{
 		info.tregmine.api.TregminePlayer tregminePlayer = this.plugin.tregminePlayer.get(event.getPlayer().getName());
 		
-		if(event.getPlayer().getWorld().getName().matches("skyland") && !tregminePlayer.getMetaBoolean("skyland")) {
-			event.setCancelled(true);
-		}
-		
-		if (tregminePlayer.isChild() && !event.getPlayer().getWorld().getName().matches("ChildsPlay") ) {
-			event.setCancelled(true);
-		}
-
-		if (!tregminePlayer.isChild() && event.getPlayer().getWorld().getName().matches("ChildsPlay") ) {
-			event.setCancelled(true);
-		}
-		
 		if (!tregminePlayer.isTrusted()) {
 			event.setCancelled(true);
 		}
@@ -51,19 +39,11 @@ public class TregmineBlockListener extends BlockListener {
 	}
 
 	public void onBlockBurn (BlockBurnEvent event) {
-		if(event.getBlock().getWorld().getName().matches("testworld")) {
-			event.setCancelled(true);
-		}
-
 		if(event.getBlock().getWorld().getName().matches("world")) {
 			event.setCancelled(true);
 		}
 
-		if(event.getBlock().getWorld().getName().matches("alpha")) {
-			event.setCancelled(true);
-		}
-		
-		if(event.getBlock().getWorld().getName().matches("ChildsPlay")) {
+		if(event.getBlock().getWorld().getName().matches("citadel")) {
 			event.setCancelled(true);
 		}
 		
@@ -71,18 +51,6 @@ public class TregmineBlockListener extends BlockListener {
 
 	public void onBlockBreak	(BlockBreakEvent event) {
 		info.tregmine.api.TregminePlayer tregminePlayer = this.plugin.tregminePlayer.get(event.getPlayer().getName());
-		
-		if(event.getPlayer().getWorld().getName().matches("skyland") && !tregminePlayer.getMetaBoolean("skyland")) {
-			event.setCancelled(true);
-		}
-		
-		if (tregminePlayer.isChild() && !event.getPlayer().getWorld().getName().matches("ChildsPlay") ) {
-			event.setCancelled(true);
-		}
-
-		if (!tregminePlayer.isChild() && event.getPlayer().getWorld().getName().matches("ChildsPlay") ) {
-			event.setCancelled(true);
-		}
 		
 		if (!tregminePlayer.isTrusted()) {
 			event.setCancelled(true);
@@ -119,21 +87,12 @@ public class TregmineBlockListener extends BlockListener {
 
 
 	public void onBlockIgnite(BlockIgniteEvent event) {
-		if(event.getBlock().getWorld().getName().matches("testworld")) {
-			event.setCancelled(true);
-		}
-
 		if(event.getBlock().getWorld().getName().matches("world")) {
 			event.setCancelled(true);
 		}
 
-		if(event.getBlock().getWorld().getName().matches("alpha")) {
+		if(event.getBlock().getWorld().getName().matches("citadel")) {
 			event.setCancelled(true);
 		}
-		
-		if(event.getBlock().getWorld().getName().matches("ChildsPlay")) {
-			event.setCancelled(true);
-		}
-
 	}
 }

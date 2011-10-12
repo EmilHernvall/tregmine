@@ -6,5 +6,6 @@
 	<classpathentry exported="true" kind="lib" path="/AA-Global/lib/mysql-connector-java-bin.jar"/>
 	<classpathentry kind="lib" path="/AA-Global/lib/ebean-2.7.0.jar"/>
 	<classpathentry kind="lib" path="/AA-Global/lib/craftbukkit-0.0.1-SNAPSHOT.jar" sourcepath="C:/Users/einand/Downloads/Bukkit-CraftBukkit-0.0.0-827-g57d9687.zip"/>
+	<classpathentry kind="lib" path="C:/Users/einand/Documents/eclipse/tregmine/AA-Global/lib/quadtree.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
