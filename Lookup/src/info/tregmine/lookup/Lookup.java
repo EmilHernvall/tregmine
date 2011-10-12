@@ -10,7 +10,6 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import info.tregmine.Tregmine; 
-//import com.tregdev.tregmine.TregmineBlock;
  
 
 public class Lookup extends JavaPlugin {
@@ -25,8 +24,6 @@ public class Lookup extends JavaPlugin {
 
 		if(this.tregmine == null) {
 		    if(test != null) {
-//				String enable = this.getDescription().getName() + " " + this.getDescription().getVersion() + " enable"; 
-//				log.info(enable);
 			this.tregmine = ((Tregmine)test);
 		    } else {
 				log.info(this.getDescription().getName() + " " + this.getDescription().getVersion() + " - could not find Tregmine");
@@ -37,8 +34,6 @@ public class Lookup extends JavaPlugin {
 	}
 	 
 	public void onDisable(){
-//		String enable = this.getDescription().getName() + " " + this.getDescription().getVersion() + " disable"; 
-//		log.info(enable);
 		this.getServer().getScheduler().cancelTasks(this);
 	}
 	public void onLoad() {
