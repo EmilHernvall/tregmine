@@ -29,6 +29,7 @@
 		<ant dir="../WallOfStats" target="clean" inheritAll="false" />
 		<ant dir="../Who" target="clean" inheritAll="false" />
 		<ant dir="../Zones" target="clean" inheritAll="false" />
+                <ant dir="../Citadel" target="clean" inheritAll="false" />
 	</target>
 
 	<target name="build" depends="init">
@@ -57,6 +58,7 @@
 		<ant dir="../WallOfStats" target="jar" inheritAll="false" />
 		<ant dir="../Who" target="jar" inheritAll="false" />
 		<ant dir="../Zones" target="jar" inheritAll="false" />
+                <ant dir="../Citadel" target="jar" inheritAll="false" />
 	</target>
     
     <target name="copy" depends="build">
@@ -84,5 +86,6 @@
     	<!--<copy file="../WallOfStats/WallOfStats.jar" tofile="jar/WallOfStats.jar" />-->
     	<copy file="../Who/Who.jar" tofile="jar/Who.jar" />
     	<copy file="../Zones/Zones.jar" tofile="jar/Zones.jar" />
+        <copy file="../Citadel/Citadel.jar" tofile="jar/Citadel.jar" />
     </target>	
 </project>
