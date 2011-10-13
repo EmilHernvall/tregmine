@@ -3,6 +3,6 @@ main: info.tregmine.citadel.Citadel
 version: 1
 
 commands:
-  citadel:
+  citadel-:
     description: gives you a out put like * name text
     -usage: /me text
