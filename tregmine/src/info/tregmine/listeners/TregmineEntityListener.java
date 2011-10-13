@@ -13,6 +13,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.Monster;
 import org.bukkit.event.entity.EntityDamageEvent;
 //import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+import org.bukkit.event.entity.EndermanPickupEvent;
 import org.bukkit.event.entity.EntityDamageByBlockEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 //import org.bukkit.event.entity.EntityDamageByProjectileEvent;
@@ -31,7 +32,11 @@ public class TregmineEntityListener extends EntityListener  {
 		plugin.getServer();
 	}
 
-
+	public void onEndermanPickup(EndermanPickupEvent event) {
+		event.setCancelled(true);
+	}
+	
+	
 	public void onEntityExplode (EntityExplodeEvent event) {
 		
 		if(event.getLocation().getWorld().getName().matches("world")) {

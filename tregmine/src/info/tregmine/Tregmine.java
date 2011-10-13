@@ -67,6 +67,7 @@ public class Tregmine extends JavaPlugin
 		getServer().getPluginManager().registerEvent(Event.Type.WEATHER_CHANGE,	weather, Priority.Highest, this);
 		
 		getServer().getPluginManager().registerEvent(Event.Type.ENTITY_EXPLODE,	tregmineentity, Priority.Highest, this); // ENTITY EXPLODE
+		getServer().getPluginManager().registerEvent(Event.Type.ENDERMAN_PICKUP,	tregmineentity, Priority.Highest, this); // ENTITY EXPLODE
 	}
 
 	public void onDisable() { //run when plugin is disabled
