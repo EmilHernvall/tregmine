@@ -42,10 +42,11 @@ public class Lookup extends JavaPlugin {
 			public void run() {
 				for (Player p : getServer().getOnlinePlayers()) {
 					if (p.getAddress().getAddress().getHostAddress().matches("127.0.0.1")) {
-						p.sendMessage(ChatColor.RED + "You are connected to the wrong server, use" + ChatColor.AQUA + " mc.tregmine.info");
-						p.sendMessage(ChatColor.RED + "You are warned until you change server, and can't build");
+						p.sendMessage(ChatColor.RED + "* * * YOU ARE connected to the WRONG adress, please use");
+						p.sendMessage(ChatColor.AQUA + "---> mc.tregmine.info <----");
+						p.sendMessage(ChatColor.RED + "You are black until you change adress, meaning can't build");
 						info.tregmine.api.TregminePlayer tregPlayer = tregmine.tregminePlayer.get(p.getName());
-						tregPlayer.setTempMetaString("color", "warned");
+						tregPlayer.setTemporaryChatName(ChatColor.BLACK + tregPlayer.getName());
 						tregPlayer.setTempMetaString("trusted", "false");
 					}
 				}

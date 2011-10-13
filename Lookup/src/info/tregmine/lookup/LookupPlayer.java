@@ -49,12 +49,6 @@ public class LookupPlayer extends PlayerListener {
 				this.plugin.getServer().broadcastMessage(ChatColor.DARK_AQUA + "Welcome! " + tregminePlayer.getChatName() + ChatColor.DARK_AQUA + " from " +l1.countryName);
 				event.getPlayer().sendMessage(ChatColor.DARK_AQUA + l1.city + " - " + l1.postalCode);
 			} 
-
-
-			if( event.getPlayer().getName().matches("einand") ) {
-				event.getPlayer().setPlayerListName(ChatColor.GREEN + "GOD");
-			}
-			
 		}
 	}    
 }

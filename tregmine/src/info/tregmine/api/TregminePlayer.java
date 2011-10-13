@@ -154,7 +154,7 @@ public class TregminePlayer extends PlayerDelegate
 		try {
 			this.mysql.connect();
 			String SQLD = "DELETE FROM `minecraft`.`user_settings` WHERE `user_settings`.`id` = "+ settings.get("uid") +" AND `user_settings`.`key` = '" + _key  +"'";
-			System.console().printf(SQLD);
+//			System.console().printf(SQLD);
 			this.mysql.statement.execute(SQLD);
 
 			
