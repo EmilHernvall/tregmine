@@ -23,32 +23,29 @@ public class Tp {
 				return;
 			}
 			
-			
 			double distance = info.tregmine.api.math.Distance.calc2d(from.getLocation(), to.getLocation());
 
+            if (tregminePlayerFrom.isAdmin() && !succeed) {
+                from.sendMessage(ChatColor.AQUA + "You teleported to " + to.getName() + ChatColor.AQUA + " in " + ChatColor.BLUE + to.getWorld().getName());
+                from.setNoDamageTicks(200);
+                from.teleport(to.getLocation());
+                succeed = true;
+            }
 
+            //TODO uglu soltution but it will change with the new permisson system
+            if (tregminePlayerFrom.getMetaBoolean("mentor") && !succeed) {
+                from.sendMessage(ChatColor.AQUA + "You teleported to " + to.getName() + ChatColor.AQUA + " in " + ChatColor.BLUE + to.getWorld().getName());
+                from.setNoDamageTicks(200);
+                from.teleport(to.getLocation());
+                succeed = true;
+            }
 
-				if (tregminePlayerFrom.isAdmin() && !succeed) {
-					from.sendMessage(ChatColor.AQUA + "You teleported to " + to.getName() + ChatColor.AQUA + " in " + ChatColor.BLUE + to.getWorld().getName());
-					from.setNoDamageTicks(200);
-					from.teleport(to.getLocation());
-					succeed = true;
-				}
+            if(from.getWorld().getName().matches("matrix")) {
+                from.sendMessage("Sorry you can't teleport in matrix");
+                return;
+            }
 
-				//TODO uglu soltution but it will change with the new permisson system
-				if (tregminePlayerFrom.getMetaBoolean("mentor") && !succeed) {
-					from.sendMessage(ChatColor.AQUA + "You teleported to " + to.getName() + ChatColor.AQUA + " in " + ChatColor.BLUE + to.getWorld().getName());
-					from.setNoDamageTicks(200);
-					from.teleport(to.getLocation());
-					succeed = true;
-				}
-
-				if(from.getWorld().getName().matches("matrix")) {
-					from.sendMessage("Sorry you can't teleport in matrix");
-					return;
-				}
-
-				if ((from.getWorld().getName().matches(to.getWorld().getName()))) {
+            if ((from.getWorld().getName().matches(to.getWorld().getName()))) {
 					
 				if (tregminePlayerFrom.isDonator() && distance < 10000 && !succeed) {
 					from.sendMessage(ChatColor.AQUA + "You teleported to " + to.getName() + ChatColor.AQUA + " in " + ChatColor.BLUE + to.getWorld().getName());
