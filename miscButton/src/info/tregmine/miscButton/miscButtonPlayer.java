@@ -286,7 +286,7 @@ public class miscButtonPlayer extends PlayerListener {
 
 		// eukeys plugins
 		//Hug button, add hashtag behind button ==
-		if (button == 892320385 ) {
+		if (button == -502432427) {
 			event.setCancelled(false);
 			//Eukeys exception
 			if (event.getPlayer().getName().matches("eukey1337")) {
@@ -316,7 +316,7 @@ public class miscButtonPlayer extends PlayerListener {
 			}
 			
 			//Emil exception
-			if (event.getPlayer().getName().matches("eukey1337")) {
+			if (event.getPlayer().getName().matches("knipil")) {
 				for (Player p : this.plugin.getServer().getOnlinePlayers()){
 					p.sendMessage(ChatColor.DARK_PURPLE + "You just got dudemeistered by the dudemeister, aka " + event.getPlayer().getName ());
 					p.playEffect(p.getLocation(), Effect.STEP_SOUND, (byte)0);

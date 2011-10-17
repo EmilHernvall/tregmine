@@ -202,20 +202,16 @@ public class BoxFill extends JavaPlugin {
 			
 			// otherwise, try regular fills
 			else {
-				MaterialData mat = parseMaterial(args[0]);
-				if (mat != null && Arrays.binarySearch(disallowedMaterials, mat.getItemType()) > 0 && args.length < 1 ) {
-					player.sendMessage(ChatColor.RED + "Disabled!");
-					return true;
-				}
-				
+				MaterialData mat = parseMaterial(args[0]);				
 				MaterialData toMat = args.length > 1 ? parseMaterial(args[1]) : null;
-				if (toMat != null && Arrays.binarySearch(disallowedMaterials, toMat.getItemType()) > 0 && args.length < 1) {
-					player.sendMessage(ChatColor.RED + "Disabled!");
-					return true;
-				}
-				
+
 				// regular fills
 				if (mat != null && toMat == null) {
+					if (mat != null && Arrays.binarySearch(disallowedMaterials, mat.getItemType()) > 0) {
+						player.sendMessage(ChatColor.RED + "Disabled!");
+						return true;
+					}
+
 					player.sendMessage("You filled with " + ChatColor.DARK_AQUA  + mat.toString() + "("+ mat.getItemTypeId() + ")");
 					
 					if (commandName.equals("fill")) {
@@ -233,6 +229,11 @@ public class BoxFill extends JavaPlugin {
 	
 				// replacers
 				if (mat != null && toMat != null) {
+					if (toMat != null && Arrays.binarySearch(disallowedMaterials, toMat.getItemType()) > 0) {
+						player.sendMessage(ChatColor.RED + "Disabled!");
+						return true;
+					}
+				
 					player.sendMessage("You replaced " + ChatColor.DARK_AQUA + mat.toString() + "("+ mat.getItemTypeId() + ")" + 
 							ChatColor.BLUE + "with" + ChatColor.DARK_AQUA + toMat.toString() + "("+ toMat.getItemTypeId() + ")" );
 					
