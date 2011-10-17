@@ -486,7 +486,7 @@ public class ZonesPlugin extends JavaPlugin
 				player.sendMessage(ChatColor.RED + "[" + zone.getName() + "] " + "Exit message changed to \"" + message + "\".");
 			}
 		}
-		else if ("pvp".equals(args[0])) {
+		else if ("pvp".equals(args[0]) && player.getMetaBoolean("zones")) {
 			boolean status = Boolean.parseBoolean(args[2]);
 			zone.setPvp(status);
 			player.sendMessage(ChatColor.RED + "[" + zone.getName() + "] " + "PVP changed to \"" + (status ? "allowed" : "disallowed") + "\".");
