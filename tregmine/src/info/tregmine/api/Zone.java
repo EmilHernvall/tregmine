@@ -93,6 +93,7 @@ public class Zone
 	private boolean placeDefault = true;
 	private boolean destroyDefault = true;
 	private boolean pvp = false;
+	private boolean hostiles = false;
 	
 	private String textEnter;
 	private String textExit;
@@ -171,6 +172,14 @@ public class Zone
 
 	public void setPvp(boolean pvp) {
 		this.pvp = pvp;
+	}
+
+	public boolean hasHostiles() {
+		return hostiles;
+	}
+
+	public void setHostiles(boolean hostiles) {
+		this.hostiles = hostiles;
 	}
 
 	public String getTextEnter() {

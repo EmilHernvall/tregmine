@@ -134,6 +134,7 @@ public class ZonesDAO
 				zone.setPlaceDefault("1".equals(rs.getString("zone_placedefault")));
 				zone.setDestroyDefault("1".equals(rs.getString("zone_destroydefault")));
 				zone.setPvp("1".equals(rs.getString("zone_pvp")));
+				zone.setHostiles("1".equals(rs.getString("zone_hostiles")));
 				zone.setTextEnter(rs.getString("zone_entermessage"));
 				zone.setTextExit(rs.getString("zone_exitmessage"));
 				
@@ -165,7 +166,7 @@ public class ZonesDAO
 		int id = 0;
 		try {
 			String sql = "INSERT INTO zone (zone_world, zone_name, zone_enterdefault, zone_placedefault, " + 
-					"zone_destroydefault, zone_pvp, zone_entermessage, zone_exitmessage) VALUES (?,?,?,?,?,?,?,?)";
+					"zone_destroydefault, zone_pvp, zone_hostiles, zone_entermessage, zone_exitmessage) VALUES (?,?,?,?,?,?,?,?,?)";
 			
 			stmt = conn.prepareStatement(sql);
 			stmt.setString(1, zone.getWorld());
@@ -174,8 +175,9 @@ public class ZonesDAO
 			stmt.setString(4, zone.getPlaceDefault() ? "1" : "0");
 			stmt.setString(5, zone.getDestroyDefault() ? "1" : "0");
 			stmt.setString(6, zone.isPvp() ? "1" : "0");
-			stmt.setString(7, zone.getTextEnter());
-			stmt.setString(8, zone.getTextExit());
+			stmt.setString(7, zone.hasHostiles() ? "1" : "0");
+			stmt.setString(8, zone.getTextEnter());
+			stmt.setString(9, zone.getTextExit());
 			stmt.execute();
 			
 			stmt.execute("SELECT LAST_INSERT_ID()");
@@ -205,8 +207,8 @@ public class ZonesDAO
 		PreparedStatement stmt = null;
 		try {
 			String sql = "UPDATE zone SET zone_world = ?, zone_name = ?, zone_enterdefault = ?, " +
-					"zone_placedefault = ?, zone_destroydefault = ?, zone_pvp = ?, zone_entermessage = ?, " +
-					"zone_exitmessage = ? WHERE zone_id = ?";
+					"zone_placedefault = ?, zone_destroydefault = ?, zone_pvp = ?, zone_hostiles = ?, " +
+					"zone_entermessage = ?, zone_exitmessage = ? WHERE zone_id = ?";
 			
 			stmt = conn.prepareStatement(sql);
 			stmt.setString(1, zone.getWorld());
@@ -215,9 +217,10 @@ public class ZonesDAO
 			stmt.setString(4, zone.getPlaceDefault() ? "1" : "0");
 			stmt.setString(5, zone.getDestroyDefault() ? "1" : "0");
 			stmt.setString(6, zone.isPvp() ? "1" : "0");
-			stmt.setString(7, zone.getTextEnter());
-			stmt.setString(8, zone.getTextExit());
-			stmt.setInt(9, zone.getId());
+			stmt.setString(7, zone.hasHostiles() ? "1" : "0");
+			stmt.setString(8, zone.getTextEnter());
+			stmt.setString(9, zone.getTextExit());
+			stmt.setInt(10, zone.getId());
 			stmt.execute();
 		}
 		finally {

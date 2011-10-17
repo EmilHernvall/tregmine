@@ -1,5 +1,8 @@
 package info.tregmine.listeners;
 
+import java.util.EnumSet;
+import java.util.Set;
+
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
 import info.tregmine.api.Zone;
@@ -11,6 +14,8 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.CreatureType;
+import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
@@ -18,6 +23,11 @@ import org.bukkit.event.entity.EntityListener;
 
 public class ZoneEntityListener extends EntityListener 
 {
+	private static final Set<CreatureType> allowedMobs = 
+			EnumSet.of(CreatureType.CHICKEN, CreatureType.COW, 
+					CreatureType.PIG, CreatureType.SHEEP, 
+					CreatureType.SQUID, CreatureType.WOLF);
+	
 	private final ZonesPlugin plugin;
 	private final Tregmine tregmine;
 
@@ -27,10 +37,23 @@ public class ZoneEntityListener extends EntityListener
 		this.tregmine = instance.tregmine;
 	}
 
-	/*public void onCreatureSpawn(CreatureSpawnEvent event) 
+	public void onCreatureSpawn(CreatureSpawnEvent event) 
 	{
-		event.setCancelled(true);			
-	}*/
+		Entity entity = event.getEntity();
+		
+		Location location = event.getLocation();
+		Point pos = new Point(location.getBlockX(), location.getBlockZ());
+		
+		ZoneWorld world = plugin.getWorld(entity.getWorld());
+		Zone zone = world.findZone(pos);
+		if (zone == null || zone.hasHostiles()) {
+			return;
+		}
+		
+		if (!allowedMobs.contains(event.getCreatureType())) {
+			event.setCancelled(true);
+		}
+	}
 
 	public void onEntityDamage(EntityDamageEvent event)
 	{

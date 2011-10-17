@@ -67,7 +67,7 @@ public class ZonesPlugin extends JavaPlugin
 		pluginMgm.registerEvent(Event.Type.PLAYER_INTERACT, new ZonePlayerListener(this), Priority.High, this);
 		pluginMgm.registerEvent(Event.Type.PLAYER_MOVE, new ZonePlayerListener(this), Priority.High, this);
 		pluginMgm.registerEvent(Event.Type.PLAYER_TELEPORT, new ZonePlayerListener(this), Priority.High, this);
-		//pluginMgm.registerEvent(Event.Type.CREATURE_SPAWN, new ZoneEntityListener(this), Priority.High, this);
+		pluginMgm.registerEvent(Event.Type.CREATURE_SPAWN, new ZoneEntityListener(this), Priority.High, this);
 		pluginMgm.registerEvent(Event.Type.ENTITY_DAMAGE, new ZoneEntityListener(this), Priority.High, this);
 		
 		worlds = new TreeMap<String, ZoneWorld>(new Comparator<String>() {
@@ -506,6 +506,11 @@ public class ZonesPlugin extends JavaPlugin
 			zone.setDestroyDefault(status);
 			player.sendMessage(ChatColor.RED + "[" + zone.getName() + "] " + "Destroy default changed to \"" + (status ? "everyone" : "whitelisted") + "\".");			
 		}
+		else if ("hostiles".equals(args[0]) && player.isAdmin()) {
+			boolean status = Boolean.parseBoolean(args[2]);
+			zone.setHostiles(status);
+			player.sendMessage(ChatColor.RED + "[" + zone.getName() + "] " + "Hostiles changed to \"" + (status ? "allowed" : "disallowed") + "\".");			
+		}
 		
 		Mysql mysql = null;
 		try {
@@ -533,6 +538,12 @@ public class ZonesPlugin extends JavaPlugin
 		}
 		
 		String zoneName = args[1];
+		int show;
+		if (args.length > 2 && args[2].equals("perm")) {
+			show = 2;
+		} else {
+			show = 1;
+		}
 		
 		Zone zone = world.getZone(zoneName);
 		if (zone == null) {
@@ -545,22 +556,26 @@ public class ZonesPlugin extends JavaPlugin
 			return;
 		}
 
-		player.sendMessage(ChatColor.RED + "Info about " + zone.getName());
-		player.sendMessage(ChatColor.RED + "ID: " + zone.getId());
-		player.sendMessage(ChatColor.RED + "World: " + zone.getWorld());
-		for (Rectangle rect : zone.getRects()) {
-			player.sendMessage(ChatColor.RED + "Rect: " + rect);
-		}
-		player.sendMessage(ChatColor.RED + "Enter: " + (zone.getEnterDefault() ? "Everyone (true)" : "Only allowed (false)"));
-		player.sendMessage(ChatColor.RED + "Place: " + (zone.getPlaceDefault() ? "Everyone (true)" : "Only makers (false)"));
-		player.sendMessage(ChatColor.RED + "Destroy: " + (zone.getDestroyDefault() ? "Everyone (true)" : "Only makers (false)"));
-		player.sendMessage(ChatColor.RED + "PVP: " + zone.isPvp());
-		player.sendMessage(ChatColor.RED + "Enter message: " + zone.getTextEnter());
-		player.sendMessage(ChatColor.RED + "Exit message: " + zone.getTextExit());
-
-		for (String user : zone.getUsers()) {
-			Zone.Permission perm = zone.getUser(user);
-			player.sendMessage(ChatColor.YELLOW + user + " - " + perm);
+		player.sendMessage(ChatColor.YELLOW + "Info about " + zone.getName());
+		
+		if (show == 1) {
+			player.sendMessage(ChatColor.YELLOW + "ID: " + zone.getId());
+			player.sendMessage(ChatColor.YELLOW + "World: " + zone.getWorld());
+			for (Rectangle rect : zone.getRects()) {
+				player.sendMessage(ChatColor.YELLOW + "Rect: " + rect);
+			}
+			player.sendMessage(ChatColor.YELLOW + "Enter: " + (zone.getEnterDefault() ? "Everyone (true)" : "Only allowed (false)"));
+			player.sendMessage(ChatColor.YELLOW + "Place: " + (zone.getPlaceDefault() ? "Everyone (true)" : "Only makers (false)"));
+			player.sendMessage(ChatColor.YELLOW + "Destroy: " + (zone.getDestroyDefault() ? "Everyone (true)" : "Only makers (false)"));
+			player.sendMessage(ChatColor.YELLOW + "PVP: " + zone.isPvp());
+			player.sendMessage(ChatColor.YELLOW + "Hostiles: " + zone.hasHostiles());
+			player.sendMessage(ChatColor.YELLOW + "Enter message: " + zone.getTextEnter());
+			player.sendMessage(ChatColor.YELLOW + "Exit message: " + zone.getTextExit());
+		} else if (show == 2) {
+			for (String user : zone.getUsers()) {
+				Zone.Permission perm = zone.getUser(user);
+				player.sendMessage(ChatColor.YELLOW + user + " - " + perm);
+			}
 		}
 	}
 	
