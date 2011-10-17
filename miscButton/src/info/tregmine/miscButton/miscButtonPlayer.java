@@ -284,8 +284,58 @@ public class miscButtonPlayer extends PlayerListener {
 			}
 		}
 
-
-
+		// eukeys plugins
+		//Hug button, add hashtag behind button ==
+		if (button == 892320385 ) {
+			event.setCancelled(false);
+			//Eukeys exception
+			if (event.getPlayer().getName().matches("eukey1337")) {
+				for (Player p : this.plugin.getServer().getOnlinePlayers()){
+					p.playEffect(p.getLocation(), Effect.STEP_SOUND, (byte)0);
+					p.sendMessage(ChatColor.DARK_PURPLE + "You just got donkey punched by " + event.getPlayer().getName ());
+				}
+				return;
+			}
+	
+			//Cams exception
+			if (event.getPlayer().getName().matches("Camrenn")) {
+				for (Player p : this.plugin.getServer().getOnlinePlayers()){
+					p.sendMessage(ChatColor.LIGHT_PURPLE + "You just got a hug by Princess " + event.getPlayer().getName ());
+					p.sendMessage(ChatColor.LIGHT_PURPLE + " Be happy!(but not too happy)");
+				}
+				return;
+			}
+			
+			//Ein exception
+			if (event.getPlayer().getName().matches("einand")) {
+				for (Player p : this.plugin.getServer().getOnlinePlayers()){
+					p.sendMessage(ChatColor.GOLD + "You just got your ass kicked by " + event.getPlayer().getName ());
+					p.playEffect(p.getLocation(), Effect.STEP_SOUND, (byte)0);
+				}
+				return;
+			}
+			
+			//Emil exception
+			if (event.getPlayer().getName().matches("eukey1337")) {
+				for (Player p : this.plugin.getServer().getOnlinePlayers()){
+					p.sendMessage(ChatColor.DARK_PURPLE + "You just got dudemeistered by the dudemeister, aka " + event.getPlayer().getName ());
+					p.playEffect(p.getLocation(), Effect.STEP_SOUND, (byte)0);
+				}
+				return;
+			}
+	
+			Wallet wallet = new Wallet(event.getPlayer().getName());
+			long newbalance = wallet.balance()-15000;
+			if (newbalance >= 0) {
+				wallet.take(15000);
+				for (Player p : this.plugin.getServer().getOnlinePlayers()){
+					p.sendMessage(ChatColor.LIGHT_PURPLE + "You just got hugged by " + event.getPlayer().getName ());
+				}
+				event.getPlayer().sendMessage(ChatColor.LIGHT_PURPLE + "15,000 tregs was taken from you");
+			} else {
+				event.getPlayer().sendMessage(ChatColor.RED + "You need 15,000 tregs");
+			}
+		}
 	}
 
 
