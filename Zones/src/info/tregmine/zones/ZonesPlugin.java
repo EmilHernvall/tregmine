@@ -182,6 +182,10 @@ public class ZonesPlugin extends JavaPlugin
 				changeValue(player, args);
 				return true;
 			}
+			else if ("hostiles".equals(args[0]) && player.isAdmin()) {
+				changeValue(player, args);
+				return true;
+			}
 			else if ("enter".equals(args[0])) {
 				changeValue(player, args);
 				return true;				
@@ -486,7 +490,7 @@ public class ZonesPlugin extends JavaPlugin
 				player.sendMessage(ChatColor.RED + "[" + zone.getName() + "] " + "Exit message changed to \"" + message + "\".");
 			}
 		}
-		else if ("pvp".equals(args[0]) && player.getMetaBoolean("zones")) {
+		else if ("pvp".equals(args[0])) {
 			boolean status = Boolean.parseBoolean(args[2]);
 			zone.setPvp(status);
 			player.sendMessage(ChatColor.RED + "[" + zone.getName() + "] " + "PVP changed to \"" + (status ? "allowed" : "disallowed") + "\".");
@@ -494,22 +498,22 @@ public class ZonesPlugin extends JavaPlugin
 		else if ("enter".equals(args[0])) {
 			boolean status = Boolean.parseBoolean(args[2]);
 			zone.setEnterDefault(status);
-			player.sendMessage(ChatColor.RED + "[" + zone.getName() + "] " + "Enter default changed to \"" + (status ? "everyone" : "whitelisted") + "\".");			
+			player.sendMessage(ChatColor.RED + "[" + zone.getName() + "] " + "Enter default changed to \"" + (status ? "everyone" : "whitelisted") + "\".");
 		}
 		else if ("place".equals(args[0])) {
 			boolean status = Boolean.parseBoolean(args[2]);
 			zone.setPlaceDefault(status);
-			player.sendMessage(ChatColor.RED + "[" + zone.getName() + "] " + "Place default changed to \"" + (status ? "everyone" : "whitelisted") + "\".");			
+			player.sendMessage(ChatColor.RED + "[" + zone.getName() + "] " + "Place default changed to \"" + (status ? "everyone" : "whitelisted") + "\".");
 		}
 		else if ("destroy".equals(args[0])) {
 			boolean status = Boolean.parseBoolean(args[2]);
 			zone.setDestroyDefault(status);
-			player.sendMessage(ChatColor.RED + "[" + zone.getName() + "] " + "Destroy default changed to \"" + (status ? "everyone" : "whitelisted") + "\".");			
+			player.sendMessage(ChatColor.RED + "[" + zone.getName() + "] " + "Destroy default changed to \"" + (status ? "everyone" : "whitelisted") + "\".");
 		}
-		else if ("hostiles".equals(args[0]) && player.isAdmin()) {
+		else if ("hostiles".equals(args[0])) {
 			boolean status = Boolean.parseBoolean(args[2]);
 			zone.setHostiles(status);
-			player.sendMessage(ChatColor.RED + "[" + zone.getName() + "] " + "Hostiles changed to \"" + (status ? "allowed" : "disallowed") + "\".");			
+			player.sendMessage(ChatColor.RED + "[" + zone.getName() + "] " + "Hostiles changed to \"" + (status ? "allowed" : "disallowed") + "\".");
 		}
 		
 		Mysql mysql = null;
