@@ -89,7 +89,7 @@ public class BlessPlayer extends PlayerListener {
 			int checksum = (loc.getBlockX() + "," + loc.getBlockZ() + "," + loc.getBlockY() + "," + loc.getWorld().getName()).hashCode();
 			
 			String name = tregminePlayer.getMetaString("chestbless");
-			this.plugin.getServer().getPlayer(name).sendMessage(ChatColor.AQUA + "Your god blessed in your name!");
+			this.plugin.getServer().getPlayer(name).sendMessage(ChatColor.AQUA + "Your god blessed it in your name!");
 			player.sendMessage(ChatColor.AQUA + "You blessed for " + name + ".");
 			this.plugin.chests.put(checksum, name);
 			info.tregmine.database.Mysql mysql = new info.tregmine.database.Mysql();
