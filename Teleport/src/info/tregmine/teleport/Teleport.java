@@ -83,7 +83,7 @@ public class Teleport extends JavaPlugin {
 
 			if (args.length == 0) {
 				Location loc = home.get();
-                if (loc != null) {
+                if (loc == null) {
                     from.sendMessage(ChatColor.RED + "Teleport failed. HAHAHA.");
                     return true;
                 }
@@ -109,7 +109,7 @@ public class Teleport extends JavaPlugin {
                 Home playersHome = new Home(playerName, getServer());
                 
 				Location loc = playersHome.get();
-                if (loc != null) {
+                if (loc == null) {
                     from.sendMessage(ChatColor.RED + "Teleport failed. HAHAHA.");
                     return true;
                 }
