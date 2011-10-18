@@ -9,5 +9,5 @@ commands:
   wallet:
     description: allows you to handle your wallet. You can check your balance, show your balance to others and send a specified amount to players.
     -usage: /wallet give <player> <amount> \
-    /wallet tell \
-    /wallet balance
+      /wallet tell \
+      /wallet balance

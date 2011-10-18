@@ -9,12 +9,12 @@ commands:
   who:
     description: show who is online. Also look up information about specified player.
     -usage: /who \
-    /who <player>
+      /who <player>
   playerlist:
     description: show who is online.
     -usage: /who \
-    /who <player>
+      /who <player>
   list:
     description: show who is online.
     -usage: /who \
-    /who <player>
+      /who <player>

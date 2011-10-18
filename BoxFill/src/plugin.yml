@@ -9,9 +9,9 @@ commands:
   fill:
     description: fill a cube with specified blocks. You can also convert specified blocks to another kind of block. You can copy a section and paste it elsewhere. Fill undo undos the latest fill. Select the diagonal corners with the wood spade.
     -usage: /fill <id:type> <new-id:new-type> \
-    /fill copy \
-    /fill paste <degrees> \
-    /fill undo
+      /fill copy \
+      /fill paste <degrees> \
+      /fill undo
   testfill:
     description: make a faux fill. Only you will see it and it will be gone when you relog.
     -usage: /testfill <id:type> <new-id:new-type>

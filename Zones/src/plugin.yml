@@ -9,34 +9,34 @@ commands:
   zone:
     description: create and manage a zone.
     -usage: /zone <command> \
-    /zone create <name> \
-    /zone delete <name> \
-    /zone enter <zone> <true/false> \
-    /zone place <zone> <true/false> \
-    /zone destroy <zone> <true/false> \
-    /zone pvp <zone> <true/false> \
-    /zone entermsg <zone> <msg> \
-    /zone exitmsg <zone> <msg> \
-    /zone adduser <zone> <player> <banned/allowed/maker/owner> \
-    /zone deluser <zone> <player> \
-    /zone hostile <zone> <true/false>
+      /zone create <name> \
+      /zone delete <name> \
+      /zone enter <zone> <true/false> \
+      /zone place <zone> <true/false> \
+      /zone destroy <zone> <true/false> \
+      /zone pvp <zone> <true/false> \
+      /zone entermsg <zone> <msg> \
+      /zone exitmsg <zone> <msg> \
+      /zone adduser <zone> <player> <banned/allowed/maker/owner> \
+      /zone deluser <zone> <player> \
+      /zone hostile <zone> <true/false>
   town:
     description: Town is similar to zone, but it automatically specifies the zone you are currently in.
     -usage: /town <command> \
-    /town delete \
-    /town enter <true/false> \
-    /town place <true/false> \
-    /town destroy <true/false> \
-    /town pvp <true/false> \
-    /town entermsg <msg> \
-    /town exitmsg <msg> \
-    /town adduser <player> <banned/allowed/maker/owner> \
-    /town deluser <player> \
-    /town hostile <true/false>
+      /town delete \
+      /town enter <true/false> \
+      /town place <true/false> \
+      /town destroy <true/false> \
+      /town pvp <true/false> \
+      /town entermsg <msg> \
+      /town exitmsg <msg> \
+      /town adduser <player> <banned/allowed/maker/owner> \
+      /town deluser <player> \
+      /town hostile <true/false>
   lot:
     description: create and manage lots.
     -usage: /lot create <lot_name> <lot_owner> \
-    /lot addowner <lot_name> <lot_owner> \
-    /lot delowner <lot_name> <lot_owner> \
-    /lot delete <lot_name>
+      /lot addowner <lot_name> <lot_owner> \
+      /lot delowner <lot_name> <lot_owner> \
+      /lot delete <lot_name>
 

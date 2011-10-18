@@ -22,8 +22,8 @@ commands:
   god:
     description: talk as the red God.
     -usage: /god <text>
-  facepalm: prints "<yournick> * facepalm *"
-    description: sends a private message to someone.
+  facepalm:
+    description: prints "<yournick> * facepalm *"
     -usage: /facepalm
   say:
     description: talk as god with your individual color. If you don't have one you will talk as red god.
