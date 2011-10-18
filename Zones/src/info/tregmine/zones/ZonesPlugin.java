@@ -135,7 +135,7 @@ public class ZonesPlugin extends JavaPlugin
 		if ("town".equals(commandName)) {
 			Zone zone = player.getCurrentZone();
 			if (zone == null) {
-				player.sendMessage(ChatColor.RED + "You are not currently in any zone.");
+				player.sendMessage(ChatColor.RED + "You are not currently in a zone.");
 				return true;
 			}
 			

@@ -24,7 +24,7 @@ public class BlessBlock extends BlockListener {
 		int checksum = (loc.getBlockX() + "," + loc.getBlockZ() + "," + loc.getBlockY() + "," + loc.getWorld().getName()).hashCode();
 		Player player = event.getPlayer();
 		if (this.plugin.chests.containsKey(checksum)) {
-			player.sendMessage(ChatColor.RED + "You can't destroy a blessed item");
+			player.sendMessage(ChatColor.RED + "You can't destroy a blessed item.");
 			event.setCancelled(true);
 			return;
 		}
@@ -45,7 +45,7 @@ public class BlessBlock extends BlockListener {
 
 			if (this.plugin.chests.containsKey(checksum1) || this.plugin.chests.containsKey(checksum2) || this.plugin.chests.containsKey(checksum3) || this.plugin.chests.containsKey(checksum4)) {
 				player.sendMessage(ChatColor.RED + "You can't place a " +
-						" next to a already blessed one");
+						" next to a already blessed one.");
 				event.setCancelled(true);
 				return;
 			}

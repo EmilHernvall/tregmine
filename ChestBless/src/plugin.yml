@@ -7,5 +7,5 @@ description: Tregmine.info chest protection
 
 commands:
   bless:
-    description: command to protect chests
-    -usage: /<command>
+    description: bless doors, buttons, plates and chests to specified player.
+    -usage: /bless <player>

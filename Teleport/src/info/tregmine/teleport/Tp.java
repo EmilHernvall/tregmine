@@ -19,7 +19,7 @@ public class Tp {
 			
 			if (tregminePlayerTo.getMetaBoolean("tpblock") && !tregminePlayerFrom.isAdmin() ) {
 				from.sendMessage(ChatColor.RED + "FFS! Annoy someone else -- TP to them is prohibited.");
-				to.sendMessage(from.getName() + ChatColor.AQUA + " tried to tp to you, laugh at him, as he failed and hurt im self hard.");
+				to.sendMessage(from.getName() + ChatColor.AQUA + " failed to tp to you.");
 				return;
 			}
 			
@@ -41,14 +41,14 @@ public class Tp {
             }
 
             if(from.getWorld().getName().matches("matrix")) {
-                from.sendMessage("Sorry you can't teleport in matrix");
+                from.sendMessage("Sorry you can't teleport in matrix.");
                 return;
             }
 
             if ((from.getWorld().getName().matches(to.getWorld().getName()))) {
 					
 				if (tregminePlayerFrom.isDonator() && distance < 10000 && !succeed) {
-					from.sendMessage(ChatColor.AQUA + "You teleported to " + to.getName() + ChatColor.AQUA + " in " + ChatColor.BLUE + to.getWorld().getName());
+					from.sendMessage(ChatColor.AQUA + "You teleported to " + to.getName() + ChatColor.AQUA + " in " + ChatColor.BLUE + to.getWorld().getName() + ".");
 					to.sendMessage(ChatColor.AQUA + from.getName() + " teleported to you!");
 					from.setNoDamageTicks(200);
 					from.teleport(to.getLocation());
@@ -56,7 +56,7 @@ public class Tp {
 				}
 
 				if (tregminePlayerFrom.isTrusted() && distance < 100 && !succeed) {
-					from.sendMessage(ChatColor.AQUA + "You teleported to " + to.getName() + ChatColor.AQUA + " in " + ChatColor.BLUE + to.getWorld().getName());
+					from.sendMessage(ChatColor.AQUA + "You teleported to " + to.getName() + ChatColor.AQUA + " in " + ChatColor.BLUE + to.getWorld().getName() + ".");
 					to.sendMessage(ChatColor.AQUA + from.getName() + " teleported to you!");
 					from.teleport(to.getLocation());
 					from.setNoDamageTicks(200);
@@ -64,14 +64,14 @@ public class Tp {
 				}
 
 				if(!succeed) {
-					from.sendMessage(ChatColor.RED + "The person you try to teleport to is to far away.");				
+					from.sendMessage(ChatColor.RED + "The person you try to teleport to is too far away.");				
 				}
 
 			} else {
-				from.sendMessage(ChatColor.RED + "The user is in another world called " + ChatColor.BLUE + to.getWorld().getName());				
+				from.sendMessage(ChatColor.RED + "The user is in another world called " + ChatColor.BLUE + to.getWorld().getName() + ".");				
 			}
 		} else {
-			from.sendMessage(ChatColor.RED + "Can't find user");
+			from.sendMessage(ChatColor.RED + "Can't find user.");
 		}
 	}
 }

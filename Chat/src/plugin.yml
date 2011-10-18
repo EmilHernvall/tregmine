@@ -8,33 +8,30 @@ description: Tregmine.info items
 
 commands:
   me:
-    description: gives you a out put like * name text
-    -usage: /me text
+    description: prints "* <yournick> <specified text>".
+    -usage: /me <text> 
   msg:
-    description: sends a private message to someone
-    -usage: /msg [name] text 
+    description: send a private message to someone.
+    -usage: /msg <name> <text> 
   m:
-    description: sends a private message to someone
-    -usage: /msg [name] text 
+    description: send a private message to someone.
+    -usage: /msg <name> <text> 
   tell:
-    description: sends a private message to someone
-    -usage: /msg [name] text 
-  all:
-    description: sends a private message to someone
-    -usage: /msg [name] text 
+    description: send a private message to someone.
+    -usage: /msg <name> <text> 
   god:
-    description: sends a private message to someone
-    -usage: /msg [name] text 
-  facepalm:
-    description: sends a private message to someone
-    -usage: /msg [name] text
+    description: talk as the red God.
+    -usage: /god <text>
+  facepalm: prints "<yournick> * facepalm *"
+    description: sends a private message to someone.
+    -usage: /facepalm
   say:
-    description: sends a private message to someone
-    -usage: /msg [name] text    
+    description: talk as god with your individual color. If you don't have one you will talk as red god.
+    -usage: /say text
   force:
-    description: sends a private message to someone
-    -usage: /msg [name] text    
+    description: force someone into a channel.
+    -usage: /force <nickname> <channel name>    
   channel:
-    description: sends a private message to someone
-    -usage: /msg [name] text    
+    description: enter a channel.
+    -usage: /channel <channel name>
     

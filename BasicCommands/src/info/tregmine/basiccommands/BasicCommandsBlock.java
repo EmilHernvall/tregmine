@@ -27,7 +27,7 @@ public class BasicCommandsBlock extends PlayerListener {
 
 			if (player.getItemInHand().getType() == Material.BOOK) {
 				
-				player.sendMessage(ChatColor.DARK_AQUA + "Typ: " + ChatColor.AQUA + block.getType().toString() + " ("+ ChatColor.BLUE + block.getType().getId() + ChatColor.DARK_AQUA + ")" );
+				player.sendMessage(ChatColor.DARK_AQUA + "Type: " + ChatColor.AQUA + block.getType().toString() + " ("+ ChatColor.BLUE + block.getType().getId() + ChatColor.DARK_AQUA + ")" );
 				player.sendMessage(ChatColor.DARK_AQUA +"Data: " + ChatColor.AQUA + (int) block.getData() );
 				player.sendMessage(
 						ChatColor.RED +"X" +
@@ -44,9 +44,9 @@ public class BasicCommandsBlock extends PlayerListener {
 				);
 
 					try {
-						player.sendMessage(ChatColor.DARK_AQUA +"BioMe: " + ChatColor.AQUA + block.getBiome().toString() );
+						player.sendMessage(ChatColor.DARK_AQUA +"Biome: " + ChatColor.AQUA + block.getBiome().toString() );
 					} catch (Exception e) {
-						player.sendMessage(ChatColor.DARK_AQUA +"BioMe: " + ChatColor.AQUA + "NULL" );
+						player.sendMessage(ChatColor.DARK_AQUA +"Biome: " + ChatColor.AQUA + "NULL" );
 					}
 				
 					

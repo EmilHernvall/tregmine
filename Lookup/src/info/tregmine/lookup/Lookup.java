@@ -44,7 +44,7 @@ public class Lookup extends JavaPlugin {
 					if (p.getAddress().getAddress().getHostAddress().matches("127.0.0.1")) {
 						p.sendMessage(ChatColor.RED + "* * * YOU ARE connected to the WRONG adress, please use");
 						p.sendMessage(ChatColor.AQUA + "---> mc.tregmine.info <----");
-						p.sendMessage(ChatColor.RED + "You are black until you change adress, meaning can't build");
+						p.sendMessage(ChatColor.RED + "You are black until you change adress, until then you can't build");
 						info.tregmine.api.TregminePlayer tregPlayer = tregmine.tregminePlayer.get(p.getName());
 						tregPlayer.setTemporaryChatName(ChatColor.BLACK + tregPlayer.getName());
 						tregPlayer.setTempMetaString("trusted", "false");

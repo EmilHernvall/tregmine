@@ -77,7 +77,7 @@ public class Item extends JavaPlugin {
 				ItemStack item = new ItemStack(matID, amount, (byte) data);
 				PlayerInventory inv = player.getInventory();
 				inv.addItem(item);
-				player.sendMessage("You reviced " + amount + " of " + ChatColor.DARK_AQUA + Material.getMaterial(matID).toString().toLowerCase());
+				player.sendMessage("You received " + amount + " of " + ChatColor.DARK_AQUA + Material.getMaterial(matID).toString().toLowerCase());
 				this.log.info(player.getName() +" SPAWNED " + amount + ":" + Material.getMaterial(matID).toString());
 			} else {
 				player.sendMessage(ChatColor.DARK_AQUA + "/item <id|name> <amount> <data>");
@@ -123,7 +123,7 @@ public class Item extends JavaPlugin {
 				inv.addItem(item);
 				player.sendMessage("You gave " + amount + " of " + ChatColor.DARK_AQUA + Material.getMaterial(matID).toString().toLowerCase() + " to " + to.getName());
 				this.log.info(player.getName() +" SPAWNED " + amount + ":" + Material.getMaterial(matID).toString() + "=>" + to.getName());
-				to.sendMessage(ChatColor.YELLOW + "You where gifted by the gods look in your inventory");
+				to.sendMessage(ChatColor.YELLOW + "You were gifted by the gods. Look in your inventory!");
 			} else {
 				player.sendMessage(ChatColor.DARK_AQUA + "/give <player> <id|name> <amount> <data>");
 			}

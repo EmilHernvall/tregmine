@@ -4,13 +4,13 @@ version: 1
 author: Ein Andersson
 commands:
   vanish:
-    description: Toggles your visibility
+    description: toggle your visibility.
     usage: |
            Incorrect usage of /<command>. Examples:
            /<command> - Toggles your visibility
            /<command> list - List of invisible players
   poof:
-    description: Toggles your visibility
+    description: toggle your visibility.
     usage: |
            Incorrect usage of /<command>. Examples:
            /<command> - Toggles your visibility

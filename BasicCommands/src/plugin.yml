@@ -7,26 +7,26 @@ description: Tregmine.info items
 
 commands:
   pos:
-    description: gives you your current position
-    -usage: /<command>
+    description: retrieve information about your current position.
+    -usage: /pos
   nuke:
-    description: kills all mobs in the current world
-    -usage: /<command>
+    description: kill all hostile mobs in the current world.
+    -usage: /nuke
   kick:
-    description: kick someone from the server
-    -usage: /<command>
+    description: kick specified player from the server.
+    -usage: /kick <player>
   ban:
-    description: ban someone from the server
-    -usage: /<command>
+    description: ban specified player from the server.
+    -usage: /ban <player>
   killp:
-    description: to kill some one
-    -usage: /<command>
+    description: kill specified player.
+    -usage: /killp <player>
   clean:
-    description: clear your inventory
-    -usage: /<command>
+    description: erase your inventory and toolbar.
+    -usage: /clean
   createmob:
-    description: spawn mobs
-    -usage: /<command>
+    description: spawn mobs.
+    -usage: /createmob
   sendto:
     description: spawn mobs
     -usage: /<command>
@@ -49,41 +49,41 @@ commands:
     description: spawn mobs
     -usage: /<command>
   ride.:
-    description: spawn mobs
-    -usage: /<command>        
+    description: ride on specified player's shoulders.
+    -usage: /ride <player>        
   eject:
-    description: spawn mobs
-    -usage: /<command>
+    description: stop riding on specified player's shoulders.
+    -usage: eject <player>
   w:
     description: spawn mobs
     -usage: /<command>
   stopmsg:
-    description: spawn mobs
+    description: kick everyone off the server
     -usage: /<command>
   tpblock:
-    description: spawn mobs
-    -usage: /<command>
+    description: prevent people from teleporting to you.
+    -usage: /tpblock true/false/info
   removeadmin:
-    description: spawn mobs
-    -usage: /<command>
+    description: removes your adminstatus and makes you a donator, until you relog or use /admin.
+    -usage: /removeadmin
   removebuilder:
-    description: spawn mobs
-    -usage: /<command>
+    description: removes your builderstatus and makes you a donator, until you relog.
+    -usage: /removebuilder
   password:
-    description: spawn mobs
-    -usage: /<command>
+    description: change your password
+    -usage: /password <oldp password> <new password>
   time:
-    description: spawn mobs
-    -usage: /<command>
+    description: change your world time. This only affects you.
+    -usage: /time day/night/normal
   t:
-    description: spawn mobs
-    -usage: /<command>
+    description: hit specified player with lightning.
+    -usage: /t <player>
   td:
-    description: spawn mobs
-    -usage: /<command>
+    description: hit and kill specified player with lightning.
+    -usage: /td <player>
   admin:
-    description: spawn mobs
-    -usage: /<command>
+    description: give yourself admin status for 10 minutes.
+    -usage: /admin
   cname:
-    description: spawn mobs
-    -usage: /<command>
+    description: change your nickname and its color.
+    -usage: /cname color nick

@@ -7,8 +7,8 @@ description: Tregmine.info items
 
 commands:
   item:
-    description: as admin spawn items
-    -usage: /<command> <id|name> <amount> <data>
+    description: spawn items in your inventory.
+    -usage: /item <id|name> <amount> <data>
   give:
-    description: as admin spawn items
-    -usage: /<command> <id|name> <amount> <data>
+    description: spawn items in a specified player's inventory. 
+    -usage: /give <player> <id|name> <amount>

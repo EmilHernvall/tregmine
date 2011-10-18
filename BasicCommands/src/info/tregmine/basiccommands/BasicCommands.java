@@ -54,7 +54,7 @@ public class BasicCommands extends JavaPlugin {
 
 			if (commandName.matches("stopmsg")) {
 				for (Player p : this.getServer().getOnlinePlayers()) {
-					p.kickPlayer("This was a scheduled restart, dont worry just rejoin");
+					p.kickPlayer("This was a scheduled restart. Don't worry, just rejoin.");
 				}
 				return true;
 			}
@@ -68,8 +68,8 @@ public class BasicCommands extends JavaPlugin {
 
 				if (victim != null) {
 					info.tregmine.api.TregminePlayer victimPlayer = this.tregmine.tregminePlayer.get(victim.getName());
-					this.getServer().broadcastMessage("GOD kicked " + victimPlayer.getChatName() + ChatColor.AQUA + " for 1 min");
-					victim.kickPlayer("kicked by GOD");
+					this.getServer().broadcastMessage("GOD kicked " + victimPlayer.getChatName() + ChatColor.AQUA + " for 1 min.");
+					victim.kickPlayer("kicked by GOD.");
 				}
 				return true;
 			}
@@ -97,11 +97,11 @@ public class BasicCommands extends JavaPlugin {
 		if (commandName.matches("admin") && tregminePlayer.isAdmin() ) {
 	    	final TregminePlayer tregPlayer = tregmine.getPlayer(player);
 	    	tregPlayer.setGameMode(GameMode.CREATIVE);
-	    	tregPlayer.sendMessage(ChatColor.YELLOW + "You are now in admin mode for 10 minutes");
+	    	tregPlayer.sendMessage(ChatColor.YELLOW + "You are now in admin mode for 10 minutes.");
 	    	
 			this.getServer().getScheduler().scheduleSyncDelayedTask(this,new Runnable() {
 				public void run() {
-					tregPlayer.sendMessage(ChatColor.YELLOW + "You are now back to survivalmode");
+					tregPlayer.sendMessage(ChatColor.YELLOW + "You are now back in survival mode.");
 			    	tregPlayer.setGameMode(GameMode.SURVIVAL);
 				}},12000L);
 		}
@@ -170,22 +170,22 @@ public class BasicCommands extends JavaPlugin {
 		if (commandName.matches("tpblock") && isDonator) {
 			if (args[0].matches("on")) {
 				tregminePlayer.setMetaString("tpblock", "true");
-				player.sendMessage("Teleportation is now blocked to you");
+				player.sendMessage("Teleportation is now blocked to you.");
 				return true;
 			}
 
 			if (args[0].matches("off")) {
 				tregminePlayer.setMetaString("tpblock", "false");
-				player.sendMessage("Teleportation is now allowed to you");
+				player.sendMessage("Teleportation is now allowed to you.");
 				return true;
 			}
 
 			if (args[0].matches("status")) {
-				player.sendMessage("Your tpblock is set to " + tregminePlayer.getMetaString("tpblock"));
+				player.sendMessage("Your tpblock is set to " + tregminePlayer.getMetaString("tpblock") + ".");
 				return true;
 			}
 
-			player.sendMessage(ChatColor.RED + "use it as /tpblock on or /tpblock off or /tpblock status");
+			player.sendMessage(ChatColor.RED + "The commands are /tpblock on, /tpblock off and /tpblock status.");
 			return true;
 		}
 
@@ -207,7 +207,7 @@ public class BasicCommands extends JavaPlugin {
 
 		
 		if (commandName.matches("nuke") && isAdmin) {
-			player.sendMessage("You nuked every mob there is!");
+			player.sendMessage("You nuked all mobs in this world!");
 			for (Entity ent : player.getWorld().getLivingEntities()) {
 				if(ent instanceof Monster) {
 					Monster mob = (Monster) ent;
@@ -242,17 +242,17 @@ public class BasicCommands extends JavaPlugin {
 					vtregPlayer.setMetaString("trusted", "true");
 					vtregPlayer.setTemporaryChatName(vtregPlayer.getNameColor() + vtregPlayer.getName());
 
-					player.sendMessage(ChatColor.AQUA + "You made " + victimPlayer.getChatName() + ChatColor.AQUA + " settler of this server" );
-					victim.sendMessage("Welcome! You are now made settler");
-					this.log.info(victim.getName() + " was given settler rights by " + player.getName());
+					player.sendMessage(ChatColor.AQUA + "You made " + victimPlayer.getChatName() + ChatColor.AQUA + " settler of this server." );
+					victim.sendMessage("Welcome! You are now made settler.");
+					this.log.info(victim.getName() + " was given settler rights by " + player.getName() + ".");
 					return true;
 				}
 
 				if (args[1].matches("warn")) {
 					vtregPlayer.setMetaString("color", "warned");
-					player.sendMessage(ChatColor.AQUA + "You warned " + victimPlayer.getChatName() );
+					player.sendMessage(ChatColor.AQUA + "You warned " + victimPlayer.getChatName() + ".");
 					victim.sendMessage("You are now warned");
-					this.log.info(victim.getName() + " was warned by " + player.getName());
+					this.log.info(victim.getName() + " was warned by " + player.getName() + ".");
 					vtregPlayer.setTemporaryChatName(vtregPlayer.getNameColor() + vtregPlayer.getName());
 					return true;
 				}
@@ -260,9 +260,9 @@ public class BasicCommands extends JavaPlugin {
 				if (args[1].matches("hardwarn")) {
 					vtregPlayer.setMetaString("color", "warned");
 					vtregPlayer.setMetaString("trusted", "false");
-					player.sendMessage(ChatColor.AQUA + "You warned " + victimPlayer.getChatName() + " and removed his building rights" );
-					victim.sendMessage("You are now warned and removed building right");
-					this.log.info(victim.getName() + " was hardwarned by " + player.getName());
+					player.sendMessage(ChatColor.AQUA + "You warned " + victimPlayer.getChatName() + " and removed his building rights." );
+					victim.sendMessage("You are now warned and bereft of your building rights.");
+					this.log.info(victim.getName() + " was hardwarned by " + player.getName() + ".");
 					vtregPlayer.setTemporaryChatName(vtregPlayer.getNameColor() + vtregPlayer.getName());
 					return true;
 				}
@@ -271,19 +271,11 @@ public class BasicCommands extends JavaPlugin {
 					player.sendMessage(ChatColor.RED + "Please use /user make settler name");
 				}
 
-				if (args[1].matches("fora")) {
-					vtregPlayer.setMetaString("fora", "true");
-					player.sendMessage(ChatColor.AQUA + "You made " + victimPlayer.getChatName() + ChatColor.AQUA + " a fora builder" );
-					this.log.info(victim.getName() + " was made resident by " + tregminePlayer.getChatName());
-					vtregPlayer.setTemporaryChatName(vtregPlayer.getNameColor() + vtregPlayer.getName());
-					return true;
-				}
-
 				if (args[1].matches("resident") && player.isOp() ) {
 					vtregPlayer.setMetaString("color", "trusted");
 					vtregPlayer.setMetaString("trusted", "true");
-					this.log.info(victim.getName() + " was given trusted rights by " + tregminePlayer.getChatName());
-					player.sendMessage(ChatColor.AQUA + "You made " + victimPlayer.getChatName() + ChatColor.AQUA + " a resident" );
+					this.log.info(victim.getName() + " was given trusted rights by " + tregminePlayer.getChatName() + ".");
+					player.sendMessage(ChatColor.AQUA + "You made " + victimPlayer.getChatName() + ChatColor.AQUA + " a resident." );
 					victim.sendMessage("Welcome! You are now a resident");
 					vtregPlayer.setTemporaryChatName(vtregPlayer.getNameColor() + vtregPlayer.getName());
 					return true;
@@ -293,9 +285,9 @@ public class BasicCommands extends JavaPlugin {
 					vtregPlayer.setMetaString("donator", "true");
 					vtregPlayer.setMetaString("compass", "true");
 					vtregPlayer.setMetaString("color", "donator");
-					player.sendMessage(ChatColor.AQUA + "You made  " + vtregPlayer.getChatName() + " a donator" );
-					this.log.info(victim.getName() + " was made donator by" + tregminePlayer.getChatName());
-					victim.sendMessage("Congratulation, you are now a donator!");
+					player.sendMessage(ChatColor.AQUA + "You made  " + vtregPlayer.getChatName() + " a donator." );
+					this.log.info(victim.getName() + " was made donator by" + tregminePlayer.getChatName() + ".");
+					victim.sendMessage("Congratulations, you are now a donator!");
 					vtregPlayer.setTemporaryChatName(vtregPlayer.getNameColor() + vtregPlayer.getName());
 					return true;
 				}
@@ -305,9 +297,9 @@ public class BasicCommands extends JavaPlugin {
 						vtregPlayer.setMetaString("police", "true");
 						vtregPlayer.setMetaString("color", "police");
 
-						player.sendMessage(ChatColor.AQUA + "You made  " + vtregPlayer.getChatName() + " a police" );
-						this.log.info(victim.getName() + " was made police by" + tregminePlayer.getChatName());
-						victim.sendMessage("Congratulation, you are now a police!");
+						player.sendMessage(ChatColor.AQUA + "You made  " + vtregPlayer.getChatName() + " a police." );
+						this.log.info(victim.getName() + " was made police by" + tregminePlayer.getChatName() + ".");
+						victim.sendMessage("Congratulations, you are now a police!");
 					} else {
 						player.sendMessage(ChatColor.AQUA + "Sorry this person is not a  " + ChatColor.GOLD + " donator." );
 					}
@@ -334,7 +326,7 @@ public class BasicCommands extends JavaPlugin {
 					return true;
 				}
 
-				this.getServer().broadcastMessage(tregminePlayer.getChatName() + ChatColor.AQUA + " kicked " + victimPlayer.getChatName() + ChatColor.AQUA + " for 1 min");
+				this.getServer().broadcastMessage(tregminePlayer.getChatName() + ChatColor.AQUA + " kicked " + victimPlayer.getChatName() + ChatColor.AQUA + " for 1 minute.");
 				this.log.info(victim.getName() + " kicked by " + player.getName());
 				victim.kickPlayer("kicked by " + player.getName());
 			}
@@ -447,7 +439,7 @@ public class BasicCommands extends JavaPlugin {
 				String mobname = args[0].substring(0,1).toUpperCase() + args[0].substring(1).toLowerCase(); 
 				mobtyp = CreatureType.fromName(mobname);
 			} catch (Exception e) {
-				player.sendMessage(ChatColor.RED + "Sorry that mob doesnt exist");
+				player.sendMessage(ChatColor.RED + "Sorry that mob doesn't exist.");
 				return true;
 			}
 
@@ -460,7 +452,7 @@ public class BasicCommands extends JavaPlugin {
 
 				} 
 
-				player.sendMessage(ChatColor.YELLOW + "You created " + amount + " " + mobtyp.getName());
+				player.sendMessage(ChatColor.YELLOW + "You created " + amount + " " + mobtyp.getName() + ".");
 			}
 			else {
 				for (CreatureType mob : CreatureType.values()) {
@@ -484,7 +476,7 @@ public class BasicCommands extends JavaPlugin {
 				}
 
 				victimPlayer.setMetaString("banned", "true");
-				this.getServer().broadcastMessage(victimPlayer.getChatName() + ChatColor.RED + " was banned by " + tregminePlayer.getChatName());
+				this.getServer().broadcastMessage(victimPlayer.getChatName() + ChatColor.RED + " was banned by " + tregminePlayer.getChatName() + ".");
 				this.log.info(victim.getName() + " Banned by " + player.getName());
 				victim.kickPlayer("banned by " + player.getName());
 			}
