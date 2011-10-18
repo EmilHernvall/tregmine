@@ -39,6 +39,9 @@ public class BlessPlayer extends PlayerListener {
 						block.getType() == Material.WOOD_PLATE ||
 						block.getType() == Material.WORKBENCH ||
 						block.getType() == Material.SIGN_POST ||
+						block.getType() == Material.DIODE ||
+						block.getType() == Material.DIODE_BLOCK_OFF ||
+						block.getType() == Material.DIODE_BLOCK_ON ||
 						block.getType() == Material.SIGN)	
 				) {
 			Location loc = block.getLocation();
@@ -74,6 +77,9 @@ public class BlessPlayer extends PlayerListener {
 				block.getType() == Material.STONE_PLATE ||
 				block.getType() == Material.WOOD_PLATE ||
 				block.getType() == Material.WORKBENCH ||
+				block.getType() == Material.DIODE ||
+				block.getType() == Material.DIODE_BLOCK_OFF ||
+				block.getType() == Material.DIODE_BLOCK_ON ||
 				block.getType() == Material.SIGN_POST ||
 				block.getType() == Material.SIGN)	
 				)) {
@@ -105,6 +111,9 @@ public class BlessPlayer extends PlayerListener {
 				block.getType() == Material.STONE_BUTTON ||
 				block.getType() == Material.STONE_PLATE ||
 				block.getType() == Material.WOOD_PLATE ||
+				block.getType() == Material.DIODE ||
+				block.getType() == Material.DIODE_BLOCK_OFF ||
+				block.getType() == Material.DIODE_BLOCK_ON ||
 				block.getType() == Material.WORKBENCH ||
 				block.getType() == Material.SIGN_POST ||
 				block.getType() == Material.SIGN)	

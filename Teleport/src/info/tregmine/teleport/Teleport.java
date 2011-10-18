@@ -78,28 +78,52 @@ public class Teleport extends JavaPlugin {
 			return true;
 		}
 
-		
 		if(commandName.equals("home") && tregminePlayer.isDonator()) {
-			Home home = new Home(from, getServer());
+			Home home = new Home(from.getName(), getServer());
 
 			if (args.length == 0) {
 				Location loc = home.get();
-
-
+                if (loc != null) {
+                    from.sendMessage(ChatColor.RED + "Teleport failed. HAHAHA.");
+                    return true;
+                }
+                
 				loc.getWorld().loadChunk(loc.getWorld().getChunkAt(loc));
 
 				if (loc.getWorld().isChunkLoaded(loc.getWorld().getChunkAt(loc))){
 					from.teleport(loc);
 					from.sendMessage(ChatColor.AQUA + "Like Superman, you fly across the world to your home. Try not to hit any birds.");
 				} else {
-					from.sendMessage(ChatColor.RED + "Loading your home chunk failed. Try /home again");
+					from.sendMessage(ChatColor.RED + "Loading your home chunk failed, try /home again");
 				}
-			} else  {
-				if(args[0].matches("save")) {
-					home.save(from.getLocation());
-					from.sendMessage(ChatColor.AQUA + "Home saved!");
+			} else if ("save".matches(args[0])) {
+                home.save(from.getLocation());
+                from.sendMessage(ChatColor.AQUA + "Home saved!");
+            } else if ("to".equals(args[0]) && (tregminePlayer.getMetaBoolean("mentor") || tregminePlayer.isAdmin())) {
+                if (args.length < 2) {
+                    from.sendMessage(ChatColor.RED + "Usage: /home to [player]");
+                    return true;
+                }
+                
+                String playerName = args[1];
+                Home playersHome = new Home(playerName, getServer());
+                
+				Location loc = playersHome.get();
+                if (loc != null) {
+                    from.sendMessage(ChatColor.RED + "Teleport failed. HAHAHA.");
+                    return true;
+                }
+
+				loc.getWorld().loadChunk(loc.getWorld().getChunkAt(loc));
+
+				if (loc.getWorld().isChunkLoaded(loc.getWorld().getChunkAt(loc))){
+					from.teleport(loc);
+					from.sendMessage(ChatColor.AQUA + "Like Superman, you fly across the world to " + playerName 
+                        + "'s home. Try not to hit any birds.");
+				} else {
+					from.sendMessage(ChatColor.RED + "Loading of home chunk failed, try /home again");
 				}
-			}
+            }
 			return true;
 		}
 
@@ -126,7 +150,7 @@ public class Teleport extends JavaPlugin {
 
 				victim.setNoDamageTicks(200);
 				victim.teleport(from.getLocation());
-				victim.sendMessage(tregminePlayer.getChatName() + ChatColor.AQUA + " summoned you to themself.");
+				victim.sendMessage(tregminePlayer.getChatName() + ChatColor.AQUA + " summond you to himself.");
 				from.sendMessage(ChatColor.AQUA + "You summoned " +  victimPlayer.getChatName() + ChatColor.AQUA + " to yourself");
 			} else {
 				from.sendMessage(ChatColor.RED + "Can't find user");
