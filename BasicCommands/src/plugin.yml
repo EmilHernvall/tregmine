@@ -63,12 +63,9 @@ commands:
   tpblock:
     description: prevent people from teleporting to you.
     -usage: /tpblock true/false/info
-  removeadmin:
-    description: removes your adminstatus and makes you a donator, until you relog or use /admin.
-    -usage: /removeadmin
-  removebuilder:
-    description: removes your builderstatus and makes you a donator, until you relog.
-    -usage: /removebuilder
+  normal:
+    description: removes your special permissions until you relog.
+    -usage: /normal
   password:
     description: change your password
     -usage: /password <oldp password> <new password>

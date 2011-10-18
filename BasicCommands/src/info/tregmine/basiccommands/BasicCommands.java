@@ -189,23 +189,23 @@ public class BasicCommands extends JavaPlugin {
 			return true;
 		}
 
-		if (commandName.matches("removeadmin") && isAdmin) {
-			info.tregmine.api.TregminePlayer tregPlayer = this.tregmine.tregminePlayer.get(player.getName());
-			tregPlayer.setTempMetaString("admin", "false");
-			tregPlayer.setTemporaryChatName(ChatColor.GOLD + tregPlayer.getName());
-			player.sendMessage(ChatColor.YELLOW + "You are no longer admin, until you reconnect!");
+		if (commandName.matches("normal")) {
+            info.tregmine.api.TregminePlayer tregPlayer = this.tregmine.tregminePlayer.get(player.getName());
+            tregPlayer.setTemporaryChatName(ChatColor.GOLD + tregPlayer.getName());
+            if (isAdmin) {
+                tregPlayer.setTempMetaString("admin", "false");
+                player.sendMessage(ChatColor.YELLOW + "You are no longer admin, until you reconnect!");
+            } else if (tregPlayer.getMetaBoolean("builder")) {
+                tregPlayer.setTempMetaString("builder", "false");
+                player.sendMessage(ChatColor.YELLOW + "You are no longer builder, until you reconnect!");
+            } else if (tregPlayer.getMetaBoolean("mentor")) {
+                tregPlayer.setTempMetaString("mentor", "false");
+                player.sendMessage(ChatColor.YELLOW + "You are no longer guardian, until you reconnect!");            
+            }
+            
 			return true;
 		}
 
-		info.tregmine.api.TregminePlayer tregPlayer = this.tregmine.tregminePlayer.get(player.getName());
-		if (commandName.matches("removebuilder") && tregPlayer.getMetaBoolean("builder") ) {
-			tregPlayer.setTempMetaString("builder", "false");
-			tregPlayer.setTemporaryChatName(ChatColor.GOLD + tregPlayer.getName());
-			player.sendMessage(ChatColor.YELLOW + "You are no longer builder, until you reconnect!");
-			return true;
-		}
-
-		
 		if (commandName.matches("nuke") && isAdmin) {
 			player.sendMessage("You nuked all mobs in this world!");
 			for (Entity ent : player.getWorld().getLivingEntities()) {

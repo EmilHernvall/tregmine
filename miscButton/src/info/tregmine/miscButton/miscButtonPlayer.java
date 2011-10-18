@@ -1,25 +1,12 @@
 package info.tregmine.miscButton;
 
-
-
-
-//import org.bukkit.ChatColor;
-//import org.bukkit.entity.Player;
-//import org.bukkit.event.block.Action;
-//import org.bukkit.event.player.PlayerInteractEvent;
-//import org.bukkit.Material;
 import info.tregmine.currency.Wallet;
 
-//import org.bukkit.Achievement;
 import org.bukkit.ChatColor;
 import org.bukkit.Effect;
-//import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-//import org.bukkit.block.Sign;
-//import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.Player;
-//import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerListener;
 import org.bukkit.inventory.ItemStack;
@@ -253,15 +240,6 @@ public class miscButtonPlayer extends PlayerListener {
 			} else {
 				event.getPlayer().sendMessage(ChatColor.RED + "You need 15,000 tregs");				
 			}
-
-
-
-			//			for (Achievement a :	Achievement.values()) {
-			//				event.getPlayer().awardAchievement(a);
-			//			}
-
-			//			event.getPlayer().getWorld().strikeLightning(event.getPlayer().getLocation());
-			//			event.getPlayer().getWorld().spawnCreature(event.getPlayer().getLocation(), CreatureType.COW);
 		}
 
 
@@ -336,9 +314,34 @@ public class miscButtonPlayer extends PlayerListener {
 				event.getPlayer().sendMessage(ChatColor.RED + "You need 15,000 tregs");
 			}
 		}
+        
+        // eukeys gate for mansion
+        if (button == 1467819296) {
+            Block gate1 = event.getClickedBlock().getWorld().getBlockAt(12189, 68, -69973);
+            Block gate2 = event.getClickedBlock().getWorld().getBlockAt(12189, 65, -69967);
+
+            fill(gate1,gate2, Material.AIR);
+        }
+
+        if (button == -1209690329) {
+            Block gate3 = event.getClickedBlock().getWorld().getBlockAt(12189, 68, -69973);
+            Block gate4 = event.getClickedBlock().getWorld().getBlockAt(12189, 68, -69973);
+            Block gated3 = event.getClickedBlock().getWorld().getBlockAt(12189, 65, -69965);
+            Block gated4 = event.getClickedBlock().getWorld().getBlockAt(12189, 65, -69967);
+            Block gated5 = event.getClickedBlock().getWorld().getBlockAt(12189, 67, -69965);
+            Block gated6 = event.getClickedBlock().getWorld().getBlockAt(12189, 67, -69967);
+            Block gated7 = event.getClickedBlock().getWorld().getBlockAt(12189, 67, -69970);
+            Block gated8 = event.getClickedBlock().getWorld().getBlockAt(12189, 67, -69972);
+            Block gated9 = event.getClickedBlock().getWorld().getBlockAt(12189, 65, -69970);
+            Block gated10 = event.getClickedBlock().getWorld().getBlockAt(12189, 65, -69972);
+
+            fill(gate3,gate4, Material.OBSIDIAN);
+            fill(gated3, gated4, Material.IRON_BLOCK);
+            fill(gated5, gated6, Material.IRON_BLOCK);
+            fill(gated7, gated8, Material.IRON_BLOCK);
+            fill(gated9, gated10, Material.IRON_BLOCK);
+        }
 	}
-
-
 
 	public void fill(Block b1, Block b2, Material item) {
 		double xMax = Math.max(b1.getLocation().getX(), b2.getLocation().getX());
