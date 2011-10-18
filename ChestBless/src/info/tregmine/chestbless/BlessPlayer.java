@@ -48,7 +48,7 @@ public class BlessPlayer extends PlayerListener {
 			if (this.plugin.chests.containsKey(checksum)) {
 				
 				String name = this.plugin.chests.get(checksum);
-				player.sendMessage(ChatColor.AQUA + "You reblessed a block for " + name);
+				player.sendMessage(ChatColor.AQUA + "You reblessed a block for " + name + ".");
 				this.plugin.chests.put(newchecksum, name);
 				this.plugin.chests.remove(checksum);
 				info.tregmine.database.Mysql mysql = new info.tregmine.database.Mysql();
@@ -82,12 +82,12 @@ public class BlessPlayer extends PlayerListener {
 			
 			String name = tregminePlayer.getMetaString("chestbless");
 			this.plugin.getServer().getPlayer(name).sendMessage(ChatColor.AQUA + "Your god blessed in your name!");
-			player.sendMessage(ChatColor.AQUA + "You blessed for " + name);
+			player.sendMessage(ChatColor.AQUA + "You blessed for " + name + ".");
 			this.plugin.chests.put(checksum, name);
 			info.tregmine.database.Mysql mysql = new info.tregmine.database.Mysql();
 			mysql.connect();
 			info.tregmine.chestbless.Store.savebless(checksum, name, player.getWorld().getName(), mysql);
-			this.plugin.log.info(player.getName() + " Blessed a block " + checksum + " to " + name);
+			this.plugin.log.info(player.getName() + " Blessed a block " + checksum + " to " + name + ".");
 			mysql.close();
 
 			event.setCancelled(true);
@@ -116,13 +116,13 @@ public class BlessPlayer extends PlayerListener {
 				String name = this.plugin.chests.get(checksum);
 				if(!player.getName().matches(name)) {
 					if (tregminePlayer.isAdmin()) {
-						player.sendMessage(ChatColor.YELLOW + "Blessed to: "+ name );
+						player.sendMessage(ChatColor.YELLOW + "Blessed to: "+ name + "." );
 					} else {
-						player.sendMessage(ChatColor.RED + "Blessed to: "+ name );
+						player.sendMessage(ChatColor.RED + "Blessed to: "+ name + ".");
 						event.setCancelled(true);
 					}
 				} else {
-					player.sendMessage(ChatColor.AQUA + "Blessed to you");
+					player.sendMessage(ChatColor.AQUA + "Blessed to you.");
 					event.setCancelled(false);
 				}
 			}

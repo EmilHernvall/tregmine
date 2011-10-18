@@ -8,33 +8,26 @@ description: Tregmine.info teleportation
 
 commands:
   tp:
-    description: Teleport tp another player
-    -usage: /<command> <player>
+    description: teleport to specified player.
+    -usage: /tp <player>
   tpto:
-    description: Teleport tp another player
-    -usage: /<command> <player>
+    description: teleport to a location.
+    -usage: /tpto <x> <y> <z>
   spawn:
-    description: sends you back to where you started
-    -usage: /<command> <player>|list
+    description: teleport to the spawn location.
+    -usage: /spawn
   s:
-    description: summon someone to you
-    -usage: /<command> <player>
+    description: summon specified player.
+    -usage: /s <player>
   warp:
-    description: send you to a warp
-    -usage: /<command> <warpname>
+    description: teleport to specified warp.
+    -usage: /warp <warpname>
   home:
-    description: send you to a warp
-    -usage: /<command> <warpname>    
+    description: teleport to your home. You can set home with /home save.
+    -usage: /home (save)
   alpha:
-    description: send you to a warp
-    -usage: /<command> <warpname>
-  childsplay:
-    description: send you to a warp
-    -usage: /<command> <warpname>
+    description: teleport to the alpha world.
+    -usage: /alpha
   skyland:
-    description: send you to a warp
-    -usage: /<command> <warpname>
-  matrix:
-    description: send you to a warp
-    -usage: /<command> <warpname>
-    
+    description: teleport to the skyland world.
+    -usage: /skyland

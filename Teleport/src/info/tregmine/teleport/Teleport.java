@@ -92,7 +92,7 @@ public class Teleport extends JavaPlugin {
 					from.teleport(loc);
 					from.sendMessage(ChatColor.AQUA + "Like Superman, you fly across the world to your home. Try not to hit any birds.");
 				} else {
-					from.sendMessage(ChatColor.RED + "Loading your home chunk faild, try /home again");
+					from.sendMessage(ChatColor.RED + "Loading your home chunk failed. Try /home again");
 				}
 			} else  {
 				if(args[0].matches("save")) {
@@ -126,7 +126,7 @@ public class Teleport extends JavaPlugin {
 
 				victim.setNoDamageTicks(200);
 				victim.teleport(from.getLocation());
-				victim.sendMessage(tregminePlayer.getChatName() + ChatColor.AQUA + " summond you to himself.");
+				victim.sendMessage(tregminePlayer.getChatName() + ChatColor.AQUA + " summoned you to themself.");
 				from.sendMessage(ChatColor.AQUA + "You summoned " +  victimPlayer.getChatName() + ChatColor.AQUA + " to yourself");
 			} else {
 				from.sendMessage(ChatColor.RED + "Can't find user");

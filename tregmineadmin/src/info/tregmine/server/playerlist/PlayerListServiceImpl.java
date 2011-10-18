@@ -21,7 +21,7 @@ public class PlayerListServiceImpl extends RemoteServiceServlet implements
 		HttpSession session = request.getSession();
 		
 		  if (session.getAttribute("test") == null) {
-			  return "ERROR: Not loged in";
+			  return "ERROR: Not logged in";
 		  }
 		
 		info.tregmine.database.Mysql mysql = new info.tregmine.database.Mysql(); 

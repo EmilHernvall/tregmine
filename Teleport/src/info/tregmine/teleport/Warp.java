@@ -67,7 +67,7 @@ public class Warp {
 						from.teleport(warppoint);
 						plugin.log.info("[warp] + <" + from.getName() + "> " + args[0] +  ":" +  world.getName() );
 					} else {
-						from.sendMessage(ChatColor.RED + "Chunk faild to load, please try to warp again");
+						from.sendMessage(ChatColor.RED + "Chunk failed to load, please try to warp again");
 					}
 					return;
 				}
@@ -80,13 +80,13 @@ public class Warp {
 				} else {
 					from.sendMessage(ChatColor.DARK_RED + "Sorry that warp is in another world!");
 					warppoint = from.getLocation();		        	
-					plugin.log.info("[warp faild] + <" + from.getName() + "> " + args[0] +  ":" +  world.getName() );
+					plugin.log.info("[warp failed] + <" + from.getName() + "> " + args[0] +  ":" +  world.getName() );
 				}
 
 			} catch (Exception e) {
 				from.sendMessage("Warp not found!");
 				try {
-					plugin.log.info("[warp faild] + <" + from.getName() + "> " + args[0] +  " -- not found");
+					plugin.log.info("[warp failed] + <" + from.getName() + "> " + args[0] +  " -- not found");
 				} catch (Exception ee) {
 					e.printStackTrace();
 				}
@@ -101,7 +101,7 @@ public class Warp {
 			if (warppoint.getWorld().isChunkLoaded(warppoint.getWorld().getChunkAt(warppoint))){
 				from.teleport(warppoint);
 			} else {
-				from.sendMessage(ChatColor.RED + "Chunk faild to load, please try to warp again");
+				from.sendMessage(ChatColor.RED + "Chunk failed to load, please try to warp again");
 			}
 
 			
@@ -134,13 +134,13 @@ public class Warp {
 				} else {
 					from.sendMessage(ChatColor.DARK_RED + "Sorry that warp is in another world!");
 					warppoint = from.getLocation();		        	
-					plugin.log.info("[warp faild] + <" + from.getName() + "> " + args[0] +  ":" +  world.getName() );
+					plugin.log.info("[warp failed] + <" + from.getName() + "> " + args[0] +  ":" +  world.getName() );
 				}
 
 			} catch (Exception e) {
 				from.sendMessage("Warp not found!");
 				try {
-					plugin.log.info("[warp faild] + <" + from.getName() + "> " + args[0] +  " -- not found");
+					plugin.log.info("[warp failed] + <" + from.getName() + "> " + args[0] +  " -- not found");
 				} catch (Exception ee) {
 					e.printStackTrace();
 				}
@@ -159,7 +159,7 @@ public class Warp {
 				from.teleport(warppoint);
 				this.getWorld("alpha").setSpawnLocation(-116217, 84, -234971);
 			} else {
-				from.sendMessage(ChatColor.RED + "Chunk faild to load, please try to warp again");
+				from.sendMessage(ChatColor.RED + "Chunk failed to load, please try to warp again");
 			}
 
 			

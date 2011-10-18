@@ -7,11 +7,14 @@ description: Tregmine.info items
 
 commands:
   who:
-    description: show who is online and not
-    -usage: /who [name]
+    description: show who is online. Also look up information about specified player.
+    -usage: /who \
+    /who <player>
   playerlist:
-    description: show who is online and not
-    -usage: /who [name]
+    description: show who is online.
+    -usage: /who \
+    /who <player>
   list:
-    description: show who is online and not
-    -usage: /who [name]
+    description: show who is online.
+    -usage: /who \
+    /who <player>

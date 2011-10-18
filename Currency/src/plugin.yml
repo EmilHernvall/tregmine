@@ -7,5 +7,7 @@ description: Tregmine.info Currency
 
 commands:
   wallet:
-    description: wallet commands
-    -usage: /<command>
+    description: allows you to handle your wallet. You can check your balance, show your balance to others and send a specified amount to players.
+    -usage: /wallet give <player> <amount> \
+    /wallet tell \
+    /wallet balance

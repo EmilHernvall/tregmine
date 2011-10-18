@@ -154,7 +154,7 @@ public List<Player> invisible = new ArrayList<Player>();
     this.log.info(player.getName() + " disappeared.");
 	info.tregmine.api.TregminePlayer tregP = this.tregmine.tregminePlayer.get(player.getName());
 	tregP.setMetaString("invis", "true");
-    player.sendMessage(ChatColor.YELLOW + "Like an flying elephant your turn yourself unseen");
+    player.sendMessage(ChatColor.YELLOW + "The invisibility cloak is now wrapped around you.");
   }
 
   public void reappear(Player player)
@@ -173,7 +173,7 @@ public List<Player> invisible = new ArrayList<Player>();
       }
   	info.tregmine.api.TregminePlayer tregP = this.tregmine.tregminePlayer.get(player.getName());
   	tregP.setMetaString("invis", "false");
-    player.sendMessage(ChatColor.YELLOW + "Like a mad cow you spawned yourelf from nothing!");
+    player.sendMessage(ChatColor.YELLOW + "Like a mad cow you spawned yourself from nothing!");
 
       this.log.info(player.getName() + " reappeared.");
     }
@@ -181,7 +181,7 @@ public List<Player> invisible = new ArrayList<Player>();
 
   public void reappearAll()
   {
-    this.log.info("Everyone is going reappear.");
+    this.log.info("Everyone is reappearing.");
     for (Player InvisiblePlayer : this.invisible) {
       reappear(InvisiblePlayer);
     }

@@ -7,5 +7,5 @@ description: Tregmine.info Currency
 
 commands:
   inv:
-    description: wallet commands
-    -usage: /<command>
+    description: browse specified player's inventory. You must stand close to them.
+    -usage: /inv <player>

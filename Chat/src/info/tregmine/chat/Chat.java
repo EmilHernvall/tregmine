@@ -118,7 +118,7 @@ public class Chat extends JavaPlugin {
 			for (Player player : players) {
 				info.tregmine.api.TregminePlayer locTregminePlayer = this.tregmine.tregminePlayer.get(player.getName());
 				if (locTregminePlayer.isAdmin()) {
-					player.sendMessage(ChatColor.DARK_AQUA + "/god used by: " + tregminePlayer.getChatName());
+					player.sendMessage(ChatColor.DARK_AQUA + "/god used by: " + tregminePlayer.getChatName() + ".");
 				}
 			}
 			return true;
@@ -129,17 +129,17 @@ public class Chat extends JavaPlugin {
 			this.channel.put(from.getName(), args[1].toUpperCase());
 			Player to = getServer().matchPlayer(args[0]).get(0);
 			this.channel.put(to.getName(), args[1].toUpperCase());
-			to.sendMessage(ChatColor.RED + from.getName() + " forced you into chatchannel " + args[1].toUpperCase() );
-			to.sendMessage(ChatColor.RED + "say /channel global to switch back to the global chat " );
-			from.sendMessage(ChatColor.RED + "You are now in a forced chat " + args[1].toUpperCase()+ " with " + to.getName() );
+			to.sendMessage(ChatColor.RED + from.getName() + " forced you into channel " + args[1].toUpperCase() + ".");
+			to.sendMessage(ChatColor.RED + "Write /channel global to switch back to the global chat." );
+			from.sendMessage(ChatColor.RED + "You are now in a forced chat " + args[1].toUpperCase()+ " with " + to.getName() + ".");
 			this.log.info(from.getName() + " FORCED CHAT WITH " + to.getName() + " IN CHANNEL " + args[1].toUpperCase());
 			return true;
 		}
 
 		if(commandName.equals("channel")  && args.length == 1 ){
 			this.channel.put(from.getName(), args[0].toUpperCase());
-			from.sendMessage(ChatColor.RED + "You are now talking in channel " + args[0] );
-			from.sendMessage(ChatColor.RED + "say /channel global to switch to the global chat " );
+			from.sendMessage(ChatColor.RED + "You are now talking in channel " + args[0] + ".");
+			from.sendMessage(ChatColor.RED + "Write /channel global to switch to the global chat." );
 		}
 
 

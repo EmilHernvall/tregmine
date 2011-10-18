@@ -19,7 +19,7 @@ public class Tp {
 			
 			if (tregminePlayerTo.getMetaBoolean("tpblock") && !tregminePlayerFrom.isAdmin() ) {
 				from.sendMessage(ChatColor.RED + "FFS! Annoy someone else -- TP to them is prohibited.");
-				to.sendMessage(from.getName() + ChatColor.AQUA + " tried to tp to you, laugh at him, as he failed and hurt im self hard.");
+				to.sendMessage(from.getName() + ChatColor.AQUA + " failed to tp to you.");
 				return;
 			}
 			
@@ -67,7 +67,7 @@ public class Tp {
 				}
 
 				if(!succeed) {
-					from.sendMessage(ChatColor.RED + "The person you try to teleport to is to far away.");				
+					from.sendMessage(ChatColor.RED + "The person you try to teleport to is too far away.");				
 				}
 
 			} else {

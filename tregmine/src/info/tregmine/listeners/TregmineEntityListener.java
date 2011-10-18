@@ -75,7 +75,7 @@ public class TregmineEntityListener extends EntityListener  {
 			
 			if(event.getDamager() instanceof Player) {
 				attaker = (Player) event.getDamager();
-				attaker.sendMessage(ChatColor.RED + "Dont hurt your friend");
+				attaker.sendMessage(ChatColor.RED + "Don't hurt your friend");
 			} else {			
 
 				if(newHealth > 0) {

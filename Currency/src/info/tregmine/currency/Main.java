@@ -59,7 +59,7 @@ public class Main extends JavaPlugin {
 				if (balance >= 0) {
 						player.sendMessage("You have " + ChatColor.GOLD +  nf.format( balance ) + ChatColor.WHITE + " Tregs" );
 				} else {
-					player.sendMessage(ChatColor.RED + "You have have no wallet contact an administrator" );					
+					player.sendMessage(ChatColor.RED + "You have have no wallet. Contact an administrator." );					
 				}
 				return true;
 			}
@@ -70,13 +70,13 @@ public class Main extends JavaPlugin {
 				long balance = wallet.balance();
 				if (balance >= 0) {
 					if (!tregminePlayer.isAdmin()) {
-						this.getServer().broadcastMessage(tregminePlayer.getChatName() + ChatColor.AQUA + " has " + ChatColor.GOLD + nf.format( balance ) + ChatColor.AQUA + " Tregs" );
+						this.getServer().broadcastMessage(tregminePlayer.getChatName() + ChatColor.AQUA + " has " + ChatColor.GOLD + nf.format( balance ) + ChatColor.AQUA + " Tregs." );
 					} else {
-						player.sendMessage(tregminePlayer.getChatName() + " have " + ChatColor.GOLD +  "more" + ChatColor.WHITE + " Tregs then you" );						
+						player.sendMessage(tregminePlayer.getChatName() + " has " + ChatColor.GOLD +  "more" + ChatColor.WHITE + " Tregs than you." );						
 					}
 
 				} else {
-					this.getServer().broadcastMessage(tregminePlayer.getChatName() + ChatColor.RED + " has no wallet, contact an administrator");
+					this.getServer().broadcastMessage(tregminePlayer.getChatName() + ChatColor.RED + " has no wallet. Contact an administrator.");
 				}
 				return true;
 			}
