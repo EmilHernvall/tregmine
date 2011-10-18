@@ -6,7 +6,7 @@ import java.sql.SQLException;
 
 import org.bukkit.Location;
 import org.bukkit.Server;
-import org.bukkit.entity.Player;
+//import org.bukkit.entity.Player;
 
 public class Home {
 	public final info.tregmine.database.Mysql mysql = new info.tregmine.database.Mysql();

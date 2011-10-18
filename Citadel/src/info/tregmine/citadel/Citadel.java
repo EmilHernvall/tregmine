@@ -32,6 +32,15 @@ public class Citadel extends JavaPlugin {
 				WorldCreator citadelCreator = new WorldCreator("citadel"); 
 				citadelCreator.environment(Environment.NORMAL);
 				citadelCreator.createWorld();
+				
+				WorldCreator alpha = new WorldCreator("alpha"); 
+				alpha.environment(Environment.NORMAL);
+				alpha.createWorld();
+				
+				WorldCreator skyland = new WorldCreator("skyland"); 
+				skyland.environment(Environment.NORMAL);
+				skyland.createWorld();
+
 			} else {
 				log.info(this.getDescription().getName() + " " + this.getDescription().getVersion() + " - could not find Tregmine");
 				this.getServer().getPluginManager().disablePlugin(this);
