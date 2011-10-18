@@ -18,15 +18,15 @@ public class Tp {
 
 			
 			if (tregminePlayerTo.getMetaBoolean("tpblock") && !tregminePlayerFrom.isAdmin() ) {
-				from.sendMessage(ChatColor.RED + "FFS! Annoy someone else -- TP to them is prohibited.");
-				to.sendMessage(from.getName() + ChatColor.AQUA + " failed to tp to you.");
+				from.sendMessage(ChatColor.RED + to.getName() + ChatColor.AQUA + "'s teloptical deflector absorbed all motion. Teleportation failed.");
+				to.sendMessage(from.getName() + ChatColor.AQUA + "'s teleportation spell cannot bypass your sophisticated defenses.");
 				return;
 			}
 			
 			double distance = info.tregmine.api.math.Distance.calc2d(from.getLocation(), to.getLocation());
 
             if (tregminePlayerFrom.isAdmin() && !succeed) {
-                from.sendMessage(ChatColor.AQUA + "You teleported to " + to.getName() + ChatColor.AQUA + " in " + ChatColor.BLUE + to.getWorld().getName());
+                from.sendMessage(ChatColor.AQUA + "You teleported to " + to.getName() + ChatColor.AQUA + " in " + ChatColor.BLUE + to.getWorld().getName() + ".");
                 from.setNoDamageTicks(200);
                 from.teleport(to.getLocation());
                 succeed = true;
@@ -34,14 +34,14 @@ public class Tp {
 
             //TODO uglu soltution but it will change with the new permisson system
             if (tregminePlayerFrom.getMetaBoolean("mentor") && !succeed) {
-                from.sendMessage(ChatColor.AQUA + "You teleported to " + to.getName() + ChatColor.AQUA + " in " + ChatColor.BLUE + to.getWorld().getName());
+                from.sendMessage(ChatColor.AQUA + "You teleported to " + to.getName() + ChatColor.AQUA + " in " + ChatColor.BLUE + to.getWorld().getName() + ".");
                 from.setNoDamageTicks(200);
                 from.teleport(to.getLocation());
                 succeed = true;
             }
 
             if(from.getWorld().getName().matches("matrix")) {
-                from.sendMessage("Sorry you can't teleport in matrix.");
+                from.sendMessage("Sorry, you can't teleport in matrix.");
                 return;
             }
 
@@ -64,7 +64,7 @@ public class Tp {
 				}
 
 				if(!succeed) {
-					from.sendMessage(ChatColor.RED + "The person you try to teleport to is too far away.");				
+					from.sendMessage(ChatColor.RED + "Your teleportation spell is not strong enough for the longer distances.");			
 				}
 
 			} else {

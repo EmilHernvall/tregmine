@@ -110,7 +110,7 @@ public class Teleport extends JavaPlugin {
                 
 				Location loc = playersHome.get();
                 if (loc == null) {
-                    from.sendMessage(ChatColor.RED + "Teleportation failed.");
+                    from.sendMessage(ChatColor.RED + "Telogric lift malfunctioned. Teleportation failed.");
                     return true;
                 }
 
