@@ -60,14 +60,14 @@ public class Warp {
 
 				if (from.getLocation().getWorld().getName().matches("ChildsPlay")) {
 					warppoint = new Location(from.getLocation().getWorld(),x,y,z);
-					from.sendMessage(ChatColor.AQUA + "You teleported to " + ChatColor.DARK_GREEN + args[0] + ChatColor.AQUA + " in " + ChatColor.BLUE +  "Alpha" );
+					from.sendMessage(ChatColor.AQUA + "You teleported to " + ChatColor.DARK_GREEN + args[0] + ChatColor.AQUA + " in " + ChatColor.BLUE +  "Alpha." );
 					warppoint.getWorld().loadChunk(warppoint.getWorld().getChunkAt(warppoint));
 
 					if (warppoint.getWorld().isChunkLoaded(warppoint.getWorld().getChunkAt(warppoint))){
 						from.teleport(warppoint);
 						plugin.log.info("[warp] + <" + from.getName() + "> " + args[0] +  ":" +  world.getName() );
 					} else {
-						from.sendMessage(ChatColor.RED + "Chunk failed to load, please try to warp again");
+						from.sendMessage(ChatColor.RED + "Chunk failed to load. Please try to warp again.");
 					}
 					return;
 				}
@@ -75,10 +75,10 @@ public class Warp {
 
 				if(world.getName().matches(from.getWorld().getName())) {					
 					warppoint = new Location(world,x,y,z);
-					from.sendMessage(ChatColor.AQUA + "You teleported to " + ChatColor.DARK_GREEN + args[0] + ChatColor.AQUA + " in " + ChatColor.BLUE +  world.getName() );
+					from.sendMessage(ChatColor.AQUA + "You teleported to " + ChatColor.DARK_GREEN + args[0] + ChatColor.AQUA + " in " + ChatColor.BLUE +  world.getName() + "." );
 					plugin.log.info("[warp] + <" + from.getName() + "> " + args[0] +  ":" +  world.getName() );
 				} else {
-					from.sendMessage(ChatColor.DARK_RED + "Sorry that warp is in another world!");
+					from.sendMessage(ChatColor.DARK_RED + "Sorry, that warp is in another world!");
 					warppoint = from.getLocation();		        	
 					plugin.log.info("[warp failed] + <" + from.getName() + "> " + args[0] +  ":" +  world.getName() );
 				}
@@ -101,7 +101,7 @@ public class Warp {
 			if (warppoint.getWorld().isChunkLoaded(warppoint.getWorld().getChunkAt(warppoint))){
 				from.teleport(warppoint);
 			} else {
-				from.sendMessage(ChatColor.RED + "Chunk failed to load, please try to warp again");
+				from.sendMessage(ChatColor.RED + "Chunk failed to load. Please try to warp again");
 			}
 
 			
@@ -129,10 +129,10 @@ public class Warp {
 
 				if(world.getName().matches(from.getWorld().getName())) {					
 					warppoint = new Location(world,x,y,z);
-					from.sendMessage(ChatColor.AQUA + "You teleported to " + ChatColor.DARK_GREEN + args[0] + ChatColor.AQUA + " in " + ChatColor.BLUE +  world.getName() );
+					from.sendMessage(ChatColor.AQUA + "You teleported to " + ChatColor.DARK_GREEN + args[0] + ChatColor.AQUA + " in " + ChatColor.BLUE +  world.getName() + "." );
 					plugin.log.info("[warp] + <" + from.getName() + "> " + args[0] +  ":" +  world.getName() );
 				} else {
-					from.sendMessage(ChatColor.DARK_RED + "Sorry that warp is in another world!");
+					from.sendMessage(ChatColor.DARK_RED + "Sorry, that warp is in another world!");
 					warppoint = from.getLocation();		        	
 					plugin.log.info("[warp failed] + <" + from.getName() + "> " + args[0] +  ":" +  world.getName() );
 				}
