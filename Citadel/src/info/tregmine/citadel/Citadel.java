@@ -38,7 +38,7 @@ public class Citadel extends JavaPlugin {
 				alpha.createWorld();
 				
 				WorldCreator skyland = new WorldCreator("skyland"); 
-				skyland.environment(Environment.NORMAL);
+				skyland.environment(Environment.SKYLANDS);
 				skyland.createWorld();
 
 			} else {
