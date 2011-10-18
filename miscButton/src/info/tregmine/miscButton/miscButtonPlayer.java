@@ -316,14 +316,16 @@ public class miscButtonPlayer extends PlayerListener {
 		}
         
         // eukeys gate for mansion
-        if (button == 1467819296) {
-            Block gate1 = event.getClickedBlock().getWorld().getBlockAt(12189, 68, -69973);
-            Block gate2 = event.getClickedBlock().getWorld().getBlockAt(12189, 65, -69967);
+        if (button == 2011155214) {
+            Block gate1 = event.getClickedBlock().getWorld().getBlockAt(12189, 64, -69964);
+            Block gate2 = event.getClickedBlock().getWorld().getBlockAt(12189, 68, -69973);
 
             fill(gate1,gate2, Material.AIR);
         }
 
         if (button == -1209690329) {
+            Block gate1 = event.getClickedBlock().getWorld().getBlockAt(12189, 64, -69964);
+            Block gate2 = event.getClickedBlock().getWorld().getBlockAt(12189, 68, -69973);
             Block gate3 = event.getClickedBlock().getWorld().getBlockAt(12189, 68, -69973);
             Block gate4 = event.getClickedBlock().getWorld().getBlockAt(12189, 68, -69973);
             Block gated3 = event.getClickedBlock().getWorld().getBlockAt(12189, 65, -69965);
@@ -335,6 +337,7 @@ public class miscButtonPlayer extends PlayerListener {
             Block gated9 = event.getClickedBlock().getWorld().getBlockAt(12189, 65, -69970);
             Block gated10 = event.getClickedBlock().getWorld().getBlockAt(12189, 65, -69972);
 
+            fill(gate1,gate2, Material.OBSIDIAN);
             fill(gate3,gate4, Material.OBSIDIAN);
             fill(gated3, gated4, Material.IRON_BLOCK);
             fill(gated5, gated6, Material.IRON_BLOCK);
