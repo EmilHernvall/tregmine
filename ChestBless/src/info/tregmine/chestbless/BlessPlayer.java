@@ -1,6 +1,9 @@
 package info.tregmine.chestbless;
 
+import info.tregmine.currency.Wallet;
 
+import java.util.Set;
+import java.util.HashSet;
 //import org.bukkit.ChatColor;
 //import org.bukkit.Location;
 
@@ -16,10 +19,28 @@ import org.bukkit.event.player.PlayerListener;
 
 public class BlessPlayer extends PlayerListener {
 	private final Bless plugin;
+    private Set<Material> allowedMaterials;
 
 	public BlessPlayer(Bless instance) {
 		this.plugin = instance;
 		plugin.getServer();
+        allowedMaterials = new HashSet<Material>();
+        allowedMaterials.add(Material.CHEST);
+        allowedMaterials.add(Material.FURNACE);
+        allowedMaterials.add(Material.BURNING_FURNACE);
+        allowedMaterials.add(Material.WOOD_DOOR);
+        allowedMaterials.add(Material.WOODEN_DOOR);
+        allowedMaterials.add(Material.LEVER);
+        allowedMaterials.add(Material.STONE_BUTTON);
+        allowedMaterials.add(Material.STONE_PLATE);
+        allowedMaterials.add(Material.WOOD_PLATE);
+        allowedMaterials.add(Material.WORKBENCH);
+        allowedMaterials.add(Material.SIGN_POST);
+        allowedMaterials.add(Material.DIODE);
+        allowedMaterials.add(Material.DIODE_BLOCK_OFF);
+        allowedMaterials.add(Material.DIODE_BLOCK_ON);
+        allowedMaterials.add(Material.JUKEBOX);
+        allowedMaterials.add(Material.SIGN);
 	}
 
 	public void onPlayerInteract(PlayerInteractEvent event) {
@@ -27,24 +48,9 @@ public class BlessPlayer extends PlayerListener {
 		Block block = event.getClickedBlock();
 		info.tregmine.api.TregminePlayer tregminePlayer = this.plugin.tregmine.tregminePlayer.get(player.getName());
 
-		if ((event.getAction() == Action.RIGHT_CLICK_BLOCK  || event.getAction() == Action.LEFT_CLICK_BLOCK) && 
-				(		block.getType() == Material.CHEST || 
-						block.getType() == Material.FURNACE ||
-						block.getType() == Material.BURNING_FURNACE ||
-						block.getType() == Material.WOOD_DOOR ||
-						block.getType() == Material.WOODEN_DOOR ||
-						block.getType() == Material.LEVER ||
-						block.getType() == Material.STONE_BUTTON ||
-						block.getType() == Material.STONE_PLATE ||
-						block.getType() == Material.WOOD_PLATE ||
-						block.getType() == Material.WORKBENCH ||
-						block.getType() == Material.SIGN_POST ||
-						block.getType() == Material.DIODE ||
-						block.getType() == Material.DIODE_BLOCK_OFF ||
-						block.getType() == Material.DIODE_BLOCK_ON ||
-						block.getType() == Material.JUKEBOX ||
-						block.getType() == Material.SIGN)	
-				) {
+		/*if ((event.getAction() == Action.RIGHT_CLICK_BLOCK  || event.getAction() == Action.LEFT_CLICK_BLOCK) && 
+				allowedMaterials.contains(block.getType())) {
+                
 			Location loc = block.getLocation();
  			int checksum = (loc.getBlockX() + "," + loc.getBlockZ() +"," + loc.getWorld().getName()).hashCode();
 			int newchecksum = (loc.getBlockX() + "," + loc.getBlockZ() + "," + loc.getBlockY() + "," + loc.getWorld().getName()).hashCode();
@@ -64,27 +70,31 @@ public class BlessPlayer extends PlayerListener {
 
 			}
 
-		}
+		}*/
 
 		
-		if (event.getAction() == Action.RIGHT_CLICK_BLOCK && player.getItemInHand().getType() == Material.BONE && (tregminePlayer.isAdmin() || tregminePlayer.getMetaBoolean("bless") &&
-				(		block.getType() == Material.CHEST || 
-				block.getType() == Material.FURNACE ||
-				block.getType() == Material.BURNING_FURNACE ||
-				block.getType() == Material.WOOD_DOOR ||
-				block.getType() == Material.WOODEN_DOOR ||
-				block.getType() == Material.LEVER ||
-				block.getType() == Material.STONE_BUTTON ||
-				block.getType() == Material.STONE_PLATE ||
-				block.getType() == Material.WOOD_PLATE ||
-				block.getType() == Material.WORKBENCH ||
-				block.getType() == Material.DIODE ||
-				block.getType() == Material.DIODE_BLOCK_OFF ||
-				block.getType() == Material.DIODE_BLOCK_ON ||
-				block.getType() == Material.SIGN_POST ||
-				block.getType() == Material.JUKEBOX ||
-				block.getType() == Material.SIGN)	
-				)) {
+		if (event.getAction() == Action.RIGHT_CLICK_BLOCK && 
+                player.getItemInHand().getType() == Material.BONE && 
+                (tregminePlayer.isAdmin() || tregminePlayer.getMetaBoolean("mentor")) &&
+				allowedMaterials.contains(block.getType())) {
+              
+            if (!tregminePlayer.isAdmin()) {
+                int amount = 5000;
+                if (block.getType().equals(Material.CHEST)) {
+                    amount = 30000;
+                }
+                    
+                Wallet wallet = new Wallet(tregminePlayer.getName());
+                long newbalance = wallet.balance()-amount;
+                if (newbalance >= 0) {
+                    wallet.take(amount);
+                    event.getPlayer().sendMessage(ChatColor.LIGHT_PURPLE + (amount + " tregs was taken from you"));
+                } else {
+                    event.getPlayer().sendMessage(ChatColor.RED + "You need " + amount + " tregs");
+                    return;
+                }
+            }
+                
 			Location loc = block.getLocation();
 			int checksum = (loc.getBlockX() + "," + loc.getBlockZ() + "," + loc.getBlockY() + "," + loc.getWorld().getName()).hashCode();
 			
@@ -104,23 +114,8 @@ public class BlessPlayer extends PlayerListener {
 
 
 		if ((event.getAction() == Action.RIGHT_CLICK_BLOCK  || event.getAction() == Action.LEFT_CLICK_BLOCK) && 
-				(		block.getType() == Material.CHEST || 
-				block.getType() == Material.FURNACE ||
-				block.getType() == Material.BURNING_FURNACE ||
-				block.getType() == Material.WOOD_DOOR ||
-				block.getType() == Material.WOODEN_DOOR ||
-				block.getType() == Material.LEVER ||
-				block.getType() == Material.STONE_BUTTON ||
-				block.getType() == Material.STONE_PLATE ||
-				block.getType() == Material.WOOD_PLATE ||
-				block.getType() == Material.DIODE ||
-				block.getType() == Material.DIODE_BLOCK_OFF ||
-				block.getType() == Material.DIODE_BLOCK_ON ||
-				block.getType() == Material.WORKBENCH ||
-				block.getType() == Material.SIGN_POST ||
-				block.getType() == Material.JUKEBOX ||
-				block.getType() == Material.SIGN)	
-		) {
+				allowedMaterials.contains(block.getType())) {
+                
 			Location loc = block.getLocation();
 			int checksum = (loc.getBlockX() + "," + loc.getBlockZ() + "," + loc.getBlockY() + "," + loc.getWorld().getName()).hashCode();
 			
