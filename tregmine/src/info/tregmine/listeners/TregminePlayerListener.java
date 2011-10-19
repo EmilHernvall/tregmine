@@ -38,8 +38,19 @@ public class TregminePlayerListener extends PlayerListener {
     private final static String[] quitMessages = new String[] {
             "%s" + ChatColor.YELLOW + " deserted from the battlefield with a hearty good bye!",
             "%s" + ChatColor.YELLOW + " stole the cookies and ran!",
-            "%s" + ChatColor.YELLOW + " was eaten by a teenage mutant ninja platypus!",
-            "%s" + ChatColor.YELLOW + " parachuted of the plane and into the unknown!"
+            "%s" + ChatColor.YELLOW + " was eaten by a teenage mutant ninja creeper!",
+            "%s" + ChatColor.YELLOW + " jumped off the plane with a cobble stone parachute!",
+			"%s" + ChatColor.YELLOW + " built Rome in one day and now deserves a break!",
+			"%s" + ChatColor.YELLOW + " will come back soon because Tregmine is awesome!",
+			"%s" + ChatColor.YELLOW + " leaves the light and enter darkness.",
+			"%s" + ChatColor.YELLOW + " disconnects from a better life.",
+			"%s" + ChatColor.YELLOW + " already miss the best friends in the world!",
+			"%s" + ChatColor.YELLOW + " will build something epic next time.",
+			"%s" + ChatColor.YELLOW + " is not banned yet!",
+			"%s" + ChatColor.YELLOW + " has left our world!",
+			"%s" + ChatColor.YELLOW + " went to browse Tregmine's forums instead!",
+			"%s" + ChatColor.YELLOW + " was scared away by einand! :(",
+			"%s" + ChatColor.YELLOW + "'s quit is sponsored by Xmart!"
         };
 
 	private final Tregmine plugin;
