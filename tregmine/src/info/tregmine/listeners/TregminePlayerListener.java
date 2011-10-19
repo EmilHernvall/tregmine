@@ -11,6 +11,7 @@ import java.util.TimeZone;
 
 import org.bukkit.ChatColor;
 //import org.bukkit.GameMode;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 //import org.bukkit.entity.Player;
@@ -127,7 +128,7 @@ public class TregminePlayerListener extends PlayerListener {
 
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		event.setJoinMessage(null);
-//		event.getPlayer().setGameMode(GameMode.SURVIVAL);
+		event.getPlayer().setGameMode(GameMode.SURVIVAL);
 	}    	
 
 	public void onPlayerLogin(PlayerLoginEvent event)
@@ -156,13 +157,14 @@ public class TregminePlayerListener extends PlayerListener {
 	public void onPlayerQuit(PlayerQuitEvent event) {
 		event.setQuitMessage(null);
 		TregminePlayer tregP = this.plugin.tregminePlayer.get(event.getPlayer().getName());
+		
 		if(!event.getPlayer().isOp()) {
             Random rand = new Random();
             int msgIndex = rand.nextInt(quitMessages.length);
             String message = String.format(quitMessages[msgIndex], tregP.getChatName());
-        
 			this.plugin.getServer().broadcastMessage(message);
 		}
+		
 		this.plugin.tregminePlayer.remove(event.getPlayer().getName());
 		this.plugin.log.info("Unloaded settings for " + event.getPlayer().getName() + ".");
 	}    	
