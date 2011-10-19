@@ -155,7 +155,7 @@ public class TregminePlayerListener extends PlayerListener {
 
 	public void onPlayerQuit(PlayerQuitEvent event) {
 		event.setQuitMessage(null);
-		TregminePlayer tregP = this.plugin.tregminePlayer.get(event.getPlayer());
+		TregminePlayer tregP = this.plugin.tregminePlayer.get(event.getPlayer().getName());
 		if(!event.getPlayer().isOp()) {
             Random rand = new Random();
             int msgIndex = rand.nextInt(quitMessages.length);
@@ -181,7 +181,7 @@ public class TregminePlayerListener extends PlayerListener {
 	}
 
 	public void onPlayerPickupItem (PlayerPickupItemEvent event){
-		TregminePlayer tregminePlayer = this.plugin.tregminePlayer.get(event.getPlayer());
+		TregminePlayer tregminePlayer = this.plugin.tregminePlayer.get(event.getPlayer().getName());
 
 		if (tregminePlayer.isAdmin()) {
 			return;
@@ -195,7 +195,7 @@ public class TregminePlayerListener extends PlayerListener {
 	}
 
 	public void onPlayerDropItem (PlayerDropItemEvent event) {
-		TregminePlayer tregminePlayer = this.plugin.tregminePlayer.get(event.getPlayer());
+		TregminePlayer tregminePlayer = this.plugin.tregminePlayer.get(event.getPlayer().getName());
 
 		if (tregminePlayer.isAdmin()) {
 			return;
