@@ -61,9 +61,9 @@ public class Bless extends JavaPlugin {
 		info.tregmine.api.TregminePlayer tregminePlayer = this.tregmine.tregminePlayer.get(player.getName());
 
 		boolean isAdmin = tregminePlayer.isAdmin();
-		boolean bless = tregminePlayer.getMetaBoolean("bless");
+		boolean isGuardian = tregminePlayer.getMetaBoolean("mentor");
 		
-		if (commandName.matches("bless") && ( isAdmin || bless)) {
+		if (commandName.matches("bless") && (isAdmin || isGuardian)) {
 			try {
 				String name = getServer().matchPlayer(args[0]).get(0).getName();
 				info.tregmine.api.TregminePlayer toPlayer = this.tregmine.tregminePlayer.get(getServer().matchPlayer(args[0]).get(0).getName());
