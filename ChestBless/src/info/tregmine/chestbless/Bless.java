@@ -27,10 +27,10 @@ public class Bless extends JavaPlugin {
 	public Tregmine tregmine = null;
 	public final BlessPlayer player = new BlessPlayer(this);
 	public final BlessBlock block = new BlessBlock(this);
-	
+
 	public HashMap<Integer, String> chests = new HashMap<Integer, String>();
-	
-	
+
+
 	public void onEnable(){
 		Plugin test = this.getServer().getPluginManager().getPlugin("Tregmine");
 
@@ -62,7 +62,7 @@ public class Bless extends JavaPlugin {
 
 		boolean isAdmin = tregminePlayer.isAdmin();
 		boolean isGuardian = tregminePlayer.getMetaBoolean("mentor");
-		
+
 		if (commandName.matches("bless") && (isAdmin || isGuardian)) {
 			try {
 				String name = getServer().matchPlayer(args[0]).get(0).getName();

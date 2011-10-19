@@ -35,12 +35,12 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 public class TregminePlayerListener extends PlayerListener {
 
-    private final static String[] quitMessages = new String[] {
-            "%s" + ChatColor.YELLOW + " deserted from the battlefield with a hearty good bye!",
-            "%s" + ChatColor.YELLOW + " stole the cookies and ran!",
-            "%s" + ChatColor.YELLOW + " was eaten by a teenage mutant ninja platypus!",
-            "%s" + ChatColor.YELLOW + " parachuted of the plane and into the unknown!"
-        };
+	private final static String[] quitMessages = new String[] {
+		"%s" + ChatColor.YELLOW + " deserted from the battlefield with a hearty good bye!",
+		"%s" + ChatColor.YELLOW + " stole the cookies and ran!",
+		"%s" + ChatColor.YELLOW + " was eaten by a teenage mutant ninja platypus!",
+		"%s" + ChatColor.YELLOW + " parachuted of the plane and into the unknown!"
+	};
 
 	private final Tregmine plugin;
 	public final info.tregmine.database.Mysql mysql = new info.tregmine.database.Mysql();
@@ -49,32 +49,32 @@ public class TregminePlayerListener extends PlayerListener {
 		plugin = instance;
 		plugin.getServer();
 	}
-	
+
 	public void onPlayerBucketFill(PlayerBucketFillEvent event) {
-		
+
 		if (event.getBucket() == Material.LAVA_BUCKET) {
-			 event.setCancelled(true);
+			event.setCancelled(true);
 		}
-		
+
 		if (event.getBlockClicked().getType() == Material.LAVA) {
 			event.setCancelled(true);
 		}
-		
+
 		if (event.getBlockClicked().getType() == Material.STATIONARY_LAVA) {
 			event.setCancelled(true);
 		}
-		
+
 	}
 
 	public void onPlayerBucketEmpty(PlayerBucketEmptyEvent event){
 		if (event.getBucket() == Material.LAVA_BUCKET) {
-		 event.setCancelled(true);
+			event.setCancelled(true);
 		}
 	}
-	
+
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		info.tregmine.api.TregminePlayer tregminePlayer = this.plugin.tregminePlayer.get(event.getPlayer().getName());
-		
+
 		if (!tregminePlayer.isTrusted()) {
 			event.setCancelled(true);
 		}
@@ -82,9 +82,9 @@ public class TregminePlayerListener extends PlayerListener {
 		if (tregminePlayer.isAdmin()) {
 			event.setCancelled(false);
 		}
-		
+
 		if (event.getPlayer().getItemInHand().getTypeId() == Material.PAPER.getId() 
-                && event.getAction() == Action.RIGHT_CLICK_BLOCK ) {
+				&& event.getAction() == Action.RIGHT_CLICK_BLOCK ) {
 
 			Location block = event.getClickedBlock().getLocation();
 			java.util.zip.CRC32 crc32 = new java.util.zip.CRC32();
@@ -99,9 +99,9 @@ public class TregminePlayerListener extends PlayerListener {
 			try {
 				this.mysql.connect();
 				this.mysql.statement.executeQuery("SELECT * FROM  stats_blocks WHERE checksum='" +  
-                    checksum + "' ORDER BY time DESC LIMIT 5");
+						checksum + "' ORDER BY time DESC LIMIT 5");
 				ResultSet rs = this.mysql.statement.getResultSet();
-				
+
 				//TODO : Reverse the sorting order
 				while (rs.next()) {
 					Date date = new Date(rs.getLong("time"));
@@ -112,10 +112,10 @@ public class TregminePlayerListener extends PlayerListener {
 
 					if (placed == true) {
 						event.getPlayer().sendMessage(ChatColor.DARK_AQUA + mat.name().toLowerCase() + 
-                            " placed by " + player + " at " + dfm.format(date));
+								" placed by " + player + " at " + dfm.format(date));
 					} else {
 						event.getPlayer().sendMessage(ChatColor.DARK_AQUA + mat.name().toLowerCase() + 
-                            " delete by " + player + " at " + dfm.format(date));    			        	
+								" delete by " + player + " at " + dfm.format(date));    			        	
 					}
 				}
 				this.mysql.close();
@@ -128,7 +128,9 @@ public class TregminePlayerListener extends PlayerListener {
 
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		event.setJoinMessage(null);
-		event.getPlayer().setGameMode(GameMode.SURVIVAL);
+		if (!event.getPlayer().isOp()) {
+			event.getPlayer().setGameMode(GameMode.SURVIVAL);
+		}
 	}    	
 
 	public void onPlayerLogin(PlayerLoginEvent event)
@@ -144,7 +146,7 @@ public class TregminePlayerListener extends PlayerListener {
 			tregPlayer.create();
 			tregPlayer.load();
 		}
-		
+
 		if (tregPlayer.isBanned()) {
 			event.setKickMessage("You are not allowed on this server!");
 			event.disallow(Result.KICK_BANNED, "You shall not pass!");
@@ -157,14 +159,14 @@ public class TregminePlayerListener extends PlayerListener {
 	public void onPlayerQuit(PlayerQuitEvent event) {
 		event.setQuitMessage(null);
 		TregminePlayer tregP = this.plugin.tregminePlayer.get(event.getPlayer().getName());
-		
+
 		if(!event.getPlayer().isOp()) {
-            Random rand = new Random();
-            int msgIndex = rand.nextInt(quitMessages.length);
-            String message = String.format(quitMessages[msgIndex], tregP.getChatName());
+			Random rand = new Random();
+			int msgIndex = rand.nextInt(quitMessages.length);
+			String message = String.format(quitMessages[msgIndex], tregP.getChatName());
 			this.plugin.getServer().broadcastMessage(message);
 		}
-		
+
 		this.plugin.tregminePlayer.remove(event.getPlayer().getName());
 		this.plugin.log.info("Unloaded settings for " + event.getPlayer().getName() + ".");
 	}    	
@@ -175,7 +177,7 @@ public class TregminePlayerListener extends PlayerListener {
 			player.kickPlayer("Sorry, we don't allow clones on this server.");
 		}
 	}
-	
+
 	public void onPlayerMove(PlayerMoveEvent event)	 { // if player move
 	}
 
@@ -184,7 +186,7 @@ public class TregminePlayerListener extends PlayerListener {
 
 	public void onPlayerPickupItem (PlayerPickupItemEvent event){
 		TregminePlayer tregminePlayer;
-		
+
 		try {
 			tregminePlayer = this.plugin.tregminePlayer.get(event.getPlayer().getName());
 		} catch (Exception e) {
@@ -197,7 +199,7 @@ public class TregminePlayerListener extends PlayerListener {
 			return;
 		}
 
-		
+
 		if (!tregminePlayer.isTrusted()) {
 			event.setCancelled(true);
 			return;

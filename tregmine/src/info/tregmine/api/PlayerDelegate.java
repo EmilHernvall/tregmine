@@ -689,4 +689,10 @@ public abstract class PlayerDelegate implements Player
 	public Map<String, Object> serialize() {
 		return delegate.serialize();
 	}
+	
+	@Override
+	public Player getPlayer() {
+		return null;
+	}
+	
 }

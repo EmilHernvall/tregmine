@@ -10,17 +10,17 @@ public class TimeRestoreFiller extends AbstractFiller
 {
 	private Mysql mysql;
 	private String param;
-	
+
 	public TimeRestoreFiller(Block block1, Block block2, int workSize, String param)
 	{
 		super(block1, block2, workSize);
-		
+
 		this.param = param;
-		
+
 		mysql = new Mysql();
 		mysql.connect();
 	}
-	
+
 	@Override
 	public void changeBlock(Block block)
 	{
@@ -29,7 +29,7 @@ public class TimeRestoreFiller extends AbstractFiller
 			block.setType(item);
 		}
 	}
-	
+
 	@Override
 	public void finished()
 	{
