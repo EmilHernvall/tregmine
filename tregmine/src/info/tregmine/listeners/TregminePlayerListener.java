@@ -145,7 +145,7 @@ public class TregminePlayerListener extends PlayerListener {
 			tregPlayer.create();
 			tregPlayer.load();
 		}
-		
+
 		if (tregPlayer.isBanned()) {
 			event.setKickMessage("You are not allowed on this server!");
 			event.disallow(Result.KICK_BANNED, "You shall not pass!");
@@ -158,12 +158,13 @@ public class TregminePlayerListener extends PlayerListener {
 	public void onPlayerQuit(PlayerQuitEvent event) {
 		event.setQuitMessage(null);
 		info.tregmine.api.TregminePlayer tregP = this.plugin.tregminePlayer.get(event.getPlayer().getName());
-		if(!event.getPlayer().getName().matches("einand") || !event.getPlayer().getName().matches("mejjad")) {
-			this.plugin.getServer().broadcastMessage(tregP.getChatName() +ChatColor.YELLOW + " deserted from the battlefield with a hearty good bye!");
+		if (!event.getPlayer().isOp()) {
+			this.plugin.getServer().broadcastMessage(tregP.getChatName() +ChatColor.YELLOW +
+				" deserted from the battlefield with a hearty good bye!");
 		}
 		this.plugin.tregminePlayer.remove(event.getPlayer().getName());
 		this.plugin.log.info("Unloaded settings for " + event.getPlayer().getName() + ".");
-	}    	
+	}
 
 	public void onPlayerPreLogin(PlayerPreLoginEvent event) {
 		Player player = this.plugin.getServer().getPlayer(event.getName());
@@ -171,7 +172,7 @@ public class TregminePlayerListener extends PlayerListener {
 			player.kickPlayer("Sorry, we don't allow clones on this server.");
 		}
 	}
-	
+
 	public void onPlayerMove(PlayerMoveEvent event)	 { // if player move
 	}
 
