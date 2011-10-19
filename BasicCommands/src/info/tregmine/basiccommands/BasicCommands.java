@@ -189,8 +189,8 @@ public class BasicCommands extends JavaPlugin {
 			return true;
 		}
 
-		if (commandName.matches("normal")) {
             info.tregmine.api.TregminePlayer tregPlayer = this.tregmine.tregminePlayer.get(player.getName());
+		if (commandName.matches("normal") && (isAdmin || tregPlayer.getMetaBoolean("builder") || tregPlayer.getMetaBoolean("mentor"))) {
             tregPlayer.setTemporaryChatName(ChatColor.GOLD + tregPlayer.getName());
             if (isAdmin) {
                 tregPlayer.setTempMetaString("admin", "false");
