@@ -183,7 +183,15 @@ public class TregminePlayerListener extends PlayerListener {
 	}
 
 	public void onPlayerPickupItem (PlayerPickupItemEvent event){
-		TregminePlayer tregminePlayer = this.plugin.tregminePlayer.get(event.getPlayer().getName());
+		TregminePlayer tregminePlayer;
+		
+		try {
+			tregminePlayer = this.plugin.tregminePlayer.get(event.getPlayer().getName());
+		} catch (Exception e) {
+			e.printStackTrace();
+			event.setCancelled(true);
+			return;
+		}
 
 		if (tregminePlayer.isAdmin()) {
 			return;
