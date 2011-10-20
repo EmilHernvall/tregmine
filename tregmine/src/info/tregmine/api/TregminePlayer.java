@@ -1,8 +1,11 @@
 package info.tregmine.api;
 
-import info.tregmine.database.Mysql;
+import info.tregmine.database.ConnectionPool;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.HashMap;
 //import java.util.Map;
 
@@ -20,7 +23,6 @@ public class TregminePlayer extends PlayerDelegate
 
 	private int id = 0;
 	private String name;
-	private final Mysql mysql = new Mysql();
 	private Zone currentZone = null;
 
 	public TregminePlayer(Player player, String _name) 
@@ -31,26 +33,31 @@ public class TregminePlayer extends PlayerDelegate
 
 	public boolean exists() 
 	{
-		this.mysql.connect();
-		if (this.mysql.connect != null) {
-			try {
-				String SQL = "SELECT COUNT(*) as count FROM user WHERE player = '"+ name +"';";
-				this.mysql.statement.executeQuery(SQL);
-				ResultSet rs = this.mysql.statement.getResultSet();
-				rs.first();
-				if ( rs.getInt("count") != 1 ) {
-					this.mysql.close();
-					return false;
-				} else { 
-					this.mysql.close();
-					return true;
-				}
-			} catch (Exception e) {
-				throw new RuntimeException(e);
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		try {
+			conn = ConnectionPool.getConnection();
+			
+			String sql = "SELECT * FROM user WHERE player = ?";
+			stmt = conn.prepareStatement(sql);
+			stmt.setString(1, name);
+			
+			rs = stmt.getResultSet();;
+			return rs.next();
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		} finally {
+			if (rs != null) {
+				try { rs.close(); } catch (SQLException e) {} 
+			}
+			if (stmt != null) {
+				try { stmt.close(); } catch (SQLException e) {}
+			}
+			if (conn != null) {
+				try { conn.close(); } catch (SQLException e) {}
 			}
 		}
-		this.mysql.close();
-		return false;
 	}
 
 	public void load() 
@@ -58,40 +65,58 @@ public class TregminePlayer extends PlayerDelegate
 		settings.clear();
 //		System.out.println("Loading settings for " + name);
 
-		mysql.connect();
-		if (this.mysql.connect != null) {
-			try {
-				this.mysql.connect();
-				this.mysql.statement.executeQuery("SELECT * FROM user JOIN  (user_settings) WHERE uid=id and player = '" + name + "';");
-				ResultSet rs = this.mysql.statement.getResultSet();
-
-				while (rs.next()) {
-					//TODO: Make this much nicer, this is bad code
-					this.id = rs.getInt("uid");
-					settings.put("uid", rs.getString("uid"));
-					settings.put(rs.getString("key"), rs.getString("value"));
-				}
-				this.mysql.close();	
-			} catch (Exception e) {
-				throw new RuntimeException(e);
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		try {
+			conn = ConnectionPool.getConnection();
+			
+			stmt = conn.prepareStatement("SELECT * FROM user JOIN  (user_settings) WHERE uid=id and player = ?");
+			stmt.setString(1, name);
+			
+			rs = stmt.getResultSet();
+			while (rs.next()) {
+				//TODO: Make this much nicer, this is bad code
+				this.id = rs.getInt("uid");
+				settings.put("uid", rs.getString("uid"));
+				settings.put(rs.getString("key"), rs.getString("value"));
+			}
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		} finally {
+			if (rs != null) {
+				try { rs.close(); } catch (SQLException e) {} 
+			}
+			if (stmt != null) {
+				try { stmt.close(); } catch (SQLException e) {}
+			}
+			if (conn != null) {
+				try { conn.close(); } catch (SQLException e) {}
 			}
 		}
-		mysql.close();
 		this.setTemporaryChatName(getNameColor() + name);
 	}
 
 	public void create() 
 	{
-		this.mysql.connect();
-		if (this.mysql.connect != null) {
-			try {
-				String SQL = "INSERT INTO user (player) VALUE ('"+ name +"')";
-				this.mysql.statement.execute(SQL);
-			} catch (Exception e) {
-				e.printStackTrace();
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		try {
+			conn = ConnectionPool.getConnection();
+			
+			String sql = "INSERT INTO user (player) VALUE (?)";
+			stmt = conn.prepareStatement(sql);
+			stmt.setString(1, name);
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		} finally {
+			if (stmt != null) {
+				try { stmt.close(); } catch (SQLException e) {}
+			}
+			if (conn != null) {
+				try { conn.close(); } catch (SQLException e) {}
 			}
 		}
-		this.mysql.close();
 	}
 
 	private boolean getBoolean(String key) 
@@ -151,19 +176,44 @@ public class TregminePlayer extends PlayerDelegate
 
 	public void setMetaString(String _key, String _value) 
 	{
+		Connection conn = null;
+		PreparedStatement stmt = null;
 		try {
-			this.mysql.connect();
-			String SQLD = "DELETE FROM `minecraft`.`user_settings` WHERE `user_settings`.`id` = "+ settings.get("uid") +" AND `user_settings`.`key` = '" + _key  +"'";
-//			System.console().printf(SQLD);
-			this.mysql.statement.execute(SQLD);
-
+			conn = ConnectionPool.getConnection();
 			
-			String SQLU = "INSERT INTO user_settings (id,`key`,`value`) VALUE ((SELECT uid FROM user WHERE player='" + this.getName() + "'),'"+ _key +"','"+ _value +"')";
+			String sqlDelete = "DELETE FROM `minecraft`.`user_settings` " +
+					"WHERE `user_settings`.`id` = ? AND `user_settings`.`key` = ?";
+//			System.console().printf(SQLD);
+			stmt = conn.prepareStatement(sqlDelete);
+			stmt.setString(1, settings.get("uid"));
+			stmt.setString(1, _key);
+			stmt.execute();
+			
+			stmt.close();
+			stmt = null;
+			
+			String sqlInsert = "INSERT INTO user_settings (id,`key`,`value`) " +
+					"VALUE ((SELECT uid FROM user WHERE player = ?),?,?)";
+			stmt = conn.prepareStatement(sqlInsert);
+			stmt.setString(1, this.getName());
+			stmt.setString(2, _key);
+			stmt.setString(3, _value);
+			stmt.execute();
+			
+			stmt.close();
+			stmt = null;
+			
 			this.settings.put(_key, _value);
-			this.mysql.statement.execute(SQLU);
-			this.mysql.close();
-		} catch (Exception e) {
+			
+		} catch (SQLException e) {
 			throw new RuntimeException(e);
+		} finally {
+			if (stmt != null) {
+				try { stmt.close(); } catch (SQLException e) {}
+			}
+			if (conn != null) {
+				try { conn.close(); } catch (SQLException e) {}
+			}
 		}
 	}
 

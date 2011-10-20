@@ -3,7 +3,7 @@ package info.tregmine.zones;
 import info.tregmine.api.TregminePlayer;
 import info.tregmine.api.Zone;
 import info.tregmine.api.Zone.Permission;
-import info.tregmine.database.Mysql;
+import info.tregmine.database.ConnectionPool;
 import info.tregmine.listeners.ZoneBlockListener;
 import info.tregmine.listeners.ZoneEntityListener;
 import info.tregmine.listeners.ZonePlayerListener;
@@ -12,6 +12,7 @@ import info.tregmine.quadtree.Point;
 //import info.tregmine.quadtree.QuadTree;
 import info.tregmine.quadtree.Rectangle;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.TreeMap;
@@ -88,11 +89,10 @@ public class ZonesPlugin extends JavaPlugin
 		
 		// lazy load zone worlds as required
 		if (zoneWorld == null) {
-			Mysql mysql = null;
+			Connection conn = null;
 			try {
-				mysql = new Mysql();
-				mysql.connect();
-				ZonesDAO dao = new ZonesDAO(mysql.connect);
+				conn = ConnectionPool.getConnection();
+				ZonesDAO dao = new ZonesDAO(conn);
 				
 				zoneWorld = new ZoneWorld(world);
 				List<Zone> zones = dao.getZones(world.getName());
@@ -114,7 +114,9 @@ public class ZonesPlugin extends JavaPlugin
 			} catch (SQLException e) {
 				throw new RuntimeException(e);
 			} finally {
-				mysql.close();
+				if (conn != null) {
+					try { conn.close(); } catch (SQLException e) {}
+				}
 			}
 		}
 		
@@ -265,11 +267,10 @@ public class ZonesPlugin extends JavaPlugin
 			player.sendMessage(ChatColor.RED + "The zone you tried to create overlaps an existing zone.");
 		}
 		
-		Mysql mysql = null;
+		Connection conn = null;
 		try {
-			mysql = new Mysql();
-			mysql.connect();
-			ZonesDAO dao = new ZonesDAO(mysql.connect);
+			conn = ConnectionPool.getConnection();
+			ZonesDAO dao = new ZonesDAO(conn);
 			int userId = dao.getUserId(player.getName());
 			if (userId == -1) {
 				player.sendMessage("Player " + player.getName() + " was not found.");
@@ -282,7 +283,9 @@ public class ZonesPlugin extends JavaPlugin
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		} finally {
-			mysql.close();
+			if (conn != null) {
+				try { conn.close(); } catch (SQLException e) {}
+			}
 		}
 	}
 	
@@ -309,16 +312,17 @@ public class ZonesPlugin extends JavaPlugin
 		world.deleteZone(name);
 		player.sendMessage(ChatColor.RED + "[" + name + "] " + "Zone deleted.");
 		
-		Mysql mysql = null;
+		Connection conn = null;
 		try {
-			mysql = new Mysql();
-			mysql.connect();
-			ZonesDAO dao = new ZonesDAO(mysql.connect);
+			conn = ConnectionPool.getConnection();
+			ZonesDAO dao = new ZonesDAO(conn);
 			dao.deleteZone(zone.getId());
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		} finally {
-			mysql.close();
+			if (conn != null) {
+				try { conn.close(); } catch (SQLException e) {}
+			}
 		}
 	}
 	
@@ -355,11 +359,10 @@ public class ZonesPlugin extends JavaPlugin
 		}
 		
 		// store permission change in db
-		Mysql mysql = null;
+		Connection conn = null;
 		try {
-			mysql = new Mysql();
-			mysql.connect();
-			ZonesDAO dao = new ZonesDAO(mysql.connect);
+			conn = ConnectionPool.getConnection();
+			ZonesDAO dao = new ZonesDAO(conn);
 			int userId = dao.getUserId(userName);
 			if (userId == -1) {
 				player.sendMessage(ChatColor.RED + "[" + zone.getName() + "] " + "Player " + userName + " was not found.");
@@ -371,7 +374,9 @@ public class ZonesPlugin extends JavaPlugin
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		} finally {
-			mysql.close();
+			if (conn != null) {
+				try { conn.close(); } catch (SQLException e) {}
+			}
 		}
 		
 		zone.addUser(userName, perm);
@@ -419,11 +424,10 @@ public class ZonesPlugin extends JavaPlugin
 		}
 		
 		// store permission change in db
-		Mysql mysql = null;
+		Connection conn = null;
 		try {
-			mysql = new Mysql();
-			mysql.connect();
-			ZonesDAO dao = new ZonesDAO(mysql.connect);
+			conn = ConnectionPool.getConnection();
+			ZonesDAO dao = new ZonesDAO(conn);
 			int userId = dao.getUserId(userName);
 			if (userId == -1) {
 				player.sendMessage(ChatColor.RED + "[" + zone.getName() + "] " + "Player " + userName + " was not found.");
@@ -434,7 +438,9 @@ public class ZonesPlugin extends JavaPlugin
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		} finally {
-			mysql.close();
+			if (conn != null) {
+				try { conn.close(); } catch (SQLException e) {}
+			}
 		}
 		
 		zone.deleteUser(userName);
@@ -516,16 +522,17 @@ public class ZonesPlugin extends JavaPlugin
 			player.sendMessage(ChatColor.RED + "[" + zone.getName() + "] " + "Hostiles changed to \"" + (status ? "allowed" : "disallowed") + "\".");
 		}
 		
-		Mysql mysql = null;
+		Connection conn = null;
 		try {
-			mysql = new Mysql();
-			mysql.connect();
-			ZonesDAO dao = new ZonesDAO(mysql.connect);
+			conn = ConnectionPool.getConnection();
+			ZonesDAO dao = new ZonesDAO(conn);
 			dao.updateZone(zone);
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		} finally {
-			mysql.close();
+			if (conn != null) {
+				try { conn.close(); } catch (SQLException e) {}
+			}
 		}
 	}
 	
@@ -603,12 +610,11 @@ public class ZonesPlugin extends JavaPlugin
 		
 		String playerName = args[2];
 		
-		Mysql mysql = null;
 		int userId;
+		Connection conn = null;
 		try {
-			mysql = new Mysql();
-			mysql.connect();
-			ZonesDAO dao = new ZonesDAO(mysql.connect);
+			conn = ConnectionPool.getConnection();
+			ZonesDAO dao = new ZonesDAO(conn);
 			userId = dao.getUserId(playerName);
 		
 			if (userId == -1) {
@@ -656,7 +662,9 @@ public class ZonesPlugin extends JavaPlugin
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		} finally {
-			mysql.close();
+			if (conn != null) {
+				try { conn.close(); } catch (SQLException e) {}
+			}
 		}
 	}
 	
@@ -693,11 +701,10 @@ public class ZonesPlugin extends JavaPlugin
 			return;
 		}
 		
-		Mysql mysql = null;
+		Connection conn = null;
 		try {
-			mysql = new Mysql();
-			mysql.connect();
-			ZonesDAO dao = new ZonesDAO(mysql.connect);
+			conn = ConnectionPool.getConnection();
+			ZonesDAO dao = new ZonesDAO(conn);
 			int userId = dao.getUserId(playerName);
 			
 			if (userId == -1) {
@@ -719,7 +726,9 @@ public class ZonesPlugin extends JavaPlugin
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		} finally {
-			mysql.close();
+			if (conn != null) {
+				try { conn.close(); } catch (SQLException e) {}
+			}
 		}
 	}
 	
@@ -750,11 +759,10 @@ public class ZonesPlugin extends JavaPlugin
 			return;
 		}
 		
-		Mysql mysql = null;
+		Connection conn = null;
 		try {
-			mysql = new Mysql();
-			mysql.connect();
-			ZonesDAO dao = new ZonesDAO(mysql.connect);
+			conn = ConnectionPool.getConnection();
+			ZonesDAO dao = new ZonesDAO(conn);
 			
 			dao.deleteLot(lot.getId());
 			dao.deleteLotUsers(lot.getId());
@@ -765,7 +773,9 @@ public class ZonesPlugin extends JavaPlugin
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		} finally {
-			mysql.close();
+			if (conn != null) {
+				try { conn.close(); } catch (SQLException e) {}
+			}
 		}
 	}
 }

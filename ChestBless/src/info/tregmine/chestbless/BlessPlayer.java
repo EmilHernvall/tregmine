@@ -102,11 +102,8 @@ public class BlessPlayer extends PlayerListener {
 			this.plugin.getServer().getPlayer(name).sendMessage(ChatColor.AQUA + "Your god blessed it in your name!");
 			player.sendMessage(ChatColor.AQUA + "You blessed for " + name + ".");
 			this.plugin.chests.put(checksum, name);
-			info.tregmine.database.Mysql mysql = new info.tregmine.database.Mysql();
-			mysql.connect();
-			info.tregmine.chestbless.Store.savebless(checksum, name, player.getWorld().getName(), mysql);
+			info.tregmine.chestbless.Store.savebless(checksum, name, player.getWorld().getName());
 			this.plugin.log.info(player.getName() + " Blessed a block " + checksum + " to " + name + ".");
-			mysql.close();
 
 			event.setCancelled(true);
 			return;

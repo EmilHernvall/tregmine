@@ -1,7 +1,9 @@
 package info.tregmine.stats;
 
 import info.tregmine.Tregmine;
+import info.tregmine.database.ConnectionPool;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -22,8 +24,6 @@ import org.bukkit.event.block.BlockPlaceEvent;
 public class BlockStats {
     private final Tregmine plugin;
     
-	public final info.tregmine.database.Mysql mysql = new info.tregmine.database.Mysql();
-
     public BlockStats(Tregmine instance) {
         plugin = instance;
         plugin.getServer();
@@ -49,52 +49,71 @@ public class BlockStats {
     		crc32.update(pos.getBytes());
     		long checksum = crc32.getValue();
 
-       	try {
-       		this.mysql.connect();
-	    	PreparedStatement ps = this.mysql.connect.prepareStatement("insert into stats_blocks (checksum, player, x, y, z, time, status, blockid, world) values (?,?,?,?,?,?,?,?,?)"); //$NON-NLS-1$
-	    	ps.setLong(1, checksum);
-	    	ps.setString(2, event.getPlayer().getName());
-	    	ps.setDouble(3, block.getX());
-	    	ps.setDouble(4, block.getY());
-	    	ps.setDouble(5, block.getZ());
-	    	ps.setDouble(6, System.currentTimeMillis());
-	    	ps.setBoolean(7, true);
-	    	ps.setDouble(8, event.getBlock().getTypeId());
-	    	ps.setString(9, event.getPlayer().getWorld().getName());
-	    	ps.execute();
-	    	ps.close();
-	    	this.mysql.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+    		Connection conn = null;
+    		PreparedStatement stmt = null;
+    		try {
+    			conn = ConnectionPool.getConnection();
+    			
+		    	stmt = conn.prepareStatement("insert into stats_blocks (checksum, player, x, y, z, " +
+		    			"time, status, blockid, world) values (?,?,?,?,?,?,?,?,?)"); 
+		    	stmt.setLong(1, checksum);
+		    	stmt.setString(2, event.getPlayer().getName());
+		    	stmt.setDouble(3, block.getX());
+		    	stmt.setDouble(4, block.getY());
+		    	stmt.setDouble(5, block.getZ());
+		    	stmt.setDouble(6, System.currentTimeMillis());
+		    	stmt.setBoolean(7, true);
+		    	stmt.setDouble(8, event.getBlock().getTypeId());
+		    	stmt.setString(9, event.getPlayer().getWorld().getName());
+		    	stmt.execute();
+		    	stmt.close();
+    		} catch (SQLException e) {
+    			throw new RuntimeException(e);
+    		} finally {
+    			if (stmt != null) {
+    				try { stmt.close(); } catch (SQLException e) {}
+    			}
+    			if (conn != null) {
+    				try { conn.close(); } catch (SQLException e) {}
+    			}
+    		}
     }
     
-public void onBlockBreak (BlockBreakEvent event) {	
+    public void onBlockBreak (BlockBreakEvent event) {	
 
-	    		Location block = event.getBlock().getLocation();
-	    		java.util.zip.CRC32 crc32 = new java.util.zip.CRC32();
-	    		String pos = block.getX() + "," + block.getY() + "," + block.getZ();  //$NON-NLS-1$//$NON-NLS-2$
-	    		crc32.update(pos.getBytes());
-	    		long checksum = crc32.getValue();
-	
-	       	try {
-	       		this.mysql.connect();
-		    	PreparedStatement ps = this.mysql.connect.prepareStatement("insert into stats_blocks (checksum, player, x, y, z, time, status, blockid) values (?,?,?,?,?,?,?,?)"); //$NON-NLS-1$
-		    	ps.setLong(1, checksum);
-		    	ps.setString(2, event.getPlayer().getName());
-		    	ps.setDouble(3, block.getX());
-		    	ps.setDouble(4, block.getY());
-		    	ps.setDouble(5, block.getZ());
-		    	ps.setDouble(6, System.currentTimeMillis());
-		    	ps.setBoolean(7, false);
-		    	ps.setDouble(8, event.getBlock().getTypeId());
-		    	ps.execute();
-		    	ps.close();
-	       		this.mysql.close();		    	
-			} catch (SQLException e) {
-				e.printStackTrace();
+		Location block = event.getBlock().getLocation();
+		java.util.zip.CRC32 crc32 = new java.util.zip.CRC32();
+		String pos = block.getX() + "," + block.getY() + "," + block.getZ();  //$NON-NLS-1$//$NON-NLS-2$
+		crc32.update(pos.getBytes());
+		long checksum = crc32.getValue();
+
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		try {
+			conn = ConnectionPool.getConnection();
+	    			
+	    	stmt = conn.prepareStatement("insert into stats_blocks (checksum, player, x, y, " +
+	    			"z, time, status, blockid) values (?,?,?,?,?,?,?,?)");
+	    	stmt.setLong(1, checksum);
+	    	stmt.setString(2, event.getPlayer().getName());
+	    	stmt.setDouble(3, block.getX());
+	    	stmt.setDouble(4, block.getY());
+	    	stmt.setDouble(5, block.getZ());
+	    	stmt.setDouble(6, System.currentTimeMillis());
+	    	stmt.setBoolean(7, false);
+	    	stmt.setDouble(8, event.getBlock().getTypeId());
+	    	stmt.execute();
+	    	stmt.close();
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		} finally {
+			if (stmt != null) {
+				try { stmt.close(); } catch (SQLException e) {}
 			}
-//    	}
+			if (conn != null) {
+				try { conn.close(); } catch (SQLException e) {}
+			}
+		}
     }
     
     
@@ -105,62 +124,32 @@ public void onBlockBreak (BlockBreakEvent event) {
 		crc32.update(pos.getBytes());
 		long checksum = crc32.getValue();
     	
-		String SQL = "SELECT COUNT(*) as count FROM stats_blocks WHERE checksum = '" + checksum + "' and status = '1'";
-		this.mysql.connect();
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
 		try {
-			this.mysql.statement.executeQuery(SQL);
-			ResultSet rs = this.mysql.statement.getResultSet();
-			rs.first();
-			if (rs.getInt("count") > 0) {
-				this.mysql.close();
-				return true;
+			conn = ConnectionPool.getConnection();
+			
+			String sql = "SELECT * FROM stats_blocks WHERE checksum = ? and status = '1'";
+			
+			stmt = conn.prepareStatement(sql);
+			stmt.setLong(1, checksum);
+			stmt.execute();
+			
+			rs = stmt.getResultSet();
+			return rs.next();
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		} finally {
+			if (rs != null) {
+				try { rs.close(); } catch (SQLException e) {} 
 			}
-		} catch (Exception e) {
-//			e.printStackTrace();
+			if (stmt != null) {
+				try { stmt.close(); } catch (SQLException e) {}
+			}
+			if (conn != null) {
+				try { conn.close(); } catch (SQLException e) {}
+			}
 		}
-		this.mysql.close();
-		return false;
     }
-    
-    
-    /*
-    public void onBlockRightClick (BlockRightClickEvent event) {
-    	if (event.getPlayer().getItemInHand().getTypeId() == Material.PAPER.getId()) {
-    		Location block = event.getBlock().getLocation();
-    		java.util.zip.CRC32 crc32 = new java.util.zip.CRC32();
-    		String pos = block.getX() + "," + block.getY() + "," + block.getZ();
-    		crc32.update(pos.getBytes());
-    		long checksum = crc32.getValue();
-    		String timezone = plugin.playerSetting.get(event.getPlayer().getName()).getTimezone();
-    		
-    	    SimpleDateFormat dfm = new SimpleDateFormat("dd/MM/yy hh:mm:ss a");
-    		dfm.setTimeZone(TimeZone.getTimeZone(timezone));
-    		
-    		if (this.mysql.connect != null) {
-    		    try {
-    	   			this.mysql.connect();
-    		    	this.mysql.statement.executeQuery("SELECT * FROM  stats_blocks WHERE checksum='" +  checksum + "' ORDER BY time");
-    		    	ResultSet rs = this.mysql.statement.getResultSet();
-    		    	while (rs.next()) {
-    			        Date date = new Date(rs.getLong("time"));
-    			        long blockid = rs.getLong("blockid");
-    			        String player =  rs.getString("player");
-    			        boolean placed = rs.getBoolean("status");
-    			        Material mat = Material.getMaterial((int) blockid);
-    			        
-    			        if (placed == true) {
-    			        	event.getPlayer().sendMessage(ChatColor.DARK_AQUA + mat.name().toLowerCase() + " placed by " + player + " at " + dfm.format(date));
-    			        } else {
-    			        	event.getPlayer().sendMessage(ChatColor.DARK_AQUA + mat.name().toLowerCase() + " delete by " + player + " at " + dfm.format(date));    			        	
-    			        }
-    		    	}
-    		    	this.mysql.close();
-    		    } catch (Exception e) {
-    		    	e.printStackTrace();
-    		    }
-    		}
-    	}
-    }
-*/
-    
 }

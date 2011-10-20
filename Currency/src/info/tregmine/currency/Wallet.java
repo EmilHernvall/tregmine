@@ -3,11 +3,15 @@ package info.tregmine.currency;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
+import info.tregmine.database.ConnectionPool;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.NumberFormat;
 
 public class Wallet {
-	public final info.tregmine.database.Mysql mysql = new info.tregmine.database.Mysql();
 	String player;
 
 	public Wallet(Player player) {
@@ -19,20 +23,34 @@ public class Wallet {
 	}
 
 	public long balance() {
-		this.mysql.connect();
-		if (this.mysql.connect != null) {
-			try {
-				this.mysql.statement.executeQuery("SELECT w.`value` FROM wallet w WHERE w.player='" +  player + "'");
-				ResultSet rs = this.mysql.statement.getResultSet();
-				rs.first();
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		try {
+			conn = ConnectionPool.getConnection();
+			
+			stmt = conn.prepareStatement("SELECT w.`value` FROM wallet w WHERE w.player = ?");
+			stmt.setString(1, player);
+			stmt.execute();
+			
+			rs = stmt.getResultSet();
+			if (rs.next()) {
 				return rs.getLong("value");
-			} catch (Exception e) {
-				e.printStackTrace();
-				this.mysql.close();
-				return -2;
+			}
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		} finally {
+			if (rs != null) {
+				try { rs.close(); } catch (SQLException e) {} 
+			}
+			if (stmt != null) {
+				try { stmt.close(); } catch (SQLException e) {}
+			}
+			if (conn != null) {
+				try { conn.close(); } catch (SQLException e) {}
 			}
 		}
-		this.mysql.close();
+		
 		return -1;
 	}
 
@@ -43,88 +61,145 @@ public class Wallet {
 	}
 	
 	public boolean exist() {
-			String sql = "SELECT count(w.`player`) as exist FROM wallet w WHERE w.player='" +  player + "'";
-			this.mysql.connect();
-			try {
-				this.mysql.statement.executeQuery(sql);
-				ResultSet rs = this.mysql.statement.getResultSet();
-				rs.first();
-				int v = Integer.parseInt( rs.getString("exist") );
-				if (v == 1) {
-					this.mysql.close();
-					return true;}
-			} catch (Exception e) {
-				  	e.printStackTrace();
-			}
-			this.mysql.close();
-		return false;
-	}
-
-	public void create(){
-			try {
-				if (!exist()) {
-					this.mysql.connect();
-					String sql = "INSERT INTO wallet (player, value) VALUES ('" + player + "','1000')";
-					this.mysql.statement.execute(sql);
-					this.mysql.close();
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-	}
-
-	public boolean add(long amount){
-		this.mysql.connect();
-		String sql = "UPDATE wallet SET value=value+" + amount + " WHERE player='" + player + "'";
-
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
 		try {
-			this.mysql.statement.execute(sql);
-			this.mysql.close();
-			return true;
-		} catch (Exception e) {
-			e.printStackTrace();
+			conn = ConnectionPool.getConnection();
+			
+			String sql = "SELECT * FROM wallet w WHERE w.player = ?";
+			stmt = conn.prepareStatement(sql);
+			stmt.setString(1, player);
+			stmt.execute();
+			
+			rs = stmt.getResultSet();
+			return rs.next();
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		} finally {
+			if (rs != null) {
+				try { rs.close(); } catch (SQLException e) {} 
+			}
+			if (stmt != null) {
+				try { stmt.close(); } catch (SQLException e) {}
+			}
+			if (conn != null) {
+				try { conn.close(); } catch (SQLException e) {}
+			}
+		}
+	}
+
+	public void create() {
+		if (exist()) {
+			return;
 		}
 		
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		try {
+			conn = ConnectionPool.getConnection();
+			
+			String sql = "INSERT INTO wallet (player, value) VALUES (?,'1000')";
+			stmt = conn.prepareStatement(sql);
+			stmt.setString(1, player);
+			stmt.execute();
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		} finally {
+			if (stmt != null) {
+				try { stmt.close(); } catch (SQLException e) {}
+			}
+			if (conn != null) {
+				try { conn.close(); } catch (SQLException e) {}
+			}
+		}
+	}
+
+	public boolean add(long amount) {
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		try {
+			conn = ConnectionPool.getConnection();
+			
+			String sql = "UPDATE wallet SET value = value + ? WHERE player = ?";
+			stmt = conn.prepareStatement(sql);
+			stmt.setLong(1, amount);
+			stmt.setString(2, player);
+			stmt.execute();
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		} finally {
+			if (stmt != null) {
+				try { stmt.close(); } catch (SQLException e) {}
+			}
+			if (conn != null) {
+				try { conn.close(); } catch (SQLException e) {}
+			}
+		}
 		
-		this.mysql.close();
-		return false;
+		return true;
 	}
 
 	public boolean take(long amount){
-		long newBalance = this.balance() - amount;
+		long newBalance = balance() - amount;
 		if (newBalance < 0) {
 			return false;
 		}
-		
-		String sql = "UPDATE wallet SET value=value-" + amount + " WHERE player='" + player + "'";
 
-		this.mysql.connect();
+		Connection conn = null;
+		PreparedStatement stmt = null;
 		try {
-			this.mysql.statement.execute(sql);
-			this.mysql.close();
-			return true;
-		} catch (Exception e) {
-			e.printStackTrace();
-			this.mysql.close();
-			return false;
+			conn = ConnectionPool.getConnection();
+			
+			String sql = "UPDATE wallet SET value = value - ? WHERE player = ?";
+			stmt = conn.prepareStatement(sql);
+			stmt.setLong(1, amount);
+			stmt.setString(2, player);
+			stmt.execute();
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		} finally {
+			if (stmt != null) {
+				try { stmt.close(); } catch (SQLException e) {}
+			}
+			if (conn != null) {
+				try { conn.close(); } catch (SQLException e) {}
+			}
 		}
+		
+		return true;
 	}
 
 	public static int getBlockValue(int block) {
-		info.tregmine.database.Mysql mysql2 = new info.tregmine.database.Mysql();
-		mysql2.connect();
-			try {
-				String sql = "SELECT i.`value` FROM items_destroyvalue i WHERE i.itemid='" +  block + "'";
-				mysql2.statement.executeQuery(sql);
-				ResultSet rs = mysql2.statement.getResultSet();
-				rs.first();
-				int value = Integer.parseInt(rs.getString("value"));
-				mysql2.close();
-				return value;
-			} catch (Exception e) {
-//				e.printStackTrace();
-				mysql2.close();
-				return 0;
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		try {
+			conn = ConnectionPool.getConnection();
+			
+			String sql = "SELECT i.`value` FROM items_destroyvalue i WHERE i.itemid = ?";
+			stmt = conn.prepareStatement(sql);
+			stmt.setInt(1, block);
+			stmt.execute();
+			
+			rs = stmt.getResultSet();
+			if (rs.next()) {
+				return rs.getInt("value");
 			}
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		} finally {
+			if (rs != null) {
+				try { rs.close(); } catch (SQLException e) {} 
+			}
+			if (stmt != null) {
+				try { stmt.close(); } catch (SQLException e) {}
+			}
+			if (conn != null) {
+				try { conn.close(); } catch (SQLException e) {}
+			}
+		}
+		
+		return 0;
 	}
 }

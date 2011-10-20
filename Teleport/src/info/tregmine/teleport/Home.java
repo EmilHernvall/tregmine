@@ -1,5 +1,8 @@
 package info.tregmine.teleport;
 
+import info.tregmine.database.ConnectionPool;
+
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -9,7 +12,6 @@ import org.bukkit.Server;
 //import org.bukkit.entity.Player;
 
 public class Home {
-	public final info.tregmine.database.Mysql mysql = new info.tregmine.database.Mysql();
 	String player;
 	Server server;
 	
@@ -19,36 +21,45 @@ public class Home {
 	}
 
 	public void save(Location loc) {
-        PreparedStatement ps = null;
-       	try {
-       		this.mysql.connect();
-	    	ps = this.mysql.connect.prepareStatement("insert into home (name, x, y, z, yaw, pitch, world, time) values (?, ?, ?, ?, ?, ?, ?, ?)");
-	    	ps.setString(1, player);
-	    	ps.setDouble(2, loc.getX());
-	    	ps.setDouble(3, loc.getY());
-	    	ps.setDouble(4, loc.getZ());
-	    	ps.setFloat(5, loc.getYaw());
-	    	ps.setFloat(6, loc.getPitch());
-	    	ps.setString(7, loc.getWorld().getName());
-	    	ps.setDouble(8, System.currentTimeMillis());
-	    	
-	    	ps.execute();
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		try {
+			conn = ConnectionPool.getConnection();
+			
+	    	stmt = conn.prepareStatement("insert into home (name, x, y, z, yaw, pitch, world, time) values (?, ?, ?, ?, ?, ?, ?, ?)");
+	    	stmt.setString(1, player);
+	    	stmt.setDouble(2, loc.getX());
+	    	stmt.setDouble(3, loc.getY());
+	    	stmt.setDouble(4, loc.getZ());
+	    	stmt.setFloat(5, loc.getYaw());
+	    	stmt.setFloat(6, loc.getPitch());
+	    	stmt.setString(7, loc.getWorld().getName());
+	    	stmt.setDouble(8, System.currentTimeMillis());
+	    	stmt.execute();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		} finally {
-            if (ps != null) {
-                try { ps.close(); } catch (SQLException e) {}
-            }
-            this.mysql.close();
-        }
+			if (stmt != null) {
+				try { stmt.close(); } catch (SQLException e) {}
+			}
+			if (conn != null) {
+				try { conn.close(); } catch (SQLException e) {}
+			}
+		}
 	}
 
 	public Location get() {
-        ResultSet rs = null;
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
 		try {
-			this.mysql.connect();
-			this.mysql.statement.executeQuery("SELECT * FROM home WHERE name='" +  player + "' ORDER BY time DESC");
-			rs = this.mysql.statement.getResultSet();
+			conn = ConnectionPool.getConnection();
+			
+			stmt = conn.prepareStatement("SELECT * FROM home WHERE name = ? ORDER BY time DESC");
+			stmt.setString(1, player);
+			stmt.execute();
+			
+			rs = stmt.getResultSet();
 			if (rs.next()) {
                 double x = rs.getDouble("x");
                 double y = rs.getDouble("y");
@@ -58,19 +69,21 @@ public class Home {
                 String world = rs.getString("world");
                 Location loc =  new Location(server.getWorld(world), x,y,z, yaw, pitch);
                 return loc;
-            } else {
-                return null;
             }
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
 		} finally {
-            if (rs != null) {
-                try { rs.close(); } catch (SQLException e) {}
-            }
-            this.mysql.close();
-        }
-
+			if (rs != null) {
+				try { rs.close(); } catch (SQLException e) {} 
+			}
+			if (stmt != null) {
+				try { stmt.close(); } catch (SQLException e) {}
+			}
+			if (conn != null) {
+				try { conn.close(); } catch (SQLException e) {}
+			}
+		}
+		
+		return null;
 	}
-
 }

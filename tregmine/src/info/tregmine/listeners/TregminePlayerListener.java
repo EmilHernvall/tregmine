@@ -2,8 +2,12 @@ package info.tregmine.listeners;
 
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
+import info.tregmine.database.ConnectionPool;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Random;
@@ -42,7 +46,6 @@ public class TregminePlayerListener extends PlayerListener {
         };
 
 	private final Tregmine plugin;
-	public final info.tregmine.database.Mysql mysql = new info.tregmine.database.Mysql();
 
 	public TregminePlayerListener(Tregmine instance) {
 		plugin = instance;
@@ -95,11 +98,16 @@ public class TregminePlayerListener extends PlayerListener {
 			SimpleDateFormat dfm = new SimpleDateFormat("dd/MM/yy hh:mm:ss a");
 			dfm.setTimeZone(TimeZone.getTimeZone(timezone));
 
+			Connection conn = null;
+			PreparedStatement stmt = null;
+			ResultSet rs = null;
 			try {
-				this.mysql.connect();
-				this.mysql.statement.executeQuery("SELECT * FROM  stats_blocks WHERE checksum='" +  
-                    checksum + "' ORDER BY time DESC LIMIT 5");
-				ResultSet rs = this.mysql.statement.getResultSet();
+				conn = ConnectionPool.getConnection();
+				
+				stmt = conn.prepareStatement("SELECT * FROM  stats_blocks WHERE checksum = ? " +
+						"ORDER BY time DESC LIMIT 5");
+				stmt.setLong(1, checksum);
+				rs = stmt.getResultSet();
 				
 				//TODO : Reverse the sorting order
 				while (rs.next()) {
@@ -117,9 +125,18 @@ public class TregminePlayerListener extends PlayerListener {
                             " delete by " + player + " at " + dfm.format(date));    			        	
 					}
 				}
-				this.mysql.close();
-			} catch (Exception e) {
-				e.printStackTrace();
+			} catch (SQLException e) {
+				throw new RuntimeException(e);
+			} finally {
+				if (rs != null) {
+					try { rs.close(); } catch (SQLException e) {} 
+				}
+				if (stmt != null) {
+					try { stmt.close(); } catch (SQLException e) {}
+				}
+				if (conn != null) {
+					try { conn.close(); } catch (SQLException e) {}
+				}
 			}
 		}
 
