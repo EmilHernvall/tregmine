@@ -31,38 +31,38 @@ public class ChatPlayer extends PlayerListener {
 		}
 
 		for (Player player : players) {
-				ChatColor txtColor = ChatColor.WHITE;
+			ChatColor txtColor = ChatColor.WHITE;
 
-				if(sender == player) {
-					txtColor = ChatColor.GRAY;
+			if(sender == player) {
+				txtColor = ChatColor.GRAY;
+			}
+			if (!this.plugin.channel.containsKey(player.getName())) {
+				this.plugin.channel.put(player.getName(), "global".toUpperCase());
+			}
+
+			if (this.plugin.channel.get(sender.getName()).toUpperCase().equals(this.plugin.channel.get(player.getName()).toUpperCase())) {
+				String channel = this.plugin.channel.get(sender.getName()) + " ";
+				if (this.plugin.channel.get(sender.getName()).matches("GLOBAL")) {
+					channel = "";
 				}
-					if (!this.plugin.channel.containsKey(player.getName())) {
-						this.plugin.channel.put(player.getName(), "global".toUpperCase());
+				if (event.getMessage().length() > 53) {
+					int nameLenght = event.getPlayer().getName().length()+5 + channel.length();
+					String firstMessage = event.getMessage().substring(0, 54 - nameLenght);
+					String spaces = "";
+					int firstInt = firstMessage.lastIndexOf(" ");
+					firstMessage = event.getMessage().substring(0, firstInt);
+					String lastMessage = event.getMessage().substring (firstInt+1);
+
+					for (int i=0; i<nameLenght; i++) {
+						spaces = spaces + " ";
 					}
-					
-					if (this.plugin.channel.get(sender.getName()).toUpperCase().equals(this.plugin.channel.get(player.getName()).toUpperCase())) {
-						String channel = this.plugin.channel.get(sender.getName()) + " ";
-						if (this.plugin.channel.get(sender.getName()).matches("GLOBAL")) {
-							channel = "";
-						}
-						if (event.getMessage().length() > 53) {
-							int nameLenght = event.getPlayer().getName().length()+5 + channel.length();
-							String firstMessage = event.getMessage().substring(0, 54 - nameLenght);
-							String spaces = "";
-							int firstInt = firstMessage.lastIndexOf(" ");
-							firstMessage = event.getMessage().substring(0, firstInt);
-							String lastMessage = event.getMessage().substring (firstInt+1);
-							
-							for (int i=0; i<nameLenght; i++) {
-								spaces = spaces + " ";
-							}
-							 
-							player.sendMessage(channel+"<" + tregminePlayer.getChatName() + ChatColor.WHITE + "> "+ txtColor + firstMessage );
-							player.sendMessage(txtColor + spaces + lastMessage);
-						} else {
-							player.sendMessage(channel+"<" + tregminePlayer.getChatName() + ChatColor.WHITE + "> " + txtColor + event.getMessage().replace("  ", ""));
-						}
-					}
+
+					player.sendMessage(channel+"<" + tregminePlayer.getChatName() + ChatColor.WHITE + "> "+ txtColor + firstMessage );
+					player.sendMessage(txtColor + spaces + lastMessage);
+				} else {
+					player.sendMessage(channel+"<" + tregminePlayer.getChatName() + ChatColor.WHITE + "> " + txtColor + event.getMessage().replace("  ", ""));
+				}
+			}
 		}
 
 		plugin.log.info("["+ sender.getWorld().getName() +  "]["+ this.plugin.channel.get(sender.getName())  +"]<" + sender.getName() +  "> " + event.getMessage() );

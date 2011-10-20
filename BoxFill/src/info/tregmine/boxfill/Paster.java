@@ -24,12 +24,12 @@ public class Paster implements Runnable
 	private int workSize;
 	private SavedBlocks undo;
 	private Set<Location> modifiedSet;
-	
+
 	private BukkitScheduler scheduler;
 	private int taskId;
-	
+
 	private int i;
-	
+
 	public Paster(History undoHistory, Player player, World world, Block base, SavedBlocks blocks, double theta, int workSize)
 	{
 		this.undoHistory = undoHistory;
@@ -38,19 +38,19 @@ public class Paster implements Runnable
 		this.base = base;
 		this.blocks = blocks;
 		this.theta = theta;
-		
+
 		this.workSize = workSize;
 		this.i = 0;
 		this.undo = new SavedBlocks();
 		this.modifiedSet = new HashSet<Location>();
 	}
-	
+
 	public void setScheduleState(BukkitScheduler scheduler, int taskId)
 	{
 		this.scheduler = scheduler;
 		this.taskId = taskId;
 	}
-	
+
 	@Override
 	public void run()
 	{
@@ -58,22 +58,22 @@ public class Paster implements Runnable
 		boolean partialWork = false;
 		for (; i < list.size(); i++) {
 			BlockState state = list.get(i);
-			
+
 			int x = state.getX() - blocks.getX();
 			int y = state.getY() - blocks.getY();
 			int z = state.getZ() - blocks.getZ();
-			
+
 			if (theta != 0.0) {
 				int xp = (int)Math.round(x*Math.cos(theta) - z*Math.sin(theta));
 				int zp = (int)Math.round(x*Math.sin(theta) + z*Math.cos(theta));
-				
+
 				x = xp;
 				z = zp;
 			}
-			
+
 			Block block = world.getBlockAt(base.getX() + x, 
 					base.getY() + y, base.getZ() + z);
-			
+
 			// use a set to make sure that we don't add the same block
 			// more than once. this might happen because we apply
 			// the rotation matrix but have to truncate the values
@@ -82,16 +82,16 @@ public class Paster implements Runnable
 				undo.addBlock(block.getState());
 				modifiedSet.add(block.getLocation());
 			}
-			
+
 			block.setType(state.getType());
 			block.setData(state.getData().getData());
-			
+
 			if (i != 0 && i % workSize == 0) {
 				partialWork = true;
 				break;
 			}
 		}
-		
+
 		if (!partialWork) {
 			undoHistory.set(player, undo);
 			player.sendMessage(ChatColor.DARK_AQUA + "Paste is finished.");

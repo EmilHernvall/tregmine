@@ -19,8 +19,8 @@ public class BlessBlock extends BlockListener {
 		plugin.getServer();
 	}
 
-    public void onBlockBreak (BlockBreakEvent event) {
-    	Location loc = event.getBlock().getLocation();
+	public void onBlockBreak (BlockBreakEvent event) {
+		Location loc = event.getBlock().getLocation();
 		int checksum = (loc.getBlockX() + "," + loc.getBlockZ() + "," + loc.getBlockY() + "," + loc.getWorld().getName()).hashCode();
 		Player player = event.getPlayer();
 		if (this.plugin.chests.containsKey(checksum)) {
@@ -28,9 +28,9 @@ public class BlessBlock extends BlockListener {
 			event.setCancelled(true);
 			return;
 		}
-		
+
 	}
-	
+
 	public void onBlockPlace (BlockPlaceEvent event)	{
 		Block block = event.getBlockPlaced();
 
