@@ -42,8 +42,9 @@ public class TregminePlayer extends PlayerDelegate
 			String sql = "SELECT * FROM user WHERE player = ?";
 			stmt = conn.prepareStatement(sql);
 			stmt.setString(1, name);
+			stmt.execute();
 			
-			rs = stmt.getResultSet();;
+			rs = stmt.getResultSet();
 			return rs.next();
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
@@ -73,6 +74,7 @@ public class TregminePlayer extends PlayerDelegate
 			
 			stmt = conn.prepareStatement("SELECT * FROM user JOIN  (user_settings) WHERE uid=id and player = ?");
 			stmt.setString(1, name);
+			stmt.execute();
 			
 			rs = stmt.getResultSet();
 			while (rs.next()) {
@@ -107,6 +109,7 @@ public class TregminePlayer extends PlayerDelegate
 			String sql = "INSERT INTO user (player) VALUE (?)";
 			stmt = conn.prepareStatement(sql);
 			stmt.setString(1, name);
+			stmt.execute();
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		} finally {
@@ -186,7 +189,7 @@ public class TregminePlayer extends PlayerDelegate
 //			System.console().printf(SQLD);
 			stmt = conn.prepareStatement(sqlDelete);
 			stmt.setString(1, settings.get("uid"));
-			stmt.setString(1, _key);
+			stmt.setString(2, _key);
 			stmt.execute();
 			
 			stmt.close();

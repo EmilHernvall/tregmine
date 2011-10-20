@@ -76,6 +76,12 @@ public class BlessPlayer extends PlayerListener {
 				player.getItemInHand().getType() == Material.BONE && 
 				(tregminePlayer.isAdmin() || tregminePlayer.getMetaBoolean("mentor")) &&
 				allowedMaterials.contains(block.getType())) {
+			
+			String name = tregminePlayer.getMetaString("chestbless");
+			if (name == null) {
+				player.sendMessage(ChatColor.RED + "Use /bless [name] first!");
+				return;
+			}
 
 			if (!tregminePlayer.isAdmin()) {
 				int amount = 5000;
@@ -97,7 +103,6 @@ public class BlessPlayer extends PlayerListener {
 			Location loc = block.getLocation();
 			int checksum = (loc.getBlockX() + "," + loc.getBlockZ() + "," + loc.getBlockY() + "," + loc.getWorld().getName()).hashCode();
 
-			String name = tregminePlayer.getMetaString("chestbless");
 			this.plugin.getServer().getPlayer(name).sendMessage(ChatColor.AQUA + "Your god blessed it in your name!");
 			player.sendMessage(ChatColor.AQUA + "You blessed for " + name + ".");
 			this.plugin.chests.put(checksum, name);
