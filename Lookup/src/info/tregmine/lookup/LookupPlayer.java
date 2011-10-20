@@ -38,6 +38,10 @@ public class LookupPlayer extends PlayerListener {
 
 		if (cl != null) {
 			Location l1 = cl.getLocation(ip);
+			if (l1 == null) {
+				return;
+			}
+
 			plugin.log.info(event.getPlayer().getName() + ": " + l1.countryName + ", " + l1.city + ", " + ip + ", " + l1.postalCode + ", " + l1.region + ", " + host);
 			tregminePlayer.setMetaString("countryName", l1.countryName);
 			tregminePlayer.setMetaString("city", l1.city);
@@ -45,7 +49,7 @@ public class LookupPlayer extends PlayerListener {
 			tregminePlayer.setMetaString("postalCode", l1.postalCode);
 			tregminePlayer.setMetaString("region", l1.region);
 			tregminePlayer.setMetaString("hostname", host);
-			if(!event.getPlayer().getName().matches("einand") && !event.getPlayer().getName().matches("mejjad")) {
+			if(!event.getPlayer().isOp()) {
 				this.plugin.getServer().broadcastMessage(ChatColor.DARK_AQUA + "Welcome! " + tregminePlayer.getChatName() + ChatColor.DARK_AQUA + " from " +l1.countryName);
 				event.getPlayer().sendMessage(ChatColor.DARK_AQUA + l1.city + " - " + l1.postalCode);
 			} 

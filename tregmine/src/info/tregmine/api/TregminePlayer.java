@@ -194,6 +194,11 @@ public class TregminePlayer extends PlayerDelegate
 			
 			stmt.close();
 			stmt = null;
+
+			if (_value == null) {
+				this.settings.remove(_key);
+				return;
+			}
 			
 			String sqlInsert = "INSERT INTO user_settings (id,`key`,`value`) " +
 					"VALUE ((SELECT uid FROM user WHERE player = ?),?,?)";

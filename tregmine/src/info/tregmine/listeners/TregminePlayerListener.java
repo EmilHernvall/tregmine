@@ -121,6 +121,8 @@ public class TregminePlayerListener extends PlayerListener {
 				stmt = conn.prepareStatement("SELECT * FROM  stats_blocks WHERE checksum = ? " +
 						"ORDER BY time DESC LIMIT 5");
 				stmt.setLong(1, checksum);
+				stmt.execute();
+
 				rs = stmt.getResultSet();
 				
 				//TODO : Reverse the sorting order

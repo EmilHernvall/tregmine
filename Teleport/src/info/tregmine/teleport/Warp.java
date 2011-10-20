@@ -53,7 +53,7 @@ public class Warp {
 		ResultSet rs = null;
 		try {
 			conn = ConnectionPool.getConnection();
-			stmt = conn.prepareStatement("SELECT * FROM warps WHERE name='" +  args[0] + "'");
+			stmt = conn.prepareStatement("SELECT * FROM warps WHERE name=?");
 			stmt.setString(1, args[0]);
 			stmt.execute();
 			
@@ -131,7 +131,7 @@ public class Warp {
 		ResultSet rs = null;
 		try {
 			conn = ConnectionPool.getConnection();
-			stmt = conn.prepareStatement("SELECT * FROM warps WHERE name='" +  args[0] + "'");
+			stmt = conn.prepareStatement("SELECT * FROM warps WHERE name=?");
 			stmt.setString(1, args[0]);
 			stmt.execute();
 			

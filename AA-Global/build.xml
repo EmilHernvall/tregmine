@@ -62,7 +62,7 @@
 	</target>
     
     <target name="copy" depends="build">
-    	<copy file="../tregmine/tregmine.jar" tofile="jar/Tregmine.jar" />
+    	<copy file="../tregmine/Tregmine.jar" tofile="jar/Tregmine.jar" />
     	<!--<copy file="../AntiCheat/AntiCheat.jar" tofile="jar/AntiCheat.jar" />-->
     	<copy file="../BasicCommands/BasicCommands.jar" tofile="jar/BasicCommands.jar" />
     	<copy file="../BoxFill/BoxFill.jar" tofile="jar/BoxFill.jar" />
