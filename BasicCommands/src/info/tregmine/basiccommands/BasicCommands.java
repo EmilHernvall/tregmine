@@ -95,18 +95,18 @@ public class BasicCommands extends JavaPlugin {
 		}
 
 		if (commandName.matches("admin") && tregminePlayer.isAdmin() ) {
-	    	final TregminePlayer tregPlayer = tregmine.getPlayer(player);
-	    	tregPlayer.setGameMode(GameMode.CREATIVE);
-	    	tregPlayer.sendMessage(ChatColor.YELLOW + "You are now in admin mode for 10 minutes.");
-	    	
+			final TregminePlayer tregPlayer = tregmine.getPlayer(player);
+			tregPlayer.setGameMode(GameMode.CREATIVE);
+			tregPlayer.sendMessage(ChatColor.YELLOW + "You are now in admin mode for 10 minutes.");
+
 			this.getServer().getScheduler().scheduleSyncDelayedTask(this,new Runnable() {
 				public void run() {
 					tregPlayer.sendMessage(ChatColor.YELLOW + "You are now back in survival mode.");
-			    	tregPlayer.setGameMode(GameMode.SURVIVAL);
+					tregPlayer.setGameMode(GameMode.SURVIVAL);
 				}},12000L);
 		}
 
-		
+
 		if (commandName.matches("pos")) {
 			Location loc = player.getLocation();
 			Location spawn = player.getWorld().getSpawnLocation();
@@ -134,20 +134,20 @@ public class BasicCommands extends JavaPlugin {
 			tregminePlayer.setTemporaryChatName(color + args[1]);
 			tregminePlayer.sendMessage("You are now: " + tregminePlayer.getChatName());
 		}
-		
+
 		if (commandName.matches("t") && tregminePlayer.isAdmin()) {
 			Player victim = this.getServer().matchPlayer(args[0]).get(0);
 			victim.getWorld().strikeLightningEffect(victim.getLocation());
 			return true;
 		}
-		
+
 		if (commandName.matches("td") && tregminePlayer.isAdmin()) {
 			Player victim = this.getServer().matchPlayer(args[0]).get(0);
 			victim.getWorld().strikeLightning(victim.getLocation());
 			victim.setHealth(0);
 			return true;
 		}
-		
+
 		if (commandName.matches("time")) {
 			if (args.length == 1) {
 
@@ -189,20 +189,22 @@ public class BasicCommands extends JavaPlugin {
 			return true;
 		}
 
-            info.tregmine.api.TregminePlayer tregPlayer = this.tregmine.tregminePlayer.get(player.getName());
-		if (commandName.matches("normal") && (isAdmin || tregPlayer.getMetaBoolean("builder") || tregPlayer.getMetaBoolean("mentor"))) {
-            tregPlayer.setTemporaryChatName(ChatColor.GOLD + tregPlayer.getName());
-            if (isAdmin) {
-                tregPlayer.setTempMetaString("admin", "false");
-                player.sendMessage(ChatColor.YELLOW + "You are no longer admin, until you reconnect!");
-            } else if (tregPlayer.getMetaBoolean("builder")) {
-                tregPlayer.setTempMetaString("builder", "false");
-                player.sendMessage(ChatColor.YELLOW + "You are no longer builder, until you reconnect!");
-            } else if (tregPlayer.getMetaBoolean("mentor")) {
-                tregPlayer.setTempMetaString("mentor", "false");
-                player.sendMessage(ChatColor.YELLOW + "You are no longer guardian, until you reconnect!");            
-            }
-            
+		if (commandName.matches("normal")) {
+			info.tregmine.api.TregminePlayer tregPlayer = this.tregmine.tregminePlayer.get(player.getName());
+			if (isAdmin) {
+				tregPlayer.setTempMetaString("admin", "false");
+				tregPlayer.setTemporaryChatName(ChatColor.GOLD + tregPlayer.getName());
+				player.sendMessage(ChatColor.YELLOW + "You are no longer admin, until you reconnect!");
+			} else if (tregPlayer.getMetaBoolean("builder")) {
+				tregPlayer.setTempMetaString("builder", "false");
+				tregPlayer.setTemporaryChatName(ChatColor.GOLD + tregPlayer.getName());
+				player.sendMessage(ChatColor.YELLOW + "You are no longer builder, until you reconnect!");
+			} else if (tregPlayer.getMetaBoolean("mentor")) {
+				tregPlayer.setTempMetaString("mentor", "false");
+				tregPlayer.setTemporaryChatName(ChatColor.GOLD + tregPlayer.getName());
+				player.sendMessage(ChatColor.YELLOW + "You are no longer guardian, until you reconnect!");            
+			}
+
 			return true;
 		}
 

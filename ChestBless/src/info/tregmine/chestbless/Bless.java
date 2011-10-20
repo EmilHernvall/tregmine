@@ -1,6 +1,7 @@
 package info.tregmine.chestbless;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Logger;
 
 //import org.bukkit.ChatColor;
@@ -28,7 +29,7 @@ public class Bless extends JavaPlugin {
 	public final BlessPlayer player = new BlessPlayer(this);
 	public final BlessBlock block = new BlessBlock(this);
 	
-	public HashMap<Integer, String> chests = new HashMap<Integer, String>();
+	public Map<Integer, String> chests = new HashMap<Integer, String>();
 	
 	
 	public void onEnable(){
@@ -80,9 +81,6 @@ public class Bless extends JavaPlugin {
 	}
 
 	public void onLoad() {
-		info.tregmine.database.Mysql mysql = new info.tregmine.database.Mysql(); 
-		mysql.connect();
-		this.chests = info.tregmine.chestbless.Store.loadbless(mysql);
-		mysql.close();
+		this.chests = info.tregmine.chestbless.Store.loadbless();
 	}
 }

@@ -19,14 +19,14 @@ public class Main extends JavaPlugin {
 	public final EntityListner el = new EntityListner(this);
 
 	public void onEnable() {
-//		this.getServer().createWorld("ChildsPlay", Environment.NORMAL);
-//		this.getServer().createWorld("skyland", Environment.SKYLANDS);
-//		World matrix = this.getServer().createWorld("matrix", Environment.NORMAL);
-//		matrix.setPVP(true);
+		//		this.getServer().createWorld("ChildsPlay", Environment.NORMAL);
+		//		this.getServer().createWorld("skyland", Environment.SKYLANDS);
+		//		World matrix = this.getServer().createWorld("matrix", Environment.NORMAL);
+		//		matrix.setPVP(true);
 		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_MOVE, listener, Priority.Highest, this);
 		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_TELEPORT, listener, Priority.Highest, this);
-//		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_INTERACT, listener, Priority.Highest, this);
-//		getServer().getPluginManager().registerEvent(Event.Type.CREATURE_SPAWN, el, Priority.Lowest, this);
+		//		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_INTERACT, listener, Priority.Highest, this);
+		//		getServer().getPluginManager().registerEvent(Event.Type.CREATURE_SPAWN, el, Priority.Lowest, this);
 	}
 
 	public void onDisable(){

@@ -26,31 +26,31 @@ public class BasicCommandsBlock extends PlayerListener {
 			Location loc = block.getLocation();
 
 			if (player.getItemInHand().getType() == Material.BOOK) {
-				
+
 				player.sendMessage(ChatColor.DARK_AQUA + "Type: " + ChatColor.AQUA + block.getType().toString() + " ("+ ChatColor.BLUE + block.getType().getId() + ChatColor.DARK_AQUA + ")" );
 				player.sendMessage(ChatColor.DARK_AQUA +"Data: " + ChatColor.AQUA + (int) block.getData() );
 				player.sendMessage(
 						ChatColor.RED +"X" +
-						ChatColor.WHITE + ", " +
-						ChatColor.GREEN + "Y" +
-						ChatColor.WHITE + ", " +
-						ChatColor.BLUE + "Z" +
-						ChatColor.WHITE + ": " +
-						ChatColor.RED + loc.getBlockX() +
-						ChatColor.WHITE + ", " +
-						ChatColor.GREEN + loc.getBlockY() +
-						ChatColor.WHITE + ", " +
-						ChatColor.BLUE + loc.getBlockZ()
-				);
+								ChatColor.WHITE + ", " +
+								ChatColor.GREEN + "Y" +
+								ChatColor.WHITE + ", " +
+								ChatColor.BLUE + "Z" +
+								ChatColor.WHITE + ": " +
+								ChatColor.RED + loc.getBlockX() +
+								ChatColor.WHITE + ", " +
+								ChatColor.GREEN + loc.getBlockY() +
+								ChatColor.WHITE + ", " +
+								ChatColor.BLUE + loc.getBlockZ()
+						);
 
-					try {
-						player.sendMessage(ChatColor.DARK_AQUA +"Biome: " + ChatColor.AQUA + block.getBiome().toString() );
-					} catch (Exception e) {
-						player.sendMessage(ChatColor.DARK_AQUA +"Biome: " + ChatColor.AQUA + "NULL" );
-					}
-				
-					
-//				player.sendMessage(ChatColor.DARK_AQUA +"Light: " + ChatColor.AQUA + (int) block.getFace(BlockFace.UP).getLightLevel() );
+				try {
+					player.sendMessage(ChatColor.DARK_AQUA +"Biome: " + ChatColor.AQUA + block.getBiome().toString() );
+				} catch (Exception e) {
+					player.sendMessage(ChatColor.DARK_AQUA +"Biome: " + ChatColor.AQUA + "NULL" );
+				}
+
+
+				//				player.sendMessage(ChatColor.DARK_AQUA +"Light: " + ChatColor.AQUA + (int) block.getFace(BlockFace.UP).getLightLevel() );
 				player.sendMessage(ChatColor.DARK_AQUA +"Hash2d: " + ChatColor.AQUA + info.tregmine.api.math.Checksum.flat(block) );
 				player.sendMessage(ChatColor.DARK_AQUA +"Hash3d: " + ChatColor.AQUA + info.tregmine.api.math.Checksum.block(block) );
 				plugin.log.info("BlockHash2d: " +  info.tregmine.api.math.Checksum.flat(block) );

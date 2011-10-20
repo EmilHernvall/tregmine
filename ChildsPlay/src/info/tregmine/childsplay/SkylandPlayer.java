@@ -105,7 +105,7 @@ public class SkylandPlayer extends PlayerListener {
 		player.teleport(newPos);
 	}
 
-/*
+	/*
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		if(
 				event.getAction() == Action.PHYSICAL &&
@@ -143,5 +143,5 @@ public class SkylandPlayer extends PlayerListener {
 		}
 
 	}
-*/
+	 */
 }

@@ -1,6 +1,11 @@
 package info.tregmine.teleport;
 
+import info.tregmine.database.ConnectionPool;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -18,8 +23,6 @@ public class Warp {
 	//	private PlayerChatEvent event;
 	Player from;
 	private String[] args;
-
-	public final info.tregmine.database.Mysql mysql = new info.tregmine.database.Mysql();
 
 	public Warp(Teleport instance, Player player, String[] args) {
 		plugin = instance;
@@ -45,54 +48,66 @@ public class Warp {
 	public void run() {
 		Location warppoint = null;
 
-		this.mysql.connect();
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		try {
+			conn = ConnectionPool.getConnection();
+			stmt = conn.prepareStatement("SELECT * FROM warps WHERE name='" +  args[0] + "'");
+			stmt.setString(1, args[0]);
+			stmt.execute();
+			
+			rs = stmt.getResultSet();
+			if (!rs.next()) {
+				from.sendMessage("Warp not found!");
+				plugin.log.info("[warp failed] + <" + from.getName() + "> " + args[0] +  " -- not found");
+				return;
+			}
 
-		if (this.mysql.connect != null) {
-			try {
-				this.mysql.statement.executeQuery("SELECT * FROM warps WHERE name='" +  args[0] + "'");
-				ResultSet rs = this.mysql.statement.getResultSet();
-				rs.first();
+			double x = rs.getDouble("x");
+			double y = rs.getDouble("y");
+			double z = rs.getDouble("z");
+			World world = getWorld(rs.getString("world"));
 
-				double x = rs.getDouble("x");
-				double y = rs.getDouble("y");
-				double z = rs.getDouble("z");
-				World world = getWorld(rs.getString("world"));
+			if (from.getLocation().getWorld().getName().matches("ChildsPlay")) {
+				warppoint = new Location(from.getLocation().getWorld(),x,y,z);
+				from.sendMessage(ChatColor.AQUA + "You teleported to " + ChatColor.DARK_GREEN + args[0] + ChatColor.AQUA + " in " + ChatColor.BLUE +  "Alpha." );
+				warppoint.getWorld().loadChunk(warppoint.getWorld().getChunkAt(warppoint));
 
-				if (from.getLocation().getWorld().getName().matches("ChildsPlay")) {
-					warppoint = new Location(from.getLocation().getWorld(),x,y,z);
-					from.sendMessage(ChatColor.AQUA + "You teleported to " + ChatColor.DARK_GREEN + args[0] + ChatColor.AQUA + " in " + ChatColor.BLUE +  "Alpha." );
-					warppoint.getWorld().loadChunk(warppoint.getWorld().getChunkAt(warppoint));
-
-					if (warppoint.getWorld().isChunkLoaded(warppoint.getWorld().getChunkAt(warppoint))){
-						from.teleport(warppoint);
-						plugin.log.info("[warp] + <" + from.getName() + "> " + args[0] +  ":" +  world.getName() );
-					} else {
-						from.sendMessage(ChatColor.RED + "Chunk failed to load. Please try to warp again.");
-					}
-					return;
-				}
-
-
-				if(world.getName().matches(from.getWorld().getName())) {					
-					warppoint = new Location(world,x,y,z);
-					from.sendMessage(ChatColor.AQUA + "You teleported to " + ChatColor.DARK_GREEN + args[0] + ChatColor.AQUA + " in " + ChatColor.BLUE +  world.getName() + "." );
+				if (warppoint.getWorld().isChunkLoaded(warppoint.getWorld().getChunkAt(warppoint))){
+					from.teleport(warppoint);
 					plugin.log.info("[warp] + <" + from.getName() + "> " + args[0] +  ":" +  world.getName() );
 				} else {
-					from.sendMessage(ChatColor.DARK_RED + "Sorry, that warp is in another world!");
-					warppoint = from.getLocation();		        	
-					plugin.log.info("[warp failed] + <" + from.getName() + "> " + args[0] +  ":" +  world.getName() );
+					from.sendMessage(ChatColor.RED + "Chunk failed to load. Please try to warp again.");
 				}
+				return;
+			}
 
-			} catch (Exception e) {
-				from.sendMessage("Warp not found!");
-				try {
-					plugin.log.info("[warp failed] + <" + from.getName() + "> " + args[0] +  " -- not found");
-				} catch (Exception ee) {
-					e.printStackTrace();
-				}
-				warppoint = null;
+
+			if(world.getName().matches(from.getWorld().getName())) {					
+				warppoint = new Location(world,x,y,z);
+				from.sendMessage(ChatColor.AQUA + "You teleported to " + ChatColor.DARK_GREEN + args[0] + ChatColor.AQUA + " in " + ChatColor.BLUE +  world.getName() + "." );
+				plugin.log.info("[warp] + <" + from.getName() + "> " + args[0] +  ":" +  world.getName() );
+			} else {
+				from.sendMessage(ChatColor.DARK_RED + "Sorry, that warp is in another world!");
+				warppoint = from.getLocation();		        	
+				plugin.log.info("[warp failed] + <" + from.getName() + "> " + args[0] +  ":" +  world.getName() );
+			}
+
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		} finally {
+			if (rs != null) {
+				try { rs.close(); } catch (SQLException e) {} 
+			}
+			if (stmt != null) {
+				try { stmt.close(); } catch (SQLException e) {}
+			}
+			if (conn != null) {
+				try { conn.close(); } catch (SQLException e) {}
 			}
 		}
+
 		if (warppoint != null) {
 			from.setNoDamageTicks(200);
 			
@@ -106,48 +121,56 @@ public class Warp {
 
 			
 		}
-
-		this.mysql.close();
-
 	}
 
 	public void wrun() {
 		Location warppoint = null;
 
-		this.mysql.connect();
-
-		if (this.mysql.connect != null) {
-			try {
-				this.mysql.statement.executeQuery("SELECT * FROM warps WHERE name='" +  args[0] + "'");
-				ResultSet rs = this.mysql.statement.getResultSet();
-				rs.first();
-
-				double x = rs.getDouble("x");
-				double y = rs.getDouble("y");
-				double z = rs.getDouble("z");
-				World world = getWorld(rs.getString("world"));
-
-				if(world.getName().matches(from.getWorld().getName())) {					
-					warppoint = new Location(world,x,y,z);
-					from.sendMessage(ChatColor.AQUA + "You teleported to " + ChatColor.DARK_GREEN + args[0] + ChatColor.AQUA + " in " + ChatColor.BLUE +  world.getName() + "." );
-					plugin.log.info("[warp] + <" + from.getName() + "> " + args[0] +  ":" +  world.getName() );
-				} else {
-					from.sendMessage(ChatColor.DARK_RED + "Sorry, that warp is in another world!");
-					warppoint = from.getLocation();		        	
-					plugin.log.info("[warp failed] + <" + from.getName() + "> " + args[0] +  ":" +  world.getName() );
-				}
-
-			} catch (Exception e) {
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		try {
+			conn = ConnectionPool.getConnection();
+			stmt = conn.prepareStatement("SELECT * FROM warps WHERE name='" +  args[0] + "'");
+			stmt.setString(1, args[0]);
+			stmt.execute();
+			
+			rs = stmt.getResultSet();
+			if (!rs.next()) {
 				from.sendMessage("Warp not found!");
-				try {
-					plugin.log.info("[warp failed] + <" + from.getName() + "> " + args[0] +  " -- not found");
-				} catch (Exception ee) {
-					e.printStackTrace();
-				}
-				from.setNoDamageTicks(200);
-				warppoint = null;
+				plugin.log.info("[warp failed] + <" + from.getName() + "> " + args[0] +  " -- not found");
+				return;
+			}
+
+			double x = rs.getDouble("x");
+			double y = rs.getDouble("y");
+			double z = rs.getDouble("z");
+			World world = getWorld(rs.getString("world"));
+
+			if(world.getName().matches(from.getWorld().getName())) {					
+				warppoint = new Location(world,x,y,z);
+				from.sendMessage(ChatColor.AQUA + "You teleported to " + ChatColor.DARK_GREEN + args[0] + ChatColor.AQUA + " in " + ChatColor.BLUE +  world.getName() + "." );
+				plugin.log.info("[warp] + <" + from.getName() + "> " + args[0] +  ":" +  world.getName() );
+			} else {
+				from.sendMessage(ChatColor.DARK_RED + "Sorry, that warp is in another world!");
+				warppoint = from.getLocation();		        	
+				plugin.log.info("[warp failed] + <" + from.getName() + "> " + args[0] +  ":" +  world.getName() );
+			}
+
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		} finally {
+			if (rs != null) {
+				try { rs.close(); } catch (SQLException e) {} 
+			}
+			if (stmt != null) {
+				try { stmt.close(); } catch (SQLException e) {}
+			}
+			if (conn != null) {
+				try { conn.close(); } catch (SQLException e) {}
 			}
 		}
+
 		if (warppoint != null) {
 			//			Location spawn = new Location(this.getWorld("alpha"), -116217, 84, -234971);
 			
@@ -164,9 +187,6 @@ public class Warp {
 
 			
 		}
-
-		this.mysql.close();
-
 	}
 
 }
