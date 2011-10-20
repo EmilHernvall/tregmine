@@ -63,6 +63,8 @@ public class Store {
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		try {
+			conn = ConnectionPool.getConnection();
+
 			Map<Integer, String> chests = new HashMap<Integer, String>();
 		
 	    	stmt = conn.prepareStatement("SELECT * FROM  chestbless");
