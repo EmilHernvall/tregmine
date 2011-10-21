@@ -25,7 +25,6 @@ public class Main extends JavaPlugin {
 
 	public final Logger log = Logger.getLogger("Minecraft");
 	public Tregmine tregmine = null;
-//	NumberFormat nf = NumberFormat.getNumberInstance();
 	public SpyPlayerListener inventory = new SpyPlayerListener(this);
 	public HashMap<Integer, String> whoDropedItem = new HashMap<Integer, String>();
 

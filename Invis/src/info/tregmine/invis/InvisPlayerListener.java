@@ -1,6 +1,5 @@
 package info.tregmine.invis;
 
-//import java.util.List;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerListener;
@@ -21,7 +20,6 @@ public class InvisPlayerListener extends PlayerListener
     Player player = event.getPlayer();
     this.plugin.updateInvisible(player);
     
-//	info.tregmine.api.TregminePlayer locTregminePlayer = this.plugin.tregmine.TregminePlayer.get(player.getName());
 	if (event.getPlayer().getName().matches("einand")) {
     	this.plugin.vanishCommand(event.getPlayer());
     }

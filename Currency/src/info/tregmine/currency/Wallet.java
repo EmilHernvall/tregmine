@@ -57,7 +57,6 @@ public class Wallet {
 	public String formatBalance() {
 		NumberFormat nf = NumberFormat.getNumberInstance();
 		return ChatColor.GOLD +  nf.format( this.balance() ) + ChatColor.WHITE + " Tregs";
-//		return "";
 	}
 	
 	public boolean exist() {

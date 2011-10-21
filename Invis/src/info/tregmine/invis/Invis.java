@@ -1,7 +1,5 @@
 package info.tregmine.invis;
 
-//import java.io.File;
-//import java.io.IOException;
 import info.tregmine.Tregmine;
 
 import java.util.ArrayList;
@@ -9,27 +7,19 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Logger;
-//import net.minecraft.server.EntityPlayer;
-//import net.minecraft.server.NetServerHandler;
 import net.minecraft.server.Packet20NamedEntitySpawn;
 import net.minecraft.server.Packet29DestroyEntity;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-//import org.bukkit.Server;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
-//import org.bukkit.event.Event.Priority;
-//import org.bukkit.event.Event.Type;
-//import org.bukkit.plugin.Plugin;
-//import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-//import org.bukkit.util.config.Configuration;
 
 public class Invis extends JavaPlugin
 {

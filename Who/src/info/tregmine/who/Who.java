@@ -11,8 +11,6 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import info.tregmine.Tregmine; 
-//import com.tregdev.tregmine.TregmineBlock;
-//import info.tregmine.currency.Wallet;
 
 
 public class Who extends JavaPlugin {

@@ -83,7 +83,6 @@ public class Home {
 				try { conn.close(); } catch (SQLException e) {}
 			}
 		}
-		
 		return null;
 	}
 }

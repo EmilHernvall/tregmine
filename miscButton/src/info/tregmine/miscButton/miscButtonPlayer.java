@@ -118,25 +118,6 @@ public class miscButtonPlayer extends PlayerListener {
 			fill(lb1,lb2, Material.LAVA);
 		}
 
-		// (temporary)
-		if (button == 388828234 && event.getPlayer().getName().matches("_Senna_")) {
-			ItemStack item = new ItemStack(Material.COBBLESTONE, 64, (byte) 0);
-			event.getPlayer().getInventory().addItem(item);
-		}
-
-		// (temporary)
-		if (button == 781855244 && event.getPlayer().getName().matches("_Senna_")) {
-			ItemStack item = new ItemStack(Material.DIRT, 64, (byte) 0);
-			event.getPlayer().getInventory().addItem(item);
-		}
-				
-		// (temporary)
-		if (button == -425775511 && event.getPlayer().getName().matches("_Senna_")) {
-			ItemStack item = new ItemStack(Material.SAND, 64, (byte) 0);
-			event.getPlayer().getInventory().addItem(item);
-		}
-		
-
 		// Whool at spawn mall
 		if (button == 1091869270) {
 			Wallet wallet = new Wallet(event.getPlayer().getName());
@@ -226,7 +207,6 @@ public class miscButtonPlayer extends PlayerListener {
 
 		if (button == 156737597) {
 			event.setCancelled(false);
-
 
 			Wallet wallet = new Wallet(event.getPlayer().getName());
 			long newbalance = wallet.balance()-15000;

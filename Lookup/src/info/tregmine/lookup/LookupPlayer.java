@@ -1,14 +1,11 @@
 package info.tregmine.lookup;
 
-//import info.tregmine.api.TregminePlayer;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
 
-//import org.bukkit.ChatColor;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-//import org.bukkit.event.player.PlayerEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerListener;
 

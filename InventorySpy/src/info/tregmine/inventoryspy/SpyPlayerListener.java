@@ -7,9 +7,6 @@ import org.bukkit.event.player.PlayerInventoryEvent;
 import org.bukkit.event.player.PlayerListener;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 
-//import com.mysql.jdbc.log.Log;
-
-
 
 public class SpyPlayerListener extends PlayerListener {
 	private final Main plugin;
@@ -57,9 +54,6 @@ public class SpyPlayerListener extends PlayerListener {
 			}
 			this.plugin.whoDropedItem.put(event.getItem().hashCode(), null);
 
-			//			if(this.plugin.getServer().getPlayer("einand") != null) {
-			//				this.plugin.getServer().getPlayer("einand").sendMessage(event.getItem().getItemStack().getType().toString().toLowerCase() + " - "+ event.getItem().getUniqueId() );
-			//			}
 		}
 
 

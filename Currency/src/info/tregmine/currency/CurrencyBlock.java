@@ -15,7 +15,6 @@ public class CurrencyBlock extends BlockListener {
 		if (!this.plugin.tregmine.blockStats.isPlaced(event.getBlock()) && !event.isCancelled() ) {
 			Wallet wallet = new Wallet(event.getPlayer());
     		int value = Wallet.getBlockValue(event.getBlock().getTypeId());
-//    		event.getPlayer().sendMessage("Value:" + value);
     		wallet.add(value);
 		}
     }

@@ -135,8 +135,6 @@ public class Main extends JavaPlugin {
 					info.tregmine.api.TregminePlayer toPlayer = this.tregmine.tregminePlayer.get(to.getName());
 					Wallet wallet = new Wallet(player);
 					Wallet toWallet = new Wallet(to);
-//					ChatColor playerColor = this.tregmine.playerSetting.get(player.getName()).getColor();
-//					ChatColor toColor = this.tregmine.playerSetting.get(to.getName()).getColor();
 					
 					long newAmount = wallet.balance() - amount;
 					if (newAmount >= 0) {

@@ -1,9 +1,6 @@
 package info.tregmine.userstats;
 
 
-//import java.text.SimpleDateFormat;
-//import java.util.Date;
-//import java.util.TimeZone;
 import java.util.logging.Logger;
 
 import org.bukkit.entity.Player;
@@ -41,9 +38,6 @@ public class Main extends JavaPlugin {
 	}
 
 	public void onDisable(){
-//		String info = this.getDescription().getName() + " " + this.getDescription().getVersion() + " disabled"; 
-//		log.info(info);
-		//		this.getServer().broadcastMessage(info);
 		this.enable = false;
 	}
 	public void onLoad() {

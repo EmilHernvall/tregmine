@@ -9,7 +9,6 @@ import java.sql.Statement;
 public class Main {
 	public static Connection connect = null;
 	public static Statement statement = null;
-//	private PreparedStatement preparedStatement = null;
 	public ResultSet resultSet = null;
 	private static String url = "jdbc:mysql://127.0.0.1:3306/minecraft";
 	private static String user = "minecraft";

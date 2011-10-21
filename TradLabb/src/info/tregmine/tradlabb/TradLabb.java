@@ -52,7 +52,6 @@ public class TradLabb extends JavaPlugin {
 	    		ny.setTimeZone(TimeZone.getTimeZone("America/New_York"));
 	    		swe.setTimeZone(TimeZone.getTimeZone("Europe/Stockholm"));
 	    		la.setTimeZone(TimeZone.getTimeZone("America/Los_Angeles"));
-//		        Date date = new Date(System.currentTimeMillis());
 	
 		        
 				if (state instanceof Sign) {
@@ -77,9 +76,6 @@ public class TradLabb extends JavaPlugin {
 	}
 
 	public void onDisable(){
-//		String info = this.getDescription().getName() + " " + this.getDescription().getVersion() + " disabled"; 
-//		log.info(info);
-		//		this.getServer().broadcastMessage(info);
 		this.enable = false;
 	}
 	public void onLoad() {

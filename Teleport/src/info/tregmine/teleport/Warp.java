@@ -67,25 +67,14 @@ public class Warp {
 			double x = rs.getDouble("x");
 			double y = rs.getDouble("y");
 			double z = rs.getDouble("z");
+            float pitch = rs.getFloat("pitch");
+            float yaw = rs.getFloat("yaw");
+			
 			World world = getWorld(rs.getString("world"));
-
-			if (from.getLocation().getWorld().getName().matches("ChildsPlay")) {
-				warppoint = new Location(from.getLocation().getWorld(),x,y,z);
-				from.sendMessage(ChatColor.AQUA + "You teleported to " + ChatColor.DARK_GREEN + args[0] + ChatColor.AQUA + " in " + ChatColor.BLUE +  "Alpha." );
-				warppoint.getWorld().loadChunk(warppoint.getWorld().getChunkAt(warppoint));
-
-				if (warppoint.getWorld().isChunkLoaded(warppoint.getWorld().getChunkAt(warppoint))){
-					from.teleport(warppoint);
-					plugin.log.info("[warp] + <" + from.getName() + "> " + args[0] +  ":" +  world.getName() );
-				} else {
-					from.sendMessage(ChatColor.RED + "Chunk failed to load. Please try to warp again.");
-				}
-				return;
-			}
 
 
 			if(world.getName().matches(from.getWorld().getName())) {					
-				warppoint = new Location(world,x,y,z);
+				warppoint =  new Location(world, x,y,z, yaw, pitch);
 				from.sendMessage(ChatColor.AQUA + "You teleported to " + ChatColor.DARK_GREEN + args[0] + ChatColor.AQUA + " in " + ChatColor.BLUE +  world.getName() + "." );
 				plugin.log.info("[warp] + <" + from.getName() + "> " + args[0] +  ":" +  world.getName() );
 			} else {

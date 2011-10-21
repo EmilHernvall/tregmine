@@ -130,8 +130,6 @@ public class Item extends JavaPlugin {
 			return true;
 		}
 
-
-
 		return false;
 	}
 	
