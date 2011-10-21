@@ -1,4 +1,4 @@
-<project name="Tregmine" default="compile" basedir=".">
+<project name="tregmine" default="compile" basedir=".">
 	
 	<property name="src" value="src" />
 	<property name="build" value="bin" />

@@ -210,7 +210,7 @@ public class TregminePlayer extends PlayerDelegate
 			
 			stmt.close();
 			stmt = null;
-			
+
 			this.settings.put(_key, _value);
 			
 		} catch (SQLException e) {

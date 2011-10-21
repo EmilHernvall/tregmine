@@ -43,7 +43,7 @@ public class ConnectionPool {
 	        ds.setPassword(password);
 	        ds.setMaxActive(5);
 	        ds.setMaxIdle(5);
-	        ds.setDefaultAutoCommit(false);
+	        ds.setDefaultAutoCommit(true);
 		}
 		
         Connection conn = ds.getConnection();
