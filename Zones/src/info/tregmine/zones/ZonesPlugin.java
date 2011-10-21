@@ -245,8 +245,8 @@ public class ZonesPlugin extends JavaPlugin
 			return;
 		}
 		
-		Block b1 = player.getBlock("b1");
-		Block b2 = player.getBlock("b2");
+		Block b1 = player.getBlock("zb1");
+		Block b2 = player.getBlock("zb2");
 		
 		Rectangle rect = new Rectangle(b1.getX(), b1.getZ(), b2.getX(), b2.getZ());
 		
