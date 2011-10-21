@@ -52,17 +52,6 @@ public class BasicCommands extends JavaPlugin {
 
 		if(!(sender instanceof Player)) {
 
-			if (commandName.matches("stopmsg")) {
-				for (Player p : this.getServer().getOnlinePlayers()) {
-					p.kickPlayer("This was a scheduled restart. Don't worry, just rejoin.");
-				}
-				return true;
-			}
-
-			if (commandName.matches("time")) {
-				return true;
-			}
-
 			if (commandName.matches("kick")) {
 				Player victim = this.getServer().matchPlayer(args[0]).get(0);
 
@@ -85,13 +74,8 @@ public class BasicCommands extends JavaPlugin {
 		boolean isMentor = tregminePlayer.getMetaBoolean("mentor");
 
 		if (commandName.matches("password")) {
-			//			info.tregmine.database.Mysql mysql = new info.tregmine.database.Mysql();
-			//			UPDATE  `user` SET  `password` =  'test' WHERE  `user`.`uid` =1
 			String hash = BCrypt.hashpw(args[0], BCrypt.gensalt());
 			player.sendMessage(hash);
-			//			mysql.connect();
-			//			
-			//			mysql.close();
 		}
 
 		if (commandName.matches("admin") && tregminePlayer.isAdmin() ) {
@@ -133,22 +117,23 @@ public class BasicCommands extends JavaPlugin {
 			ChatColor color = ChatColor.getByCode(Integer.parseInt(args[0]));
 			tregminePlayer.setTemporaryChatName(color + args[1]);
 			tregminePlayer.sendMessage("You are now: " + tregminePlayer.getChatName());
+			this.log.info(tregminePlayer.getName() + "changed name to" + tregminePlayer.getChatName());
 		}
 
-		if (commandName.matches("t") && tregminePlayer.isAdmin()) {
+		if (commandName.matches("t") && tregminePlayer.isOp()) {
 			Player victim = this.getServer().matchPlayer(args[0]).get(0);
 			victim.getWorld().strikeLightningEffect(victim.getLocation());
 			return true;
 		}
 
-		if (commandName.matches("td") && tregminePlayer.isAdmin()) {
+		if (commandName.matches("td") && tregminePlayer.isOp()) {
 			Player victim = this.getServer().matchPlayer(args[0]).get(0);
 			victim.getWorld().strikeLightning(victim.getLocation());
 			victim.setHealth(0);
 			return true;
 		}
 
-		if (commandName.matches("time")) {
+		if (commandName.matches("time") && tregminePlayer.isDonator()) {
 			if (args.length == 1) {
 
 				if (args[0].matches("day")) {
@@ -312,10 +297,6 @@ public class BasicCommands extends JavaPlugin {
 			}
 		}
 
-		if (commandName.matches("killstreak")) {
-			return true;
-		}
-
 		if (commandName.matches("kick") && (isAdmin || isMentor)) {
 			Player victim = this.getServer().matchPlayer(args[0]).get(0);
 
@@ -335,61 +316,13 @@ public class BasicCommands extends JavaPlugin {
 			return true;
 		}
 
-		if (commandName.matches("ride.")) {
+		if (commandName.matches("ride.") && tregminePlayer.isOp() ) {
 			Player v = this.getServer().matchPlayer(args[0]).get(0);
 			Player v2 = this.getServer().matchPlayer(args[1]).get(0);
 			v2.setPassenger(v);
 			return true;
 		}
-		/*
-		if (commandName.matches("w") && isAdmin) {
-			if (args[0].matches("storm-true")) {
-				this.getServer().getWorld("world").setThundering(true);
-				this.getServer().getWorld("world").setStorm(true);
-				this.getServer().getWorld("world").setThunderDuration(1000);
-
-				player.sendMessage("Storm true");
-			}
-			if (args[0].matches("storm-false")) {
-				this.getServer().getWorld("world").setThundering(true);
-				this.getServer().getWorld("world").setStorm(true);
-				this.getServer().getWorld("world").setThunderDuration(1000);
-				player.sendMessage("Storm true");
-
-				this.getServer().getWorld("world").setThundering(false);
-				this.getServer().getWorld("world").setStorm(false);
-				this.getServer().getWorld("world").setThunderDuration(0);
-				player.sendMessage("Storm false");
-			}
-
-			if (args[0].matches("rain-false")) {
-				this.getServer().getWorld("world").setWeatherDuration(1);
-				player.sendMessage("rain false");
-			}
-
-			if (args[0].matches("hit")) {
-				Player p = this.getServer().matchPlayer(args[1]).get(0);
-				player.sendMessage("You tried to lighening " + p.getName() );
-				p.setNoDamageTicks(2000);
-				p.getWorld().strikeLightning(p.getLocation());
-				p.getWorld().strikeLightningEffect(p.getLocation());
-				p.getWorld().strikeLightningEffect(p.getLocation());
-				p.getWorld().strikeLightningEffect(p.getLocation());
-			}
-
-			if (args[0].matches("hitkill")) {
-				Player p = this.getServer().matchPlayer(args[1]).get(0);
-				player.sendMessage("You tried to lighening kill " + p.getName() );
-				p.setHealth(0);
-				p.getWorld().strikeLightning(p.getLocation());
-				p.getWorld().strikeLightningEffect(p.getLocation());
-				p.getWorld().strikeLightningEffect(p.getLocation());
-				p.getWorld().strikeLightningEffect(p.getLocation());
-			}
-
-			return true;
-		}
-		 */
+		
 		if (commandName.matches("eject")) {
 			Player v = this.getServer().matchPlayer(args[0]).get(0);
 			v.eject();
@@ -414,19 +347,6 @@ public class BasicCommands extends JavaPlugin {
 			player.sendMessage("Donator: " +tregminePlayer.isDonator());
 			player.sendMessage("Trusted: " +tregminePlayer.isTrusted());
 		}
-
-		if (commandName.matches("lagtest") && isAdmin) {
-			player.sendMessage("" + player.getWorld().getTime() );
-			try {
-				Thread.sleep(10000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			player.sendMessage("" + player.getWorld().getTime() );
-		}
-
-
 
 		if (commandName.matches("createmob") && isAdmin) {
 			int amount = 1;
