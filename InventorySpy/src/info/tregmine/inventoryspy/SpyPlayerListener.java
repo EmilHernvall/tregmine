@@ -1,8 +1,11 @@
 package info.tregmine.inventoryspy;
 
 
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.player.PlayerGameModeChangeEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerInventoryEvent;
 import org.bukkit.event.player.PlayerListener;
 import org.bukkit.event.player.PlayerPickupItemEvent;
@@ -16,17 +19,42 @@ public class SpyPlayerListener extends PlayerListener {
 		plugin.getServer();
 	}
 
+	public void onPlayerGameModeChange(PlayerGameModeChangeEvent event) {
+		event.getPlayer().getInventory().clear();
+	}
 
+	public void onPlayerInteract(PlayerInteractEvent event) {
+		if (event.getClickedBlock().getType() == Material.CHEST && event.getPlayer().getGameMode() == GameMode.CREATIVE) {
+				event.setCancelled(true);
+				return;
+		}
+	}
+
+	
 	public void onInventoryOpen (PlayerInventoryEvent event) {
 		event.getPlayer().sendMessage("INV");
 	}
 
 	public void onPlayerDropItem (PlayerDropItemEvent event) {
+		if (event.getPlayer().getGameMode() == GameMode.CREATIVE) {
+			event.setCancelled(true);
+			return;
+		}
+
+		
+		
 		this.plugin.whoDropedItem.put(event.getItemDrop().hashCode(), event.getPlayer().getName());
 	}
 
 	public void onPlayerPickupItem (PlayerPickupItemEvent event){
 
+		
+		if (event.getPlayer().getGameMode() == GameMode.CREATIVE) {
+			event.setCancelled(true);
+			return;
+		}
+
+		
 		if (event.getItem().getItemStack().getType() == Material.MOB_SPAWNER) {
 			event.setCancelled(true);
 			return;

@@ -48,35 +48,11 @@ public class BlessPlayer extends PlayerListener {
 		Block block = event.getClickedBlock();
 		info.tregmine.api.TregminePlayer tregminePlayer = this.plugin.tregmine.tregminePlayer.get(player.getName());
 
-		/*if ((event.getAction() == Action.RIGHT_CLICK_BLOCK  || event.getAction() == Action.LEFT_CLICK_BLOCK) && 
-				allowedMaterials.contains(block.getType())) {
-
-			Location loc = block.getLocation();
- 			int checksum = (loc.getBlockX() + "," + loc.getBlockZ() +"," + loc.getWorld().getName()).hashCode();
-			int newchecksum = (loc.getBlockX() + "," + loc.getBlockZ() + "," + loc.getBlockY() + "," + loc.getWorld().getName()).hashCode();
-
-			if (this.plugin.chests.containsKey(checksum)) {
-
-				String name = this.plugin.chests.get(checksum);
-				player.sendMessage(ChatColor.AQUA + "You reblessed a block for " + name + ".");
-				this.plugin.chests.put(newchecksum, name);
-				this.plugin.chests.remove(checksum);
-				info.tregmine.database.Mysql mysql = new info.tregmine.database.Mysql();
-				mysql.connect();
-
-				info.tregmine.chestbless.Store.savebless(newchecksum, name, player.getWorld().getName(), mysql);
-				info.tregmine.chestbless.Store.deletebless(checksum, name, player.getWorld().getName(), mysql);
-				mysql.close();
-
-			}
-
-		}*/
-
 		if (event.getAction() == Action.RIGHT_CLICK_BLOCK && 
 				player.getItemInHand().getType() == Material.BONE && 
 				(tregminePlayer.isAdmin() || tregminePlayer.getMetaBoolean("mentor")) &&
 				allowedMaterials.contains(block.getType())) {
-			
+
 			String name = tregminePlayer.getMetaString("chestbless");
 			if (name == null) {
 				player.sendMessage(ChatColor.RED + "Use /bless [name] first!");
@@ -84,9 +60,12 @@ public class BlessPlayer extends PlayerListener {
 			}
 
 			if (!tregminePlayer.isAdmin()) {
-				int amount = 5000;
-				if (block.getType().equals(Material.CHEST)) {
-					amount = 30000;
+				int amount;
+
+				switch (block.getType()) {
+					case CHEST: 						amount = 25000;	break;
+					case WOOD_DOOR: case WOODEN_DOOR:	amount = 2000;	break;
+					default:							amount = 4000;	break;
 				}
 
 				Wallet wallet = new Wallet(tregminePlayer.getName());

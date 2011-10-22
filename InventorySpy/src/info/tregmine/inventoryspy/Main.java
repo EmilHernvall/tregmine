@@ -40,9 +40,12 @@ public class Main extends JavaPlugin {
 				this.getServer().getPluginManager().disablePlugin(this);
 			}
 			
-			  getServer().getPluginManager().registerEvent(Event.Type.INVENTORY_OPEN, inventory, Priority.Monitor, this);
+//			  getServer().getPluginManager().registerEvent(Event.Type.INVENTORY_OPEN, inventory, Priority.Monitor, this);
 			  getServer().getPluginManager().registerEvent(Event.Type.PLAYER_DROP_ITEM, inventory, Priority.Monitor, this);
 			  getServer().getPluginManager().registerEvent(Event.Type.PLAYER_PICKUP_ITEM, inventory, Priority.Monitor, this);
+			  getServer().getPluginManager().registerEvent(Event.Type.PLAYER_GAME_MODE_CHANGE, inventory, Priority.Monitor, this);
+			  getServer().getPluginManager().registerEvent(Event.Type.PLAYER_INTERACT, inventory, Priority.Monitor, this);
+//			  getServer().getPluginManager().registerEvent(Event.Type.INVENTORY_CLICK, inventory, Priority.Monitor, this);
 
 		}
 	}
