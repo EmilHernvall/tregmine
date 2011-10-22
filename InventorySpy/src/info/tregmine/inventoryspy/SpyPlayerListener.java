@@ -24,13 +24,17 @@ public class SpyPlayerListener extends PlayerListener {
 	}
 
 	public void onPlayerInteract(PlayerInteractEvent event) {
-		if (event.getClickedBlock().getType() == Material.CHEST && event.getPlayer().getGameMode() == GameMode.CREATIVE) {
+
+
+		if (event.getClickedBlock().getType() != null) {
+			if (event.getClickedBlock().getType() == Material.CHEST && event.getPlayer().getGameMode() == GameMode.CREATIVE) {
 				event.setCancelled(true);
 				return;
+			}
 		}
 	}
 
-	
+
 	public void onInventoryOpen (PlayerInventoryEvent event) {
 		event.getPlayer().sendMessage("INV");
 	}
@@ -41,26 +45,26 @@ public class SpyPlayerListener extends PlayerListener {
 			return;
 		}
 
-		
-		
+
+
 		this.plugin.whoDropedItem.put(event.getItemDrop().hashCode(), event.getPlayer().getName());
 	}
 
 	public void onPlayerPickupItem (PlayerPickupItemEvent event){
 
-		
+
 		if (event.getPlayer().getGameMode() == GameMode.CREATIVE) {
 			event.setCancelled(true);
 			return;
 		}
 
-		
+
 		if (event.getItem().getItemStack().getType() == Material.MOB_SPAWNER) {
 			event.setCancelled(true);
 			return;
 		}
-		
-		
+
+
 		if (this.plugin.whoDropedItem.containsKey(event.getItem().hashCode())) {
 
 			if (event.isCancelled()) {
