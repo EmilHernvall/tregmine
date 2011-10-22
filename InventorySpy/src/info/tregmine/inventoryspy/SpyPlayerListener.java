@@ -3,6 +3,7 @@ package info.tregmine.inventoryspy;
 
 import org.bukkit.GameMode;
 import org.bukkit.Material;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerGameModeChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -24,14 +25,12 @@ public class SpyPlayerListener extends PlayerListener {
 	}
 
 	public void onPlayerInteract(PlayerInteractEvent event) {
-
-
-		if (event.getClickedBlock().getType() != null) {
-			if (event.getClickedBlock().getType() == Material.CHEST && event.getPlayer().getGameMode() == GameMode.CREATIVE) {
-				event.setCancelled(true);
-				return;
+		if ((event.getAction() == Action.RIGHT_CLICK_BLOCK  || event.getAction() == Action.LEFT_CLICK_BLOCK)) {
+				if (event.getClickedBlock().getType() == Material.CHEST && event.getPlayer().getGameMode() == GameMode.CREATIVE) {
+					event.setCancelled(true);
+					return;
+				}
 			}
-		}
 	}
 
 
