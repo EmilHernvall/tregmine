@@ -1,6 +1,7 @@
 package info.tregmine.inventoryspy;
 
 
+import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.event.block.Action;
@@ -45,8 +46,8 @@ public class SpyPlayerListener extends PlayerListener {
 		}
 
 
-
-		this.plugin.whoDropedItem.put(event.getItemDrop().hashCode(), event.getPlayer().getName());
+		info.tregmine.api.TregminePlayer tregminePlayer = this.plugin.tregmine.tregminePlayer.get(event.getPlayer().getName());
+		this.plugin.whoDropedItem.put(event.getItemDrop().hashCode(), tregminePlayer.getChatName());
 	}
 
 	public void onPlayerPickupItem (PlayerPickupItemEvent event){
@@ -75,12 +76,12 @@ public class SpyPlayerListener extends PlayerListener {
 			if (from != null && !event.getPlayer().getName().matches(from)) {
 
 				info.tregmine.api.TregminePlayer tregminePlayerFrom = this.plugin.tregmine.tregminePlayer.get(from);
-				info.tregmine.api.TregminePlayer tregminePlayerTo =this.plugin.tregmine.tregminePlayer.get(event.getPlayer().getName());
+				info.tregmine.api.TregminePlayer tregminePlayerTo = this.plugin.tregmine.tregminePlayer.get(event.getPlayer().getName());
 
 				this.plugin.log.info (event.getItem().getItemStack().getAmount() + ":" + event.getItem().getItemStack().getType().toString() + " " + from + " ==> " + event.getPlayer().getName() );
 				if	 (!tregminePlayerFrom.getMetaBoolean("invis") && ! tregminePlayerTo.getMetaBoolean("invis")) {
-					event.getPlayer().sendMessage("You got " + event.getItem().getItemStack().getAmount() + " " + event.getItem().getItemStack().getType().toString().toLowerCase() + " from " + from );
-					this.plugin.getServer().getPlayer(from).sendMessage("You gave " + event.getItem().getItemStack().getAmount() + " " + event.getItem().getItemStack().getType().toString().toLowerCase() + " to " + event.getPlayer().getName()  );
+					event.getPlayer().sendMessage(ChatColor.YELLOW + "You got " + event.getItem().getItemStack().getAmount() + " " + event.getItem().getItemStack().getType().toString().toLowerCase() + ChatColor.YELLOW + " from " + from );
+					this.plugin.getServer().getPlayer(from).sendMessage(ChatColor.YELLOW +  "You gave " + event.getItem().getItemStack().getAmount() + " " + event.getItem().getItemStack().getType().toString().toLowerCase() +  " to " + tregminePlayerTo.getChatName()  );
 				}
 			}
 			this.plugin.whoDropedItem.put(event.getItem().hashCode(), null);
