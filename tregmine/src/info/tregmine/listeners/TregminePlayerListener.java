@@ -56,13 +56,13 @@ public class TregminePlayerListener extends PlayerListener {
 			ChatColor.YELLOW + "Quit - " + "%s" + ChatColor.YELLOW + " has left our world!",
 			ChatColor.YELLOW + "Quit - " + "%s" + ChatColor.YELLOW + " went to browse Tregmine's forums instead!",
 			ChatColor.YELLOW + "Quit - " + "%s" + ChatColor.YELLOW + " was scared away by einand! :(",
-			ChatColor.YELLOW + "Quit - " + "%s" + ChatColor.YELLOW + "'s CPU was killed by the Rendermen!",
+			ChatColor.YELLOW + "Quit - " + "%s" + "'s" + ChatColor.YELLOW + " CPU was killed by the Rendermen!",
 			ChatColor.YELLOW + "Quit - " + "%s" + ChatColor.YELLOW + " fell off the map!",
 			ChatColor.YELLOW + "Quit - " + "%s" + ChatColor.YELLOW + " logged out on accident!",
 			ChatColor.YELLOW + "Quit - " + "%s" + ChatColor.YELLOW + " found the IRL warp!",
 			ChatColor.YELLOW + "Quit - " + "%s" + ChatColor.YELLOW + " left the game due to IRL chunk error issues!",
 			ChatColor.YELLOW + "Quit - " + "%s" + ChatColor.YELLOW + " left the Matrix. Say hi to Morpheus!",
-			ChatColor.YELLOW + "Quit - " + "%s" + ChatColor.YELLOW + " <preserved space for ads. Contact a Senior Admin. Only 200k!>",
+			ChatColor.YELLOW + "Quit - " + "%s" + ChatColor.YELLOW + " <reserved space for ads. Contact a Senior Admin. Only 200k!>",
 			ChatColor.YELLOW + "Quit - " + "%s" + ChatColor.YELLOW + " disconnected? What is this!? Impossibru!"
         };
 
