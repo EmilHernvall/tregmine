@@ -78,9 +78,12 @@ commands:
   td:
     description: hit and kill specified player with lightning.
     -usage: /td <player>
-  admin:
-    description: give yourself admin status for 10 minutes.
+  creative:
+    description: enter creative mode
     -usage: /admin
+  survival:
+    description: enter survival mode
+    -usage: /survival
   cname:
     description: change your nickname and its color.
     -usage: /cname color nick

@@ -78,16 +78,22 @@ public class BasicCommands extends JavaPlugin {
 			player.sendMessage(hash);
 		}
 
-		if (commandName.matches("admin") && tregminePlayer.isAdmin() ) {
+		if (commandName.matches("creative") && (tregminePlayer.isAdmin() || tregminePlayer.getMetaBoolean("builder"))) {
 			final TregminePlayer tregPlayer = tregmine.getPlayer(player);
 			tregPlayer.setGameMode(GameMode.CREATIVE);
-			tregPlayer.sendMessage(ChatColor.YELLOW + "You are now in admin mode for 10 minutes.");
+			tregPlayer.sendMessage(ChatColor.YELLOW + "You are now in creative mode.");
 
-			this.getServer().getScheduler().scheduleSyncDelayedTask(this,new Runnable() {
+			/*this.getServer().getScheduler().scheduleSyncDelayedTask(this,new Runnable() {
 				public void run() {
 					tregPlayer.sendMessage(ChatColor.YELLOW + "You are now back in survival mode.");
 					tregPlayer.setGameMode(GameMode.SURVIVAL);
-				}},12000L);
+				}},12000L);*/
+		}
+
+		if (commandName.matches("survival") && (tregminePlayer.isAdmin() || tregminePlayer.getMetaBoolean("builder"))) {
+			final TregminePlayer tregPlayer = tregmine.getPlayer(player);
+			tregPlayer.setGameMode(GameMode.SURVIVAL);
+			tregPlayer.sendMessage(ChatColor.YELLOW + "You are now in survival mode.");
 		}
 
 
