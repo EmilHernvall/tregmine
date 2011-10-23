@@ -47,7 +47,7 @@ public class SpyPlayerListener extends PlayerListener {
 
 
 		info.tregmine.api.TregminePlayer tregminePlayer = this.plugin.tregmine.tregminePlayer.get(event.getPlayer().getName());
-		this.plugin.whoDropedItem.put(event.getItemDrop().hashCode(), tregminePlayer.getChatName());
+		this.plugin.whoDropedItem.put(event.getItemDrop().hashCode(), tregminePlayer.getName());
 	}
 
 	public void onPlayerPickupItem (PlayerPickupItemEvent event){
@@ -78,9 +78,9 @@ public class SpyPlayerListener extends PlayerListener {
 				info.tregmine.api.TregminePlayer tregminePlayerFrom = this.plugin.tregmine.tregminePlayer.get(from);
 				info.tregmine.api.TregminePlayer tregminePlayerTo = this.plugin.tregmine.tregminePlayer.get(event.getPlayer().getName());
 
-				this.plugin.log.info (event.getItem().getItemStack().getAmount() + ":" + event.getItem().getItemStack().getType().toString() + " " + from + " ==> " + event.getPlayer().getName() );
+				this.plugin.log.info (event.getItem().getItemStack().getAmount() + ":" + event.getItem().getItemStack().getType().toString() + " " + tregminePlayerFrom.getChatName() + " ==> " + tregminePlayerTo.getChatName() );
 				if	 (!tregminePlayerFrom.getMetaBoolean("invis") && ! tregminePlayerTo.getMetaBoolean("invis")) {
-					event.getPlayer().sendMessage(ChatColor.YELLOW + "You got " + event.getItem().getItemStack().getAmount() + " " + event.getItem().getItemStack().getType().toString().toLowerCase() + ChatColor.YELLOW + " from " + from );
+					event.getPlayer().sendMessage(ChatColor.YELLOW + "You got " + event.getItem().getItemStack().getAmount() + " " + event.getItem().getItemStack().getType().toString().toLowerCase() + ChatColor.YELLOW + " from " + tregminePlayerFrom.getChatName() );
 					this.plugin.getServer().getPlayer(from).sendMessage(ChatColor.YELLOW +  "You gave " + event.getItem().getItemStack().getAmount() + " " + event.getItem().getItemStack().getType().toString().toLowerCase() +  " to " + tregminePlayerTo.getChatName()  );
 				}
 			}
