@@ -97,20 +97,24 @@ public class ZonesPlugin extends JavaPlugin
 				zoneWorld = new ZoneWorld(world);
 				List<Zone> zones = dao.getZones(world.getName());
 				for (Zone zone : zones) {
-					log.info("Loading zone " + zone.getName());
-					zoneWorld.addZone(zone);
-					this.zones.put(zone.getId(), zone);
+					try {
+						zoneWorld.addZone(zone);
+						this.zones.put(zone.getId(), zone);
+					} catch (IntersectionException e) {
+						log.warning("Failed to load zone " + zone.getName() + " with id " + zone.getId() + ".");
+					}
 				}
 				
 				List<Lot> lots = dao.getLots(world.getName());
 				for (Lot lot : lots) {
-					log.info("Loading " + lot.getName());
-					zoneWorld.addLot(lot);
+					try {
+						zoneWorld.addLot(lot);
+					} catch (IntersectionException e) {
+						log.warning("Failed to load lot " + lot.getName() + " with id " + lot.getId() + ".");
+					}
 				}
 				
 				worlds.put(world.getName(), zoneWorld);
-			} catch (IntersectionException e) {
-				throw new RuntimeException(e);
 			} catch (SQLException e) {
 				throw new RuntimeException(e);
 			} finally {
@@ -265,6 +269,7 @@ public class ZonesPlugin extends JavaPlugin
 			player.sendMessage(ChatColor.RED + "[" + zone.getName() + "] " + "Zone created successfully.");
 		} catch (IntersectionException e) {
 			player.sendMessage(ChatColor.RED + "The zone you tried to create overlaps an existing zone.");
+			return;
 		}
 		
 		Connection conn = null;
