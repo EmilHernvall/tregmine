@@ -16,6 +16,13 @@ import org.bukkit.entity.Player;
 
 public class TregminePlayer extends PlayerDelegate
 {
+	public enum GuardianState
+	{
+		ACTIVE, // nuvarande aktiv
+		INACTIVE, // har kört /normal
+		QUEUED; // väntar på att aktiveras
+	};
+
 	private HashMap<String,String> settings = new HashMap<String,String>();
 	private HashMap<String,Block> block = new HashMap<String,Block>();
 	private HashMap<String,Integer> integer = new HashMap<String,Integer>();
@@ -24,6 +31,7 @@ public class TregminePlayer extends PlayerDelegate
 	private int id = 0;
 	private String name;
 	private Zone currentZone = null;
+	private GuardianState guardianState = null;
 
 	public TregminePlayer(Player player, String _name) 
 	{
@@ -170,6 +178,40 @@ public class TregminePlayer extends PlayerDelegate
 	public boolean isImmortal() 
 	{
 		return getBoolean("immortal");
+	}
+
+	public boolean isGuardian()
+	{
+		return getMetaString("guardian") != null;
+	}
+
+	public int getGuardianRank()
+	{
+		try {
+			return Integer.parseInt(getMetaString("guardian"));
+		} catch (NumberFormatException e) {
+			return -1;
+		}
+	}
+
+	public GuardianState getGuardianState()
+	{
+		return guardianState;
+	}
+
+	public void setGuardianState(GuardianState v)
+	{
+		this.guardianState = v;
+		switch (v) {
+			case ACTIVE:
+				setTempMetaString("color", "police");
+				break;
+			case INACTIVE:
+			case QUEUED:
+				setTempMetaString("color", "donator");
+				break;
+		}
+		setTemporaryChatName(getNameColor() + getName());
 	}
 
 	public boolean getMetaBoolean(String _key) 
