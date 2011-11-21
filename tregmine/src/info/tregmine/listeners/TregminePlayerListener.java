@@ -91,7 +91,9 @@ public class TregminePlayerListener extends PlayerListener {
         ChatColor.YELLOW + "Quit - " + "%s" + ChatColor.YELLOW + " left the game due to IRL chunk error issues!",
         ChatColor.YELLOW + "Quit - " + "%s" + ChatColor.YELLOW + " left the Matrix. Say hi to Morpheus!",
         ChatColor.YELLOW + "Quit - " + "%s" + ChatColor.YELLOW + " <reserved space for ads. Contact a Senior Admin. Only 200k!>",
-        ChatColor.YELLOW + "Quit - " + "%s" + ChatColor.YELLOW + " disconnected? What is this!? Impossibru!"
+        ChatColor.YELLOW + "Quit - " + "%s" + ChatColor.YELLOW + " disconnected? What is this!? Impossibru!",
+        ChatColor.YELLOW + "Quit - " + "%s" + ChatColor.YELLOW + " Be sure to visit the rifton general store! Follow the red line at /warp rifton",
+        ChatColor.YELLOW + "Quit - " + "%s" + ChatColor.YELLOW + " Come to Exon (Near sunspot)"
         };
 
     private final Tregmine plugin;
@@ -331,7 +333,7 @@ public class TregminePlayerListener extends PlayerListener {
                     break;
             }
 
-            guardian.setGuardianState(TregminePlayer.GuardianState.INACTIVE);
+            guardian.setGuardianState(TregminePlayer.GuardianState.QUEUED);
             guardians.add(guardian);
         }
 

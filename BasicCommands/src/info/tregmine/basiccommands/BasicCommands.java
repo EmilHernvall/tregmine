@@ -17,6 +17,7 @@ import org.bukkit.event.Event;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.entity.EnderDragon;
 
 import info.tregmine.Tregmine; 
 import info.tregmine.api.TregminePlayer;
@@ -232,6 +233,10 @@ public class BasicCommands extends JavaPlugin {
 					Slime slime = (Slime) ent;
 					slime.setHealth(0);
 				}
+				if (ent instanceof EnderDragon) {
+					EnderDragon dragon = (EnderDragon)ent;
+					dragon.setHealth(0);
+				}
 
 			}
 			return true;
@@ -385,7 +390,7 @@ public class BasicCommands extends JavaPlugin {
 			}
 
 			try {
-				String mobname = args[0].substring(0,1).toUpperCase() + args[0].substring(1).toLowerCase(); 
+				String mobname = args[0]; //args[0].substring(0,1).toUpperCase() + args[0].substring(1).toLowerCase(); 
 				mobtyp = CreatureType.fromName(mobname);
 			} catch (Exception e) {
 				player.sendMessage(ChatColor.RED + "Sorry that mob doesn't exist.");
@@ -404,10 +409,16 @@ public class BasicCommands extends JavaPlugin {
 				player.sendMessage(ChatColor.YELLOW + "You created " + amount + " " + mobtyp.getName() + ".");
 			}
 			else {
+				StringBuilder buf = new StringBuilder();
+				String delim = "";
 				for (CreatureType mob : CreatureType.values()) {
-					player.sendMessage(mob.getName());
+					buf.append(delim);
+					buf.append(mob.getName());
+					delim = ", ";
 				}
 
+				player.sendMessage("Valid names are: ");
+				player.sendMessage(buf.toString());
 			}
 			return true;
 

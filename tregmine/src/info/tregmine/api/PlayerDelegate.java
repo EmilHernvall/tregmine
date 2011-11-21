@@ -695,4 +695,9 @@ public abstract class PlayerDelegate implements Player
 		return null;
 	}
 	
+	@Override
+	public int getMaxHealth()
+	{
+		return delegate.getMaxHealth();
+	}
 }
