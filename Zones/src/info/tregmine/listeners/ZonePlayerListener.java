@@ -6,6 +6,7 @@ import info.tregmine.api.Zone;
 import info.tregmine.quadtree.Point;
 import info.tregmine.zones.ZoneWorld;
 import info.tregmine.zones.ZonesPlugin;
+import info.tregmine.zones.Lot;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -51,6 +52,7 @@ public class ZonePlayerListener extends PlayerListener
     	}
     	
 		Zone zone = world.findZone(currentPos);
+        Lot lot = world.findLot(currentPos);
 		
 		// within a zone, lots can be created by zone owners or people with
 		// the zones permission.
@@ -60,6 +62,10 @@ public class ZonePlayerListener extends PlayerListener
 			if (perm != Zone.Permission.Owner && !player.getMetaBoolean("zones")) {
 				return;
 			}
+            if (lot != null) {
+                player.sendMessage("This lot is called " + lot.getName() + ".");
+                return;
+            }
 			type = "lot";
 		}
 		// outside of a zone 
