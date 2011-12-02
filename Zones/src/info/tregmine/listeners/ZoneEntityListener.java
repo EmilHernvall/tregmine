@@ -26,7 +26,8 @@ public class ZoneEntityListener extends EntityListener
 	private static final Set<CreatureType> allowedMobs = 
 			EnumSet.of(CreatureType.CHICKEN, CreatureType.COW, 
 					CreatureType.PIG, CreatureType.SHEEP, 
-					CreatureType.SQUID, CreatureType.WOLF);
+					CreatureType.SQUID, CreatureType.WOLF,
+                    CreatureType.VILLAGER, CreatureType.MUSHROOM_COW);
 	
 	private final ZonesPlugin plugin;
 	private final Tregmine tregmine;

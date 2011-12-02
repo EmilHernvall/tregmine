@@ -567,11 +567,6 @@ public class ZonesPlugin extends JavaPlugin
 			return;
 		}
 		
-		if (zone.getUser(player.getName()) != Permission.Owner && !player.isAdmin()) {
-			player.sendMessage(ChatColor.RED + "[" + zone.getName() + "] " + "You do not have permission to change settings for this zone.");
-			return;
-		}
-
 		player.sendMessage(ChatColor.YELLOW + "Info about " + zone.getName());
 		
 		if (show == 1) {

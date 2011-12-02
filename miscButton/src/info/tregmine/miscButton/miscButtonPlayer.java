@@ -2,9 +2,11 @@ package info.tregmine.miscButton;
 
 import info.tregmine.currency.Wallet;
 
+import org.bukkit.Location;
 import org.bukkit.ChatColor;
 import org.bukkit.Effect;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -95,6 +97,13 @@ public class miscButtonPlayer extends PlayerListener {
 			}
 		}
 */
+
+        //Button to tp a player to rule house from northpole
+        if (button == 1608821290) {
+            Player player = event.getPlayer();
+            World world = player.getWorld();
+            player.teleport(new Location(world, 404, 19, -238));
+        }
 
 		// Gatway button at spawn
 		if (button == 642446803) {

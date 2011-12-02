@@ -67,26 +67,31 @@ public class SkylandPlayer extends PlayerListener {
 
 
 	public void onPlayerTeleport(PlayerTeleportEvent event) {
-		if (event.getPlayer().getWorld().getName().matches("citadel")) {		
+        Location toLoc = event.getTo();
+		if ("citadel".equals(toLoc.getWorld())) {		
 
-			if(event.getTo().getBlockX() > 2048) {
+			if(toLoc.getBlockX() > 2048) {
 				event.getPlayer().sendMessage(ChatColor.YELLOW + "Sorry but your world is limited!");
 				event.setCancelled(true);
+                return;
 			}
 
-			if(event.getTo().getBlockX() < -2048) {
+			if(toLoc.getBlockX() < -2048) {
 				event.getPlayer().sendMessage(ChatColor.YELLOW + "Sorry but your world is limited!");
 				event.setCancelled(true);
+                return;
 			}
 
-			if(event.getTo().getBlockZ() > 2048) {
+			if(toLoc.getBlockZ() > 2048) {
 				event.getPlayer().sendMessage(ChatColor.YELLOW + "Sorry but your world is limited!");
 				event.setCancelled(true);
+                return;
 			}
 
-			if(event.getTo().getBlockZ() < -2048) {
+			if(toLoc.getBlockZ() < -2048) {
 				event.getPlayer().sendMessage(ChatColor.YELLOW + "Sorry but your world is limited!");
 				event.setCancelled(true);
+                return;
 			}
 		}
 
