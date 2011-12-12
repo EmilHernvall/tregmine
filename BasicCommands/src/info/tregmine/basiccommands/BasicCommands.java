@@ -311,6 +311,14 @@ public class BasicCommands extends JavaPlugin {
 					return true;
 				}
 
+                if (args[1].matches("child")) {
+					vtregPlayer.setMetaString("color", "child");
+					player.sendMessage(ChatColor.AQUA + "You made  " + vtregPlayer.getChatName() + " a child." );
+					this.log.info(victim.getName() + " was made child by" + tregminePlayer.getChatName() + ".");
+					vtregPlayer.setTemporaryChatName(vtregPlayer.getNameColor() + vtregPlayer.getName());
+					return true;
+				}
+
 				if (args[1].matches("guardian") && player.isOp() ) {
 					if(vtregPlayer.isDonator()) {
 						vtregPlayer.setMetaString("police", "true");

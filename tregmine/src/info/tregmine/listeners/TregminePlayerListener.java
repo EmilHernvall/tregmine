@@ -320,15 +320,12 @@ public class TregminePlayerListener extends PlayerListener {
 
             switch (state) {
                 case ACTIVE:
-                    this.plugin.log.info("active: " + guardian.getName());
                     activeGuardians.add(guardian);    
                     break;
                 case INACTIVE:
-                    this.plugin.log.info("inactive: " + guardian.getName());
                     inactiveGuardians.add(guardian);
                     break;
                 case QUEUED:
-                    this.plugin.log.info("queued: " + guardian.getName());
                     queuedGuardians.add(guardian);
                     break;
             }
@@ -340,8 +337,6 @@ public class TregminePlayerListener extends PlayerListener {
         Collections.sort(activeGuardians, new RankComparator());
         Collections.sort(inactiveGuardians, new RankComparator(true));
         Collections.sort(queuedGuardians, new RankComparator());
-
-        this.plugin.log.info(String.format("%d active, %d inactive, %d queued, %d total", activeGuardians.size(), inactiveGuardians.size(), queuedGuardians.size(), guardians.size()));
 
         int idealCount = (int)Math.ceil(Math.sqrt(players.length)/2);
         // There are not enough guardians active, we need to activate a few more
