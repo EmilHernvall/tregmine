@@ -20,7 +20,7 @@ public class Teleport extends JavaPlugin {
 
 	public final Logger log = Logger.getLogger("Minecraft");
 	public Tregmine tregmine = null;
-	public TregminePlayer from = null;
+	public Player from = null;
 
 	public void onEnable(){
 		Plugin test = this.getServer().getPluginManager().getPlugin("Tregmine");
@@ -44,7 +44,7 @@ public class Teleport extends JavaPlugin {
 		if(!(sender instanceof Player)) {
 			return false;
 		} else {
-			from = (TregminePlayer) sender;
+			from = (Player) sender;
 		}
 		info.tregmine.api.TregminePlayer tregminePlayer = this.tregmine.tregminePlayer.get(from.getName());
 
@@ -170,8 +170,8 @@ public class Teleport extends JavaPlugin {
 
 
 		if (commandName.matches("spawn")) {
-			int delay = 30;
-			if (from.isAdmin()) {
+			long delay = 30;
+			if (tregminePlayer.isAdmin()) {
 				delay = 0;
 			}
 			
