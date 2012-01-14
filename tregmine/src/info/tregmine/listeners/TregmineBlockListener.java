@@ -40,7 +40,7 @@ public class TregmineBlockListener extends BlockListener {
 		}
 
 		if(tregminePlayer.getWorld().getName().matches("alpha")) {
-			event.setCancelled(false);
+			event.setCancelled(true);
 		}
 		
 		plugin.blockStats.onBlockPlace(event);
