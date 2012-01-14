@@ -7,7 +7,8 @@ import java.util.logging.Logger;
 
 import net.minecraft.server.EntityHuman;
 import net.minecraft.server.EntityPlayer;
-import net.minecraft.server.InventoryPlayer;
+//import net.minecraft.server.InventoryPlayer;
+import net.minecraft.server.PlayerInventory;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -70,7 +71,7 @@ public class Main extends JavaPlugin {
 			if (target != null) {
 				EntityPlayer eh = ((CraftPlayer) player).getHandle();
 				EntityHuman ehtarget = ((CraftPlayer) target).getHandle();
-				InventoryPlayer ehtargetinv = ehtarget.inventory;
+				PlayerInventory ehtargetinv = ehtarget.inventory;
 				eh.a(ehtargetinv); // Show to the user.
 				player.sendMessage("tried to look in " + target.getName() +  " inventory");
 			}

@@ -26,6 +26,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.Snowball;
 import org.bukkit.entity.Vehicle;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.map.MapView;
@@ -566,6 +567,7 @@ public abstract class PlayerDelegate implements Player
 		delegate.setExhaustion(arg0);
 	}
 	
+	@SuppressWarnings("deprecation")
 	@Override
 	public int getExperience()
 	{
@@ -610,6 +612,7 @@ public abstract class PlayerDelegate implements Player
 		return delegate.getTotalExperience();
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void setExperience(int arg0) {
 		delegate.setExperience(arg0);
@@ -699,5 +702,70 @@ public abstract class PlayerDelegate implements Player
 	public int getMaxHealth()
 	{
 		return delegate.getMaxHealth();
+	}
+	@Override
+	public float getExp() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void giveExp(int arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setExp(float arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Player getKiller() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean teleport(Location arg0, TeleportCause arg1) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean teleport(Entity arg0, TeleportCause arg1) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public long getFirstPlayed() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public long getLastPlayed() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public boolean hasPlayedBefore() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public Set<String> getListeningPluginChannels() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void sendPluginMessage(Plugin arg0, String arg1, byte[] arg2) {
+		// TODO Auto-generated method stub
+		
 	}
 }

@@ -19,6 +19,7 @@ public class Teleport extends JavaPlugin {
 
 	public final Logger log = Logger.getLogger("Minecraft");
 	public Tregmine tregmine = null;
+	public Player from = null;
 
 	public void onEnable(){
 		Plugin test = this.getServer().getPluginManager().getPlugin("Tregmine");
@@ -39,7 +40,6 @@ public class Teleport extends JavaPlugin {
 
 	public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args) {
 		String commandName = command.getName().toLowerCase();
-		Player from = null;
 		if(!(sender instanceof Player)) {
 			return false;
 		} else {
@@ -63,10 +63,10 @@ public class Teleport extends JavaPlugin {
 //			return true;
 //		}
 
-		if(commandName.equals("skyland") && tregminePlayer.getMetaBoolean("skyland") && tregminePlayer.isDonator()) {
-			from.teleport(this.getServer().getWorld("skyland").getSpawnLocation());
-			return true;
-		}
+//		if(commandName.equals("skyland") && tregminePlayer.getMetaBoolean("skyland") && tregminePlayer.isDonator()) {
+//			from.teleport(this.getServer().getWorld("skyland").getSpawnLocation());
+//			return true;
+//		}
 
 //		if(commandName.equals("matrix")) {
 //			from.teleport(this.getServer().getWorld("matrix").getSpawnLocation());
@@ -169,7 +169,13 @@ public class Teleport extends JavaPlugin {
 
 
 		if (commandName.matches("spawn")) {
-			from.teleport(this.getServer().getWorld("world").getSpawnLocation());
+			from.sendMessage(ChatColor.AQUA + "You must now stand still and wait 30 seconds for the stars to align, allowing you to teleport");
+			this.getServer().getScheduler().scheduleSyncDelayedTask(this,new Runnable() {
+				public void run() {
+					from.teleport(getServer().getWorld("world").getSpawnLocation());
+				}},20*30L);
+
+			
 			return true;
 		}
 

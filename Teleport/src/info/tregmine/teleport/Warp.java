@@ -161,8 +161,6 @@ public class Warp {
 		}
 
 		if (warppoint != null) {
-			//			Location spawn = new Location(this.getWorld("alpha"), -116217, 84, -234971);
-			
 			warppoint.getWorld().loadChunk(warppoint.getWorld().getChunkAt(warppoint));
 
 			if (warppoint.getWorld().isChunkLoaded(warppoint.getWorld().getChunkAt(warppoint))){

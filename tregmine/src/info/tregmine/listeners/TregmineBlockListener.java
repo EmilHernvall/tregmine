@@ -26,6 +26,10 @@ public class TregmineBlockListener extends BlockListener {
 
 	public void onBlockPlace (BlockPlaceEvent event)	{
 		info.tregmine.api.TregminePlayer tregminePlayer = this.plugin.tregminePlayer.get(event.getPlayer().getName());
+
+		if(tregminePlayer.getWorld().getName().matches("alpha")) {
+			event.setCancelled(false);
+		}
 		
 		if (!tregminePlayer.isTrusted()) {
 			event.setCancelled(true);
@@ -35,6 +39,10 @@ public class TregmineBlockListener extends BlockListener {
 			event.setCancelled(false);
 		}
 
+		if(tregminePlayer.getWorld().getName().matches("alpha")) {
+			event.setCancelled(false);
+		}
+		
 		plugin.blockStats.onBlockPlace(event);
 	}
 
@@ -47,6 +55,9 @@ public class TregmineBlockListener extends BlockListener {
 			event.setCancelled(true);
 		}
 		
+		if(event.getBlock().getWorld().getName().matches("alpha")) {
+			event.setCancelled(false);
+		}
 	}
 
 	public void onBlockBreak	(BlockBreakEvent event) {
@@ -60,6 +71,10 @@ public class TregmineBlockListener extends BlockListener {
 			event.setCancelled(false);
 		}
 
+		if(tregminePlayer.getWorld().getName().matches("alpha")) {
+			event.setCancelled(false);
+		}
+		
 		plugin.blockStats.onBlockBreak(event);
 	}
 
@@ -74,15 +89,23 @@ public class TregmineBlockListener extends BlockListener {
 		if (fence.getType() == Material.FENCE) {
 			event.setCancelled(true);
 		}
+		
+		if(event.getBlock().getWorld().getName().matches("alpha")) {
+			event.setCancelled(false);
+		}
+
 	}
 
 	public void onBlockFlow	(BlockFromToEvent event) {
-		//		event.setCancelled(true);
+		if(event.getBlock().getWorld().getName().matches("alpha")) {
+			event.setCancelled(false);
+		}
 	}
 
-	public void onSignChange(SignChangeEvent event)
-	{
-		//			event.setLine(3,event.getPlayer().getName());
+	public void onSignChange(SignChangeEvent event)	{
+		if(event.getBlock().getWorld().getName().matches("alpha")) {
+			event.setCancelled(false);
+		}
 	}
 
 
@@ -94,5 +117,10 @@ public class TregmineBlockListener extends BlockListener {
 		if(event.getBlock().getWorld().getName().matches("citadel")) {
 			event.setCancelled(true);
 		}
+		
+		if(event.getBlock().getWorld().getName().matches("alpha")) {
+			event.setCancelled(false);
+		}
+
 	}
 }

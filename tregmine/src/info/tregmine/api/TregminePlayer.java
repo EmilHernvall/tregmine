@@ -7,12 +7,17 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
+//import java.util.Set;
 //import java.util.Map;
 
 import org.bukkit.ChatColor;
+//import org.bukkit.Location;
 //import org.bukkit.GameMode;
 import org.bukkit.block.Block;
+//import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+//import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
+//import org.bukkit.plugin.Plugin;
 
 public class TregminePlayer extends PlayerDelegate
 {
@@ -400,5 +405,4 @@ public class TregminePlayer extends PlayerDelegate
 	{
 		return currentZone;
 	}
-
 }
