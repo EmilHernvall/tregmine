@@ -11,7 +11,7 @@ import java.util.HashMap;
 //import java.util.Map;
 
 import org.bukkit.ChatColor;
-import org.bukkit.EntityEffect;
+//import org.bukkit.EntityEffect;
 //import org.bukkit.Location;
 //import org.bukkit.GameMode;
 import org.bukkit.block.Block;

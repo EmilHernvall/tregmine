@@ -116,6 +116,10 @@ public class TregminePlayerListener extends PlayerListener {
         if (event.getBlockClicked().getType() == Material.STATIONARY_LAVA) {
             event.setCancelled(true);
         }
+        
+        if (event.getPlayer().getWorld().getName().matches("alpha")) {
+            event.setCancelled(true);
+        }
 
     }
 
@@ -136,6 +140,11 @@ public class TregminePlayerListener extends PlayerListener {
             event.setCancelled(false);
         }
 
+        if (tregminePlayer.getWorld().getName().matches("alpha")) {
+            event.setCancelled(true);
+        }
+        
+        
         if (event.getPlayer().getItemInHand().getTypeId() == Material.PAPER.getId() 
                 && event.getAction() == Action.RIGHT_CLICK_BLOCK ) {
 
@@ -280,6 +289,10 @@ public class TregminePlayerListener extends PlayerListener {
             event.setCancelled(true);
             return;
         }
+        
+        if (event.getPlayer().getWorld().getName().matches("alpha")) {
+            event.setCancelled(true);
+        }
     }
 
     public void onPlayerDropItem(PlayerDropItemEvent event) {
@@ -293,6 +306,11 @@ public class TregminePlayerListener extends PlayerListener {
             event.setCancelled(true);
             return;
         }
+        
+        if (event.getPlayer().getWorld().getName().matches("alpha")) {
+            event.setCancelled(true);
+        }
+
     }
 
     public void onPlayerKick(PlayerKickEvent event) {

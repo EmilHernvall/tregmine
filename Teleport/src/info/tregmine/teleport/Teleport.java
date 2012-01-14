@@ -13,7 +13,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import info.tregmine.Tregmine; 
-import info.tregmine.api.TregminePlayer;
+//import info.tregmine.api.TregminePlayer;
 
 
 public class Teleport extends JavaPlugin {
