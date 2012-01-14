@@ -48,7 +48,7 @@ public class TregmineEntityListener extends EntityListener  {
 		}
 
 		if(event.getLocation().getWorld().getName().matches("alpha")) {
-			event.setCancelled(false);
+			event.setCancelled(true);
 		}
 	}
 

@@ -28,7 +28,7 @@ public class TregmineBlockListener extends BlockListener {
 		info.tregmine.api.TregminePlayer tregminePlayer = this.plugin.tregminePlayer.get(event.getPlayer().getName());
 
 		if(tregminePlayer.getWorld().getName().matches("alpha")) {
-			event.setCancelled(false);
+			event.setCancelled(true);
 		}
 		
 		if (!tregminePlayer.isTrusted()) {
@@ -56,7 +56,7 @@ public class TregmineBlockListener extends BlockListener {
 		}
 		
 		if(event.getBlock().getWorld().getName().matches("alpha")) {
-			event.setCancelled(false);
+			event.setCancelled(true);
 		}
 	}
 
@@ -72,7 +72,7 @@ public class TregmineBlockListener extends BlockListener {
 		}
 
 		if(tregminePlayer.getWorld().getName().matches("alpha")) {
-			event.setCancelled(false);
+			event.setCancelled(true);
 		}
 		
 		plugin.blockStats.onBlockBreak(event);
@@ -91,20 +91,20 @@ public class TregmineBlockListener extends BlockListener {
 		}
 		
 		if(event.getBlock().getWorld().getName().matches("alpha")) {
-			event.setCancelled(false);
+			event.setCancelled(true);
 		}
 
 	}
 
 	public void onBlockFlow	(BlockFromToEvent event) {
 		if(event.getBlock().getWorld().getName().matches("alpha")) {
-			event.setCancelled(false);
+			event.setCancelled(true);
 		}
 	}
 
 	public void onSignChange(SignChangeEvent event)	{
 		if(event.getBlock().getWorld().getName().matches("alpha")) {
-			event.setCancelled(false);
+			event.setCancelled(true);
 		}
 	}
 
@@ -119,7 +119,7 @@ public class TregmineBlockListener extends BlockListener {
 		}
 		
 		if(event.getBlock().getWorld().getName().matches("alpha")) {
-			event.setCancelled(false);
+			event.setCancelled(true);
 		}
 
 	}
