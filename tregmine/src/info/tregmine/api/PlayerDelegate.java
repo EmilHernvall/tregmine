@@ -10,6 +10,7 @@ import java.util.UUID;
 
 import org.bukkit.Achievement;
 import org.bukkit.Effect;
+import org.bukkit.EntityEffect;
 import org.bukkit.GameMode;
 import org.bukkit.Instrument;
 import org.bukkit.Location;
@@ -768,4 +769,11 @@ public abstract class PlayerDelegate implements Player
 		// TODO Auto-generated method stub
 		
 	}
+	
+	@Override
+	public void playEffect(EntityEffect arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+	
 }
