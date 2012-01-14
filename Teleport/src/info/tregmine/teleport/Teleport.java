@@ -170,9 +170,11 @@ public class Teleport extends JavaPlugin {
 
 		if (commandName.matches("spawn")) {
 			from.sendMessage(ChatColor.AQUA + "You must now stand still and wait 30 seconds for the stars to align, allowing you to teleport");
+			
+			final Player tempfrom = from;
 			this.getServer().getScheduler().scheduleSyncDelayedTask(this,new Runnable() {
 				public void run() {
-					from.teleport(getServer().getWorld("world").getSpawnLocation());
+					tempfrom.teleport(getServer().getWorld("world").getSpawnLocation());
 				}},20*30L);
 
 			
