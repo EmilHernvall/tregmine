@@ -40,11 +40,6 @@ public class Tp {
                 succeed = true;
             }
 
-            if(from.getWorld().getName().matches("matrix")) {
-                from.sendMessage("Sorry, you can't teleport in matrix.");
-                return;
-            }
-
             if ((from.getWorld().getName().matches(to.getWorld().getName()))) {
 					
 				if (tregminePlayerFrom.isDonator() && distance < 10000 && !succeed) {

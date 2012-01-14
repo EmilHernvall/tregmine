@@ -59,21 +59,6 @@ public class Teleport extends JavaPlugin {
 			return true;
 		}
 
-//		if(commandName.equals("alpha") && tregminePlayer.isDonator()) {
-//			from.teleport(this.getServer().getWorld("alpha").getSpawnLocation());
-//			return true;
-//		}
-
-//		if(commandName.equals("skyland") && tregminePlayer.getMetaBoolean("skyland") && tregminePlayer.isDonator()) {
-//			from.teleport(this.getServer().getWorld("skyland").getSpawnLocation());
-//			return true;
-//		}
-
-//		if(commandName.equals("matrix")) {
-//			from.teleport(this.getServer().getWorld("matrix").getSpawnLocation());
-//			return true;
-//		}
-
 		if(commandName.equals("home") && tregminePlayer.isDonator()) {
 			Home home = new Home(from.getName(), getServer());
 
@@ -155,16 +140,9 @@ public class Teleport extends JavaPlugin {
 		}
 
 
-		if(commandName.equals("warp") && tregminePlayer.isTrusted()) {
-
-
-			if(from.getWorld().getName().matches("alpha")) {
-				Warp warp = new Warp(this, from, args);
-				warp.wrun();
-			} else {
+		if(commandName.equals("warp")) {
 				Warp warp = new Warp(this, from, args);
 				warp.run();
-			}
 			return true;
 		}
 
