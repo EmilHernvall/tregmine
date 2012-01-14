@@ -70,7 +70,7 @@ public class Warp {
 
 			if(world.getName().matches(from.getWorld().getName())) {					
 				warppoint =  new Location(world, x,y,z, yaw, pitch);
-				from.sendMessage(ChatColor.AQUA + "You teleported to " + ChatColor.DARK_GREEN + args[0] + ChatColor.AQUA + " in " + ChatColor.BLUE +  world.getName() + "." );
+				from.sendMessage(ChatColor.AQUA + "You started teleport to " + ChatColor.DARK_GREEN + args[0] + ChatColor.AQUA + " in " + ChatColor.BLUE +  world.getName() + "." );
 				plugin.log.info("[warp] + <" + from.getName() + "> " + args[0] +  ":" +  world.getName() );
 			} else {
 				from.sendMessage(ChatColor.DARK_RED + "Sorry, that warp is in another world!");

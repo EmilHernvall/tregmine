@@ -2,6 +2,7 @@ package info.tregmine.teleport;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 
 public class Tp {
 
@@ -11,50 +12,84 @@ public class Tp {
 			info.tregmine.api.TregminePlayer tregminePlayerTo = plugin.tregmine.tregminePlayer.get(to.getName());
 			boolean succeed = false;
 
-			
+
 			if (tregminePlayerTo.getMetaBoolean("invis")) {
 				return;
 			}
 
-			
+
 			if (tregminePlayerTo.getMetaBoolean("tpblock") && !tregminePlayerFrom.isAdmin() ) {
 				from.sendMessage(ChatColor.RED + to.getName() + ChatColor.AQUA + "'s teloptical deflector absorbed all motion. Teleportation failed.");
 				to.sendMessage(from.getName() + ChatColor.AQUA + "'s teleportation spell cannot bypass your sophisticated defenses.");
 				return;
 			}
-			
+
 			double distance = info.tregmine.api.math.Distance.calc2d(from.getLocation(), to.getLocation());
 
-            if (tregminePlayerFrom.isAdmin() && !succeed) {
-                from.sendMessage(ChatColor.AQUA + "You teleported to " + to.getName() + ChatColor.AQUA + " in " + ChatColor.BLUE + to.getWorld().getName() + ".");
-                from.setNoDamageTicks(200);
-                from.teleport(to.getLocation());
-                succeed = true;
-            }
+			if (tregminePlayerFrom.isAdmin() && !succeed) {
+				from.sendMessage(ChatColor.AQUA + "You started teleport to " + to.getName() + ChatColor.AQUA + " in " + ChatColor.BLUE + to.getWorld().getName() + ".");
 
-            //TODO uglu soltution but it will change with the new permisson system
-            if (tregminePlayerFrom.getMetaBoolean("mentor") && !succeed) {
-                from.sendMessage(ChatColor.AQUA + "You teleported to " + to.getName() + ChatColor.AQUA + " in " + ChatColor.BLUE + to.getWorld().getName() + ".");
-                from.setNoDamageTicks(200);
-                from.teleport(to.getLocation());
-                succeed = true;
-            }
+				final Player tempfrom = from;
+				final Player tempto = to;
+				final Plugin teleport = from.getServer().getPluginManager().getPlugin("Teleport");
+				
+				from.getServer().getScheduler().scheduleSyncDelayedTask(teleport, new Runnable() {
+					public void run() {
+//						tempto.sendMessage(ChatColor.AQUA + tempfrom.getName() + " teleported to you!");
+						tempfrom.teleport(tempto.getLocation());
+						tempfrom.setNoDamageTicks(200);
+					}},20*1);
+				succeed = true;
+			}
 
-            if ((from.getWorld().getName().matches(to.getWorld().getName()))) {
-					
+			//TODO uglu soltution but it will change with the new permisson system
+			if (tregminePlayerFrom.getMetaBoolean("mentor") && !succeed) {
+				from.sendMessage(ChatColor.AQUA + "You started teleport to " + to.getName() + ChatColor.AQUA + " in " + ChatColor.BLUE + to.getWorld().getName() + ".");
+
+				final Player tempfrom = from;
+				final Player tempto = to;
+				final Plugin teleport = from.getServer().getPluginManager().getPlugin("Teleport");
+				
+				from.getServer().getScheduler().scheduleSyncDelayedTask(teleport, new Runnable() {
+					public void run() {
+						tempto.sendMessage(ChatColor.AQUA + tempfrom.getName() + " teleported to you!");
+						tempfrom.teleport(tempto.getLocation());
+						tempfrom.setNoDamageTicks(200);
+					}},20*1);
+				succeed = true;
+			}
+
+			if ((from.getWorld().getName().matches(to.getWorld().getName()))) {
+
 				if (tregminePlayerFrom.isDonator() && distance < 10000 && !succeed) {
-					from.sendMessage(ChatColor.AQUA + "You teleported to " + to.getName() + ChatColor.AQUA + " in " + ChatColor.BLUE + to.getWorld().getName() + ".");
-					to.sendMessage(ChatColor.AQUA + from.getName() + " teleported to you!");
-					from.setNoDamageTicks(200);
-					from.teleport(to.getLocation());
+					from.sendMessage(ChatColor.AQUA + "You started teleport to " + to.getName() + ChatColor.AQUA + " in " + ChatColor.BLUE + to.getWorld().getName() + ".");
+
+					final Player tempfrom = from;
+					final Player tempto = to;
+					final Plugin teleport = from.getServer().getPluginManager().getPlugin("Teleport");
+					
+					from.getServer().getScheduler().scheduleSyncDelayedTask(teleport, new Runnable() {
+						public void run() {
+							tempto.sendMessage(ChatColor.AQUA + tempfrom.getName() + " teleported to you!");
+							tempfrom.teleport(tempto.getLocation());
+							tempfrom.setNoDamageTicks(200);
+						}},20*30);
 					succeed = true;
 				}
 
 				if (tregminePlayerFrom.isTrusted() && distance < 100 && !succeed) {
-					from.sendMessage(ChatColor.AQUA + "You teleported to " + to.getName() + ChatColor.AQUA + " in " + ChatColor.BLUE + to.getWorld().getName() + ".");
-					to.sendMessage(ChatColor.AQUA + from.getName() + " teleported to you!");
-					from.teleport(to.getLocation());
-					from.setNoDamageTicks(200);
+					from.sendMessage(ChatColor.AQUA + "You started teleport to " + to.getName() + ChatColor.AQUA + " in " + ChatColor.BLUE + to.getWorld().getName() + ".");
+
+					final Player tempfrom = from;
+					final Player tempto = to;
+					final Plugin teleport = from.getServer().getPluginManager().getPlugin("Teleport");
+					
+					from.getServer().getScheduler().scheduleSyncDelayedTask(teleport, new Runnable() {
+						public void run() {
+							tempto.sendMessage(ChatColor.AQUA + tempfrom.getName() + " teleported to you!");
+							tempfrom.teleport(tempto.getLocation());
+							tempfrom.setNoDamageTicks(200);
+						}},20*30);
 					succeed = true;
 				}
 
