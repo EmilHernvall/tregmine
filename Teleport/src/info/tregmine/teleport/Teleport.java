@@ -13,13 +13,14 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import info.tregmine.Tregmine; 
+import info.tregmine.api.TregminePlayer;
 
 
 public class Teleport extends JavaPlugin {
 
 	public final Logger log = Logger.getLogger("Minecraft");
 	public Tregmine tregmine = null;
-	public Player from = null;
+	public TregminePlayer from = null;
 
 	public void onEnable(){
 		Plugin test = this.getServer().getPluginManager().getPlugin("Tregmine");
@@ -43,7 +44,7 @@ public class Teleport extends JavaPlugin {
 		if(!(sender instanceof Player)) {
 			return false;
 		} else {
-			from = (Player) sender;
+			from = (TregminePlayer) sender;
 		}
 		info.tregmine.api.TregminePlayer tregminePlayer = this.tregmine.tregminePlayer.get(from.getName());
 
@@ -169,13 +170,18 @@ public class Teleport extends JavaPlugin {
 
 
 		if (commandName.matches("spawn")) {
-			from.sendMessage(ChatColor.AQUA + "You must now stand still and wait 30 seconds for the stars to align, allowing you to teleport");
+			int delay = 30;
+			if (from.isAdmin()) {
+				delay = 0;
+			}
+			
+			from.sendMessage(ChatColor.AQUA + "You must now stand still and wait " + delay + " seconds for the stars to align, allowing you to teleport");
 			
 			final Player tempfrom = from;
 			this.getServer().getScheduler().scheduleSyncDelayedTask(this,new Runnable() {
 				public void run() {
 					tempfrom.teleport(getServer().getWorld("world").getSpawnLocation());
-				}},20*30L);
+				}},20*delay);
 
 			
 			return true;
