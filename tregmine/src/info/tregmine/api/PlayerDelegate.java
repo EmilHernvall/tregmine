@@ -775,5 +775,17 @@ public abstract class PlayerDelegate implements Player
 		// TODO Auto-generated method stub
 		
 	}
-	
+
+	@Override
+	public boolean getAllowFlight() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void setAllowFlight(boolean arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
