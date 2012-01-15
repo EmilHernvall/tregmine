@@ -1,5 +1,6 @@
 package info.tregmine.teleport;
 
+import info.tregmine.api.TregminePlayer;
 import info.tregmine.database.ConnectionPool;
 
 import java.sql.Connection;
@@ -98,7 +99,8 @@ public class Warp {
 			warppoint.getWorld().loadChunk(warppoint.getWorld().getChunkAt(warppoint));
 
 			if (warppoint.getWorld().isChunkLoaded(warppoint.getWorld().getChunkAt(warppoint))){
-				long delay = 30;
+				long delay = 3;
+				
 //				if (tregminePlayer.isAdmin()) {
 //					delay = 0;
 //				}
