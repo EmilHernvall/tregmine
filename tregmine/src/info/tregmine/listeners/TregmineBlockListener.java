@@ -31,7 +31,7 @@ public class TregmineBlockListener extends BlockListener {
 			event.setCancelled(true);
 		}
 		
-		if (!tregminePlayer.isTrusted()) {
+		if (!tregminePlayer.isTrusted() && !tregminePlayer.getWorld().getName().matches("vanilla")) {
 			event.setCancelled(true);
 		}
 
@@ -63,7 +63,7 @@ public class TregmineBlockListener extends BlockListener {
 	public void onBlockBreak	(BlockBreakEvent event) {
 		info.tregmine.api.TregminePlayer tregminePlayer = this.plugin.tregminePlayer.get(event.getPlayer().getName());
 		
-		if (!tregminePlayer.isTrusted()) {
+		if (!tregminePlayer.isTrusted() && !tregminePlayer.getWorld().getName().matches("vanilla")) {
 			event.setCancelled(true);
 		}
 
