@@ -26,10 +26,6 @@ public class TregmineBlockListener extends BlockListener {
 
 	public void onBlockPlace (BlockPlaceEvent event)	{
 		info.tregmine.api.TregminePlayer tregminePlayer = this.plugin.tregminePlayer.get(event.getPlayer().getName());
-
-		if(tregminePlayer.getWorld().getName().matches("alpha")) {
-			event.setCancelled(true);
-		}
 		
 		if (!tregminePlayer.isTrusted()) {
 			event.setCancelled(true);
