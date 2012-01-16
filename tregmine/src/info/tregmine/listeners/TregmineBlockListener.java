@@ -31,7 +31,7 @@ public class TregmineBlockListener extends BlockListener {
 			event.setCancelled(true);
 		}
 		
-		if (!tregminePlayer.isTrusted() && !tregminePlayer.getWorld().getName().matches("vanilla")) {
+		if (!tregminePlayer.isTrusted()) {
 			event.setCancelled(true);
 		}
 
@@ -41,6 +41,10 @@ public class TregmineBlockListener extends BlockListener {
 
 		if(tregminePlayer.getWorld().getName().matches("alpha")) {
 			event.setCancelled(true);
+		}
+		
+		if(tregminePlayer.getWorld().getName().matches("vanilla")) {
+			event.setCancelled(false);
 		}
 		
 		plugin.blockStats.onBlockPlace(event);
@@ -63,7 +67,7 @@ public class TregmineBlockListener extends BlockListener {
 	public void onBlockBreak	(BlockBreakEvent event) {
 		info.tregmine.api.TregminePlayer tregminePlayer = this.plugin.tregminePlayer.get(event.getPlayer().getName());
 		
-		if (!tregminePlayer.isTrusted() && !tregminePlayer.getWorld().getName().matches("vanilla")) {
+		if (!tregminePlayer.isTrusted()) {
 			event.setCancelled(true);
 		}
 
@@ -74,6 +78,11 @@ public class TregmineBlockListener extends BlockListener {
 		if(tregminePlayer.getWorld().getName().matches("alpha")) {
 			event.setCancelled(true);
 		}
+
+		if(tregminePlayer.getWorld().getName().matches("vanilla")) {
+			event.setCancelled(false);
+		}
+		
 		
 		plugin.blockStats.onBlockBreak(event);
 	}
