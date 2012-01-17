@@ -57,6 +57,9 @@ public class ChatPlayer extends PlayerListener {
 						spaces = spaces + " ";
 					}
 
+					firstMessage = ChatColor.stripColor(firstMessage);
+					lastMessage = ChatColor.stripColor(lastMessage);
+					
 					player.sendMessage(channel+"<" + tregminePlayer.getChatName() + ChatColor.WHITE + "> "+ txtColor + firstMessage );
 					player.sendMessage(txtColor + spaces + lastMessage);
 				} else {

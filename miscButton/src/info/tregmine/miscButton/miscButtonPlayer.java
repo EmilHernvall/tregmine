@@ -338,13 +338,12 @@ public class miscButtonPlayer extends PlayerListener {
         	World world = this.plugin.getServer().getWorld("citadel");
             Block topCorner = world.getBlockAt(-738, 73, 16);
             Block bottomCorner = world.getBlockAt(-697, 60, 33);
-            Block backCorner = world.getBlockAt(-738, 66, 33);
-            Block frontCorner = world.getBlockAt(-797, 66, 16);
+            Block backCorner = world.getBlockAt(-738, 66, 16);
+            Block frontCorner = world.getBlockAt(-797, 66, 33);
 
             fill(topCorner,bottomCorner, Material.AIR);
             fill(backCorner,frontCorner, Material.SNOW_BLOCK);
         }	
-	
 	
 	}
 
