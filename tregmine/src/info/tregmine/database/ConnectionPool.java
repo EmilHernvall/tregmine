@@ -50,7 +50,7 @@ public class ConnectionPool {
         Statement stmt = null;
         try {
             stmt = conn.createStatement();
-            stmt.execute("SET NAMES utf8");
+            stmt.execute("SET NAMES latin1");
         } finally {
             if (stmt != null) {
                 try { stmt.close(); } catch (SQLException e) {}
