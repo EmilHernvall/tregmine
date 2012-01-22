@@ -7,13 +7,14 @@ import java.net.InetSocketAddress;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerListener;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 
 import com.maxmind.geoip.Location;
 import com.maxmind.geoip.LookupService;
 
 
-public class LookupPlayer extends PlayerListener {
+public class LookupPlayer implements  Listener  {
 	private final Lookup plugin;
 	private LookupService cl = null;
 
@@ -26,6 +27,7 @@ public class LookupPlayer extends PlayerListener {
 		}
 	}
 
+	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		Player player = event.getPlayer();
 		InetSocketAddress sock = player.getAddress();

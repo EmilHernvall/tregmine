@@ -1,8 +1,12 @@
 package info.tregmine.signcolor;
 
 
+import javax.swing.event.DocumentEvent.EventType;
+
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.event.Event;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Event.Priority;
 
 public class SignColours extends JavaPlugin {
 	
@@ -13,7 +17,8 @@ public class SignColours extends JavaPlugin {
 
 	public void onEnable() {
 		listener = new SignListener();
-		getServer().getPluginManager().registerEvent(Event.Type.SIGN_CHANGE, this.listener, Event.Priority.High, this);
+//		getServer().getPluginManager().registerEvent(Event.Type.SIGN_CHANGE, this.listener, EventPriority.HIGH, this);
+
 	}
 
 	public void onLoad() {
