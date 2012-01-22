@@ -787,5 +787,12 @@ public abstract class PlayerDelegate implements Player
 		// TODO Auto-generated method stub
 		
 	}
+	
+	@Override
+	public void setBedSpawnLocation(Location arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+	
 
 }

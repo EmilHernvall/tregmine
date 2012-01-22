@@ -234,6 +234,9 @@ public class ZonePlayerListener extends PlayerListener
 			}
 			player.setCurrentZone(currentZone);
 		}
+		
+		player.setCurrentZone(null);
+		
 	}
 	
 	private void disallowedMessage(Zone currentZone, TregminePlayer player)

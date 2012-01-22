@@ -148,7 +148,7 @@ public class Teleport extends JavaPlugin {
 
 
 		if (commandName.matches("spawn")) {
-			long delay = 30;
+			long delay = 0;
 			if (tregminePlayer.isAdmin()) {
 				delay = 0;
 			}

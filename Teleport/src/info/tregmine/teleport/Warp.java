@@ -99,7 +99,7 @@ public class Warp {
 			warppoint.getWorld().loadChunk(warppoint.getWorld().getChunkAt(warppoint));
 
 			if (warppoint.getWorld().isChunkLoaded(warppoint.getWorld().getChunkAt(warppoint))){
-				long delay = 3;
+				long delay = 0;
 				
 //				if (tregminePlayer.isAdmin()) {
 //					delay = 0;

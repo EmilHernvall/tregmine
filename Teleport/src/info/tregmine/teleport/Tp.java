@@ -38,7 +38,7 @@ public class Tp {
 //						tempto.sendMessage(ChatColor.AQUA + tempfrom.getName() + " teleported to you!");
 						tempfrom.teleport(tempto.getLocation());
 						tempfrom.setNoDamageTicks(200);
-					}},20*1);
+					}},20*0);
 				succeed = true;
 			}
 
