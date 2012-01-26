@@ -121,10 +121,6 @@ public class TregminePlayerListener extends PlayerListener {
             event.setCancelled(true);
         }
 
-		if(event.getPlayer().getWorld().getName().matches("vanilla")) {
-			event.setCancelled(false);
-		}
-
     }
 
     public void onPlayerBucketEmpty(PlayerBucketEmptyEvent event){
@@ -132,9 +128,6 @@ public class TregminePlayerListener extends PlayerListener {
             event.setCancelled(true);
         }
         
-		if(event.getPlayer().getWorld().getName().matches("vanilla")) {
-			event.setCancelled(false);
-		}
     }
 
     public void onPlayerInteract(PlayerInteractEvent event) {
@@ -151,11 +144,6 @@ public class TregminePlayerListener extends PlayerListener {
         if (tregminePlayer.getWorld().getName().matches("alpha")) {
             event.setCancelled(true);
         }
-        
-		if(event.getPlayer().getWorld().getName().matches("vanilla")) {
-			event.setCancelled(false);
-		}
-
         
         if (event.getPlayer().getItemInHand().getTypeId() == Material.PAPER.getId() 
                 && event.getAction() == Action.RIGHT_CLICK_BLOCK ) {
@@ -306,9 +294,6 @@ public class TregminePlayerListener extends PlayerListener {
             event.setCancelled(true);
         }
         
-		if(event.getPlayer().getWorld().getName().matches("vanilla")) {
-			event.setCancelled(false);
-		}
     }
 
     public void onPlayerDropItem(PlayerDropItemEvent event) {
@@ -326,11 +311,6 @@ public class TregminePlayerListener extends PlayerListener {
         if (event.getPlayer().getWorld().getName().matches("alpha")) {
             event.setCancelled(true);
         }
-
-		if(event.getPlayer().getWorld().getName().matches("vanilla")) {
-			event.setCancelled(false);
-		}
-
         
     }
 
