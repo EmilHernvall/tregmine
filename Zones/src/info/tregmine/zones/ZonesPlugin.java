@@ -63,6 +63,8 @@ public class ZonesPlugin extends JavaPlugin
 			}
 		}
 		
+		pluginMgm.registerEvent(Event.Type.PLAYER_BUCKET_EMPTY, new ZonePlayerListener(this), Priority.High, this);
+
 		pluginMgm.registerEvent(Event.Type.BLOCK_BREAK, new ZoneBlockListener(this), Priority.High, this);
 		pluginMgm.registerEvent(Event.Type.BLOCK_PLACE, new ZoneBlockListener(this), Priority.High, this);
 		pluginMgm.registerEvent(Event.Type.PLAYER_INTERACT, new ZonePlayerListener(this), Priority.High, this);
