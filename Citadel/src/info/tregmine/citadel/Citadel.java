@@ -41,6 +41,11 @@ public class Citadel extends JavaPlugin {
 				vanilla.environment(Environment.NORMAL);
 				vanilla.createWorld();
 
+				
+				WorldCreator elva = new WorldCreator("elva"); 
+				elva.environment(Environment.NORMAL);
+				elva.createWorld();
+
 //				WorldCreator skyland = new WorldCreator("archive"); 
 //				skyland.environment(Environment.);
 //				skyland.createWorld();
