@@ -26,13 +26,21 @@ public class ChatPlayer extends PlayerListener {
 		info.tregmine.api.TregminePlayer tregminePlayer = this.plugin.tregmine.tregminePlayer.get(sender.getName());
 		Player[] players = plugin.getServer().getOnlinePlayers();
 
+		if (event.getMessage().equals(this.plugin.lastline.get(sender.getName())) ) {
+			sender.getPlayer().sendMessage("No need to repeat yourself!"); 
+			return;
+		}
+		
+		this.plugin.lastline.put(sender.getName(), event.getMessage());
+		
+		
 		if (!this.plugin.channel.containsKey(sender.getName())) {
 			this.plugin.channel.put(sender.getName(), "global".toUpperCase());
 		}
 
 		for (Player player : players) {
 			ChatColor txtColor = ChatColor.WHITE;
-
+			
 			if(sender == player) {
 				txtColor = ChatColor.GRAY;
 			}

@@ -254,6 +254,12 @@ public class ZonePlayerListener extends PlayerListener
 		Point currentPos = new Point(movingTo.getBlockX(), movingTo.getBlockZ());
 
 		Zone currentZone = player.getCurrentZone();
+		
+		if (currentZone.isPvp()) {
+			event.setCancelled(true);
+			return;
+		}
+		
 		if (currentZone == null || !currentZone.contains(currentPos)) {
 
 			if (currentZone != null && currentZone.contains(oldPos)) {
@@ -263,7 +269,7 @@ public class ZonePlayerListener extends PlayerListener
 			currentZone = world.findZone(currentPos);
 			if (currentZone != null) {
 				Zone.Permission perm = currentZone.getUser(player.getName());
-
+				
 				if (currentZone.getEnterDefault()) {
 					if (player.isAdmin()) {
 						// never applies to admins
@@ -288,7 +294,6 @@ public class ZonePlayerListener extends PlayerListener
 						return;			    		
 					}
 				}
-
 				welcomeMessage(currentZone, player, perm);
 			}
 			player.setCurrentZone(currentZone);

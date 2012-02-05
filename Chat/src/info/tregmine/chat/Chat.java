@@ -21,6 +21,7 @@ public class Chat extends JavaPlugin {
 	public Tregmine tregmine = null;
 	public final Logger log = Logger.getLogger("Minecraft");
 	public HashMap<String, String> channel = new HashMap<String, String>();
+	public HashMap<String, String> lastline = new HashMap<String, String>();
 
 
 	public void onDisable() {
