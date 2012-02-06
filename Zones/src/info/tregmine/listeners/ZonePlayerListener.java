@@ -255,11 +255,6 @@ public class ZonePlayerListener extends PlayerListener
 
 		Zone currentZone = player.getCurrentZone();
 		
-		if (currentZone.isPvp()) {
-			event.setCancelled(true);
-			return;
-		}
-		
 		if (currentZone == null || !currentZone.contains(currentPos)) {
 
 			if (currentZone != null && currentZone.contains(oldPos)) {
@@ -294,6 +289,13 @@ public class ZonePlayerListener extends PlayerListener
 						return;			    		
 					}
 				}
+				
+				if (currentZone.isPvp()) {
+					event.setCancelled(true);
+					return;
+				}
+
+				
 				welcomeMessage(currentZone, player, perm);
 			}
 			player.setCurrentZone(currentZone);
