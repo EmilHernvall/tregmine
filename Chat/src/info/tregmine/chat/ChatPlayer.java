@@ -28,6 +28,7 @@ public class ChatPlayer extends PlayerListener {
 
 		if (event.getMessage().equals(this.plugin.lastline.get(sender.getName())) ) {
 			sender.getPlayer().sendMessage("No need to repeat yourself!"); 
+			event.setCancelled(true);
 			return;
 		}
 		
