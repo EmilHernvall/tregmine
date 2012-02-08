@@ -706,93 +706,93 @@ public abstract class PlayerDelegate implements Player
 	}
 	@Override
 	public float getExp() {
-		// TODO Auto-generated method stub
-		return 0;
+		return delegate.getExp();
 	}
 
 	@Override
 	public void giveExp(int arg0) {
-		// TODO Auto-generated method stub
-		
+		delegate.giveExp(arg0);	
 	}
 
 	@Override
 	public void setExp(float arg0) {
-		// TODO Auto-generated method stub
-		
+		delegate.setExp(arg0);	
 	}
 
 	@Override
 	public Player getKiller() {
-		// TODO Auto-generated method stub
-		return null;
+		return  delegate.getKiller();
 	}
 
 	@Override
 	public boolean teleport(Location arg0, TeleportCause arg1) {
-		// TODO Auto-generated method stub
-		return false;
+		return delegate.teleport(arg0, arg1);
 	}
 
 	@Override
 	public boolean teleport(Entity arg0, TeleportCause arg1) {
-		// TODO Auto-generated method stub
-		return false;
+		return delegate.teleport(arg0, arg1);
 	}
 
 	@Override
 	public long getFirstPlayed() {
-		// TODO Auto-generated method stub
-		return 0;
+		return delegate.getFirstPlayed();
 	}
 
 	@Override
 	public long getLastPlayed() {
-		// TODO Auto-generated method stub
-		return 0;
+		return delegate.getLastPlayed();
 	}
 
 	@Override
 	public boolean hasPlayedBefore() {
-		// TODO Auto-generated method stub
-		return false;
+		return delegate.hasPlayedBefore();
 	}
 
 	@Override
 	public Set<String> getListeningPluginChannels() {
-		// TODO Auto-generated method stub
-		return null;
+		return delegate.getListeningPluginChannels();
 	}
 
 	@Override
 	public void sendPluginMessage(Plugin arg0, String arg1, byte[] arg2) {
-		// TODO Auto-generated method stub
-		
+		delegate.sendPluginMessage(arg0, arg1, arg2);	
 	}
 	
 	@Override
 	public void playEffect(EntityEffect arg0) {
-		// TODO Auto-generated method stub
-		
+		delegate.playEffect(arg0);
 	}
 
 	@Override
 	public boolean getAllowFlight() {
-		// TODO Auto-generated method stub
-		return false;
+		return delegate.getAllowFlight();
 	}
 
 	@Override
 	public void setAllowFlight(boolean arg0) {
-		// TODO Auto-generated method stub
-		
+		delegate.setAllowFlight(arg0);		
 	}
 	
 	@Override
 	public void setBedSpawnLocation(Location arg0) {
-		// TODO Auto-generated method stub
-		
+		delegate.setBedSpawnLocation(arg0);
 	}
 	
+	@Override
+	public boolean canSee(Player arg0) {
+		return delegate.canSee(arg0);
+	}
 
+	@Override
+	public void hidePlayer(Player arg0) {
+		delegate.hidePlayer(arg0);
+	}
+
+	@Override
+	public void showPlayer(Player arg0) {
+		delegate.showPlayer(arg0);
+	}
+
+	
 }

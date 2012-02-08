@@ -7,15 +7,16 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
-import org.bukkit.event.Event.Priority;
+//import org.bukkit.event.Event;
+//import org.bukkit.event.Event.Priority;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import info.tregmine.Tregmine; 
 
 
-public class Chat extends JavaPlugin {
+//  public class Chat extends JavaPlugin {
+	public class Chat extends JavaPlugin {
 
 	public final ChatPlayer chatplayer = new ChatPlayer(this);
 	public Tregmine tregmine = null;
@@ -24,9 +25,11 @@ public class Chat extends JavaPlugin {
 	public HashMap<String, String> lastline = new HashMap<String, String>();
 
 
+	@Override
 	public void onDisable() {
 	}
 
+	@Override
 	public void onEnable() {
 		Plugin test = this.getServer().getPluginManager().getPlugin("Tregmine");
 
@@ -39,9 +42,10 @@ public class Chat extends JavaPlugin {
 			}
 		}
 
-		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_CHAT, chatplayer, Priority.Highest, this);
+	getServer().getPluginManager().registerEvents(new ChatPlayer(this), this);
 	}
 
+	@Override
 	public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args) {
 		String commandName = command.getName().toLowerCase();
 		Player from = null;
@@ -201,6 +205,8 @@ public class Chat extends JavaPlugin {
 		}
 		return false;
 	}
+	
+	@Override
 	public void onLoad() {
 	}
 

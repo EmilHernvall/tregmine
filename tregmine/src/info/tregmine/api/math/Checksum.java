@@ -64,6 +64,7 @@ public class Checksum {
 	* @return unique value of the block checksum
 	* @deprecated
 	*/
+	/*
 	public static long OLDflat(double x, double z, World world){
 		java.util.zip.CRC32 crc32 = new java.util.zip.CRC32();
 		String pos = x + "," + "," + z + ":" + world.getName();
@@ -71,6 +72,7 @@ public class Checksum {
 //		System.out.print(pos);
 		return crc32.getValue();
 	}
+	*/
 	
 	/**
 	* Calculates the checksum of a 2d(not height) location
@@ -79,6 +81,7 @@ public class Checksum {
 	* @return unique value of the block checksum
 	* @deprecated
 	*/
+	/*
 	public static long OLDflat(Block block){
 		Location loc = block.getLocation();
 		java.util.zip.CRC32 crc32 = new java.util.zip.CRC32();
@@ -86,4 +89,5 @@ public class Checksum {
 		crc32.update(pos.getBytes());
 		return crc32.getValue();
 	}
+	*/
 }

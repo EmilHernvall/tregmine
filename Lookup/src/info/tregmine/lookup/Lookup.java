@@ -4,13 +4,13 @@ import java.util.logging.Logger;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
+//import org.bukkit.event.Event;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import org.bukkit.event.Listener;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.player.PlayerLoginEvent;
+//import org.bukkit.event.Listener;
+//import org.bukkit.event.EventHandler;
+//import org.bukkit.event.player.PlayerLoginEvent;
 
 
 import info.tregmine.Tregmine; 
@@ -23,6 +23,7 @@ public class Lookup extends JavaPlugin {
 	
 //	public final LookupPlayer lookupplayer = new LookupPlayer(this);
 	
+	@Override
 	public void onEnable(){
 		Plugin test = this.getServer().getPluginManager().getPlugin("Tregmine");
 
@@ -37,12 +38,16 @@ public class Lookup extends JavaPlugin {
 		  getServer().getPluginManager().registerEvents(new LookupPlayer(this), this);
 	}
 	 
+	@Override
 	public void onDisable(){
 		this.getServer().getScheduler().cancelTasks(this);
 	}
+	
+	@Override
 	public void onLoad() {
 
 		getServer().getScheduler().scheduleAsyncRepeatingTask(this,new Runnable() {
+			@Override
 			public void run() {
 				for (Player p : getServer().getOnlinePlayers()) {
 					if (p.getAddress().getAddress().getHostAddress().matches("127.0.0.1")) {

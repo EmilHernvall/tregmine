@@ -111,7 +111,8 @@ public class Teleport extends JavaPlugin {
 		if(commandName.equals("tp") && tregminePlayer.isTrusted()) {
 			try {
 				List<Player> to = this.getServer().matchPlayer(args[0]);
-				new Tp(from, to.get(0), this);
+				Tp tp = new Tp(from, to.get(0), this);
+				tp.hashCode();
 				return true;			
 			} catch (Exception e) {
 				return false;

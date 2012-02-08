@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
 	<classpathentry kind="lib" path="/AA-Global/lib/bukkit-0.0.1-SNAPSHOT.jar" sourcepath="C:/Users/einand/Downloads/Bukkit-Bukkit-0.0.0-600-gff73db3.zip"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/tregmine"/>
 	<classpathentry kind="output" path="bin"/>

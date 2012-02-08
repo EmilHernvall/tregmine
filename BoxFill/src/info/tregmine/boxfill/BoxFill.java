@@ -95,6 +95,7 @@ public class BoxFill extends JavaPlugin {
 	public void onDisable() {
 	}
 
+	@SuppressWarnings("null")
 	public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args) {
 		String commandName = command.getName().toLowerCase();
 		Player player = null;

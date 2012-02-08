@@ -89,6 +89,7 @@ public class ZonePlayerListener extends PlayerListener
 		
 	}
 
+	@SuppressWarnings("null")
 	@Override
 	public void onPlayerInteract(PlayerInteractEvent event) 
 	{

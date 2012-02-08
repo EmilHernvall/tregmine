@@ -11,7 +11,7 @@ import java.util.HashMap;
 //import java.util.Map;
 
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
+//import org.bukkit.Location;
 //import org.bukkit.EntityEffect;
 //import org.bukkit.Location;
 //import org.bukkit.GameMode;
@@ -167,6 +167,7 @@ public class TregminePlayer extends PlayerDelegate
 		return getBoolean("donator");
 	}
 
+	@Override
 	public boolean isBanned() 
 	{
 		return getBoolean("banned");
@@ -407,5 +408,4 @@ public class TregminePlayer extends PlayerDelegate
 	{
 		return currentZone;
 	}
-
 }

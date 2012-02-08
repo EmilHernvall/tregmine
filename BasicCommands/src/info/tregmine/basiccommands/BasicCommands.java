@@ -31,6 +31,7 @@ public class BasicCommands extends JavaPlugin {
 	public Tregmine tregmine = null;
 	public final BasicCommandsBlock block = new BasicCommandsBlock(this);
 
+	@Override
 	public void onEnable(){
 		Plugin test = this.getServer().getPluginManager().getPlugin("Tregmine");
 
@@ -45,9 +46,11 @@ public class BasicCommands extends JavaPlugin {
 		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_INTERACT, block, Priority.Highest, this);
 	}
 
+	@Override
 	public void onDisable(){
 	}
 
+	@Override
 	public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args) {
 		String commandName = command.getName().toLowerCase();
 
@@ -459,6 +462,7 @@ public class BasicCommands extends JavaPlugin {
 		return false;
 	}
 
+	@Override
 	public void onLoad() {
 	}
 }

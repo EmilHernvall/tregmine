@@ -111,7 +111,8 @@ private static SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
         return null;
     }
 
-    public String toString() {
+    @Override
+	public String toString() {
         return info;
     }
 }

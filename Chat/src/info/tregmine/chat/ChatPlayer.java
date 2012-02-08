@@ -8,12 +8,10 @@ package info.tregmine.chat;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerChatEvent;
-import org.bukkit.event.player.PlayerListener;
 
-
-
-public class ChatPlayer extends PlayerListener {
+public class ChatPlayer implements Listener {
 	private final Chat plugin;
 
 	public ChatPlayer(Chat instance) {
