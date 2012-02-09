@@ -21,8 +21,6 @@ public class Lookup extends JavaPlugin {
 	public final Logger log = Logger.getLogger("Minecraft");
 	public Tregmine tregmine = null;
 	
-//	public final LookupPlayer lookupplayer = new LookupPlayer(this);
-	
 	@Override
 	public void onEnable(){
 		Plugin test = this.getServer().getPluginManager().getPlugin("Tregmine");

@@ -53,13 +53,13 @@ public class LookupPlayer implements  Listener  {
 				event.getPlayer().sendMessage(ChatColor.DARK_AQUA + l1.city + " - " + l1.postalCode);
 			} 
 
-			if(tregminePlayer.isDonator()) {
-				tregminePlayer.setAllowFlight(true);
-			} else {
-				tregminePlayer.setAllowFlight(false);
-			}
-
-
 		}
+
+		if(tregminePlayer.isDonator()) {
+			tregminePlayer.setAllowFlight(true);
+		} else {
+			tregminePlayer.setAllowFlight(false);
+		}
+
 	}    
 }

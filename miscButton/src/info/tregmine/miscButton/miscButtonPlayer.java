@@ -1,5 +1,4 @@
 package info.tregmine.miscButton;
-
 import info.tregmine.currency.Wallet;
 
 import org.bukkit.Location;
@@ -9,11 +8,12 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerListener;
 import org.bukkit.inventory.ItemStack;
 
-public class miscButtonPlayer extends PlayerListener {
+public class miscButtonPlayer implements Listener  {
 	private final miscButton plugin;
 	private boolean state = true;
 	public miscButtonPlayer(miscButton instance) {
@@ -21,8 +21,8 @@ public class miscButtonPlayer extends PlayerListener {
 		plugin.getServer();
 	}
 
+	@EventHandler
 	public void onPlayerInteract(PlayerInteractEvent event) {
-
 		int button;
 		try {
 			button = info.tregmine.api.math.Checksum.block(event.getClickedBlock());
