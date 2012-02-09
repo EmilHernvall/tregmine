@@ -8,8 +8,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
-import org.bukkit.event.Event.Priority;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -24,6 +22,7 @@ public class Main extends JavaPlugin {
 	public final CurrencyBlock block = new CurrencyBlock(this);
 	NumberFormat nf = NumberFormat.getNumberInstance();
 
+	@Override
 	public void onEnable(){
 		Plugin test = this.getServer().getPluginManager().getPlugin("Tregmine");
 
@@ -35,13 +34,16 @@ public class Main extends JavaPlugin {
 				this.getServer().getPluginManager().disablePlugin(this);
 			}
 		}
-		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_LOGIN, player, Priority.Lowest, this);
-		getServer().getPluginManager().registerEvent(Event.Type.BLOCK_BREAK, block, Priority.Monitor, this);
+		
+		getServer().getPluginManager().registerEvents(new CurrencyPlayer(this), this);
+		getServer().getPluginManager().registerEvents(new CurrencyBlock(this), this);
 	}
 
+	@Override
 	public void onDisable(){
 	}
 
+	@Override
 	public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args) {
 		String commandName = command.getName().toLowerCase();
 
@@ -156,6 +158,7 @@ public class Main extends JavaPlugin {
 		return false;
 	}
 	
+	@Override
 	public void onLoad() {
 	}
 

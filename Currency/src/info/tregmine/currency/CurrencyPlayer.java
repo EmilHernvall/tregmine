@@ -1,25 +1,25 @@
 package info.tregmine.currency;
-	import org.bukkit.event.player.PlayerEvent;
-	import org.bukkit.event.player.PlayerLoginEvent;
-	import org.bukkit.event.player.PlayerListener;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerEvent;
+import org.bukkit.event.player.PlayerLoginEvent;
 
 
-	public class CurrencyPlayer extends PlayerListener {
-	    private final Main plugin;
-			
-	    public CurrencyPlayer(Main instance) {
-	        plugin = instance;
-	    	plugin.getServer();
-	    }
+public class CurrencyPlayer implements  Listener {
+	private final Main plugin;
 
-	    public void onPlayerJoin(PlayerEvent event) {
-	    }    	
-	    
-	    public void onPlayerLogin (PlayerLoginEvent event){
-	    	Wallet wallet = new Wallet(event.getPlayer());
-	    	wallet.create();
-	     }
-	    
-	    public void onPlayerQuit(PlayerEvent event) {
-	    }    	
+	public CurrencyPlayer(Main instance) {
+		plugin = instance;
+		plugin.getServer();
 	}
+
+	@EventHandler
+	public void onPlayerJoin(PlayerEvent event) {
+	}    	
+
+	@EventHandler
+	public void onPlayerLogin (PlayerLoginEvent event){
+		Wallet wallet = new Wallet(event.getPlayer());
+		wallet.create();
+	}
+}
