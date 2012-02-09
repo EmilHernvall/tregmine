@@ -8,6 +8,7 @@ package info.tregmine.chat;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerChatEvent;
 
@@ -19,6 +20,7 @@ public class ChatPlayer implements Listener {
 		plugin.getServer();
 	}
 
+	@EventHandler
 	public void onPlayerChat(PlayerChatEvent event) {
 		Player sender = event.getPlayer();
 		info.tregmine.api.TregminePlayer tregminePlayer = this.plugin.tregmine.tregminePlayer.get(sender.getName());
