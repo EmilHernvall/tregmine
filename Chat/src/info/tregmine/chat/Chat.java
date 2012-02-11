@@ -162,13 +162,8 @@ import info.tregmine.Tregmine;
 				if (!this.channel.containsKey(player.getName())) {
 					this.channel.put(player.getName(), "global".toUpperCase());
 				}
-
-				if (this.channel.get(from.getName()).toUpperCase().matches(this.channel.get(player.getName()).toUpperCase())) {
-
+				if (this.channel.get(from.getName()).toUpperCase().equals(this.channel.get(player.getName()).toUpperCase())) {
 					player.sendMessage("* " + tregminePlayer.getChatName() + ChatColor.WHITE + buf.toString() );
-
-					//				getServer().broadcastMessage("* " + tregminePlayer.getChatName() + ChatColor.WHITE + buf.toString());
-					//				this.log.info(this.channel  + " - * " + from.getName() + buf.toString());
 				}
 			}
 
