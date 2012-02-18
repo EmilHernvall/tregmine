@@ -56,7 +56,13 @@ public class CurrencyPlayer implements Listener  {
 				
 				rs.first();
 				
-				event.getPlayer().sendMessage("value: " + rs.getInt("value"));
+				int total = rs.getInt("value") * event.getItemDrop().getItemStack().getAmount();
+				event.getPlayer().sendMessage("value: " + total);
+				
+				
+				event.getItemDrop().remove();
+				
+				
 				
 			} catch (SQLException e) {
 				throw new RuntimeException(e);
@@ -74,7 +80,7 @@ public class CurrencyPlayer implements Listener  {
 			
 			
 			
-			event.getPlayer().sendMessage("If you see this, you are in a dropzone");
+//			event.getPlayer().sendMessage("If you see this, you are in a dropzone");
 
 		}
 	}
