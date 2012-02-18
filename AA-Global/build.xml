@@ -21,7 +21,6 @@
 		<ant dir="../miscButton" target="clean" inheritAll="false" />
 		<ant dir="../SignColours" target="clean" inheritAll="false" />
 		<ant dir="../Teleport" target="clean" inheritAll="false" />
-		<ant dir="../UserStats" target="clean" inheritAll="false" />
 		<ant dir="../WallOfStats" target="clean" inheritAll="false" />
 		<ant dir="../Who" target="clean" inheritAll="false" />
 		<ant dir="../Zones" target="clean" inheritAll="false" />
@@ -46,11 +45,10 @@
 		<ant dir="../miscButton" target="jar" inheritAll="false" />
 		<ant dir="../SignColours" target="jar" inheritAll="false" />
 		<ant dir="../Teleport" target="jar" inheritAll="false" />
-		<ant dir="../UserStats" target="jar" inheritAll="false" />
 		<ant dir="../WallOfStats" target="jar" inheritAll="false" />
 		<ant dir="../Who" target="jar" inheritAll="false" />
 		<ant dir="../Zones" target="jar" inheritAll="false" />
-                <ant dir="../Citadel" target="jar" inheritAll="false" />
+        <ant dir="../Citadel" target="jar" inheritAll="false" />
 	</target>
     
     <target name="copy" depends="build">
