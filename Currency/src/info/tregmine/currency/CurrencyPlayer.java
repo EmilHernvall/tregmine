@@ -13,6 +13,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
+import org.bukkit.event.player.PlayerPickupItemEvent;
 
 
 public class CurrencyPlayer implements Listener  {
@@ -30,6 +31,23 @@ public class CurrencyPlayer implements Listener  {
 	}
 
 	@EventHandler
+	public void onPlayerPickupItem (PlayerPickupItemEvent event){
+
+
+		if (
+				event.getItem().getLocation().getBlockX() < 509 &&
+				event.getItem().getLocation().getBlockX() > 498 &&
+				event.getItem().getLocation().getBlockZ() > -165 &&
+				event.getItem().getLocation().getBlockZ() < -153
+				){
+			event.setCancelled(true);
+			event.getItem().remove();
+		}
+
+	}
+
+
+	@EventHandler
 	public void onPlayerDropItem (PlayerDropItemEvent event) {
 		if (event.getPlayer().getGameMode() == GameMode.CREATIVE) {
 			event.setCancelled(true);
@@ -40,7 +58,7 @@ public class CurrencyPlayer implements Listener  {
 				event.getItemDrop().getLocation().getBlockX() > 498 &&
 				event.getItemDrop().getLocation().getBlockZ() > -165 &&
 				event.getItemDrop().getLocation().getBlockZ() < -153
-			){
+				){
 			Connection conn = null;
 			PreparedStatement stmt = null;
 			ResultSet rs = null;
@@ -48,29 +66,29 @@ public class CurrencyPlayer implements Listener  {
 				conn = ConnectionPool.getConnection();
 
 				String sql = "SELECT value FROM items_destroyvalue WHERE itemid = ?";
-				
+
 				stmt = conn.prepareStatement(sql);
 				stmt.setLong(1, event.getItemDrop().getItemStack().getTypeId());
 				stmt.execute();
-				
+
 				rs = stmt.getResultSet();
-				
+
 				rs.first();
-				
+
 				int total = rs.getInt("value") * event.getItemDrop().getItemStack().getAmount();
-//				event.getPlayer().sendMessage("value: " + total);
-				
-				
+				//				event.getPlayer().sendMessage("value: " + total);
+
+
 				if (total > 0) {
 					Wallet wallet = new Wallet(event.getPlayer().getName());
-//					event.getItemDrop().remove();
+					//					event.getItemDrop().remove();
 					event.getItemDrop().getItemStack().setAmount(0);
-					event.getItemDrop().setPickupDelay(Integer.MAX_VALUE);
-//					wallet.add(total);
+					//					event.getItemDrop().setPickupDelay(Integer.MAX_VALUE);
+					//					wallet.add(total);
 					event.getPlayer().sendMessage(ChatColor.AQUA + "You got " + ChatColor.GOLD + total + " Tregs " + ChatColor.AQUA +"(You have " + wallet.formatBalance() + ")");
 				}
-				
-				
+
+
 			} catch (SQLException e) {
 				throw new RuntimeException(e);
 			} finally {
@@ -84,10 +102,10 @@ public class CurrencyPlayer implements Listener  {
 					try { conn.close(); } catch (SQLException e) {}
 				}
 			}
-			
-			
-			
-//			event.getPlayer().sendMessage("If you see this, you are in a dropzone");
+
+
+
+			//			event.getPlayer().sendMessage("If you see this, you are in a dropzone");
 
 		}
 	}

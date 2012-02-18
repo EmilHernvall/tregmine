@@ -15,6 +15,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerPickupItemEvent;
 
 public class BlessPlayer implements Listener {
 	private final Bless plugin;
@@ -43,6 +44,13 @@ public class BlessPlayer implements Listener {
 		allowedMaterials.add(Material.SIGN);
 	}
 
+	@EventHandler
+	public void onPlayerPickupItem (PlayerPickupItemEvent event){
+		
+	}
+
+	
+	
 	@EventHandler
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		Player player = event.getPlayer();
