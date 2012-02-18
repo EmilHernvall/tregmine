@@ -31,7 +31,7 @@ public class CurrencyPlayer implements Listener  {
 				event.getItemDrop().getLocation().getBlockX() < 509 &&
 				event.getItemDrop().getLocation().getBlockX() > 498 &&
 				event.getItemDrop().getLocation().getBlockZ() > -165 &&
-				event.getItemDrop().getLocation().getBlockZ() < -158
+				event.getItemDrop().getLocation().getBlockZ() < -153
 			){
 			
 			event.getPlayer().sendMessage("If you see this, you are in a dropzone");
