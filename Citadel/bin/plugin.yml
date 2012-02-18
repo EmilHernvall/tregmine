@@ -1,0 +1,8 @@
+name: Citadel
+main: info.tregmine.citadel.Citadel
+version: 1
+
+commands:
+  citadel-:
+    description: teleports you to the citadel world.
+    -usage: /citadel
