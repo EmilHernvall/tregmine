@@ -1,5 +1,12 @@
 package info.tregmine.currency;
 
+import info.tregmine.database.ConnectionPool;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import org.bukkit.GameMode;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -33,6 +40,37 @@ public class CurrencyPlayer implements Listener  {
 				event.getItemDrop().getLocation().getBlockZ() > -165 &&
 				event.getItemDrop().getLocation().getBlockZ() < -153
 			){
+			Connection conn = null;
+			PreparedStatement stmt = null;
+			ResultSet rs = null;
+			try {
+				conn = ConnectionPool.getConnection();
+
+				String sql = "SELECT value FROM items_destroyvalue WHERE itemid = ?";
+				
+				stmt = conn.prepareStatement(sql);
+				stmt.setLong(1, event.getItemDrop().getItemStack().getTypeId());
+				stmt.execute();
+				
+				rs = stmt.getResultSet();
+				
+				event.getPlayer().sendMessage("value: " + rs.getInt("value"));
+				
+			} catch (SQLException e) {
+				throw new RuntimeException(e);
+			} finally {
+				if (rs != null) {
+					try { rs.close(); } catch (SQLException e) {} 
+				}
+				if (stmt != null) {
+					try { stmt.close(); } catch (SQLException e) {}
+				}
+				if (conn != null) {
+					try { conn.close(); } catch (SQLException e) {}
+				}
+			}
+			
+			
 			
 			event.getPlayer().sendMessage("If you see this, you are in a dropzone");
 
