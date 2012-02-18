@@ -1,8 +1,5 @@
 package info.tregmine.currency;
 
-import info.tregmine.quadtree.Point;
-import info.tregmine.zones.Lot;
-import info.tregmine.zones.ZoneWorld;
 import org.bukkit.GameMode;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -30,16 +27,16 @@ public class CurrencyPlayer implements Listener  {
 			event.setCancelled(true);
 			return;
 		}
-		info.tregmine.api.TregminePlayer tregPlayer = this.plugin.tregmine.tregminePlayer.get(event.getPlayer().getName());
-
-		ZoneWorld world = this.plugin.zones.getWorld(tregPlayer.getWorld());
-		
-		Point p = new info.tregmine.quadtree.Point(tregPlayer.getLocation().getBlockX(),tregPlayer.getLocation().getBlockZ());
-		Lot lot = world.findLot(p);
-
-		if (lot != null) {
-			tregPlayer.sendMessage(lot.getName());
-		}
+		//		info.tregmine.api.TregminePlayer tregPlayer = this.plugin.tregmine.tregminePlayer.get(event.getPlayer().getName());
+		//
+		//		ZoneWorld world = this.plugin.zones.getWorld(tregPlayer.getWorld());
+		//		
+		//		Point p = new info.tregmine.quadtree.Point(tregPlayer.getLocation().getBlockX(),tregPlayer.getLocation().getBlockZ());
+		//		Lot lot = world.findLot(p);
+		//
+		//		if (lot != null) {
+		//			tregPlayer.sendMessage(lot.getName());
+		//		}
 	}
 
 }
