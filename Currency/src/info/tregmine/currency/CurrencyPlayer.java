@@ -54,6 +54,8 @@ public class CurrencyPlayer implements Listener  {
 				
 				rs = stmt.getResultSet();
 				
+				rs.first();
+				
 				event.getPlayer().sendMessage("value: " + rs.getInt("value"));
 				
 			} catch (SQLException e) {
