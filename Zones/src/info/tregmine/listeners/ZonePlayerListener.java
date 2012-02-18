@@ -12,15 +12,16 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerListener;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.util.Vector;
 
-public class ZonePlayerListener extends PlayerListener 
+public class ZonePlayerListener implements Listener
 {
 	private final ZonesPlugin plugin;
 	private final Tregmine tregmine;
@@ -32,7 +33,7 @@ public class ZonePlayerListener extends PlayerListener
 	}
 
 
-	@Override
+	@EventHandler
 	public void onPlayerBucketEmpty(PlayerBucketEmptyEvent event){
     	TregminePlayer player = tregmine.getPlayer(event.getPlayer());
     	if (player.isAdmin()) {
@@ -90,7 +91,7 @@ public class ZonePlayerListener extends PlayerListener
 	}
 
 	@SuppressWarnings("null")
-	@Override
+	@EventHandler
 	public void onPlayerInteract(PlayerInteractEvent event) 
 	{
 		if (event.getAction() != Action.RIGHT_CLICK_BLOCK) {
@@ -183,7 +184,7 @@ public class ZonePlayerListener extends PlayerListener
 		player.teleport(newPos);
 	}
 
-	@Override
+	@EventHandler
 	public void onPlayerMove(PlayerMoveEvent event)
 	{
 		TregminePlayer player = tregmine.getPlayer(event.getPlayer());
@@ -242,7 +243,7 @@ public class ZonePlayerListener extends PlayerListener
 		}
 	}
 
-	@Override
+	@EventHandler
 	public void onPlayerTeleport(PlayerTeleportEvent event)
 	{
 		TregminePlayer player = tregmine.getPlayer(event.getPlayer());

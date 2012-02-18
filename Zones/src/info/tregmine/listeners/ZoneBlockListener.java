@@ -11,11 +11,12 @@ import info.tregmine.zones.ZonesPlugin;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockListener;
 import org.bukkit.event.block.BlockPlaceEvent;
 
-public class ZoneBlockListener extends BlockListener 
+public class ZoneBlockListener implements Listener 
 {
     private final ZonesPlugin plugin;
     private final Tregmine tregmine;
@@ -26,6 +27,7 @@ public class ZoneBlockListener extends BlockListener
         this.tregmine = instance.tregmine;
     }
 
+	@EventHandler
     public void onBlockBreak (BlockBreakEvent event) 
     {
     	TregminePlayer player = tregmine.getPlayer(event.getPlayer());
@@ -82,6 +84,7 @@ public class ZoneBlockListener extends BlockListener
     	}
     }
     
+	@EventHandler
 	public void onBlockPlace(BlockPlaceEvent event)
 	{
     	TregminePlayer player = tregmine.getPlayer(event.getPlayer());

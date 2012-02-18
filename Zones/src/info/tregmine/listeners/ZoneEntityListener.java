@@ -15,13 +15,14 @@ import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.CreatureType;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
-import org.bukkit.event.entity.EntityListener;
 
-public class ZoneEntityListener extends EntityListener 
+public class ZoneEntityListener implements Listener
 {
 	private static final Set<CreatureType> allowedMobs = 
 			EnumSet.of(CreatureType.CHICKEN, CreatureType.COW, 
@@ -38,6 +39,7 @@ public class ZoneEntityListener extends EntityListener
 		this.tregmine = instance.tregmine;
 	}
 
+	@EventHandler
 	public void onCreatureSpawn(CreatureSpawnEvent event) 
 	{
 		Entity entity = event.getEntity();
@@ -56,6 +58,7 @@ public class ZoneEntityListener extends EntityListener
 		}
 	}
 
+	@EventHandler
 	public void onEntityDamage(EntityDamageEvent event)
 	{
 		Entity entity = event.getEntity();
