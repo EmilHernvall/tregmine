@@ -7,6 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -57,11 +58,15 @@ public class CurrencyPlayer implements Listener  {
 				rs.first();
 				
 				int total = rs.getInt("value") * event.getItemDrop().getItemStack().getAmount();
-				event.getPlayer().sendMessage("value: " + total);
+//				event.getPlayer().sendMessage("value: " + total);
 				
 				
-				event.getItemDrop().remove();
-				
+				if (total > 0) {
+					Wallet wallet = new Wallet(event.getPlayer().getName());
+					event.getItemDrop().remove();
+					wallet.add(total);
+					event.getPlayer().sendMessage(ChatColor.AQUA + "You got " + ChatColor.GOLD + total + " Tregs");
+				}
 				
 				
 			} catch (SQLException e) {
