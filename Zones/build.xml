@@ -4,6 +4,7 @@
 	<property name="build" value="bin" />
 	<property name="lib" value="../AA-Global/lib" />
 	<property name="tregminelib" value="../tregmine/tregmine.jar" />
+	<property name="zonelib" value="../Zones/Zones.jar" />
 	<property name="build.compiler" value="modern" />
 	
 	<target name="init">
@@ -26,7 +27,7 @@
 			
 			<classpath>
 				<pathelement path="${build}"/>
-				<pathelement path="${tregminelib}"/>
+				<pathelement path="${tregminelib}:${zonelib}"/>
 				<fileset dir="${lib}">
 					<include name="**/*.jar"/>
 				</fileset>
