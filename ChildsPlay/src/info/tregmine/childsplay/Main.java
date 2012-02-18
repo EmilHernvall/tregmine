@@ -1,12 +1,8 @@
 package info.tregmine.childsplay;
 
+
 import java.util.HashMap;
 import java.util.logging.Logger;
-
-//import org.bukkit.World;
-//import org.bukkit.World.Environment;
-import org.bukkit.event.Event;
-import org.bukkit.event.Event.Priority;
 import org.bukkit.plugin.java.JavaPlugin;
 
 
@@ -16,16 +12,17 @@ public class Main extends JavaPlugin {
 	public final Logger log = Logger.getLogger("Minecraft");
 	public final SkylandPlayer listener = new SkylandPlayer(this);
 	public HashMap<String,Boolean> skylandBlock = new HashMap<String,Boolean>();
-	public final EntityListner el = new EntityListner(this);
 
+	@Override
 	public void onEnable() {
-		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_MOVE, listener, Priority.Highest, this);
-		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_TELEPORT, listener, Priority.Highest, this);
+		getServer().getPluginManager().registerEvents(new SkylandPlayer(this), this);
 	}
 
+	@Override
 	public void onDisable(){
 	}
 
+	@Override
 	public void onLoad() {
 	}
 

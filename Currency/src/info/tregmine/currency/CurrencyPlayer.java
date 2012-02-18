@@ -33,7 +33,7 @@ public class CurrencyPlayer implements Listener  {
 		info.tregmine.api.TregminePlayer tregPlayer = this.plugin.tregmine.tregminePlayer.get(event.getPlayer().getName());
 
 		ZoneWorld world = this.plugin.zones.getWorld(tregPlayer.getWorld());
-
+		
 		Point p = new info.tregmine.quadtree.Point(tregPlayer.getLocation().getBlockX(),tregPlayer.getLocation().getBlockZ());
 		Lot lot = world.findLot(p);
 

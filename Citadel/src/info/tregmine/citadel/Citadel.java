@@ -22,6 +22,7 @@ public class Citadel extends JavaPlugin {
 	public final Logger log = Logger.getLogger("Minecraft");
 	public Tregmine tregmine = null;
 
+	@Override
 	public void onEnable() {
 		Plugin test = this.getServer().getPluginManager().getPlugin("Tregmine");
 		
@@ -62,13 +63,16 @@ public class Citadel extends JavaPlugin {
 		
 	}
 
+	@Override
 	public void onDisable(){
 	}
 
+	@Override
 	public void onLoad() {
 	}
 
 	
+	@Override
 	public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args) {
 		String commandName = command.getName().toLowerCase();
 		Player from = null;

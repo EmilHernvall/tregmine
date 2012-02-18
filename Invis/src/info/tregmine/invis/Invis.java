@@ -16,9 +16,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Invis extends JavaPlugin
@@ -32,15 +30,17 @@ public class Invis extends JavaPlugin
 
 public List<Player> invisible = new ArrayList<Player>();
 
-  private final InvisPlayerListener playerListener = new InvisPlayerListener(this);
+//  private final InvisPlayerListener playerListener = new InvisPlayerListener(this);
   private final Logger log = Logger.getLogger("Minecraft");
 
-  public void onDisable()
+  @Override
+public void onDisable()
   {
     this.timer.cancel();
   }
 
-  public void onEnable()
+  @Override
+public void onEnable()
   {
     
 		Plugin test = this.getServer().getPluginManager().getPlugin("Tregmine");
@@ -60,11 +60,11 @@ public List<Player> invisible = new ArrayList<Player>();
     this.TOTAL_REFRESHES = 10;  // getConfiguration().getInt("total_refreshes", 10);
     this.REFRESH_TIMER = 2;     // getConfiguration().getInt("refresh_timer", 2);
 
-    PluginManager pm = getServer().getPluginManager();
+ //   PluginManager pm = getServer().getPluginManager();
+
     
-    pm.registerEvent(Event.Type.PLAYER_JOIN, this.playerListener, Event.Priority.Monitor, this);
-    pm.registerEvent(Event.Type.PLAYER_QUIT, this.playerListener, Event.Priority.Monitor, this);
-    pm.registerEvent(Event.Type.PLAYER_TELEPORT, this.playerListener, Event.Priority.Monitor, this);
+    getServer().getPluginManager().registerEvents(new InvisPlayerListener(this), this);
+
 
     this.log.info(getDescription().getName() + " " + getDescription().getVersion() + " loaded.");
 
@@ -82,7 +82,8 @@ public List<Player> invisible = new ArrayList<Player>();
     return (sender instanceof ConsoleCommandSender);
   }
 
-  public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args)
+  @Override
+public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args)
   {
     if ((command.getName().equalsIgnoreCase("vanish")) || (command.getName().equalsIgnoreCase("poof")))
     {
@@ -259,7 +260,8 @@ public List<Player> invisible = new ArrayList<Player>();
       this.startTimer = startTimer;
     }
 
-    public void run()
+    @Override
+	public void run()
     {
       Invis.this.updateInvisibleForAll(this.startTimer);
     }

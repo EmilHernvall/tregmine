@@ -3,22 +3,12 @@ package info.tregmine.chestbless;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
-
-//import org.bukkit.ChatColor;
-//import org.bukkit.Location;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-//import org.bukkit.entity.CreatureType;
-//import org.bukkit.entity.Entity;
-//import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
-//import org.bukkit.entity.Slime;
-import org.bukkit.event.Event;
-import org.bukkit.event.Event.Priority;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
-
 import info.tregmine.Tregmine; 
 
 
@@ -26,12 +16,11 @@ public class Bless extends JavaPlugin {
 
 	public final Logger log = Logger.getLogger("Minecraft");
 	public Tregmine tregmine = null;
-	public final BlessPlayer player = new BlessPlayer(this);
-	public final BlessBlock block = new BlessBlock(this);
 	
 	public Map<Integer, String> chests = new HashMap<Integer, String>();
 	
 	
+	@Override
 	public void onEnable(){
 		Plugin test = this.getServer().getPluginManager().getPlugin("Tregmine");
 
@@ -43,14 +32,15 @@ public class Bless extends JavaPlugin {
 				this.getServer().getPluginManager().disablePlugin(this);
 			}
 		}
-		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_INTERACT, player, Priority.Highest, this);
-		getServer().getPluginManager().registerEvent(Event.Type.BLOCK_PLACE, block, Priority.Highest, this);
-		getServer().getPluginManager().registerEvent(Event.Type.BLOCK_BREAK, block, Priority.Highest, this);
+		getServer().getPluginManager().registerEvents(new BlessBlock(this), this);
+		getServer().getPluginManager().registerEvents(new BlessPlayer(this), this);
 	}
 
+	@Override
 	public void onDisable(){
 	}
 
+	@Override
 	public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args) {
 		String commandName = command.getName().toLowerCase();
 
@@ -80,6 +70,7 @@ public class Bless extends JavaPlugin {
 		return false;
 	}
 
+	@Override
 	public void onLoad() {
 		this.chests = info.tregmine.chestbless.Store.loadbless();
 	}

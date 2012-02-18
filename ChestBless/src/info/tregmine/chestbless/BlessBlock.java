@@ -5,12 +5,13 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockListener;
 import org.bukkit.event.block.BlockPlaceEvent;
 
 
-public class BlessBlock extends BlockListener {
+public class BlessBlock implements Listener {
 	private final Bless plugin;
 
 
@@ -19,6 +20,7 @@ public class BlessBlock extends BlockListener {
 		plugin.getServer();
 	}
 
+	@EventHandler
 	public void onBlockBreak (BlockBreakEvent event) {
 		Location loc = event.getBlock().getLocation();
 		int checksum = (loc.getBlockX() + "," + loc.getBlockZ() + "," + loc.getBlockY() + "," + loc.getWorld().getName()).hashCode();
@@ -31,6 +33,7 @@ public class BlessBlock extends BlockListener {
 
 	}
 
+	@EventHandler
 	public void onBlockPlace (BlockPlaceEvent event)	{
 		Block block = event.getBlockPlaced();
 

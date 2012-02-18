@@ -6,11 +6,12 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerAnimationEvent;
 import org.bukkit.event.player.PlayerAnimationType;
-import org.bukkit.event.player.PlayerListener;
 
-public class CompassPlayer extends PlayerListener {
+public class CompassPlayer implements Listener {
 	private final Compass plugin;
 	int mode = CompassMode.Pressision;
 
@@ -19,6 +20,7 @@ public class CompassPlayer extends PlayerListener {
 		plugin.getServer();
 	}
 
+	@EventHandler
 	public void onPlayerAnimation(PlayerAnimationEvent event) {
 		info.tregmine.api.TregminePlayer tregminePlayer = this.plugin.tregmine.tregminePlayer.get(event.getPlayer().getName());
 

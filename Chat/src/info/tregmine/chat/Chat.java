@@ -15,8 +15,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import info.tregmine.Tregmine; 
 
 
-//  public class Chat extends JavaPlugin {
-	public class Chat extends JavaPlugin {
+public class Chat extends JavaPlugin {
 
 	public final ChatPlayer chatplayer = new ChatPlayer(this);
 	public Tregmine tregmine = null;
@@ -42,7 +41,7 @@ import info.tregmine.Tregmine;
 			}
 		}
 
-	getServer().getPluginManager().registerEvents(new ChatPlayer(this), this);
+		getServer().getPluginManager().registerEvents(new ChatPlayer(this), this);
 	}
 
 	@Override
@@ -200,7 +199,7 @@ import info.tregmine.Tregmine;
 		}
 		return false;
 	}
-	
+
 	@Override
 	public void onLoad() {
 	}

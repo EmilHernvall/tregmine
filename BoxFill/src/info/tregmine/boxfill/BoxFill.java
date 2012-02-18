@@ -11,8 +11,6 @@ import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
-import org.bukkit.event.Event.Priority;
 import org.bukkit.material.MaterialData;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -57,6 +55,7 @@ public class BoxFill extends JavaPlugin {
 		Material.GOLD_ORE,
 		Material.IRON_ORE,
 		Material.LAPIS_ORE,
+		Material.SAPLING,
 		Material.REDSTONE_ORE
 	};
 
@@ -69,12 +68,12 @@ public class BoxFill extends JavaPlugin {
 
 	public final Logger log = Logger.getLogger("Minecraft");
 	public Tregmine tregmine = null;
-	public final BoxFillBlockListener boxfillblockListener = new BoxFillBlockListener(this);
 
 	//private List<BlockState> undo = null;
 	private History undoHistory;
 	private History copyHistory;
 
+	@Override
 	public void onEnable() {
 		Plugin test = this.getServer().getPluginManager().getPlugin("Tregmine");
 
@@ -86,15 +85,20 @@ public class BoxFill extends JavaPlugin {
 				this.getServer().getPluginManager().disablePlugin(this);
 			}
 		}
-		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_INTERACT, boxfillblockListener, Priority.Highest, this);
+		
+		getServer().getPluginManager().registerEvents(new BoxFillBlockListener(this), this);
+
+//		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_INTERACT, boxfillblockListener, Priority.Highest, this);
 
 		undoHistory = new History();
 		copyHistory = new History();
 	}
 
+	@Override
 	public void onDisable() {
 	}
 
+	@Override
 	@SuppressWarnings("null")
 	public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args) {
 		String commandName = command.getName().toLowerCase();

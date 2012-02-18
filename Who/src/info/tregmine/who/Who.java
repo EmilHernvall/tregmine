@@ -20,6 +20,7 @@ public class Who extends JavaPlugin {
 	public final Logger log = Logger.getLogger("Minecraft");
 	public Tregmine tregmine = null;
 
+	@Override
 	public void onEnable(){
 		Plugin test = this.getServer().getPluginManager().getPlugin("Tregmine");
 
@@ -33,9 +34,11 @@ public class Who extends JavaPlugin {
 		}
 	}
 
+	@Override
 	public void onDisable(){
 	}
 
+	@Override
 	public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args) {
 		String commandName = command.getName().toLowerCase();
 		Player p = null;
@@ -136,6 +139,7 @@ public class Who extends JavaPlugin {
 		}
 		return null;
 	}
+	@Override
 	public void onLoad() {
 	}
 

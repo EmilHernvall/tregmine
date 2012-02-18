@@ -1,11 +1,5 @@
 package info.tregmine.chat;
 
-//import java.text.SimpleDateFormat;
-//import java.util.Date;
-//import java.util.TimeZone;
-
-//import java.util.Random;
-
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

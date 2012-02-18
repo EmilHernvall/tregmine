@@ -2,9 +2,6 @@ package info.tregmine.death;
 
 
 import java.util.logging.Logger;
-
-import org.bukkit.event.Event;
-import org.bukkit.event.Event.Priority;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -15,9 +12,8 @@ public class Death extends JavaPlugin {
 	
 	public final Logger log = Logger.getLogger("Minecraft");
 	public Tregmine tregmine = null;
-	public final DeathEntity entity = new DeathEntity(this);
-	public final DeathPlayer player = new DeathPlayer(this);
 	
+	@Override
 	public void onEnable(){
 		Plugin test = this.getServer().getPluginManager().getPlugin("Tregmine");
 
@@ -29,14 +25,16 @@ public class Death extends JavaPlugin {
 				this.getServer().getPluginManager().disablePlugin(this);
 		    }
 		}
-		  getServer().getPluginManager().registerEvent(Event.Type.ENTITY_EXPLODE, entity, Priority.Normal, this);
-		  getServer().getPluginManager().registerEvent(Event.Type.ENTITY_DEATH, entity, Priority.Normal, this);
-		  getServer().getPluginManager().registerEvent(Event.Type.PLAYER_RESPAWN, player, Priority.Normal, this);
+		
+		getServer().getPluginManager().registerEvents(new DeathEntity(this), this);
+		getServer().getPluginManager().registerEvents(new DeathPlayer(this), this);
 	}
 	
+	@Override
 	public void onDisable(){
 	}
 
+	@Override
 	public void onLoad() {
 	}
 

@@ -2,13 +2,12 @@ package info.tregmine.boxfill;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-//import org.bukkit.event.block.BlockListener;
-//import org.bukkit.event.block.BlockRightClickEvent;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerListener;
 
-public class BoxFillBlockListener extends PlayerListener {
+public class BoxFillBlockListener implements Listener {
 	private final BoxFill plugin;
 
 	public BoxFillBlockListener(BoxFill boxfill) {
@@ -16,6 +15,7 @@ public class BoxFillBlockListener extends PlayerListener {
 		plugin.getServer();
 	}
 
+	@EventHandler
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
 			info.tregmine.api.TregminePlayer tregminePlayer = this.plugin.tregmine.tregminePlayer.get(event.getPlayer().getName());

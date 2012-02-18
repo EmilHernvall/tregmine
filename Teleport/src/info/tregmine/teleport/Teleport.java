@@ -22,6 +22,7 @@ public class Teleport extends JavaPlugin {
 	public Tregmine tregmine = null;
 	public Player from = null;
 
+	@Override
 	public void onEnable(){
 		Plugin test = this.getServer().getPluginManager().getPlugin("Tregmine");
 
@@ -35,10 +36,12 @@ public class Teleport extends JavaPlugin {
 		}
 	}
 
+	@Override
 	public void onDisable(){
 	}
 
 
+	@Override
 	public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args) {
 		String commandName = command.getName().toLowerCase();
 		if(!(sender instanceof Player)) {
@@ -158,6 +161,7 @@ public class Teleport extends JavaPlugin {
 			
 			final Player tempfrom = from;
 			this.getServer().getScheduler().scheduleSyncDelayedTask(this,new Runnable() {
+				@Override
 				public void run() {
 					tempfrom.teleport(getServer().getWorld("world").getSpawnLocation());
 				}},20*delay);
@@ -169,6 +173,7 @@ public class Teleport extends JavaPlugin {
 		return false;
 	}
 
+	@Override
 	public void onLoad() {
 	}
 }

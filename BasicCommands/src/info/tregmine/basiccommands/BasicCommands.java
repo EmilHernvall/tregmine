@@ -13,8 +13,6 @@ import org.bukkit.entity.Monster;
 
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Slime;
-import org.bukkit.event.Event;
-import org.bukkit.event.Event.Priority;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.entity.EnderDragon;
@@ -29,7 +27,6 @@ public class BasicCommands extends JavaPlugin {
 
 	public final Logger log = Logger.getLogger("Minecraft");
 	public Tregmine tregmine = null;
-	public final BasicCommandsBlock block = new BasicCommandsBlock(this);
 
 	@Override
 	public void onEnable(){
@@ -43,7 +40,8 @@ public class BasicCommands extends JavaPlugin {
 				this.getServer().getPluginManager().disablePlugin(this);
 			}
 		}
-		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_INTERACT, block, Priority.Highest, this);
+		
+		getServer().getPluginManager().registerEvents(new BasicCommandsBlock(this), this);
 	}
 
 	@Override
@@ -86,12 +84,6 @@ public class BasicCommands extends JavaPlugin {
 			final TregminePlayer tregPlayer = tregmine.getPlayer(player);
 			tregPlayer.setGameMode(GameMode.CREATIVE);
 			tregPlayer.sendMessage(ChatColor.YELLOW + "You are now in creative mode.");
-
-			/*this.getServer().getScheduler().scheduleSyncDelayedTask(this,new Runnable() {
-				public void run() {
-					tregPlayer.sendMessage(ChatColor.YELLOW + "You are now back in survival mode.");
-					tregPlayer.setGameMode(GameMode.SURVIVAL);
-				}},12000L);*/
 		}
 
 		if (commandName.matches("survival") && (tregminePlayer.isAdmin() || tregminePlayer.getMetaBoolean("builder"))) {
@@ -124,6 +116,7 @@ public class BasicCommands extends JavaPlugin {
 		}
 
 		if (commandName.matches("cname") && tregminePlayer.isAdmin()) {
+			@SuppressWarnings("deprecation")
 			ChatColor color = ChatColor.getByCode(Integer.parseInt(args[0]));
 			tregminePlayer.setTemporaryChatName(color + args[1]);
 			tregminePlayer.sendMessage("You are now: " + tregminePlayer.getChatName());

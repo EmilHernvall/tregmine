@@ -1,20 +1,18 @@
 package info.tregmine.childsplay;
 
-//import info.tregmine.api.TregminePlayer;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-//import org.bukkit.event.block.Action;
-//import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerListener;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.util.Vector;
 
 
-public class SkylandPlayer extends PlayerListener {
+public class SkylandPlayer implements Listener {
 	private final Main plugin;
 
 	public SkylandPlayer(Main instance) {
@@ -23,6 +21,7 @@ public class SkylandPlayer extends PlayerListener {
 	}
 
 
+	@EventHandler
 	public void onPlayerMove(PlayerMoveEvent event)	 {
 
 		if (event.getPlayer().getWorld().getName().matches("citadel")) {		
@@ -66,6 +65,7 @@ public class SkylandPlayer extends PlayerListener {
 	}
 
 
+	@EventHandler
 	public void onPlayerTeleport(PlayerTeleportEvent event) {
         Location toLoc = event.getTo();
 		if ("citadel".equals(toLoc.getWorld())) {		
@@ -97,6 +97,7 @@ public class SkylandPlayer extends PlayerListener {
 
 	}
 
+	@EventHandler
 	private void movePlayerBack(Player player, Location movingFrom, Location movingTo)
 	{
 		Vector a = new Vector(movingFrom.getX(), movingFrom.getY(), movingFrom.getZ());
@@ -109,44 +110,4 @@ public class SkylandPlayer extends PlayerListener {
 		Location newPos = new Location(player.getWorld(), newPosVector.getX(), newPosVector.getY(), newPosVector.getZ());
 		player.teleport(newPos);
 	}
-
-	/*
-	public void onPlayerInteract(PlayerInteractEvent event) {
-		if(
-				event.getAction() == Action.PHYSICAL &&
-				(info.tregmine.api.math.Checksum.block(event.getClickedBlock()) == -1343863112 ||
-				info.tregmine.api.math.Checksum.block(event.getClickedBlock()) == 1597794487 ||
-				info.tregmine.api.math.Checksum.block(event.getClickedBlock()) == 244484790 ||
-				info.tregmine.api.math.Checksum.block(event.getClickedBlock()) == -1108824907 ||
-				info.tregmine.api.math.Checksum.block(event.getClickedBlock()) == 1832832692
-						)
-				) {
-
-			Location loc = new Location(this.plugin.getServer().getWorld("world"), 760.625, 123.5, -357.0625, -270.1499F, 46.95F);
-			event.getPlayer().teleport(loc);
-
-		}
-
-
-		if(
-				event.getAction() == Action.PHYSICAL &&
-				(info.tregmine.api.math.Checksum.block(event.getClickedBlock()) == 2096737327 ||
-				info.tregmine.api.math.Checksum.block(event.getClickedBlock()) == -401278610 ||
-				info.tregmine.api.math.Checksum.block(event.getClickedBlock()) == 1395672749 ||
-				info.tregmine.api.math.Checksum.block(event.getClickedBlock()) == -1102343188 ||
-				info.tregmine.api.math.Checksum.block(event.getClickedBlock()) == 694608171
-						)
-				) {
-
-			//			Location loc = new Location(this.plugin.getServer().getWorld("world"), 760.625, 123.5, -357.0625);
-			Location loc = this.plugin.getServer().getWorld("skyland").getSpawnLocation();
-			loc.setPitch(-10.800016F);
-			loc.setYaw(-177.7501F);
-
-			event.getPlayer().teleport(loc);
-
-		}
-
-	}
-	 */
 }

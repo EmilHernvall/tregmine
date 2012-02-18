@@ -21,6 +21,7 @@ public class Item extends JavaPlugin {
 	public Tregmine tregmine = null;
 
 
+	@Override
 	public void onEnable() {
 		Plugin test = this.getServer().getPluginManager().getPlugin("Tregmine");
 
@@ -35,9 +36,11 @@ public class Item extends JavaPlugin {
 
 	}
 
+	@Override
 	public void onDisable() {
 	}
 
+	@Override
 	public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args) {
 		String commandName = command.getName().toLowerCase();
 		Player player = null;
@@ -133,6 +136,7 @@ public class Item extends JavaPlugin {
 		return false;
 	}
 	
+	@Override
 	public void onLoad() {
 	}
 

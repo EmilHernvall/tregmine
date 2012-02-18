@@ -4,8 +4,6 @@ import info.tregmine.currency.Wallet;
 
 import java.util.Set;
 import java.util.HashSet;
-//import org.bukkit.ChatColor;
-//import org.bukkit.Location;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -13,11 +11,12 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 //import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerListener;
 
-public class BlessPlayer extends PlayerListener {
+public class BlessPlayer implements Listener {
 	private final Bless plugin;
 	private Set<Material> allowedMaterials;
 
@@ -38,11 +37,13 @@ public class BlessPlayer extends PlayerListener {
 		allowedMaterials.add(Material.SIGN_POST);
 		allowedMaterials.add(Material.DIODE);
 		allowedMaterials.add(Material.DIODE_BLOCK_OFF);
+		allowedMaterials.add(Material.TRAP_DOOR);
 		allowedMaterials.add(Material.DIODE_BLOCK_ON);
 		allowedMaterials.add(Material.JUKEBOX);
 		allowedMaterials.add(Material.SIGN);
 	}
 
+	@EventHandler
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		Player player = event.getPlayer();
 		Block block = event.getClickedBlock();

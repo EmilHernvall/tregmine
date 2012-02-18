@@ -34,6 +34,7 @@ public class Tp {
 				final Plugin teleport = from.getServer().getPluginManager().getPlugin("Teleport");
 				
 				from.getServer().getScheduler().scheduleSyncDelayedTask(teleport, new Runnable() {
+					@Override
 					public void run() {
 //						tempto.sendMessage(ChatColor.AQUA + tempfrom.getName() + " teleported to you!");
 						tempfrom.teleport(tempto.getLocation());
@@ -51,6 +52,7 @@ public class Tp {
 				final Plugin teleport = from.getServer().getPluginManager().getPlugin("Teleport");
 				
 				from.getServer().getScheduler().scheduleSyncDelayedTask(teleport, new Runnable() {
+					@Override
 					public void run() {
 						tempto.sendMessage(ChatColor.AQUA + tempfrom.getName() + " teleported to you!");
 						tempfrom.teleport(tempto.getLocation());
@@ -69,6 +71,7 @@ public class Tp {
 					final Plugin teleport = from.getServer().getPluginManager().getPlugin("Teleport");
 					
 					from.getServer().getScheduler().scheduleSyncDelayedTask(teleport, new Runnable() {
+						@Override
 						public void run() {
 							tempto.sendMessage(ChatColor.AQUA + tempfrom.getName() + " teleported to you!");
 							tempfrom.teleport(tempto.getLocation());
@@ -85,6 +88,7 @@ public class Tp {
 					final Plugin teleport = from.getServer().getPluginManager().getPlugin("Teleport");
 					
 					from.getServer().getScheduler().scheduleSyncDelayedTask(teleport, new Runnable() {
+						@Override
 						public void run() {
 							tempto.sendMessage(ChatColor.AQUA + tempfrom.getName() + " teleported to you!");
 							tempfrom.teleport(tempto.getLocation());

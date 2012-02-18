@@ -1,13 +1,13 @@
 package info.tregmine.invis;
 
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerListener;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
-public class InvisPlayerListener extends PlayerListener
-{
+public class InvisPlayerListener implements Listener {
   private final Invis plugin;
 
   public InvisPlayerListener(Invis instance)
@@ -15,6 +15,7 @@ public class InvisPlayerListener extends PlayerListener
     this.plugin = instance;
   }
 
+  @EventHandler
   public void onPlayerJoin(PlayerJoinEvent event)
   {
     Player player = event.getPlayer();
@@ -25,12 +26,14 @@ public class InvisPlayerListener extends PlayerListener
     }
   }
 
+  @EventHandler
   public void onPlayerQuit(PlayerQuitEvent event)
   {
     Player player = event.getPlayer();
     this.plugin.invisible.remove(player);
   }
 
+  @EventHandler
   public void onPlayerTeleport(PlayerTeleportEvent event)
   {
     if (event.isCancelled()) return;
