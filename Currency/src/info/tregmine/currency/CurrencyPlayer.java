@@ -27,16 +27,9 @@ public class CurrencyPlayer implements Listener  {
 			event.setCancelled(true);
 			return;
 		}
-		//		info.tregmine.api.TregminePlayer tregPlayer = this.plugin.tregmine.tregminePlayer.get(event.getPlayer().getName());
-		//
-		//		ZoneWorld world = this.plugin.zones.getWorld(tregPlayer.getWorld());
-		//		
-		//		Point p = new info.tregmine.quadtree.Point(tregPlayer.getLocation().getBlockX(),tregPlayer.getLocation().getBlockZ());
-		//		Lot lot = world.findLot(p);
-		//
-		//		if (lot != null) {
-		//			tregPlayer.sendMessage(lot.getName());
-		//		}
+		if (event.getItemDrop().getLocation().getBlockX() < 509 && event.getItemDrop().getLocation().getBlockX() > 498) {
+			event.getPlayer().sendMessage("If you see this, meaning something is wrong, or correct depending on where you are");
+		}
 	}
 
 }
