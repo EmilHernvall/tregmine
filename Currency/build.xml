@@ -6,6 +6,14 @@
 	<property name="tregminelib" value="../tregmine/tregmine.jar" />
 	<property name="build.compiler" value="modern" />
 	
+	
+	<property name="src" value="src" />
+	<property name="build" value="bin" />
+	<property name="lib" value="../AA-Global/lib" />
+	<property name="tregminelib" value="../tregmine/tregmine.jar" />
+	<property name="build.compiler" value="modern" />
+
+	
 	<target name="init">
 		<tstamp />
 		<mkdir dir="${build}" />
@@ -42,6 +50,9 @@
     
 	<target name="jar" depends="compile">
 		<jar destfile="${ant.project.name}.jar" basedir="${build}" />
+                    <manifest>
+                        <attribute name="Class-Path" value="lib/quadtree.jar lib/commons-dbcp-1.4.jar lib/commons-pool-1.5.6.jar" />
+                    </manifest>
 	</target>
 	
 </project>
