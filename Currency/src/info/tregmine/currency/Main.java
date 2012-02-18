@@ -10,16 +10,14 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
-
 import info.tregmine.Tregmine; 
-
 
 public class Main extends JavaPlugin {
 
 	public final Logger log = Logger.getLogger("Minecraft");
 	public Tregmine tregmine = null;
-	public final CurrencyPlayer player = new CurrencyPlayer(this);
-	public final CurrencyBlock block = new CurrencyBlock(this);
+//	public final CurrencyPlayer player = new CurrencyPlayer(this);
+//	public final CurrencyBlock block = new CurrencyBlock(this);
 	NumberFormat nf = NumberFormat.getNumberInstance();
 
 	@Override
@@ -34,9 +32,8 @@ public class Main extends JavaPlugin {
 				this.getServer().getPluginManager().disablePlugin(this);
 			}
 		}
-		
+	
 		getServer().getPluginManager().registerEvents(new CurrencyPlayer(this), this);
-		getServer().getPluginManager().registerEvents(new CurrencyBlock(this), this);
 	}
 
 	@Override

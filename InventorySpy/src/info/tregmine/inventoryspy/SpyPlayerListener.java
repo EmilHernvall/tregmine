@@ -4,16 +4,17 @@ package info.tregmine.inventoryspy;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerGameModeChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerInventoryEvent;
-import org.bukkit.event.player.PlayerListener;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 
 
-public class SpyPlayerListener extends PlayerListener {
+public class SpyPlayerListener implements Listener {
 	private final Main plugin;
 
 	public SpyPlayerListener(Main instance) {
@@ -21,10 +22,12 @@ public class SpyPlayerListener extends PlayerListener {
 		plugin.getServer();
 	}
 
+	@EventHandler
 	public void onPlayerGameModeChange(PlayerGameModeChangeEvent event) {
 		event.getPlayer().getInventory().clear();
 	}
 
+	@EventHandler
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		if ((event.getAction() == Action.RIGHT_CLICK_BLOCK  || event.getAction() == Action.LEFT_CLICK_BLOCK)) {
 				if (event.getClickedBlock().getType() == Material.CHEST && event.getPlayer().getGameMode() == GameMode.CREATIVE) {
@@ -35,10 +38,12 @@ public class SpyPlayerListener extends PlayerListener {
 	}
 
 
+	@EventHandler
 	public void onInventoryOpen (PlayerInventoryEvent event) {
 		event.getPlayer().sendMessage("INV");
 	}
 
+	@EventHandler
 	public void onPlayerDropItem (PlayerDropItemEvent event) {
 		if (event.getPlayer().getGameMode() == GameMode.CREATIVE) {
 			event.setCancelled(true);
@@ -50,9 +55,8 @@ public class SpyPlayerListener extends PlayerListener {
 		this.plugin.whoDropedItem.put(event.getItemDrop().hashCode(), tregminePlayer.getName());
 	}
 
+	@EventHandler
 	public void onPlayerPickupItem (PlayerPickupItemEvent event){
-
-
 		if (event.getPlayer().getGameMode() == GameMode.CREATIVE) {
 			event.setCancelled(true);
 			return;

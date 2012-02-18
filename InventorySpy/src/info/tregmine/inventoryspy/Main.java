@@ -14,8 +14,8 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
-import org.bukkit.event.Event.Priority;
+//import org.bukkit.event.Event;
+//import org.bukkit.event.Event.Priority;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -26,9 +26,10 @@ public class Main extends JavaPlugin {
 
 	public final Logger log = Logger.getLogger("Minecraft");
 	public Tregmine tregmine = null;
-	public SpyPlayerListener inventory = new SpyPlayerListener(this);
+//	public SpyPlayerListener inventory = new SpyPlayerListener(this);
 	public HashMap<Integer, String> whoDropedItem = new HashMap<Integer, String>();
 
+	@Override
 	public void onEnable(){
 		Plugin test = this.getServer().getPluginManager().getPlugin("Tregmine");
 
@@ -40,20 +41,23 @@ public class Main extends JavaPlugin {
 				log.info(this.getDescription().getName() + " " + this.getDescription().getVersion() + " - could not find Tregmine");
 				this.getServer().getPluginManager().disablePlugin(this);
 			}
+
 			
-//			  getServer().getPluginManager().registerEvent(Event.Type.INVENTORY_OPEN, inventory, Priority.Monitor, this);
-			  getServer().getPluginManager().registerEvent(Event.Type.PLAYER_DROP_ITEM, inventory, Priority.Monitor, this);
-			  getServer().getPluginManager().registerEvent(Event.Type.PLAYER_PICKUP_ITEM, inventory, Priority.Monitor, this);
-			  getServer().getPluginManager().registerEvent(Event.Type.PLAYER_GAME_MODE_CHANGE, inventory, Priority.Monitor, this);
-			  getServer().getPluginManager().registerEvent(Event.Type.PLAYER_INTERACT, inventory, Priority.Monitor, this);
-//			  getServer().getPluginManager().registerEvent(Event.Type.INVENTORY_CLICK, inventory, Priority.Monitor, this);
+			getServer().getPluginManager().registerEvents(new SpyPlayerListener(this), this);
+
+//			  getServer().getPluginManager().registerEvent(Event.Type.PLAYER_DROP_ITEM, inventory, Priority.Monitor, this);
+//			  getServer().getPluginManager().registerEvent(Event.Type.PLAYER_PICKUP_ITEM, inventory, Priority.Monitor, this);
+//			  getServer().getPluginManager().registerEvent(Event.Type.PLAYER_GAME_MODE_CHANGE, inventory, Priority.Monitor, this);
+//			  getServer().getPluginManager().registerEvent(Event.Type.PLAYER_INTERACT, inventory, Priority.Monitor, this);
 
 		}
 	}
 
+	@Override
 	public void onDisable(){
 	}
 
+	@Override
 	public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args) {
 		String commandName = command.getName().toLowerCase();
 
@@ -79,6 +83,7 @@ public class Main extends JavaPlugin {
 		return true;
 	}
 	
+	@Override
 	public void onLoad() {
 	}
 
