@@ -11,11 +11,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import info.tregmine.Tregmine; 
+import info.tregmine.zones.ZonesPlugin;
 
 public class Main extends JavaPlugin {
 
 	public final Logger log = Logger.getLogger("Minecraft");
 	public Tregmine tregmine = null;
+	public ZonesPlugin zones = null;
 	NumberFormat nf = NumberFormat.getNumberInstance();
 
 	@Override
@@ -30,7 +32,21 @@ public class Main extends JavaPlugin {
 				this.getServer().getPluginManager().disablePlugin(this);
 			}
 		}
-	
+
+		
+		Plugin zonesTest = this.getServer().getPluginManager().getPlugin("ZonesPlugin");
+
+		if(this.zones == null) {
+			if(test != null) {
+				this.zones = ((ZonesPlugin)zonesTest);
+			} else {
+				log.info(this.getDescription().getName() + " " + this.getDescription().getVersion() + " - could not find zones");
+				this.getServer().getPluginManager().disablePlugin(this);
+			}
+		}
+		
+		
+		
 		getServer().getPluginManager().registerEvents(new CurrencyPlayer(this), this);
 	}
 

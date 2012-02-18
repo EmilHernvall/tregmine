@@ -70,18 +70,6 @@ public class ZonesPlugin extends JavaPlugin
 		getServer().getPluginManager().registerEvents(new ZonePlayerListener(this), this);
 		getServer().getPluginManager().registerEvents(new ZoneBlockListener(this), this);
 		getServer().getPluginManager().registerEvents(new ZoneEntityListener(this), this);
-//		getServer().getPluginManager().registerEvents(new ZonePlayerListener(this), this);
-
-		/*
-		pluginMgm.registerEvent(Event.Type.PLAYER_BUCKET_EMPTY, new ZonePlayerListener(this), Priority.High, this);
-		pluginMgm.registerEvent(Event.Type.BLOCK_BREAK, new ZoneBlockListener(this), Priority.High, this);
-		pluginMgm.registerEvent(Event.Type.BLOCK_PLACE, new ZoneBlockListener(this), Priority.High, this);
-		pluginMgm.registerEvent(Event.Type.PLAYER_INTERACT, new ZonePlayerListener(this), Priority.High, this);
-		pluginMgm.registerEvent(Event.Type.PLAYER_MOVE, new ZonePlayerListener(this), Priority.High, this);
-		pluginMgm.registerEvent(Event.Type.PLAYER_TELEPORT, new ZonePlayerListener(this), Priority.High, this);
-		pluginMgm.registerEvent(Event.Type.CREATURE_SPAWN, new ZoneEntityListener(this), Priority.High, this);
-		pluginMgm.registerEvent(Event.Type.ENTITY_DAMAGE, new ZoneEntityListener(this), Priority.High, this);
-		*/
 		
 		worlds = new TreeMap<String, ZoneWorld>(new Comparator<String>() {
 			@Override

@@ -3,6 +3,7 @@
 	<name>Currency</name>
 	<comment></comment>
 	<projects>
+		<project>Zones</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
