@@ -65,7 +65,7 @@ public class CurrencyPlayer implements Listener  {
 					Wallet wallet = new Wallet(event.getPlayer().getName());
 					event.getItemDrop().remove();
 					wallet.add(total);
-					event.getPlayer().sendMessage(ChatColor.AQUA + "You got " + ChatColor.GOLD + total + " Tregs");
+					event.getPlayer().sendMessage(ChatColor.AQUA + "You got " + ChatColor.GOLD + total + " Tregs (" + wallet.formatBalance() + ")");
 				}
 				
 				
