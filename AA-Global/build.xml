@@ -20,7 +20,6 @@
 		<ant dir="../Lookup" target="clean" inheritAll="false" />
 		<ant dir="../miscButton" target="clean" inheritAll="false" />
 		<ant dir="../SignColours" target="clean" inheritAll="false" />
-		<ant dir="../Surprise" target="clean" inheritAll="false" />
 		<ant dir="../Teleport" target="clean" inheritAll="false" />
 		<ant dir="../UserStats" target="clean" inheritAll="false" />
 		<ant dir="../WallOfStats" target="clean" inheritAll="false" />
@@ -46,7 +45,6 @@
 		<ant dir="../Lookup" target="jar" inheritAll="false" />
 		<ant dir="../miscButton" target="jar" inheritAll="false" />
 		<ant dir="../SignColours" target="jar" inheritAll="false" />
-		<ant dir="../Surprise" target="jar" inheritAll="false" />
 		<ant dir="../Teleport" target="jar" inheritAll="false" />
 		<ant dir="../UserStats" target="jar" inheritAll="false" />
 		<ant dir="../WallOfStats" target="jar" inheritAll="false" />
