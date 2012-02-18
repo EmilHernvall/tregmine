@@ -5,18 +5,19 @@ import info.tregmine.Tregmine;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockBurnEvent;
 import org.bukkit.event.block.BlockCanBuildEvent;
 import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.block.BlockIgniteEvent;
-import org.bukkit.event.block.BlockListener;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.LeavesDecayEvent;
 import org.bukkit.event.block.SignChangeEvent;
 
 
-public class TregmineBlockListener extends BlockListener {
+public class TregmineBlockListener implements Listener {
 	private final Tregmine plugin;
 
 	public TregmineBlockListener(Tregmine instance) {
@@ -24,6 +25,7 @@ public class TregmineBlockListener extends BlockListener {
 		plugin.getServer();
 	}
 
+	@EventHandler
 	public void onBlockPlace (BlockPlaceEvent event)	{
 		info.tregmine.api.TregminePlayer tregminePlayer = this.plugin.tregminePlayer.get(event.getPlayer().getName());
 		
@@ -46,6 +48,7 @@ public class TregmineBlockListener extends BlockListener {
 		plugin.blockStats.onBlockPlace(event);
 	}
 
+	@EventHandler
 	public void onBlockBurn (BlockBurnEvent event) {
 		if(event.getBlock().getWorld().getName().matches("world")) {
 			event.setCancelled(true);
@@ -60,6 +63,7 @@ public class TregmineBlockListener extends BlockListener {
 		}
 	}
 
+	@EventHandler
 	public void onBlockBreak	(BlockBreakEvent event) {
 		info.tregmine.api.TregminePlayer tregminePlayer = this.plugin.tregminePlayer.get(event.getPlayer().getName());
 		
@@ -83,10 +87,12 @@ public class TregmineBlockListener extends BlockListener {
 		plugin.blockStats.onBlockBreak(event);
 	}
 
+	@EventHandler
 	public void onBlockCanBuild (BlockCanBuildEvent event) {
 		//Test
 	}
 
+	@EventHandler
 	public void onLeavesDecay	(LeavesDecayEvent event) {
 		Location l = event.getBlock().getLocation();
 		Block  fence = event.getBlock().getWorld().getBlockAt(l.getBlockX(),l.getBlockY()-1, l.getBlockZ());
@@ -101,12 +107,14 @@ public class TregmineBlockListener extends BlockListener {
 
 	}
 
+	@EventHandler
 	public void onBlockFlow	(BlockFromToEvent event) {
 		if(event.getBlock().getWorld().getName().matches("alpha")) {
 			event.setCancelled(true);
 		}
 	}
 
+	@EventHandler
 	public void onSignChange(SignChangeEvent event)	{
 		if(event.getBlock().getWorld().getName().matches("alpha")) {
 			event.setCancelled(true);
@@ -114,6 +122,7 @@ public class TregmineBlockListener extends BlockListener {
 	}
 
 
+	@EventHandler
 	public void onBlockIgnite(BlockIgniteEvent event) {
 		if(event.getBlock().getWorld().getName().matches("world")) {
 			event.setCancelled(true);

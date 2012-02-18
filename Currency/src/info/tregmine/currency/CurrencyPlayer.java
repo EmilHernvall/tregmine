@@ -1,4 +1,6 @@
 package info.tregmine.currency;
+import info.tregmine.api.Zone;
+
 import org.bukkit.GameMode;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -27,7 +29,8 @@ public class CurrencyPlayer implements Listener  {
 			return;
 		}
 		info.tregmine.api.TregminePlayer tregPlayer = this.plugin.tregmine.tregminePlayer.get(event.getPlayer().getName());
-		tregPlayer.sendMessage("You droped something");
+		tregPlayer.sendMessage(tregPlayer.getCurrentZone().getName());
+		
 	}
 
 }

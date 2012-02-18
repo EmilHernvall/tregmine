@@ -44,10 +44,12 @@ public class ZonesPlugin extends JavaPlugin
 	private Map<String, ZoneWorld> worlds;
 	private Map<Integer, Zone> zones;
 	
+	@Override
 	public void onLoad() 
 	{
 	}
 	
+	@Override
 	public void onEnable()
 	{
 		Server server = getServer();
@@ -64,7 +66,6 @@ public class ZonesPlugin extends JavaPlugin
 		}
 		
 		pluginMgm.registerEvent(Event.Type.PLAYER_BUCKET_EMPTY, new ZonePlayerListener(this), Priority.High, this);
-
 		pluginMgm.registerEvent(Event.Type.BLOCK_BREAK, new ZoneBlockListener(this), Priority.High, this);
 		pluginMgm.registerEvent(Event.Type.BLOCK_PLACE, new ZoneBlockListener(this), Priority.High, this);
 		pluginMgm.registerEvent(Event.Type.PLAYER_INTERACT, new ZonePlayerListener(this), Priority.High, this);
@@ -81,6 +82,7 @@ public class ZonesPlugin extends JavaPlugin
 		zones = new HashMap<Integer, Zone>();
 	}
 
+	@Override
 	public void onDisable()
 	{
 	}
@@ -129,6 +131,7 @@ public class ZonesPlugin extends JavaPlugin
 		return zoneWorld;
 	}
 
+	@Override
 	public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args) 
 	{
 		String commandName = command.getName().toLowerCase();

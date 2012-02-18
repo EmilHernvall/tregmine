@@ -16,8 +16,6 @@ public class Main extends JavaPlugin {
 
 	public final Logger log = Logger.getLogger("Minecraft");
 	public Tregmine tregmine = null;
-//	public final CurrencyPlayer player = new CurrencyPlayer(this);
-//	public final CurrencyBlock block = new CurrencyBlock(this);
 	NumberFormat nf = NumberFormat.getNumberInstance();
 
 	@Override

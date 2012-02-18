@@ -11,6 +11,12 @@ import info.tregmine.quadtree.Rectangle;
 
 public class Zone 
 {
+	
+	public enum lotStatus {
+		dropzone(),
+		bank();
+	}
+	
 	public enum Permission
 	{
 		// can modify the zone in any way

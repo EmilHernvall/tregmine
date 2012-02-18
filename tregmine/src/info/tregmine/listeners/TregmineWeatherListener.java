@@ -2,10 +2,11 @@ package info.tregmine.listeners;
 
 import info.tregmine.Tregmine;
 
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.event.weather.WeatherChangeEvent;
-import org.bukkit.event.weather.WeatherListener;
 
-public class TregmineWeatherListener extends WeatherListener {
+public class TregmineWeatherListener implements Listener {
 	private final Tregmine plugin;
 	public TregmineWeatherListener(Tregmine instance) {
 		plugin = instance;
@@ -13,6 +14,7 @@ public class TregmineWeatherListener extends WeatherListener {
 	}
 
 	
+	@EventHandler
 	public void	onWeatherChange(WeatherChangeEvent event)  {
 //		if (event.toWeatherState()) {
 //			event.setCancelled(true);
