@@ -4,7 +4,7 @@ import info.tregmine.api.TregminePlayer;
 import info.tregmine.api.Zone;
 import info.tregmine.api.Zone.Permission;
 import info.tregmine.database.ConnectionPool;
-import info.tregmine.listeners.TregminePlayerListener;
+//import info.tregmine.listeners.TregminePlayerListener;
 import info.tregmine.listeners.ZoneBlockListener;
 import info.tregmine.listeners.ZoneEntityListener;
 import info.tregmine.listeners.ZonePlayerListener;
@@ -29,8 +29,8 @@ import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
-import org.bukkit.event.Event.Priority;
+//import org.bukkit.event.Event;
+//import org.bukkit.event.Event.Priority;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -70,7 +70,7 @@ public class ZonesPlugin extends JavaPlugin
 		getServer().getPluginManager().registerEvents(new ZonePlayerListener(this), this);
 		getServer().getPluginManager().registerEvents(new ZoneBlockListener(this), this);
 		getServer().getPluginManager().registerEvents(new ZoneEntityListener(this), this);
-		getServer().getPluginManager().registerEvents(new ZonePlayerListener(this), this);
+//		getServer().getPluginManager().registerEvents(new ZonePlayerListener(this), this);
 
 		/*
 		pluginMgm.registerEvent(Event.Type.PLAYER_BUCKET_EMPTY, new ZonePlayerListener(this), Priority.High, this);

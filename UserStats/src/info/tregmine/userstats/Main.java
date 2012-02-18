@@ -16,6 +16,7 @@ public class Main extends JavaPlugin {
 	public Tregmine tregmine = null;
 	public boolean enable = true;
 
+	@Override
 	public void onEnable(){
 		Plugin test = this.getServer().getPluginManager().getPlugin("Tregmine");
 
@@ -28,6 +29,7 @@ public class Main extends JavaPlugin {
 		}
 
 		getServer().getScheduler().scheduleAsyncRepeatingTask(this, new Runnable() {
+			@Override
 			public void run() {
 				for (Player p : getServer().getOnlinePlayers()) {
 					p.sendMessage("SPAWM");
@@ -37,9 +39,11 @@ public class Main extends JavaPlugin {
 
 	}
 
+	@Override
 	public void onDisable(){
 		this.enable = false;
 	}
+	@Override
 	public void onLoad() {
 	}
 

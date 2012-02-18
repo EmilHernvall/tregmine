@@ -25,12 +25,14 @@ public class ZoneWorld
 		this.world = world;
 		this.zonesLookup = new QuadTree<Zone>();
 		this.zoneNameLookup = new TreeMap<String, Zone>(new Comparator<String>() {
+				@Override
 				public int compare(String a, String b) {
 					return a.compareToIgnoreCase(b);
 				}
 			});
 		this.lotLookup = new QuadTree<Lot>();
 		this.lotNameLookup = new TreeMap<String, Lot>(new Comparator<String>() {
+			@Override
 			public int compare(String a, String b) {
 				return a.compareToIgnoreCase(b);
 			}

@@ -16,6 +16,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
+import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
@@ -243,6 +244,14 @@ public class ZonePlayerListener implements Listener
 		}
 	}
 
+	
+	@EventHandler
+	public void onPlayerChangedWorld(PlayerChangedWorldEvent event) {
+		TregminePlayer player = tregmine.getPlayer(event.getPlayer());
+		player.setCurrentZone(null);
+	}
+
+	
 	@EventHandler
 	public void onPlayerTeleport(PlayerTeleportEvent event)
 	{
@@ -302,9 +311,6 @@ public class ZonePlayerListener implements Listener
 			}
 			player.setCurrentZone(currentZone);
 		}
-
-		player.setCurrentZone(null);
-
 	}
 
 	private void disallowedMessage(Zone currentZone, TregminePlayer player)
