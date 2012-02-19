@@ -38,7 +38,7 @@ public class Wallet {
 				return rs.getLong("value");
 			}
 		} catch (SQLException e) {
-			throw new RuntimeException(e);
+//			throw new RuntimeException(e);
 		} finally {
 			if (rs != null) {
 				try { rs.close(); } catch (SQLException e) {} 

@@ -23,7 +23,7 @@ public class DeathEntity implements Listener  {
              PlayerDeathEvent e = (PlayerDeathEvent) event;
              e.setDeathMessage(null);
          }
-w	}
+	}
 
 	@EventHandler
 	public void onEntityExplode (EntityExplodeEvent event) {
