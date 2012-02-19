@@ -6,6 +6,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 
 public class DeathEntity implements Listener  {
 	private final Death plugin;
@@ -18,7 +19,11 @@ public class DeathEntity implements Listener  {
 	
 	@EventHandler
 	public void onEntityDeath (EntityDeathEvent event) {
-	}
+		 if (event instanceof PlayerDeathEvent) {
+             PlayerDeathEvent e = (PlayerDeathEvent) event;
+             e.setDeathMessage(null);
+         }
+w	}
 
 	@EventHandler
 	public void onEntityExplode (EntityExplodeEvent event) {
