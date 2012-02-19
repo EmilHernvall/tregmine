@@ -79,13 +79,13 @@ public class CurrencyPlayer implements Listener  {
 				//				event.getPlayer().sendMessage("value: " + total);
 
 
-				if (total > 0) {
+				if (total > 0 && event.getItemDrop().getFireTicks() > 0) {
 					Wallet wallet = new Wallet(event.getPlayer().getName());
-					//					event.getItemDrop().remove();
 					event.getItemDrop().getItemStack().setAmount(0);
 					event.getItemDrop().setPickupDelay(Integer.MAX_VALUE);
 					wallet.add(total);
 					event.getPlayer().sendMessage(ChatColor.AQUA + "You got " + ChatColor.GOLD + total + " Tregs " + ChatColor.AQUA +"(You have " + wallet.formatBalance() + ")");
+					event.getItemDrop().remove();
 				}
 
 
