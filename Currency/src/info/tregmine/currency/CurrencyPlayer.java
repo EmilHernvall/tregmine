@@ -55,9 +55,9 @@ public class CurrencyPlayer implements Listener  {
 		}
 		if (
 				event.getItemDrop().getLocation().getBlockX() < 509 &&
-				event.getItemDrop().getLocation().getBlockX() > 498 &&
+				event.getItemDrop().getLocation().getBlockX() > 495 &&
 				event.getItemDrop().getLocation().getBlockZ() > -165 &&
-				event.getItemDrop().getLocation().getBlockZ() < -153
+				event.getItemDrop().getLocation().getBlockZ() < -150
 				){
 			Connection conn = null;
 			PreparedStatement stmt = null;
