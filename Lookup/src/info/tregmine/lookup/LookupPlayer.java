@@ -56,9 +56,13 @@ public class LookupPlayer implements  Listener  {
 		}
 
 		if(tregminePlayer.isDonator()) {
-			tregminePlayer.setAllowFlight(true);
+			event.getPlayer().sendMessage("You are allowed to fly on this server");
+			event.getPlayer().setAllowFlight(true);
+//			tregminePlayer.setAllowFlight(true);
 		} else {
-			tregminePlayer.setAllowFlight(false);
+//			event.getPlayer().sendMessage("no-z-cheat");
+			event.getPlayer().sendMessage("You are NOT allowed to fly on this server");
+			event.getPlayer().setAllowFlight(false);
 		}
 
 	}    
