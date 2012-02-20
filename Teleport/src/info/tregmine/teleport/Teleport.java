@@ -62,6 +62,11 @@ public class Teleport extends JavaPlugin {
 			return true;
 		}
 
+		if(commandName.equals("makewarp") && tregminePlayer.isAdmin()) {
+			
+		}
+		
+		
 		if(commandName.equals("home") && tregminePlayer.isDonator()) {
 			Home home = new Home(from.getName(), getServer());
 

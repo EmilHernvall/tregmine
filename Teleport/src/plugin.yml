@@ -25,9 +25,7 @@ commands:
   home:
     description: teleport to your home. You can set home with /home save.
     -usage: /home (save)
-  alpha:
-    description: teleport to the alpha world.
-    -usage: /alpha
-  skyland:
-    description: teleport to the skyland world.
-    -usage: /skyland
+  makewarp:
+    description: teleport to specified warp.
+    -usage: /warp <warpname>
+    

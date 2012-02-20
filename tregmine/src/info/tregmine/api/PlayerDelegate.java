@@ -1,6 +1,7 @@
 package info.tregmine.api;
 
 import java.net.InetSocketAddress;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +36,8 @@ import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionAttachment;
 import org.bukkit.permissions.PermissionAttachmentInfo;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
 public abstract class PlayerDelegate implements Player 
@@ -567,14 +570,7 @@ public abstract class PlayerDelegate implements Player
 	{
 		delegate.setExhaustion(arg0);
 	}
-	
-	@SuppressWarnings("deprecation")
-	@Override
-	public int getExperience()
-	{
-		return delegate.getExperience();
-	}
-	
+		
 	@Override
 	public void setLevel(int arg0)
 	{
@@ -611,12 +607,6 @@ public abstract class PlayerDelegate implements Player
 	@Override
 	public int getTotalExperience() {
 		return delegate.getTotalExperience();
-	}
-
-	@SuppressWarnings("deprecation")
-	@Override
-	public void setExperience(int arg0) {
-		delegate.setExperience(arg0);
 	}
 
 	@Override
@@ -792,6 +782,42 @@ public abstract class PlayerDelegate implements Player
 	@Override
 	public void showPlayer(Player arg0) {
 		delegate.showPlayer(arg0);
+	}
+
+	@Override
+	public boolean addPotionEffect(PotionEffect arg0) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean addPotionEffect(PotionEffect arg0, boolean arg1) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean addPotionEffects(Collection<PotionEffect> arg0) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public Collection<PotionEffect> getActivePotionEffects() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean hasPotionEffect(PotionEffectType arg0) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void removePotionEffect(PotionEffectType arg0) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	
