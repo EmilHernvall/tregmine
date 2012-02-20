@@ -73,10 +73,13 @@ public class CurrencyPlayer implements Listener  {
 
 				rs = stmt.getResultSet();
 
-				rs.first();
 
-				int total = rs.getInt("value") * event.getItemDrop().getItemStack().getAmount();
-				//				event.getPlayer().sendMessage("value: " + total);
+				int total = 0;
+				if (rs.first() ) {
+
+					total = rs.getInt("value") * event.getItemDrop().getItemStack().getAmount();
+					//				event.getPlayer().sendMessage("value: " + total);
+				}
 
 
 				if (total > 0) {
@@ -86,9 +89,8 @@ public class CurrencyPlayer implements Listener  {
 					event.getItemDrop().setFireTicks(Integer.MAX_VALUE);
 					wallet.add(total);
 					event.getPlayer().sendMessage(ChatColor.AQUA + "You got " + ChatColor.GOLD + total + " Tregs " + ChatColor.AQUA +"(You have " + wallet.formatBalance() + ")");
-//					event.getItemDrop().remove();
+					//					event.getItemDrop().remove();
 				}
-
 
 			} catch (SQLException e) {
 				throw new RuntimeException(e);
