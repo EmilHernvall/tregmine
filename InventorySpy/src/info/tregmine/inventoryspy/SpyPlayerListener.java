@@ -30,12 +30,12 @@ public class SpyPlayerListener implements Listener {
 	@EventHandler
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		if ((event.getAction() == Action.RIGHT_CLICK_BLOCK  || event.getAction() == Action.LEFT_CLICK_BLOCK)) {
-			event.getPlayer().sendMessage("Interaction faild");
-//				if (event.getClickedBlock().getType() == Material.CHEST && event.getPlayer().getGameMode() == GameMode.CREATIVE) {
-//					event.setCancelled(true);
-//					return;
-//				}
+			if (event.getClickedBlock().getType() == Material.CHEST && event.getPlayer().getGameMode() == GameMode.CREATIVE) {
+				event.getPlayer().sendMessage("error");
+				event.setCancelled(true);
+				return;
 			}
+		}
 	}
 
 
