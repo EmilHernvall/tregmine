@@ -56,21 +56,22 @@ public class CurrencyPlayer implements Listener  {
 				event.getItemDrop().getLocation().getBlockZ() > -165 &&
 				event.getItemDrop().getLocation().getBlockZ() < -150
 				){
-			
+
 			if (event.getPlayer().getGameMode() == GameMode.CREATIVE) {
 				event.setCancelled(true);
 				return;
 			}
-			
-			
+
+
 			TregminePlayer tregminePlayer = this.plugin.tregmine.tregminePlayer.get(event.getPlayer().getName());
 			if (!tregminePlayer.isTrusted()) {
+				tregminePlayer.sendMessage(ChatColor.YELLOW + "Sorry you can't sell block as long as you are untrusted");
 				event.setCancelled(true);
 				return;
 			}
-			
-			
-			
+
+
+
 			Connection conn = null;
 			PreparedStatement stmt = null;
 			ResultSet rs = null;
