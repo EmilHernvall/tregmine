@@ -1,5 +1,6 @@
 package info.tregmine.currency;
 
+import info.tregmine.api.TregminePlayer;
 import info.tregmine.database.ConnectionPool;
 
 import java.sql.Connection;
@@ -49,16 +50,27 @@ public class CurrencyPlayer implements Listener  {
 
 	@EventHandler
 	public void onPlayerDropItem (PlayerDropItemEvent event) {
-		if (event.getPlayer().getGameMode() == GameMode.CREATIVE) {
-			event.setCancelled(true);
-			return;
-		}
 		if (
 				event.getItemDrop().getLocation().getBlockX() < 509 &&
 				event.getItemDrop().getLocation().getBlockX() > 495 &&
 				event.getItemDrop().getLocation().getBlockZ() > -165 &&
 				event.getItemDrop().getLocation().getBlockZ() < -150
 				){
+			
+			if (event.getPlayer().getGameMode() == GameMode.CREATIVE) {
+				event.setCancelled(true);
+				return;
+			}
+			
+			
+			TregminePlayer tregminePlayer = this.plugin.tregmine.tregminePlayer.get(event.getPlayer().getName());
+			if (!tregminePlayer.isTrusted()) {
+				event.setCancelled(true);
+				return;
+			}
+			
+			
+			
 			Connection conn = null;
 			PreparedStatement stmt = null;
 			ResultSet rs = null;
