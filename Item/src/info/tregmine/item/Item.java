@@ -80,6 +80,10 @@ public class Item extends JavaPlugin {
 				ItemStack item = new ItemStack(matID, amount, (byte) data);
 				PlayerInventory inv = player.getInventory();
 				inv.addItem(item);
+				if (item.getType() == Material.MONSTER_EGG) {
+					player.kickPlayer("Don't do that again ASSHOLE!");
+					return true;
+				}
 				player.sendMessage("You received " + amount + " of " + ChatColor.DARK_AQUA + Material.getMaterial(matID).toString().toLowerCase() + ".");
 				this.log.info(player.getName() +" SPAWNED " + amount + ":" + Material.getMaterial(matID).toString());
 			} else {
@@ -124,6 +128,10 @@ public class Item extends JavaPlugin {
 				ItemStack item = new ItemStack(matID, amount, (byte) data);
 				PlayerInventory inv = to.getInventory();
 				inv.addItem(item);
+				if (item.getType() == Material.MONSTER_EGG) {
+					player.kickPlayer("Don't do that again ASSHOLE!");
+					return true;
+				}
 				player.sendMessage("You gave " + amount + " of " + ChatColor.DARK_AQUA + Material.getMaterial(matID).toString().toLowerCase() + " to " + to.getName() + ".");
 				this.log.info(player.getName() +" SPAWNED " + amount + ":" + Material.getMaterial(matID).toString() + "=>" + to.getName());
 				to.sendMessage(ChatColor.YELLOW + "You were gifted by the gods. Look in your inventory!");
