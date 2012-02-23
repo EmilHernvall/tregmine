@@ -29,24 +29,8 @@ public class SpyPlayerListener implements Listener {
 
 	@EventHandler
 	public void onPlayerInteract(PlayerInteractEvent event) {
-		
-		//TODO: Fix all this ugly code
 		if ((event.getAction() == Action.RIGHT_CLICK_BLOCK  || event.getAction() == Action.LEFT_CLICK_BLOCK)) {
 				if (event.getClickedBlock().getType() == Material.CHEST && event.getPlayer().getGameMode() == GameMode.CREATIVE) {
-					event.setCancelled(true);
-					return;
-				}
-				if (event.getClickedBlock().getType() == Material.FURNACE && event.getPlayer().getGameMode() == GameMode.CREATIVE) {
-					event.setCancelled(true);
-					return;
-				}
-				
-				if (event.getClickedBlock().getType() == Material.BURNING_FURNACE && event.getPlayer().getGameMode() == GameMode.CREATIVE) {
-					event.setCancelled(true);
-					return;
-				}
-				
-				if (event.getClickedBlock().getType() == Material.DISPENSER && event.getPlayer().getGameMode() == GameMode.CREATIVE) {
 					event.setCancelled(true);
 					return;
 				}
