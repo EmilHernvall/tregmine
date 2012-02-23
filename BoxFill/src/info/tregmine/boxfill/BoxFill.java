@@ -56,7 +56,9 @@ public class BoxFill extends JavaPlugin {
 		Material.IRON_ORE,
 		Material.LAPIS_ORE,
 		Material.SAPLING,
-		Material.REDSTONE_ORE
+		Material.REDSTONE_ORE,
+		Material.MONSTER_EGG,
+		Material.MONSTER_EGGS
 	};
 
 	private static int MAX_FILL_SIZE = (10 * 16) * (10 * 16) * 128; 
