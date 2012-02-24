@@ -4,6 +4,7 @@ package info.tregmine.inventoryspy;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
+import org.bukkit.block.Chest;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
@@ -30,6 +31,12 @@ public class SpyPlayerListener implements Listener {
 	@EventHandler
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		if ((event.getAction() == Action.RIGHT_CLICK_BLOCK  || event.getAction() == Action.LEFT_CLICK_BLOCK)) {
+
+			if(event.getClickedBlock().getState() instanceof Chest) {
+				event.getPlayer().sendMessage("You clicked on a chest!");
+			}
+
+			
 			if (event.getClickedBlock().getType() == Material.CHEST && event.getPlayer().getGameMode() == GameMode.CREATIVE) {
 				event.getPlayer().sendMessage("error");
 				event.setCancelled(true);
