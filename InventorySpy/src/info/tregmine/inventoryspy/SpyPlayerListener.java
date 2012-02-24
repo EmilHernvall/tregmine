@@ -33,7 +33,8 @@ public class SpyPlayerListener implements Listener {
 		if ((event.getAction() == Action.RIGHT_CLICK_BLOCK  || event.getAction() == Action.LEFT_CLICK_BLOCK)) {
 
 			if(event.getClickedBlock().getState() instanceof Chest) {
-				event.getPlayer().sendMessage("You clicked on a chest!");
+//				event.getPlayer().sendMessage("You clicked on a chest!");
+				int check = info.tregmine.api.math.Checksum.block(event.getClickedBlock());
 			}
 
 			
