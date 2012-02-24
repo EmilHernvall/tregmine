@@ -42,6 +42,7 @@ public class SpyPlayerListener implements Listener {
 	@EventHandler
 	public void onInventoryOpen (PlayerInventoryEvent event) {
 		event.getPlayer().sendMessage("INV");
+		this.plugin.log.info(event.getInventory().getItem(0).getType().name());
 	}
 
 	@EventHandler
