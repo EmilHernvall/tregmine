@@ -49,8 +49,12 @@ public class LookupPlayer implements  Listener  {
 			tregminePlayer.setMetaString("region", l1.region);
 			tregminePlayer.setMetaString("hostname", host);
 			if(!event.getPlayer().isOp()) {
-				this.plugin.getServer().broadcastMessage(ChatColor.DARK_AQUA + "Welcome! " + tregminePlayer.getChatName() + ChatColor.DARK_AQUA + " from " +l1.countryName);
-				event.getPlayer().sendMessage(ChatColor.DARK_AQUA + l1.city + " - " + l1.postalCode);
+				if(tregminePlayer.getMetaBoolean("hiddenlocation")) {
+					this.plugin.getServer().broadcastMessage(ChatColor.DARK_AQUA + "Welcome! " + tregminePlayer.getChatName());
+				} else {
+					this.plugin.getServer().broadcastMessage(ChatColor.DARK_AQUA + "Welcome! " + tregminePlayer.getChatName() + ChatColor.DARK_AQUA + " from " +l1.countryName);
+					event.getPlayer().sendMessage(ChatColor.DARK_AQUA + l1.city + " - " + l1.postalCode);
+				}
 			} 
 
 		}
@@ -58,7 +62,7 @@ public class LookupPlayer implements  Listener  {
 		if(tregminePlayer.isDonator()) {
 			event.getPlayer().sendMessage("You are allowed to fly on this server");
 			event.getPlayer().setAllowFlight(true);
-//			tregminePlayer.setAllowFlight(true);
+			//			tregminePlayer.setAllowFlight(true);
 		} else {
 			event.getPlayer().sendMessage("no-z-cheat");
 			event.getPlayer().sendMessage("You are NOT allowed to fly on this server");
