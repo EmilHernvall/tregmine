@@ -125,7 +125,7 @@ public class Teleport extends JavaPlugin {
 		    	stmt = conn.prepareStatement("insert into warps (name, x, y, z, yaw, pitch, world) values (?, ?, ?, ?, ?, ?, ?)");
 		    	Location loc = tregminePlayer.getLocation();
 		    	
-		    	stmt.setString(1, args[1]);
+		    	stmt.setString(1, args[0]);
 		    	stmt.setDouble(2, loc.getX());
 		    	stmt.setDouble(3, loc.getY());
 		    	stmt.setDouble(4, loc.getZ());
@@ -134,8 +134,8 @@ public class Teleport extends JavaPlugin {
 		    	stmt.setString(7, loc.getWorld().getName());
 		    	stmt.execute();
 		    	
-		    	tregminePlayer.sendMessage("Warp created");
-		    	this.log.info("WARPCREATE: " + args[1] + " by " + tregminePlayer.getName());
+		    	tregminePlayer.sendMessage("Warp "+ args[0] +" created");
+		    	this.log.info("WARPCREATE: " + args[0] + " by " + tregminePlayer.getName());
 			} catch (SQLException e) {
 		    	tregminePlayer.sendMessage("Warp creation error");
 				throw new RuntimeException(e);
