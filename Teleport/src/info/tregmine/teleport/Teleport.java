@@ -135,6 +135,7 @@ public class Teleport extends JavaPlugin {
 		    	stmt.execute();
 		    	
 		    	tregminePlayer.sendMessage("Warp created");
+		    	this.log.info("WARPCREATE: " + args[1] + " by " + tregminePlayer.getName());
 			} catch (SQLException e) {
 		    	tregminePlayer.sendMessage("Warp creation error");
 				throw new RuntimeException(e);
