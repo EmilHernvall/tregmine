@@ -19,13 +19,12 @@ commands:
   s:
     description: summon specified player.
     -usage: /s <player>
+  makewarp:
+    description: Creates a warp.
+    -usage: /makewarp <warpname>
   warp:
     description: teleport to specified warp.
     -usage: /warp <warpname>
   home:
     description: teleport to your home. You can set home with /home save.
-    -usage: /home (save)
-  makewarp:
-    description: teleport to specified warp.
-    -usage: /warp <warpname>
-    
+    -usage: /home (save)    

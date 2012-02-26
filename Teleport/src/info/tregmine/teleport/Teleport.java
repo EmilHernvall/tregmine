@@ -1,6 +1,9 @@
 package info.tregmine.teleport;
 
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -14,6 +17,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import info.tregmine.Tregmine; 
 //import info.tregmine.api.TregminePlayer;
+import info.tregmine.database.ConnectionPool;
 
 
 public class Teleport extends JavaPlugin {
@@ -61,11 +65,6 @@ public class Teleport extends JavaPlugin {
 			}
 			return true;
 		}
-
-		if(commandName.equals("makewarp") && tregminePlayer.isAdmin()) {
-			
-		}
-		
 		
 		if(commandName.equals("home") && tregminePlayer.isDonator()) {
 			Home home = new Home(from.getName(), getServer());
@@ -116,6 +115,45 @@ public class Teleport extends JavaPlugin {
 			return true;
 		}
 
+		
+		if(commandName.equals("makewarp") && tregminePlayer.isAdmin()) {
+			Connection conn = null;
+			PreparedStatement stmt = null;
+			try {
+				conn = ConnectionPool.getConnection();
+			
+		    	stmt = conn.prepareStatement("insert into warps (name, x, y, z, yaw, pitch, world) values (?, ?, ?, ?, ?, ?, ?)");
+		    	Location loc = tregminePlayer.getLocation();
+		    	
+		    	stmt.setString(1, args[1]);
+		    	stmt.setDouble(2, loc.getX());
+		    	stmt.setDouble(3, loc.getY());
+		    	stmt.setDouble(4, loc.getZ());
+		    	stmt.setFloat(5, loc.getYaw());
+		    	stmt.setFloat(6, loc.getPitch());
+		    	stmt.setString(7, loc.getWorld().getName());
+		    	stmt.execute();
+		    	
+		    	tregminePlayer.sendMessage("Warp created");
+			} catch (SQLException e) {
+		    	tregminePlayer.sendMessage("Warp creation error");
+				throw new RuntimeException(e);
+			} finally {
+				if (stmt != null) {
+					try { stmt.close(); } catch (SQLException e) {}
+				}
+				if (conn != null) {
+					try { conn.close(); } catch (SQLException e) {}
+				}
+			}
+			
+			
+			
+			return true;
+		}
+		
+		
+		
 		if(commandName.equals("tp") && tregminePlayer.isTrusted()) {
 			try {
 				List<Player> to = this.getServer().matchPlayer(args[0]);
