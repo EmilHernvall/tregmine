@@ -113,6 +113,7 @@ public class Main extends JavaPlugin {
 				if (to != null && amount > 0) {
 					if  (info.tregmine.api.math.Distance.calc2d(player.getLocation(), to.getLocation()) > 5) {
 						player.sendMessage(ChatColor.RED + to.getName() + " is to far away for a wallet transaction, please move closer");
+						return true;
 					}
 					
 					
@@ -156,6 +157,7 @@ public class Main extends JavaPlugin {
 
 					if  (info.tregmine.api.math.Distance.calc2d(player.getLocation(), to.getLocation()) > 5) {
 						player.sendMessage(ChatColor.RED + to.getName() + " is to far away for a wallet transaction, please move closer");
+						return true;
 					}
 
 					
