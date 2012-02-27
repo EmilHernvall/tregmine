@@ -153,6 +153,11 @@ public class Main extends JavaPlugin {
 					info.tregmine.api.TregminePlayer toPlayer = this.tregmine.tregminePlayer.get(to.getName());
 					Wallet wallet = new Wallet(player);
 					Wallet toWallet = new Wallet(to);
+
+					if  (info.tregmine.api.math.Distance.calc2d(player.getLocation(), to.getLocation()) > 5) {
+						player.sendMessage(ChatColor.RED + to.getName() + " is to far away for a wallet transaction, please move closer");
+					}
+
 					
 					long newAmount = wallet.balance() - amount;
 					if (newAmount >= 0) {
