@@ -5,15 +5,17 @@ package info.tregmine.inventoryspy;
 import java.util.HashMap;
 import java.util.logging.Logger;
 
-import net.minecraft.server.EntityHuman;
-import net.minecraft.server.EntityPlayer;
+//import net.minecraft.server.EntityHuman;
+//import net.minecraft.server.EntityPlayer;
 //import net.minecraft.server.InventoryPlayer;
-import net.minecraft.server.PlayerInventory;
+//import net.minecraft.server.PlayerInventory;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.craftbukkit.entity.CraftPlayer;
+//import org.bukkit.craftbukkit.entity.CraftPlayer;
+//import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+//import org.bukkit.event.player.PlayerInventoryEvent;
 //import org.bukkit.event.Event;
 //import org.bukkit.event.Event.Priority;
 import org.bukkit.plugin.Plugin;
@@ -71,14 +73,14 @@ public class Main extends JavaPlugin {
 		boolean isAdmin = tregminePlayer.isAdmin();
 		
 		if (commandName.matches("inv") && args.length > 0  && isAdmin) {
-			Player target = this.getServer().matchPlayer(args[0]).get(0);
-			if (target != null) {
-				EntityPlayer eh = ((CraftPlayer) player).getHandle();
-				EntityHuman ehtarget = ((CraftPlayer) target).getHandle();
-				PlayerInventory ehtargetinv = ehtarget.inventory;
-				eh.a(ehtargetinv); // Show to the user.
-				player.sendMessage("tried to look in " + target.getName() +  " inventory");
-			}
+//			Player target = this.getServer().matchPlayer(args[0]).get(0);
+//			if (target != null) {
+//				Entity eh = ((CraftPlayer) player).getHandle();
+//				Entity ehtarget = ((CraftPlayer) target).getHandle();
+//				PlayerInventoryEvent ehtargetinv = ehtarget.inventory;
+//				eh.a(ehtargetinv); // Show to the user.
+//				player.sendMessage("tried to look in " + target.getName() +  " inventory");
+//			}
 		}
 		return true;
 	}

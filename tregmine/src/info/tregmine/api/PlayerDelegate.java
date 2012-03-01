@@ -21,17 +21,24 @@ import org.bukkit.Server;
 import org.bukkit.Statistic;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.conversations.Conversation;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Egg;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.entity.Snowball;
-import org.bukkit.entity.Vehicle;
+//import org.bukkit.entity.Vehicle;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.inventory.InventoryView.Property;
 import org.bukkit.map.MapView;
+import org.bukkit.metadata.MetadataValue;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionAttachment;
 import org.bukkit.permissions.PermissionAttachmentInfo;
@@ -149,7 +156,7 @@ public abstract class PlayerDelegate implements Player
 	}
 
 	@Override
-	public Vehicle getVehicle() {
+	public Entity getVehicle() {
 		return delegate.getVehicle();
 	}
 
@@ -191,21 +198,6 @@ public abstract class PlayerDelegate implements Player
 	@Override
 	public void setRemainingAir(int arg0) {
 		delegate.setRemainingAir(arg0);
-	}
-
-	@Override
-	public Arrow shootArrow() {
-		return delegate.shootArrow();
-	}
-
-	@Override
-	public Egg throwEgg() {
-		return delegate.throwEgg();
-	}
-
-	@Override
-	public Snowball throwSnowball() {
-		return delegate.throwSnowball();
 	}
 
 	@Override
@@ -818,6 +810,150 @@ public abstract class PlayerDelegate implements Player
 	public void removePotionEffect(PotionEffectType arg0) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public <T> void playEffect(Location arg0, Effect arg1, T arg2) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void closeInventory() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public ItemStack getItemOnCursor() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public InventoryView getOpenInventory() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public InventoryView openEnchanting(Location arg0, boolean arg1) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public InventoryView openInventory(Inventory arg0) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void openInventory(InventoryView arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public InventoryView openWorkbench(Location arg0, boolean arg1) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setItemOnCursor(ItemStack arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean setWindowProperty(Property arg0, int arg1) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public <T extends Projectile> T launchProjectile(Class<? extends T> arg0) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public EntityType getType() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<MetadataValue> getMetadata(String arg0) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean hasMetadata(String arg0) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void removeMetadata(String arg0, Plugin arg1) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setMetadata(String arg0, MetadataValue arg1) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void abandonConversation(Conversation arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void acceptConversationInput(String arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean beginConversation(Conversation arg0) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean isConversing() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void sendMessage(String[] arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Arrow shootArrow() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Egg throwEgg() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Snowball throwSnowball() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	

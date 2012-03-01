@@ -4,6 +4,8 @@ import info.tregmine.Tregmine;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.event.entity.EntityExplodeEvent;
 
 
@@ -15,6 +17,14 @@ public class TregmineEntityListener  implements Listener  {
 		plugin.getServer();
 	}
 
+	@EventHandler
+	public void onCreatureSpawn(CreatureSpawnEvent event) 	{
+		if (event.getSpawnReason() == SpawnReason.SPAWNER_EGG) {
+			event.setCancelled(true);
+		}
+	}
+	
+	
 	@EventHandler
 	public void onEntityExplode (EntityExplodeEvent event) {
 

@@ -7,10 +7,25 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
+//import java.util.List;
 
 import org.bukkit.ChatColor;
+//import org.bukkit.Effect;
+//import org.bukkit.Location;
 import org.bukkit.block.Block;
+//import org.bukkit.conversations.Conversation;
+//import org.bukkit.entity.Arrow;
+//import org.bukkit.entity.Egg;
+//import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+//import org.bukkit.entity.Projectile;
+//import org.bukkit.entity.Snowball;
+//import org.bukkit.inventory.Inventory;
+//import org.bukkit.inventory.InventoryView;
+//import org.bukkit.inventory.InventoryView.Property;
+//import org.bukkit.inventory.ItemStack;
+//import org.bukkit.metadata.MetadataValue;
+//import org.bukkit.plugin.Plugin;
 
 public class TregminePlayer extends PlayerDelegate
 {

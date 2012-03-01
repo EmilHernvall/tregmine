@@ -14,7 +14,6 @@ public class DeathPlayer implements Listener {
 	
 	@EventHandler
 	public void onPlayerRespawn(final PlayerRespawnEvent event) {
-		
 		this.plugin.getServer().getScheduler().scheduleSyncDelayedTask(this.plugin,new Runnable() {
 			@Override
 			public void run() {

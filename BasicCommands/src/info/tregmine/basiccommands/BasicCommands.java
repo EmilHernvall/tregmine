@@ -7,8 +7,9 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.CreatureType;
+//import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Monster;
 
 import org.bukkit.entity.Player;
@@ -385,7 +386,7 @@ public class BasicCommands extends JavaPlugin {
 
 		if (commandName.matches("createmob") && isAdmin) {
 			int amount = 1;
-			CreatureType mobtyp;
+			EntityType mobtyp;
 			try {
 				amount = Integer.parseInt( args[1] );
 			} catch (Exception e) {
@@ -394,7 +395,7 @@ public class BasicCommands extends JavaPlugin {
 
 			try {
 				String mobname = args[0]; //args[0].substring(0,1).toUpperCase() + args[0].substring(1).toLowerCase(); 
-				mobtyp = CreatureType.fromName(mobname);
+				mobtyp = EntityType.fromName(mobname);
 			} catch (Exception e) {
 				player.sendMessage(ChatColor.RED + "Sorry that mob doesn't exist.");
 				return true;
@@ -414,7 +415,7 @@ public class BasicCommands extends JavaPlugin {
 			else {
 				StringBuilder buf = new StringBuilder();
 				String delim = "";
-				for (CreatureType mob : CreatureType.values()) {
+				for (EntityType mob : EntityType.values()) {
 					buf.append(delim);
 					buf.append(mob.getName());
 					delim = ", ";

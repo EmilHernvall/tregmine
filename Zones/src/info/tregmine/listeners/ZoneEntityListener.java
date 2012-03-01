@@ -13,8 +13,9 @@ import info.tregmine.zones.ZonesPlugin;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.CreatureType;
+//import org.bukkit.entity.CreatureType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
@@ -24,11 +25,11 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 
 public class ZoneEntityListener implements Listener
 {
-	private static final Set<CreatureType> allowedMobs = 
-			EnumSet.of(CreatureType.CHICKEN, CreatureType.COW, 
-					CreatureType.PIG, CreatureType.SHEEP, 
-					CreatureType.SQUID, CreatureType.WOLF,
-                    CreatureType.VILLAGER, CreatureType.MUSHROOM_COW);
+	private static final Set<EntityType> allowedMobs = 
+			EnumSet.of(EntityType.CHICKEN, EntityType.COW, 
+					EntityType.PIG, EntityType.SHEEP, 
+					EntityType.SQUID, EntityType.WOLF,
+					EntityType.VILLAGER, EntityType.MUSHROOM_COW);
 	
 	private final ZonesPlugin plugin;
 	private final Tregmine tregmine;
@@ -53,7 +54,7 @@ public class ZoneEntityListener implements Listener
 			return;
 		}
 		
-		if (!allowedMobs.contains(event.getCreatureType())) {
+		if (!allowedMobs.contains(event.getEntityType())) {
 			event.setCancelled(true);
 		}
 	}

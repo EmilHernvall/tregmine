@@ -11,7 +11,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerGameModeChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerInventoryEvent;
+//import org.bukkit.event.player.PlayerInventoryEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 
 
@@ -47,11 +47,11 @@ public class SpyPlayerListener implements Listener {
 	}
 
 
-	@EventHandler
-	public void onInventoryOpen (PlayerInventoryEvent event) {
-		event.getPlayer().sendMessage("INV");
-		this.plugin.log.info(event.getInventory().getItem(0).getType().name());
-	}
+//	@EventHandler
+//	public void onInventoryOpen (PlayerInventoryEvent event) {
+//		event.getPlayer().sendMessage("INV");
+//		this.plugin.log.info(event.getInventory().getItem(0).getType().name());
+//	}
 
 	@EventHandler
 	public void onPlayerDropItem (PlayerDropItemEvent event) {

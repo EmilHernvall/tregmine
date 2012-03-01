@@ -16,7 +16,6 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.LeavesDecayEvent;
 import org.bukkit.event.block.SignChangeEvent;
 
-
 public class TregmineBlockListener implements Listener {
 	private final Tregmine plugin;
 
@@ -26,7 +25,7 @@ public class TregmineBlockListener implements Listener {
 	}
 
 	@EventHandler
-	public void onBlockPlace (BlockPlaceEvent event)	{
+	public void onBlockPlace (BlockPlaceEvent event)	{		
 		info.tregmine.api.TregminePlayer tregminePlayer = this.plugin.tregminePlayer.get(event.getPlayer().getName());
 		
 		if (!tregminePlayer.isTrusted()) {
