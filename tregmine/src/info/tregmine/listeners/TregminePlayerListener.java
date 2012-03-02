@@ -212,6 +212,10 @@ public class TregminePlayerListener implements Listener {
 			event.getPlayer().setGameMode(GameMode.SURVIVAL);
 		}
 
+		if (event.getPlayer().getServer().getPort() == 1337) {
+			event.getPlayer().setGameMode(GameMode.CREATIVE);
+		}
+		
 		activateGuardians();
 	}        
 
