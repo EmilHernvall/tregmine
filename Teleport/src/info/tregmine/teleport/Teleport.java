@@ -65,17 +65,17 @@ public class Teleport extends JavaPlugin {
 			}
 			return true;
 		}
-		
+
 		if(commandName.equals("home") && tregminePlayer.isDonator()) {
 			Home home = new Home(from.getName(), getServer());
 
 			if (args.length == 0) {
 				Location loc = home.get();
-                if (loc == null) {
-                    from.sendMessage(ChatColor.RED + "Telogric lift malfunctioned. Teleportation failed.");
-                    return true;
-                }
-                
+				if (loc == null) {
+					from.sendMessage(ChatColor.RED + "Telogric lift malfunctioned. Teleportation failed.");
+					return true;
+				}
+
 				loc.getWorld().loadChunk(loc.getWorld().getChunkAt(loc));
 
 				if (loc.getWorld().isChunkLoaded(loc.getWorld().getChunkAt(loc))){
@@ -85,59 +85,59 @@ public class Teleport extends JavaPlugin {
 					from.sendMessage(ChatColor.RED + "Loading your home chunk failed, try /home again.");
 				}
 			} else if ("save".matches(args[0])) {
-                home.save(from.getLocation());
-                from.sendMessage(ChatColor.AQUA + "Home saved!");
-            } else if ("to".equals(args[0]) && (tregminePlayer.getMetaBoolean("mentor") || tregminePlayer.isAdmin())) {
-                if (args.length < 2) {
-                    from.sendMessage(ChatColor.RED + "Usage: /home to <player>.");
-                    return true;
-                }
-                
-                String playerName = args[1];
-                Home playersHome = new Home(playerName, getServer());
-                
+				home.save(from.getLocation());
+				from.sendMessage(ChatColor.AQUA + "Home saved!");
+			} else if ("to".equals(args[0]) && (tregminePlayer.getMetaBoolean("mentor") || tregminePlayer.isAdmin())) {
+				if (args.length < 2) {
+					from.sendMessage(ChatColor.RED + "Usage: /home to <player>.");
+					return true;
+				}
+
+				String playerName = args[1];
+				Home playersHome = new Home(playerName, getServer());
+
 				Location loc = playersHome.get();
-                if (loc == null) {
-                    from.sendMessage(ChatColor.RED + "Telogric lift malfunctioned. Teleportation failed.");
-                    return true;
-                }
+				if (loc == null) {
+					from.sendMessage(ChatColor.RED + "Telogric lift malfunctioned. Teleportation failed.");
+					return true;
+				}
 
 				loc.getWorld().loadChunk(loc.getWorld().getChunkAt(loc));
 
 				if (loc.getWorld().isChunkLoaded(loc.getWorld().getChunkAt(loc))){
 					from.teleport(loc);
 					from.sendMessage(ChatColor.AQUA + "Like a drunken gnome, you fly across the world to " + playerName 
-                        + "'s home. Try not to hit any birds.");
+							+ "'s home. Try not to hit any birds.");
 				} else {
 					from.sendMessage(ChatColor.RED + "Loading of home chunk failed, try /home again");
 				}
-            }
+			}
 			return true;
 		}
 
-		
+
 		if(commandName.equals("makewarp") && tregminePlayer.isAdmin()) {
 			Connection conn = null;
 			PreparedStatement stmt = null;
 			try {
 				conn = ConnectionPool.getConnection();
-			
-		    	stmt = conn.prepareStatement("insert into warps (name, x, y, z, yaw, pitch, world) values (?, ?, ?, ?, ?, ?, ?)");
-		    	Location loc = tregminePlayer.getLocation();
-		    	
-		    	stmt.setString(1, args[0]);
-		    	stmt.setDouble(2, loc.getX());
-		    	stmt.setDouble(3, loc.getY());
-		    	stmt.setDouble(4, loc.getZ());
-		    	stmt.setFloat(5, loc.getYaw());
-		    	stmt.setFloat(6, loc.getPitch());
-		    	stmt.setString(7, loc.getWorld().getName());
-		    	stmt.execute();
-		    	
-		    	tregminePlayer.sendMessage("Warp "+ args[0] +" created");
-		    	this.log.info("WARPCREATE: " + args[0] + " by " + tregminePlayer.getName());
+
+				stmt = conn.prepareStatement("insert into warps (name, x, y, z, yaw, pitch, world) values (?, ?, ?, ?, ?, ?, ?)");
+				Location loc = tregminePlayer.getLocation();
+
+				stmt.setString(1, args[0]);
+				stmt.setDouble(2, loc.getX());
+				stmt.setDouble(3, loc.getY());
+				stmt.setDouble(4, loc.getZ());
+				stmt.setFloat(5, loc.getYaw());
+				stmt.setFloat(6, loc.getPitch());
+				stmt.setString(7, loc.getWorld().getName());
+				stmt.execute();
+
+				tregminePlayer.sendMessage("Warp "+ args[0] +" created");
+				this.log.info("WARPCREATE: " + args[0] + " by " + tregminePlayer.getName());
 			} catch (SQLException e) {
-		    	tregminePlayer.sendMessage("Warp creation error");
+				tregminePlayer.sendMessage("Warp creation error");
 				throw new RuntimeException(e);
 			} finally {
 				if (stmt != null) {
@@ -147,14 +147,14 @@ public class Teleport extends JavaPlugin {
 					try { conn.close(); } catch (SQLException e) {}
 				}
 			}
-			
-			
-			
+
+
+
 			return true;
 		}
-		
-		
-		
+
+
+
 		if(commandName.equals("tp") && tregminePlayer.isTrusted()) {
 			try {
 				List<Player> to = this.getServer().matchPlayer(args[0]);
@@ -189,20 +189,26 @@ public class Teleport extends JavaPlugin {
 
 
 		if(commandName.equals("warp")) {
-				Warp warp = new Warp(this, from, args);
-				warp.run();
+			Warp warp = new Warp(this, from, args);
+			warp.run();
 			return true;
 		}
 
 
 		if (commandName.matches("spawn")) {
+
+			if(tregminePlayer.getServer().getPort() == 1337) {
+				tregminePlayer.teleport(tregminePlayer.getWorld().getSpawnLocation());
+				return true;
+			}
+
 			long delay = 0;
 			if (tregminePlayer.isAdmin()) {
 				delay = 0;
 			}
-			
+
 			from.sendMessage(ChatColor.AQUA + "You must now stand still and wait " + delay + " seconds for the stars to align, allowing you to teleport");
-			
+
 			final Player tempfrom = from;
 			this.getServer().getScheduler().scheduleSyncDelayedTask(this,new Runnable() {
 				@Override
@@ -210,7 +216,7 @@ public class Teleport extends JavaPlugin {
 					tempfrom.teleport(getServer().getWorld("world").getSpawnLocation());
 				}},20*delay);
 
-			
+
 			return true;
 		}
 

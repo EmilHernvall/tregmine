@@ -10,6 +10,7 @@ import org.bukkit.command.CommandSender;
 //import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+//import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Monster;
 
 import org.bukkit.entity.Player;
@@ -384,9 +385,12 @@ public class BasicCommands extends JavaPlugin {
 			player.sendMessage("Trusted: " +tregminePlayer.isTrusted());
 		}
 
-		if (commandName.matches("createmob") && isAdmin) {
+		if (commandName.matches("createmob-disabled") && isAdmin) {
 			int amount = 1;
 			EntityType mobtyp;
+			
+			
+			
 			try {
 				amount = Integer.parseInt( args[1] );
 			} catch (Exception e) {
@@ -400,8 +404,6 @@ public class BasicCommands extends JavaPlugin {
 				player.sendMessage(ChatColor.RED + "Sorry that mob doesn't exist.");
 				return true;
 			}
-
-
 
 			if (mobtyp != null) {
 				for (int i = 0; i<amount;i++) {
