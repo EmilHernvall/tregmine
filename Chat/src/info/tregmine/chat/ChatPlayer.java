@@ -26,7 +26,8 @@ public class ChatPlayer implements Listener {
 		if ( !this.plugin.lasttime.containsKey(tregminePlayer.getId())) {
 			this.plugin.lasttime.put(tregminePlayer.getId(), 0L);
 		} else {
-			if (this.plugin.lasttime.get(tregminePlayer.getId())  + 3000 >= System.currentTimeMillis() ) {
+			if (System.currentTimeMillis() - this.plugin.lasttime.get(tregminePlayer.getId()) <= 3000 ) {
+				tregminePlayer.sendMessage(":" + ( System.currentTimeMillis() - this.plugin.lasttime.get(tregminePlayer.getId())));
 				tregminePlayer.sendMessage("SPAMBLOCK TEST *IGNORE IT*, its not yet tuned");
 			}
 		}
