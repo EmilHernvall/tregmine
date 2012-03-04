@@ -1,5 +1,7 @@
 package info.tregmine.chat;
 
+//import java.util.HashMap;
+
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -20,22 +22,37 @@ public class ChatPlayer implements Listener {
 		info.tregmine.api.TregminePlayer tregminePlayer = this.plugin.tregmine.tregminePlayer.get(sender.getName());
 		Player[] players = plugin.getServer().getOnlinePlayers();
 
-		if (event.getMessage().equals(this.plugin.lastline.get(sender.getName())) ) {
-			sender.getPlayer().sendMessage("No need to repeat yourself!"); 
-			event.setCancelled(true);
-			return;
+
+		if ( !this.plugin.lasttime.containsKey(tregminePlayer.getId())) {
+			this.plugin.lasttime.put(tregminePlayer.getId(), 0L);
+		} else {
+			if (this.plugin.lasttime.get(tregminePlayer.getId()) <= this.plugin.lasttime.get(tregminePlayer.getId()) + 3000 ) {
+				tregminePlayer.sendMessage("SPAMBLOCK TEST *IGNORE IT*, its not yet tuned");
+			}
 		}
-		
+
+		//		if (event.getMessage().equals(this.plugin.lastline.get(sender.getName())) ) {
+
+		//		}
+
+
+		//		if (event.getMessage().equals(this.plugin.lastline.get(sender.getName())) ) {
+		//			sender.getPlayer().sendMessage("No need to repeat yourself!"); 
+		//			sender.getPlayer().kickPlayer("Don't spam");
+		//			event.setCancelled(true);
+		//			return;
+		//		}
+
 		this.plugin.lastline.put(sender.getName(), event.getMessage());
-		
-		
+
+
 		if (!this.plugin.channel.containsKey(sender.getName())) {
 			this.plugin.channel.put(sender.getName(), "global".toUpperCase());
 		}
 
 		for (Player player : players) {
 			ChatColor txtColor = ChatColor.WHITE;
-			
+
 			if(sender == player) {
 				txtColor = ChatColor.GRAY;
 			}
@@ -62,7 +79,7 @@ public class ChatPlayer implements Listener {
 
 					firstMessage = ChatColor.stripColor(firstMessage);
 					lastMessage = ChatColor.stripColor(lastMessage);
-					
+
 					player.sendMessage(channel+"<" + tregminePlayer.getChatName() + ChatColor.WHITE + "> "+ txtColor + firstMessage );
 					player.sendMessage(txtColor + spaces + lastMessage);
 				} else {
@@ -71,7 +88,10 @@ public class ChatPlayer implements Listener {
 			}
 		}
 
+		this.plugin.lasttime.put(tregminePlayer.getId(), System.currentTimeMillis());
+
 		plugin.log.info("["+ sender.getWorld().getName() +  "]["+ this.plugin.channel.get(sender.getName())  +"]<" + sender.getName() +  "> " + event.getMessage() );
 		event.setCancelled(true);
+		this.plugin.lasttime.put(tregminePlayer.getId(), 0L);
 	}
 }
