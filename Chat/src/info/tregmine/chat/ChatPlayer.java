@@ -23,15 +23,20 @@ public class ChatPlayer implements Listener {
 		Player[] players = plugin.getServer().getOnlinePlayers();
 
 
+		if ("einand".matches(tregminePlayer.getName())){
+			tregminePlayer.sendMessage(":" + ( System.currentTimeMillis() - this.plugin.lasttime.get(tregminePlayer.getId())));
+			
+		
 		if ( !this.plugin.lasttime.containsKey(tregminePlayer.getId())) {
 			this.plugin.lasttime.put(tregminePlayer.getId(), 0L);
 		} else {
 			if (System.currentTimeMillis() - this.plugin.lasttime.get(tregminePlayer.getId()) <= 3000 ) {
-				tregminePlayer.sendMessage(":" + ( System.currentTimeMillis() - this.plugin.lasttime.get(tregminePlayer.getId())));
 				tregminePlayer.sendMessage("SPAMBLOCK TEST *IGNORE IT*, its not yet tuned");
 			}
 		}
 
+		}
+		
 		//		if (event.getMessage().equals(this.plugin.lastline.get(sender.getName())) ) {
 
 		//		}
