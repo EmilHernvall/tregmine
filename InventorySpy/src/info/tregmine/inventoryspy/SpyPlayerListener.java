@@ -1,7 +1,7 @@
 package info.tregmine.inventoryspy;
 
 
-import net.minecraft.server.Item;
+//import net.minecraft.server.Item;
 
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -38,6 +38,16 @@ public class SpyPlayerListener implements Listener {
 			event.setCancelled(true);
 		}
 
+		if (event.getPlayer().getItemInHand().getType() == Material.MINECART) {
+			event.getPlayer().sendMessage("MINECARTs are temporary disabled as they are used to crash the server");
+			event.setCancelled(true);
+		}
+
+		if (event.getPlayer().getItemInHand().getType() == Material.SADDLE) {
+			event.getPlayer().sendMessage("SADDLEs are temporary disabled as they are used to crash the server");
+			event.setCancelled(true);
+		}
+		
 		if ((event.getAction() == Action.RIGHT_CLICK_BLOCK  || event.getAction() == Action.LEFT_CLICK_BLOCK)) {
 
 			if(event.getClickedBlock().getState() instanceof Chest) {
