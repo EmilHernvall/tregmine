@@ -24,19 +24,18 @@ public class ChatPlayer implements Listener {
 
 
 		if ("einand".matches(tregminePlayer.getName())){
+			if ( !this.plugin.lasttime.containsKey(tregminePlayer.getId())) {
+				this.plugin.lasttime.put(tregminePlayer.getId(), 0L);
+			}
+
 			tregminePlayer.sendMessage(":" + ( System.currentTimeMillis() - this.plugin.lasttime.get(tregminePlayer.getId())));
-			
-		
-		if ( !this.plugin.lasttime.containsKey(tregminePlayer.getId())) {
-			this.plugin.lasttime.put(tregminePlayer.getId(), 0L);
-		} else {
+
 			if (System.currentTimeMillis() - this.plugin.lasttime.get(tregminePlayer.getId()) <= 3000 ) {
 				tregminePlayer.sendMessage("SPAMBLOCK TEST *IGNORE IT*, its not yet tuned");
 			}
-		}
 
 		}
-		
+
 		//		if (event.getMessage().equals(this.plugin.lastline.get(sender.getName())) ) {
 
 		//		}
