@@ -23,7 +23,7 @@ public class ChatPlayer implements Listener {
 		Player[] players = plugin.getServer().getOnlinePlayers();
 
 
-		if ("einand".matches(tregminePlayer.getName())){
+//		if ("einand".matches(tregminePlayer.getName())){
 			
 			if ( !this.plugin.lasttime.containsKey(tregminePlayer.getId())) {
 				this.plugin.lasttime.put(tregminePlayer.getId(), 0L);
@@ -32,8 +32,9 @@ public class ChatPlayer implements Listener {
 			if (this.plugin.lasttime.get(tregminePlayer.getId()) >= System.currentTimeMillis()) {
 				tregminePlayer.sendMessage("SPAMBLOCK TEST *IGNORE IT*, its not yet tuned");
 //				tregminePlayer.kickPlayer("Please do no spam!");
+				this.plugin.getServer().broadcastMessage("Spammer kicked : " + tregminePlayer.getChatName());
 			}
-		}
+//		}
 
 		//		if (event.getMessage().equals(this.plugin.lastline.get(sender.getName())) ) {
 
@@ -95,6 +96,6 @@ public class ChatPlayer implements Listener {
 
 		plugin.log.info("["+ sender.getWorld().getName() +  "]["+ this.plugin.channel.get(sender.getName())  +"]<" + sender.getName() +  "> " + event.getMessage() );
 		event.setCancelled(true);
-		this.plugin.lasttime.put(tregminePlayer.getId(), System.currentTimeMillis() + 600);
+		this.plugin.lasttime.put(tregminePlayer.getId(), System.currentTimeMillis() + 1200);
 	}
 }
