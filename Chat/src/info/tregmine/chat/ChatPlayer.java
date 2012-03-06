@@ -23,20 +23,19 @@ public class ChatPlayer implements Listener {
 		Player[] players = plugin.getServer().getOnlinePlayers();
 
 
-//		if ("einand".matches(tregminePlayer.getName())){
+		if ("einand".matches(tregminePlayer.getName())){
 
 			if ( !this.plugin.lasttime.containsKey(tregminePlayer.getId())) {
 				this.plugin.lasttime.put(tregminePlayer.getId(), 0L);
 			}
 
-//			tregminePlayer.sendMessage(":-" + (this.plugin.lasttime.get(tregminePlayer.getId()) - System.currentTimeMillis()));
+			tregminePlayer.sendMessage(":-" + (this.plugin.lasttime.get(tregminePlayer.getId()) - System.currentTimeMillis()));
 
 			if (this.plugin.lasttime.get(tregminePlayer.getId()) -System.currentTimeMillis() <= 600 ) {
-//				tregminePlayer.sendMessage("SPAMBLOCK TEST *IGNORE IT*, its not yet tuned");
-				tregminePlayer.kickPlayer("Please do no spam!");
+				tregminePlayer.sendMessage("SPAMBLOCK TEST *IGNORE IT*, its not yet tuned");
+//				tregminePlayer.kickPlayer("Please do no spam!");
 			}
-
-//		}
+		}
 
 		//		if (event.getMessage().equals(this.plugin.lastline.get(sender.getName())) ) {
 
