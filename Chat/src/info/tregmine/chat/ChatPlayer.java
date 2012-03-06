@@ -24,14 +24,12 @@ public class ChatPlayer implements Listener {
 
 
 		if ("einand".matches(tregminePlayer.getName())){
-
+			
 			if ( !this.plugin.lasttime.containsKey(tregminePlayer.getId())) {
 				this.plugin.lasttime.put(tregminePlayer.getId(), 0L);
 			}
 
-			tregminePlayer.sendMessage(":-" + (this.plugin.lasttime.get(tregminePlayer.getId()) - System.currentTimeMillis()));
-
-			if (this.plugin.lasttime.get(tregminePlayer.getId()) -System.currentTimeMillis() <= 600 ) {
+			if (this.plugin.lasttime.get(tregminePlayer.getId()) >= System.currentTimeMillis()) {
 				tregminePlayer.sendMessage("SPAMBLOCK TEST *IGNORE IT*, its not yet tuned");
 //				tregminePlayer.kickPlayer("Please do no spam!");
 			}
@@ -97,6 +95,6 @@ public class ChatPlayer implements Listener {
 
 		plugin.log.info("["+ sender.getWorld().getName() +  "]["+ this.plugin.channel.get(sender.getName())  +"]<" + sender.getName() +  "> " + event.getMessage() );
 		event.setCancelled(true);
-		this.plugin.lasttime.put(tregminePlayer.getId(), System.currentTimeMillis());
+		this.plugin.lasttime.put(tregminePlayer.getId(), System.currentTimeMillis() + 3000);
 	}
 }
