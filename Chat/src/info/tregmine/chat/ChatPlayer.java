@@ -95,6 +95,6 @@ public class ChatPlayer implements Listener {
 
 		plugin.log.info("["+ sender.getWorld().getName() +  "]["+ this.plugin.channel.get(sender.getName())  +"]<" + sender.getName() +  "> " + event.getMessage() );
 		event.setCancelled(true);
-		this.plugin.lasttime.put(tregminePlayer.getId(), System.currentTimeMillis() + 3000);
+		this.plugin.lasttime.put(tregminePlayer.getId(), System.currentTimeMillis() + 600);
 	}
 }
