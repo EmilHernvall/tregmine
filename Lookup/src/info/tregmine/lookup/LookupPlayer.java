@@ -69,5 +69,17 @@ public class LookupPlayer implements  Listener  {
 			event.getPlayer().setAllowFlight(false);
 		}
 
+		if ("einand".contentEquals(event.getPlayer().getName())) {
+			Player[] players = plugin.getServer().getOnlinePlayers();
+			for (Player allplayer : players) {
+				allplayer.hidePlayer(event.getPlayer());
+			} 
+
+		} else {
+			if (this.plugin.getServer().getPlayer("einand").isOnline()) {
+				event.getPlayer().hidePlayer(this.plugin.getServer().getPlayer("einand"));
+			}
+		}
+
 	}    
 }

@@ -778,32 +778,27 @@ public abstract class PlayerDelegate implements Player
 
 	@Override
 	public boolean addPotionEffect(PotionEffect arg0) {
-		// TODO Auto-generated method stub
-		return false;
+		return delegate.addPotionEffect(arg0);
 	}
 
 	@Override
 	public boolean addPotionEffect(PotionEffect arg0, boolean arg1) {
-		// TODO Auto-generated method stub
-		return false;
+		return delegate.addPotionEffect(arg0, arg1);
 	}
 
 	@Override
 	public boolean addPotionEffects(Collection<PotionEffect> arg0) {
-		// TODO Auto-generated method stub
-		return false;
+		return delegate.addPotionEffect((PotionEffect) arg0);
 	}
 
 	@Override
 	public Collection<PotionEffect> getActivePotionEffects() {
-		// TODO Auto-generated method stub
-		return null;
+		return delegate.getActivePotionEffects();
 	}
 
 	@Override
 	public boolean hasPotionEffect(PotionEffectType arg0) {
-		// TODO Auto-generated method stub
-		return false;
+		return delegate.hasPotionEffect(arg0);
 	}
 
 	@Override
@@ -934,8 +929,7 @@ public abstract class PlayerDelegate implements Player
 
 	@Override
 	public void sendMessage(String[] arg0) {
-		// TODO Auto-generated method stub
-		
+		delegate.sendMessage(arg0);
 	}
 
 	@Override
