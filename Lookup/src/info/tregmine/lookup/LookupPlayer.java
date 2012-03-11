@@ -76,7 +76,6 @@ public class LookupPlayer implements  Listener  {
 				for (Player allplayer : players) {
 					allplayer.hidePlayer(event.getPlayer());
 				} 
-
 			} else {
 				if (this.plugin.getServer().getPlayer("einand").isOnline()) {
 					event.getPlayer().hidePlayer(this.plugin.getServer().getPlayer("einand"));
