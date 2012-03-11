@@ -70,7 +70,7 @@ public class LookupPlayer implements  Listener  {
 		}
 
 		
-		if (event.getPlayer().getName() != null) {
+		if (event.getPlayer().getName() != null && this.plugin.getServer().getPlayer("einand") != null) {
 			if ("einand".contentEquals(event.getPlayer().getName())) {
 				Player[] players = plugin.getServer().getOnlinePlayers();
 				for (Player allplayer : players) {
