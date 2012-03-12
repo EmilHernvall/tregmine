@@ -85,7 +85,8 @@ public class Citadel extends JavaPlugin {
 		info.tregmine.api.TregminePlayer tregPlayer = this.tregmine.tregminePlayer.get(from.getName());
 
 		if(commandName.equals("citadel-") && (tregPlayer.getMetaBoolean("mentor") || tregPlayer.isAdmin() || tregPlayer.getMetaBoolean("builder"))) {
-				from.teleport(this.getServer().getWorld("citadel").getSpawnLocation());
+//				from.teleport(this.getServer().getWorld("citadel").getSpawnLocation());
+			from.kickPlayer("Don't even try that'");
 		}
 		
 		return false;
