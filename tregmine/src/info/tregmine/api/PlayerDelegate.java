@@ -788,7 +788,8 @@ public abstract class PlayerDelegate implements Player
 
 	@Override
 	public boolean addPotionEffects(Collection<PotionEffect> arg0) {
-		return delegate.addPotionEffect((PotionEffect) arg0);
+//		return delegate.addPotionEffect(arg0);
+		return false;
 	}
 
 	@Override
