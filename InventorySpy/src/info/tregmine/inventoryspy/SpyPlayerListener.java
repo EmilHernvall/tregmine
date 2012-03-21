@@ -32,7 +32,7 @@ public class SpyPlayerListener implements Listener {
 
 	@EventHandler
 	public void onPlayerInteract(PlayerInteractEvent event) {
-
+/*
 		if (event.getPlayer().getItemInHand().getType() == Material.BOAT) {
 			event.getPlayer().sendMessage("Boats are temporary disabled as they are used to crash the server");
 			event.setCancelled(true);
@@ -47,6 +47,7 @@ public class SpyPlayerListener implements Listener {
 			event.getPlayer().sendMessage("SADDLEs are temporary disabled as they are used to crash the server");
 			event.setCancelled(true);
 		}
+*/
 		
 		if ((event.getAction() == Action.RIGHT_CLICK_BLOCK  || event.getAction() == Action.LEFT_CLICK_BLOCK)) {
 

@@ -30,7 +30,7 @@ public class ChatPlayer implements Listener {
 
 		if (this.plugin.lasttime.get(tregminePlayer.getId()) >= System.currentTimeMillis()) {
 			if (tregminePlayer.isDonator()) {
-				tregminePlayer.sendMessage("Please avoide spamming!");
+				tregminePlayer.sendMessage("Please avoid spamming!");
 			} else {
 				tregminePlayer.kickPlayer("Please do no spam!");
 				this.plugin.getServer().broadcastMessage("Spammer kicked : " + tregminePlayer.getChatName());
