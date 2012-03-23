@@ -28,14 +28,14 @@ public class Main extends JavaPlugin {
 
 	public final Logger log = Logger.getLogger("Minecraft");
 	public Tregmine tregmine = null;
-//	public SpyPlayerListener inventory = new SpyPlayerListener(this);
+	//	public SpyPlayerListener inventory = new SpyPlayerListener(this);
 	public HashMap<Integer, String> whoDropedItem = new HashMap<Integer, String>();
 
 	@Override
 	public void onEnable(){
 		Plugin test = this.getServer().getPluginManager().getPlugin("Tregmine");
 
-		
+
 		if(this.tregmine == null) {
 			if(test != null) {
 				this.tregmine = ((Tregmine)test);
@@ -44,13 +44,13 @@ public class Main extends JavaPlugin {
 				this.getServer().getPluginManager().disablePlugin(this);
 			}
 
-			
+
 			getServer().getPluginManager().registerEvents(new SpyPlayerListener(this), this);
 
-//			  getServer().getPluginManager().registerEvent(Event.Type.PLAYER_DROP_ITEM, inventory, Priority.Monitor, this);
-//			  getServer().getPluginManager().registerEvent(Event.Type.PLAYER_PICKUP_ITEM, inventory, Priority.Monitor, this);
-//			  getServer().getPluginManager().registerEvent(Event.Type.PLAYER_GAME_MODE_CHANGE, inventory, Priority.Monitor, this);
-//			  getServer().getPluginManager().registerEvent(Event.Type.PLAYER_INTERACT, inventory, Priority.Monitor, this);
+			//			  getServer().getPluginManager().registerEvent(Event.Type.PLAYER_DROP_ITEM, inventory, Priority.Monitor, this);
+			//			  getServer().getPluginManager().registerEvent(Event.Type.PLAYER_PICKUP_ITEM, inventory, Priority.Monitor, this);
+			//			  getServer().getPluginManager().registerEvent(Event.Type.PLAYER_GAME_MODE_CHANGE, inventory, Priority.Monitor, this);
+			//			  getServer().getPluginManager().registerEvent(Event.Type.PLAYER_INTERACT, inventory, Priority.Monitor, this);
 
 		}
 	}
@@ -69,22 +69,18 @@ public class Main extends JavaPlugin {
 		Player player = (Player) sender;
 		info.tregmine.api.TregminePlayer tregminePlayer = this.tregmine.tregminePlayer.get(player.getName());
 
-		
+
 		boolean isAdmin = tregminePlayer.isAdmin();
-		
+
 		if (commandName.matches("inv") && args.length > 0  && isAdmin) {
-//			Player target = this.getServer().matchPlayer(args[0]).get(0);
-//			if (target != null) {
-//				Entity eh = ((CraftPlayer) player).getHandle();
-//				Entity ehtarget = ((CraftPlayer) target).getHandle();
-//				PlayerInventoryEvent ehtargetinv = ehtarget.inventory;
-//				eh.a(ehtargetinv); // Show to the user.
-//				player.sendMessage("tried to look in " + target.getName() +  " inventory");
-//			}
+			Player target = this.getServer().matchPlayer(args[0]).get(0);
+			if (target != null) {
+				tregminePlayer.openInventory(target.getInventory()); 
+			}
 		}
 		return true;
 	}
-	
+
 	@Override
 	public void onLoad() {
 	}

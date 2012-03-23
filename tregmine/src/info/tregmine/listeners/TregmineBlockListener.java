@@ -135,5 +135,10 @@ public class TregmineBlockListener implements Listener {
 			event.setCancelled(true);
 		}
 
+		
+		if(event.getBlock().getWorld().getName().matches("creative")) {
+			event.setCancelled(true);
+		}
+		
 	}
 }

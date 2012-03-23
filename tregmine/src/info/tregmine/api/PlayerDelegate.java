@@ -22,6 +22,7 @@ import org.bukkit.Statistic;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.conversations.Conversation;
+import org.bukkit.conversations.ConversationAbandonedEvent;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Egg;
 import org.bukkit.entity.Entity;
@@ -840,14 +841,12 @@ public abstract class PlayerDelegate implements Player
 
 	@Override
 	public InventoryView openInventory(Inventory arg0) {
-		// TODO Auto-generated method stub
-		return null;
+		return delegate.openInventory(arg0);
 	}
 
 	@Override
 	public void openInventory(InventoryView arg0) {
-		// TODO Auto-generated method stub
-		
+		delegate.openInventory(arg0);
 	}
 
 	@Override
@@ -949,6 +948,30 @@ public abstract class PlayerDelegate implements Player
 	public Snowball throwSnowball() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	@Override
+	public boolean isFlying() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void setFlying(boolean arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean isBlocking() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void abandonConversation(Conversation arg0,
+			ConversationAbandonedEvent arg1) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	

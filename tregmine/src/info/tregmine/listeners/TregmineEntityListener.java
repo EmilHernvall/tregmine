@@ -39,5 +39,10 @@ public class TregmineEntityListener  implements Listener  {
 		if(event.getLocation().getWorld().getName().matches("alpha")) {
 			event.setCancelled(true);
 		}
+		
+		if(event.getLocation().getWorld().getName().matches("creative")) {
+			event.setCancelled(true);
+		}
+		
 	}
 }
