@@ -10,6 +10,7 @@ import java.util.logging.Logger;
 //import net.minecraft.server.InventoryPlayer;
 //import net.minecraft.server.PlayerInventory;
 
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 //import org.bukkit.craftbukkit.entity.CraftPlayer;
@@ -75,13 +76,17 @@ public class Main extends JavaPlugin {
 		if (commandName.matches("cansee") && args.length > 0  && isAdmin) {
 			Player target = this.getServer().matchPlayer(args[0]).get(0);
 			if (target != null) {
-//				tregminePlayer.canSee(target);
+				//				tregminePlayer.canSee(target);
+				tregminePlayer.sendMessage(ChatColor.AQUA + target.getName() + "can now see you");
 				target.canSee(player);
+			} else {
+				tregminePlayer.sendMessage(ChatColor.RED + "player not found");				
 			}
+			return true;
 		}
-		
-		
-		
+
+
+
 		if (commandName.matches("inv") && args.length > 0  && isAdmin) {
 			Player target = this.getServer().matchPlayer(args[0]).get(0);
 			if (target != null) {
