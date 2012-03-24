@@ -77,8 +77,9 @@ public class Main extends JavaPlugin {
 			Player target = this.getServer().matchPlayer(args[0]).get(0);
 			if (target != null) {
 				//				tregminePlayer.canSee(target);
-				tregminePlayer.sendMessage(ChatColor.AQUA + target.getName() + "can now see you");
-				target.canSee(player);
+				tregminePlayer.sendMessage(ChatColor.AQUA + target.getName() + " can now see you");
+//				target.canSee(player.getPlayer());
+				target.showPlayer(player);
 			} else {
 				tregminePlayer.sendMessage(ChatColor.RED + "player not found");				
 			}
