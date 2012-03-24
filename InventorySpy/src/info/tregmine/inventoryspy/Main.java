@@ -75,7 +75,8 @@ public class Main extends JavaPlugin {
 		if (commandName.matches("cansee") && args.length > 0  && isAdmin) {
 			Player target = this.getServer().matchPlayer(args[0]).get(0);
 			if (target != null) {
-				tregminePlayer.canSee(target); 
+//				tregminePlayer.canSee(target);
+				target.canSee(player);
 			}
 		}
 		
