@@ -72,6 +72,15 @@ public class Main extends JavaPlugin {
 
 		boolean isAdmin = tregminePlayer.isAdmin();
 
+		if (commandName.matches("cansee") && args.length > 0  && isAdmin) {
+			Player target = this.getServer().matchPlayer(args[0]).get(0);
+			if (target != null) {
+				tregminePlayer.canSee(target); 
+			}
+		}
+		
+		
+		
 		if (commandName.matches("inv") && args.length > 0  && isAdmin) {
 			Player target = this.getServer().matchPlayer(args[0]).get(0);
 			if (target != null) {
