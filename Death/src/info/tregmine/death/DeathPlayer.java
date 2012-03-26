@@ -14,11 +14,11 @@ public class DeathPlayer implements Listener {
 	
 	@EventHandler
 	public void onPlayerRespawn(final PlayerRespawnEvent event) {
-		this.plugin.getServer().getScheduler().scheduleSyncDelayedTask(this.plugin,new Runnable() {
-			@Override
-			public void run() {
-				event.getPlayer().teleport(plugin.getServer().getWorld("world").getSpawnLocation());
-			}},20L);
-			
+//		this.plugin.getServer().getScheduler().scheduleSyncDelayedTask(this.plugin,new Runnable() {
+//			@Override
+//			public void run() {
+//				event.getPlayer().teleport(plugin.getServer().getWorld("world").getSpawnLocation());
+//			}},20L);
+//			
 	}
 }
