@@ -1,4 +1,4 @@
-wpackage info.tregmine.item;
+package info.tregmine.item;
 
 
 import java.util.logging.Logger;
