@@ -50,7 +50,7 @@ public class LookupPlayer implements  Listener  {
 			tregminePlayer.setMetaString("hostname", host);
 			if(!event.getPlayer().isOp()) {
 				if(tregminePlayer.getMetaBoolean("hiddenlocation")) {
-					this.plugin.getServer().broadcastMessage(ChatColor.DARK_AQUA + "Welcome! " + tregminePlayer.getChatName());
+//					this.plugin.getServer().broadcastMessage(ChatColor.DARK_AQUA + "Welcome! " + tregminePlayer.getChatName());
 				} else {
 					this.plugin.getServer().broadcastMessage(ChatColor.DARK_AQUA + "Welcome! " + tregminePlayer.getChatName() + ChatColor.DARK_AQUA + " from " +l1.countryName);
 					event.getPlayer().sendMessage(ChatColor.DARK_AQUA + l1.city + " - " + l1.postalCode);
