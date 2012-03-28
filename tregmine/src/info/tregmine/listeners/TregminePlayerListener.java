@@ -215,7 +215,7 @@ public class TregminePlayerListener implements Listener {
 		if (event.getPlayer().getServer().getPort() == 1337) {
 			event.getPlayer().setGameMode(GameMode.CREATIVE);
 		}
-		
+
 		activateGuardians();
 	}        
 
@@ -235,12 +235,18 @@ public class TregminePlayerListener implements Listener {
 		}
 
 		if (tregPlayer.isBanned()) {
-			event.setKickMessage("You are not allowed on this server!");
+//			event.setKickMessage("You are not allowed on this server!");
 			event.disallow(Result.KICK_BANNED, "You shall not pass!");
 		} else  {
 			this.plugin.tregminePlayer.put(playerName, tregPlayer);
 		}
 
+		if (event.getPlayer().getServer().getPort() == 1337 || tregPlayer.getNameColor() == ChatColor.GRAY) {
+			event.disallow(Result.KICK_BANNED, "Sorry warned players are not allowed on creative server!");
+		}
+
+		
+		
 		if (tregPlayer.isGuardian()) {
 			tregPlayer.setGuardianState(TregminePlayer.GuardianState.QUEUED);
 		}

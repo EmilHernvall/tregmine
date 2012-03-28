@@ -80,7 +80,13 @@ public class ZoneEntityListener implements Listener
 		}
 
 		if (currentZone == null || !currentZone.isPvp()) {
-			if(event.getCause() == DamageCause.ENTITY_ATTACK || event.getCause() == DamageCause.PROJECTILE || event.getCause() == DamageCause.MAGIC || event.getCause() == DamageCause.POISON) {
+			if (event.getCause() == DamageCause.PROJECTILE || event.getCause() == DamageCause.MAGIC || event.getCause() == DamageCause.POISON) {
+//				EntityDamageEvent damageEvent = event.getEntity().getLastDamageCause();
+//				EntityDamageByEntityEvent eEvent = (EntityDamageByEntityEvent) damageEvent; 
+//
+			}
+			
+			if(event.getCause() == DamageCause.ENTITY_ATTACK) {
 				
 				EntityDamageEvent damageEvent = event.getEntity().getLastDamageCause();
 				EntityDamageByEntityEvent eEvent = (EntityDamageByEntityEvent) damageEvent; 

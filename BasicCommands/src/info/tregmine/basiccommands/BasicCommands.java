@@ -42,7 +42,7 @@ public class BasicCommands extends JavaPlugin {
 				this.getServer().getPluginManager().disablePlugin(this);
 			}
 		}
-		
+
 		getServer().getPluginManager().registerEvents(new BasicCommandsBlock(this), this);
 	}
 
@@ -189,30 +189,30 @@ public class BasicCommands extends JavaPlugin {
 				tregPlayer.setTemporaryChatName(ChatColor.GOLD + tregPlayer.getName());
 				player.sendMessage(ChatColor.YELLOW + "You are no longer builder, until you reconnect!");
 			} else if (tregPlayer.isGuardian()) {
-                Player[] players = tregmine.getServer().getOnlinePlayers();
-                TregminePlayer maxRank = null;
-                for (Player srvPlayer : players) {
-                    TregminePlayer guardian = tregmine.getPlayer(srvPlayer);
-                    if (!guardian.isGuardian()) {
-                        continue;
-                    }
+				Player[] players = tregmine.getServer().getOnlinePlayers();
+				TregminePlayer maxRank = null;
+				for (Player srvPlayer : players) {
+					TregminePlayer guardian = tregmine.getPlayer(srvPlayer);
+					if (!guardian.isGuardian()) {
+						continue;
+					}
 
-                    TregminePlayer.GuardianState state = guardian.getGuardianState();
-                    if (state == TregminePlayer.GuardianState.QUEUED) {
-                        if (maxRank == null || guardian.getGuardianRank() > maxRank.getGuardianRank()) {
-                            maxRank = guardian;
-                        }
-                    }
-                }
+					TregminePlayer.GuardianState state = guardian.getGuardianState();
+					if (state == TregminePlayer.GuardianState.QUEUED) {
+						if (maxRank == null || guardian.getGuardianRank() > maxRank.getGuardianRank()) {
+							maxRank = guardian;
+						}
+					}
+				}
 
-                if (maxRank != null) {
-                    tregPlayer.setGuardianState(TregminePlayer.GuardianState.INACTIVE);
-                    tregPlayer.sendMessage(ChatColor.BLUE + "You are now in normal mode, and no longer have to response to help requests.");
-                    maxRank.setGuardianState(TregminePlayer.GuardianState.ACTIVE);
-                    maxRank.sendMessage(ChatColor.BLUE + "You are now on active duty and should respond to help requests.");
-                } else {
-                    tregPlayer.sendMessage(ChatColor.BLUE + "Not enough guardians are on to manage the server. We need you to keep working. Sorry. :/");
-                }
+				if (maxRank != null) {
+					tregPlayer.setGuardianState(TregminePlayer.GuardianState.INACTIVE);
+					tregPlayer.sendMessage(ChatColor.BLUE + "You are now in normal mode, and no longer have to response to help requests.");
+					maxRank.setGuardianState(TregminePlayer.GuardianState.ACTIVE);
+					maxRank.sendMessage(ChatColor.BLUE + "You are now on active duty and should respond to help requests.");
+				} else {
+					tregPlayer.sendMessage(ChatColor.BLUE + "Not enough guardians are on to manage the server. We need you to keep working. Sorry. :/");
+				}
 			}
 
 			return true;
@@ -308,7 +308,7 @@ public class BasicCommands extends JavaPlugin {
 					return true;
 				}
 
-                if (args[1].matches("child")) {
+				if (args[1].matches("child")) {
 					vtregPlayer.setMetaString("color", "child");
 					player.sendMessage(ChatColor.AQUA + "You made  " + vtregPlayer.getChatName() + " a child." );
 					this.log.info(victim.getName() + " was made child by" + tregminePlayer.getChatName() + ".");
@@ -359,7 +359,7 @@ public class BasicCommands extends JavaPlugin {
 			v2.setPassenger(v);
 			return true;
 		}
-		
+
 		if (commandName.matches("eject")) {
 			Player v = this.getServer().matchPlayer(args[0]).get(0);
 			v.eject();
@@ -388,9 +388,9 @@ public class BasicCommands extends JavaPlugin {
 		if (commandName.matches("createmob-disabled") && isAdmin) {
 			int amount = 1;
 			EntityType mobtyp;
-			
-			
-			
+
+
+
 			try {
 				amount = Integer.parseInt( args[1] );
 			} catch (Exception e) {
@@ -431,6 +431,11 @@ public class BasicCommands extends JavaPlugin {
 		}
 
 		if (commandName.matches("ban") && (isAdmin || isMentor)) {
+
+			if (this.getServer().matchPlayer(args[0]).size() > 1) {
+				player.sendMessage("Found more then one player that contain that letters");
+			}
+
 			Player victim = this.getServer().matchPlayer(args[0]).get(0);
 			if (victim != null) {
 				info.tregmine.api.TregminePlayer victimPlayer = this.tregmine.tregminePlayer.get(victim.getName());
