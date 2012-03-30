@@ -385,7 +385,7 @@ public class BasicCommands extends JavaPlugin {
 			player.sendMessage("Trusted: " +tregminePlayer.isTrusted());
 		}
 
-		if (commandName.matches("createmob-disabled") && isAdmin) {
+		if (commandName.matches("createmob") && isAdmin) {
 			int amount = 1;
 			EntityType mobtyp;
 
@@ -408,7 +408,9 @@ public class BasicCommands extends JavaPlugin {
 			if (mobtyp != null) {
 				for (int i = 0; i<amount;i++) {
 
-					player.getWorld().spawnCreature(player.getLocation(), mobtyp);
+					if (mobtyp.isSpawnable() && mobtyp.isAlive()) {
+						player.getWorld().spawnCreature(player.getLocation(), mobtyp);
+					}
 
 				} 
 
@@ -418,9 +420,11 @@ public class BasicCommands extends JavaPlugin {
 				StringBuilder buf = new StringBuilder();
 				String delim = "";
 				for (EntityType mob : EntityType.values()) {
-					buf.append(delim);
-					buf.append(mob.getName());
-					delim = ", ";
+					if (mob.isSpawnable() && mob.isAlive()) {
+						buf.append(delim);
+						buf.append(mob.getName());
+						delim = ", ";
+					}
 				}
 
 				player.sendMessage("Valid names are: ");
