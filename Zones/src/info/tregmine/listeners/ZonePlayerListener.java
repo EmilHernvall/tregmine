@@ -303,7 +303,7 @@ public class ZonePlayerListener implements Listener
 					}
 				}
 				
-				if (currentZone.isPvp()) {
+				if (currentZone.isPvp() && !player.isAdmin()) {
 					event.setCancelled(true);
 					return;
 				}
