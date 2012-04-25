@@ -29,7 +29,7 @@ public class LookupPlayer implements  Listener  {
 
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent event) {
-		Player player = event.getPlayer();
+		Player player = event.getPlayer();		
 		InetSocketAddress sock = player.getAddress();
 		String ip = sock.getAddress().getHostAddress();
 		String host = sock.getAddress().getCanonicalHostName();

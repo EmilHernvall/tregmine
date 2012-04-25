@@ -216,7 +216,8 @@ public class ZonePlayerListener implements Listener
 					}
 					else if (perm != null && perm == Zone.Permission.Banned) {
 						bannedMessage(currentZone, player);
-						movePlayerBack(player, movingFrom, movingTo);
+						player.teleport( player.getWorld().getSpawnLocation() );
+						//movePlayerBack(player, movingFrom, movingTo);
 						return;
 					}
 				}
