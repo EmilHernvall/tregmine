@@ -101,7 +101,7 @@ public class BoxFill extends JavaPlugin {
 	}
 
 	@Override
-	@SuppressWarnings("null")
+//	@SuppressWarnings("null")
 	public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args) {
 		String commandName = command.getName().toLowerCase();
 		Player player = null;

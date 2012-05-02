@@ -91,7 +91,7 @@ public class ZonePlayerListener implements Listener
 		
 	}
 
-	@SuppressWarnings("null")
+//	@SuppressWarnings("null")
 	@EventHandler
 	public void onPlayerInteract(PlayerInteractEvent event) 
 	{

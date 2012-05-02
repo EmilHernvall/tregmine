@@ -6,6 +6,5 @@
 	<classpathentry kind="lib" path="/AA-Global/lib/ebean-2.7.0.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/tregmine"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Zones"/>
-	<classpathentry kind="lib" path="C:/Users/einand/Dropbox/project/eclipse/tregmine-plugins/tregmine/AA-Global/lib/quadtree.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
