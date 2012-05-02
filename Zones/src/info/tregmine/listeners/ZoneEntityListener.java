@@ -59,25 +59,26 @@ public class ZoneEntityListener implements Listener
 		}
 	}
 
-	@EventHandler
-	public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
-		this.plugin.tregmine.log.info("onEntityDamageByEntity");
+//	@EventHandler
+//	public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
+//		this.plugin.tregmine.log.info("onEntityDamageByEntity");
 		
-		Entity entity2 = event.getEntity();
-		if (entity2 instanceof Player) {
-			TregminePlayer player = tregmine.getPlayer((Player)entity2);
-			player.sendMessage("V:" + event.getCause().toString());
-		}
+//		Entity entity2 = event.getEntity();
+//		if (entity2 instanceof Player) {
+//			TregminePlayer player = tregmine.getPlayer((Player)entity2);
+//			player.sendMessage("V:" + event.getCause().toString());
+//		}
 
-		Entity entDamager = event.getDamager();
-		if (entDamager instanceof Player) {
-			TregminePlayer player = tregmine.getPlayer((Player)entDamager);
-			player.sendMessage("A:" + event.getCause().toString());
-		}
-	}
+//		Entity entDamager = event.getDamager();
+//		if (entDamager instanceof Player) {
+//			TregminePlayer player = tregmine.getPlayer((Player)entDamager);
+//			player.sendMessage("A:" + event.getCause().toString());
+//		}
+//	}
 	
 	@EventHandler
-	public void onEntityDamage(EntityDamageEvent event)	{
+	public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
+//	public void onEntityDamage(EntityDamageEvent event)	{
 		Entity entity = event.getEntity();
 		if (!(entity instanceof Player)) {
 			return;
@@ -96,10 +97,9 @@ public class ZoneEntityListener implements Listener
 		}
 
 		if (currentZone == null || !currentZone.isPvp()) {
-			if (event.getCause() == DamageCause.PROJECTILE || event.getCause() == DamageCause.MAGIC || event.getCause() == DamageCause.POISON) {
-//				EntityDamageEvent damageEvent = event.getEntity().getLastDamageCause();
-//				EntityDamageByEntityEvent eEvent = (EntityDamageByEntityEvent) damageEvent; 
-//
+			if (event.getCause() == DamageCause.PROJECTILE) {
+				player.sendMessage("Hit by an arrow outside a pvp zone");
+				event.setCancelled(true);
 			}
 			
 			if(event.getCause() == DamageCause.ENTITY_ATTACK) {
