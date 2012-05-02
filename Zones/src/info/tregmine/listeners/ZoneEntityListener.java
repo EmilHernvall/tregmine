@@ -59,48 +59,25 @@ public class ZoneEntityListener implements Listener
 		}
 	}
 
-	
 	@EventHandler
 	public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
-		Entity entity = event.getEntity();
-		if (entity instanceof Player) {
-			TregminePlayer player = tregmine.getPlayer((Player)entity);
+		this.plugin.tregmine.log.info("onEntityDamageByEntity");
+		
+		Entity entity2 = event.getEntity();
+		if (entity2 instanceof Player) {
+			TregminePlayer player = tregmine.getPlayer((Player)entity2);
 			player.sendMessage("V:" + event.getCause().toString());
 		}
 
 		Entity entDamager = event.getDamager();
 		if (entDamager instanceof Player) {
-			TregminePlayer player = tregmine.getPlayer((Player)entity);
+			TregminePlayer player = tregmine.getPlayer((Player)entDamager);
 			player.sendMessage("A:" + event.getCause().toString());
 		}
-		
-	
-/*		
-		if (event.getCause() == DamageCause.PROJECTILE) {
-			Entity entity = event.getEntity();
-			if (!(entity instanceof Player)) {
-				return;
-			}
-
-			Entity entDamager = event.getDamager();
-			if (!(entDamager instanceof Player)) {
-				return;
-			}
-
-			
-
-			TregminePlayer player = tregmine.getPlayer((Player)entity);
-			TregminePlayer damager = tregmine.getPlayer((Player)entDamager);
-			player.sendMessage("You where hit a by an arrow from" + damager.getChatName());
-			damager.sendMessage("You where hit " + player.getChatName() + " with an arrow");
-		}
-*/
 	}
 	
-	
 	@EventHandler
-	public void onEntityDamage(EntityDamageEvent event)
-	{
+	public void onEntityDamage(EntityDamageEvent event)	{
 		Entity entity = event.getEntity();
 		if (!(entity instanceof Player)) {
 			return;
