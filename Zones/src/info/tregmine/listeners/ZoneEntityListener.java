@@ -62,8 +62,20 @@ public class ZoneEntityListener implements Listener
 	
 	@EventHandler
 	public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
+		Entity entity = event.getEntity();
+		if (entity instanceof Player) {
+			TregminePlayer player = tregmine.getPlayer((Player)entity);
+			player.sendMessage("V:" + event.getCause().toString());
+		}
 
+		Entity entDamager = event.getDamager();
+		if (entDamager instanceof Player) {
+			TregminePlayer player = tregmine.getPlayer((Player)entity);
+			player.sendMessage("A:" + event.getCause().toString());
+		}
 		
+	
+/*		
 		if (event.getCause() == DamageCause.PROJECTILE) {
 			Entity entity = event.getEntity();
 			if (!(entity instanceof Player)) {
@@ -82,6 +94,7 @@ public class ZoneEntityListener implements Listener
 			player.sendMessage("You where hit a by an arrow from" + damager.getChatName());
 			damager.sendMessage("You where hit " + player.getChatName() + " with an arrow");
 		}
+*/
 	}
 	
 	
