@@ -59,6 +59,32 @@ public class ZoneEntityListener implements Listener
 		}
 	}
 
+	
+	@EventHandler
+	public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
+
+		
+		if (event.getCause() == DamageCause.PROJECTILE) {
+			Entity entity = event.getEntity();
+			if (!(entity instanceof Player)) {
+				return;
+			}
+
+			Entity entDamager = event.getDamager();
+			if (!(entDamager instanceof Player)) {
+				return;
+			}
+
+			
+
+			TregminePlayer player = tregmine.getPlayer((Player)entity);
+			TregminePlayer damager = tregmine.getPlayer((Player)entDamager);
+			player.sendMessage("You where hit a by an arrow from" + damager.getChatName());
+			damager.sendMessage("You where hit " + player.getChatName() + " with an arrow");
+		}
+	}
+	
+	
 	@EventHandler
 	public void onEntityDamage(EntityDamageEvent event)
 	{
