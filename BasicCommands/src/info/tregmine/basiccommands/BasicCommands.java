@@ -8,6 +8,7 @@ import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 //import org.bukkit.entity.CreatureType;
+import org.bukkit.entity.Chicken;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 //import org.bukkit.entity.LivingEntity;
@@ -226,10 +227,17 @@ public class BasicCommands extends JavaPlugin {
 					mob.setHealth(0);
 				}
 
+				if(ent instanceof Chicken) {
+					Chicken chicken = (Chicken) ent;
+					chicken.setHealth(0);
+				}
+
+				
 				if(ent instanceof Slime) {
 					Slime slime = (Slime) ent;
 					slime.setHealth(0);
 				}
+				
 				if (ent instanceof EnderDragon) {
 					EnderDragon dragon = (EnderDragon)ent;
 					dragon.setHealth(0);

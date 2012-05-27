@@ -127,7 +127,8 @@ public class Main extends JavaPlugin {
 						wallet.take(amount);
 						player.sendMessage(ChatColor.AQUA + "You donated to " + toPlayer.getChatName() + " " + ChatColor.GOLD + this.nf.format( amount ) + ChatColor.AQUA +" Tregs.");
 						to.sendMessage(ChatColor.AQUA + "You received " + ChatColor.GOLD + this.nf.format( amount ) + ChatColor.AQUA +" Tregs from a secret admirer.");
-						this.log.info(amount+ ":TREG_DONATED " + player.getName() + " => " + to.getName());
+//						this.log.info(amount+ ":TREG_DONATED " + player.getName() + " => " + to.getName());
+						this.log.info(amount+ ":TREG_DONATED " + player.getName() + "(" + wallet.balance() + ")" + " => " + to.getName() + "(" + toWallet.balance() + ")");
 					} else {
 						player.sendMessage(ChatColor.RED + "You cant give more then you have!");
 					}
@@ -167,7 +168,7 @@ public class Main extends JavaPlugin {
 						wallet.take(amount);
 						player.sendMessage(ChatColor.AQUA + "You gave " + toPlayer.getChatName() + " " + ChatColor.GOLD + this.nf.format( amount ) + ChatColor.AQUA +" Tregs.");
 						to.sendMessage(ChatColor.AQUA + "You received " + ChatColor.GOLD + this.nf.format( amount ) + ChatColor.AQUA +" Tregs from " + tregminePlayer.getChatName() + ".");
-						this.log.info(amount+ ":TREG " + player.getName() + " => " + to.getName());
+						this.log.info(amount+ ":TREG " + player.getName() + "(" + wallet.balance() + ")" + " => " + to.getName() + "(" + toWallet.balance() + ")");
 					} else {
 						player.sendMessage(ChatColor.RED + "You cant give more then you have!");
 					}
