@@ -219,7 +219,9 @@ public class BasicCommands extends JavaPlugin {
 			return true;
 		}
 
-		if (commandName.matches("nuke") && isAdmin) {
+		info.tregmine.api.TregminePlayer tP = this.tregmine.tregminePlayer.get(player.getName());
+
+		if (commandName.matches("nuke") && tP.isGuardian()) {
 			player.sendMessage("You nuked all mobs in this world!");
 			for (Entity ent : player.getWorld().getLivingEntities()) {
 				if(ent instanceof Monster) {
