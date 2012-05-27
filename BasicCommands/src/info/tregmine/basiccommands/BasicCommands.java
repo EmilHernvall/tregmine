@@ -8,7 +8,7 @@ import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 //import org.bukkit.entity.CreatureType;
-import org.bukkit.entity.Chicken;
+//import org.bukkit.entity.Chicken;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 //import org.bukkit.entity.LivingEntity;
@@ -221,7 +221,7 @@ public class BasicCommands extends JavaPlugin {
 
 		info.tregmine.api.TregminePlayer tP = this.tregmine.tregminePlayer.get(player.getName());
 
-		if (commandName.matches("nuke") && tP.isGuardian()) {
+		if (commandName.matches("nuke") && (tP.isGuardian() || tP.isAdmin())) {
 			player.sendMessage("You nuked all mobs in this world!");
 			for (Entity ent : player.getWorld().getLivingEntities()) {
 				if(ent instanceof Monster) {
@@ -229,11 +229,15 @@ public class BasicCommands extends JavaPlugin {
 					mob.setHealth(0);
 				}
 
-				if(ent instanceof Chicken) {
-					Chicken chicken = (Chicken) ent;
-					chicken.setHealth(0);
+//				if(ent instanceof Chicken) {
+//					Chicken chicken = (Chicken) ent;
+//					chicken.setHealth(0);
+//				}
+				
+				if(ent instanceof org.bukkit.entity.Animals) {
+					org.bukkit.entity.Animals animal = (org.bukkit.entity.Animals) ent;
+					animal.setHealth(0);
 				}
-
 				
 				if(ent instanceof Slime) {
 					Slime slime = (Slime) ent;
