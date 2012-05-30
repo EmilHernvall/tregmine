@@ -126,6 +126,8 @@ public class LookupPlayer implements  Listener  {
 		}
 
 		
+		this.plugin.log.info("ALIAS: " + all);
+//		allP.sendMessage(ChatColor.YELLOW + "This player have also used names: " + all);
 		
 		Player[] players = plugin.getServer().getOnlinePlayers();
 		for (Player allplayer : players) {
