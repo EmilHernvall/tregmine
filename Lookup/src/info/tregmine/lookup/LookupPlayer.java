@@ -65,7 +65,7 @@ public class LookupPlayer implements  Listener  {
 
 		}
 
-		if(tregminePlayer.getNameColor() == ChatColor.YELLOW || tregminePlayer.isAdmin() || tregminePlayer.isGuardian() || tregminePlayer.getMetaBoolean("builder")) {
+		if(tregminePlayer.getNameColor() == ChatColor.GOLD || tregminePlayer.isAdmin() || tregminePlayer.isGuardian() || tregminePlayer.getMetaBoolean("builder")) {
 			event.getPlayer().sendMessage("You are allowed to fly");
 			event.getPlayer().setAllowFlight(true);
 			//			tregminePlayer.setAllowFlight(true);
