@@ -133,7 +133,7 @@ public class LookupPlayer implements  Listener  {
 		for (Player allplayer : players) {
 			info.tregmine.api.TregminePlayer allP = this.plugin.tregmine.tregminePlayer.get(allplayer.getName());
 
-			if (allP.isAdmin() || allP.isAdmin()) {
+			if (allP.isAdmin() || allP.isGuardian()) {
 				allP.sendMessage(ChatColor.YELLOW + "This player have also used names: " + all);
 			}
 		} 
