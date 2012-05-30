@@ -95,7 +95,7 @@ public class LookupPlayer implements  Listener  {
 		Connection conn = null;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
-		String all = null;
+		String all = "";
 		
 		try {
 			conn = ConnectionPool.getConnection();
@@ -109,7 +109,7 @@ public class LookupPlayer implements  Listener  {
 
 			while (rs.next()) {
 				String name =  rs.getString("player");
-				all = all + ", " + name;
+				all = name + ", "+ all;
 			}
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
