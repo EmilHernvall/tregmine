@@ -131,7 +131,7 @@ public class BasicCommands extends JavaPlugin {
 			return true;
 		}
 
-		if (commandName.matches("td") && tregminePlayer.isOp()) {
+		if (commandName.matches("td") && tregminePlayer.isAdmin()) {
 			Player victim = this.getServer().matchPlayer(args[0]).get(0);
 			victim.getWorld().strikeLightning(victim.getLocation());
 			victim.setHealth(0);
@@ -429,6 +429,7 @@ public class BasicCommands extends JavaPlugin {
 				} 
 
 				player.sendMessage(ChatColor.YELLOW + "You created " + amount + " " + mobtyp.getName() + ".");
+				this.log.info(player.getName() + " created " + amount + " " + mobtyp.getName());
 			}
 			else {
 				StringBuilder buf = new StringBuilder();

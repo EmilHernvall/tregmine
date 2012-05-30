@@ -1,8 +1,14 @@
 package info.tregmine.lookup;
 
 
+import info.tregmine.database.ConnectionPool;
+
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -59,13 +65,13 @@ public class LookupPlayer implements  Listener  {
 
 		}
 
-		if(tregminePlayer.isDonator()) {
-			event.getPlayer().sendMessage("You are allowed to fly on this server");
+		if(tregminePlayer.getNameColor() == ChatColor.YELLOW || tregminePlayer.isAdmin() || tregminePlayer.isGuardian() || tregminePlayer.getMetaBoolean("builder")) {
+			event.getPlayer().sendMessage("You are allowed to fly");
 			event.getPlayer().setAllowFlight(true);
 			//			tregminePlayer.setAllowFlight(true);
 		} else {
 			event.getPlayer().sendMessage("no-z-cheat");
-			event.getPlayer().sendMessage("You are NOT allowed to fly on this server");
+			event.getPlayer().sendMessage("You are NOT allowed to fly");
 			event.getPlayer().setAllowFlight(false);
 		}
 
@@ -85,5 +91,50 @@ public class LookupPlayer implements  Listener  {
 			}
 		}
 
+		
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		String all = null;
+		
+		try {
+			conn = ConnectionPool.getConnection();
+
+			stmt = conn.prepareStatement("SELECT minecraft.user.player FROM minecraft.user, minecraft.user_settings WHERE user.uid=user_settings.id AND minecraft.user_settings.value=?" +
+					"ORDER BY time DESC LIMIT 5");
+			stmt.setString(1, ip);
+			stmt.execute();
+
+			rs = stmt.getResultSet();
+
+			while (rs.next()) {
+				String name =  rs.getString("username");
+				all = all + ", " + name;
+			}
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		} finally {
+			if (rs != null) {
+				try { rs.close(); } catch (SQLException e) {} 
+			}
+			if (stmt != null) {
+				try { stmt.close(); } catch (SQLException e) {}
+			}
+			if (conn != null) {
+				try { conn.close(); } catch (SQLException e) {}
+			}
+		}
+
+		
+		
+		Player[] players = plugin.getServer().getOnlinePlayers();
+		for (Player allplayer : players) {
+			info.tregmine.api.TregminePlayer allP = this.plugin.tregmine.tregminePlayer.get(allplayer.getName());
+
+			if (allP.isAdmin() || allP.isAdmin()) {
+				allP.sendMessage(ChatColor.YELLOW + "This player have also used names: " + all);
+			}
+		} 
+		
 	}    
 }
