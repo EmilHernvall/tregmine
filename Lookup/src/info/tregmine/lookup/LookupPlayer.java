@@ -108,7 +108,7 @@ public class LookupPlayer implements  Listener  {
 			rs = stmt.getResultSet();
 
 			while (rs.next()) {
-				String name =  rs.getString("username");
+				String name =  rs.getString("player");
 				all = all + ", " + name;
 			}
 		} catch (SQLException e) {
