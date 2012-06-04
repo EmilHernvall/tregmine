@@ -54,9 +54,11 @@ public class LookupPlayer implements  Listener  {
 			tregminePlayer.setMetaString("postalCode", l1.postalCode);
 			tregminePlayer.setMetaString("region", l1.region);
 			tregminePlayer.setMetaString("hostname", host);
+			
+			
+			
 			if(!event.getPlayer().isOp()) {
 				if(tregminePlayer.getMetaBoolean("hiddenlocation")) {
-//					this.plugin.getServer().broadcastMessage(ChatColor.DARK_AQUA + "Welcome! " + tregminePlayer.getChatName());
 				} else {
 					this.plugin.getServer().broadcastMessage(ChatColor.DARK_AQUA + "Welcome! " + tregminePlayer.getChatName() + ChatColor.DARK_AQUA + " from " +l1.countryName);
 					event.getPlayer().sendMessage(ChatColor.DARK_AQUA + l1.city + " - " + l1.postalCode);
@@ -127,14 +129,15 @@ public class LookupPlayer implements  Listener  {
 
 		
 		this.plugin.log.info("ALIAS: " + all);
-//		allP.sendMessage(ChatColor.YELLOW + "This player have also used names: " + all);
 		
 		Player[] players = plugin.getServer().getOnlinePlayers();
 		for (Player allplayer : players) {
 			info.tregmine.api.TregminePlayer allP = this.plugin.tregmine.tregminePlayer.get(allplayer.getName());
 
 			if (allP.isAdmin() || allP.isGuardian()) {
-				allP.sendMessage(ChatColor.YELLOW + "This player have also used names: " + all);
+				if(!tregminePlayer.getMetaBoolean("hiddenlocation")) {
+					allP.sendMessage(ChatColor.YELLOW + "This player have also used names: " + all);
+				}
 			}
 		} 
 		
