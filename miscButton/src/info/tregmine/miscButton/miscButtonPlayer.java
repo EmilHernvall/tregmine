@@ -105,12 +105,8 @@ public class miscButtonPlayer implements Listener  {
             player.teleport(new Location(world, 404, 19, -238));
         }
 
-		// Gatway button at spawn
-		if (button == 642446803) {
-			event.getPlayer().teleport(this.plugin.getServer().getWorld("ChildsPlay").getSpawnLocation());
-		}
-		
-		//Spleefarena button
+/*
+        //Spleefarena button
 		if (button == 1467819296) {
 			Block sb1 = event.getClickedBlock().getWorld().getBlockAt(-1, 91, 1105);
 			Block sb2 = event.getClickedBlock().getWorld().getBlockAt( 33, 91, 1133);
@@ -126,7 +122,7 @@ public class miscButtonPlayer implements Listener  {
 			fill(sb1,sb2, Material.SNOW_BLOCK);
 			fill(lb1,lb2, Material.LAVA);
 		}
-
+*/
 		// Whool at spawn mall
 		if (button == 1091869270) {
 			Wallet wallet = new Wallet(event.getPlayer().getName());
