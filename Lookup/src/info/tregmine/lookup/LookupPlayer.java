@@ -76,23 +76,6 @@ public class LookupPlayer implements  Listener  {
 			event.getPlayer().sendMessage("You are NOT allowed to fly");
 			event.getPlayer().setAllowFlight(false);
 		}
-
-
-		if (event.getPlayer().getName() != null) {
-			if ("einand".contentEquals(event.getPlayer().getName())) {
-				Player[] players = plugin.getServer().getOnlinePlayers();
-				for (Player allplayer : players) {
-					allplayer.hidePlayer(event.getPlayer());
-				} 
-			} else {
-				if (this.plugin.getServer().getPlayer("einand") != null) {
-					if (this.plugin.getServer().getPlayer("einand").isOnline()) {
-						event.getPlayer().hidePlayer(this.plugin.getServer().getPlayer("einand"));
-					}
-				}
-			}
-		}
-
 		
 		Connection conn = null;
 		PreparedStatement stmt = null;

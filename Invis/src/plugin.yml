@@ -3,13 +3,7 @@ main: info.tregmine.invis.Invis
 version: 1
 author: Ein Andersson
 commands:
-  vanish:
-    description: toggle your visibility.
-    usage: |
-           Incorrect usage of /<command>. Examples:
-           /<command> - Toggles your visibility
-           /<command> list - List of invisible players
-  poof:
+  invis:
     description: toggle your visibility.
     usage: |
            Incorrect usage of /<command>. Examples:

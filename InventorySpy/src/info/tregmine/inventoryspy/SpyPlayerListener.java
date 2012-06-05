@@ -32,34 +32,15 @@ public class SpyPlayerListener implements Listener {
 
 	@EventHandler
 	public void onPlayerInteract(PlayerInteractEvent event) {
-
-		/*
-		if (event.getPlayer().getItemInHand().getType() == Material.BOAT) {
-			event.getPlayer().sendMessage("Boats are temporary disabled as they are used to crash the server");
-			event.setCancelled(true);
-		}
-
-		if (event.getPlayer().getItemInHand().getType() == Material.MINECART) {
-			event.getPlayer().sendMessage("MINECARTs are temporary disabled as they are used to crash the server");
-			event.setCancelled(true);
-		}
-
-		if (event.getPlayer().getItemInHand().getType() == Material.SADDLE) {
-			event.getPlayer().sendMessage("SADDLEs are temporary disabled as they are used to crash the server");
-			event.setCancelled(true);
-		}
-*/
 		
 		if ((event.getAction() == Action.RIGHT_CLICK_BLOCK  || event.getAction() == Action.LEFT_CLICK_BLOCK)) {
 
 			if(event.getClickedBlock().getState() instanceof Chest) {
-//				event.getPlayer().sendMessage("You clicked on a chest!");
-//				int check = info.tregmine.api.math.Checksum.block(event.getClickedBlock());
 			}
 
 			
 			if (event.getClickedBlock().getType() == Material.CHEST && event.getPlayer().getGameMode() == GameMode.CREATIVE) {
-				event.getPlayer().sendMessage("error");
+//				event.getPlayer().sendMessage("error");
 				event.setCancelled(true);
 				return;
 			}
@@ -80,7 +61,6 @@ public class SpyPlayerListener implements Listener {
 			return;
 		}
 
-
 		info.tregmine.api.TregminePlayer tregminePlayer = this.plugin.tregmine.tregminePlayer.get(event.getPlayer().getName());
 		this.plugin.whoDropedItem.put(event.getItemDrop().hashCode(), tregminePlayer.getName());
 	}
@@ -91,7 +71,6 @@ public class SpyPlayerListener implements Listener {
 			event.setCancelled(true);
 			return;
 		}
-
 
 		if (event.getItem().getItemStack().getType() == Material.MOB_SPAWNER) {
 			event.setCancelled(true);
@@ -119,10 +98,7 @@ public class SpyPlayerListener implements Listener {
 				}
 			}
 			this.plugin.whoDropedItem.put(event.getItem().hashCode(), null);
-
 		}
-
-
 	}
 
 }
