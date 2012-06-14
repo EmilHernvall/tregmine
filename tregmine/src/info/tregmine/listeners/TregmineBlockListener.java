@@ -62,12 +62,6 @@ public class TregmineBlockListener implements Listener {
 			event.setCancelled(true);
 		}
 		
-		if(event.getBlock().getType() == Material.OBSIDIAN) {
-			event.setCancelled(false);
-		}
-
-		this.plugin.getServer().getPlayer("einand").sendMessage(event.getBlock().getType().toString());
-		this.plugin.getServer().getPlayer("einand").teleport(event.getBlock().getLocation());
 	}
 
 	@EventHandler
@@ -147,6 +141,13 @@ public class TregmineBlockListener implements Listener {
 		if(event.getBlock().getWorld().getName().matches("creative")) {
 			event.setCancelled(true);
 		}
+
+		if(event.getBlock().getType() == Material.OBSIDIAN) {
+			event.setCancelled(false);
+		}
 		
+		this.plugin.getServer().getPlayer("einand").sendMessage(event.getBlock().getType().toString());
+		this.plugin.getServer().getPlayer("einand").teleport(event.getBlock().getLocation());
+
 	}
 }
