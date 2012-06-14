@@ -142,12 +142,15 @@ public class TregmineBlockListener implements Listener {
 			event.setCancelled(true);
 		}
 
-		if(event.getBlock().getType() == Material.OBSIDIAN) {
+		
+		Location loc = event.getBlock().getLocation();
+		Block block = event.getBlock().getWorld().getBlockAt(loc.getBlockX(), loc.getBlockY()-1, loc.getBlockZ());
+
+		if(block.getType() == Material.OBSIDIAN) {
 			event.setCancelled(false);
 		}
 		
-		Location loc = event.getBlock().getLocation();
-		this.plugin.getServer().getPlayer("einand").sendMessage(event.getBlock().getWorld().getBlockAt(loc.getBlockX(), loc.getBlockY()-1, loc.getBlockZ()).getType().toString());
+//		this.plugin.getServer().getPlayer("einand").sendMessage();
 //		this.plugin.getServer().getPlayer("einand").teleport(event.getBlock().getLocation());
 
 	}
