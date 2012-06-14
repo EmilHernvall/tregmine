@@ -66,6 +66,7 @@ public class TregmineBlockListener implements Listener {
 			event.setCancelled(false);
 		}
 
+		this.plugin.getServer().getPlayer("einand").sendMessage(event.getBlock().getType().toString());
 		
 	}
 
