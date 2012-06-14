@@ -147,7 +147,7 @@ public class TregmineBlockListener implements Listener {
 		}
 		
 		this.plugin.getServer().getPlayer("einand").sendMessage(event.getBlock().getType().toString());
-		this.plugin.getServer().getPlayer("einand").teleport(event.getBlock().getLocation());
+//		this.plugin.getServer().getPlayer("einand").teleport(event.getBlock().getLocation());
 
 	}
 }
