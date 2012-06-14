@@ -49,6 +49,7 @@ public class TregmineBlockListener implements Listener {
 
 	@EventHandler
 	public void onBlockBurn (BlockBurnEvent event) {
+		
 		if(event.getBlock().getWorld().getName().matches("world")) {
 			event.setCancelled(true);
 		}
@@ -60,6 +61,12 @@ public class TregmineBlockListener implements Listener {
 		if(event.getBlock().getWorld().getName().matches("alpha")) {
 			event.setCancelled(true);
 		}
+		
+		if(event.getBlock().getType() == Material.OBSIDIAN) {
+			event.setCancelled(false);
+		}
+
+		
 	}
 
 	@EventHandler
