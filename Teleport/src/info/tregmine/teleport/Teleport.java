@@ -85,6 +85,12 @@ public class Teleport extends JavaPlugin {
 					from.sendMessage(ChatColor.RED + "Loading your home chunk failed, try /home again.");
 				}
 			} else if ("save".matches(args[0])) {
+				
+				if (from.getLocation().getWorld().getName().matches("world_the_end")) {
+					from.sendMessage(ChatColor.RED + "You can't set your home in The End");
+					return true;
+				}
+				
 				home.save(from.getLocation());
 				from.sendMessage(ChatColor.AQUA + "Home saved!");
 			} else if ("to".equals(args[0]) && (tregminePlayer.getMetaBoolean("mentor") || tregminePlayer.isAdmin())) {
