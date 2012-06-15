@@ -19,14 +19,6 @@ import org.bukkit.block.Block;
 //import org.bukkit.entity.Egg;
 //import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
-//import org.bukkit.entity.Projectile;
-//import org.bukkit.entity.Snowball;
-//import org.bukkit.inventory.Inventory;
-//import org.bukkit.inventory.InventoryView;
-//import org.bukkit.inventory.InventoryView.Property;
-//import org.bukkit.inventory.ItemStack;
-//import org.bukkit.metadata.MetadataValue;
-//import org.bukkit.plugin.Plugin;
 
 public class TregminePlayer extends PlayerDelegate
 {
@@ -40,7 +32,6 @@ public class TregminePlayer extends PlayerDelegate
 	private HashMap<String,String> settings = new HashMap<String,String>();
 	private HashMap<String,Block> block = new HashMap<String,Block>();
 	private HashMap<String,Integer> integer = new HashMap<String,Integer>();
-	//	private HashMap<String,Location> location = new HashMap<String,Location>();
 
 	private int id = 0;
 	private String name;
@@ -87,7 +78,6 @@ public class TregminePlayer extends PlayerDelegate
 	public void load() 
 	{
 		settings.clear();
-//		System.out.println("Loading settings for " + name);
 
 		Connection conn = null;
 		PreparedStatement stmt = null;
@@ -244,7 +234,6 @@ public class TregminePlayer extends PlayerDelegate
 			
 			String sqlDelete = "DELETE FROM `minecraft`.`user_settings` " +
 					"WHERE `user_settings`.`id` = ? AND `user_settings`.`key` = ?";
-//			System.console().printf(SQLD);
 			stmt = conn.prepareStatement(sqlDelete);
 			stmt.setString(1, settings.get("uid"));
 			stmt.setString(2, _key);
