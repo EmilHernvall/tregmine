@@ -23,7 +23,6 @@ import org.bukkit.entity.EnderDragon;
 import info.tregmine.Tregmine; 
 import info.tregmine.api.TregminePlayer;
 //import info.tregmine.api.TregminePlayer;
-import info.tregmine.api.encryption.BCrypt;
 
 
 public class BasicCommands extends JavaPlugin {
@@ -79,8 +78,18 @@ public class BasicCommands extends JavaPlugin {
 		boolean isMentor = tregminePlayer.getMetaBoolean("mentor");
 
 		if (commandName.matches("password")) {
-			String hash = BCrypt.hashpw(args[0], BCrypt.gensalt());
-			player.sendMessage(hash);
+            if (args.length != 1) {
+                return false; 
+            }
+            if (args[0].length() < 6) {
+                tregminePlayer.sendMessage(ChatColor.RED + "Your password must be at least " +
+                    "6 characters long.");
+                return true;
+            }
+
+            tregminePlayer.setPassword(args[0]);
+            tregminePlayer.sendMessage(ChatColor.YELLOW + "Your password has been changed.");
+            return true;
 		}
 
 		if (commandName.matches("creative") && (tregminePlayer.isAdmin() || tregminePlayer.getMetaBoolean("builder"))) {

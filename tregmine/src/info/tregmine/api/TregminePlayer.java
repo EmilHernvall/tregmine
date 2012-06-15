@@ -1,5 +1,6 @@
 package info.tregmine.api;
 
+import info.tregmine.api.encryption.BCrypt;
 import info.tregmine.database.ConnectionPool;
 
 import java.sql.Connection;
@@ -45,6 +46,7 @@ public class TregminePlayer extends PlayerDelegate
 	private String name;
 	private Zone currentZone = null;
 	private GuardianState guardianState = null;
+    private String password;
 
 	public TregminePlayer(Player player, String _name) 
 	{
@@ -416,4 +418,36 @@ public class TregminePlayer extends PlayerDelegate
 	public Zone getCurrentZone() {
 		return currentZone;
 	}
+	
+    public void setPassword(String newPassword)
+    {
+        String hash = BCrypt.hashpw(newPassword, BCrypt.gensalt());
+
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        try {
+            conn = ConnectionPool.getConnection();
+
+            String sql = "UPDATE user SET password = ? WHERE uid = ?";
+            stmt = conn.prepareStatement(sql);
+            stmt.setString(1, hash);
+            stmt.setInt(2, this.id);
+            stmt.execute();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            if (stmt != null) {
+				try { stmt.close(); } catch (SQLException e) {}
+			}
+			if (conn != null) {
+				try { conn.close(); } catch (SQLException e) {}
+			}
+        }
+    }
+
+    public boolean verifyPassword(String attempt)
+    {
+        return BCrypt.checkpw(attempt, this.password);
+    }
+
 }
