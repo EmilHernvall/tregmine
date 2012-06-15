@@ -18,6 +18,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.painting.PaintingBreakByEntityEvent;
+import org.bukkit.event.painting.PaintingPlaceEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -94,6 +95,68 @@ public class ZonePlayerListener implements Listener
 
 	}
 
+	
+	
+	@EventHandler
+	public void onPaintingPlace(PaintingPlaceEvent event){
+		TregminePlayer player = tregmine.getPlayer(event.getPlayer());
+		if (player.isAdmin()) {
+			return;
+		}
+
+		ZoneWorld world = plugin.getWorld(player.getWorld());
+
+		
+//		Block block = event.getBlockClicked();
+		Location location = event.getPainting().getLocation();
+		Point pos = new Point(location.getBlockX(), location.getBlockZ());
+
+		Zone currentZone = player.getCurrentZone();
+		if (currentZone == null || !currentZone.contains(pos)) {
+			currentZone = world.findZone(pos);
+			player.setCurrentZone(currentZone);
+		}
+
+		if (currentZone != null) {
+			Zone.Permission perm = currentZone.getUser(player.getName());
+
+			Lot lot = world.findLot(pos);
+			if (lot != null) {
+				if (perm != Zone.Permission.Owner && !lot.isOwner(player.getName())) {
+					player.sendMessage(ChatColor.RED + "[" + currentZone.getName() + "] " + 
+							"You are not allowed to break blocks in lot " + lot.getName() + ".");
+					event.setCancelled(true);
+					return;
+				}
+
+				return;
+			}
+
+			// if everyone is allowed to build in this zone...
+			if (currentZone.getDestroyDefault()) {
+				// ...the only people that can't build are those that are banned
+				if (perm != null && perm == Zone.Permission.Banned) {
+					event.setCancelled(true);
+					player.sendMessage(ChatColor.RED + "[" + currentZone.getName() + "] " + 
+							"You are banned from " + currentZone.getName() + ".");	    			
+				}
+			} 
+			// if this zone has limited building privileges...
+			else {
+				// ...we only allow builders and owners to make changes.
+				if (perm == null || (perm != Zone.Permission.Maker && perm != Zone.Permission.Owner)) {
+					player.setFireTicks(50);
+					event.setCancelled(true);
+					player.sendMessage(ChatColor.RED + "[" + currentZone.getName() + "] " + 
+							"You are not allowed to break blocks in " + currentZone.getName() + ".");
+				}
+			}
+		}
+
+	}
+
+	
+	
 	
 	@EventHandler
 	public void onPaintingBreakByEntity(PaintingBreakByEntityEvent event){
