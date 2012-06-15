@@ -124,7 +124,7 @@ public class ZonePlayerListener implements Listener
 			if (lot != null) {
 				if (perm != Zone.Permission.Owner && !lot.isOwner(player.getName())) {
 					player.sendMessage(ChatColor.RED + "[" + currentZone.getName() + "] " + 
-							"You are not allowed to break blocks in lot " + lot.getName() + ".");
+							"You are not allowed to place paintings in lot " + lot.getName() + ".");
 					event.setCancelled(true);
 					return;
 				}
@@ -148,7 +148,7 @@ public class ZonePlayerListener implements Listener
 					player.setFireTicks(50);
 					event.setCancelled(true);
 					player.sendMessage(ChatColor.RED + "[" + currentZone.getName() + "] " + 
-							"You are not allowed to break blocks in " + currentZone.getName() + ".");
+							"You are not allowed to place paintings in " + currentZone.getName() + ".");
 				}
 			}
 		}
@@ -192,7 +192,7 @@ public class ZonePlayerListener implements Listener
 			if (lot != null) {
 				if (perm != Zone.Permission.Owner && !lot.isOwner(player.getName())) {
 					player.sendMessage(ChatColor.RED + "[" + currentZone.getName() + "] " + 
-							"You are not allowed to break blocks in lot " + lot.getName() + ".");
+							"You are not allowed to destroy paintings in lot " + lot.getName() + ".");
 					event.setCancelled(true);
 					return;
 				}
@@ -216,7 +216,7 @@ public class ZonePlayerListener implements Listener
 					player.setFireTicks(50);
 					event.setCancelled(true);
 					player.sendMessage(ChatColor.RED + "[" + currentZone.getName() + "] " + 
-							"You are not allowed to break blocks in " + currentZone.getName() + ".");
+							"You are not allowed to destroy paintings in " + currentZone.getName() + ".");
 				}
 			}
 		}
