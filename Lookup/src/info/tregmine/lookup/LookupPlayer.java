@@ -110,6 +110,11 @@ public class LookupPlayer implements  Listener  {
 			}
 		}
 
+
+		
+		if (player.getLocation().getWorld().getName().matches("world_the_end")) {
+			player.teleport(this.plugin.getServer().getWorld("world").getSpawnLocation());
+		}
 		
 		this.plugin.log.info("ALIAS: " + all);
 		
