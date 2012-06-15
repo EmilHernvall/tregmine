@@ -36,62 +36,62 @@ public class ZonePlayerListener implements Listener
 
 	@EventHandler
 	public void onPlayerBucketEmpty(PlayerBucketEmptyEvent event){
-    	TregminePlayer player = tregmine.getPlayer(event.getPlayer());
-    	if (player.isAdmin()) {
-    		return;
-    	}
-    	
-    	ZoneWorld world = plugin.getWorld(player.getWorld());
-    				
-    	Block block = event.getBlockClicked();
-    	Location location = block.getLocation();
-    	Point pos = new Point(location.getBlockX(), location.getBlockZ());
-    	
-    	Zone currentZone = player.getCurrentZone();
-    	if (currentZone == null || !currentZone.contains(pos)) {
-    		currentZone = world.findZone(pos);
-    		player.setCurrentZone(currentZone);
-    	}
-    	
-    	if (currentZone != null) {
-	    	Zone.Permission perm = currentZone.getUser(player.getName());
-	    	
-	    	Lot lot = world.findLot(pos);
-	    	if (lot != null) {
-	    		if (perm != Zone.Permission.Owner && !lot.isOwner(player.getName())) {
-		    		player.sendMessage(ChatColor.RED + "[" + currentZone.getName() + "] " + 
-		    				"You are not allowed to break blocks in lot " + lot.getName() + ".");
-		    		event.setCancelled(true);
-		    		return;
-	    		}
+		TregminePlayer player = tregmine.getPlayer(event.getPlayer());
+		if (player.isAdmin()) {
+			return;
+		}
 
-                        return;
-	    	}
-	    	
-	    	// if everyone is allowed to build in this zone...
-	    	if (currentZone.getDestroyDefault()) {
-	    		// ...the only people that can't build are those that are banned
-	    		if (perm != null && perm == Zone.Permission.Banned) {
-		    		event.setCancelled(true);
-		    		player.sendMessage(ChatColor.RED + "[" + currentZone.getName() + "] " + 
-		    				"You are banned from " + currentZone.getName() + ".");	    			
-	    		}
-	    	} 
-	    	// if this zone has limited building privileges...
-	    	else {
-	    		// ...we only allow builders and owners to make changes.
-		    	if (perm == null || (perm != Zone.Permission.Maker && perm != Zone.Permission.Owner)) {
-		    		player.setFireTicks(50);
-		    		event.setCancelled(true);
-		    		player.sendMessage(ChatColor.RED + "[" + currentZone.getName() + "] " + 
-		    				"You are not allowed to break blocks in " + currentZone.getName() + ".");
-		    	}
-	    	}
-    	}
-		
+		ZoneWorld world = plugin.getWorld(player.getWorld());
+
+		Block block = event.getBlockClicked();
+		Location location = block.getLocation();
+		Point pos = new Point(location.getBlockX(), location.getBlockZ());
+
+		Zone currentZone = player.getCurrentZone();
+		if (currentZone == null || !currentZone.contains(pos)) {
+			currentZone = world.findZone(pos);
+			player.setCurrentZone(currentZone);
+		}
+
+		if (currentZone != null) {
+			Zone.Permission perm = currentZone.getUser(player.getName());
+
+			Lot lot = world.findLot(pos);
+			if (lot != null) {
+				if (perm != Zone.Permission.Owner && !lot.isOwner(player.getName())) {
+					player.sendMessage(ChatColor.RED + "[" + currentZone.getName() + "] " + 
+							"You are not allowed to break blocks in lot " + lot.getName() + ".");
+					event.setCancelled(true);
+					return;
+				}
+
+				return;
+			}
+
+			// if everyone is allowed to build in this zone...
+			if (currentZone.getDestroyDefault()) {
+				// ...the only people that can't build are those that are banned
+				if (perm != null && perm == Zone.Permission.Banned) {
+					event.setCancelled(true);
+					player.sendMessage(ChatColor.RED + "[" + currentZone.getName() + "] " + 
+							"You are banned from " + currentZone.getName() + ".");	    			
+				}
+			} 
+			// if this zone has limited building privileges...
+			else {
+				// ...we only allow builders and owners to make changes.
+				if (perm == null || (perm != Zone.Permission.Maker && perm != Zone.Permission.Owner)) {
+					player.setFireTicks(50);
+					event.setCancelled(true);
+					player.sendMessage(ChatColor.RED + "[" + currentZone.getName() + "] " + 
+							"You are not allowed to break blocks in " + currentZone.getName() + ".");
+				}
+			}
+		}
+
 	}
 
-//	@SuppressWarnings("null")
+	//	@SuppressWarnings("null")
 	@EventHandler
 	public void onPlayerInteract(PlayerInteractEvent event) 
 	{
@@ -234,7 +234,7 @@ public class ZonePlayerListener implements Listener
 					}
 					else if (perm == Zone.Permission.Banned) {
 						bannedMessage(currentZone, player);
-//						bannedMessage(currentZone, player);
+						//						bannedMessage(currentZone, player);
 						player.teleport( player.getWorld().getSpawnLocation() );
 						return;			    		
 					}
@@ -246,7 +246,7 @@ public class ZonePlayerListener implements Listener
 		}
 	}
 
-	
+
 	@EventHandler
 	public void onPlayerChangedWorld(PlayerChangedWorldEvent event) {
 		event.getPlayer().sendMessage("ChangeWorld " + event.getPlayer().getWorld().getName());
@@ -260,8 +260,8 @@ public class ZonePlayerListener implements Listener
 		Point currentPos = new Point(movingTo.getBlockX(), movingTo.getBlockZ());
 
 		Zone currentZone = player.getCurrentZone();
-		
-		
+
+
 		if (currentZone == null || !currentZone.contains(currentPos)) {
 
 			if (currentZone != null && currentZone.contains(oldPos)) {
@@ -271,7 +271,7 @@ public class ZonePlayerListener implements Listener
 			currentZone = world.findZone(currentPos);
 			if (currentZone != null) {
 				Zone.Permission perm = currentZone.getUser(player.getName());
-				
+
 				if (currentZone.getEnterDefault()) {
 					if (player.isAdmin()) {
 						// never applies to admins
@@ -279,7 +279,7 @@ public class ZonePlayerListener implements Listener
 					else if (perm != null && perm == Zone.Permission.Banned) {
 						bannedMessage(currentZone, player);
 						player.teleport(this.plugin.getServer().getWorld("world").getSpawnLocation());
-//						event.setCancelled(true);
+						//						event.setCancelled(true);
 						return;
 					}
 				} else {
@@ -289,20 +289,20 @@ public class ZonePlayerListener implements Listener
 					else if (perm == null) {
 						disallowedMessage(currentZone, player);
 						player.teleport(this.plugin.getServer().getWorld("world").getSpawnLocation());
-//						event.setCancelled(true);
+						//						event.setCancelled(true);
 						return;
 					}
 					else if (perm == Zone.Permission.Banned) {
 						bannedMessage(currentZone, player);
 						player.teleport(this.plugin.getServer().getWorld("world").getSpawnLocation());
-//						event.setCancelled(true);
+						//						event.setCancelled(true);
 						return;			    		
 					}
 				}
-				
+
 				if (currentZone.isPvp() && !player.isAdmin()) {
 					player.teleport(this.plugin.getServer().getWorld("world").getSpawnLocation());
-//					event.setCancelled(true);
+					//					event.setCancelled(true);
 					return;
 				}
 				welcomeMessage(currentZone, player, perm);
@@ -311,80 +311,82 @@ public class ZonePlayerListener implements Listener
 		}
 	}
 
-	
+
 	@EventHandler
 	public void onPlayerTeleport(PlayerTeleportEvent event)
 	{		
 		event.getPlayer().sendMessage("Teleport " + event.getPlayer().getWorld().getName());
-		
+
 		if (event.getTo().getWorld().getName().matches("world_the_end")) {
 			event.getPlayer().sendMessage(ChatColor.RED + "You can't teleport to someone in The End");
 			event.setCancelled(true);
 			return;
 		}
 
-//		if (event.getPlayer().getWorld().getName().matches("world_the_end")) {
-//			event.getPlayer().sendMessage(ChatColor.RED + "You can't teleport to someone in The End");
-//			event.setCancelled(true);
-//			return;
-//		}
-		
-		TregminePlayer player = tregmine.getPlayer(event.getPlayer());
-		ZoneWorld world = plugin.getWorld(player.getWorld());
+		//		if (event.getPlayer().getWorld().getName().matches("world_the_end")) {
+		//			event.getPlayer().sendMessage(ChatColor.RED + "You can't teleport to someone in The End");
+		//			event.setCancelled(true);
+		//			return;
+		//		}
 
-		Location movingFrom = event.getFrom();
-		Point oldPos = new Point(movingFrom.getBlockX(), movingFrom.getBlockZ());
+		if (event.getFrom().getWorld().getName().matches(event.getTo().getWorld().getName())) {
+			TregminePlayer player = tregmine.getPlayer(event.getPlayer());
+			ZoneWorld world = plugin.getWorld(player.getWorld());
 
-		Location movingTo = event.getTo();
-		Point currentPos = new Point(movingTo.getBlockX(), movingTo.getBlockZ());
+			Location movingFrom = event.getFrom();
+			Point oldPos = new Point(movingFrom.getBlockX(), movingFrom.getBlockZ());
 
-		Zone currentZone = player.getCurrentZone();
-		
-		
-		if (currentZone == null || !currentZone.contains(currentPos)) {
+			Location movingTo = event.getTo();
+			Point currentPos = new Point(movingTo.getBlockX(), movingTo.getBlockZ());
 
-			if (currentZone != null && currentZone.contains(oldPos)) {
-				player.sendMessage(currentZone.getTextExit());
-			}
+			Zone currentZone = player.getCurrentZone();
 
-			currentZone = world.findZone(currentPos);
-			if (currentZone != null) {
-				Zone.Permission perm = currentZone.getUser(player.getName());
-				
-				if (currentZone.getEnterDefault()) {
-					if (player.isAdmin()) {
-						// never applies to admins
+
+			if (currentZone == null || !currentZone.contains(currentPos)) {
+
+				if (currentZone != null && currentZone.contains(oldPos)) {
+					player.sendMessage(currentZone.getTextExit());
+				}
+
+				currentZone = world.findZone(currentPos);
+				if (currentZone != null) {
+					Zone.Permission perm = currentZone.getUser(player.getName());
+
+					if (currentZone.getEnterDefault()) {
+						if (player.isAdmin()) {
+							// never applies to admins
+						}
+						else if (perm != null && perm == Zone.Permission.Banned) {
+							bannedMessage(currentZone, player);
+							event.setCancelled(true);
+							return;
+						}
+					} else {
+						if (player.isAdmin()) {
+							// never applies to admins
+						}
+						else if (perm == null) {
+							disallowedMessage(currentZone, player);
+							event.setCancelled(true);
+							return;
+						}
+						else if (perm == Zone.Permission.Banned) {
+							bannedMessage(currentZone, player);
+							event.setCancelled(true);
+							return;			    		
+						}
 					}
-					else if (perm != null && perm == Zone.Permission.Banned) {
-						bannedMessage(currentZone, player);
+
+					if (currentZone.isPvp() && !player.isAdmin()) {
 						event.setCancelled(true);
 						return;
 					}
-				} else {
-					if (player.isAdmin()) {
-						// never applies to admins
-					}
-					else if (perm == null) {
-						disallowedMessage(currentZone, player);
-						event.setCancelled(true);
-						return;
-					}
-					else if (perm == Zone.Permission.Banned) {
-						bannedMessage(currentZone, player);
-						event.setCancelled(true);
-						return;			    		
-					}
-				}
-				
-				if (currentZone.isPvp() && !player.isAdmin()) {
-					event.setCancelled(true);
-					return;
-				}
 
-				
-				welcomeMessage(currentZone, player, perm);
+
+					welcomeMessage(currentZone, player, perm);
+				}
+				player.setCurrentZone(currentZone);
 			}
-			player.setCurrentZone(currentZone);
 		}
 	}
 
