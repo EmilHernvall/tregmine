@@ -249,6 +249,7 @@ public class ZonePlayerListener implements Listener
 	
 	@EventHandler
 	public void onPlayerChangedWorld(PlayerChangedWorldEvent event) {
+		event.getPlayer().sendMessage("" + event.getPlayer().getWorld().getName());
 //		TregminePlayer player = tregmine.getPlayer(event.getPlayer());
 //		player.setCurrentZone(null);
 //		ZoneWorld world = plugin.getWorld(player.getWorld());
@@ -281,6 +282,7 @@ public class ZonePlayerListener implements Listener
 		Point currentPos = new Point(movingTo.getBlockX(), movingTo.getBlockZ());
 
 		Zone currentZone = player.getCurrentZone();
+		
 		
 		if (currentZone == null || !currentZone.contains(currentPos)) {
 
