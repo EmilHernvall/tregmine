@@ -250,9 +250,65 @@ public class ZonePlayerListener implements Listener
 	@EventHandler
 	public void onPlayerChangedWorld(PlayerChangedWorldEvent event) {
 		event.getPlayer().sendMessage("ChangeWorld " + event.getPlayer().getWorld().getName());
-//		TregminePlayer player = tregmine.getPlayer(event.getPlayer());
-//		player.setCurrentZone(null);
-//		ZoneWorld world = plugin.getWorld(player.getWorld());
+		TregminePlayer player = tregmine.getPlayer(event.getPlayer());
+		ZoneWorld world = plugin.getWorld(player.getWorld());
+
+		Location movingFrom = player.getLocation();
+		Point oldPos = new Point(movingFrom.getBlockX(), movingFrom.getBlockZ());
+
+		Location movingTo = player.getLocation();
+		Point currentPos = new Point(movingTo.getBlockX(), movingTo.getBlockZ());
+
+		Zone currentZone = player.getCurrentZone();
+		
+		
+		if (currentZone == null || !currentZone.contains(currentPos)) {
+
+			if (currentZone != null && currentZone.contains(oldPos)) {
+				player.sendMessage(currentZone.getTextExit());
+			}
+
+			currentZone = world.findZone(currentPos);
+			if (currentZone != null) {
+				Zone.Permission perm = currentZone.getUser(player.getName());
+				
+				if (currentZone.getEnterDefault()) {
+					if (player.isAdmin()) {
+						// never applies to admins
+					}
+					else if (perm != null && perm == Zone.Permission.Banned) {
+						bannedMessage(currentZone, player);
+						player.teleport(this.plugin.getServer().getWorld("world").getSpawnLocation());
+//						event.setCancelled(true);
+						return;
+					}
+				} else {
+					if (player.isAdmin()) {
+						// never applies to admins
+					}
+					else if (perm == null) {
+						disallowedMessage(currentZone, player);
+						player.teleport(this.plugin.getServer().getWorld("world").getSpawnLocation());
+//						event.setCancelled(true);
+						return;
+					}
+					else if (perm == Zone.Permission.Banned) {
+						bannedMessage(currentZone, player);
+						player.teleport(this.plugin.getServer().getWorld("world").getSpawnLocation());
+//						event.setCancelled(true);
+						return;			    		
+					}
+				}
+				
+				if (currentZone.isPvp() && !player.isAdmin()) {
+					player.teleport(this.plugin.getServer().getWorld("world").getSpawnLocation());
+//					event.setCancelled(true);
+					return;
+				}
+				welcomeMessage(currentZone, player, perm);
+			}
+			player.setCurrentZone(currentZone);
+		}
 	}
 
 	
