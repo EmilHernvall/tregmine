@@ -1,5 +1,7 @@
 package info.tregmine.invis;
 
+import info.tregmine.api.TregminePlayer;
+
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -16,23 +18,38 @@ public class InvisPlayer implements  Listener  {
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent event) {
 
+
+
 		if (event.getPlayer().getName() != null) {
-			if ("einand".contentEquals(event.getPlayer().getName())) {
+			TregminePlayer player = this.plugin.tregmine.getPlayer(event.getPlayer());
+
+			if (player.getMetaBoolean("invis")) {
 				Player[] players = plugin.getServer().getOnlinePlayers();
 				for (Player allplayer : players) {
 					allplayer.hidePlayer(event.getPlayer());
-				} 
+				}				
 			} else {
-				if (this.plugin.getServer().getPlayer("einand") != null) {
-					if (this.plugin.getServer().getPlayer("einand").isOnline()) {
-						event.getPlayer().hidePlayer(this.plugin.getServer().getPlayer("einand"));
-					}
+				Player[] players = plugin.getServer().getOnlinePlayers();
+				for (Player allplayer : players) {
+					allplayer.showPlayer(event.getPlayer());
 				}
 			}
+
+			
+			Player[] players = plugin.getServer().getOnlinePlayers();
+			for (Player allplayer : players) {
+				TregminePlayer aplayer = this.plugin.tregmine.getPlayer(allplayer);
+				if (aplayer.getMetaBoolean("invis")) {
+					player.hidePlayer(aplayer);
+				} else {
+					if (aplayer.getMetaBoolean("invis")) {
+						player.showPlayer(aplayer);
+					}
+
+				}				
+			}
+
+
 		}
-
-		
 	}
-
-	
 }

@@ -11,6 +11,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 
 import info.tregmine.Tregmine; 
+//import info.tregmine.api.TregminePlayer;
 
 
 public class Invis extends JavaPlugin {
