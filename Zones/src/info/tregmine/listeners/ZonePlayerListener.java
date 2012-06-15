@@ -252,21 +252,21 @@ public class ZonePlayerListener implements Listener
 		event.getPlayer().sendMessage("ChangeWorld " + event.getPlayer().getWorld().getName());
 		TregminePlayer player = tregmine.getPlayer(event.getPlayer());
 		ZoneWorld world = plugin.getWorld(player.getWorld());
-
-		Location movingFrom = player.getLocation();
-		Point oldPos = new Point(movingFrom.getBlockX(), movingFrom.getBlockZ());
+		
+//		Location movingFrom = player.getLocation();
+//		Point oldPos = new Point(movingFrom.getBlockX(), movingFrom.getBlockZ());
 
 		Location movingTo = player.getLocation();
 		Point currentPos = new Point(movingTo.getBlockX(), movingTo.getBlockZ());
 
-		Zone currentZone = player.getCurrentZone();
+		Zone currentZone = null;
 
 
 		if (currentZone == null || !currentZone.contains(currentPos)) {
 
-			if (currentZone != null && currentZone.contains(oldPos)) {
-				player.sendMessage(currentZone.getTextExit());
-			}
+//			if (currentZone != null && currentZone.contains(oldPos)) {
+//				player.sendMessage(currentZone.getTextExit());
+//			}
 
 			currentZone = world.findZone(currentPos);
 			if (currentZone != null) {
