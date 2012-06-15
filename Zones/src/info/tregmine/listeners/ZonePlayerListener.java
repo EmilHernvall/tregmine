@@ -260,7 +260,7 @@ public class ZonePlayerListener implements Listener
 		
 		if (event.getTo().getWorld().getName().matches("world_the_end")) {
 			event.getPlayer().sendMessage(ChatColor.RED + "You can't teleport to someone in The End");
-			event.setCancelled(false);
+			event.setCancelled(true);
 			return;
 		}
 		
