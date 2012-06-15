@@ -72,7 +72,7 @@ public class Teleport extends JavaPlugin {
 			if (args.length == 0) {
 				Location loc = home.get();
 				
-				if (info.tregmine.api.math.Distance.calc2d(loc, tregminePlayer.getLocation()) < 700) {
+				if (info.tregmine.api.math.Distance.calc2d(this.getServer().getWorld("world").getSpawnLocation(), loc) < 700) {
 					from.sendMessage(ChatColor.RED + "Telogric lift malfunctioned. Teleportation failed, to close to spawn.");
 					return true;
 				}
@@ -96,6 +96,11 @@ public class Teleport extends JavaPlugin {
 				
 				if (from.getLocation().getWorld().getName().matches("world_the_end")) {
 					from.sendMessage(ChatColor.RED + "You can't set your home in The End");
+					return true;
+				}
+				
+				if (info.tregmine.api.math.Distance.calc2d(this.getServer().getWorld("world").getSpawnLocation(), tregminePlayer.getLocation()) < 700) {
+					from.sendMessage(ChatColor.RED + "Telogric lift malfunctioned. Teleportation failed, to close to spawn.");
 					return true;
 				}
 				
