@@ -109,13 +109,7 @@ public class LookupPlayer implements  Listener  {
 				try { conn.close(); } catch (SQLException e) {}
 			}
 		}
-
-
-		
-		if (player.getLocation().getWorld().getName().matches("world_the_end")) {
-			player.teleport(this.plugin.getServer().getWorld("world").getSpawnLocation());
-		}
-		
+				
 		this.plugin.log.info("ALIAS: " + all);
 		
 		Player[] players = plugin.getServer().getOnlinePlayers();

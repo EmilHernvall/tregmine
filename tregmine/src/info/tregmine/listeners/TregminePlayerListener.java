@@ -227,6 +227,13 @@ public class TregminePlayerListener implements Listener {
 
 		TregminePlayer tregPlayer = new TregminePlayer(player, playerName);
 
+		if (player.getLocation().getWorld().getName().matches("world_the_end")) {
+			player.teleport(this.plugin.getServer().getWorld("world").getSpawnLocation());
+		}
+
+		
+		
+		
 		if(tregPlayer.exists()) {
 			tregPlayer.load();
 		} else {
