@@ -249,7 +249,7 @@ public class ZonePlayerListener implements Listener
 	
 	@EventHandler
 	public void onPlayerChangedWorld(PlayerChangedWorldEvent event) {
-		event.getPlayer().sendMessage("" + event.getPlayer().getWorld().getName());
+		event.getPlayer().sendMessage("ChangeWorld " + event.getPlayer().getWorld().getName());
 //		TregminePlayer player = tregmine.getPlayer(event.getPlayer());
 //		player.setCurrentZone(null);
 //		ZoneWorld world = plugin.getWorld(player.getWorld());
@@ -259,6 +259,7 @@ public class ZonePlayerListener implements Listener
 	@EventHandler
 	public void onPlayerTeleport(PlayerTeleportEvent event)
 	{		
+		event.getPlayer().sendMessage("Teleport " + event.getPlayer().getWorld().getName());
 		
 		if (event.getTo().getWorld().getName().matches("world_the_end")) {
 			event.getPlayer().sendMessage(ChatColor.RED + "You can't teleport to someone in The End");
