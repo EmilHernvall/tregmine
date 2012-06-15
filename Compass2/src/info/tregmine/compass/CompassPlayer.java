@@ -24,15 +24,15 @@ public class CompassPlayer implements Listener {
 	public void onPlayerAnimation(PlayerAnimationEvent event) {
 		info.tregmine.api.TregminePlayer tregminePlayer = this.plugin.tregmine.tregminePlayer.get(event.getPlayer().getName());
 
-		if (tregminePlayer.getMetaBoolean("betacompass") && event.getAnimationType() == PlayerAnimationType.ARM_SWING  && event.getPlayer().getItemInHand().getType() == Material.COMPASS) {
+		if (tregminePlayer.getMetaBoolean("compass") && event.getAnimationType() == PlayerAnimationType.ARM_SWING  && event.getPlayer().getItemInHand().getType() == Material.COMPASS) {
 			Player player = event.getPlayer();
 			Block target = player.getTargetBlock(null, 300);
 			Block b1 = player.getWorld().getBlockAt(new Location(player.getWorld(), target.getX(),target.getY()+1,target.getZ()));
 			Block b2 = player.getWorld().getBlockAt(new Location(player.getWorld(), target.getX(),target.getY()+2,target.getZ()));
 
-			player.sendMessage(target.getType().toString() + ": " + target.getX() +", " + target.getY() + ", " + target.getZ() );
-			player.sendMessage(b1.getType().toString() + ": " + b1.getX() +", " + b1.getY() + ", " + b1.getZ() );
-			player.sendMessage(b2.getType().toString() + ": " + b2.getX() +", " + b2.getY() + ", " + b2.getZ() );
+//			player.sendMessage(target.getType().toString() + ": " + target.getX() +", " + target.getY() + ", " + target.getZ() );
+//			player.sendMessage(b1.getType().toString() + ": " + b1.getX() +", " + b1.getY() + ", " + b1.getZ() );
+//			player.sendMessage(b2.getType().toString() + ": " + b2.getX() +", " + b2.getY() + ", " + b2.getZ() );
 
 			if (mode == CompassMode.OnTop) {
 				int top = player.getWorld().getHighestBlockYAt(target.getLocation());
@@ -53,7 +53,7 @@ public class CompassPlayer implements Listener {
 		}
 
 
-		if (tregminePlayer.getMetaBoolean("compass") && event.getAnimationType() == PlayerAnimationType.ARM_SWING  && event.getPlayer().getItemInHand().getType() == Material.COMPASS) {
+		if (tregminePlayer.getMetaBoolean("oldcompass") && event.getAnimationType() == PlayerAnimationType.ARM_SWING  && event.getPlayer().getItemInHand().getType() == Material.COMPASS) {
 
 			float pitch = event.getPlayer().getLocation().getPitch();
 			float yaw = event.getPlayer().getLocation().getYaw();
