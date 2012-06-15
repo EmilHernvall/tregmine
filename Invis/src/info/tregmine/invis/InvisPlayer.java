@@ -35,21 +35,20 @@ public class InvisPlayer implements  Listener  {
 				}
 			}
 
-			
+
 			Player[] players = plugin.getServer().getOnlinePlayers();
+
 			for (Player allplayer : players) {
 				TregminePlayer aplayer = this.plugin.tregmine.getPlayer(allplayer);
 				if (aplayer.getMetaBoolean("invis")) {
 					player.hidePlayer(aplayer);
 				} else {
-					if (aplayer.getMetaBoolean("invis")) {
-						player.showPlayer(aplayer);
-					}
+					player.showPlayer(aplayer);
+				}
 
-				}				
-			}
-
-
+			}				
 		}
+
+
 	}
 }
