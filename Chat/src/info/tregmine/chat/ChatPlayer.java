@@ -39,24 +39,30 @@ public class ChatPlayer implements Listener {
 
 		this.plugin.lastline.put(sender.getName(), event.getMessage());
 
-
-		if (!this.plugin.channel.containsKey(sender.getName())) {
-			this.plugin.channel.put(sender.getName(), "global".toUpperCase());
+		
+		if ("".matches(tregminePlayer.getMetaString("ChatChannel"))) {
+			tregminePlayer.setMetaString("ChatChannel", "GLOBAL");
 		}
+
+//		if (!this.plugin.channel.containsKey(sender.getName())) {
+//			this.plugin.channel.put(sender.getName(), "global".toUpperCase());
+//		}
 
 		for (Player player : players) {
 			ChatColor txtColor = ChatColor.WHITE;
-
+			info.tregmine.api.TregminePlayer to = this.plugin.tregmine.tregminePlayer.get(player);
+			
+			
 			if(sender == player) {
 				txtColor = ChatColor.GRAY;
 			}
-			if (!this.plugin.channel.containsKey(player.getName())) {
-				this.plugin.channel.put(player.getName(), "global".toUpperCase());
+			if ("".matches(tregminePlayer.getMetaString("ChatChannel"))) {
+				tregminePlayer.setMetaString("ChatChannel", "GLOBAL");
 			}
-
-			if (this.plugin.channel.get(sender.getName()).toUpperCase().equals(this.plugin.channel.get(player.getName()).toUpperCase())) {
-				String channel = this.plugin.channel.get(sender.getName()) + " ";
-				if (this.plugin.channel.get(sender.getName()).matches("GLOBAL")) {
+			
+			if (tregminePlayer.getMetaString("ChatChannel").equals(to.getMetaString("ChatChannel").toUpperCase())) {
+				String channel = tregminePlayer.getMetaString("ChatChannel") + " ";
+				if (tregminePlayer.getMetaString("ChatChannel").matches("GLOBAL")) {
 					channel = "";
 				}
 				if (event.getMessage().length() > 53) {
@@ -83,7 +89,7 @@ public class ChatPlayer implements Listener {
 		}
 
 
-		plugin.log.info("["+ sender.getWorld().getName() +  "]["+ this.plugin.channel.get(sender.getName())  +"]<" + sender.getName() +  "> " + event.getMessage() );
+		plugin.log.info("["+ sender.getWorld().getName() +  "]["+ tregminePlayer.getMetaString("ChatChannel")  +"]<" + sender.getName() +  "> " + event.getMessage() );
 		event.setCancelled(true);
 		this.plugin.lasttime.put(tregminePlayer.getId(), System.currentTimeMillis() + 1200);
 	}

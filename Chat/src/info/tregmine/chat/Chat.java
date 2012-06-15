@@ -20,7 +20,7 @@ public class Chat extends JavaPlugin {
 	public final ChatPlayer chatplayer = new ChatPlayer(this);
 	public Tregmine tregmine = null;
 	public final Logger log = Logger.getLogger("Minecraft");
-	public HashMap<String, String> channel = new HashMap<String, String>();
+//	public HashMap<String, String> channel = new HashMap<String, String>();
 	public HashMap<String, String> lastline = new HashMap<String, String>();
 	public HashMap<Integer, Long> lasttime = new HashMap<Integer, Long>();
 
@@ -133,9 +133,15 @@ public class Chat extends JavaPlugin {
 
 
 		if(commandName.equals("force")  && args.length == 2 ){
-			this.channel.put(from.getName(), args[1].toUpperCase());
+			tregminePlayer.setMetaString("ChatChannel", args[1].toUpperCase());
+//			this.channel.put(from.getName(), args[1].toUpperCase());
+			
 			Player to = getServer().matchPlayer(args[0]).get(0);
-			this.channel.put(to.getName(), args[1].toUpperCase());
+			info.tregmine.api.TregminePlayer toPlayer = this.tregmine.tregminePlayer.get(to.getName());
+			
+			toPlayer.setMetaString("ChatChannel", args[1].toUpperCase());
+			
+//			this.channel.put(to.getName(), args[1].toUpperCase());
 			to.sendMessage(ChatColor.RED + from.getName() + " forced you into channel " + args[1].toUpperCase() + ".");
 			to.sendMessage(ChatColor.RED + "Write /channel global to switch back to the global chat." );
 			from.sendMessage(ChatColor.RED + "You are now in a forced chat " + args[1].toUpperCase()+ " with " + to.getName() + ".");
@@ -144,7 +150,8 @@ public class Chat extends JavaPlugin {
 		}
 
 		if(commandName.equals("channel")  && args.length == 1 ){
-			this.channel.put(from.getName(), args[0].toUpperCase());
+			tregminePlayer.setMetaString("ChatChannel", args[0].toUpperCase());
+//			this.channel.put(from.getName(), args[0].toUpperCase());
 			from.sendMessage(ChatColor.RED + "You are now talking in channel " + args[0] + ".");
 			from.sendMessage(ChatColor.RED + "Write /channel global to switch to the global chat." );
 		}
@@ -159,10 +166,14 @@ public class Chat extends JavaPlugin {
 			}
 
 			for (Player player : players) {
-				if (!this.channel.containsKey(player.getName())) {
-					this.channel.put(player.getName(), "global".toUpperCase());
+				info.tregmine.api.TregminePlayer to = this.tregmine.tregminePlayer.get(player);
+
+				if ("".matches(tregminePlayer.getMetaString("ChatChannel"))) {
+					tregminePlayer.setMetaString("ChatChannel", "GLOBAL");
 				}
-				if (this.channel.get(from.getName()).toUpperCase().equals(this.channel.get(player.getName()).toUpperCase())) {
+				
+				if (tregminePlayer.getMetaString("ChatChannel").matches(to.getMetaString("ChatChannel"))) {
+						//this.channel.get(from.getName()).toUpperCase().equals(this.channel.get(player.getName()).toUpperCase())) {
 					player.sendMessage("* " + tregminePlayer.getChatName() + ChatColor.WHITE + buf.toString() );
 				}
 			}

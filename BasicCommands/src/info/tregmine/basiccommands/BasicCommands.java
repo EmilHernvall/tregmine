@@ -313,7 +313,8 @@ public class BasicCommands extends JavaPlugin {
 
 				if (args[1].matches("donator") && player.isOp() ) {
 					vtregPlayer.setMetaString("donator", "true");
-					vtregPlayer.setMetaString("compass", "true");
+//					vtregPlayer.setMetaString("compass", "true");
+					vtregPlayer.setFlying(true);
 					vtregPlayer.setMetaString("color", "donator");
 					player.sendMessage(ChatColor.AQUA + "You made  " + vtregPlayer.getChatName() + " a donator." );
 					this.log.info(victim.getName() + " was made donator by" + tregminePlayer.getChatName() + ".");
