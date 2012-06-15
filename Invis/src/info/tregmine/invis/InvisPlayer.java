@@ -40,7 +40,7 @@ public class InvisPlayer implements  Listener  {
 
 			for (Player allplayer : players) {
 				TregminePlayer aplayer = this.plugin.tregmine.getPlayer(allplayer);
-				if (aplayer.getMetaBoolean("invis") && !aplayer.isAdmin()) {
+				if (aplayer.getMetaBoolean("invis")) {
 					player.hidePlayer(allplayer);
 				} else {
 					player.showPlayer(allplayer);
