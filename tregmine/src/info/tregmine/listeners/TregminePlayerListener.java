@@ -208,10 +208,19 @@ public class TregminePlayerListener implements Listener {
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		event.setJoinMessage(null);
-		if (!event.getPlayer().isOp()) {
+		TregminePlayer tregPlayer = this.plugin.tregminePlayer.get(event.getPlayer());
+		
+		
+		if (!tregPlayer.isOp()) {
 			event.getPlayer().setGameMode(GameMode.SURVIVAL);
 		}
 
+		
+		if (!tregPlayer.getMetaBoolean("builder")) {
+			event.getPlayer().setGameMode(GameMode.CREATIVE);
+		}
+
+		
 		if (event.getPlayer().getServer().getPort() == 1337) {
 			event.getPlayer().setGameMode(GameMode.CREATIVE);
 		}
