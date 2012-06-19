@@ -11,6 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.EventHandler;
@@ -122,6 +123,21 @@ public class LookupPlayer implements  Listener  {
 				}
 			}
 		} 
+
+		if (!tregminePlayer.isOp()) {
+			event.getPlayer().setGameMode(GameMode.SURVIVAL);
+		}
+
+		
+		if (!tregminePlayer.getMetaBoolean("builder")) {
+			event.getPlayer().setGameMode(GameMode.CREATIVE);
+		}
+
+		
+		if (event.getPlayer().getServer().getPort() == 1337) {
+			event.getPlayer().setGameMode(GameMode.CREATIVE);
+		}
+		
 		
 	}    
 }

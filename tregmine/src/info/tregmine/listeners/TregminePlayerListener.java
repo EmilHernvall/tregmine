@@ -20,7 +20,7 @@ import java.util.Set;
 import java.util.HashSet;
 
 import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
+//import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -208,22 +208,6 @@ public class TregminePlayerListener implements Listener {
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		event.setJoinMessage(null);
-		TregminePlayer tregPlayer = this.plugin.tregminePlayer.get(event.getPlayer());
-		
-		
-		if (!tregPlayer.isOp()) {
-			event.getPlayer().setGameMode(GameMode.SURVIVAL);
-		}
-
-		
-		if (!tregPlayer.getMetaBoolean("builder")) {
-			event.getPlayer().setGameMode(GameMode.CREATIVE);
-		}
-
-		
-		if (event.getPlayer().getServer().getPort() == 1337) {
-			event.getPlayer().setGameMode(GameMode.CREATIVE);
-		}
 
 		activateGuardians();
 	}        
