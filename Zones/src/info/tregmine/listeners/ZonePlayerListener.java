@@ -455,7 +455,7 @@ public class ZonePlayerListener implements Listener
 //		event.getPlayer().sendMessage("Teleport " + event.getPlayer().getWorld().getName());
 		TregminePlayer player = tregmine.getPlayer(event.getPlayer());
 
-		if (event.getTo().getWorld().getName().matches("world_the_end") || !player.isOp()) {
+		if (event.getTo().getWorld().getName().matches("world_the_end") && !player.isOp()) {
 			event.getPlayer().sendMessage(ChatColor.RED + "You can't teleport to someone in The End");
 			event.setCancelled(true);
 			return;
