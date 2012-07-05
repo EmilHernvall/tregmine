@@ -173,10 +173,12 @@ public class TregminePlayerListener implements Listener {
 //						event.getPlayer().sendMessage(ChatColor.DARK_AQUA + mat.name().toLowerCase() + 
 //								" placed by " + player + " at " + dfm.format(date));
 						event.getPlayer().sendMessage(ChatColor.DARK_AQUA + mat.name().toLowerCase() + 
-						" placed by " + player + " at " + p.format(date));
+						" placed by " + player + " " + p.format(date));
+						event.getPlayer().sendMessage(ChatColor.DARK_AQUA + timezone + ": " + dfm.format(date));
 					} else {
 						event.getPlayer().sendMessage(ChatColor.DARK_AQUA + mat.name().toLowerCase() + 
-								" delete by " + player + " at " + p.format(date));                            
+								" delete by " + player + " " + p.format(date));
+						event.getPlayer().sendMessage(ChatColor.DARK_AQUA + timezone + ": " + dfm.format(date));
 					}
 				}
 			} catch (SQLException e) {
