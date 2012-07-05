@@ -71,10 +71,7 @@ public class BasicCommands extends JavaPlugin {
 			return false;
 		}
 
-		Player player = (Player) sender;
-		
-		this.log.info("COMMAND: " + commandLabel + " ::  " + args.toString());
-		
+		Player player = (Player) sender;		
 		info.tregmine.api.TregminePlayer tregminePlayer = this.tregmine.tregminePlayer.get(player.getName());
 		boolean isAdmin = tregminePlayer.isAdmin();
 		boolean isDonator = tregminePlayer.isDonator();

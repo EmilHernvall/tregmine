@@ -29,6 +29,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerBucketFillEvent;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -198,6 +199,12 @@ public class TregminePlayerListener implements Listener {
 
 	}
 
+	@EventHandler
+	public void onPreCommand(PlayerCommandPreprocessEvent event) {
+		this.plugin.log.info("COMMAND: " + event.getPlayer().getName() + "::" + event.getMessage());
+		
+	}
+	
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		event.setJoinMessage(null);
