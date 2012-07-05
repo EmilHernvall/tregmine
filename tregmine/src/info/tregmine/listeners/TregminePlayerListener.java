@@ -39,6 +39,7 @@ import org.bukkit.event.player.PlayerLoginEvent.Result;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.ocpsoft.pretty.time.PrettyTime;
 
 
 public class TregminePlayerListener implements Listener {
@@ -104,18 +105,6 @@ public class TregminePlayerListener implements Listener {
 	@EventHandler
 	public void onPlayerBucketFill(PlayerBucketFillEvent event) {
 
-		if (event.getBucket() == Material.LAVA_BUCKET) {
-			event.setCancelled(true);
-		}
-
-		if (event.getBlockClicked().getType() == Material.LAVA) {
-			event.setCancelled(true);
-		}
-
-		if (event.getBlockClicked().getType() == Material.STATIONARY_LAVA) {
-			event.setCancelled(true);
-		}
-
 		if (event.getPlayer().getWorld().getName().matches("alpha")) {
 			event.setCancelled(true);
 		}
@@ -127,7 +116,6 @@ public class TregminePlayerListener implements Listener {
 		if (event.getBucket() == Material.LAVA_BUCKET) {
 			event.setCancelled(true);
 		}
-
 	}
 
 	@EventHandler
@@ -175,17 +163,20 @@ public class TregminePlayerListener implements Listener {
 				//TODO : Reverse the sorting order
 				while (rs.next()) {
 					Date date = new Date(rs.getLong("time"));
+					PrettyTime p = new PrettyTime();
 					long blockid = rs.getLong("blockid");
 					String player =  rs.getString("player");
 					boolean placed = rs.getBoolean("status");
 					Material mat = Material.getMaterial((int) blockid);
 
 					if (placed == true) {
+//						event.getPlayer().sendMessage(ChatColor.DARK_AQUA + mat.name().toLowerCase() + 
+//								" placed by " + player + " at " + dfm.format(date));
 						event.getPlayer().sendMessage(ChatColor.DARK_AQUA + mat.name().toLowerCase() + 
-								" placed by " + player + " at " + dfm.format(date));
+						" placed by " + player + " at " + p.format(date));
 					} else {
 						event.getPlayer().sendMessage(ChatColor.DARK_AQUA + mat.name().toLowerCase() + 
-								" delete by " + player + " at " + dfm.format(date));                            
+								" delete by " + player + " at " + p.format(date));                            
 					}
 				}
 			} catch (SQLException e) {

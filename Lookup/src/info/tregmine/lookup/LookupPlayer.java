@@ -123,9 +123,7 @@ public class LookupPlayer implements  Listener  {
 				}
 			}
 		} 
-
-
-		
+				
 		if (tregminePlayer.getMetaBoolean("builder")) {
 			event.getPlayer().setGameMode(GameMode.CREATIVE);
 		} else {
