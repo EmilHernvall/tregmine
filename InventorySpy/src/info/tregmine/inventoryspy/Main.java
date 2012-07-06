@@ -83,6 +83,17 @@ public class Main extends JavaPlugin {
 				if (info.tregmine.api.math.Distance.calc2d(player.getLocation(), target.getLocation()) < 5) {
 
 					Inventory inven =  getServer().createInventory(null, InventoryType.CHEST);
+					
+					if (player.getOpenInventory() != null) {
+						player.sendMessage(ChatColor.RED + "You must close your current inventory");
+						return false;
+					}
+
+					if (target.getOpenInventory() != null) {
+						player.sendMessage(ChatColor.RED + "The other player already have an inventory open");
+						return false;
+					}
+					
 					player.openInventory(inven);
 					target.openInventory(inven);
 				} else {
