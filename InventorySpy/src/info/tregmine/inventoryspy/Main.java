@@ -79,19 +79,23 @@ public class Main extends JavaPlugin {
 		if (commandName.matches("safetrade") && args.length > 0) {
 			Player target = this.getServer().matchPlayer(args[0]).get(0);
 			if (target != null) {
-				
-				Inventory inven =  getServer().createInventory(null, InventoryType.CHEST);
-				player.openInventory(inven);
-				target.openInventory(inven);
-				
-//				tregminePlayer.openInventory(target.getInventory()); 
+
+				if (info.tregmine.api.math.Distance.calc2d(player.getLocation(), target.getLocation()) < 5) {
+
+					Inventory inven =  getServer().createInventory(null, InventoryType.CHEST);
+					player.openInventory(inven);
+					target.openInventory(inven);
+				} else {
+					player.sendMessage(ChatColor.RED + "The player you wish to trade with are to far away!");
+				}
+				//				tregminePlayer.openInventory(target.getInventory()); 
 			} else {
 				player.sendMessage(ChatColor.RED + "Could not find a player with that name");
 			}
-			
+
 		}
 
-		
+
 		if (commandName.matches("inv") && args.length > 0  && isAdmin) {
 			Player target = this.getServer().matchPlayer(args[0]).get(0);
 			if (target != null) {
