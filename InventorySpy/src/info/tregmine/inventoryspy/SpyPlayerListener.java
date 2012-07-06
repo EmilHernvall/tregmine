@@ -34,27 +34,29 @@ public class SpyPlayerListener implements Listener {
 
 	@EventHandler
 	public void onPlayerInteract(PlayerInteractEvent event) {
-		
+
 		if ((event.getAction() == Action.RIGHT_CLICK_BLOCK  || event.getAction() == Action.LEFT_CLICK_BLOCK)) {
 
-			
+
 			if(event.getClickedBlock().getState() instanceof Chest) {
 				Chest chest = (Chest) event.getClickedBlock().getState();
 				Inventory invent = 	chest.getBlockInventory();
 				Location loc = event.getClickedBlock().getLocation();
-				
+
 				this.plugin.log.info("" + event.getClickedBlock().getData());
-				
-				
+
+
 				for (int i = 0; i <= invent.getSize(); i++) {
-					this.plugin.log.info("CHEST: " + "(" + loc.getBlockX() + "," + loc.getBlockY() + "," +  loc.getBlockZ() + ")" + "(" + i + ")" + "(" + event.getPlayer().getName() + ")" + invent.getItem(i).getType().toString() + ":" + invent.getItem(i).getType().toString() + " :: " + invent.getItem(i).getAmount());
+					if (invent.getItem(i) != null) {
+						this.plugin.log.info("CHEST: " + "(" + loc.getBlockX() + "," + loc.getBlockY() + "," +  loc.getBlockZ() + ")" + "(" + i + ")" + "(" + event.getPlayer().getName() + ")" + invent.getItem(i).getType().toString() + ":" + invent.getItem(i).getType().toString() + " :: " + invent.getItem(i).getAmount());
+					}
 				}
-				
+
 			}
 
-			
+
 			if (event.getClickedBlock().getType() == Material.CHEST && event.getPlayer().getGameMode() == GameMode.CREATIVE) {
-//				event.getPlayer().sendMessage("error");
+				//				event.getPlayer().sendMessage("error");
 				event.setCancelled(true);
 				return;
 			}
@@ -62,11 +64,11 @@ public class SpyPlayerListener implements Listener {
 	}
 
 
-//	@EventHandler
-//	public void onInventoryOpen (PlayerInventoryEvent event) {
-//		event.getPlayer().sendMessage("INV");
-//		this.plugin.log.info(event.getInventory().getItem(0).getType().name());
-//	}
+	//	@EventHandler
+	//	public void onInventoryOpen (PlayerInventoryEvent event) {
+	//		event.getPlayer().sendMessage("INV");
+	//		this.plugin.log.info(event.getInventory().getItem(0).getType().name());
+	//	}
 
 	@EventHandler
 	public void onPlayerDropItem (PlayerDropItemEvent event) {
