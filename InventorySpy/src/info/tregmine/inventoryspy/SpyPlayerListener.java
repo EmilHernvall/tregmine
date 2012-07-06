@@ -15,6 +15,7 @@ import org.bukkit.event.player.PlayerGameModeChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 //import org.bukkit.event.player.PlayerInventoryEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
+import org.bukkit.inventory.Inventory;
 
 
 public class SpyPlayerListener implements Listener {
@@ -35,7 +36,11 @@ public class SpyPlayerListener implements Listener {
 		
 		if ((event.getAction() == Action.RIGHT_CLICK_BLOCK  || event.getAction() == Action.LEFT_CLICK_BLOCK)) {
 
+			
 			if(event.getClickedBlock().getState() instanceof Chest) {
+				Chest chest = (Chest) event.getClickedBlock().getState();
+				Inventory invent = 	chest.getBlockInventory();
+				this.plugin.log.info("CHEST: " +  invent.getItem(0).getType().toString() );
 			}
 
 			
