@@ -34,6 +34,7 @@ public class Main extends JavaPlugin {
 	public Tregmine tregmine = null;
 	//	public SpyPlayerListener inventory = new SpyPlayerListener(this);
 	public HashMap<Integer, String> whoDropedItem = new HashMap<Integer, String>();
+	public HashMap<String, Inventory> safetradechest = new HashMap<String, Inventory>();
 
 	@Override
 	public void onEnable(){
@@ -81,21 +82,30 @@ public class Main extends JavaPlugin {
 			if (target != null) {
 
 				if (info.tregmine.api.math.Distance.calc2d(player.getLocation(), target.getLocation()) < 5) {
-
-					Inventory inven =  getServer().createInventory(null, InventoryType.CHEST);
+					Inventory inven = null; getServer().createInventory(null, InventoryType.CHEST);
+					String key = player.getName() + target.getName();
 					
-					player.sendMessage("" + player.getOpenInventory().toString());
-					player.openInventory(player.getOpenInventory());
-					
-					if (player.getOpenInventory() != null) {
-						player.sendMessage(ChatColor.RED + "You must close your current inventory");
-						return false;
+					if (safetradechest.containsKey(key)) {
+						inven = safetradechest.get(key);
+					} else {
+						inven = getServer().createInventory(null, InventoryType.CHEST);
+						safetradechest.put(key, inven);
+					}
+						
+					// Inventory inven =  getServer().createInventory(null, InventoryType.CHEST);
+	
+					if (player.getOpenInventory().getType() != InventoryType.CRAFTING) {
+						player.sendMessage(ChatColor.RED + "You must close your inventory first");
+						return true;
 					}
 
-					if (target.getOpenInventory() != null) {
-						player.sendMessage(ChatColor.RED + "The other player already have an inventory open");
-						return false;
+					if (target.getOpenInventory().getType() != InventoryType.CRAFTING) {
+						player.sendMessage(ChatColor.RED + "The other player must close there inventory first!");
+						return true;
 					}
+
+//					player.sendMessage("" + player.getOpenInventory().toString());
+//					player.openInventory(player.getOpenInventory());
 					
 					player.openInventory(inven);
 					target.openInventory(inven);
