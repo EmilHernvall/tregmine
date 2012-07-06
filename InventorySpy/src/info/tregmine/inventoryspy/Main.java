@@ -95,21 +95,16 @@ public class Main extends JavaPlugin {
 					// Inventory inven =  getServer().createInventory(null, InventoryType.CHEST);
 	
 					player.sendMessage("" + player.getOpenInventory().getType().toString());
-					if (player.getOpenInventory().getType() != InventoryType.CRAFTING) {
-						player.sendMessage(ChatColor.RED + "You must close your inventory first");
-						return true;
-					}
 
-					if (target.getOpenInventory().getType() != InventoryType.CRAFTING) {
+					if (target.getOpenInventory().getType() == InventoryType.CRAFTING || target.getOpenInventory().getType() == InventoryType.CREATIVE) {
+						player.openInventory(inven);
+						target.openInventory(inven);
+					} else {
 						player.sendMessage(ChatColor.RED + "The other player must close there inventory first!");
 						return true;
+	
 					}
 
-//					player.sendMessage("" + player.getOpenInventory().toString());
-//					player.openInventory(player.getOpenInventory());
-					
-					player.openInventory(inven);
-					target.openInventory(inven);
 				} else {
 					player.sendMessage(ChatColor.RED + "The player you wish to trade with are to far away!");
 				}
