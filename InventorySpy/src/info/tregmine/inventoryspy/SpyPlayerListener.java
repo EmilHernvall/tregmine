@@ -43,9 +43,10 @@ public class SpyPlayerListener implements Listener {
 				Inventory invent = 	chest.getBlockInventory();
 				Location loc = event.getClickedBlock().getLocation();
 				
-				for (int i = 0; i == invent.getSize(); i++) {
+				for (int i = 0; i <= invent.getSize(); i++) {
 					this.plugin.log.info("CHEST: " + "(" + loc.getBlockX() + "," + loc.getBlockY() + "," +  loc.getBlockZ() + ")" + "(" + i + ")" +  invent.getItem(0).getType().toString() );
 				}
+				
 			}
 
 			
