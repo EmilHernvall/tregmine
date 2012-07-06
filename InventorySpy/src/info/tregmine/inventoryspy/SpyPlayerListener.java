@@ -46,7 +46,7 @@ public class SpyPlayerListener implements Listener {
 				this.plugin.log.info("" + event.getClickedBlock().getData());
 
 
-				for (int i = 0; i <= invent.getSize(); i++) {
+				for (int i = 0; i < invent.getSize(); i++) {
 					if (invent.getItem(i) != null) {
 						this.plugin.log.info("CHEST: " + "(" + loc.getBlockX() + "," + loc.getBlockY() + "," +  loc.getBlockZ() + ")" + "(" + i + ")" + "(" + event.getPlayer().getName() + ")" + invent.getItem(i).getType().toString() + ":" + invent.getItem(i).getType().toString() + " :: " + invent.getItem(i).getAmount());
 					}
