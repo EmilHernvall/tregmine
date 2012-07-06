@@ -84,6 +84,8 @@ public class Main extends JavaPlugin {
 
 					Inventory inven =  getServer().createInventory(null, InventoryType.CHEST);
 					
+					player.sendMessage("" + player.getOpenInventory().toString());
+					
 					if (player.getOpenInventory() != null) {
 						player.sendMessage(ChatColor.RED + "You must close your current inventory");
 						return false;
