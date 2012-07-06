@@ -5,6 +5,7 @@ package info.tregmine.inventoryspy;
 
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Chest;
 import org.bukkit.event.EventHandler;
@@ -40,7 +41,11 @@ public class SpyPlayerListener implements Listener {
 			if(event.getClickedBlock().getState() instanceof Chest) {
 				Chest chest = (Chest) event.getClickedBlock().getState();
 				Inventory invent = 	chest.getBlockInventory();
-				this.plugin.log.info("CHEST: " +  invent.getItem(0).getType().toString() );
+				Location loc = event.getClickedBlock().getLocation();
+				
+				for (int i = 0; i == invent.getSize(); i++) {
+					this.plugin.log.info("CHEST: " + "(" + loc.getBlockX() + "," + loc.getBlockY() + "," +  loc.getBlockZ() + ")" + "(" + i + ")" +  invent.getItem(0).getType().toString() );
+				}
 			}
 
 			
