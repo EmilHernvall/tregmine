@@ -9,3 +9,6 @@ commands:
   inv:
     description: browse specified player's inventory. You must stand close to them.
     -usage: /inv <player>
+  safetrade:
+    description: browse specified player's inventory. You must stand close to them.
+    -usage: /inv <player>

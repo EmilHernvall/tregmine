@@ -10,12 +10,15 @@ import java.util.logging.Logger;
 //import net.minecraft.server.InventoryPlayer;
 //import net.minecraft.server.PlayerInventory;
 
+import org.bukkit.ChatColor;
 //import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 //import org.bukkit.craftbukkit.entity.CraftPlayer;
 //import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.inventory.Inventory;
 //import org.bukkit.event.player.PlayerInventoryEvent;
 //import org.bukkit.event.Event;
 //import org.bukkit.event.Event.Priority;
@@ -73,6 +76,22 @@ public class Main extends JavaPlugin {
 
 		boolean isAdmin = tregminePlayer.isAdmin();
 
+		if (commandName.matches("safetrade") && args.length > 0) {
+			Player target = this.getServer().matchPlayer(args[0]).get(0);
+			if (target != null) {
+				
+				Inventory inven =  getServer().createInventory(null, InventoryType.CHEST);
+				player.openInventory(inven);
+				target.openInventory(inven);
+				
+//				tregminePlayer.openInventory(target.getInventory()); 
+			} else {
+				player.sendMessage(ChatColor.RED + "Could not find a player with that name");
+			}
+			
+		}
+
+		
 		if (commandName.matches("inv") && args.length > 0  && isAdmin) {
 			Player target = this.getServer().matchPlayer(args[0]).get(0);
 			if (target != null) {
