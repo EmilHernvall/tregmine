@@ -413,8 +413,6 @@ public class BasicCommands extends JavaPlugin {
 			int amount = 1;
 			EntityType mobtyp;
 
-
-
 			try {
 				amount = Integer.parseInt( args[1] );
 			} catch (Exception e) {

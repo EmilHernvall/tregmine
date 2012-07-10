@@ -381,6 +381,15 @@ public class TregminePlayer extends PlayerDelegate
 		return ChatColor.WHITE;
 	}
 
+	
+	public String getSayName() 	{
+		return name;
+	}
+
+	public void setSayName() 	{
+//		return name;
+	}
+	
 	public String getChatName() 	{
 		return name;
 	}

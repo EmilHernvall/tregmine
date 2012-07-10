@@ -851,8 +851,7 @@ public abstract class PlayerDelegate implements Player
 
 	@Override
 	public InventoryView openWorkbench(Location arg0, boolean arg1) {
-		// TODO Auto-generated method stub
-		return null;
+		return delegate.openWorkbench(arg0, arg1);
 	}
 
 	@Override

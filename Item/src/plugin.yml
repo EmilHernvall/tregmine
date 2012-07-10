@@ -6,6 +6,9 @@ author: Ein Andersson
 description: Tregmine.info items
 
 commands:
+  einitem:
+    description: spawn items in your inventory.
+    -usage: /item <id|name> <amount> <data>
   item:
     description: spawn items in your inventory.
     -usage: /item <id|name> <amount> <data>

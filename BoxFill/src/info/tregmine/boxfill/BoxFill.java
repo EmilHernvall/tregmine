@@ -121,7 +121,7 @@ public class BoxFill extends JavaPlugin {
 			return true;
 		}
 
-		if(commandName.equals("timemachine") && tregminePlayer.isAdmin()) {
+		if(commandName.equals("timemachine") && tregminePlayer.isOp()) {
 			Block b1 = tregminePlayer.getBlock("b1");
 			Block b2 = tregminePlayer.getBlock("b2");
 
@@ -132,7 +132,7 @@ public class BoxFill extends JavaPlugin {
 			return true;
 		}
 
-		if(commandName.equals("timerestore") && tregminePlayer.isAdmin()) {
+		if(commandName.equals("timerestore") && tregminePlayer.isOp()) {
 			Block b1 = tregminePlayer.getBlock("b1");
 			Block b2 = tregminePlayer.getBlock("b2");
 
@@ -143,7 +143,7 @@ public class BoxFill extends JavaPlugin {
 			return true;
 		}
 
-		if(commandName.equals("crestore") && tregminePlayer.isAdmin()) {
+		if(commandName.equals("crestore") && tregminePlayer.isOp()) {
 			Block b1 = tregminePlayer.getBlock("b1");
 
 			player.getWorld().regenerateChunk(b1.getChunk().getX(), b1.getChunk().getZ());

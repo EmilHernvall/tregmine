@@ -94,13 +94,13 @@ public class Main extends JavaPlugin {
 						
 					// Inventory inven =  getServer().createInventory(null, InventoryType.CHEST);
 	
-					player.sendMessage("" + player.getOpenInventory().getType().toString());
-
+//					player.sendMessage("" + player.getOpenInventory().getType().toString());
+					
 					if (target.getOpenInventory().getType() == InventoryType.CRAFTING || target.getOpenInventory().getType() == InventoryType.CREATIVE) {
 						player.openInventory(inven);
 						target.openInventory(inven);
 					} else {
-						player.sendMessage(ChatColor.RED + "The other player must close there inventory first!");
+						player.sendMessage(ChatColor.RED + "The other player is already in a trade!");
 						return true;
 	
 					}

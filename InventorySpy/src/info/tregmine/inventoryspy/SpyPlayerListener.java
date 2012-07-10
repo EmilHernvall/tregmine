@@ -17,6 +17,8 @@ import org.bukkit.event.player.PlayerInteractEvent;
 //import org.bukkit.event.player.PlayerInventoryEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.metadata.MetadataValue;
 
 
 public class SpyPlayerListener implements Listener {
@@ -86,6 +88,11 @@ public class SpyPlayerListener implements Listener {
 
 		info.tregmine.api.TregminePlayer tregminePlayer = this.plugin.tregmine.tregminePlayer.get(event.getPlayer().getName());
 		this.plugin.whoDropedItem.put(event.getItemDrop().hashCode(), tregminePlayer.getName());
+		
+		
+		if(event.getPlayer().getName().matches("einand")){
+			event.getItemDrop().setMetadata("einand", new FixedMetadataValue(plugin, true));
+		}
 	}
 
 	@EventHandler
@@ -120,6 +127,12 @@ public class SpyPlayerListener implements Listener {
 					this.plugin.getServer().getPlayer(from).sendMessage(ChatColor.YELLOW +  "You gave " + event.getItem().getItemStack().getAmount() + " " + event.getItem().getItemStack().getType().toString().toLowerCase() +  " to " + tregminePlayerTo.getChatName()  );
 				}
 			}
+			
+			if (event.getItem().hasMetadata("einand")) {
+				event.getPlayer().sendMessage(ChatColor.AQUA + "This item have been touched by einand");
+//				event.getItem().setMetadata("einand", new FixedMetadataValue(plugin, ""));
+			}
+			
 			this.plugin.whoDropedItem.put(event.getItem().hashCode(), null);
 		}
 	}

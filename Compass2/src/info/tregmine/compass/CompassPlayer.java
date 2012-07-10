@@ -79,7 +79,7 @@ public class CompassPlayer implements Listener {
 						theLoc.setY(theLoc.getY() + i);
 						theLoc.setPitch(pitch);
 						theLoc.setYaw(yaw);
-						if(theLoc.getY() < 129) {
+						if(theLoc.getY() < 255) {
 							event.getPlayer().teleport(theLoc);
 						}
 						break;
