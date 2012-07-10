@@ -92,6 +92,48 @@ public class Item extends JavaPlugin {
 			return true;
 		}
 
+		if(commandName.equals("einitem") && (tregminePlayer.isAdmin() || tregminePlayer.getMetaBoolean("builder"))) {
+			int matID, amount, data;
+
+			try {
+				matID = Integer.parseInt(args[0]);
+			} catch (Exception  e) {
+				try {
+					matID = Material.getMaterial(args[0].toUpperCase()).getId();
+				} catch (NullPointerException ne) {
+					matID = 0;
+				}
+			}
+
+			try {
+				amount = Integer.parseInt(args[1]);
+			} catch (Exception  e) {
+				amount = 1;
+			}
+
+			try {
+				data = Integer.parseInt(args[2]);
+			} catch (Exception  e) {
+				data = 0;
+			}
+
+			if (matID > 0) {		
+				ItemStack item = new ItemStack(matID, amount, (byte) data);
+				PlayerInventory inv = player.getInventory();
+				if (item.getType() == Material.MONSTER_EGG) {
+					player.kickPlayer("Don't do that again ASSHOLE!");
+					return true;
+				}
+				inv.addItem(item);				
+				player.sendMessage("You received " + amount + " of " + ChatColor.DARK_AQUA + Material.getMaterial(matID).toString().toLowerCase() + ".");
+				this.log.info(player.getName() +" SPAWNED " + amount + ":" + Material.getMaterial(matID).toString());
+			} else {
+				player.sendMessage(ChatColor.DARK_AQUA + "/item <id|name> <amount> <data>.");
+			}
+			return true;
+		}
+		
+		
 		if(commandName.equals("give") && tregminePlayer.isAdmin()) {
 			int matID, amount, data;
 				

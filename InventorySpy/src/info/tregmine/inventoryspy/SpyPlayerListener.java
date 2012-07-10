@@ -18,7 +18,6 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.metadata.FixedMetadataValue;
-import org.bukkit.metadata.MetadataValue;
 
 
 public class SpyPlayerListener implements Listener {
@@ -130,8 +129,9 @@ public class SpyPlayerListener implements Listener {
 			
 			if (event.getItem().hasMetadata("einand")) {
 				event.getPlayer().sendMessage(ChatColor.AQUA + "This item have been touched by einand");
-//				event.getItem().setMetadata("einand", new FixedMetadataValue(plugin, ""));
 			}
+
+//			event.getItem().setMetadata("einand", new FixedMetadataValue(plugin, ""));
 			
 			this.plugin.whoDropedItem.put(event.getItem().hashCode(), null);
 		}
