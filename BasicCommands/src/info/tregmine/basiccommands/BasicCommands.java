@@ -127,20 +127,20 @@ public class BasicCommands extends JavaPlugin {
 			return true;
 		}
 
-		if (commandName.matches("cname") && tregminePlayer.isAdmin()) {
+		if (commandName.matches("cname") && tregminePlayer.isOp()) {
 			ChatColor color = ChatColor.getByChar(args[0]);
 			tregminePlayer.setTemporaryChatName(color + args[1]);
 			tregminePlayer.sendMessage("You are now: " + tregminePlayer.getChatName());
 			this.log.info(tregminePlayer.getName() + "changed name to" + tregminePlayer.getChatName());
 		}
 
-		if (commandName.matches("t") && tregminePlayer.isOp()) {
+		if (commandName.matches("t") && tregminePlayer.isAdmin()) {
 			Player victim = this.getServer().matchPlayer(args[0]).get(0);
 			victim.getWorld().strikeLightningEffect(victim.getLocation());
 			return true;
 		}
 
-		if (commandName.matches("td") && tregminePlayer.isAdmin()) {
+		if (commandName.matches("td") && tregminePlayer.isOp()) {
 			Player victim = this.getServer().matchPlayer(args[0]).get(0);
 			victim.getWorld().strikeLightning(victim.getLocation());
 			victim.setHealth(0);

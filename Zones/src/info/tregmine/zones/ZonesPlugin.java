@@ -715,6 +715,11 @@ public class ZonesPlugin extends JavaPlugin
 				return;
 			}
 
+			if ("kick".equals(args[0])) {
+				
+			}
+
+			
 			if ("addowner".equals(args[0])) {
 
 				if (lot.isOwner(playerName)) {
