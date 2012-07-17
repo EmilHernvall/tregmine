@@ -12,9 +12,11 @@ import info.tregmine.zones.ZonesPlugin;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 //import org.bukkit.entity.CreatureType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -101,11 +103,15 @@ public class ZoneEntityListener implements Listener
 				EntityDamageEvent damageEvent = event.getEntity().getLastDamageCause();
 				EntityDamageByEntityEvent eEvent = (EntityDamageByEntityEvent) damageEvent; 
 
-				if(eEvent.getDamager() instanceof Player) {
-					Player offender = (Player) eEvent.getDamager();
-					player.sendMessage("Hit by an arrow outside a pvp zone");
-					offender.sendMessage("Don't shoot here!");
-					event.setCancelled(true);
+				
+				if(eEvent.getDamager() instanceof Arrow) {
+					Arrow arrow = (Arrow) eEvent.getDamager();
+
+					if(arrow.getShooter() instanceof Player) {
+						Player offender = (Player) arrow.getShooter();
+						offender.sendMessage("Shooting");
+						event.setCancelled(true);
+					}
 				}
 			}
 			
