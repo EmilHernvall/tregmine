@@ -90,7 +90,7 @@ public class Tregmine extends JavaPlugin
 		
 		if(commandName.equals("invis")) {
 			Invis invis = new Invis(tregminePlayer, commandName, args, this);
-			invis.execute();
+			return invis.execute();
 		}
 		
 		

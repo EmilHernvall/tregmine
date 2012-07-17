@@ -1,5 +1,7 @@
 package info.tregmine.commands;
 
+import org.bukkit.ChatColor;
+
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
 
@@ -15,10 +17,9 @@ public class Invis {
 	}
 
 	public Boolean allowed() {
-		if (tregPlayer.isOp()) {
+		if (this.tregPlayer.isOp()) {
 			return true;
 		}
-
 		return false;
 	}
 
@@ -26,13 +27,14 @@ public class Invis {
 	
 	public Boolean execute() {
 		if (allowed()) {
-			if (this.flags[0].equals("status")) {
+			if ("status".equals(this.flags[0])) {
 				this.tregPlayer.sendMessage("Your invis are currently: " + this.tregPlayer.getInvis());
 			}
 			return true;
-		}
+		} 
 		
-		return false;
+		this.tregPlayer.sendMessage(ChatColor.RED + "You are not allowed to use this command");
+		return true;
 	}
 
 }
