@@ -92,7 +92,7 @@ public class Who extends JavaPlugin {
 				from.sendMessage(ChatColor.DARK_AQUA + "********** "+ ChatColor.DARK_PURPLE + c + ChatColor.DARK_AQUA +" players online **********");
 				return true;
 			} else {
-				if (tregminePlayer.isAdmin()) {
+				if (tregminePlayer.isAdmin() && tregminePlayer.canSee(p)) {
 					info.tregmine.currency.Wallet wallet = new info.tregmine.currency.Wallet(p);
 					info.tregmine.api.TregminePlayer pPlayer = this.tregmine.tregminePlayer.get(p.getName());
 

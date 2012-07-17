@@ -52,11 +52,6 @@ public class Main extends JavaPlugin {
 
 			getServer().getPluginManager().registerEvents(new SpyPlayerListener(this), this);
 
-			//			  getServer().getPluginManager().registerEvent(Event.Type.PLAYER_DROP_ITEM, inventory, Priority.Monitor, this);
-			//			  getServer().getPluginManager().registerEvent(Event.Type.PLAYER_PICKUP_ITEM, inventory, Priority.Monitor, this);
-			//			  getServer().getPluginManager().registerEvent(Event.Type.PLAYER_GAME_MODE_CHANGE, inventory, Priority.Monitor, this);
-			//			  getServer().getPluginManager().registerEvent(Event.Type.PLAYER_INTERACT, inventory, Priority.Monitor, this);
-
 		}
 	}
 
@@ -84,29 +79,33 @@ public class Main extends JavaPlugin {
 				if (info.tregmine.api.math.Distance.calc2d(player.getLocation(), target.getLocation()) < 5) {
 					Inventory inven = null; getServer().createInventory(null, InventoryType.CHEST);
 					String key = player.getName() + target.getName();
-					
+
 					if (safetradechest.containsKey(key)) {
 						inven = safetradechest.get(key);
 					} else {
 						inven = getServer().createInventory(null, InventoryType.CHEST);
 						safetradechest.put(key, inven);
 					}
-						
+
 					// Inventory inven =  getServer().createInventory(null, InventoryType.CHEST);
-	
-//					player.sendMessage("" + player.getOpenInventory().getType().toString());
-					
+
+					//					player.sendMessage("" + player.getOpenInventory().getType().toString());
+
 					if (target.getOpenInventory().getType() == InventoryType.CRAFTING || target.getOpenInventory().getType() == InventoryType.CREATIVE) {
 						player.openInventory(inven);
 						target.openInventory(inven);
 					} else {
-						player.sendMessage(ChatColor.RED + "The other player is already in a trade!");
-						return true;
-	
+						if (player.canSee(target)) {
+							player.sendMessage(ChatColor.RED + "The other player is already in a trade!");
+							return true;
+						}
+
 					}
 
 				} else {
-					player.sendMessage(ChatColor.RED + "The player you wish to trade with are to far away!");
+					if (player.canSee(target)) {
+						player.sendMessage(ChatColor.RED + "The player you wish to trade with are to far away!");
+					}
 				}
 				//				tregminePlayer.openInventory(target.getInventory()); 
 			} else {

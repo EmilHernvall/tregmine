@@ -44,8 +44,6 @@ public class SpyPlayerListener implements Listener {
 				Inventory invent = 	chest.getBlockInventory();
 				Location loc = event.getClickedBlock().getLocation();
 
-//				this.plugin.log.info("" + event.getClickedBlock().getData());
-
 
 				for (int i = 0; i < invent.getSize(); i++) {
 					if (invent.getItem(i) != null) {
@@ -70,13 +68,6 @@ public class SpyPlayerListener implements Listener {
 			}
 		}
 	}
-
-
-	//	@EventHandler
-	//	public void onInventoryOpen (PlayerInventoryEvent event) {
-	//		event.getPlayer().sendMessage("INV");
-	//		this.plugin.log.info(event.getInventory().getItem(0).getType().name());
-	//	}
 
 	@EventHandler
 	public void onPlayerDropItem (PlayerDropItemEvent event) {
