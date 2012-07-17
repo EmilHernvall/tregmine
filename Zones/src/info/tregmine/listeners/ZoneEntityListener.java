@@ -102,14 +102,13 @@ public class ZoneEntityListener implements Listener
 			if (event.getCause() == DamageCause.PROJECTILE) {
 				EntityDamageEvent damageEvent = event.getEntity().getLastDamageCause();
 				EntityDamageByEntityEvent eEvent = (EntityDamageByEntityEvent) damageEvent; 
-
 				
 				if(eEvent.getDamager() instanceof Arrow) {
 					Arrow arrow = (Arrow) eEvent.getDamager();
 
 					if(arrow.getShooter() instanceof Player) {
 						Player offender = (Player) arrow.getShooter();
-						offender.sendMessage("Shooting");
+						offender.sendMessage(ChatColor.RED + "This is not a PVP zone!");
 						event.setCancelled(true);
 					}
 				}
