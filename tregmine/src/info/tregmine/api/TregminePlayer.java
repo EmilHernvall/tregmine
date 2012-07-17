@@ -225,8 +225,19 @@ public class TregminePlayer extends PlayerDelegate
 		return getBoolean(_key);
 	}
 
-	public void setMetaString(String _key, String _value) 
-	{
+	public void setMetaBoolean(String _key, Boolean _value) 	{
+		if (_value == true) {
+			this.setMetaString(_key, "true");
+		}
+		
+		if (_value == false) {
+			this.setMetaString(_key, "false");
+		}
+
+	}
+
+	
+	public void setMetaString(String _key, String _value) 	{
 		Connection conn = null;
 		PreparedStatement stmt = null;
 		try {
@@ -394,6 +405,14 @@ public class TregminePlayer extends PlayerDelegate
 		return name;
 	}
 
+
+	public void setInvis(Boolean _value)	{
+		this.setMetaBoolean("invis", _value);
+	}
+
+	public Boolean getInvis()	{
+		return this.getBoolean("invis");
+	}
 	
 	public void setTemporaryChatName(String _name)	{
 		name = _name;

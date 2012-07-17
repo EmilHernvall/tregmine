@@ -4,3 +4,8 @@ version: 1000
 website: http://tregmine.info
 author: Ein Andersson
 description: Tregmine.info main files
+
+commands:
+  invis:
+    description: hide from all players
+    -usage: /invis true|false
