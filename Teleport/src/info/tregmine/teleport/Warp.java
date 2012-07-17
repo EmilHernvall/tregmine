@@ -67,7 +67,12 @@ public class Warp {
 			
 			World world = getWorld(rs.getString("world"));
 
-
+			if (world == null) {
+				from.sendMessage("Warp not found!");
+				plugin.log.info("[warp failed] + <" + from.getName() + "> " + args[0] +  " -- not found");
+				return;				
+			}
+			
 //			if(world.getName().matches(from.getWorld().getName())) {					
 				warppoint =  new Location(world, x,y,z, yaw, pitch);
 				from.sendMessage(ChatColor.AQUA + "You started teleport to " + ChatColor.DARK_GREEN + args[0] + ChatColor.AQUA + " in " + ChatColor.BLUE +  world.getName() + "." );
