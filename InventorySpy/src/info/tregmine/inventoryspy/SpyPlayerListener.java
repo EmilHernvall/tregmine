@@ -50,6 +50,7 @@ public class SpyPlayerListener implements Listener {
 	@EventHandler
 	public void onChunkLoad(ChunkLoadEvent event) {
 		List<Entity> entitys = event.getWorld().getEntities();
+		plugin.getServer().broadcastMessage("If you see this message, tell einand or any other senior: " + event.getChunk().toString());
 		
 		for (Entity entity : entitys) {
 
