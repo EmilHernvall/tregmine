@@ -431,7 +431,8 @@ public class BasicCommands extends JavaPlugin {
 				for (int i = 0; i<amount;i++) {
 
 					if (mobtyp.isSpawnable() && mobtyp.isAlive()) {
-						player.getWorld().spawnCreature(player.getLocation(), mobtyp);
+//						player.getWorld().spawnCreature(player.getLocation(), mobtyp);
+						player.getWorld().spawnEntity(player.getLocation(), mobtyp);
 					}
 
 				} 

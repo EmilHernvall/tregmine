@@ -11,6 +11,7 @@ import org.bukkit.block.Chest;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.ItemSpawnEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerGameModeChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -33,6 +34,14 @@ public class SpyPlayerListener implements Listener {
 		event.getPlayer().getInventory().clear();
 	}
 
+	@EventHandler
+	public void onItemSpawn(ItemSpawnEvent event) {
+		if (event.getEntity().getItemStack().getType() == Material.SUGAR_CANE) {
+			event.setCancelled(true);
+		}
+	}
+	
+	
 	@EventHandler
 	public void onPlayerInteract(PlayerInteractEvent event) {
 

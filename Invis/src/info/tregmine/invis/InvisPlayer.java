@@ -18,8 +18,6 @@ public class InvisPlayer implements  Listener  {
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent event) {
 
-
-
 		if (event.getPlayer().getName() != null) {
 			TregminePlayer player = this.plugin.tregmine.getPlayer(event.getPlayer());
 

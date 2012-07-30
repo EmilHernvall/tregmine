@@ -14,6 +14,7 @@ import org.bukkit.ChatColor;
 //import org.bukkit.Effect;
 //import org.bukkit.Location;
 import org.bukkit.block.Block;
+//import org.bukkit.entity.Entity;
 //import org.bukkit.conversations.Conversation;
 //import org.bukkit.entity.Arrow;
 //import org.bukkit.entity.Egg;
@@ -466,5 +467,4 @@ public class TregminePlayer extends PlayerDelegate
     {
         return BCrypt.checkpw(attempt, this.password);
     }
-
 }

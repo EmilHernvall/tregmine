@@ -973,5 +973,22 @@ public abstract class PlayerDelegate implements Player
 		
 	}
 
+	@Override
+	public int getExpToLevel() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public boolean hasLineOfSight(Entity arg0) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean isValid() {
+		// TODO Auto-generated method stub
+		return false;
+	}
 	
 }

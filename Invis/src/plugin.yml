@@ -2,10 +2,3 @@ name: Invis
 main: info.tregmine.invis.Invis
 version: 1
 author: Ein Andersson
-commands:
-  invis:
-    description: toggle your visibility.
-    usage: |
-           Incorrect usage of /<command>. Examples:
-           /<command> - Toggles your visibility
-           /<command> list - List of invisible players
