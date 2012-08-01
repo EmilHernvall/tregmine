@@ -254,13 +254,12 @@ public class TregminePlayerListener implements Listener {
 			this.plugin.log.warning( keyword );
 
 			if (keyword.equals(event.getHostname().toLowerCase()) || keyword.matches("mc.tregmine.info:25565")) {
-				this.plugin.log.warning( "success" );
+//				this.plugin.log.warning( "success" );
 			} else {
-				this.plugin.log.warning( "faild" );
-
+				event.disallow(Result.KICK_BANNED, "Wrong keyword!");
 			}
 		} else {
-			this.plugin.log.warning( "success no keyword set" );			
+//			this.plugin.log.warning( "success no keyword set" );			
 		}
 
 		if (tregPlayer.isGuardian()) {
