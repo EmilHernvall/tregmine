@@ -218,6 +218,8 @@ public class TregminePlayerListener implements Listener {
 		Player player = event.getPlayer();
 		String playerName = player.getName();
 
+		this.plugin.log.warning( event.getHostname() );
+		
 		TregminePlayer tregPlayer = new TregminePlayer(player, playerName);
 
 		if (player.getLocation().getWorld().getName().matches("world_the_end")) {

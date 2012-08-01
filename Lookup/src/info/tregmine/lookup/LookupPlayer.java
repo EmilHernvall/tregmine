@@ -4,7 +4,9 @@ package info.tregmine.lookup;
 import info.tregmine.database.ConnectionPool;
 
 import java.io.IOException;
+//import java.net.InetAddress;
 import java.net.InetSocketAddress;
+//import java.net.UnknownHostException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -42,8 +44,8 @@ public class LookupPlayer implements  Listener  {
 		String host = sock.getAddress().getCanonicalHostName();
 		info.tregmine.api.TregminePlayer tregminePlayer = this.plugin.tregmine.tregminePlayer.get(player.getName());
 
-		this.plugin.log.info("[DEBUG] " + sock.getHostName().toLowerCase());
-		this.plugin.log.info("[DEBUG] " + "****");
+
+		
 		
 		if (cl != null) {
 			Location l1 = cl.getLocation(ip);
