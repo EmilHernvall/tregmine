@@ -223,9 +223,8 @@ public class TregminePlayerListener implements Listener {
 		if (player.getLocation().getWorld().getName().matches("world_the_end")) {
 			player.teleport(this.plugin.getServer().getWorld("world").getSpawnLocation());
 		}
-
 		
-		
+		plugin.log.info("" + tregPlayer.getAddress().getHostString() );
 		
 		if(tregPlayer.exists()) {
 			tregPlayer.load();
@@ -234,6 +233,9 @@ public class TregminePlayerListener implements Listener {
 			tregPlayer.load();
 		}
 
+		
+		
+		
 		if (tregPlayer.isBanned()) {
 //			event.setKickMessage("You are not allowed on this server!");
 			event.disallow(Result.KICK_BANNED, "You shall not pass!");

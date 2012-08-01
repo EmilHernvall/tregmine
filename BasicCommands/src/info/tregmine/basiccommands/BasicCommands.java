@@ -77,6 +77,23 @@ public class BasicCommands extends JavaPlugin {
 		boolean isDonator = tregminePlayer.isDonator();
 		boolean isMentor = tregminePlayer.getMetaBoolean("mentor");
 
+		
+		if (commandName.matches("keyword")) {
+            if (args.length != 1) {
+                return false; 
+            }
+            if (args[0].length() < 1) {
+                tregminePlayer.sendMessage(ChatColor.RED + "Your keyword must be at least " +
+                    "1 characters long.");
+                return true;
+            }
+
+            tregminePlayer.setMetaString("keyword", args[0].toLowerCase());
+            tregminePlayer.sendMessage(ChatColor.YELLOW + "From now on you can only log in by using ip " + args[0].toLowerCase() + ".mc.tregmine.info");
+            return true;
+		}
+		
+		
 		if (commandName.matches("password")) {
             if (args.length != 1) {
                 return false; 

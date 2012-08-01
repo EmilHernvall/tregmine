@@ -6,6 +6,9 @@ author: Ein Andersson
 description: Tregmine.info items
 
 commands:
+  keyword:
+    description: Sets a secure keyword to log  on to the server.
+    -usage: /keyword <keyword>
   pos:
     description: retrieve information about your current position.
     -usage: /pos

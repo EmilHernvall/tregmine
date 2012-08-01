@@ -1,17 +1,10 @@
 package info.tregmine.inventoryspy;
 
-
-//import net.minecraft.server.Item;
-
-import java.util.List;
-
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Chest;
-import org.bukkit.entity.Entity;
-//import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
@@ -19,11 +12,8 @@ import org.bukkit.event.entity.ItemSpawnEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerGameModeChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-//import org.bukkit.event.player.PlayerInventoryEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
-import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 
 
@@ -47,24 +37,28 @@ public class SpyPlayerListener implements Listener {
 		}
 	}
 
+	/*
 	@EventHandler
 	public void onChunkLoad(ChunkLoadEvent event) {
 		List<Entity> entitys = event.getWorld().getEntities();
-		
+
+		if (plugin.getServer().getPlayer("einand") != null) {
+			plugin.getServer().getPlayer("einand").sendMessage("::" + event.getClass().toString());
+		}
+
+
 		for (Entity entity : entitys) {
 
-//			Entity entity = event.getEntity();
+
+			//			Entity entity = event.getEntity();
 			if (entity instanceof ItemStack) {
 				ItemStack itemstack = (ItemStack) entity;
 				plugin.getServer().broadcastMessage("::" + itemstack.getType().toString());
-//				if (plugin.getServer().getPlayer("einand") != null) {
-//					plugin.getServer().getPlayer("einand").sendMessage("::" + itemstack.getType().toString());
-//				}
 			}
 		}
 
 	}
-
+*/
 
 
 	@EventHandler
