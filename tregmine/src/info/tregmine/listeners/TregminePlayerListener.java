@@ -217,8 +217,6 @@ public class TregminePlayerListener implements Listener {
 	{
 		Player player = event.getPlayer();
 		String playerName = player.getName();
-
-		this.plugin.log.warning( event.getHostname() );
 		
 		TregminePlayer tregPlayer = new TregminePlayer(player, playerName);
 
@@ -226,7 +224,6 @@ public class TregminePlayerListener implements Listener {
 			player.teleport(this.plugin.getServer().getWorld("world").getSpawnLocation());
 		}
 		
-	//	plugin.log.info("[DEBUG]" + tregPlayer.get );
 		
 		if(tregPlayer.exists()) {
 			tregPlayer.load();
@@ -249,7 +246,15 @@ public class TregminePlayerListener implements Listener {
 			event.disallow(Result.KICK_BANNED, "Sorry warned players are not allowed on creative server!");
 		}
 
-		
+		String keyword = tregPlayer.getMetaString("keyword") + ".mc.tregmine.info:25565";
+		this.plugin.log.warning( event.getHostname() );
+
+		if (keyword.equals(event.getHostname()) || keyword.matches("")) {
+			this.plugin.log.warning( "success" );
+		} else {
+			this.plugin.log.warning( "faild" );
+			
+		}
 		
 		if (tregPlayer.isGuardian()) {
 			tregPlayer.setGuardianState(TregminePlayer.GuardianState.QUEUED);
