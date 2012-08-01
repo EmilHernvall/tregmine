@@ -248,6 +248,7 @@ public class TregminePlayerListener implements Listener {
 
 		String keyword = tregPlayer.getMetaString("keyword").toLowerCase() + ".mc.tregmine.info:25565".toLowerCase();
 		this.plugin.log.warning( event.getHostname() );
+		this.plugin.log.warning( keyword );
 
 		if (keyword.equals(event.getHostname().toLowerCase()) || keyword.matches(".mc.tregmine.info:25565")) {
 			this.plugin.log.warning( "success" );
