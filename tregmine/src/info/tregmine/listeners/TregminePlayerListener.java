@@ -224,7 +224,7 @@ public class TregminePlayerListener implements Listener {
 			player.teleport(this.plugin.getServer().getWorld("world").getSpawnLocation());
 		}
 		
-//		plugin.log.info("" + tregPlayer.getAddress() );
+	//	plugin.log.info("[DEBUG]" + tregPlayer.get );
 		
 		if(tregPlayer.exists()) {
 			tregPlayer.load();
