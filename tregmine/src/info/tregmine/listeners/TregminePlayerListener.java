@@ -246,11 +246,17 @@ public class TregminePlayerListener implements Listener {
 			event.disallow(Result.KICK_BANNED, "Sorry warned players are not allowed on creative server!");
 		}
 
-		String keyword = tregPlayer.getMetaString("keyword").toLowerCase() + ".mc.tregmine.info:25565".toLowerCase();
+		String keyword;
+		try {
+			keyword = tregPlayer.getMetaString("keyword").toLowerCase() + ".mc.tregmine.info:25565".toLowerCase();
+		} catch (Exception e) {
+			keyword = "mc.tregmine.info:25565";
+//			e.printStackTrace();
+		}
 		this.plugin.log.warning( event.getHostname() );
 		this.plugin.log.warning( keyword );
 
-		if (keyword.equals(event.getHostname().toLowerCase()) || keyword.matches(".mc.tregmine.info:25565")) {
+		if (keyword.equals(event.getHostname().toLowerCase()) || keyword.matches("mc.tregmine.info:25565")) {
 			this.plugin.log.warning( "success" );
 		} else {
 			this.plugin.log.warning( "faild" );
