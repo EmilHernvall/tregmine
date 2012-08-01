@@ -65,7 +65,7 @@ public class TregminePlayerListener implements Listener {
 			return order * (a.getGuardianRank() - b.getGuardianRank());
 		}
 	}
-/*
+	/*
 	private final static String[] quitMessages = new String[] {
 		ChatColor.YELLOW + "Quit - " + "%s" + ChatColor.YELLOW + " deserted from the battlefield with a hearty good bye!",
 		ChatColor.YELLOW + "Quit - " + "%s" + ChatColor.YELLOW + " stole the cookies and ran!",
@@ -95,7 +95,7 @@ public class TregminePlayerListener implements Listener {
 		ChatColor.YELLOW + "Quit - " + "%s" + ChatColor.YELLOW + " Be sure to visit the rifton general store! Follow the red line at /warp rifton",
 		ChatColor.YELLOW + "Quit - " + "%s" + ChatColor.YELLOW + " Come to Exon (Near sunspot)"
 	};
-*/
+	 */
 	private final Tregmine plugin;
 
 	public TregminePlayerListener(Tregmine instance) {
@@ -171,10 +171,10 @@ public class TregminePlayerListener implements Listener {
 					Material mat = Material.getMaterial((int) blockid);
 
 					if (placed == true) {
-//						event.getPlayer().sendMessage(ChatColor.DARK_AQUA + mat.name().toLowerCase() + 
-//								" placed by " + player + " at " + dfm.format(date));
+						//						event.getPlayer().sendMessage(ChatColor.DARK_AQUA + mat.name().toLowerCase() + 
+						//								" placed by " + player + " at " + dfm.format(date));
 						event.getPlayer().sendMessage(ChatColor.DARK_AQUA + mat.name().toLowerCase() + 
-						" placed by " + player + " " + p.format(date));
+								" placed by " + player + " " + p.format(date));
 						event.getPlayer().sendMessage(ChatColor.DARK_AQUA + timezone + ": " + dfm.format(date));
 					} else {
 						event.getPlayer().sendMessage(ChatColor.DARK_AQUA + mat.name().toLowerCase() + 
@@ -202,9 +202,9 @@ public class TregminePlayerListener implements Listener {
 	@EventHandler
 	public void onPreCommand(PlayerCommandPreprocessEvent event) {
 		this.plugin.log.info("COMMAND: " + event.getPlayer().getName() + "::" + event.getMessage());
-		
+
 	}
-	
+
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		event.setJoinMessage(null);
@@ -217,14 +217,14 @@ public class TregminePlayerListener implements Listener {
 	{
 		Player player = event.getPlayer();
 		String playerName = player.getName();
-		
+
 		TregminePlayer tregPlayer = new TregminePlayer(player, playerName);
 
 		if (player.getLocation().getWorld().getName().matches("world_the_end")) {
 			player.teleport(this.plugin.getServer().getWorld("world").getSpawnLocation());
 		}
-		
-		
+
+
 		if(tregPlayer.exists()) {
 			tregPlayer.load();
 		} else {
@@ -232,11 +232,11 @@ public class TregminePlayerListener implements Listener {
 			tregPlayer.load();
 		}
 
-		
-		
-		
+
+
+
 		if (tregPlayer.isBanned()) {
-//			event.setKickMessage("You are not allowed on this server!");
+			//			event.setKickMessage("You are not allowed on this server!");
 			event.disallow(Result.KICK_BANNED, "You shall not pass!");
 		} else  {
 			this.plugin.tregminePlayer.put(playerName, tregPlayer);
@@ -246,23 +246,23 @@ public class TregminePlayerListener implements Listener {
 			event.disallow(Result.KICK_BANNED, "Sorry warned players are not allowed on creative server!");
 		}
 
-		String keyword;
-		try {
-			keyword = tregPlayer.getMetaString("keyword").toLowerCase() + ".mc.tregmine.info:25565".toLowerCase();
-		} catch (Exception e) {
-			keyword = "mc.tregmine.info:25565";
-//			e.printStackTrace();
-		}
-		this.plugin.log.warning( event.getHostname() );
-		this.plugin.log.warning( keyword );
 
-		if (keyword.equals(event.getHostname().toLowerCase()) || keyword.matches("mc.tregmine.info:25565")) {
-			this.plugin.log.warning( "success" );
+
+		if (tregPlayer.getMetaString("keyword") != null) {
+			String keyword = tregPlayer.getMetaString("keyword") + ".mc.tregmine.info:25565".toLowerCase();
+			this.plugin.log.warning( event.getHostname() );
+			this.plugin.log.warning( keyword );
+
+			if (keyword.equals(event.getHostname().toLowerCase()) || keyword.matches("mc.tregmine.info:25565")) {
+				this.plugin.log.warning( "success" );
+			} else {
+				this.plugin.log.warning( "faild" );
+
+			}
 		} else {
-			this.plugin.log.warning( "faild" );
-			
+			this.plugin.log.warning( "success no keyword set" );			
 		}
-		
+
 		if (tregPlayer.isGuardian()) {
 			tregPlayer.setGuardianState(TregminePlayer.GuardianState.QUEUED);
 		}
@@ -271,14 +271,14 @@ public class TregminePlayerListener implements Listener {
 	@EventHandler
 	public void onPlayerQuit(PlayerQuitEvent event) {
 		event.setQuitMessage(null);
-//		TregminePlayer tregP = this.plugin.tregminePlayer.get(event.getPlayer().getName());
+		//		TregminePlayer tregP = this.plugin.tregminePlayer.get(event.getPlayer().getName());
 
-//		if(!event.getPlayer().isOp()) {
-//			Random rand = new Random();
-//			int msgIndex = rand.nextInt(quitMessages.length);
-//			String message = String.format(quitMessages[msgIndex], tregP.getChatName());
-//			this.plugin.getServer().broadcastMessage(message);
-//		}
+		//		if(!event.getPlayer().isOp()) {
+		//			Random rand = new Random();
+		//			int msgIndex = rand.nextInt(quitMessages.length);
+		//			String message = String.format(quitMessages[msgIndex], tregP.getChatName());
+		//			this.plugin.getServer().broadcastMessage(message);
+		//		}
 
 		this.plugin.tregminePlayer.remove(event.getPlayer().getName());
 		this.plugin.log.info("Unloaded settings for " + event.getPlayer().getName() + ".");
