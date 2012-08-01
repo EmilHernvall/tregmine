@@ -43,6 +43,7 @@ public class LookupPlayer implements  Listener  {
 		info.tregmine.api.TregminePlayer tregminePlayer = this.plugin.tregmine.tregminePlayer.get(player.getName());
 
 		this.plugin.log.info("[DEBUG] " + sock.getHostString());
+		this.plugin.log.info("[DEBUG] " + "****");
 		
 		if (cl != null) {
 			Location l1 = cl.getLocation(ip);
