@@ -6,7 +6,8 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerChatEvent;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
+//import org.bukkit.event.player.PlayerChatEvent;
 
 public class ChatPlayer implements Listener {
 	private final Chat plugin;
@@ -17,7 +18,7 @@ public class ChatPlayer implements Listener {
 	}
 
 	@EventHandler
-	public void onPlayerChat(PlayerChatEvent event) {
+	public void onPlayerChat(AsyncPlayerChatEvent event) {
 		Player sender = event.getPlayer();
 		info.tregmine.api.TregminePlayer tregminePlayer = this.plugin.tregmine.tregminePlayer.get(sender.getName());
 		Player[] players = plugin.getServer().getOnlinePlayers();
