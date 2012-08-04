@@ -54,12 +54,12 @@ public class LookupPlayer implements  Listener  {
 			}
 
 			plugin.log.info(event.getPlayer().getName() + ": " + l1.countryName + ", " + l1.city + ", " + ip + ", " + l1.postalCode + ", " + l1.region + ", " + host);
-//			tregminePlayer.setMetaString("countryName", l1.countryName);
-//			tregminePlayer.setMetaString("city", l1.city);
-//			tregminePlayer.setMetaString("ip", ip);
-//			tregminePlayer.setMetaString("postalCode", l1.postalCode);
-//			tregminePlayer.setMetaString("region", l1.region);
-//			tregminePlayer.setMetaString("hostname", host);
+			tregminePlayer.setMetaString("countryName", l1.countryName);
+			tregminePlayer.setMetaString("city", l1.city);
+			tregminePlayer.setMetaString("ip", ip);
+			tregminePlayer.setMetaString("postalCode", l1.postalCode);
+			tregminePlayer.setMetaString("region", l1.region);
+			tregminePlayer.setMetaString("hostname", host);
 			
 			
 			
