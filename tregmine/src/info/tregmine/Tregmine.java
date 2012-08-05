@@ -11,6 +11,8 @@ import info.tregmine.stats.BlockStats;
 
 import java.util.logging.Logger;
 
+import org.bukkit.WorldCreator;
+import org.bukkit.World.Environment;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 //import org.bukkit.ChatColor;
@@ -40,8 +42,26 @@ public class Tregmine extends JavaPlugin
 	public int amount = 0;
 
 	@Override
-	public void onEnable() 
-	{
+	public void onEnable() 	{
+		
+		WorldCreator citadelCreator = new WorldCreator("citadel"); 
+		citadelCreator.environment(Environment.NORMAL);
+		citadelCreator.createWorld();
+		
+		WorldCreator alpha = new WorldCreator("alpha"); 
+		alpha.environment(Environment.NORMAL);
+		alpha.createWorld();
+
+		WorldCreator vanilla = new WorldCreator("world"); 
+		vanilla.environment(Environment.NORMAL);
+		vanilla.createWorld();
+
+		
+		WorldCreator elva = new WorldCreator("elva"); 
+		elva.environment(Environment.NORMAL);
+		elva.createWorld();
+
+		
 
 		getServer().getPluginManager().registerEvents(new TregminePlayerListener(this), this);
 		getServer().getPluginManager().registerEvents(new TregmineBlockListener(this), this);
