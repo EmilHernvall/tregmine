@@ -52,10 +52,9 @@ public class Tregmine extends JavaPlugin
 		alpha.environment(Environment.NORMAL);
 		alpha.createWorld();
 
-		WorldCreator vanilla = new WorldCreator("world"); 
-		vanilla.environment(Environment.NORMAL);
-		vanilla.createWorld();
-
+		WorldCreator world = new WorldCreator("world"); 
+		world.environment(Environment.NORMAL);
+		world.createWorld();
 		
 		WorldCreator elva = new WorldCreator("elva"); 
 		elva.environment(Environment.NORMAL);

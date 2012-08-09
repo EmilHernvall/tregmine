@@ -247,21 +247,22 @@ public class TregminePlayerListener implements Listener {
 		}
 
 
-/*
+
 		if (tregPlayer.getMetaString("keyword") != null) {
 			String keyword = tregPlayer.getMetaString("keyword") + ".mc.tregmine.info:25565".toLowerCase();
 			this.plugin.log.warning( event.getHostname() );
 			this.plugin.log.warning( keyword );
 
 			if (keyword.equals(event.getHostname().toLowerCase()) || keyword.matches("mc.tregmine.info:25565")) {
-//				this.plugin.log.warning( "success" );
+				this.plugin.log.warning(tregPlayer.getName() +  " keyword :: success" );
 			} else {
+				this.plugin.log.warning(tregPlayer.getName() +  " keyword :: faild" );
 				event.disallow(Result.KICK_BANNED, "Wrong keyword!");
 			}
 		} else {
-//			this.plugin.log.warning( "success no keyword set" );			
+			this.plugin.log.warning(tregPlayer.getName() +  " keyword :: notset" );
 		}
-*/
+
 		if (tregPlayer.isGuardian()) {
 			tregPlayer.setGuardianState(TregminePlayer.GuardianState.QUEUED);
 		}
