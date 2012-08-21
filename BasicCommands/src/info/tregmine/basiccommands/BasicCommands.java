@@ -159,7 +159,7 @@ public class BasicCommands extends JavaPlugin {
 
 		if (commandName.matches("td") && tregminePlayer.isOp()) {
 			Player victim = this.getServer().matchPlayer(args[0]).get(0);
-			victim.getWorld().strikeLightning(victim.getLocation());
+			victim.getWorld().strikeLightningEffect(victim.getLocation());
 			victim.setHealth(0);
 			return true;
 		}

@@ -5,13 +5,13 @@ import info.tregmine.Tregmine;
 import java.util.logging.Logger;
 
 //import org.bukkit.World;
-import org.bukkit.World.Environment;
+//import org.bukkit.World.Environment;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 //import org.bukkit.ChatColor;
 //import org.bukkit.World;
-import org.bukkit.WorldCreator;
+//import org.bukkit.WorldCreator;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
