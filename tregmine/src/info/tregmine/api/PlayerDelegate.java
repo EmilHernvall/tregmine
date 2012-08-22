@@ -990,5 +990,30 @@ public abstract class PlayerDelegate implements Player
 		// TODO Auto-generated method stub
 		return false;
 	}
+
+	@Override
+	public float getFlySpeed() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public float getWalkSpeed() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void setFlySpeed(float arg0) throws IllegalArgumentException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setWalkSpeed(float arg0) throws IllegalArgumentException {
+		// TODO Auto-generated method stub
+		
+	}
+	
 	
 }
