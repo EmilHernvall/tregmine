@@ -30,12 +30,12 @@ public class SpyPlayerListener implements Listener {
 		event.getPlayer().getInventory().clear();
 	}
 
-	@EventHandler
-	public void onItemSpawn(ItemSpawnEvent event) {
-		if (event.getEntity().getItemStack().getType() == Material.SUGAR_CANE) {
-			event.setCancelled(true);
-		}
-	}
+//	@EventHandler
+//	public void onItemSpawn(ItemSpawnEvent event) {
+//		if (event.getEntity().getItemStack().getType() == Material.SUGAR_CANE) {
+//			event.setCancelled(true);
+//		}
+//	}
 
 	/*
 	@EventHandler

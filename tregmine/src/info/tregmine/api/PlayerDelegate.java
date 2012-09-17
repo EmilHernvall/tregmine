@@ -18,6 +18,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Note;
 import org.bukkit.Server;
+import org.bukkit.Sound;
 import org.bukkit.Statistic;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -1015,5 +1016,15 @@ public abstract class PlayerDelegate implements Player
 		
 	}
 	
+	@Override
+	public void playSound(Location arg0, Sound arg1, float arg2, float arg3) {
+		delegate.playSound(arg0, arg1, arg2, arg3);		
+	}
+
+	@Override
+	public Inventory getEnderChest() {
+		return delegate.getEnderChest();
+	}
+
 	
 }
