@@ -8,7 +8,7 @@ import info.tregmine.listeners.TregmineEntityListener;
 import info.tregmine.listeners.TregminePlayerListener;
 import info.tregmine.listeners.TregmineWeatherListener;
 import info.tregmine.stats.BlockStats;
-import info.tregmine.world.citadel.CitadelLimit;
+//import info.tregmine.world.citadel.CitadelLimit;
 
 import java.util.logging.Logger;
 
@@ -56,6 +56,11 @@ public class Tregmine extends JavaPlugin
 		WorldCreator world = new WorldCreator("world"); 
 		world.environment(Environment.NORMAL);
 		world.createWorld();
+
+		WorldCreator NETHER = new WorldCreator("world_nether"); 
+		NETHER.environment(Environment.NETHER);
+		NETHER.createWorld();
+
 		
 //		WorldCreator elva = new WorldCreator("elva"); 
 //		elva.environment(Environment.NORMAL);
@@ -66,7 +71,8 @@ public class Tregmine extends JavaPlugin
 		getServer().getPluginManager().registerEvents(new TregmineEntityListener(this), this);
 		getServer().getPluginManager().registerEvents(new TregmineWeatherListener(this), this);
 
-		getServer().getPluginManager().registerEvents(new CitadelLimit(this), this);		
+		
+		getServer().getPluginManager().registerEvents(new info.tregmine.world.citadel.CitadelLimit(this), this);		
 	 	getServer().getPluginManager().registerEvents(new info.tregmine.sign.Color(), this);
 	}
 
