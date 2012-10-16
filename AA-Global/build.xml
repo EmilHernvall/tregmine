@@ -10,7 +10,6 @@
 		<ant dir="../BoxFill" target="clean" inheritAll="false" />
 		<ant dir="../Chat" target="clean" inheritAll="false" />
 		<ant dir="../ChestBless" target="clean" inheritAll="false" />
-		<ant dir="../ChildsPlay" target="clean" inheritAll="false" />
 		<ant dir="../Compass2" target="clean" inheritAll="false" />
 		<ant dir="../Currency" target="clean" inheritAll="false" />
 		<ant dir="../Death" target="clean" inheritAll="false" />
@@ -19,11 +18,8 @@
 		<ant dir="../Item" target="clean" inheritAll="false" />
 		<ant dir="../Lookup" target="clean" inheritAll="false" />
 		<ant dir="../miscButton" target="clean" inheritAll="false" />
-		<ant dir="../SignColours" target="clean" inheritAll="false" />
 		<ant dir="../Teleport" target="clean" inheritAll="false" />
-		<ant dir="../Who" target="clean" inheritAll="false" />
 		<ant dir="../Zones" target="clean" inheritAll="false" />
-        <ant dir="../Citadel" target="clean" inheritAll="false" />
 	</target>
 
 	<target name="build" depends="init">
@@ -34,7 +30,6 @@
 		<ant dir="../BoxFill" target="jar" inheritAll="false" />
 		<ant dir="../Chat" target="jar" inheritAll="false" />
 		<ant dir="../ChestBless" target="jar" inheritAll="false" />
-		<ant dir="../ChildsPlay" target="jar" inheritAll="false" />
 		<ant dir="../Compass2" target="jar" inheritAll="false" />
 		<ant dir="../Death" target="jar" inheritAll="false" />
 		<ant dir="../InventorySpy" target="jar" inheritAll="false" />
@@ -42,11 +37,8 @@
 		<ant dir="../Item" target="jar" inheritAll="false" />
 		<ant dir="../Lookup" target="jar" inheritAll="false" />
 		<ant dir="../miscButton" target="jar" inheritAll="false" />
-		<ant dir="../SignColours" target="jar" inheritAll="false" />
 		<ant dir="../Teleport" target="jar" inheritAll="false" />
-		<ant dir="../Who" target="jar" inheritAll="false" />
 		<ant dir="../Zones" target="jar" inheritAll="false" />
-        <ant dir="../Citadel" target="jar" inheritAll="false" />
 	</target>
     
     <target name="copy" depends="build">
@@ -55,7 +47,6 @@
     	<copy file="../BoxFill/BoxFill.jar" tofile="jar/BoxFill.jar" />
     	<copy file="../Chat/Chat.jar" tofile="jar/Chat.jar" />
     	<copy file="../ChestBless/ChestBless.jar" tofile="jar/ChestBless.jar" />
-    	<copy file="../ChildsPlay/ChildsPlay.jar" tofile="jar/ChildsPlay.jar" />
     	<copy file="../Compass2/Compass2.jar" tofile="jar/Compass.jar" />
     	<copy file="../Currency/Currency.jar" tofile="jar/Currency.jar" />
     	<copy file="../Death/Death.jar" tofile="jar/Death.jar" />
@@ -64,10 +55,7 @@
     	<copy file="../Item/Item.jar" tofile="jar/Item.jar" />
     	<copy file="../Lookup/Lookup.jar" tofile="jar/Lookup.jar" />
     	<copy file="../miscButton/miscButton.jar" tofile="jar/miscButton.jar" />
-    	<copy file="../SignColours/SignColours.jar" tofile="jar/SignColours.jar" />
     	<copy file="../Teleport/Teleport.jar" tofile="jar/Teleport.jar" />
-    	<copy file="../Who/Who.jar" tofile="jar/Who.jar" />
     	<copy file="../Zones/Zones.jar" tofile="jar/Zones.jar" />
-        <copy file="../Citadel/Citadel.jar" tofile="jar/Citadel.jar" />
     </target>	
 </project>

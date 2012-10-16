@@ -38,7 +38,7 @@ import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerLoginEvent.Result;
 import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerPreLoginEvent;
+//import org.bukkit.event.player.PlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.ocpsoft.pretty.time.PrettyTime;
 
@@ -286,13 +286,13 @@ public class TregminePlayerListener implements Listener {
 		activateGuardians();
 	}        
 
-	@EventHandler
-	public void onPlayerPreLogin(PlayerPreLoginEvent event) {
-		Player player = this.plugin.getServer().getPlayer(event.getName());
-		if (player != null) {
-			player.kickPlayer("Sorry, we don't allow clones on this server.");
-		}
-	}
+//	@EventHandler
+//	public void onPlayerPreLogin(PlayerPreLoginEvent event) {
+//		Player player = this.plugin.getServer().getPlayer(event.getName());
+//		if (player != null) {
+//			player.kickPlayer("Sorry, we don't allow clones on this server.");
+//		}
+//	}
 
 	public void onPlayerMove(PlayerMoveEvent event)     { // if player move
 	}

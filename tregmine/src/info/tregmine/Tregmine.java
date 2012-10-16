@@ -8,6 +8,7 @@ import info.tregmine.listeners.TregmineEntityListener;
 import info.tregmine.listeners.TregminePlayerListener;
 import info.tregmine.listeners.TregmineWeatherListener;
 import info.tregmine.stats.BlockStats;
+import info.tregmine.world.citadel.CitadelLimit;
 
 import java.util.logging.Logger;
 
@@ -48,25 +49,25 @@ public class Tregmine extends JavaPlugin
 		citadelCreator.environment(Environment.NORMAL);
 		citadelCreator.createWorld();
 		
-		WorldCreator alpha = new WorldCreator("alpha"); 
-		alpha.environment(Environment.NORMAL);
-		alpha.createWorld();
+//		WorldCreator alpha = new WorldCreator("alpha"); 
+//		alpha.environment(Environment.NORMAL);
+//		alpha.createWorld();
 
 		WorldCreator world = new WorldCreator("world"); 
 		world.environment(Environment.NORMAL);
 		world.createWorld();
 		
-		WorldCreator elva = new WorldCreator("elva"); 
-		elva.environment(Environment.NORMAL);
-		elva.createWorld();
-
-		
+//		WorldCreator elva = new WorldCreator("elva"); 
+//		elva.environment(Environment.NORMAL);
+//		elva.createWorld();
 
 		getServer().getPluginManager().registerEvents(new TregminePlayerListener(this), this);
 		getServer().getPluginManager().registerEvents(new TregmineBlockListener(this), this);
 		getServer().getPluginManager().registerEvents(new TregmineEntityListener(this), this);
 		getServer().getPluginManager().registerEvents(new TregmineWeatherListener(this), this);
 
+		getServer().getPluginManager().registerEvents(new CitadelLimit(this), this);		
+	 	getServer().getPluginManager().registerEvents(new info.tregmine.sign.Color(), this);
 	}
 
 	@Override
