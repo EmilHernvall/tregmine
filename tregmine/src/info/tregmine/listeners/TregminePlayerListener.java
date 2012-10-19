@@ -209,6 +209,10 @@ public class TregminePlayerListener implements Listener {
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		event.setJoinMessage(null);
 
+	if (!this.plugin.tregminePlayer.containsKey(event.getPlayer().getName())) {
+		event.getPlayer().kickPlayer("error loading profile!");
+	}
+		
 		activateGuardians();
 	}        
 
@@ -225,12 +229,6 @@ public class TregminePlayerListener implements Listener {
 		if (player.getLocation().getWorld().getName().matches("world_the_end")) {
 			player.teleport(this.plugin.getServer().getWorld("world").getSpawnLocation());
 		}
-
-		if (tregPlayer.getName() == null) {
-			event.disallow(Result.KICK_BANNED, "Error please rejoin!");
-		}
-		
-		
 		
 		if(tregPlayer.exists()) {
 			tregPlayer.load();
