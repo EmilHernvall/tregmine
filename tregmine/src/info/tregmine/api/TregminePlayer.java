@@ -114,11 +114,6 @@ public class TregminePlayer extends PlayerDelegate
 			}
 		}
 		this.setTemporaryChatName(getNameColor() + name);
-		
-		if (this.getMetaInt("id") != null) {
-			this.setTemporaryChatName(getNameColor() + name + " profile fail");
-		}
-		
 	}
 
 	public void create() 

@@ -233,6 +233,7 @@ public class TregminePlayerListener implements Listener {
 		}
 
 
+		tregPlayer.sendMessage(""+ tregPlayer.getId());
 
 
 		if (tregPlayer.isBanned()) {
