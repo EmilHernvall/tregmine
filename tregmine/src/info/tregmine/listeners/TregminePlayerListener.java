@@ -220,11 +220,18 @@ public class TregminePlayerListener implements Listener {
 
 		TregminePlayer tregPlayer = new TregminePlayer(player, playerName);
 
+
+		
 		if (player.getLocation().getWorld().getName().matches("world_the_end")) {
 			player.teleport(this.plugin.getServer().getWorld("world").getSpawnLocation());
 		}
 
-
+		if (tregPlayer.getName() == null) {
+			event.disallow(Result.KICK_BANNED, "Error please rejoin!");
+		}
+		
+		
+		
 		if(tregPlayer.exists()) {
 			tregPlayer.load();
 		} else {
@@ -233,10 +240,7 @@ public class TregminePlayerListener implements Listener {
 		}
 
 
-		if (tregPlayer.getId() == NULL) {
-			event.disallow(Result.KICK_BANNED, "Sorry faild to load your profile, please rejoin!");			
-		}
-
+		
 		if (tregPlayer.isBanned()) {
 			//			event.setKickMessage("You are not allowed on this server!");
 			event.disallow(Result.KICK_BANNED, "You shall not pass!");
