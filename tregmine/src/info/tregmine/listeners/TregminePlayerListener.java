@@ -233,7 +233,9 @@ public class TregminePlayerListener implements Listener {
 		}
 
 
-		this.plugin.log.info(""+ tregPlayer.getId());
+		if (tregPlayer.getId() == NULL) {
+			event.disallow(Result.KICK_BANNED, "Sorry faild to load your profile, please rejoin!");			
+		}
 
 		if (tregPlayer.isBanned()) {
 			//			event.setKickMessage("You are not allowed on this server!");
