@@ -298,7 +298,11 @@ public class TregminePlayerListener implements Listener {
 //		}
 //	}
 
+	@EventHandler
 	public void onPlayerMove(PlayerMoveEvent event)     { // if player move
+		if (!this.plugin.tregminePlayer.containsKey(event.getPlayer().getName())) {
+			event.getPlayer().kickPlayer("error loading profile!");
+		}
 	}
 
 	public void onPlayerTeleport(PlayerMoveEvent event)     { // if player teleport
