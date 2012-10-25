@@ -144,7 +144,7 @@ public class BasicCommands extends JavaPlugin {
 			return true;
 		}
 
-		if (commandName.matches("cname") && tregminePlayer.isOp()) {
+		if (commandName.matches("cname") && tregminePlayer.isAdmin()) {
 			ChatColor color = ChatColor.getByChar(args[0]);
 			tregminePlayer.setTemporaryChatName(color + args[1]);
 			tregminePlayer.sendMessage("You are now: " + tregminePlayer.getChatName());
