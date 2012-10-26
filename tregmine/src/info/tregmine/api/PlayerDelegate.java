@@ -963,57 +963,49 @@ public abstract class PlayerDelegate implements Player
 
 	@Override
 	public boolean isBlocking() {
-		// TODO Auto-generated method stub
-		return false;
-	}
+		return delegate.isBanned();
+		
+		}
 
 	@Override
 	public void abandonConversation(Conversation arg0,
 			ConversationAbandonedEvent arg1) {
-		// TODO Auto-generated method stub
-		
+		delegate.abandonConversation(arg0);		
 	}
 
 	@Override
 	public int getExpToLevel() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+		return delegate.getExpToLevel();
+		}
 
 	@Override
 	public boolean hasLineOfSight(Entity arg0) {
-		// TODO Auto-generated method stub
-		return false;
+		return delegate.hasLineOfSight(arg0);
 	}
 
 	@Override
 	public boolean isValid() {
-		// TODO Auto-generated method stub
-		return false;
+		return delegate.isValid();
 	}
 
 	@Override
 	public float getFlySpeed() {
-		// TODO Auto-generated method stub
-		return 0;
+		return delegate.getFlySpeed();
 	}
 
 	@Override
 	public float getWalkSpeed() {
-		// TODO Auto-generated method stub
-		return 0;
+		return delegate.getWalkSpeed();
 	}
 
 	@Override
 	public void setFlySpeed(float arg0) throws IllegalArgumentException {
-		// TODO Auto-generated method stub
-		
-	}
+		delegate.setFlySpeed(arg0);
+		}
 
 	@Override
 	public void setWalkSpeed(float arg0) throws IllegalArgumentException {
-		// TODO Auto-generated method stub
-		
+		delegate.setWalkSpeed(arg0);
 	}
 	
 	@Override

@@ -1,11 +1,6 @@
 name: Tregmine
 main: info.tregmine.Tregmine
-version: 1000
+version: 1001
 website: http://tregmine.info
 author: Ein Andersson
-description: Tregmine.info main files
-
-commands:
-  invis:
-    description: hide from all players
-    -usage: /invis true|false
+description: Tregmine

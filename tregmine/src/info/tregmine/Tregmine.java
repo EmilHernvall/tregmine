@@ -2,7 +2,6 @@ package info.tregmine;
 
 
 import info.tregmine.api.TregminePlayer;
-import info.tregmine.commands.Invis;
 import info.tregmine.listeners.TregmineBlockListener;
 import info.tregmine.listeners.TregmineEntityListener;
 import info.tregmine.listeners.TregminePlayerListener;
@@ -12,6 +11,7 @@ import info.tregmine.stats.BlockStats;
 
 import java.util.logging.Logger;
 
+import org.bukkit.ChatColor;
 import org.bukkit.WorldCreator;
 import org.bukkit.World.Environment;
 import org.bukkit.command.Command;
@@ -48,10 +48,6 @@ public class Tregmine extends JavaPlugin
 		WorldCreator citadelCreator = new WorldCreator("citadel"); 
 		citadelCreator.environment(Environment.NORMAL);
 		citadelCreator.createWorld();
-		
-//		WorldCreator alpha = new WorldCreator("alpha"); 
-//		alpha.environment(Environment.NORMAL);
-//		alpha.createWorld();
 
 		WorldCreator world = new WorldCreator("world"); 
 		world.environment(Environment.NORMAL);
@@ -61,16 +57,21 @@ public class Tregmine extends JavaPlugin
 		NETHER.environment(Environment.NETHER);
 		NETHER.createWorld();
 
+		getServer().getPluginManager().registerEvents(new info.tregmine.lookup.LookupPlayer(this), this);
 		
-//		WorldCreator elva = new WorldCreator("elva"); 
-//		elva.environment(Environment.NORMAL);
-//		elva.createWorld();
-
+		
 		getServer().getPluginManager().registerEvents(new TregminePlayerListener(this), this);
 		getServer().getPluginManager().registerEvents(new TregmineBlockListener(this), this);
 		getServer().getPluginManager().registerEvents(new TregmineEntityListener(this), this);
 		getServer().getPluginManager().registerEvents(new TregmineWeatherListener(this), this);
+		
+		getServer().getPluginManager().registerEvents(new info.tregmine.invis.InvisPlayer(this), this);
 
+		
+		getServer().getPluginManager().registerEvents(new info.tregmine.death.DeathEntity(this), this);
+		getServer().getPluginManager().registerEvents(new info.tregmine.death.DeathPlayer(this), this);
+
+		
 		
 		getServer().getPluginManager().registerEvents(new info.tregmine.world.citadel.CitadelLimit(this), this);		
 	 	getServer().getPluginManager().registerEvents(new info.tregmine.sign.Color(), this);
@@ -78,6 +79,7 @@ public class Tregmine extends JavaPlugin
 
 	@Override
 	public void onDisable() { //run when plugin is disabled
+		this.getServer().getScheduler().cancelTasks(this);
 	}
 
 	@Override
@@ -91,6 +93,22 @@ public class Tregmine extends JavaPlugin
 			tregPlayer.load();
 			this.tregminePlayer.put(onlineName, tregPlayer);
 		}
+		
+		getServer().getScheduler().scheduleAsyncRepeatingTask(this,new Runnable() {
+			@Override
+			public void run() {
+			for (Player p : getServer().getOnlinePlayers()) {
+				if (p.getAddress().getAddress().getHostAddress().matches("127.0.0.1")) {
+					p.sendMessage(ChatColor.RED + "* * * YOU ARE connected to the WRONG adress, please use");
+					p.sendMessage(ChatColor.AQUA + "---> mc.tregmine.info <----");
+					p.sendMessage(ChatColor.RED + "You are black until you change adress, until then you can't build");
+					info.tregmine.api.TregminePlayer tregPlayer = tregminePlayer.get(p.getName());
+					tregPlayer.setTemporaryChatName(ChatColor.BLACK + tregPlayer.getName());
+					tregPlayer.setTempMetaString("trusted", "false");
+				}
+			}
+		}},400L, 400L);
+		
 	}
 
 	public TregminePlayer getPlayer(String name)	{
@@ -110,17 +128,10 @@ public class Tregmine extends JavaPlugin
 			from = (Player) sender;
 		}
 
-		info.tregmine.api.TregminePlayer tregminePlayer = this.tregminePlayer.get(from.getName());
+//		info.tregmine.api.TregminePlayer tregminePlayer = this.tregminePlayer.get(from.getName());
 
-//		TregminePlayer _tregPlayer, String _command, String _flaggs,  Tregmine _tregmine
 		
 		from.sendMessage(commandName);
-		
-		if(commandName.equals("invis")) {
-			Invis invis = new Invis(tregminePlayer, commandName, args, this);
-			from.sendMessage("TEST");
-			return invis.execute();
-		}
 		
 		
 		return false;
