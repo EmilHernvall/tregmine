@@ -83,7 +83,7 @@ public class BasicCommands extends JavaPlugin {
 		boolean isMentor = tregminePlayer.getMetaBoolean("mentor");
 
 
-		if (commandName.matches("wf")) {
+		if (commandName.matches("fw")) {
 			
 			Location loc = player.getLocation();
 			
