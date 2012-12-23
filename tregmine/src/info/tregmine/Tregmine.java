@@ -43,8 +43,7 @@ public class Tregmine extends JavaPlugin
 	public int amount = 0;
 
 	@Override
-	public void onEnable() 	{
-		
+	public void onEnable() 	{		
 		WorldCreator citadelCreator = new WorldCreator("citadel"); 
 		citadelCreator.environment(Environment.NORMAL);
 		citadelCreator.createWorld();
