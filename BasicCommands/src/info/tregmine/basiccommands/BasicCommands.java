@@ -86,8 +86,7 @@ public class BasicCommands extends JavaPlugin {
 		if (commandName.matches("fw")) {
 			
 			
-			
-			this.getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
+			this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
 		
                 public void run() {
         			Location loc = player.getLocation();
@@ -117,7 +116,7 @@ public class BasicCommands extends JavaPlugin {
                 }
 
 				
-			},100L);
+			},100L,20L);
 
 			
 
