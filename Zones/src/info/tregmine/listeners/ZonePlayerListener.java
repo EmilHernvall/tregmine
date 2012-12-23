@@ -167,7 +167,12 @@ public class ZonePlayerListener implements Listener
 		}
 
 		
+		
+		
 		TregminePlayer player = tregmine.getPlayer((Player) event.getEntity());
+
+		player.sendMessage("BREAKE");
+		
 		if (player.isAdmin()) {
 			return;
 		}
