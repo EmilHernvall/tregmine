@@ -165,11 +165,9 @@ public class ZonePlayerListener implements Listener
 		if (!(entity instanceof Player)) {
 			return;
 		}
-
 		
 		
-		
-		TregminePlayer player = tregmine.getPlayer((Player) event.getEntity());
+		TregminePlayer player = tregmine.getPlayer((Player) event.getRemover());
 
 		player.sendMessage("BREAKE");
 		
