@@ -85,44 +85,6 @@ public class BasicCommands extends JavaPlugin {
 
 
 		if (commandName.matches("fw")) {
-			
-			final World world = this.getServer().getWorld("world");
-			
-			this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
-		
-                public void run() {
-                	
-        			Location loc = world.getSpawnLocation();
-        			
-                    Firework f1 = (Firework) player.getWorld().spawnEntity(loc, EntityType.FIREWORK);
-
-        			player.sendMessage(f1.toString());
-
-                    FireworkEffect.Builder effect = FireworkEffect.builder();
-
-                    player.sendMessage(effect.toString());
-                    
-                    effect.trail(true).with(FireworkEffect.Type.STAR)
-                    	.withColor(Color.RED)
-                    	.withColor(Color.ORANGE)
-                    	.withColor(Color.AQUA)
-                    	.withFade(Color.BLACK);
-
-                    FireworkMeta meta1 = f1.getFireworkMeta();
-
-                    meta1.setPower(3);
-
-                    meta1.addEffect(effect.build());
-                    
-                    f1.setFireworkMeta(meta1);
-                	
-                }
-
-				
-			},100L,200L);
-
-			
-
 
 		}
 
@@ -558,5 +520,36 @@ public class BasicCommands extends JavaPlugin {
 
 	@Override
 	public void onLoad() {
+		
+		final World world = this.getServer().getWorld("world");
+		
+		this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
+	
+            public void run() {
+            	
+    			Location loc = world.getSpawnLocation();
+                Firework f1 = (Firework) loc.getWorld().spawnEntity(loc, EntityType.FIREWORK);
+                FireworkEffect.Builder effect = FireworkEffect.builder();
+                effect.trail(true).with(FireworkEffect.Type.STAR)
+                	.withColor(Color.RED)
+                	.withColor(Color.ORANGE)
+                	.withColor(Color.AQUA)
+                	.withFade(Color.BLACK);
+
+                FireworkMeta meta1 = f1.getFireworkMeta();
+
+                meta1.setPower(3);
+
+                meta1.addEffect(effect.build());
+                
+                f1.setFireworkMeta(meta1);
+            	
+            }
+
+			
+		},100L,200L);
+
+
+		
 	}
 }
