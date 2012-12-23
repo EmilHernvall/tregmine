@@ -76,7 +76,7 @@ public class BasicCommands extends JavaPlugin {
 			return false;
 		}
 
-		Player player = (Player) sender;		
+		final Player player = (Player) sender;		
 		info.tregmine.api.TregminePlayer tregminePlayer = this.tregmine.tregminePlayer.get(player.getName());
 		boolean isAdmin = tregminePlayer.isAdmin();
 		boolean isDonator = tregminePlayer.isDonator();
@@ -85,25 +85,41 @@ public class BasicCommands extends JavaPlugin {
 
 		if (commandName.matches("fw")) {
 			
-			Location loc = player.getLocation();
 			
-            Firework f1 = (Firework) player.getWorld().spawnEntity(loc, EntityType.FIREWORK);
+			
+			this.getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
+		
+                public void run() {
+        			Location loc = player.getLocation();
+        			
+                    Firework f1 = (Firework) player.getWorld().spawnEntity(loc, EntityType.FIREWORK);
 
-			player.sendMessage(f1.toString());
+        			player.sendMessage(f1.toString());
 
-            FireworkEffect.Builder effect = FireworkEffect.builder();
+                    FireworkEffect.Builder effect = FireworkEffect.builder();
 
-            player.sendMessage(effect.toString());
-            
-            effect.trail(true).with(FireworkEffect.Type.BALL_LARGE).withColor(Color.RED).withColor(Color.ORANGE).withFade(Color.BLACK);
+                    player.sendMessage(effect.toString());
+                    
+                    effect.trail(true).with(FireworkEffect.Type.BALL_LARGE)
+                    	.withColor(Color.RED)
+                    	.withColor(Color.ORANGE)
+                    	.withColor(Color.AQUA)
+                    	.withFade(Color.BLACK);
 
-            FireworkMeta meta1 = f1.getFireworkMeta();
+                    FireworkMeta meta1 = f1.getFireworkMeta();
 
-            meta1.setPower(3);
+                    meta1.setPower(3);
 
-            meta1.addEffect(effect.build());
-            
-            f1.setFireworkMeta(meta1);
+                    meta1.addEffect(effect.build());
+                    
+                    f1.setFireworkMeta(meta1);
+                	
+                }
+
+				
+			},100L);
+
+			
 
 
 		}
