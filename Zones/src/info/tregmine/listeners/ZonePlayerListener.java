@@ -17,8 +17,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.painting.PaintingBreakByEntityEvent;
-import org.bukkit.event.painting.PaintingPlaceEvent;
+import org.bukkit.event.hanging.HangingBreakByEntityEvent;
+//import org.bukkit.event.hanging.HangingBreakEvent;
+import org.bukkit.event.hanging.HangingPlaceEvent;
+//import org.bukkit.event.painting.PaintingBreakByEntityEvent;
+//import org.bukkit.event.painting.PaintingPlaceEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -95,10 +98,9 @@ public class ZonePlayerListener implements Listener
 
 	}
 
-	
-	
+
 	@EventHandler
-	public void onPaintingPlace(PaintingPlaceEvent event){
+	public void onHangingPlace(HangingPlaceEvent event){
 		TregminePlayer player = tregmine.getPlayer(event.getPlayer());
 		if (player.isAdmin()) {
 			return;
@@ -108,7 +110,7 @@ public class ZonePlayerListener implements Listener
 
 		
 //		Block block = event.getBlockClicked();
-		Location location = event.getPainting().getLocation();
+		Location location = event.getBlock().getLocation();
 		Point pos = new Point(location.getBlockX(), location.getBlockZ());
 
 		Zone currentZone = player.getCurrentZone();
@@ -152,22 +154,20 @@ public class ZonePlayerListener implements Listener
 				}
 			}
 		}
-
+		
 	}
-
-	
-	
 	
 	@EventHandler
-	public void onPaintingBreakByEntity(PaintingBreakByEntityEvent event){
+	public void onHangingBreakByEntityEvent(HangingBreakByEntityEvent event){
 		
 		Entity entity = event.getRemover();
+		
 		if (!(entity instanceof Player)) {
 			return;
 		}
 
 		
-		TregminePlayer player = tregmine.getPlayer((Player) event.getRemover());
+		TregminePlayer player = tregmine.getPlayer((Player) event.getEntity());
 		if (player.isAdmin()) {
 			return;
 		}
@@ -176,7 +176,10 @@ public class ZonePlayerListener implements Listener
 
 		
 //		Block block = event.getBlockClicked();
-		Location location = event.getPainting().getLocation();
+	
+		
+		
+		Location location = player.getLocation();
 		Point pos = new Point(location.getBlockX(), location.getBlockZ());
 
 		Zone currentZone = player.getCurrentZone();

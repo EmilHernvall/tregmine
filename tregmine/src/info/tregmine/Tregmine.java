@@ -11,7 +11,7 @@ import info.tregmine.stats.BlockStats;
 
 import java.util.logging.Logger;
 
-import org.bukkit.ChatColor;
+//import org.bukkit.ChatColor;
 import org.bukkit.WorldCreator;
 import org.bukkit.World.Environment;
 import org.bukkit.command.Command;
@@ -92,21 +92,6 @@ public class Tregmine extends JavaPlugin
 			tregPlayer.load();
 			this.tregminePlayer.put(onlineName, tregPlayer);
 		}
-		
-		getServer().getScheduler().scheduleAsyncRepeatingTask(this,new Runnable() {
-			@Override
-			public void run() {
-			for (Player p : getServer().getOnlinePlayers()) {
-				if (p.getAddress().getAddress().getHostAddress().matches("127.0.0.1")) {
-					p.sendMessage(ChatColor.RED + "* * * YOU ARE connected to the WRONG adress, please use");
-					p.sendMessage(ChatColor.AQUA + "---> mc.tregmine.info <----");
-					p.sendMessage(ChatColor.RED + "You are black until you change adress, until then you can't build");
-					info.tregmine.api.TregminePlayer tregPlayer = tregminePlayer.get(p.getName());
-					tregPlayer.setTemporaryChatName(ChatColor.BLACK + tregPlayer.getName());
-					tregPlayer.setTempMetaString("trusted", "false");
-				}
-			}
-		}},400L, 400L);
 		
 	}
 

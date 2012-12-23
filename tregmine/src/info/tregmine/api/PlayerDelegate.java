@@ -34,6 +34,7 @@ import org.bukkit.entity.Snowball;
 //import org.bukkit.entity.Vehicle;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
+import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
@@ -1016,6 +1017,60 @@ public abstract class PlayerDelegate implements Player
 	@Override
 	public Inventory getEnderChest() {
 		return delegate.getEnderChest();
+	}
+
+	@Override
+	public void giveExpLevels(int arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setBedSpawnLocation(Location arg0, boolean arg1) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setTexturePack(String arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean getCanPickupItems() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public EntityEquipment getEquipment() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean getRemoveWhenFarAway() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void setCanPickupItems(boolean arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setRemoveWhenFarAway(boolean arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Location getLocation(Location arg0) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	
