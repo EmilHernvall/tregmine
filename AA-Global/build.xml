@@ -14,7 +14,6 @@
 		<ant dir="../Currency" target="clean" inheritAll="false" />
 		<ant dir="../InventorySpy" target="clean" inheritAll="false" />
 		<ant dir="../Item" target="clean" inheritAll="false" />
-		<ant dir="../Lookup" target="clean" inheritAll="false" />
 		<ant dir="../Teleport" target="clean" inheritAll="false" />
 		<ant dir="../Zones" target="clean" inheritAll="false" />
 	</target>
@@ -29,7 +28,6 @@
 		<ant dir="../Compass2" target="jar" inheritAll="false" />
 		<ant dir="../InventorySpy" target="jar" inheritAll="false" />
 		<ant dir="../Item" target="jar" inheritAll="false" />
-		<ant dir="../Lookup" target="jar" inheritAll="false" />
 		<ant dir="../Teleport" target="jar" inheritAll="false" />
 		<ant dir="../Zones" target="jar" inheritAll="false" />
 	</target>
@@ -44,7 +42,6 @@
     	<copy file="../Currency/Currency.jar" tofile="jar/Currency.jar" />
     	<copy file="../InventorySpy/InventorySpy.jar" tofile="jar/InventorySpy.jar" />
     	<copy file="../Item/Item.jar" tofile="jar/Item.jar" />
-    	<copy file="../Lookup/Lookup.jar" tofile="jar/Lookup.jar" />
      	<copy file="../Teleport/Teleport.jar" tofile="jar/Teleport.jar" />
     	<copy file="../Zones/Zones.jar" tofile="jar/Zones.jar" />
     </target>	
