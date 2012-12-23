@@ -6,6 +6,9 @@ author: Ein Andersson
 description: Tregmine.info items
 
 commands:
+  fw:
+    description: Sets a secure keyword to log  on to the server.
+    -usage: /keyword <keyword>
   keyword:
     description: Sets a secure keyword to log  on to the server.
     -usage: /keyword <keyword>

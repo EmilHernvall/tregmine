@@ -3,6 +3,7 @@ package info.tregmine.basiccommands;
 import java.util.logging.Logger;
 
 import org.bukkit.ChatColor;
+import org.bukkit.FireworkEffect;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
@@ -11,14 +12,18 @@ import org.bukkit.command.CommandSender;
 //import org.bukkit.entity.Chicken;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Firework;
+//import org.bukkit.entity.Firework;
 //import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Monster;
+import org.bukkit.Color;
 
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Slime;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.entity.EnderDragon;
+import org.bukkit.inventory.meta.FireworkMeta;
 
 import info.tregmine.Tregmine; 
 import info.tregmine.api.TregminePlayer;
@@ -76,6 +81,25 @@ public class BasicCommands extends JavaPlugin {
 		boolean isAdmin = tregminePlayer.isAdmin();
 		boolean isDonator = tregminePlayer.isDonator();
 		boolean isMentor = tregminePlayer.getMetaBoolean("mentor");
+
+
+		if (commandName.matches("wf")) {
+			
+            Firework f1 = (Firework) player.getWorld().spawnEntity(player.getLocation(), EntityType.FIREWORK);
+            FireworkEffect.Builder effect = FireworkEffect.builder();
+
+            effect.trail(true).with(FireworkEffect.Type.BALL_LARGE).withColor(Color.RED).withColor(Color.ORANGE).withFade(Color.BLACK);
+
+            FireworkMeta meta1 = f1.getFireworkMeta();
+
+            meta1.setPower(3);
+
+            meta1.addEffect(effect.build());
+
+            f1.setFireworkMeta(meta1);
+
+
+		}
 
 		
 		if (commandName.matches("keyword")) {
