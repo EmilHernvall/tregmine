@@ -85,9 +85,16 @@ public class BasicCommands extends JavaPlugin {
 
 		if (commandName.matches("wf")) {
 			
-            Firework f1 = (Firework) player.getWorld().spawnEntity(player.getLocation(), EntityType.FIREWORK);
+			Location loc = player.getLocation();
+			
+            Firework f1 = (Firework) player.getWorld().spawnEntity(loc, EntityType.FIREWORK);
+
+			player.sendMessage(f1.toString());
+
             FireworkEffect.Builder effect = FireworkEffect.builder();
 
+            player.sendMessage(effect.toString());
+            
             effect.trail(true).with(FireworkEffect.Type.BALL_LARGE).withColor(Color.RED).withColor(Color.ORANGE).withFade(Color.BLACK);
 
             FireworkMeta meta1 = f1.getFireworkMeta();
@@ -95,7 +102,7 @@ public class BasicCommands extends JavaPlugin {
             meta1.setPower(3);
 
             meta1.addEffect(effect.build());
-
+            
             f1.setFireworkMeta(meta1);
 
 
