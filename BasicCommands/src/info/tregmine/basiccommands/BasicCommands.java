@@ -6,6 +6,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.FireworkEffect;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 //import org.bukkit.entity.CreatureType;
@@ -85,11 +86,13 @@ public class BasicCommands extends JavaPlugin {
 
 		if (commandName.matches("fw")) {
 			
+			final World world = this.getServer().getWorld("world");
 			
 			this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
 		
                 public void run() {
-        			Location loc = player.getLocation();
+                	
+        			Location loc = world.getSpawnLocation();
         			
                     Firework f1 = (Firework) player.getWorld().spawnEntity(loc, EntityType.FIREWORK);
 
@@ -99,7 +102,7 @@ public class BasicCommands extends JavaPlugin {
 
                     player.sendMessage(effect.toString());
                     
-                    effect.trail(true).with(FireworkEffect.Type.BALL_LARGE)
+                    effect.trail(true).with(FireworkEffect.Type.STAR)
                     	.withColor(Color.RED)
                     	.withColor(Color.ORANGE)
                     	.withColor(Color.AQUA)
@@ -116,7 +119,7 @@ public class BasicCommands extends JavaPlugin {
                 }
 
 				
-			},100L,20L);
+			},100L,200L);
 
 			
 
