@@ -21,6 +21,18 @@ public class BasicCommandsBlock implements Listener {
 		plugin.getServer();
 	}
 
+	@EventHandler 
+	public void onFrameHit(PlayerInteractEvent event) {
+		if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+			Player player = event.getPlayer();
+			Block block = event.getClickedBlock();
+			player.sendMessage("" + block.hashCode());
+		}
+		
+	}
+	
+	
+	
 	@EventHandler
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {

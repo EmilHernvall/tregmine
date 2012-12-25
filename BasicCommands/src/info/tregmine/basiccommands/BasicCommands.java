@@ -544,9 +544,10 @@ public class BasicCommands extends JavaPlugin {
                 Firework f2 = (Firework) loc.getWorld().spawnEntity(loc2, EntityType.FIREWORK);
 
                 
+                
                 FireworkEffect.Builder effect = FireworkEffect.builder();
                 FireworkEffect.Builder effect2 = FireworkEffect.builder();
-                
+                                
                 effect.trail(true).with(FireworkEffect.Type.STAR)
                 	.withColor(Color.RED)
                 	.withColor(Color.ORANGE)
