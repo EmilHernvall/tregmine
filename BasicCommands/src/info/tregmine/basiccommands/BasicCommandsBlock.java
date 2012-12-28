@@ -302,7 +302,7 @@ public class BasicCommandsBlock implements Listener {
 
 
 
-			ItemStack item = new ItemStack(Material.BEDROCK);
+			ItemStack item = new ItemStack(Material.BEDROCK, 5);
 			PlayerInventory inv = player.getInventory();
 			inv.addItem(item);
 
