@@ -283,14 +283,14 @@ public class BasicCommandsBlock implements Listener {
 			//			-2038282101	OLIVE		| OLIVE
 
 
-			
+
 			// Reset colors -565613610
 			if (info.tregmine.api.math.Checksum.block(block) == -565613610) {
 
 				if (!this.plugin.fireWorkEffect.containsKey(player.getName())) {
 					this.plugin.fireWorkEffect.put(player.getName(), FireworkEffect.builder());
 				}
-			
+
 				if (this.plugin.fireWorkEffect.containsKey(player.getName())) {
 					this.plugin.fireWorkEffect.remove(player.getName());
 					player.sendMessage(ChatColor.AQUA + "You have now rested everyting and need to start from scratch");
@@ -299,25 +299,25 @@ public class BasicCommandsBlock implements Listener {
 			}
 
 			// Gunpoweder 1 -1938184705
-			
-			
-			
-			ItemStack item = new ItemStack(Material.FIREWORK);
+
+
+
+			ItemStack item = new ItemStack(Material.BEDROCK);
 			PlayerInventory inv = player.getInventory();
 			inv.addItem(item);
 
-//			Firework meta = (Firework) item.getItemMeta();
-			
-			
-			
-			
-//			Location loc = player.getLocation();
-//			Firework f1 = (Firework) loc.getWorld().spawnEntity(loc, EntityType.FIREWORK);
-//			FireworkMeta meta = f1.getFireworkMeta();
-//			meta.setPower(1);
-//			meta.addEffect(this.plugin.fireWorkEffect.get(player.getName()).build());
-//			f1.setFireworkMeta(meta);
-//			f1.getFireworkMeta().setDisplayName("test");
+			//			Firework meta = (Firework) item.getItemMeta();
+
+
+
+
+			//			Location loc = player.getLocation();
+			//			Firework f1 = (Firework) loc.getWorld().spawnEntity(loc, EntityType.FIREWORK);
+			//			FireworkMeta meta = f1.getFireworkMeta();
+			//			meta.setPower(1);
+			//			meta.addEffect(this.plugin.fireWorkEffect.get(player.getName()).build());
+			//			f1.setFireworkMeta(meta);
+			//			f1.getFireworkMeta().setDisplayName("test");
 
 		}
 
