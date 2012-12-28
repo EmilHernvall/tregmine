@@ -289,7 +289,7 @@ public class BasicCommandsBlock implements Listener {
 			
 				if (this.plugin.fireWorkEffect.containsKey(player.getName())) {
 					this.plugin.fireWorkEffect.remove(player.getName());
-					player.sendMessage(ChatColor.AQUA + "You have now added olive");
+					player.sendMessage(ChatColor.AQUA + "You have now rested everyting and need to start from scratch");
 				}
 
 			}
@@ -300,6 +300,7 @@ public class BasicCommandsBlock implements Listener {
 			meta.setPower(1);
 			meta.addEffect(this.plugin.fireWorkEffect.get(player.getName()).build());
 			f1.setFireworkMeta(meta);
+//			f1.getFireworkMeta().setDisplayName("test");
 
 		}
 
