@@ -303,6 +303,8 @@ public class BasicCommandsBlock implements Listener {
 
 
 			if (info.tregmine.api.math.Checksum.block(block) == 656425969) {
+				player.sendMessage("you got 5 fireworks");
+				
 				ItemStack item = new ItemStack(Material.FIREWORK, 5);
 				FireworkMeta meta = (FireworkMeta) item.getItemMeta();
 				meta.addEffect(this.plugin.fireWorkEffect.get(player.getName()).build());
