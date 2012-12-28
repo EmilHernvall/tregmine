@@ -221,72 +221,73 @@ public class BasicCommandsBlock implements Listener {
 					player.sendMessage(ChatColor.AQUA + "You have now added maroon");
 				}
 
-				if (info.tregmine.api.math.Checksum.block(block) == 1967285645) {
+			}
+			if (info.tregmine.api.math.Checksum.block(block) == 1967285645) {
 
-					if (!this.plugin.fireWorkEffect.containsKey(player.getName())) {
-						this.plugin.fireWorkEffect.put(player.getName(), FireworkEffect.builder());
-					}
-
-					if (this.plugin.fireWorkEffect.containsKey(player.getName())) {
-						this.plugin.fireWorkEffect.get(player.getName()).withColor(Color.TEAL);
-						player.sendMessage(ChatColor.AQUA + "You have now added teal");
-					}
-
+				if (!this.plugin.fireWorkEffect.containsKey(player.getName())) {
+					this.plugin.fireWorkEffect.put(player.getName(), FireworkEffect.builder());
 				}
 
-				if (info.tregmine.api.math.Checksum.block(block) == -2131168146) {
-
-					if (!this.plugin.fireWorkEffect.containsKey(player.getName())) {
-						this.plugin.fireWorkEffect.put(player.getName(), FireworkEffect.builder());
-					}
-
-					if (this.plugin.fireWorkEffect.containsKey(player.getName())) {
-						this.plugin.fireWorkEffect.get(player.getName()).withColor(Color.NAVY);
-						player.sendMessage(ChatColor.AQUA + "You have now added navy");
-					}
-
+				if (this.plugin.fireWorkEffect.containsKey(player.getName())) {
+					this.plugin.fireWorkEffect.get(player.getName()).withColor(Color.TEAL);
+					player.sendMessage(ChatColor.AQUA + "You have now added teal");
 				}
-
-				if (info.tregmine.api.math.Checksum.block(block) == -2038282101) {
-
-					if (!this.plugin.fireWorkEffect.containsKey(player.getName())) {
-						this.plugin.fireWorkEffect.put(player.getName(), FireworkEffect.builder());
-					}
-
-					if (this.plugin.fireWorkEffect.containsKey(player.getName())) {
-						this.plugin.fireWorkEffect.get(player.getName()).withColor(Color.OLIVE);
-						player.sendMessage(ChatColor.AQUA + "You have now added olive");
-					}
-
-				}
-				//			-1845477288 WHITE 		| silver *
-				//			-337925479 CYAN 		| Aqua *
-				//			1169626330 PURPLE 		| Purple *
-				//			-1617789157 BLUE 		| BLUE*
-				//			-1469174797 BROWN 		| MAROON
-				//			38377012 BLACK			| BLACK
-				//			1938955831 ORANGE		| ORANGE
-				//			1967285645 MAGENTA		| TEAL
-				//			-2131168146 LIGHT BLUE	| NAVY
-				//			-1934654641 YELLOW *	| YELLOW
-				//			-1738141136 GREEN 		| LIME *
-				//			-1541627631 PINK 		| FUCHSIA *
-				//			-1345114126 DARK GREY	| GRAY *
-				//			-1148600621 GREY		| SILVER *
-				//			-952087116 DARK GREEN 	| GREEN
-				//			-755573611 RED 			| RED
-				//			-2038282101	OLIVE		| OLIVE
-
-
-				Location loc = player.getLocation();
-				Firework f1 = (Firework) loc.getWorld().spawnEntity(loc, EntityType.FIREWORK);
-				FireworkMeta meta = f1.getFireworkMeta();
-				meta.setPower(1);
-				meta.addEffect(this.plugin.fireWorkEffect.get(player.getName()).build());
-				f1.setFireworkMeta(meta);
 
 			}
+
+			if (info.tregmine.api.math.Checksum.block(block) == -2131168146) {
+
+				if (!this.plugin.fireWorkEffect.containsKey(player.getName())) {
+					this.plugin.fireWorkEffect.put(player.getName(), FireworkEffect.builder());
+				}
+
+				if (this.plugin.fireWorkEffect.containsKey(player.getName())) {
+					this.plugin.fireWorkEffect.get(player.getName()).withColor(Color.NAVY);
+					player.sendMessage(ChatColor.AQUA + "You have now added navy");
+				}
+
+			}
+
+			if (info.tregmine.api.math.Checksum.block(block) == -2038282101) {
+
+				if (!this.plugin.fireWorkEffect.containsKey(player.getName())) {
+					this.plugin.fireWorkEffect.put(player.getName(), FireworkEffect.builder());
+				}
+
+				if (this.plugin.fireWorkEffect.containsKey(player.getName())) {
+					this.plugin.fireWorkEffect.get(player.getName()).withColor(Color.OLIVE);
+					player.sendMessage(ChatColor.AQUA + "You have now added olive");
+				}
+
+			}
+			//			-1845477288 WHITE 		| silver *
+			//			-337925479 CYAN 		| Aqua *
+			//			1169626330 PURPLE 		| Purple *
+			//			-1617789157 BLUE 		| BLUE*
+			//			-1469174797 BROWN 		| MAROON
+			//			38377012 BLACK			| BLACK
+			//			1938955831 ORANGE		| ORANGE
+			//			1967285645 MAGENTA		| TEAL
+			//			-2131168146 LIGHT BLUE	| NAVY
+			//			-1934654641 YELLOW *	| YELLOW
+			//			-1738141136 GREEN 		| LIME *
+			//			-1541627631 PINK 		| FUCHSIA *
+			//			-1345114126 DARK GREY	| GRAY *
+			//			-1148600621 GREY		| SILVER *
+			//			-952087116 DARK GREEN 	| GREEN
+			//			-755573611 RED 			| RED
+			//			-2038282101	OLIVE		| OLIVE
+
+
+			Location loc = player.getLocation();
+			Firework f1 = (Firework) loc.getWorld().spawnEntity(loc, EntityType.FIREWORK);
+			FireworkMeta meta = f1.getFireworkMeta();
+			meta.setPower(1);
+			meta.addEffect(this.plugin.fireWorkEffect.get(player.getName()).build());
+			f1.setFireworkMeta(meta);
+
 		}
+
 	}
 
 
