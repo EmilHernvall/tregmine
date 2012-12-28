@@ -33,7 +33,8 @@ public class BasicCommandsBlock implements Listener {
 //			Player player = event.getPlayer();
 			Block block = event.getClickedBlock();
 //			Location loc = block.getLocation();
-			player.sendMessage("Hash: " + block.hashCode());
+//			info.tregmine.api.math.Checksum.block(block);
+			player.sendMessage("Hash: " + info.tregmine.api.math.Checksum.block(block));
 		}
 	}
 	
