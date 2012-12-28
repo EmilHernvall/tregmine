@@ -3,7 +3,7 @@ package info.tregmine.basiccommands;
 
 import info.tregmine.api.TregminePlayer;
 
-import net.minecraft.server.v1_4_6.Item;
+//import net.minecraft.server.v1_4_6.Item;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
@@ -11,8 +11,8 @@ import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Firework;
+//import org.bukkit.entity.EntityType;
+//import org.bukkit.entity.Firework;
 //import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -302,7 +302,10 @@ public class BasicCommandsBlock implements Listener {
 
 
 
-			ItemStack item = new ItemStack(Material.BEDROCK, 5);
+			ItemStack item = new ItemStack(Material.FIREWORK, 5);
+			FireworkMeta meta = (FireworkMeta) item.getItemMeta();
+			meta.addEffect(this.plugin.fireWorkEffect.get(player.getName()).build());
+			
 			PlayerInventory inv = player.getInventory();
 			inv.addItem(item);
 
