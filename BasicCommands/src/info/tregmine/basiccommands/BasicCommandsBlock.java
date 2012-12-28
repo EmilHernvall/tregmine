@@ -4,9 +4,13 @@ package info.tregmine.basiccommands;
 import info.tregmine.api.TregminePlayer;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Color;
+import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Firework;
 //import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -17,6 +21,7 @@ import org.bukkit.event.block.Action;
 //import org.bukkit.event.hanging.HangingPlaceEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 //import org.bukkit.event.player.PlayerListener;
+import org.bukkit.inventory.meta.FireworkMeta;
 
 public class BasicCommandsBlock implements Listener {
 	private final BasicCommands plugin;
@@ -30,20 +35,41 @@ public class BasicCommandsBlock implements Listener {
 	public void fireWorkButton(PlayerInteractEvent event) {
 		if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
 			TregminePlayer player = this.plugin.tregmine.getPlayer(event.getPlayer());
-//			Player player = event.getPlayer();
 			Block block = event.getClickedBlock();
-//			Location loc = block.getLocation();
-//			info.tregmine.api.math.Checksum.block(block);
-			player.sendMessage("Hash: " + info.tregmine.api.math.Checksum.block(block));
 			
-			if (block.getType() == Material.STONE_BUTTON) {
-				player.sendMessage("Hash: " + info.tregmine.api.math.Checksum.block(block));
+			if (info.tregmine.api.math.Checksum.block(block) == -1845477288) {
+
+				if (!this.plugin.fireWorkEffect.containsKey(player.getName())) {
+					this.plugin.fireWorkEffect.put(player.getName(), FireworkEffect.builder());
+				}
+				
+				if (this.plugin.fireWorkEffect.containsKey(player.getName())) {
+					this.plugin.fireWorkEffect.get(player.getName()).withColor(Color.WHITE);
+					player.sendMessage(ChatColor.AQUA + "You have now added White color");
+				}
+				
+			}
+
+			if (info.tregmine.api.math.Checksum.block(block) == -337925479) {
+
+				if (!this.plugin.fireWorkEffect.containsKey(player.getName())) {
+					this.plugin.fireWorkEffect.put(player.getName(), FireworkEffect.builder());
+				}
+				
+				if (this.plugin.fireWorkEffect.containsKey(player.getName())) {
+					this.plugin.fireWorkEffect.get(player.getName()).withColor(Color.AQUA);
+					player.sendMessage(ChatColor.AQUA + "You have now added Aqua color");
+				}
+				
 			}
 
 			
-			if (info.tregmine.api.math.Checksum.block(block) == -1845477288) {
-				player.sendMessage("You have now added white color");
-			}
+			Location loc = player.getLocation();
+            Firework f1 = (Firework) loc.getWorld().spawnEntity(loc, EntityType.FIREWORK);
+            FireworkMeta meta = f1.getFireworkMeta();
+            meta.setPower(1);
+            meta.addEffect(this.plugin.fireWorkEffect.get(player.getName()).build());
+            f1.setFireworkMeta(meta);
 
 			
 		}
