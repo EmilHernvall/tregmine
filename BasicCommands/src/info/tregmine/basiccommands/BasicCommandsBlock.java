@@ -47,7 +47,7 @@ public class BasicCommandsBlock implements Listener {
 				if (!this.plugin.fireWork.containsKey(player.getName())) {
 					ItemStack item = new ItemStack(Material.FIREWORK, 5);
 					FireworkMeta meta = (FireworkMeta) item.getItemMeta();
-					meta.setDisplayName("Firework shop: " + meta.toString());
+					meta.setDisplayName("Firework shop:");
 					this.plugin.fireWorkMeta.put(player.getName(), meta);
 					this.plugin.fireWork.put(player.getName(), item);
 				}
@@ -60,6 +60,7 @@ public class BasicCommandsBlock implements Listener {
 				if (this.plugin.fireWorkEffect.containsKey(player.getName())) {
 					this.plugin.fireWorkEffect.get(player.getName()).withColor(Color.WHITE);
 					this.plugin.fireWorkMeta.get(player.getName()).addEffect(this.plugin.fireWorkEffect.get(player.getName()).build());
+					this.plugin.fireWorkMeta.get(player.getName()).setDisplayName(this.plugin.fireWorkMeta.get(player.getName()).getDisplayName() + " WHITE");
 					this.plugin.fireWork.get(player.getName()).setItemMeta(this.plugin.fireWorkMeta.get(player.getName()));
 					player.sendMessage(ChatColor.AQUA + "You have now added white");
 				}
