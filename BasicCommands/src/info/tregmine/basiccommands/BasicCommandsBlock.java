@@ -302,15 +302,17 @@ public class BasicCommandsBlock implements Listener {
 
 
 
-			ItemStack item = new ItemStack(Material.FIREWORK, 5);
-			FireworkMeta meta = (FireworkMeta) item.getItemMeta();
-			meta.addEffect(this.plugin.fireWorkEffect.get(player.getName()).build());
-			meta.setDisplayName("EIN");
-			item.setItemMeta(meta);
-			
-			PlayerInventory inv = player.getInventory();
-			inv.addItem(item);
+			if (info.tregmine.api.math.Checksum.block(block) == 656425969) {
+				ItemStack item = new ItemStack(Material.FIREWORK, 5);
+				FireworkMeta meta = (FireworkMeta) item.getItemMeta();
+				meta.addEffect(this.plugin.fireWorkEffect.get(player.getName()).build());
+				meta.setDisplayName("Firework shop: " + meta.toString());
+				item.setItemMeta(meta);
 
+				PlayerInventory inv = player.getInventory();
+				inv.addItem(item);
+
+			}
 			//			Firework meta = (Firework) item.getItemMeta();
 
 
