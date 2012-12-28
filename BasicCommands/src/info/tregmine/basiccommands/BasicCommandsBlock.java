@@ -281,7 +281,7 @@ public class BasicCommandsBlock implements Listener {
 
 			
 			// Reset colors -565613610
-			if (info.tregmine.api.math.Checksum.block(block) == -2038282101) {
+			if (info.tregmine.api.math.Checksum.block(block) == -565613610) {
 
 				if (!this.plugin.fireWorkEffect.containsKey(player.getName())) {
 					this.plugin.fireWorkEffect.put(player.getName(), FireworkEffect.builder());
