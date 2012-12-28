@@ -1,5 +1,7 @@
 package info.tregmine.basiccommands;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import org.bukkit.ChatColor;
@@ -36,6 +38,9 @@ public class BasicCommands extends JavaPlugin {
 	public final Logger log = Logger.getLogger("Minecraft");
 	public Tregmine tregmine = null;
 
+	public Map<String, FireworkEffect.Builder> fireWorkEffect = new HashMap<String, FireworkEffect.Builder>();
+
+	
 	@Override
 	public void onEnable(){
 		Plugin test = this.getServer().getPluginManager().getPlugin("Tregmine");

@@ -1,6 +1,8 @@
 package info.tregmine.basiccommands;
 
 
+import info.tregmine.api.TregminePlayer;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -10,9 +12,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.entity.EntityChangeBlockEvent;
-import org.bukkit.event.hanging.HangingEvent;
-import org.bukkit.event.hanging.HangingPlaceEvent;
+//import org.bukkit.event.entity.EntityChangeBlockEvent;
+//import org.bukkit.event.hanging.HangingEvent;
+//import org.bukkit.event.hanging.HangingPlaceEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 //import org.bukkit.event.player.PlayerListener;
 
@@ -25,10 +27,14 @@ public class BasicCommandsBlock implements Listener {
 	}
 
 	@EventHandler 
-	public void onFrameHit(HangingPlaceEvent event) {
-			Player player = event.getPlayer();
-			player.sendMessage("" + event.getBlock().hashCode());
-		
+	public void fireWorkButton(PlayerInteractEvent event) {
+		if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+			TregminePlayer player = this.plugin.tregmine.getPlayer(event.getPlayer());
+//			Player player = event.getPlayer();
+			Block block = event.getClickedBlock();
+//			Location loc = block.getLocation();
+			player.sendMessage("Hash: " + block.hashCode());
+		}
 	}
 	
 	
