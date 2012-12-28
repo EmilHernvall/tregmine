@@ -26,6 +26,7 @@ import org.bukkit.entity.Slime;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.entity.EnderDragon;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
 
 import info.tregmine.Tregmine; 
@@ -40,7 +41,7 @@ public class BasicCommands extends JavaPlugin {
 
 	public Map<String, FireworkEffect.Builder> fireWorkEffect = new HashMap<String, FireworkEffect.Builder>();
 	public Map<String, FireworkMeta> fireWorkMeta = new HashMap<String, FireworkMeta>();
-	public Map<String, Firework> fireWork = new HashMap<String, Firework>();
+	public Map<String, ItemStack> fireWork = new HashMap<String, ItemStack>();
 
 	
 	@Override

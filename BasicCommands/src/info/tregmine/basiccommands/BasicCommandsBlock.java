@@ -42,13 +42,25 @@ public class BasicCommandsBlock implements Listener {
 			Block block = event.getClickedBlock();
 
 			if (info.tregmine.api.math.Checksum.block(block) == -1845477288) {
-
+				
+				
+				if (!this.plugin.fireWork.containsKey(player.getName())) {
+					ItemStack item = new ItemStack(Material.FIREWORK, 5);
+					FireworkMeta meta = (FireworkMeta) item.getItemMeta();
+					meta.setDisplayName("Firework shop: " + meta.toString());
+					this.plugin.fireWorkMeta.put(player.getName(), meta);
+					this.plugin.fireWork.put(player.getName(), item);
+				}
+				
+				
 				if (!this.plugin.fireWorkEffect.containsKey(player.getName())) {
 					this.plugin.fireWorkEffect.put(player.getName(), FireworkEffect.builder());
 				}
 
 				if (this.plugin.fireWorkEffect.containsKey(player.getName())) {
 					this.plugin.fireWorkEffect.get(player.getName()).withColor(Color.WHITE);
+					this.plugin.fireWorkMeta.get(player.getName()).addEffect(this.plugin.fireWorkEffect.get(player.getName()).build());
+					this.plugin.fireWork.get(player.getName()).setItemMeta(this.plugin.fireWorkMeta.get(player.getName()));
 					player.sendMessage(ChatColor.AQUA + "You have now added white");
 				}
 
@@ -304,15 +316,8 @@ public class BasicCommandsBlock implements Listener {
 
 			if (info.tregmine.api.math.Checksum.block(block) == 656425969) {
 				player.sendMessage("you got 5 fireworks");
-				
-				ItemStack item = new ItemStack(Material.FIREWORK, 5);
-				FireworkMeta meta = (FireworkMeta) item.getItemMeta();
-				meta.addEffect(this.plugin.fireWorkEffect.get(player.getName()).build());
-				meta.setDisplayName("Firework shop: " + meta.toString());
-				item.setItemMeta(meta);
-
 				PlayerInventory inv = player.getInventory();
-				inv.addItem(item);
+				inv.addItem(this.plugin.fireWork.get(player.getName()));
 
 			}
 			//			Firework meta = (Firework) item.getItemMeta();
