@@ -39,6 +39,8 @@ public class BasicCommands extends JavaPlugin {
 	public Tregmine tregmine = null;
 
 	public Map<String, FireworkEffect.Builder> fireWorkEffect = new HashMap<String, FireworkEffect.Builder>();
+	public Map<String, FireworkMeta> fireWorkMeta = new HashMap<String, FireworkMeta>();
+	public Map<String, Firework> fireWork = new HashMap<String, Firework>();
 
 	
 	@Override

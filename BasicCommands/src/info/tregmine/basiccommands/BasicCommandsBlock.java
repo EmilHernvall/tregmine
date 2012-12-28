@@ -3,6 +3,8 @@ package info.tregmine.basiccommands;
 
 import info.tregmine.api.TregminePlayer;
 
+import net.minecraft.server.v1_4_6.Item;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
@@ -20,6 +22,8 @@ import org.bukkit.event.block.Action;
 //import org.bukkit.event.hanging.HangingEvent;
 //import org.bukkit.event.hanging.HangingPlaceEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 //import org.bukkit.event.player.PlayerListener;
 import org.bukkit.inventory.meta.FireworkMeta;
 
@@ -293,13 +297,26 @@ public class BasicCommandsBlock implements Listener {
 				}
 
 			}
+
+			// Gunpoweder 1 -1938184705
 			
-			Location loc = player.getLocation();
-			Firework f1 = (Firework) loc.getWorld().spawnEntity(loc, EntityType.FIREWORK);
-			FireworkMeta meta = f1.getFireworkMeta();
-			meta.setPower(1);
-			meta.addEffect(this.plugin.fireWorkEffect.get(player.getName()).build());
-			f1.setFireworkMeta(meta);
+			
+			
+			ItemStack item = new ItemStack(Material.FIREWORK);
+			PlayerInventory inv = player.getInventory();
+			inv.addItem(item);
+
+//			Firework meta = (Firework) item.getItemMeta();
+			
+			
+			
+			
+//			Location loc = player.getLocation();
+//			Firework f1 = (Firework) loc.getWorld().spawnEntity(loc, EntityType.FIREWORK);
+//			FireworkMeta meta = f1.getFireworkMeta();
+//			meta.setPower(1);
+//			meta.addEffect(this.plugin.fireWorkEffect.get(player.getName()).build());
+//			f1.setFireworkMeta(meta);
 //			f1.getFireworkMeta().setDisplayName("test");
 
 		}
