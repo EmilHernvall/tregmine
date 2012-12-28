@@ -45,7 +45,7 @@ public class BasicCommandsBlock implements Listener {
 				
 				if (this.plugin.fireWorkEffect.containsKey(player.getName())) {
 					this.plugin.fireWorkEffect.get(player.getName()).withColor(Color.WHITE);
-					player.sendMessage(ChatColor.AQUA + "You have now added White color");
+					player.sendMessage(ChatColor.AQUA + "You have now added white");
 				}
 				
 			}
@@ -58,11 +58,51 @@ public class BasicCommandsBlock implements Listener {
 				
 				if (this.plugin.fireWorkEffect.containsKey(player.getName())) {
 					this.plugin.fireWorkEffect.get(player.getName()).withColor(Color.AQUA);
-					player.sendMessage(ChatColor.AQUA + "You have now added Aqua color");
+					player.sendMessage(ChatColor.AQUA + "You have now added aqua");
 				}
 				
 			}
 
+			if (info.tregmine.api.math.Checksum.block(block) == 1169626330) {
+
+				if (!this.plugin.fireWorkEffect.containsKey(player.getName())) {
+					this.plugin.fireWorkEffect.put(player.getName(), FireworkEffect.builder());
+				}
+				
+				if (this.plugin.fireWorkEffect.containsKey(player.getName())) {
+					this.plugin.fireWorkEffect.get(player.getName()).withColor(Color.PURPLE);
+					player.sendMessage(ChatColor.AQUA + "You have now added purple");
+				}
+				
+			}
+			
+
+			if (info.tregmine.api.math.Checksum.block(block) == -1617789157) {
+
+				if (!this.plugin.fireWorkEffect.containsKey(player.getName())) {
+					this.plugin.fireWorkEffect.put(player.getName(), FireworkEffect.builder());
+				}
+				
+				if (this.plugin.fireWorkEffect.containsKey(player.getName())) {
+					this.plugin.fireWorkEffect.get(player.getName()).withColor(Color.BLUE);
+					player.sendMessage(ChatColor.AQUA + "You have now added blue");
+				}
+				
+			}
+			
+			if (info.tregmine.api.math.Checksum.block(block) == -1469174797) {
+
+				if (!this.plugin.fireWorkEffect.containsKey(player.getName())) {
+					this.plugin.fireWorkEffect.put(player.getName(), FireworkEffect.builder());
+				}
+				
+				if (this.plugin.fireWorkEffect.containsKey(player.getName())) {
+					this.plugin.fireWorkEffect.get(player.getName()).withColor(Color.FUCHSIA);
+					player.sendMessage(ChatColor.AQUA + "You have now added fuchsia");
+				}
+				
+			}
+			
 			
 			Location loc = player.getLocation();
             Firework f1 = (Firework) loc.getWorld().spawnEntity(loc, EntityType.FIREWORK);
