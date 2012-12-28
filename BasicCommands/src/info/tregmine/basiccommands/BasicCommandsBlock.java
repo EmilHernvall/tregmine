@@ -35,6 +35,17 @@ public class BasicCommandsBlock implements Listener {
 //			Location loc = block.getLocation();
 //			info.tregmine.api.math.Checksum.block(block);
 			player.sendMessage("Hash: " + info.tregmine.api.math.Checksum.block(block));
+			
+			if (block.getType() == Material.STONE_BUTTON) {
+				player.sendMessage("Hash: " + info.tregmine.api.math.Checksum.block(block));
+			}
+
+			
+			if (info.tregmine.api.math.Checksum.block(block) == -1845477288) {
+				player.sendMessage("You have now added white color");
+			}
+
+			
 		}
 	}
 	
