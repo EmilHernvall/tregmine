@@ -90,7 +90,7 @@ public class BasicCommandsBlock implements Listener {
 				
 			}
 			
-			if (info.tregmine.api.math.Checksum.block(block) == -1469174797) {
+			if (info.tregmine.api.math.Checksum.block(block) == -1541627631) {
 
 				if (!this.plugin.fireWorkEffect.containsKey(player.getName())) {
 					this.plugin.fireWorkEffect.put(player.getName(), FireworkEffect.builder());
@@ -98,7 +98,21 @@ public class BasicCommandsBlock implements Listener {
 				
 				if (this.plugin.fireWorkEffect.containsKey(player.getName())) {
 					this.plugin.fireWorkEffect.get(player.getName()).withColor(Color.FUCHSIA);
-					player.sendMessage(ChatColor.AQUA + "You have now added fuchsia");
+					player.sendMessage(ChatColor.AQUA + "You have now added fuchsia (pink)");
+				}
+				
+			}
+			
+
+			if (info.tregmine.api.math.Checksum.block(block) == 38377012) {
+
+				if (!this.plugin.fireWorkEffect.containsKey(player.getName())) {
+					this.plugin.fireWorkEffect.put(player.getName(), FireworkEffect.builder());
+				}
+				
+				if (this.plugin.fireWorkEffect.containsKey(player.getName())) {
+					this.plugin.fireWorkEffect.get(player.getName()).withColor(Color.BLACK);
+					player.sendMessage(ChatColor.AQUA + "You have now added black");
 				}
 				
 			}
