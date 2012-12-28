@@ -279,6 +279,21 @@ public class BasicCommandsBlock implements Listener {
 			//			-2038282101	OLIVE		| OLIVE
 
 
+			
+			// Reset colors -565613610
+			if (info.tregmine.api.math.Checksum.block(block) == -2038282101) {
+
+				if (!this.plugin.fireWorkEffect.containsKey(player.getName())) {
+					this.plugin.fireWorkEffect.put(player.getName(), FireworkEffect.builder());
+				}
+			
+				if (this.plugin.fireWorkEffect.containsKey(player.getName())) {
+					this.plugin.fireWorkEffect.remove(player.getName());
+					player.sendMessage(ChatColor.AQUA + "You have now added olive");
+				}
+
+			}
+			
 			Location loc = player.getLocation();
 			Firework f1 = (Firework) loc.getWorld().spawnEntity(loc, EntityType.FIREWORK);
 			FireworkMeta meta = f1.getFireworkMeta();
