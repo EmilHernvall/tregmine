@@ -27,6 +27,7 @@ public class createFirwork {
 
 			}
 		}
+		colorCounter++;
 		colors[colorCounter] = _color;
 	}
 
@@ -123,7 +124,7 @@ public class createFirwork {
 		FireworkEffect.Builder effect = FireworkEffect.builder();
 
 		
-		for (int cc = 0; cc <= colorCounter; cc++) {
+		for (int cc = 1; cc <= colorCounter; cc++) {
 			effect.withColor(colors[cc]);
 		}
 		
