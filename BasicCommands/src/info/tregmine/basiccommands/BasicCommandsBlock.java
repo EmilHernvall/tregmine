@@ -240,22 +240,12 @@ public class BasicCommandsBlock implements Listener {
 
 			// Reset colors -565613610
 			if (info.tregmine.api.math.Checksum.block(block) == -565613610) {
-
-				if (!this.plugin.fireWorkEffect.containsKey(player.getName())) {
-					this.plugin.fireWorkEffect.put(player.getName(), FireworkEffect.builder());
-				} 
-
-				if (this.plugin.fireWorkEffect.containsKey(player.getName())) {
 					this.plugin.fireWorkEffect.remove(player.getName());
 					this.plugin.fireWorkMeta.remove(player.getName());
 					this.plugin.fireWork.remove(player.getName());
 					this.plugin.property.remove(player.getName());
 					player.sendMessage(ChatColor.AQUA + "You have now rested everyting and need to start from scratch");
-				}
-
 			}
-
-			// Gunpoweder 1 -1938184705
 
 
 
