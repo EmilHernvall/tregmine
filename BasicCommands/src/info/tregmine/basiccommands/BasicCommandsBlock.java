@@ -162,17 +162,19 @@ public class BasicCommandsBlock implements Listener {
 				
 				FireWork.addColor(Color.WHITE);
 				player.sendMessage("White added");
+				
+				PlayerInventory inv = player.getInventory();
+				inv.addItem(FireWork.getAsStack(5));
 			}
 
 			if (info.tregmine.api.math.Checksum.block(block) == -337925479) {
 				info.tregmine.api.firework.createFirwork FireWork = this.plugin.firework.get(player.getName());
 
-				player.sendMessage("F: " + FireWork.colorCounter);
 				FireWork.addColor(Color.AQUA);
-				player.sendMessage("L: " + FireWork.colorCounter);
-				player.sendMessage("Aqua added");
 				PlayerInventory inv = player.getInventory();
 				inv.addItem(FireWork.getAsStack(5));
+				
+				player.sendMessage("Aqua added");
 			}
 
 			if (info.tregmine.api.math.Checksum.block(block) == 1169626330) {
