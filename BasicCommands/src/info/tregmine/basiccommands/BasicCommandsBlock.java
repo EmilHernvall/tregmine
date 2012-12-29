@@ -231,7 +231,7 @@ public class BasicCommandsBlock implements Listener {
 					PlayerInventory inv = player.getInventory();
 					inv.addItem(FireWork.getAsStack(5));
 					player.sendMessage(ChatColor.AQUA + "you got 5 fireworks and " + ChatColor.GOLD + "2000" + ChatColor.AQUA + " Tregs was taken from you");
-					this.plugin.log.info(player.getName() + ":2000");
+					this.plugin.log.info(player.getName() + "FIREWORK:2000");
 
 				} else {
 					player.sendMessage("I'm sorry but you can't afford the 2000 tregs");
