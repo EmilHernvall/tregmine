@@ -107,16 +107,6 @@ public class createFirwork {
 
 	}
 
-	public Color[] haveColors() {
-		Color[] c = new Color[colorCounter+1];
-		
-		for (int i = 0; i >= colorCounter; i++) {
-			c[i] = colors[i];
-		}
-		
-		return c;
-	}
-
 	public String[] hasColorAsString() {
 
 		String [] colorNames = new String[colorCounter];
@@ -135,17 +125,15 @@ public class createFirwork {
 		ItemStack item = new ItemStack(Material.FIREWORK, _stackSize);
 		FireworkEffect.Builder effect = FireworkEffect.builder();
 
-		System.console().printf("" + this.haveColors().length);
 		
-		for (Color color : this.haveColors()) {
-			System.console().printf(color.toString());
-			effect.withColor(color);
+		for (int cc = 0; cc <= colorCounter; cc++) {
+			effect.withColor(colors[cc]);
 		}
 
 //		effect.withColor(Color.WHITE);
 		
 		FireworkMeta meta = (FireworkMeta) item.getItemMeta();
-		meta.setDisplayName("Firework: " + haveColors().toString() );
+		meta.setDisplayName("Firework: " + colorCounter );
 		meta.addEffect(effect.build());
 		item.setItemMeta(meta);
 
