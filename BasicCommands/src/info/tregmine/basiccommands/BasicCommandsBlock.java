@@ -154,6 +154,7 @@ public class BasicCommandsBlock implements Listener {
 			if (info.tregmine.api.math.Checksum.block(block) == -1845477288) {
 				info.tregmine.api.firework.createFirwork FireWork = new info.tregmine.api.firework.createFirwork();
 				FireWork.addColor(Color.WHITE);
+				player.sendMessage("White added");
 				PlayerInventory inv = player.getInventory();
 				inv.addItem(FireWork.getAsStack(5));
 			}
@@ -161,6 +162,7 @@ public class BasicCommandsBlock implements Listener {
 			if (info.tregmine.api.math.Checksum.block(block) == -337925479) {
 				info.tregmine.api.firework.createFirwork FireWork = new info.tregmine.api.firework.createFirwork();
 				FireWork.addColor(Color.AQUA);
+				player.sendMessage("Aqua added");
 				PlayerInventory inv = player.getInventory();
 				inv.addItem(FireWork.getAsStack(5));
 			}
