@@ -49,7 +49,7 @@ public class BasicCommandsBlock implements Listener {
 			info.tregmine.api.firework.createFirwork FireWork = this.plugin.firework.get(player.getName());
 
 			FireWork.addColor(c);
-			player.sendMessage(FireWork.colorToString(c) + " added");
+			player.sendMessage(ChatColor.AQUA + FireWork.colorToString(c) + " added");
 		}
 
 
@@ -92,7 +92,41 @@ public class BasicCommandsBlock implements Listener {
 			}
 
 
-			if (info.tregmine.api.math.Checksum.block(block) == 563539924) {
+			// duration 1 button
+			if (info.tregmine.api.math.Checksum.block(block) == -1938184705) {
+				if (!this.plugin.firework.containsKey(player.getName())) {
+					this.plugin.firework.put(player.getName(), new info.tregmine.api.firework.createFirwork());
+				}
+
+				info.tregmine.api.firework.createFirwork FireWork = this.plugin.firework.get(player.getName());
+				FireWork.duration(1);
+				player.sendMessage(ChatColor.AQUA + "Changed duration to 1");
+			}
+
+			// duration 2 button
+			if (info.tregmine.api.math.Checksum.block(block) == -430632896) {
+				if (!this.plugin.firework.containsKey(player.getName())) {
+					this.plugin.firework.put(player.getName(), new info.tregmine.api.firework.createFirwork());
+				}
+
+				info.tregmine.api.firework.createFirwork FireWork = this.plugin.firework.get(player.getName());
+				FireWork.duration(2);
+				player.sendMessage(ChatColor.AQUA + "Changed duration to 2");
+			}
+			
+			// duration 3 button
+			if (info.tregmine.api.math.Checksum.block(block) == 1076918913) {
+				if (!this.plugin.firework.containsKey(player.getName())) {
+					this.plugin.firework.put(player.getName(), new info.tregmine.api.firework.createFirwork());
+				}
+
+				info.tregmine.api.firework.createFirwork FireWork = this.plugin.firework.get(player.getName());
+				FireWork.duration(3);
+				player.sendMessage(ChatColor.AQUA + "Changed duration to 3");
+			}
+			
+			// Large ball effect button
+			if (info.tregmine.api.math.Checksum.block(block) == 367026419) {
 				if (!this.plugin.firework.containsKey(player.getName())) {
 					this.plugin.firework.put(player.getName(), new info.tregmine.api.firework.createFirwork());
 				}
@@ -113,7 +147,7 @@ public class BasicCommandsBlock implements Listener {
 			}
 
 
-			if (info.tregmine.api.math.Checksum.block(block) == 367026419) {
+			if (info.tregmine.api.math.Checksum.block(block) == 563539924) {
 				if (!this.plugin.firework.containsKey(player.getName())) {
 					this.plugin.firework.put(player.getName(), new info.tregmine.api.firework.createFirwork());
 				}

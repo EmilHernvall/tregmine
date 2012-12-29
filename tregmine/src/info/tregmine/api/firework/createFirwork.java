@@ -15,6 +15,7 @@ public class createFirwork {
 
 	private Color[] colors = new Color[19];
 	public int colorCounter = 0;
+	public int duration = 1;
 
 
 
@@ -106,6 +107,10 @@ public class createFirwork {
 
 	}
 
+	public void duration(int _duration) {
+		this.duration = _duration;
+	}
+
 	public String[] hasColorAsString() {
 
 		String [] colorNames = new String[colorCounter];
@@ -136,6 +141,7 @@ public class createFirwork {
 		FireworkMeta meta = (FireworkMeta) item.getItemMeta();
 		meta.setDisplayName("Firework: " + colorString );
 		effect.with(type);
+		meta.setPower(this.duration);
 		meta.addEffect(effect.build());
 		item.setItemMeta(meta);
 
