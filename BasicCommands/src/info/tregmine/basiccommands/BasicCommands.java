@@ -47,7 +47,7 @@ public class BasicCommands extends JavaPlugin {
 //	public Map<String, ItemStack> fireWork = new HashMap<String, ItemStack>();
 //	public Map<String, Boolean> property = new HashMap<String, Boolean>();
 	
-	public Map<String, info.tregmine.api.firework.createFirwork> firework = new HashMap<String, info.tregmine.api.firework.createFirwork>();
+	public Map<String, info.tregmine.api.firework.createFirework> firework = new HashMap<String, info.tregmine.api.firework.createFirework>();
 
 	
 	@Override
@@ -543,11 +543,11 @@ public class BasicCommands extends JavaPlugin {
             	
             	
     			Location loc = world.getSpawnLocation();
-    			info.tregmine.api.firework.createFirwork firework = new info.tregmine.api.firework.createFirwork();
+    			info.tregmine.api.firework.createFirework firework = new info.tregmine.api.firework.createFirework();
     			firework.addColor(Color.BLUE);
     			firework.addColor(Color.YELLOW);
     			firework.addType(FireworkEffect.Type.STAR);
-    			firework.shoot(loc);
+    			firework.shot(loc);
             }
 
 			

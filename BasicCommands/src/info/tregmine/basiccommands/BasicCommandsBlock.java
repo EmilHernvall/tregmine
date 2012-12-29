@@ -43,10 +43,10 @@ public class BasicCommandsBlock implements Listener {
 
 		if (info.tregmine.api.math.Checksum.block(block) == button) {
 			if (!this.plugin.firework.containsKey(player.getName())) {
-				this.plugin.firework.put(player.getName(), new info.tregmine.api.firework.createFirwork());
+				this.plugin.firework.put(player.getName(), new info.tregmine.api.firework.createFirework());
 			}
 
-			info.tregmine.api.firework.createFirwork FireWork = this.plugin.firework.get(player.getName());
+			info.tregmine.api.firework.createFirework FireWork = this.plugin.firework.get(player.getName());
 
 			FireWork.addColor(c);
 			player.sendMessage(ChatColor.AQUA + FireWork.colorToString(c) + " added");
@@ -59,10 +59,10 @@ public class BasicCommandsBlock implements Listener {
 
 		if (info.tregmine.api.math.Checksum.block(block) == button) {
 			if (!this.plugin.firework.containsKey(player.getName())) {
-				this.plugin.firework.put(player.getName(), new info.tregmine.api.firework.createFirwork());
+				this.plugin.firework.put(player.getName(), new info.tregmine.api.firework.createFirework());
 			}
 
-			info.tregmine.api.firework.createFirwork FireWork = this.plugin.firework.get(player.getName());
+			info.tregmine.api.firework.createFirework FireWork = this.plugin.firework.get(player.getName());
 
 			FireWork.fadeTo(c);
 			player.sendMessage(ChatColor.AQUA + "Changed fade color to " + FireWork.colorToString(c));
@@ -117,7 +117,7 @@ public class BasicCommandsBlock implements Listener {
 
 			// Reset colors -565613610
 			if (info.tregmine.api.math.Checksum.block(block) == -565613610) {
-				this.plugin.firework.put(player.getName(), new info.tregmine.api.firework.createFirwork());
+				this.plugin.firework.put(player.getName(), new info.tregmine.api.firework.createFirework());
 				player.sendMessage(ChatColor.AQUA + "You have now rested everyting and need to start from scratch");
 			}
 
@@ -125,10 +125,10 @@ public class BasicCommandsBlock implements Listener {
 			// duration 1 button
 			if (info.tregmine.api.math.Checksum.block(block) == -1938184705) {
 				if (!this.plugin.firework.containsKey(player.getName())) {
-					this.plugin.firework.put(player.getName(), new info.tregmine.api.firework.createFirwork());
+					this.plugin.firework.put(player.getName(), new info.tregmine.api.firework.createFirework());
 				}
 
-				info.tregmine.api.firework.createFirwork FireWork = this.plugin.firework.get(player.getName());
+				info.tregmine.api.firework.createFirework FireWork = this.plugin.firework.get(player.getName());
 				FireWork.duration(1);
 				player.sendMessage(ChatColor.AQUA + "Changed duration to 1");
 			}
@@ -136,10 +136,10 @@ public class BasicCommandsBlock implements Listener {
 			// duration 2 button
 			if (info.tregmine.api.math.Checksum.block(block) == -430632896) {
 				if (!this.plugin.firework.containsKey(player.getName())) {
-					this.plugin.firework.put(player.getName(), new info.tregmine.api.firework.createFirwork());
+					this.plugin.firework.put(player.getName(), new info.tregmine.api.firework.createFirework());
 				}
 
-				info.tregmine.api.firework.createFirwork FireWork = this.plugin.firework.get(player.getName());
+				info.tregmine.api.firework.createFirework FireWork = this.plugin.firework.get(player.getName());
 				FireWork.duration(2);
 				player.sendMessage(ChatColor.AQUA + "Changed duration to 2");
 			}
@@ -147,10 +147,10 @@ public class BasicCommandsBlock implements Listener {
 			// duration 3 button
 			if (info.tregmine.api.math.Checksum.block(block) == 1076918913) {
 				if (!this.plugin.firework.containsKey(player.getName())) {
-					this.plugin.firework.put(player.getName(), new info.tregmine.api.firework.createFirwork());
+					this.plugin.firework.put(player.getName(), new info.tregmine.api.firework.createFirework());
 				}
 
-				info.tregmine.api.firework.createFirwork FireWork = this.plugin.firework.get(player.getName());
+				info.tregmine.api.firework.createFirework FireWork = this.plugin.firework.get(player.getName());
 				FireWork.duration(3);
 				player.sendMessage(ChatColor.AQUA + "Changed duration to 3");
 			}
@@ -158,20 +158,20 @@ public class BasicCommandsBlock implements Listener {
 			// Large ball effect button
 			if (info.tregmine.api.math.Checksum.block(block) == 367026419) {
 				if (!this.plugin.firework.containsKey(player.getName())) {
-					this.plugin.firework.put(player.getName(), new info.tregmine.api.firework.createFirwork());
+					this.plugin.firework.put(player.getName(), new info.tregmine.api.firework.createFirework());
 				}
 
-				info.tregmine.api.firework.createFirwork FireWork = this.plugin.firework.get(player.getName());
+				info.tregmine.api.firework.createFirework FireWork = this.plugin.firework.get(player.getName());
 				FireWork.addType(FireworkEffect.Type.BALL_LARGE);
 				player.sendMessage(ChatColor.AQUA + "Changed to huge ball effect");
 			}
 
 			if (info.tregmine.api.math.Checksum.block(block) == 956566934) {
 				if (!this.plugin.firework.containsKey(player.getName())) {
-					this.plugin.firework.put(player.getName(), new info.tregmine.api.firework.createFirwork());
+					this.plugin.firework.put(player.getName(), new info.tregmine.api.firework.createFirework());
 				}
 
-				info.tregmine.api.firework.createFirwork FireWork = this.plugin.firework.get(player.getName());
+				info.tregmine.api.firework.createFirework FireWork = this.plugin.firework.get(player.getName());
 				FireWork.addType(FireworkEffect.Type.BURST);
 				player.sendMessage(ChatColor.AQUA + "Changed to burst effect");
 			}
@@ -179,10 +179,10 @@ public class BasicCommandsBlock implements Listener {
 
 			if (info.tregmine.api.math.Checksum.block(block) == 563539924) {
 				if (!this.plugin.firework.containsKey(player.getName())) {
-					this.plugin.firework.put(player.getName(), new info.tregmine.api.firework.createFirwork());
+					this.plugin.firework.put(player.getName(), new info.tregmine.api.firework.createFirework());
 				}
 
-				info.tregmine.api.firework.createFirwork FireWork = this.plugin.firework.get(player.getName());
+				info.tregmine.api.firework.createFirework FireWork = this.plugin.firework.get(player.getName());
 				FireWork.addType(FireworkEffect.Type.STAR);
 				player.sendMessage(ChatColor.AQUA + "Changed to star effect");
 			}
@@ -190,10 +190,10 @@ public class BasicCommandsBlock implements Listener {
 
 			if (info.tregmine.api.math.Checksum.block(block) == 760053429) {
 				if (!this.plugin.firework.containsKey(player.getName())) {
-					this.plugin.firework.put(player.getName(), new info.tregmine.api.firework.createFirwork());
+					this.plugin.firework.put(player.getName(), new info.tregmine.api.firework.createFirework());
 				}
 
-				info.tregmine.api.firework.createFirwork FireWork = this.plugin.firework.get(player.getName());
+				info.tregmine.api.firework.createFirework FireWork = this.plugin.firework.get(player.getName());
 				FireWork.addType(FireworkEffect.Type.CREEPER);
 				player.sendMessage(ChatColor.AQUA + "Changed to creeper effect");
 			}
@@ -210,8 +210,8 @@ public class BasicCommandsBlock implements Listener {
 
 						Location loc = new Location(block.getWorld(), -1444, 40, 5471);
 
-						info.tregmine.api.firework.createFirwork FireWork = plugin.firework.get(player.getName());
-						FireWork.shoot(loc);
+						info.tregmine.api.firework.createFirework FireWork = plugin.firework.get(player.getName());
+						FireWork.shot(loc);
 						player.sendMessage("<" + ChatColor.GREEN + "ELF" + ChatColor.WHITE + "> Shoting your firework now!");
 					}
 				}, 600L);
@@ -220,10 +220,10 @@ public class BasicCommandsBlock implements Listener {
 
 			if (info.tregmine.api.math.Checksum.block(block) == 656425969) {
 				if (!this.plugin.firework.containsKey(player.getName())) {
-					this.plugin.firework.put(player.getName(), new info.tregmine.api.firework.createFirwork());
+					this.plugin.firework.put(player.getName(), new info.tregmine.api.firework.createFirework());
 				}
 
-				info.tregmine.api.firework.createFirwork FireWork = this.plugin.firework.get(player.getName());
+				info.tregmine.api.firework.createFirework FireWork = this.plugin.firework.get(player.getName());
 
 
 				Wallet wallet = new Wallet(player.getName());
