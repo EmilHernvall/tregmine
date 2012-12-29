@@ -105,7 +105,7 @@ public class BasicCommandsBlock implements Listener {
 			this.fadeFirework(player, Color.BLACK, 		-1078925166,	block);
 			this.fadeFirework(player, Color.ORANGE, 	524357500, 		block);
 			this.fadeFirework(player, Color.YELLOW, 	-561837485, 	block);
-			this.fadeFirework(player, Color.LIME, 		-1872875789, 	block);
+			this.fadeFirework(player, Color.LIME, 		-2069389294, 	block);
 			this.fadeFirework(player, Color.GRAY, 		493182874, 		block);
 			this.fadeFirework(player, Color.SILVER, 	296669369, 		block);
 			this.fadeFirework(player, Color.GREEN, 		-685898156, 	block);			
