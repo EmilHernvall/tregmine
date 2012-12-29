@@ -14,8 +14,10 @@ public class createFirwork {
 
 
 	private Color[] colors = new Color[19];
-	public int colorCounter = 0;
-	public int duration = 1;
+	private Color fadeTo = null;
+
+	private int colorCounter = 0;
+	private int duration = 1;
 
 
 
@@ -31,6 +33,27 @@ public class createFirwork {
 		}
 		colorCounter++;
 		colors[colorCounter] = _color;
+	}
+
+	public String effectToString(FireworkEffect.Type _type) {
+
+		if (FireworkEffect.Type.BALL.equals(_type)) {
+			return "ball";
+		}
+		
+		if (FireworkEffect.Type.BALL_LARGE.equals(_type)) {
+			return "large ball";
+		}
+		
+		if (FireworkEffect.Type.STAR.equals(_type)) {
+			return "star";
+		}
+		
+		if (FireworkEffect.Type.CREEPER.equals(_type)) {
+			return "star";
+		}
+		
+		return "UNKOWN";
 	}
 
 	public String colorToString(Color c) {
@@ -121,6 +144,10 @@ public class createFirwork {
 		return colorNames;
 	}
 
+	public void fadeTo(Color _color) {
+		this.fadeTo = _color;
+	}
+	
 	public void addType(FireworkEffect.Type _type) {
 		this.type = _type;
 	}
@@ -130,17 +157,25 @@ public class createFirwork {
 		FireworkEffect.Builder effect = FireworkEffect.builder();
 
 		String colorString = "";
-		
-//		Arrays.sort(colors);
-		
+
+		//		Arrays.sort(colors);
+
 		for (int cc = 1; cc <= colorCounter; cc++) {
 			effect.withColor(colors[cc]);
 			colorString = colorString + " " + this.colorToString(colors[cc]); 
 		}
+
+		
+		
 		
 		FireworkMeta meta = (FireworkMeta) item.getItemMeta();
-		meta.setDisplayName("Firework: " + colorString );
+		meta.setDisplayName("Firework: " + colorString + " " + this.effectToString(this.type)  );
 		effect.with(type);
+		
+		if (this.fadeTo != null) {
+			effect.withFade(fadeTo);
+		}
+		
 		meta.setPower(this.duration);
 		meta.addEffect(effect.build());
 		item.setItemMeta(meta);

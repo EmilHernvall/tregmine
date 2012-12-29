@@ -82,8 +82,16 @@ public class BasicCommandsBlock implements Listener {
 			this.colorFirework(player, Color.OLIVE, 	-2038282101, 	block);
 
 
+			// Fadeto
+			if (info.tregmine.api.math.Checksum.block(block) == -1078925166) {
+				if (!this.plugin.firework.containsKey(player.getName())) {
+					this.plugin.firework.put(player.getName(), new info.tregmine.api.firework.createFirwork());
+				}
 
-
+				info.tregmine.api.firework.createFirwork FireWork = this.plugin.firework.get(player.getName());
+				FireWork.fadeTo(Color.BLACK);
+				player.sendMessage(ChatColor.AQUA + "Changed to black fade");
+			}
 
 			// Reset colors -565613610
 			if (info.tregmine.api.math.Checksum.block(block) == -565613610) {
