@@ -146,7 +146,7 @@ public class createFirwork {
 		
 		FireworkMeta meta = (FireworkMeta) item.getItemMeta();
 		meta.setDisplayName("Firework: " + haveColors().toString() );
-
+		meta.addEffect(effect.build());
 		item.setItemMeta(meta);
 
 		return item;
