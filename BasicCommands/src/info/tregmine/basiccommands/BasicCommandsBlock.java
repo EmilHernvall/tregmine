@@ -38,7 +38,7 @@ public class BasicCommandsBlock implements Listener {
 
 	
 	public void createFirework(TregminePlayer player, Color c) {
-
+/*
 		String colorName = c.toString();
 		
         if (c.equals(Color.WHITE)) {
@@ -141,6 +141,7 @@ public class BasicCommandsBlock implements Listener {
 		} else {
 			player.sendMessage(colorName + " already added");
 		}
+*/
 	}
 	
 	
@@ -151,10 +152,13 @@ public class BasicCommandsBlock implements Listener {
 			TregminePlayer player = this.plugin.tregmine.getPlayer(event.getPlayer());
 			Block block = event.getClickedBlock();
 
-			info.tregmine.api.firework.createFirwork FireWork = new info.tregmine.api.firework.createFirwork();
-			
+			if (!this.plugin.firework.containsKey(player.getName())) {
+				this.plugin.firework.put(player.getName(), new info.tregmine.api.firework.createFirwork());
+			}
 			
 			if (info.tregmine.api.math.Checksum.block(block) == -1845477288) {
+				info.tregmine.api.firework.createFirwork FireWork = this.plugin.firework.get(player.getName());
+				
 				player.sendMessage("F: " + FireWork.colorCounter);
 				FireWork.addColor(Color.WHITE);
 				player.sendMessage("L: " + FireWork.colorCounter);
@@ -165,6 +169,8 @@ public class BasicCommandsBlock implements Listener {
 			}
 
 			if (info.tregmine.api.math.Checksum.block(block) == -337925479) {
+				info.tregmine.api.firework.createFirwork FireWork = this.plugin.firework.get(player.getName());
+
 				player.sendMessage("F: " + FireWork.colorCounter);
 				FireWork.addColor(Color.AQUA);
 				player.sendMessage("L: " + FireWork.colorCounter);
@@ -259,10 +265,10 @@ public class BasicCommandsBlock implements Listener {
 
 			// Reset colors -565613610
 			if (info.tregmine.api.math.Checksum.block(block) == -565613610) {
-					this.plugin.fireWorkEffect.put(player.getName(), null);
-					this.plugin.fireWorkMeta.put(player.getName(), null);
-					this.plugin.fireWork.put(player.getName(), null);
-					this.plugin.property.put(player.getName(), null);
+//					this.plugin.fireWorkEffect.put(player.getName(), null);
+//					this.plugin.fireWorkMeta.put(player.getName(), null);
+//					this.plugin.fireWork.put(player.getName(), null);
+//					this.plugin.property.put(player.getName(), null);
 					player.sendMessage(ChatColor.AQUA + "You have now rested everyting and need to start from scratch");
 			}
 
@@ -271,7 +277,7 @@ public class BasicCommandsBlock implements Listener {
 			if (info.tregmine.api.math.Checksum.block(block) == 656425969) {
 				player.sendMessage("you got 5 fireworks");
 				PlayerInventory inv = player.getInventory();
-				inv.addItem(this.plugin.fireWork.get(player.getName()));
+//				inv.addItem(this.plugin.fireWork.get(player.getName()));
 
 			}
 			//			Firework meta = (Firework) item.getItemMeta();

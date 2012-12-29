@@ -39,10 +39,12 @@ public class BasicCommands extends JavaPlugin {
 	public final Logger log = Logger.getLogger("Minecraft");
 	public Tregmine tregmine = null;
 
-	public Map<String, FireworkEffect.Builder> fireWorkEffect = new HashMap<String, FireworkEffect.Builder>();
-	public Map<String, FireworkMeta> fireWorkMeta = new HashMap<String, FireworkMeta>();
-	public Map<String, ItemStack> fireWork = new HashMap<String, ItemStack>();
-	public Map<String, Boolean> property = new HashMap<String, Boolean>();
+//	public Map<String, FireworkEffect.Builder> fireWorkEffect = new HashMap<String, FireworkEffect.Builder>();
+//	public Map<String, FireworkMeta> fireWorkMeta = new HashMap<String, FireworkMeta>();
+//	public Map<String, ItemStack> fireWork = new HashMap<String, ItemStack>();
+//	public Map<String, Boolean> property = new HashMap<String, Boolean>();
+	
+	public Map<String, info.tregmine.api.firework.createFirwork> firework = new HashMap<String, info.tregmine.api.firework.createFirwork>();
 
 	
 	@Override
