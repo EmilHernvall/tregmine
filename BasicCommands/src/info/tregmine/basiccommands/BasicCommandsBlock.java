@@ -39,7 +39,7 @@ public class BasicCommandsBlock implements Listener {
 	
 	public void createFirework(TregminePlayer player, Color c) {
 
-		String colorName = "";
+		String colorName = c.toString();
 		
         if (c.equals(Color.WHITE)) {
         	colorName = "white";
@@ -54,13 +54,57 @@ public class BasicCommandsBlock implements Listener {
         }
 
         if (c.equals(Color.FUCHSIA)) {
-        	colorName = "blue";
+        	colorName = "fuchsia";
         }
         
         if (c.equals(Color.GRAY)) {
-        	colorName = "blue";
+        	colorName = "gray";
         }
         
+        if (c.equals(Color.GREEN)) {
+        	colorName = "green";
+        }
+
+        if (c.equals(Color.LIME)) {
+        	colorName = "lime";
+        }
+
+        if (c.equals(Color.MAROON)) {
+        	colorName = "maroon";
+        }
+
+        if (c.equals(Color.NAVY)) {
+        	colorName = "navy";
+        }
+
+        if (c.equals(Color.OLIVE)) {
+        	colorName = "olive";
+        }
+
+        if (c.equals(Color.ORANGE)) {
+        	colorName = "orange";
+        }
+
+        if (c.equals(Color.PURPLE)) {
+        	colorName = "purple";
+        }
+       
+        if (c.equals(Color.RED)) {
+        	colorName = "red";
+        }
+       
+        if (c.equals(Color.SILVER)) {
+        	colorName = "silver";
+        }
+       
+        if (c.equals(Color.TEAL)) {
+        	colorName = "teal";
+        }
+        
+        if (c.equals(Color.YELLOW)) {
+        	colorName = "yellow";
+        }
+       
         if (!this.plugin.fireWork.containsKey(player.getName())) {
 			ItemStack item = new ItemStack(Material.FIREWORK, 5);
 			FireworkMeta meta = (FireworkMeta) item.getItemMeta();
