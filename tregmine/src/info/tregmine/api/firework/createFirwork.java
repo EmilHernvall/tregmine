@@ -19,9 +19,8 @@ public class createFirwork {
 	public void addColor(Color _color) {
 
 		if (colorCounter > 0) {
-			for (Color color : colors) {
-
-				if (color.equals(_color)) {
+			for (int cc = 1; cc <= colorCounter; cc++) {
+				if (colors[cc].equals(_color)) {
 					return;
 				}
 
