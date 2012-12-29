@@ -29,7 +29,7 @@ public class createFirwork {
 		}
 		
 		colors[colorCounter] = _color;
-		colorCounter++;
+//		colorCounter++;
 
 	}
 
