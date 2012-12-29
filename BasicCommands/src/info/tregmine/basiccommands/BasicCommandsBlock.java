@@ -11,7 +11,7 @@ import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.entity.Firework;
+//import org.bukkit.entity.Firework;
 //import org.bukkit.entity.EntityType;
 //import org.bukkit.entity.Firework;
 //import org.bukkit.block.BlockFace;
@@ -39,7 +39,29 @@ public class BasicCommandsBlock implements Listener {
 	
 	public void createFirework(TregminePlayer player, Color c) {
 
-		if (!this.plugin.fireWork.containsKey(player.getName())) {
+		String colorName = "";
+		
+        if (c.equals(Color.WHITE)) {
+        	colorName = "white";
+        }
+		
+        if (c.equals(Color.BLACK)) {
+        	colorName = "black";
+        }
+
+        if (c.equals(Color.BLUE)) {
+        	colorName = "blue";
+        }
+
+        if (c.equals(Color.FUCHSIA)) {
+        	colorName = "blue";
+        }
+        
+        if (c.equals(Color.GRAY)) {
+        	colorName = "blue";
+        }
+        
+        if (!this.plugin.fireWork.containsKey(player.getName())) {
 			ItemStack item = new ItemStack(Material.FIREWORK, 5);
 			FireworkMeta meta = (FireworkMeta) item.getItemMeta();
 			meta.setDisplayName("Firework: ");
@@ -47,21 +69,28 @@ public class BasicCommandsBlock implements Listener {
 			this.plugin.fireWork.put(player.getName(), item);
 		}
 
-
 		if (!this.plugin.fireWorkEffect.containsKey(player.getName())) {
 			this.plugin.fireWorkEffect.put(player.getName(), FireworkEffect.builder());
 		}
 
-		if (!this.plugin.fireWorkEffect.containsKey(player.getName())) {
-			this.plugin.fireWorkEffect.put(player.getName(), FireworkEffect.builder());
-		}
+		if (!this.plugin.property.containsKey(colorName)) {
+			FireworkEffect.Builder effect = this.plugin.fireWorkEffect.get(player.getName());
+//			FireworkMeta meta = this.plugin.fireWorkMeta.get(player.getName());
+			ItemStack fireWork = this.plugin.fireWork.get(player.getName());
+			
+			effect.withColor(c);
+			
+			FireworkMeta meta = (FireworkMeta) fireWork.getItemMeta();
+			meta.addEffect(effect.build());
+			fireWork.setItemMeta(meta);
+			
+			this.plugin.fireWork.put(player.getName(), fireWork);
+			
+			player.sendMessage(ChatColor.AQUA + "You have now added " + colorName);
+			this.plugin.property.put(colorName, true);
 
-		if (!this.plugin.property.containsKey(c.toString())) {
-
-			player.sendMessage(ChatColor.AQUA + "You have now added " + c.toString());
-			this.plugin.property.put(c.toString(), true);
 		} else {
-			player.sendMessage(c.toString() + " already added");
+			player.sendMessage(colorName + " already added");
 		}
 	}
 	
