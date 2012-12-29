@@ -99,6 +99,7 @@ public class BasicCommandsBlock implements Listener {
 
 				info.tregmine.api.firework.createFirwork FireWork = this.plugin.firework.get(player.getName());
 				FireWork.addType(FireworkEffect.Type.STAR);
+				player.sendMessage(ChatColor.AQUA + "Changed to star effect");
 			}
 
 			if (info.tregmine.api.math.Checksum.block(block) == 760053429) {
@@ -108,6 +109,7 @@ public class BasicCommandsBlock implements Listener {
 
 				info.tregmine.api.firework.createFirwork FireWork = this.plugin.firework.get(player.getName());
 				FireWork.addType(FireworkEffect.Type.CREEPER);
+				player.sendMessage(ChatColor.AQUA + "Changed to creeper effect");
 			}
 
 			
