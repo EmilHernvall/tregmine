@@ -126,7 +126,7 @@ public class createFirwork {
 
 		String colorString = "";
 		
-		Arrays.sort(colors);
+//		Arrays.sort(colors);
 		
 		for (int cc = 1; cc <= colorCounter; cc++) {
 			effect.withColor(colors[cc]);
