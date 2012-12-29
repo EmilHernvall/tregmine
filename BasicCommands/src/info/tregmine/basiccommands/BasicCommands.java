@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 import org.bukkit.ChatColor;
-import org.bukkit.FireworkEffect;
+//import org.bukkit.FireworkEffect;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 //import org.bukkit.World;
@@ -26,8 +26,8 @@ import org.bukkit.entity.Slime;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.entity.EnderDragon;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.FireworkMeta;
+//import org.bukkit.inventory.ItemStack;
+//import org.bukkit.inventory.meta.FireworkMeta;
 
 import info.tregmine.Tregmine; 
 import info.tregmine.api.TregminePlayer;

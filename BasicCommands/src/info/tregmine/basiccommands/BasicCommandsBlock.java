@@ -7,7 +7,7 @@ import info.tregmine.api.TregminePlayer;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
-import org.bukkit.FireworkEffect;
+//import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -23,10 +23,10 @@ import org.bukkit.event.block.Action;
 //import org.bukkit.event.hanging.HangingEvent;
 //import org.bukkit.event.hanging.HangingPlaceEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.ItemStack;
+//import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 //import org.bukkit.event.player.PlayerListener;
-import org.bukkit.inventory.meta.FireworkMeta;
+//import org.bukkit.inventory.meta.FireworkMeta;
 
 public class BasicCommandsBlock implements Listener {
 	private final BasicCommands plugin;
@@ -37,111 +37,23 @@ public class BasicCommandsBlock implements Listener {
 	}
 
 	
-	public void createFirework(TregminePlayer player, Color c) {
-/*
-		String colorName = c.toString();
+	public void colorFirework(TregminePlayer player, Color c, int button, Block block) {
 		
-        if (c.equals(Color.WHITE)) {
-        	colorName = "white";
-        }
-		
-        if (c.equals(Color.BLACK)) {
-        	colorName = "black";
-        }
-
-        if (c.equals(Color.BLUE)) {
-        	colorName = "blue";
-        }
-
-        if (c.equals(Color.FUCHSIA)) {
-        	colorName = "fuchsia";
-        }
-        
-        if (c.equals(Color.GRAY)) {
-        	colorName = "gray";
-        }
-        
-        if (c.equals(Color.GREEN)) {
-        	colorName = "green";
-        }
-
-        if (c.equals(Color.LIME)) {
-        	colorName = "lime";
-        }
-
-        if (c.equals(Color.MAROON)) {
-        	colorName = "maroon";
-        }
-
-        if (c.equals(Color.NAVY)) {
-        	colorName = "navy";
-        }
-
-        if (c.equals(Color.OLIVE)) {
-        	colorName = "olive";
-        }
-
-        if (c.equals(Color.ORANGE)) {
-        	colorName = "orange";
-        }
-
-        if (c.equals(Color.PURPLE)) {
-        	colorName = "purple";
-        }
-
-        if (c.equals(Color.AQUA)) {
-        	colorName = "aqua";
-        }
-
-        
-        if (c.equals(Color.RED)) {
-        	colorName = "red";
-        }
-       
-        if (c.equals(Color.SILVER)) {
-        	colorName = "silver";
-        }
-       
-        if (c.equals(Color.TEAL)) {
-        	colorName = "teal";
-        }
-        
-        if (c.equals(Color.YELLOW)) {
-        	colorName = "yellow";
-        }
-       
-        if (!this.plugin.fireWork.containsKey(player.getName())) {
-			ItemStack item = new ItemStack(Material.FIREWORK, 5);
-			FireworkMeta meta = (FireworkMeta) item.getItemMeta();
-			meta.setDisplayName("Firework: ");
-			this.plugin.fireWorkMeta.put(player.getName(), meta);
-			this.plugin.fireWork.put(player.getName(), item);
+		if (info.tregmine.api.math.Checksum.block(block) == button) {
+			if (!this.plugin.firework.containsKey(player.getName())) {
+				this.plugin.firework.put(player.getName(), new info.tregmine.api.firework.createFirwork());
+			}
+			
+			info.tregmine.api.firework.createFirwork FireWork = this.plugin.firework.get(player.getName());
+			
+			FireWork.addColor(c);
+			player.sendMessage(FireWork.colorToString(c) + " added");
+			
+			PlayerInventory inv = player.getInventory();
+			inv.addItem(FireWork.getAsStack(5));
 		}
 
-		if (!this.plugin.fireWorkEffect.containsKey(player.getName())) {
-			this.plugin.fireWorkEffect.put(player.getName(), FireworkEffect.builder());
-		}
-
-		if (!this.plugin.property.containsKey(colorName)) {
-			FireworkEffect.Builder effect = this.plugin.fireWorkEffect.get(player.getName());
-//			FireworkMeta meta = this.plugin.fireWorkMeta.get(player.getName());
-			ItemStack fireWork = this.plugin.fireWork.get(player.getName());
-			
-			effect.withColor(c);
-			
-			FireworkMeta meta = (FireworkMeta) fireWork.getItemMeta();
-			meta.addEffect(effect.build());
-			fireWork.setItemMeta(meta);
-			
-			this.plugin.fireWork.put(player.getName(), fireWork);
-			
-			player.sendMessage(ChatColor.AQUA + "You have now added " + colorName);
-			this.plugin.property.put(colorName, true);
-
-		} else {
-			player.sendMessage(colorName + " already added");
-		}
-*/
+	
 	}
 	
 	
@@ -152,94 +64,23 @@ public class BasicCommandsBlock implements Listener {
 			TregminePlayer player = this.plugin.tregmine.getPlayer(event.getPlayer());
 			Block block = event.getClickedBlock();
 
-			
-			if (info.tregmine.api.math.Checksum.block(block) == -1845477288) {
-				if (!this.plugin.firework.containsKey(player.getName())) {
-					this.plugin.firework.put(player.getName(), new info.tregmine.api.firework.createFirwork());
-				}
-				
-				info.tregmine.api.firework.createFirwork FireWork = this.plugin.firework.get(player.getName());
-				
-				FireWork.addColor(Color.WHITE);
-				player.sendMessage("White added");
-				
-				PlayerInventory inv = player.getInventory();
-				inv.addItem(FireWork.getAsStack(5));
-			}
-
-			if (info.tregmine.api.math.Checksum.block(block) == -337925479) {
-				info.tregmine.api.firework.createFirwork FireWork = this.plugin.firework.get(player.getName());
-
-				FireWork.addColor(Color.AQUA);
-				PlayerInventory inv = player.getInventory();
-				inv.addItem(FireWork.getAsStack(5));
-				
-				player.sendMessage("Aqua added");
-			}
-
-			if (info.tregmine.api.math.Checksum.block(block) == 1169626330) {
-				this.createFirework(player, Color.PURPLE);
-			}
-
-
-			if (info.tregmine.api.math.Checksum.block(block) == -1617789157) {
-				this.createFirework(player, Color.BLUE);
-			}
-
-			if (info.tregmine.api.math.Checksum.block(block) == -1541627631) {
-				this.createFirework(player, Color.FUCHSIA);
-			}
-
-
-			if (info.tregmine.api.math.Checksum.block(block) == 38377012) {
-				this.createFirework(player, Color.BLACK);
-			}
-
-			if (info.tregmine.api.math.Checksum.block(block) == 1938955831) {
-				this.createFirework(player, Color.ORANGE);
-			}
-
-			if (info.tregmine.api.math.Checksum.block(block) == -1934654641) {
-				this.createFirework(player, Color.YELLOW);
-			}
-
-			if (info.tregmine.api.math.Checksum.block(block) == -1738141136) {
-				this.createFirework(player, Color.LIME);
-			}
-
-			if (info.tregmine.api.math.Checksum.block(block) == -1345114126) {
-				this.createFirework(player, Color.GRAY);
-			}
-
-			if (info.tregmine.api.math.Checksum.block(block) == -1148600621) {
-				this.createFirework(player, Color.SILVER);
-			}
-
-			if (info.tregmine.api.math.Checksum.block(block) == -952087116) {
-				this.createFirework(player, Color.GREEN);
-			}
-
-
-			if (info.tregmine.api.math.Checksum.block(block) == -755573611) {
-				this.createFirework(player, Color.RED);
-			}
-
-
-			if (info.tregmine.api.math.Checksum.block(block) == -1469174797) {
-				this.createFirework(player, Color.MAROON);
-			}
-			
-			if (info.tregmine.api.math.Checksum.block(block) == 1967285645) {
-				this.createFirework(player, Color.TEAL);
-			}
-
-			if (info.tregmine.api.math.Checksum.block(block) == -2131168146) {
-				this.createFirework(player, Color.NAVY);
-			}
-
-			if (info.tregmine.api.math.Checksum.block(block) == -2038282101) {
-				this.createFirework(player, Color.OLIVE);
-			}
+			this.colorFirework(player, Color.WHITE, 	-1845477288, 	block);
+			this.colorFirework(player, Color.AQUA, 		-337925479, 	block);
+			this.colorFirework(player, Color.PURPLE, 	1169626330, 	block);
+			this.colorFirework(player, Color.BLUE, 		-1617789157, 	block);
+			this.colorFirework(player, Color.FUCHSIA, 	-1541627631, 	block);
+			this.colorFirework(player, Color.BLACK, 	38377012, 		block);
+			this.colorFirework(player, Color.ORANGE, 	1938955831, 	block);
+			this.colorFirework(player, Color.YELLOW, 	-1934654641, 	block);
+			this.colorFirework(player, Color.LIME, 		-1738141136, 	block);
+			this.colorFirework(player, Color.GRAY, 		-1345114126, 	block);
+			this.colorFirework(player, Color.SILVER, 	-1148600621, 	block);
+			this.colorFirework(player, Color.GREEN, 	-952087116, 	block);			
+			this.colorFirework(player, Color.RED, 		-755573611, 	block);
+			this.colorFirework(player, Color.MAROON, 	-1469174797, 	block);
+			this.colorFirework(player, Color.TEAL, 		1967285645, 	block);
+			this.colorFirework(player, Color.NAVY, 		-2131168146, 	block);
+			this.colorFirework(player, Color.OLIVE, 	-2038282101, 	block);
 
 			//			-1845477288 WHITE 		| silver *
 			//			-337925479 CYAN 		| Aqua *
@@ -274,7 +115,7 @@ public class BasicCommandsBlock implements Listener {
 
 			if (info.tregmine.api.math.Checksum.block(block) == 656425969) {
 				player.sendMessage("you got 5 fireworks");
-				PlayerInventory inv = player.getInventory();
+//				PlayerInventory inv = player.getInventory();
 //				inv.addItem(this.plugin.fireWork.get(player.getName()));
 
 			}
