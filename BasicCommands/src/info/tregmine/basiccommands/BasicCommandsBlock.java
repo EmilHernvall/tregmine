@@ -2,6 +2,7 @@ package info.tregmine.basiccommands;
 
 
 import info.tregmine.api.TregminePlayer;
+import info.tregmine.currency.Wallet;
 
 //import net.minecraft.server.v1_4_6.Item;
 
@@ -36,28 +37,25 @@ public class BasicCommandsBlock implements Listener {
 		plugin.getServer();
 	}
 
-	
+
 	public void colorFirework(TregminePlayer player, Color c, int button, Block block) {
-		
+
 		if (info.tregmine.api.math.Checksum.block(block) == button) {
 			if (!this.plugin.firework.containsKey(player.getName())) {
 				this.plugin.firework.put(player.getName(), new info.tregmine.api.firework.createFirwork());
 			}
-			
+
 			info.tregmine.api.firework.createFirwork FireWork = this.plugin.firework.get(player.getName());
-			
+
 			FireWork.addColor(c);
 			player.sendMessage(FireWork.colorToString(c) + " added");
-			
-			PlayerInventory inv = player.getInventory();
-			inv.addItem(FireWork.getAsStack(5));
 		}
 
-	
+
 	}
-	
-	
-	
+
+
+
 	@EventHandler 
 	public void fireWorkButton(PlayerInteractEvent event) {
 		if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
@@ -104,33 +102,35 @@ public class BasicCommandsBlock implements Listener {
 
 			// Reset colors -565613610
 			if (info.tregmine.api.math.Checksum.block(block) == -565613610) {
-//					this.plugin.fireWorkEffect.put(player.getName(), null);
-//					this.plugin.fireWorkMeta.put(player.getName(), null);
-//					this.plugin.fireWork.put(player.getName(), null);
-//					this.plugin.property.put(player.getName(), null);
-					player.sendMessage(ChatColor.AQUA + "You have now rested everyting and need to start from scratch");
+				if (!this.plugin.firework.containsKey(player.getName())) {
+					this.plugin.firework.put(player.getName(), new info.tregmine.api.firework.createFirwork());
+				}
+				this.plugin.firework.put(player.getName(), null);
+				player.sendMessage(ChatColor.AQUA + "You have now rested everyting and need to start from scratch");
 			}
 
 
 
 			if (info.tregmine.api.math.Checksum.block(block) == 656425969) {
-				player.sendMessage("you got 5 fireworks");
-//				PlayerInventory inv = player.getInventory();
-//				inv.addItem(this.plugin.fireWork.get(player.getName()));
+				if (!this.plugin.firework.containsKey(player.getName())) {
+					this.plugin.firework.put(player.getName(), new info.tregmine.api.firework.createFirwork());
+				}
+
+				info.tregmine.api.firework.createFirwork FireWork = this.plugin.firework.get(player.getName());
+
+
+				Wallet wallet = new Wallet(player.getName());
+				if ( wallet.take(2000) ) {
+					PlayerInventory inv = player.getInventory();
+					inv.addItem(FireWork.getAsStack(5));
+					player.sendMessage(ChatColor.AQUA + "you got 5 fireworks and " + ChatColor.GOLD + "2000" + ChatColor.AQUA + " Tregs was taken from you");
+
+				} else {
+					player.sendMessage("I'm sorry but you can't afford the 2000 tregs");
+				}
+
 
 			}
-			//			Firework meta = (Firework) item.getItemMeta();
-
-
-
-
-			//			Location loc = player.getLocation();
-			//			Firework f1 = (Firework) loc.getWorld().spawnEntity(loc, EntityType.FIREWORK);
-			//			FireworkMeta meta = f1.getFireworkMeta();
-			//			meta.setPower(1);
-			//			meta.addEffect(this.plugin.fireWorkEffect.get(player.getName()).build());
-			//			f1.setFireworkMeta(meta);
-			//			f1.getFireworkMeta().setDisplayName("test");
 
 		}
 
