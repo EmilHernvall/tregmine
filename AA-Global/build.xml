@@ -6,12 +6,12 @@
     
 	<target name="clean" depends="init">
 		<ant dir="../tregmine" target="clean" inheritAll="false" />
+		<ant dir="../Currency" target="clean" inheritAll="false" />
 		<ant dir="../BasicCommands" target="clean" inheritAll="false" />
 		<ant dir="../BoxFill" target="clean" inheritAll="false" />
 		<ant dir="../Chat" target="clean" inheritAll="false" />
 		<ant dir="../ChestBless" target="clean" inheritAll="false" />
 		<ant dir="../Compass2" target="clean" inheritAll="false" />
-		<ant dir="../Currency" target="clean" inheritAll="false" />
 		<ant dir="../InventorySpy" target="clean" inheritAll="false" />
 		<ant dir="../Item" target="clean" inheritAll="false" />
 		<ant dir="../Teleport" target="clean" inheritAll="false" />
@@ -34,12 +34,12 @@
     
     <target name="copy" depends="build">
     	<copy file="../tregmine/tregmine.jar" tofile="jar/tregmine.jar" />
+    	<copy file="../Currency/Currency.jar" tofile="jar/Currency.jar" />
     	<copy file="../BasicCommands/BasicCommands.jar" tofile="jar/BasicCommands.jar" />
     	<copy file="../BoxFill/BoxFill.jar" tofile="jar/BoxFill.jar" />
     	<copy file="../Chat/Chat.jar" tofile="jar/Chat.jar" />
     	<copy file="../ChestBless/ChestBless.jar" tofile="jar/ChestBless.jar" />
     	<copy file="../Compass2/Compass2.jar" tofile="jar/Compass.jar" />
-    	<copy file="../Currency/Currency.jar" tofile="jar/Currency.jar" />
     	<copy file="../InventorySpy/InventorySpy.jar" tofile="jar/InventorySpy.jar" />
     	<copy file="../Item/Item.jar" tofile="jar/Item.jar" />
      	<copy file="../Teleport/Teleport.jar" tofile="jar/Teleport.jar" />
