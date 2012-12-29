@@ -8,7 +8,7 @@ import org.bukkit.inventory.meta.FireworkMeta;
 
 public class createFirwork {
 
-	private FireworkEffect.Type type = null;
+	private FireworkEffect.Type type = FireworkEffect.Type.BALL;
 
 
 	private Color[] colors = new Color[19];
@@ -131,13 +131,13 @@ public class createFirwork {
 
 		for (Color color : this.haveColors()) {
 			effect.withColor(color);
+			System.console().printf(color.toString());
 		}
 
 		FireworkMeta meta = (FireworkMeta) item.getItemMeta();
 		meta.setDisplayName("Firework: " + haveColors().toString() );
 
 		item.setItemMeta(meta);
-
 
 		return item;
 	}
