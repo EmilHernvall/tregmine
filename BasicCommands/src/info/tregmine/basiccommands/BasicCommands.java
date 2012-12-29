@@ -42,6 +42,7 @@ public class BasicCommands extends JavaPlugin {
 	public Map<String, FireworkEffect.Builder> fireWorkEffect = new HashMap<String, FireworkEffect.Builder>();
 	public Map<String, FireworkMeta> fireWorkMeta = new HashMap<String, FireworkMeta>();
 	public Map<String, ItemStack> fireWork = new HashMap<String, ItemStack>();
+	public Map<String, Boolean> property = new HashMap<String, Boolean>();
 
 	
 	@Override
