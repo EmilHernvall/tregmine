@@ -136,11 +136,14 @@ public class createFirwork {
 		FireworkEffect.Builder effect = FireworkEffect.builder();
 
 		System.console().printf("" + this.haveColors().length);
-		for (Color color : this.haveColors()) {
-			System.console().printf(color.toString());
-			effect.withColor(color);
-		}
+		
+//		for (Color color : this.haveColors()) {
+//			System.console().printf(color.toString());
+//			effect.withColor(color);
+//		}
 
+		effect.withColor(Color.WHITE);
+		
 		FireworkMeta meta = (FireworkMeta) item.getItemMeta();
 		meta.setDisplayName("Firework: " + haveColors().toString() );
 
