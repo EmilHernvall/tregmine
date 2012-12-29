@@ -107,215 +107,73 @@ public class BasicCommandsBlock implements Listener {
 			}
 
 			if (info.tregmine.api.math.Checksum.block(block) == -337925479) {
-
-				if (!this.plugin.fireWorkEffect.containsKey(player.getName())) {
-					this.plugin.fireWorkEffect.put(player.getName(), FireworkEffect.builder());
-				}
-
-				if (this.plugin.fireWorkEffect.containsKey(player.getName())) {
-					this.plugin.fireWorkEffect.get(player.getName()).withColor(Color.AQUA);
-					player.sendMessage(ChatColor.AQUA + "You have now added aqua");
-				}
-
+				this.createFirework(player, Color.AQUA);
 			}
 
 			if (info.tregmine.api.math.Checksum.block(block) == 1169626330) {
-
-				if (!this.plugin.fireWorkEffect.containsKey(player.getName())) {
-					this.plugin.fireWorkEffect.put(player.getName(), FireworkEffect.builder());
-				}
-
-				if (this.plugin.fireWorkEffect.containsKey(player.getName())) {
-					this.plugin.fireWorkEffect.get(player.getName()).withColor(Color.PURPLE);
-					player.sendMessage(ChatColor.AQUA + "You have now added purple");
-				}
-
+				this.createFirework(player, Color.PURPLE);
 			}
 
 
 			if (info.tregmine.api.math.Checksum.block(block) == -1617789157) {
-
-				if (!this.plugin.fireWorkEffect.containsKey(player.getName())) {
-					this.plugin.fireWorkEffect.put(player.getName(), FireworkEffect.builder());
-				}
-
-				if (this.plugin.fireWorkEffect.containsKey(player.getName())) {
-					this.plugin.fireWorkEffect.get(player.getName()).withColor(Color.BLUE);
-					player.sendMessage(ChatColor.AQUA + "You have now added blue");
-				}
-
+				this.createFirework(player, Color.BLUE);
 			}
 
 			if (info.tregmine.api.math.Checksum.block(block) == -1541627631) {
-
-				if (!this.plugin.fireWorkEffect.containsKey(player.getName())) {
-					this.plugin.fireWorkEffect.put(player.getName(), FireworkEffect.builder());
-				}
-
-				if (this.plugin.fireWorkEffect.containsKey(player.getName())) {
-					this.plugin.fireWorkEffect.get(player.getName()).withColor(Color.FUCHSIA);
-					player.sendMessage(ChatColor.AQUA + "You have now added fuchsia (pink)");
-				}
-
+				this.createFirework(player, Color.FUCHSIA);
 			}
 
 
 			if (info.tregmine.api.math.Checksum.block(block) == 38377012) {
-
-				if (!this.plugin.fireWorkEffect.containsKey(player.getName())) {
-					this.plugin.fireWorkEffect.put(player.getName(), FireworkEffect.builder());
-				}
-
-				if (this.plugin.fireWorkEffect.containsKey(player.getName())) {
-					this.plugin.fireWorkEffect.get(player.getName()).withColor(Color.BLACK);
-					player.sendMessage(ChatColor.AQUA + "You have now added black");
-				}
-
+				this.createFirework(player, Color.BLACK);
 			}
 
 			if (info.tregmine.api.math.Checksum.block(block) == 1938955831) {
-
-				if (!this.plugin.fireWorkEffect.containsKey(player.getName())) {
-					this.plugin.fireWorkEffect.put(player.getName(), FireworkEffect.builder());
-				}
-
-				if (this.plugin.fireWorkEffect.containsKey(player.getName())) {
-					this.plugin.fireWorkEffect.get(player.getName()).withColor(Color.ORANGE);
-					player.sendMessage(ChatColor.AQUA + "You have now added orange");
-				}
-
+				this.createFirework(player, Color.ORANGE);
 			}
 
 			if (info.tregmine.api.math.Checksum.block(block) == -1934654641) {
-
-				if (!this.plugin.fireWorkEffect.containsKey(player.getName())) {
-					this.plugin.fireWorkEffect.put(player.getName(), FireworkEffect.builder());
-				}
-
-				if (this.plugin.fireWorkEffect.containsKey(player.getName())) {
-					this.plugin.fireWorkEffect.get(player.getName()).withColor(Color.YELLOW);
-					player.sendMessage(ChatColor.AQUA + "You have now added yellow");
-				}
-
+				this.createFirework(player, Color.YELLOW);
 			}
 
 			if (info.tregmine.api.math.Checksum.block(block) == -1738141136) {
-
-				if (!this.plugin.fireWorkEffect.containsKey(player.getName())) {
-					this.plugin.fireWorkEffect.put(player.getName(), FireworkEffect.builder());
-				}
-
-				if (this.plugin.fireWorkEffect.containsKey(player.getName())) {
-					this.plugin.fireWorkEffect.get(player.getName()).withColor(Color.LIME);
-					player.sendMessage(ChatColor.AQUA + "You have now added lime");
-				}
-
+				this.createFirework(player, Color.LIME);
 			}
 
 			if (info.tregmine.api.math.Checksum.block(block) == -1345114126) {
-
-				if (!this.plugin.fireWorkEffect.containsKey(player.getName())) {
-					this.plugin.fireWorkEffect.put(player.getName(), FireworkEffect.builder());
-				}
-
-				if (this.plugin.fireWorkEffect.containsKey(player.getName())) {
-					this.plugin.fireWorkEffect.get(player.getName()).withColor(Color.GRAY);
-					player.sendMessage(ChatColor.AQUA + "You have now added gray");
-				}
-
+				this.createFirework(player, Color.GRAY);
 			}
 
 			if (info.tregmine.api.math.Checksum.block(block) == -1148600621) {
-
-				if (!this.plugin.fireWorkEffect.containsKey(player.getName())) {
-					this.plugin.fireWorkEffect.put(player.getName(), FireworkEffect.builder());
-				}
-
-				if (this.plugin.fireWorkEffect.containsKey(player.getName())) {
-					this.plugin.fireWorkEffect.get(player.getName()).withColor(Color.SILVER);
-					player.sendMessage(ChatColor.AQUA + "You have now added silver");
-				}
-
+				this.createFirework(player, Color.SILVER);
 			}
 
 			if (info.tregmine.api.math.Checksum.block(block) == -952087116) {
-
-				if (!this.plugin.fireWorkEffect.containsKey(player.getName())) {
-					this.plugin.fireWorkEffect.put(player.getName(), FireworkEffect.builder());
-				}
-
-				if (this.plugin.fireWorkEffect.containsKey(player.getName())) {
-					this.plugin.fireWorkEffect.get(player.getName()).withColor(Color.GREEN);
-					player.sendMessage(ChatColor.AQUA + "You have now added green");
-				}
-
+				this.createFirework(player, Color.GREEN);
 			}
 
 
 			if (info.tregmine.api.math.Checksum.block(block) == -755573611) {
-
-				if (!this.plugin.fireWorkEffect.containsKey(player.getName())) {
-					this.plugin.fireWorkEffect.put(player.getName(), FireworkEffect.builder());
-				}
-
-				if (this.plugin.fireWorkEffect.containsKey(player.getName())) {
-					this.plugin.fireWorkEffect.get(player.getName()).withColor(Color.RED);
-					player.sendMessage(ChatColor.AQUA + "You have now added red");
-				}
-
+				this.createFirework(player, Color.RED);
 			}
 
 
 			if (info.tregmine.api.math.Checksum.block(block) == -1469174797) {
-
-				if (!this.plugin.fireWorkEffect.containsKey(player.getName())) {
-					this.plugin.fireWorkEffect.put(player.getName(), FireworkEffect.builder());
-				}
-
-				if (this.plugin.fireWorkEffect.containsKey(player.getName())) {
-					this.plugin.fireWorkEffect.get(player.getName()).withColor(Color.MAROON);
-					player.sendMessage(ChatColor.AQUA + "You have now added maroon");
-				}
-
+				this.createFirework(player, Color.MAROON);
 			}
+			
 			if (info.tregmine.api.math.Checksum.block(block) == 1967285645) {
-
-				if (!this.plugin.fireWorkEffect.containsKey(player.getName())) {
-					this.plugin.fireWorkEffect.put(player.getName(), FireworkEffect.builder());
-				}
-
-				if (this.plugin.fireWorkEffect.containsKey(player.getName())) {
-					this.plugin.fireWorkEffect.get(player.getName()).withColor(Color.TEAL);
-					player.sendMessage(ChatColor.AQUA + "You have now added teal");
-				}
-
+				this.createFirework(player, Color.TEAL);
 			}
 
 			if (info.tregmine.api.math.Checksum.block(block) == -2131168146) {
-
-				if (!this.plugin.fireWorkEffect.containsKey(player.getName())) {
-					this.plugin.fireWorkEffect.put(player.getName(), FireworkEffect.builder());
-				}
-
-				if (this.plugin.fireWorkEffect.containsKey(player.getName())) {
-					this.plugin.fireWorkEffect.get(player.getName()).withColor(Color.NAVY);
-					player.sendMessage(ChatColor.AQUA + "You have now added navy");
-				}
-
+				this.createFirework(player, Color.NAVY);
 			}
 
 			if (info.tregmine.api.math.Checksum.block(block) == -2038282101) {
-
-				if (!this.plugin.fireWorkEffect.containsKey(player.getName())) {
-					this.plugin.fireWorkEffect.put(player.getName(), FireworkEffect.builder());
-				}
-
-				if (this.plugin.fireWorkEffect.containsKey(player.getName())) {
-					this.plugin.fireWorkEffect.get(player.getName()).withColor(Color.OLIVE);
-					player.sendMessage(ChatColor.AQUA + "You have now added olive");
-				}
-
+				this.createFirework(player, Color.OLIVE);
 			}
+
 			//			-1845477288 WHITE 		| silver *
 			//			-337925479 CYAN 		| Aqua *
 			//			1169626330 PURPLE 		| Purple *
