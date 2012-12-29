@@ -36,6 +36,37 @@ public class BasicCommandsBlock implements Listener {
 		plugin.getServer();
 	}
 
+	
+	public void createFirework(TregminePlayer player, Color c) {
+
+		if (!this.plugin.fireWork.containsKey(player.getName())) {
+			ItemStack item = new ItemStack(Material.FIREWORK, 5);
+			FireworkMeta meta = (FireworkMeta) item.getItemMeta();
+			meta.setDisplayName("Firework: ");
+			this.plugin.fireWorkMeta.put(player.getName(), meta);
+			this.plugin.fireWork.put(player.getName(), item);
+		}
+
+
+		if (!this.plugin.fireWorkEffect.containsKey(player.getName())) {
+			this.plugin.fireWorkEffect.put(player.getName(), FireworkEffect.builder());
+		}
+
+		if (!this.plugin.fireWorkEffect.containsKey(player.getName())) {
+			this.plugin.fireWorkEffect.put(player.getName(), FireworkEffect.builder());
+		}
+
+		if (!this.plugin.property.containsKey(c.toString())) {
+
+			player.sendMessage(ChatColor.AQUA + "You have now added " + c.toString());
+			this.plugin.property.put(c.toString(), true);
+		} else {
+			player.sendMessage(c.toString() + " already added");
+		}
+	}
+	
+	
+	
 	@EventHandler 
 	public void fireWorkButton(PlayerInteractEvent event) {
 		if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
@@ -43,42 +74,7 @@ public class BasicCommandsBlock implements Listener {
 			Block block = event.getClickedBlock();
 
 			if (info.tregmine.api.math.Checksum.block(block) == -1845477288) {
-
-
-				if (!this.plugin.fireWork.containsKey(player.getName())) {
-					ItemStack item = new ItemStack(Material.FIREWORK, 5);
-					FireworkMeta meta = (FireworkMeta) item.getItemMeta();
-					meta.setDisplayName("Firework shop:");
-					this.plugin.fireWorkMeta.put(player.getName(), meta);
-					this.plugin.fireWork.put(player.getName(), item);
-				}
-
-
-				if (!this.plugin.fireWorkEffect.containsKey(player.getName())) {
-					this.plugin.fireWorkEffect.put(player.getName(), FireworkEffect.builder());
-				}
-
-				if (this.plugin.fireWorkEffect.containsKey(player.getName())) {
-
-					if (!this.plugin.property.containsKey("white")) {
-						FireworkEffect.Builder effect = FireworkEffect.builder();
-						FireworkMeta meta = (FireworkMeta) this.plugin.fireWork.get(player.getName()).getItemMeta();
-						ItemStack fireWork = this.plugin.fireWork.get(player.getName());
-
-						
-						effect.withColor(Color.WHITE);
-						meta.addEffect(effect.build());
-						meta.setDisplayName(meta.getDisplayName() + " WHITE");
-						fireWork.setItemMeta(meta);
-						this.plugin.fireWork.put(player.getName(), fireWork);
-
-						player.sendMessage(ChatColor.AQUA + "You have now added white");
-						this.plugin.property.put("white", true);
-					} else {
-						player.sendMessage("White already added");
-					}
-				}
-
+				this.createFirework(player, Color.WHITE);
 			}
 
 			if (info.tregmine.api.math.Checksum.block(block) == -337925479) {
