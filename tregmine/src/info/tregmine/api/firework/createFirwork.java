@@ -135,9 +135,10 @@ public class createFirwork {
 		ItemStack item = new ItemStack(Material.FIREWORK, _stackSize);
 		FireworkEffect.Builder effect = FireworkEffect.builder();
 
+		System.console().printf("" + this.haveColors().length);
 		for (Color color : this.haveColors()) {
-			effect.withColor(color);
 			System.console().printf(color.toString());
+			effect.withColor(color);
 		}
 
 		FireworkMeta meta = (FireworkMeta) item.getItemMeta();
