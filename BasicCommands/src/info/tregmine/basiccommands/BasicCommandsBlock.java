@@ -8,6 +8,7 @@ import info.tregmine.currency.Wallet;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
+import org.bukkit.FireworkEffect;
 //import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -80,23 +81,7 @@ public class BasicCommandsBlock implements Listener {
 			this.colorFirework(player, Color.NAVY, 		-2131168146, 	block);
 			this.colorFirework(player, Color.OLIVE, 	-2038282101, 	block);
 
-			//			-1845477288 WHITE 		| silver *
-			//			-337925479 CYAN 		| Aqua *
-			//			1169626330 PURPLE 		| Purple *
-			//			-1617789157 BLUE 		| BLUE*
-			//			-1469174797 BROWN 		| MAROON
-			//			38377012 BLACK			| BLACK
-			//			1938955831 ORANGE		| ORANGE
-			//			1967285645 MAGENTA		| TEAL
-			//			-2131168146 LIGHT BLUE	| NAVY
-			//			-1934654641 YELLOW *	| YELLOW
-			//			-1738141136 GREEN 		| LIME *
-			//			-1541627631 PINK 		| FUCHSIA *
-			//			-1345114126 DARK GREY	| GRAY *
-			//			-1148600621 GREY		| SILVER *
-			//			-952087116 DARK GREEN 	| GREEN
-			//			-755573611 RED 			| RED
-			//			-2038282101	OLIVE		| OLIVE
+
 
 
 
@@ -107,7 +92,25 @@ public class BasicCommandsBlock implements Listener {
 			}
 
 
+			if (info.tregmine.api.math.Checksum.block(block) == 367026419) {
+				if (!this.plugin.firework.containsKey(player.getName())) {
+					this.plugin.firework.put(player.getName(), new info.tregmine.api.firework.createFirwork());
+				}
 
+				info.tregmine.api.firework.createFirwork FireWork = this.plugin.firework.get(player.getName());
+				FireWork.addType(FireworkEffect.Type.STAR);
+			}
+
+			if (info.tregmine.api.math.Checksum.block(block) == 760053429) {
+				if (!this.plugin.firework.containsKey(player.getName())) {
+					this.plugin.firework.put(player.getName(), new info.tregmine.api.firework.createFirwork());
+				}
+
+				info.tregmine.api.firework.createFirwork FireWork = this.plugin.firework.get(player.getName());
+				FireWork.addType(FireworkEffect.Type.CREEPER);
+			}
+
+			
 			if (info.tregmine.api.math.Checksum.block(block) == 656425969) {
 				if (!this.plugin.firework.containsKey(player.getName())) {
 					this.plugin.firework.put(player.getName(), new info.tregmine.api.firework.createFirwork());
