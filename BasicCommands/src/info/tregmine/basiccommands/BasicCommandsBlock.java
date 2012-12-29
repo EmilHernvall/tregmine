@@ -97,7 +97,23 @@ public class BasicCommandsBlock implements Listener {
 			this.colorFirework(player, Color.NAVY, 		-2131168146, 	block);
 			this.colorFirework(player, Color.OLIVE, 	-2038282101, 	block);
 
+			this.fadeFirework(player, Color.WHITE, 		327843995, 		block);
+			this.fadeFirework(player, Color.AQUA, 		100155864, 		block);
+			this.fadeFirework(player, Color.PURPLE, 	-96357641, 		block);
+			this.fadeFirework(player, Color.BLUE, 		-292871146, 	block);
+			this.fadeFirework(player, Color.FUCHSIA, 	689696379, 		block);
 			this.fadeFirework(player, Color.BLACK, 		-1078925166,	block);
+			this.fadeFirework(player, Color.ORANGE, 	524357500, 		block);
+			this.fadeFirework(player, Color.YELLOW, 	-561837485, 	block);
+			this.fadeFirework(player, Color.LIME, 		-1872875789, 	block);
+			this.fadeFirework(player, Color.GRAY, 		493182874, 		block);
+			this.fadeFirework(player, Color.SILVER, 	296669369, 		block);
+			this.fadeFirework(player, Color.GREEN, 		-685898156, 	block);			
+			this.fadeFirework(player, Color.RED, 		-882411661, 	block);
+			this.fadeFirework(player, Color.MAROON, 	-489384651, 	block);
+			this.fadeFirework(player, Color.TEAL, 		1804221178, 	block);
+			this.fadeFirework(player, Color.NAVY, 		1607707673, 	block);
+			this.fadeFirework(player, Color.OLIVE, 		-983194309, 	block);
 
 			// Reset colors -565613610
 			if (info.tregmine.api.math.Checksum.block(block) == -565613610) {
