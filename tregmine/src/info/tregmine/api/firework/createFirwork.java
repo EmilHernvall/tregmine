@@ -1,5 +1,7 @@
 package info.tregmine.api.firework;
 
+import java.util.Arrays;
+
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Material;
@@ -122,13 +124,17 @@ public class createFirwork {
 		ItemStack item = new ItemStack(Material.FIREWORK, _stackSize);
 		FireworkEffect.Builder effect = FireworkEffect.builder();
 
+		String colorString = "";
+		
+		Arrays.sort(colors);
 		
 		for (int cc = 1; cc <= colorCounter; cc++) {
 			effect.withColor(colors[cc]);
+			colorString = colorString + this.colorToString(colors[cc]); 
 		}
 		
 		FireworkMeta meta = (FireworkMeta) item.getItemMeta();
-		meta.setDisplayName("Firework: " + effect.toString() );
+		meta.setDisplayName("Firework: " + colorString );
 		meta.addEffect(effect.build());
 		item.setItemMeta(meta);
 
