@@ -4,7 +4,10 @@ package info.tregmine.api.firework;
 
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
+import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Firework;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
 
@@ -152,6 +155,27 @@ public class createFirwork {
 		this.type = _type;
 	}
 
+	public void shoot(Location _location){
+		
+        Firework firework = (Firework) _location.getWorld().spawnEntity(_location, EntityType.FIREWORK);
+		FireworkEffect.Builder effect = FireworkEffect.builder();
+
+		for (int cc = 1; cc <= colorCounter; cc++) {
+			effect.withColor(colors[cc]);
+		}
+
+		FireworkMeta meta = firework.getFireworkMeta();
+		effect.with(type);
+		if (this.fadeTo != null) {
+			effect.withFade(fadeTo);
+		}
+		
+		meta.setPower(this.duration);
+		meta.addEffect(effect.build());
+		firework.setFireworkMeta(meta);
+	}
+
+	
 	public ItemStack getAsStack(int _stackSize){
 		ItemStack item = new ItemStack(Material.FIREWORK, _stackSize);
 		FireworkEffect.Builder effect = FireworkEffect.builder();
@@ -164,9 +188,6 @@ public class createFirwork {
 			effect.withColor(colors[cc]);
 			colorString = colorString + " " + this.colorToString(colors[cc]); 
 		}
-
-		
-		
 		
 		FireworkMeta meta = (FireworkMeta) item.getItemMeta();
 		meta.setDisplayName("Firework: " + colorString + " " + this.effectToString(this.type)  );

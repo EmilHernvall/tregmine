@@ -5,9 +5,12 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Color;
+import org.bukkit.FireworkEffect;
 //import org.bukkit.FireworkEffect;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.World;
 //import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -531,7 +534,6 @@ public class BasicCommands extends JavaPlugin {
 
 	@Override
 	public void onLoad() {
-		/*
 		final World world = this.getServer().getWorld("world");
 		
 		this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
@@ -539,53 +541,17 @@ public class BasicCommands extends JavaPlugin {
             public void run() {
     
             	
-//            	21:26:31 [INFO] X: -1432.3791313868546 (-1433)
-//            	21:26:31 [INFO] Y: 63.0 (63)
-//            	21:26:31 [INFO] Z: 5471.3057720838115 (5471)
             	
     			Location loc = world.getSpawnLocation();
-            	Location loc2 = new Location(world, -1432, 63, 5471);
-            	
-            	
-            	
-                Firework f1 = (Firework) loc.getWorld().spawnEntity(loc, EntityType.FIREWORK);
-
-                Firework f2 = (Firework) loc.getWorld().spawnEntity(loc2, EntityType.FIREWORK);
-
-                
-                
-                FireworkEffect.Builder effect = FireworkEffect.builder();
-                FireworkEffect.Builder effect2 = FireworkEffect.builder();
-                                
-                effect.trail(true).with(FireworkEffect.Type.STAR)
-                	.withColor(Color.RED)
-                	.withColor(Color.ORANGE)
-                	.withColor(Color.AQUA)
-                	.withFade(Color.BLACK);
-
-                effect2.trail(true).with(FireworkEffect.Type.CREEPER)
-            	.withColor(Color.YELLOW)
-            	.withColor(Color.ORANGE)
-            	.withFade(Color.GREEN);
-
-                FireworkMeta meta1 = f1.getFireworkMeta();
-                FireworkMeta meta2 = f2.getFireworkMeta();
-
-                meta1.setPower(1);
-                meta2.setPower(1);
-
-                meta1.addEffect(effect.build());
-                meta2.addEffect(effect2.build());
-                
-                f1.setFireworkMeta(meta1);
-                f2.setFireworkMeta(meta2);
-            	
+    			info.tregmine.api.firework.createFirwork firework = new info.tregmine.api.firework.createFirwork();
+    			firework.addColor(Color.BLUE);
+    			firework.addColor(Color.YELLOW);
+    			firework.addType(FireworkEffect.Type.STAR);
+    			firework.shoot(loc);
             }
 
 			
 		},100L,200L);
-
-*/
 		
 	}
 }
