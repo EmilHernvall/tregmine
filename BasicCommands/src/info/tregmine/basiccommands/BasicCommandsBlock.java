@@ -212,8 +212,9 @@ public class BasicCommandsBlock implements Listener {
 
 						info.tregmine.api.firework.createFirwork FireWork = plugin.firework.get(player.getName());
 						FireWork.shoot(loc);
+						player.sendMessage("<" + ChatColor.GREEN + "ELF" + ChatColor.WHITE + "> Shoting your firework now!");
 					}
-				}, 20L);
+				}, 600L);
 			}
 
 
