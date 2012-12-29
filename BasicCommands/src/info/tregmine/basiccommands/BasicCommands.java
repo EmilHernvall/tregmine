@@ -528,7 +528,7 @@ public class BasicCommands extends JavaPlugin {
 
 	@Override
 	public void onLoad() {
-		
+		/*
 		final World world = this.getServer().getWorld("world");
 		
 		this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
@@ -536,11 +536,9 @@ public class BasicCommands extends JavaPlugin {
             public void run() {
     
             	
-            	/*
-            	21:26:31 [INFO] X: -1432.3791313868546 (-1433)
-            	21:26:31 [INFO] Y: 63.0 (63)
-            	21:26:31 [INFO] Z: 5471.3057720838115 (5471)
-            	*/
+//            	21:26:31 [INFO] X: -1432.3791313868546 (-1433)
+//            	21:26:31 [INFO] Y: 63.0 (63)
+//            	21:26:31 [INFO] Z: 5471.3057720838115 (5471)
             	
     			Location loc = world.getSpawnLocation();
             	Location loc2 = new Location(world, -1432, 63, 5471);
@@ -584,7 +582,7 @@ public class BasicCommands extends JavaPlugin {
 			
 		},100L,200L);
 
-
+*/
 		
 	}
 }

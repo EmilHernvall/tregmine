@@ -11,6 +11,7 @@ import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Firework;
 //import org.bukkit.entity.EntityType;
 //import org.bukkit.entity.Firework;
 //import org.bukkit.block.BlockFace;
@@ -58,10 +59,14 @@ public class BasicCommandsBlock implements Listener {
 				}
 
 				if (this.plugin.fireWorkEffect.containsKey(player.getName())) {
-					this.plugin.fireWorkEffect.get(player.getName()).withColor(Color.WHITE);
-					this.plugin.fireWorkMeta.get(player.getName()).addEffect(this.plugin.fireWorkEffect.get(player.getName()).build());
-					this.plugin.fireWorkMeta.get(player.getName()).setDisplayName(this.plugin.fireWorkMeta.get(player.getName()).getDisplayName() + " WHITE");
-					this.plugin.fireWork.get(player.getName()).setItemMeta(this.plugin.fireWorkMeta.get(player.getName()));
+					FireworkEffect.Builder effect = FireworkEffect.builder();
+					FireworkMeta meta = (FireworkMeta) this.plugin.fireWork.get(player.getName()).getItemMeta();
+					ItemStack fireWork = this.plugin.fireWork.get(player.getName());
+					
+					effect.withColor(Color.WHITE);
+					meta.addEffect(effect.build());
+					meta.setDisplayName(meta.getDisplayName() + " WHITE");
+					
 					player.sendMessage(ChatColor.AQUA + "You have now added white");
 				}
 
