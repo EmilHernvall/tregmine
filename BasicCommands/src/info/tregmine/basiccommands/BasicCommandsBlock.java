@@ -243,10 +243,13 @@ public class BasicCommandsBlock implements Listener {
 
 				if (!this.plugin.fireWorkEffect.containsKey(player.getName())) {
 					this.plugin.fireWorkEffect.put(player.getName(), FireworkEffect.builder());
-				}
+				} 
 
 				if (this.plugin.fireWorkEffect.containsKey(player.getName())) {
 					this.plugin.fireWorkEffect.remove(player.getName());
+					this.plugin.fireWorkMeta.remove(player.getName());
+					this.plugin.fireWork.remove(player.getName());
+					this.plugin.property.remove(player.getName());
 					player.sendMessage(ChatColor.AQUA + "You have now rested everyting and need to start from scratch");
 				}
 
