@@ -55,7 +55,23 @@ public class BasicCommandsBlock implements Listener {
 
 	}
 
+	public void fadeFirework(TregminePlayer player, Color c, int button, Block block) {
 
+		if (info.tregmine.api.math.Checksum.block(block) == button) {
+			if (!this.plugin.firework.containsKey(player.getName())) {
+				this.plugin.firework.put(player.getName(), new info.tregmine.api.firework.createFirwork());
+			}
+
+			info.tregmine.api.firework.createFirwork FireWork = this.plugin.firework.get(player.getName());
+
+			FireWork.fadeTo(c);
+			player.sendMessage(ChatColor.AQUA + "Changed fade color to " + FireWork.colorToString(c));
+		}
+
+
+	}
+
+	
 
 	@EventHandler 
 	public void fireWorkButton(PlayerInteractEvent event) {
@@ -81,17 +97,7 @@ public class BasicCommandsBlock implements Listener {
 			this.colorFirework(player, Color.NAVY, 		-2131168146, 	block);
 			this.colorFirework(player, Color.OLIVE, 	-2038282101, 	block);
 
-
-			// Fadeto
-			if (info.tregmine.api.math.Checksum.block(block) == -1078925166) {
-				if (!this.plugin.firework.containsKey(player.getName())) {
-					this.plugin.firework.put(player.getName(), new info.tregmine.api.firework.createFirwork());
-				}
-
-				info.tregmine.api.firework.createFirwork FireWork = this.plugin.firework.get(player.getName());
-				FireWork.fadeTo(Color.BLACK);
-				player.sendMessage(ChatColor.AQUA + "Changed to black fade");
-			}
+			this.fadeFirework(player, Color.BLACK, 		-1078925166,	block);
 
 			// Reset colors -565613610
 			if (info.tregmine.api.math.Checksum.block(block) == -565613610) {
