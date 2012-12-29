@@ -27,10 +27,7 @@ public class createFirwork {
 
 			}
 		}
-		
 		colors[colorCounter] = _color;
-//		colorCounter++;
-
 	}
 
 	public String colorToString(Color c) {
@@ -129,11 +126,9 @@ public class createFirwork {
 		for (int cc = 0; cc <= colorCounter; cc++) {
 			effect.withColor(colors[cc]);
 		}
-
-//		effect.withColor(Color.WHITE);
 		
 		FireworkMeta meta = (FireworkMeta) item.getItemMeta();
-		meta.setDisplayName("Firework: " + colorCounter );
+		meta.setDisplayName("Firework: " + meta.toString() );
 		meta.addEffect(effect.build());
 		item.setItemMeta(meta);
 
