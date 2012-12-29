@@ -108,7 +108,7 @@ public class createFirwork {
 	}
 
 	public Color[] haveColors() {
-		Color[] c = new Color[colorCounter];
+		Color[] c = new Color[colorCounter+1];
 		
 		for (int i = 0; i >= colorCounter; i++) {
 			c[i] = colors[i];
