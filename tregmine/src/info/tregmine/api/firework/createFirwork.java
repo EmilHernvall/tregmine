@@ -108,7 +108,13 @@ public class createFirwork {
 	}
 
 	public Color[] haveColors() {
-		return colors;
+		Color[] c = new Color[colorCounter];
+		
+		for (int i = 0; i >= colorCounter; i++) {
+			c[i] = colors[i];
+		}
+		
+		return c;
 	}
 
 	public String[] hasColorAsString() {
