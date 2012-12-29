@@ -71,13 +71,13 @@ public class BasicCommandsBlock implements Listener {
 
 	}
 
-	
+
 
 	@EventHandler 
 	public void fireWorkButton(PlayerInteractEvent event) {
 		if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-			TregminePlayer player = this.plugin.tregmine.getPlayer(event.getPlayer());
-			Block block = event.getClickedBlock();
+			final TregminePlayer player = this.plugin.tregmine.getPlayer(event.getPlayer());
+			final Block block = event.getClickedBlock();
 
 			this.colorFirework(player, Color.WHITE, 	-1845477288, 	block);
 			this.colorFirework(player, Color.AQUA, 		-337925479, 	block);
@@ -143,7 +143,7 @@ public class BasicCommandsBlock implements Listener {
 				FireWork.duration(2);
 				player.sendMessage(ChatColor.AQUA + "Changed duration to 2");
 			}
-			
+
 			// duration 3 button
 			if (info.tregmine.api.math.Checksum.block(block) == 1076918913) {
 				if (!this.plugin.firework.containsKey(player.getName())) {
@@ -154,7 +154,7 @@ public class BasicCommandsBlock implements Listener {
 				FireWork.duration(3);
 				player.sendMessage(ChatColor.AQUA + "Changed duration to 3");
 			}
-			
+
 			// Large ball effect button
 			if (info.tregmine.api.math.Checksum.block(block) == 367026419) {
 				if (!this.plugin.firework.containsKey(player.getName())) {
@@ -205,80 +205,85 @@ public class BasicCommandsBlock implements Listener {
 					return;
 				}
 
-				Location loc = new Location(block.getWorld(), -1444, 40, 5471);
-				info.tregmine.api.firework.createFirwork FireWork = this.plugin.firework.get(player.getName());
-				FireWork.shoot(loc);
-			}
+				this.plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+					public void run() {
 
-			
-			
-			if (info.tregmine.api.math.Checksum.block(block) == 656425969) {
-				if (!this.plugin.firework.containsKey(player.getName())) {
-					this.plugin.firework.put(player.getName(), new info.tregmine.api.firework.createFirwork());
+						Location loc = new Location(block.getWorld(), -1444, 40, 5471);
+						
+						info.tregmine.api.firework.createFirwork FireWork = plugin.firework.get(player.getName());
+						FireWork.shoot(loc);
+					}
+				}, 20L);
+
+
+
+				if (info.tregmine.api.math.Checksum.block(block) == 656425969) {
+					if (!this.plugin.firework.containsKey(player.getName())) {
+						this.plugin.firework.put(player.getName(), new info.tregmine.api.firework.createFirwork());
+					}
+
+					info.tregmine.api.firework.createFirwork FireWork = this.plugin.firework.get(player.getName());
+
+
+					Wallet wallet = new Wallet(player.getName());
+					if ( wallet.take(2000) ) {
+						PlayerInventory inv = player.getInventory();
+						inv.addItem(FireWork.getAsStack(5));
+						player.sendMessage(ChatColor.AQUA + "you got 5 fireworks and " + ChatColor.GOLD + "2000" + ChatColor.AQUA + " Tregs was taken from you");
+						this.plugin.log.info(player.getName() + ":2000");
+
+					} else {
+						player.sendMessage("I'm sorry but you can't afford the 2000 tregs");
+					}
+
+
 				}
-
-				info.tregmine.api.firework.createFirwork FireWork = this.plugin.firework.get(player.getName());
-
-
-				Wallet wallet = new Wallet(player.getName());
-				if ( wallet.take(2000) ) {
-					PlayerInventory inv = player.getInventory();
-					inv.addItem(FireWork.getAsStack(5));
-					player.sendMessage(ChatColor.AQUA + "you got 5 fireworks and " + ChatColor.GOLD + "2000" + ChatColor.AQUA + " Tregs was taken from you");
-					this.plugin.log.info(player.getName() + ":2000");
-					
-				} else {
-					player.sendMessage("I'm sorry but you can't afford the 2000 tregs");
-				}
-
 
 			}
 
 		}
 
+
+
+		@EventHandler
+		public void onPlayerInteract(PlayerInteractEvent event) {
+			if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+				Player player = event.getPlayer();
+				Block block = event.getClickedBlock();
+				Location loc = block.getLocation();
+
+				if (player.getItemInHand().getType() == Material.BOOK) {
+
+					player.sendMessage(ChatColor.DARK_AQUA + "Type: " + ChatColor.AQUA + block.getType().toString() + " ("+ ChatColor.BLUE + block.getType().getId() + ChatColor.DARK_AQUA + ")" );
+					player.sendMessage(ChatColor.DARK_AQUA +"Data: " + ChatColor.AQUA + (int) block.getData() );
+					player.sendMessage(
+							ChatColor.RED +"X" +
+									ChatColor.WHITE + ", " +
+									ChatColor.GREEN + "Y" +
+									ChatColor.WHITE + ", " +
+									ChatColor.BLUE + "Z" +
+									ChatColor.WHITE + ": " +
+									ChatColor.RED + loc.getBlockX() +
+									ChatColor.WHITE + ", " +
+									ChatColor.GREEN + loc.getBlockY() +
+									ChatColor.WHITE + ", " +
+									ChatColor.BLUE + loc.getBlockZ()
+							);
+
+					try {
+						player.sendMessage(ChatColor.DARK_AQUA +"Biome: " + ChatColor.AQUA + block.getBiome().toString() );
+					} catch (Exception e) {
+						player.sendMessage(ChatColor.DARK_AQUA +"Biome: " + ChatColor.AQUA + "NULL" );
+					}
+
+
+					//				player.sendMessage(ChatColor.DARK_AQUA +"Light: " + ChatColor.AQUA + (int) block.getFace(BlockFace.UP).getLightLevel() );
+					player.sendMessage(ChatColor.DARK_AQUA +"Hash2d: " + ChatColor.AQUA + info.tregmine.api.math.Checksum.flat(block) );
+					player.sendMessage(ChatColor.DARK_AQUA +"Hash3d: " + ChatColor.AQUA + info.tregmine.api.math.Checksum.block(block) );
+					plugin.log.info("BlockHash2d: " +  info.tregmine.api.math.Checksum.flat(block) );
+					plugin.log.info("BlockHash3d: " +  info.tregmine.api.math.Checksum.block(block) );
+					plugin.log.info("POS: " +  loc.getBlockX() + ", " + loc.getBlockY() + ", " + loc.getBlockZ());
+				}
+			}
+		}    
 	}
-
-
-
-	@EventHandler
-	public void onPlayerInteract(PlayerInteractEvent event) {
-		if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-			Player player = event.getPlayer();
-			Block block = event.getClickedBlock();
-			Location loc = block.getLocation();
-
-			if (player.getItemInHand().getType() == Material.BOOK) {
-
-				player.sendMessage(ChatColor.DARK_AQUA + "Type: " + ChatColor.AQUA + block.getType().toString() + " ("+ ChatColor.BLUE + block.getType().getId() + ChatColor.DARK_AQUA + ")" );
-				player.sendMessage(ChatColor.DARK_AQUA +"Data: " + ChatColor.AQUA + (int) block.getData() );
-				player.sendMessage(
-						ChatColor.RED +"X" +
-								ChatColor.WHITE + ", " +
-								ChatColor.GREEN + "Y" +
-								ChatColor.WHITE + ", " +
-								ChatColor.BLUE + "Z" +
-								ChatColor.WHITE + ": " +
-								ChatColor.RED + loc.getBlockX() +
-								ChatColor.WHITE + ", " +
-								ChatColor.GREEN + loc.getBlockY() +
-								ChatColor.WHITE + ", " +
-								ChatColor.BLUE + loc.getBlockZ()
-						);
-
-				try {
-					player.sendMessage(ChatColor.DARK_AQUA +"Biome: " + ChatColor.AQUA + block.getBiome().toString() );
-				} catch (Exception e) {
-					player.sendMessage(ChatColor.DARK_AQUA +"Biome: " + ChatColor.AQUA + "NULL" );
-				}
-
-
-				//				player.sendMessage(ChatColor.DARK_AQUA +"Light: " + ChatColor.AQUA + (int) block.getFace(BlockFace.UP).getLightLevel() );
-				player.sendMessage(ChatColor.DARK_AQUA +"Hash2d: " + ChatColor.AQUA + info.tregmine.api.math.Checksum.flat(block) );
-				player.sendMessage(ChatColor.DARK_AQUA +"Hash3d: " + ChatColor.AQUA + info.tregmine.api.math.Checksum.block(block) );
-				plugin.log.info("BlockHash2d: " +  info.tregmine.api.math.Checksum.flat(block) );
-				plugin.log.info("BlockHash3d: " +  info.tregmine.api.math.Checksum.block(block) );
-				plugin.log.info("POS: " +  loc.getBlockX() + ", " + loc.getBlockY() + ", " + loc.getBlockZ());
-			}
-		}
-	}    
-}
