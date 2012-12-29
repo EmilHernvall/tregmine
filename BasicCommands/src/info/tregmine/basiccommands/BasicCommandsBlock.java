@@ -102,10 +102,7 @@ public class BasicCommandsBlock implements Listener {
 
 			// Reset colors -565613610
 			if (info.tregmine.api.math.Checksum.block(block) == -565613610) {
-				if (!this.plugin.firework.containsKey(player.getName())) {
-					this.plugin.firework.put(player.getName(), new info.tregmine.api.firework.createFirwork());
-				}
-				this.plugin.firework.put(player.getName(), null);
+				this.plugin.firework.put(player.getName(), new info.tregmine.api.firework.createFirwork());
 				player.sendMessage(ChatColor.AQUA + "You have now rested everyting and need to start from scratch");
 			}
 
