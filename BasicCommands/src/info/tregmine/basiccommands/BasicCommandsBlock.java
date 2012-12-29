@@ -92,6 +92,27 @@ public class BasicCommandsBlock implements Listener {
 			}
 
 
+			if (info.tregmine.api.math.Checksum.block(block) == 563539924) {
+				if (!this.plugin.firework.containsKey(player.getName())) {
+					this.plugin.firework.put(player.getName(), new info.tregmine.api.firework.createFirwork());
+				}
+
+				info.tregmine.api.firework.createFirwork FireWork = this.plugin.firework.get(player.getName());
+				FireWork.addType(FireworkEffect.Type.BALL_LARGE);
+				player.sendMessage(ChatColor.AQUA + "Changed to huge ball effect");
+			}
+
+			if (info.tregmine.api.math.Checksum.block(block) == 956566934) {
+				if (!this.plugin.firework.containsKey(player.getName())) {
+					this.plugin.firework.put(player.getName(), new info.tregmine.api.firework.createFirwork());
+				}
+
+				info.tregmine.api.firework.createFirwork FireWork = this.plugin.firework.get(player.getName());
+				FireWork.addType(FireworkEffect.Type.BURST);
+				player.sendMessage(ChatColor.AQUA + "Changed to burst effect");
+			}
+
+
 			if (info.tregmine.api.math.Checksum.block(block) == 367026419) {
 				if (!this.plugin.firework.containsKey(player.getName())) {
 					this.plugin.firework.put(player.getName(), new info.tregmine.api.firework.createFirwork());
@@ -101,6 +122,7 @@ public class BasicCommandsBlock implements Listener {
 				FireWork.addType(FireworkEffect.Type.STAR);
 				player.sendMessage(ChatColor.AQUA + "Changed to star effect");
 			}
+
 
 			if (info.tregmine.api.math.Checksum.block(block) == 760053429) {
 				if (!this.plugin.firework.containsKey(player.getName())) {
@@ -112,7 +134,7 @@ public class BasicCommandsBlock implements Listener {
 				player.sendMessage(ChatColor.AQUA + "Changed to creeper effect");
 			}
 
-			
+
 			if (info.tregmine.api.math.Checksum.block(block) == 656425969) {
 				if (!this.plugin.firework.containsKey(player.getName())) {
 					this.plugin.firework.put(player.getName(), new info.tregmine.api.firework.createFirwork());
