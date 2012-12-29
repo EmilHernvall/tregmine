@@ -88,7 +88,12 @@ public class BasicCommandsBlock implements Listener {
         if (c.equals(Color.PURPLE)) {
         	colorName = "purple";
         }
-       
+
+        if (c.equals(Color.AQUA)) {
+        	colorName = "aqua";
+        }
+
+        
         if (c.equals(Color.RED)) {
         	colorName = "red";
         }
@@ -147,7 +152,16 @@ public class BasicCommandsBlock implements Listener {
 			Block block = event.getClickedBlock();
 
 			if (info.tregmine.api.math.Checksum.block(block) == -1845477288) {
-				this.createFirework(player, Color.WHITE);
+				info.tregmine.api.firework.createFirwork FireWork = new info.tregmine.api.firework.createFirwork();
+				
+				FireWork.addColor(Color.WHITE);
+
+				PlayerInventory inv = player.getInventory();
+				inv.addItem(FireWork.getAsStack(5));
+				
+				
+				
+//				this.createFirework(player, Color.WHITE);
 			}
 
 			if (info.tregmine.api.math.Checksum.block(block) == -337925479) {
@@ -240,10 +254,10 @@ public class BasicCommandsBlock implements Listener {
 
 			// Reset colors -565613610
 			if (info.tregmine.api.math.Checksum.block(block) == -565613610) {
-					this.plugin.fireWorkEffect.remove(player.getName());
-					this.plugin.fireWorkMeta.remove(player.getName());
-					this.plugin.fireWork.remove(player.getName());
-					this.plugin.property.remove(player.getName());
+					this.plugin.fireWorkEffect.put(player.getName(), null);
+					this.plugin.fireWorkMeta.put(player.getName(), null);
+					this.plugin.fireWork.put(player.getName(), null);
+					this.plugin.property.put(player.getName(), null);
 					player.sendMessage(ChatColor.AQUA + "You have now rested everyting and need to start from scratch");
 			}
 
