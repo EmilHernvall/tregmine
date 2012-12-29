@@ -69,9 +69,11 @@ public class BasicCommandsBlock implements Listener {
 						effect.withColor(Color.WHITE);
 						meta.addEffect(effect.build());
 						meta.setDisplayName(meta.getDisplayName() + " WHITE");
+						fireWork.setItemMeta(meta);
 						this.plugin.fireWork.put(player.getName(), fireWork);
 
 						player.sendMessage(ChatColor.AQUA + "You have now added white");
+						this.plugin.property.put("white", true);
 					} else {
 						player.sendMessage("White already added");
 					}
