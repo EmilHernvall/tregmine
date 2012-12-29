@@ -198,7 +198,20 @@ public class BasicCommandsBlock implements Listener {
 				player.sendMessage(ChatColor.AQUA + "Changed to creeper effect");
 			}
 
+			// Preview button
+			if (info.tregmine.api.math.Checksum.block(block) == -1250389219) {
+				if (!this.plugin.firework.containsKey(player.getName())) {
+					player.sendMessage(ChatColor.RED + "You most go and set some fireworks propertys first");
+					return;
+				}
 
+				Location loc = new Location(block.getWorld(), -1444, 40, 5471);
+				info.tregmine.api.firework.createFirwork FireWork = this.plugin.firework.get(player.getName());
+				FireWork.shoot(loc);
+			}
+
+			
+			
 			if (info.tregmine.api.math.Checksum.block(block) == 656425969) {
 				if (!this.plugin.firework.containsKey(player.getName())) {
 					this.plugin.firework.put(player.getName(), new info.tregmine.api.firework.createFirwork());
