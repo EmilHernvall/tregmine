@@ -46,7 +46,6 @@ public class BoxFill extends JavaPlugin {
 		Material.RED_ROSE,
 		Material.SPONGE,
 		Material.SAPLING,
-		Material.BEDROCK,
 		Material.CACTUS,
 		Material.CLAY,
 		Material.CLAY_BRICK,
