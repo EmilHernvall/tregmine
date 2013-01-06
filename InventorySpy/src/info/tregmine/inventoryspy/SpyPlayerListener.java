@@ -30,12 +30,12 @@ public class SpyPlayerListener implements Listener {
 		event.getPlayer().getInventory().clear();
 	}
 
-//	@EventHandler
-//	public void onItemSpawn(ItemSpawnEvent event) {
-//		if (event.getEntity().getItemStack().getType() == Material.SUGAR_CANE) {
-//			event.setCancelled(true);
-//		}
-//	}
+	//	@EventHandler
+	//	public void onItemSpawn(ItemSpawnEvent event) {
+	//		if (event.getEntity().getItemStack().getType() == Material.SUGAR_CANE) {
+	//			event.setCancelled(true);
+	//		}
+	//	}
 
 	/*
 	@EventHandler
@@ -58,7 +58,7 @@ public class SpyPlayerListener implements Listener {
 		}
 
 	}
-*/
+	 */
 
 
 	@EventHandler
@@ -91,7 +91,10 @@ public class SpyPlayerListener implements Listener {
 
 			if (event.getClickedBlock().getType() == Material.CHEST && event.getPlayer().getGameMode() == GameMode.CREATIVE) {
 				//				event.getPlayer().sendMessage("error");
-				event.setCancelled(true);
+
+				if (!event.getPlayer().isOp()) {
+					event.setCancelled(true);
+				}
 				return;
 			}
 		}
