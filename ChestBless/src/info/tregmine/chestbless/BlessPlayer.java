@@ -42,6 +42,9 @@ public class BlessPlayer implements Listener {
 		allowedMaterials.add(Material.DIODE_BLOCK_ON);
 		allowedMaterials.add(Material.JUKEBOX);
 		allowedMaterials.add(Material.SIGN);
+		allowedMaterials.add(Material.FENCE_GATE);
+		allowedMaterials.add(Material.WOOD_BUTTON);
+		
 	}
 
 	@EventHandler

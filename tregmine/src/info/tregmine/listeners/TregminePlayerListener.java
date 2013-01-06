@@ -245,12 +245,6 @@ public class TregminePlayerListener implements Listener {
 		} else  {
 			this.plugin.tregminePlayer.put(playerName, tregPlayer);
 		}
-
-		if (event.getPlayer().getServer().getPort() == 1337 && tregPlayer.getNameColor() == ChatColor.GRAY) {
-			event.disallow(Result.KICK_BANNED, "Sorry warned players are not allowed on creative server!");
-		}
-
-
  
 		if (tregPlayer.getMetaString("keyword") != null) {
 			String keyword = tregPlayer.getMetaString("keyword") + ".mc.tregmine.info:25565".toLowerCase();
