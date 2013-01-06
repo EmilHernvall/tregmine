@@ -25,7 +25,7 @@ public class Chat implements Listener {
 
 		for (Player player : players) {
 			ChatColor txtColor = ChatColor.WHITE;
-			info.tregmine.api.TregminePlayer to = this.plugin.tregminePlayer.get(player);
+			info.tregmine.api.TregminePlayer to = this.plugin.getPlayer(player);
 
 
 			if(sender.equals(to)) {
