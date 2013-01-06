@@ -44,7 +44,7 @@ public class Chat implements Listener {
 				}
 */
 				player.sendMessage(channel+"<" + sender.getChatName() + ChatColor.WHITE + "> " + txtColor + event.getMessage());
-			}
+//			}
 
 
 		}
