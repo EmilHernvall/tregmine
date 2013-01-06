@@ -28,7 +28,7 @@ public class Chat implements Listener {
 			info.tregmine.api.TregminePlayer to = this.plugin.tregminePlayer.get(player);
 
 
-			if(sender == player) {
+			if(sender.equals(to)) {
 				txtColor = ChatColor.GRAY;
 			}
 
