@@ -129,10 +129,19 @@ public class Tregmine extends JavaPlugin
 			return true;
 		}
 		
+		if(commandName.equals("channel")){
+			if (args.length != 1) {
+				return false;
+			}
+			
+			player.setChatChannel(args[0]);
+			return true;
+		}
+		
 //		info.tregmine.api.TregminePlayer tregminePlayer = this.tregminePlayer.get(from.getName());
 
 		
-		from.sendMessage(commandName);
+//		from.sendMessage(commandName);
 		
 		
 		return false;

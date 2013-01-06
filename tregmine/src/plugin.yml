@@ -1,6 +1,6 @@
 name: Tregmine
 main: info.tregmine.Tregmine
-version: 2013
+version: 2014
 website: http://tregmine.info
 author: Ein Andersson
 description: Tregmine
@@ -12,4 +12,7 @@ commands:
   tp:
     description: teleport to specified player.
     -usage: /tp <player>
+  channel:
+    description: Join a chat channel
+    -usage: /channel channelname
     

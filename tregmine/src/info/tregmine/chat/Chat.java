@@ -33,9 +33,9 @@ public class Chat implements Listener {
 			}
 
 			
+			String channel = sender.getChatChannel();
 			if (sender.getChatChannel().equals(to.getChatChannel())) {
 				
-				String channel = sender.getChatChannel();
 				
 				if (sender.getChatChannel().matches("GLOBAL")) {
 					channel = "";
@@ -43,7 +43,7 @@ public class Chat implements Listener {
 				
 				player.sendMessage(channel+"<" + sender.getChatName() + ChatColor.WHITE + "> " + txtColor + event.getMessage());
 			}
-
+				this.plugin.log.info(channel+"<" + sender.getName() + "> " + txtColor + event.getMessage());
 
 		}
 		event.setCancelled(true);
