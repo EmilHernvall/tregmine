@@ -9,3 +9,7 @@ commands:
   who:
     description: show a list of who is online.
     -usage: /who
+  tp:
+    description: teleport to specified player.
+    -usage: /tp <player>
+    

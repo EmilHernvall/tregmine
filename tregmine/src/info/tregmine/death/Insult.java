@@ -5,7 +5,7 @@ import java.util.Random;
 public class Insult {
 
 	public static String random() {
-		String[] dieText = new String[156];
+		String[] dieText = new String[157];
 		dieText[0] = "Better luck next time.";
 		dieText[1] = "Did you just really do that?";
 		dieText[2] = "And you will never see heaven.";
@@ -165,7 +165,8 @@ public class Insult {
 			dieText[153] = "Einand doesn't like you";
 			dieText[154] = "Even the nether rejects you";
 			dieText[155] = "You were smoth by the hammer of Thor";
-
+			dieText[156] = " was smited by Josh121297 from senior heaven";
+			
 	    Random ran = new Random( System.currentTimeMillis() );
 	    int  rand = ran.nextInt(dieText.length);
 		return dieText[rand];

@@ -7,9 +7,6 @@ author: Ein Andersson
 description: Tregmine.info teleportation
 
 commands:
-  tp:
-    description: teleport to specified player.
-    -usage: /tp <player>
   tpto:
     description: teleport to a location.
     -usage: /tpto <x> <y> <z>
