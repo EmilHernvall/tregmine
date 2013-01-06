@@ -807,38 +807,32 @@ public abstract class PlayerDelegate implements Player
 
 	@Override
 	public void removePotionEffect(PotionEffectType arg0) {
-		// TODO Auto-generated method stub
-		
+		delegate.removePotionEffect(arg0);		
 	}
 
 	@Override
 	public <T> void playEffect(Location arg0, Effect arg1, T arg2) {
-		// TODO Auto-generated method stub
-		
-	}
+		delegate.playEffect(arg0, arg1, arg2);
+		}
 
 	@Override
 	public void closeInventory() {
-		// TODO Auto-generated method stub
-		
+		delegate.closeInventory();		
 	}
 
 	@Override
 	public ItemStack getItemOnCursor() {
-		// TODO Auto-generated method stub
-		return null;
+		return delegate.getItemOnCursor();
 	}
 
 	@Override
 	public InventoryView getOpenInventory() {
-		// TODO Auto-generated method stub
-		return null;
+		return delegate.getOpenInventory();
 	}
 
 	@Override
 	public InventoryView openEnchanting(Location arg0, boolean arg1) {
-		// TODO Auto-generated method stub
-		return null;
+		return delegate.openEnchanting(arg0, arg1);
 	}
 
 	@Override
@@ -858,74 +852,62 @@ public abstract class PlayerDelegate implements Player
 
 	@Override
 	public void setItemOnCursor(ItemStack arg0) {
-		// TODO Auto-generated method stub
-		
+		delegate.setItemOnCursor(arg0);
 	}
 
 	@Override
 	public boolean setWindowProperty(Property arg0, int arg1) {
-		// TODO Auto-generated method stub
-		return false;
+		return delegate.setWindowProperty(arg0, arg1);
 	}
 
 	@Override
 	public <T extends Projectile> T launchProjectile(Class<? extends T> arg0) {
-		// TODO Auto-generated method stub
-		return null;
+		return delegate.launchProjectile(arg0);
 	}
 
 	@Override
 	public EntityType getType() {
-		// TODO Auto-generated method stub
-		return null;
+		return delegate.getType();
 	}
 
 	@Override
 	public List<MetadataValue> getMetadata(String arg0) {
-		// TODO Auto-generated method stub
-		return null;
+		return delegate.getMetadata(arg0);
 	}
 
 	@Override
 	public boolean hasMetadata(String arg0) {
-		// TODO Auto-generated method stub
-		return false;
+		return delegate.hasMetadata(arg0);
 	}
 
 	@Override
 	public void removeMetadata(String arg0, Plugin arg1) {
-		// TODO Auto-generated method stub
-		
+		delegate.removeMetadata(arg0, arg1);
 	}
 
 	@Override
 	public void setMetadata(String arg0, MetadataValue arg1) {
-		// TODO Auto-generated method stub
-		
+		delegate.setMetadata(arg0, arg1);
 	}
 
 	@Override
 	public void abandonConversation(Conversation arg0) {
-		// TODO Auto-generated method stub
-		
+		delegate.abandonConversation(arg0);		
 	}
 
 	@Override
 	public void acceptConversationInput(String arg0) {
-		// TODO Auto-generated method stub
-		
+		delegate.acceptConversationInput(arg0);		
 	}
 
 	@Override
 	public boolean beginConversation(Conversation arg0) {
-		// TODO Auto-generated method stub
-		return false;
+		return delegate.beginConversation(arg0);
 	}
 
 	@Override
 	public boolean isConversing() {
-		// TODO Auto-generated method stub
-		return false;
+		return delegate.isConversing();
 	}
 
 	@Override
@@ -935,43 +917,37 @@ public abstract class PlayerDelegate implements Player
 
 	@Override
 	public Arrow shootArrow() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Egg throwEgg() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Snowball throwSnowball() {
-		// TODO Auto-generated method stub
 		return null;
 	}
+	
 	@Override
 	public boolean isFlying() {
-		// TODO Auto-generated method stub
-		return false;
+		return delegate.isFlying();
 	}
 
 	@Override
 	public void setFlying(boolean arg0) {
-		// TODO Auto-generated method stub
-		
+		delegate.setFlying(arg0);
 	}
 
 	@Override
 	public boolean isBlocking() {
-		return delegate.isBanned();
-		
-		}
+		return delegate.isBlocking();		
+	}
 
 	@Override
-	public void abandonConversation(Conversation arg0,
-			ConversationAbandonedEvent arg1) {
-		delegate.abandonConversation(arg0);		
+	public void abandonConversation(Conversation arg0, ConversationAbandonedEvent arg1) {
+		delegate.abandonConversation(arg0, arg1);		
 	}
 
 	@Override
@@ -1021,57 +997,57 @@ public abstract class PlayerDelegate implements Player
 
 	@Override
 	public void giveExpLevels(int arg0) {
-		// TODO Auto-generated method stub
+		delegate.giveExpLevels(arg0);
 		
 	}
 
 	@Override
 	public void setBedSpawnLocation(Location arg0, boolean arg1) {
-		// TODO Auto-generated method stub
-		
+		delegate.setBedSpawnLocation(arg0, arg1);
 	}
 
 	@Override
 	public void setTexturePack(String arg0) {
-		// TODO Auto-generated method stub
-		
+		delegate.setTexturePack(arg0);
 	}
 
 	@Override
 	public boolean getCanPickupItems() {
-		// TODO Auto-generated method stub
-		return false;
+		return delegate.getCanPickupItems();
 	}
 
 	@Override
 	public EntityEquipment getEquipment() {
-		// TODO Auto-generated method stub
-		return null;
+		return delegate.getEquipment();
 	}
 
 	@Override
 	public boolean getRemoveWhenFarAway() {
-		// TODO Auto-generated method stub
-		return false;
+		return delegate.getRemoveWhenFarAway();
 	}
 
 	@Override
 	public void setCanPickupItems(boolean arg0) {
-		// TODO Auto-generated method stub
-		
+		delegate.setCanPickupItems(arg0);
 	}
 
 	@Override
 	public void setRemoveWhenFarAway(boolean arg0) {
-		// TODO Auto-generated method stub
-		
+		delegate.setRemoveWhenFarAway(arg0);
 	}
 
 	@Override
 	public Location getLocation(Location arg0) {
-		// TODO Auto-generated method stub
-		return null;
+		return delegate.getLocation(arg0);
 	}
 
-	
+	@Override
+	public void resetMaxHealth() {
+		delegate.resetMaxHealth();
+	}
+
+	@Override
+	public void setMaxHealth(int arg0) {
+		delegate.setMaxHealth(arg0);
+	}
 }

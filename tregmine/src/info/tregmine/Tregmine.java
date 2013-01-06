@@ -81,6 +81,12 @@ public class Tregmine extends JavaPlugin
 	@Override
 	public void onDisable() { //run when plugin is disabled
 		this.getServer().getScheduler().cancelTasks(this);
+
+		Player[] players = this.getServer().getOnlinePlayers();
+
+		for (Player player : players) {
+			player.sendMessage(ChatColor.AQUA + "Tregmine successfully unloaded build: " + this.getDescription().getVersion() );
+		}	
 	}
 
 	@Override
@@ -93,7 +99,7 @@ public class Tregmine extends JavaPlugin
 			TregminePlayer tregPlayer = new TregminePlayer(player, onlineName);
 			tregPlayer.load();
 			this.tregminePlayer.put(onlineName, tregPlayer);
-			player.sendMessage(ChatColor.AQUA + "Tregmine successfully upgraded to build: " + this.getDescription().getVersion() );
+			player.sendMessage(ChatColor.AQUA + "Tregmine successfully loaded to build: " + this.getDescription().getVersion() );
 		}
 
 	}
