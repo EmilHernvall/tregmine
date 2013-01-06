@@ -11,6 +11,7 @@ import info.tregmine.stats.BlockStats;
 
 import java.util.logging.Logger;
 
+import org.bukkit.ChatColor;
 //import org.bukkit.ChatColor;
 import org.bukkit.WorldCreator;
 import org.bukkit.World.Environment;
@@ -90,6 +91,7 @@ public class Tregmine extends JavaPlugin
 			TregminePlayer tregPlayer = new TregminePlayer(player, onlineName);
 			tregPlayer.load();
 			this.tregminePlayer.put(onlineName, tregPlayer);
+			player.sendMessage(ChatColor.AQUA + "Tregmine successfully upgraded to build: " + this.getDescription().getVersion() );
 		}
 		
 	}
