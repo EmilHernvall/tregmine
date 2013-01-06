@@ -24,7 +24,7 @@ public class Tp {
 			return;
 		}
 
-		if (to.getMetaBoolean("tpblock") && !to.isAdmin() ) {
+		if (to.getMetaBoolean("tpblock") && !_player.isAdmin() ) {
 			_player.sendMessage(ChatColor.RED + to.getName() + ChatColor.AQUA + "'s teloptical deflector absorbed all motion. Teleportation failed.");
 			to.sendMessage(_player.getName() + ChatColor.AQUA + "'s teleportation spell cannot bypass your sophisticated defenses.");
 			return;
