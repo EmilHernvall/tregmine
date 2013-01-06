@@ -105,12 +105,22 @@ public class Tregmine extends JavaPlugin
 	public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args) {
 		String commandName = command.getName().toLowerCase();
 		Player from = null;
+		TregminePlayer player = null;
 		if(!(sender instanceof Player)) {
 			return false;
 		} else {
 			from = (Player) sender;
+			player = this.getPlayer(from);
 		}
 
+		
+		
+		if(commandName.equals("who") || commandName.equals("playerlist") || commandName.equals("list")){
+			info.tregmine.commands.Who.run(this, player, args);
+			return true;
+		}
+
+		
 //		info.tregmine.api.TregminePlayer tregminePlayer = this.tregminePlayer.get(from.getName());
 
 		
