@@ -34,7 +34,9 @@ public class Chat implements Listener {
 
 
 			if (sender.getChatChannel().equals(to.getChatChannel())) {
-				String channel = sender.getChatChannel();
+				
+				String channel = sender.getChatChannel()
+						;
 				if (sender.getChatChannel().matches("GLOBAL")) {
 					channel = "";
 				}

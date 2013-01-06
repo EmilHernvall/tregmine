@@ -474,10 +474,11 @@ public class TregminePlayer extends PlayerDelegate
     }
 
     public String getChatChannel() {
-    	if (this.getMetaString("channel") == null) {
+//    	if (this.getMetaString("channel") == null) {
     		return "GLOBAL";
-    	}    	
-    	return this.getMetaString("channel").toUpperCase();
+//    	}    	
+    	
+//    	return this.getMetaString("channel").toUpperCase();
     }
     
     
