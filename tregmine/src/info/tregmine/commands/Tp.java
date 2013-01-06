@@ -1,6 +1,6 @@
 package info.tregmine.commands;
 
-import java.util.List;
+//import java.util.List;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -12,7 +12,7 @@ public class Tp {
 
 	public static void run(Tregmine _plugin, TregminePlayer _player, String[] _args){
 		Player pto = _plugin.getServer().getPlayer(_args[0]);
-
+		
 		if (pto == null) {
 			_player.sendMessage(ChatColor.RED + "Can no find a user with name" + _args[0] );
 			return;
@@ -26,7 +26,7 @@ public class Tp {
 
 		if (to.getMetaBoolean("tpblock") && !_player.isAdmin() ) {
 			_player.sendMessage(ChatColor.RED + to.getName() + ChatColor.AQUA + "'s teloptical deflector absorbed all motion. Teleportation failed.");
-			to.sendMessage(_player.getName() + ChatColor.AQUA + "'s teleportation spell cannot bypass your sophisticated defenses.");
+			to.sendMessage(_player.getChatName() + ChatColor.AQUA + "'s teleportation spell cannot bypass your sophisticated defenses.");
 			return;
 		}
 		

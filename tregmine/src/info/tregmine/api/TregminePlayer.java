@@ -468,6 +468,19 @@ public class TregminePlayer extends PlayerDelegate
         }
     }
 
+    
+    public void setChatChannel(String _channel) {
+    	this.setMetaString("channel", _channel.toUpperCase());
+    }
+
+    public String getChatChannel() {
+    	if (this.getMetaString("channel") == null) {
+    		return "GLOBAL";
+    	}    	
+    	return this.getMetaString("channel").toUpperCase();
+    }
+    
+    
     public boolean verifyPassword(String attempt)
     {
         return BCrypt.checkpw(attempt, this.password);

@@ -71,6 +71,8 @@ public class Tregmine extends JavaPlugin
 		getServer().getPluginManager().registerEvents(new info.tregmine.death.DeathEntity(this), this);
 		getServer().getPluginManager().registerEvents(new info.tregmine.death.DeathPlayer(this), this);
 
+
+		getServer().getPluginManager().registerEvents(new info.tregmine.chat.Chat(this), this);
 		
 		
 	 	getServer().getPluginManager().registerEvents(new info.tregmine.sign.Color(), this);
