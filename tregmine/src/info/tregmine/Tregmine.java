@@ -188,7 +188,7 @@ public class Tregmine extends JavaPlugin
 				TregminePlayer to = this.getPlayer(tp);
 				
 				if (player.getChatChannel().equals(to.getChatChannel())) {
-					player.sendMessage("* " + player.getChatName() + ChatColor.WHITE + buf.toString() );
+					to.sendMessage("* " + player.getChatName() + ChatColor.WHITE + buf.toString() );
 				}
 			}
 			return true;
