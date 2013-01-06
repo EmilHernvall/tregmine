@@ -2,6 +2,7 @@ package info.tregmine.listeners;
 
 import info.tregmine.Tregmine;
 
+//import org.bukkit.GameMode;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
@@ -43,6 +44,5 @@ public class TregmineEntityListener  implements Listener  {
 		if(event.getLocation().getWorld().getName().matches("creative")) {
 			event.setCancelled(true);
 		}
-		
 	}
 }
