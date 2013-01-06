@@ -43,6 +43,7 @@ public class BlessPlayer implements Listener {
 		allowedMaterials.add(Material.JUKEBOX);
 		allowedMaterials.add(Material.SIGN);
 		allowedMaterials.add(Material.FENCE_GATE);
+		allowedMaterials.add(Material.DISPENSER);
 		allowedMaterials.add(Material.WOOD_BUTTON);
 		
 	}
