@@ -148,7 +148,7 @@ public class Tregmine extends JavaPlugin
 
 			toPlayer.setChatChannel(args[1]);
 
-			to.sendMessage(ChatColor.YELLOW + player.getChatChannel() + " forced you into channel " + args[1].toUpperCase() + ".");
+			to.sendMessage(ChatColor.YELLOW + player.getChatName() + " forced you into channel " + args[1].toUpperCase() + ".");
 			to.sendMessage(ChatColor.YELLOW + "Write /channel global to switch back to the global chat." );
 			from.sendMessage(ChatColor.YELLOW + "You are now in a forced chat " + args[1].toUpperCase()+ " with " + to.getDisplayName() + ".");
 			this.log.info(from.getName() + " FORCED CHAT WITH " + to.getDisplayName() + " IN CHANNEL " + args[1].toUpperCase());
