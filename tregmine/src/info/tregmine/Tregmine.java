@@ -122,6 +122,10 @@ public class Tregmine extends JavaPlugin
 			return true;
 		}
 
+		if(commandName.equals("tp")){
+			info.tregmine.commands.Tp.run(this, player, args);
+			return true;
+		}
 		
 //		info.tregmine.api.TregminePlayer tregminePlayer = this.tregminePlayer.get(from.getName());
 
