@@ -1,6 +1,6 @@
 name: Tregmine
 main: info.tregmine.Tregmine
-version: 2014
+version: 2015
 website: http://tregmine.info
 author: Ein Andersson
 description: Tregmine
@@ -15,4 +15,19 @@ commands:
   channel:
     description: Join a chat channel
     -usage: /channel channelname
-    
+  force:
+    description: Join a chat channel
+    -usage: /channel channelname
+  m:
+    description: send a private message
+    -usage: /m <player> message
+  msg:
+    description: send a private message
+    -usage: /m <player> message
+  tell:
+    description: send a private message
+    -usage: /m <player> message
+  me:
+    description: send a private message
+    -usage: /m <player> message
+        

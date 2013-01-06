@@ -58,24 +58,24 @@ public class Tregmine extends JavaPlugin
 		NETHER.createWorld();
 
 		getServer().getPluginManager().registerEvents(new info.tregmine.lookup.LookupPlayer(this), this);
-		
-		
+
+
 		getServer().getPluginManager().registerEvents(new TregminePlayerListener(this), this);
 		getServer().getPluginManager().registerEvents(new TregmineBlockListener(this), this);
 		getServer().getPluginManager().registerEvents(new TregmineEntityListener(this), this);
 		getServer().getPluginManager().registerEvents(new TregmineWeatherListener(this), this);
-		
+
 		getServer().getPluginManager().registerEvents(new info.tregmine.invis.InvisPlayer(this), this);
 
-		
+
 		getServer().getPluginManager().registerEvents(new info.tregmine.death.DeathEntity(this), this);
 		getServer().getPluginManager().registerEvents(new info.tregmine.death.DeathPlayer(this), this);
 
 
 		getServer().getPluginManager().registerEvents(new info.tregmine.chat.Chat(this), this);
-		
-		
-	 	getServer().getPluginManager().registerEvents(new info.tregmine.sign.Color(), this);
+
+
+		getServer().getPluginManager().registerEvents(new info.tregmine.sign.Color(), this);
 	}
 
 	@Override
@@ -95,7 +95,7 @@ public class Tregmine extends JavaPlugin
 			this.tregminePlayer.put(onlineName, tregPlayer);
 			player.sendMessage(ChatColor.AQUA + "Tregmine successfully upgraded to build: " + this.getDescription().getVersion() );
 		}
-		
+
 	}
 
 	public TregminePlayer getPlayer(String name)	{
@@ -117,8 +117,8 @@ public class Tregmine extends JavaPlugin
 			player = this.getPlayer(from);
 		}
 
-		
-		
+
+
 		if(commandName.equals("who") || commandName.equals("playerlist") || commandName.equals("list")){
 			info.tregmine.commands.Who.run(this, player, args);
 			return true;
@@ -128,20 +128,71 @@ public class Tregmine extends JavaPlugin
 			info.tregmine.commands.Tp.run(this, player, args);
 			return true;
 		}
-		
+
 		if(commandName.equals("channel")){
 			if (args.length != 1) {
 				return false;
 			}
-			
+
+			from.sendMessage(ChatColor.YELLOW + "You are now talking in channel " + args[0] + ".");
+			from.sendMessage(ChatColor.YELLOW + "Write /channel global to switch to the global chat." );
 			player.setChatChannel(args[0]);
 			return true;
 		}
-		
-//		info.tregmine.api.TregminePlayer tregminePlayer = this.tregminePlayer.get(from.getName());
 
-		
-//		from.sendMessage(commandName);
+
+		if(commandName.equals("force")  && args.length == 2 ){
+			player.setChatChannel(args[1]);
+			Player to = getServer().matchPlayer(args[0]).get(0);
+			info.tregmine.api.TregminePlayer toPlayer = this.tregminePlayer.get(to.getName());
+
+			toPlayer.setChatChannel(args[1]);
+
+			to.sendMessage(ChatColor.YELLOW + player.getChatChannel() + " forced you into channel " + args[1].toUpperCase() + ".");
+			to.sendMessage(ChatColor.YELLOW + "Write /channel global to switch back to the global chat." );
+			from.sendMessage(ChatColor.YELLOW + "You are now in a forced chat " + args[1].toUpperCase()+ " with " + to.getDisplayName() + ".");
+			this.log.info(from.getName() + " FORCED CHAT WITH " + to.getDisplayName() + " IN CHANNEL " + args[1].toUpperCase());
+			return true;
+		}
+
+		if(commandName.equals("msg") || commandName.equals("m") || commandName.equals("tell")) {			
+			Player to = getServer().getPlayer(args[0]);
+
+			if (to != null) {
+				info.tregmine.api.TregminePlayer toPlayer = this.tregminePlayer.get(to.getName());
+
+				StringBuffer buf = new StringBuffer();
+				for (int i = 1; i < args.length; ++i) {
+					buf.append(" " + args[i]);
+				}
+				String buffMsg = buf.toString();
+
+				if (!toPlayer.getMetaBoolean("invis")) {
+					from.sendMessage(ChatColor.GREEN + "(to) " + toPlayer.getChatName() + ChatColor.GREEN + ": "  + buffMsg);
+				}
+				to.sendMessage(ChatColor.GREEN + "(msg) " + player.getChatName() + ChatColor.GREEN + ": " + buffMsg);
+				log.info(from.getName() + " => " + to.getName() + buffMsg);
+				return true;
+			}
+		}
+
+		if(commandName.equals("me")  && args.length > 0 ){
+			StringBuffer buf = new StringBuffer();
+			Player[] players = getServer().getOnlinePlayers();
+
+			for (int i = 0; i < args.length; ++i) {
+				buf.append(" " + args[i]);
+			}
+
+			for (Player tp : players) {
+				TregminePlayer to = this.getPlayer(tp);
+				
+				if (player.getChatChannel().equals(to.getChatChannel())) {
+					player.sendMessage("* " + player.getChatName() + ChatColor.WHITE + buf.toString() );
+				}
+			}
+			return true;
+		}
 		
 		
 		return false;
