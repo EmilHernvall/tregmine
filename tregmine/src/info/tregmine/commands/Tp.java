@@ -54,7 +54,7 @@ public class Tp {
 				return;
 			}
 
-			if (_player.isDonator() && distance < 100) {
+			if (_player.isTrusted() && distance < 100) {
 				_player.sendMessage(ChatColor.AQUA + "You started teleport to " + to.getName() + ChatColor.AQUA + " in " + ChatColor.BLUE + to.getWorld().getName() + ".");
 				to.sendMessage(ChatColor.AQUA + _player.getChatName() + " teleported to you!");
 				_player.teleport(to);
