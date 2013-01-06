@@ -4,6 +4,7 @@ package info.tregmine.death;
 
 import info.tregmine.Tregmine;
 
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -24,8 +25,9 @@ public class DeathEntity implements Listener  {
 	@EventHandler
 	public void onEntityDeath (EntityDeathEvent event) {
 		 if (event instanceof PlayerDeathEvent) {
+			 Player player = (Player) event.getEntity();
              PlayerDeathEvent e = (PlayerDeathEvent) event;
-             e.setDeathMessage(Insult.random());
+             e.setDeathMessage(ChatColor.DARK_GRAY + player.getName() + " " + Insult.random());
          }
 	}
 
