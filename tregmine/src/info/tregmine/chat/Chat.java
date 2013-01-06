@@ -32,9 +32,7 @@ public class Chat implements Listener {
 				txtColor = ChatColor.GRAY;
 			}
 
-			String channel = sender.getChatChannel();
 			
-/*
 			if (sender.getChatChannel().equals(to.getChatChannel())) {
 				
 				String channel = sender.getChatChannel();
@@ -42,9 +40,9 @@ public class Chat implements Listener {
 				if (sender.getChatChannel().matches("GLOBAL")) {
 					channel = "";
 				}
-*/
+				
 				player.sendMessage(channel+"<" + sender.getChatName() + ChatColor.WHITE + "> " + txtColor + event.getMessage());
-//			}
+			}
 
 
 		}
