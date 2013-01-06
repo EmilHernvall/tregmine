@@ -1,6 +1,6 @@
 package info.tregmine.death;
 
-import java.util.Random;
+//import java.util.Random;
 
 import info.tregmine.Tregmine;
 

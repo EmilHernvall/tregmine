@@ -72,7 +72,6 @@ public class Tregmine extends JavaPlugin
 
 		
 		
-		getServer().getPluginManager().registerEvents(new info.tregmine.world.citadel.CitadelLimit(this), this);		
 	 	getServer().getPluginManager().registerEvents(new info.tregmine.sign.Color(), this);
 	}
 
