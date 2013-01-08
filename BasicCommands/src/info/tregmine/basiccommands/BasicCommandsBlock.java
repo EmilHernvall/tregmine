@@ -230,6 +230,7 @@ public class BasicCommandsBlock implements Listener {
 				if ( wallet.take(2000) ) {
 					PlayerInventory inv = player.getInventory();
 					inv.addItem(FireWork.getAsStack(5));
+					player.updateInventory();
 					player.sendMessage(ChatColor.AQUA + "you got 5 fireworks and " + ChatColor.GOLD + "2000" + ChatColor.AQUA + " Tregs was taken from you");
 					this.plugin.log.info(player.getName() + "FIREWORK:2000");
 

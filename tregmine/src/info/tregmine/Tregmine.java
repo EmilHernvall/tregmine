@@ -169,7 +169,7 @@ public class Tregmine extends JavaPlugin
 			Player[] players =  this.getServer().getOnlinePlayers();
 
 			for (Player p : players) {
-				info.tregmine.api.TregminePlayer locTregminePlayer = this.getPlayer((player.getName()));
+				info.tregmine.api.TregminePlayer locTregminePlayer = this.getPlayer((p.getName()));
 				if (locTregminePlayer.isAdmin()) {
 					player.sendMessage(ChatColor.DARK_AQUA + "/say used by: " + player.getChatName());
 				}
