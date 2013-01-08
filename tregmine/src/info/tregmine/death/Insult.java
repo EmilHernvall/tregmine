@@ -5,7 +5,7 @@ import java.util.Random;
 public class Insult {
 
 	public static String random() {
-		String[] dieText = new String[157];
+		String[] dieText = new String[174];
 		dieText[0] = "Better luck next time.";
 		dieText[1] = "Did you just really do that?";
 		dieText[2] = "And you will never see heaven.";
@@ -67,7 +67,7 @@ public class Insult {
 		dieText[59] = "We tried giving out money but still no one would show up for your funeral";
 		dieText[60] = "Before you died there was depression but no everyone is happy";
 		dieText[61] = "it was the Obama administration that got him killed";
-		dieText[62] = "Sorry you hade to die but you where so ugly that you sacered others away from the server";
+		dieText[62] = "Sorry you hade to die but you where so ugly that you scared others away from the server";
 		dieText[63] = "Sorry as there is no Nether in multiplayer yet, you were sent back";
 		dieText[64] = "GAME OVER - PRESS SELECT TO CONTINUE";
 		dieText[65] = "What did a cat do that to you";
@@ -88,7 +88,7 @@ public class Insult {
 		dieText[79] = "There are three natural anaesthetics: Sleep, fainting, and death."; 
 		dieText[80] = "Didn't you see that creeper crawling up on you from behind?";
 		dieText[81] = "Did you order a hit man for suicide?";
-		dieText[82] = "Call 991";
+		dieText[82] = "is dead, call 991";
 		dieText[83] = "It was a Hit And Run";
 		dieText[84] = "That why you never shall play with water";
 		dieText[85] = "You are such a loser, you can't even die normal";
@@ -165,7 +165,36 @@ public class Insult {
 			dieText[153] = "Einand doesn't like you";
 			dieText[154] = "Even the nether rejects you";
 			dieText[155] = "You were smoth by the hammer of Thor";
-			dieText[156] = " was smited by Josh121297 from senior heaven";
+			dieText[156] = "was smited by Josh121297 from senior heaven";
+
+			dieText[157] = "You did see that ledge there...didn't you?";
+			dieText[158] = "Another one assassinated by Toddtedd.";
+			dieText[159] = "Another one bites the dust.";
+			
+			dieText[160] = "You dun goofed.";
+			dieText[161] = "You weren't very lucky, punk.";
+			dieText[162] = "HEADSHOT!";
+			dieText[163] = "Pow! Right in the kisser!";
+			dieText[164] = "Does that mean that the mushroom WAS Poisonous?";
+			dieText[165] = "Well, there's your problem. You're dead!";
+			dieText[166] = "Note to self: Do not dry hump TNT";
+			dieText[167] = "Molesting creepers is a no-no.";
+			dieText[168] = "Please keep your arms and legs inside the coffin at all times.";
+			dieText[169] = "Bloody bugger to you, you beastly bastard.";
+
+			dieText[170] = "You had one job...";
+			dieText[171] = "You talked about Fight Club didn't you.";
+			dieText[172] = "You got the ol' Onesey Twosey";
+			dieText[173] = "Pow! Right in the kisser!";
+			
+			/*
+			dieText[174] = "Does that mean that the mushroom WAS Poisonous?";
+			dieText[175] = "Well, there's your problem. You're dead!";
+			dieText[176] = "Note to self: Do not dry hump TNT";
+			dieText[177] = "Molesting creepers is a no-no.";
+			dieText[178] = "Please keep your arms and legs inside the coffin at all times.";
+			dieText[179] = "Bloody bugger to you, you beastly bastard.";
+			*/
 			
 	    Random ran = new Random( System.currentTimeMillis() );
 	    int  rand = ran.nextInt(dieText.length);
