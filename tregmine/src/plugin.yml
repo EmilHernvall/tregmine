@@ -1,6 +1,6 @@
 name: Tregmine
 main: info.tregmine.Tregmine
-version: 3002
+version: 3010
 website: http://tregmine.info
 author: Ein Andersson
 description: Tregmine
@@ -30,4 +30,7 @@ commands:
   me:
     description: send a private message
     -usage: /m <player> message
+  say:
+    description: talk as good
+    -usage: /say message
         
