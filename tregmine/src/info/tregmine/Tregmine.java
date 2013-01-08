@@ -117,6 +117,18 @@ public class Tregmine extends JavaPlugin
 		Player from = null;
 		TregminePlayer player = null;
 		if(!(sender instanceof Player)) {
+			if(commandName.equals("say")) {
+				StringBuffer buf = new StringBuffer();
+				buf.append(args[0]);
+				for (int i = 1; i < args.length; ++i) {
+					buf.append(" " + args[i]);
+				}
+				String buffMsg = buf.toString();
+				this.getServer().broadcastMessage("<" + ChatColor.BLUE + "GOD" + ChatColor.WHITE + "> " + ChatColor.LIGHT_PURPLE +  buffMsg);
+				this.log.info("CONSOLE: <GOD> " + buffMsg);
+				return true;
+			}
+
 			return false;
 		} else {
 			from = (Player) sender;
@@ -125,6 +137,48 @@ public class Tregmine extends JavaPlugin
 
 
 
+		if(commandName.equals("say") && player.isAdmin()) {
+			StringBuffer buf = new StringBuffer();
+			buf.append(args[0]);
+			for (int i = 1; i < args.length; ++i) {
+				buf.append(" " + args[i]);
+			}
+			String buffMsg = buf.toString();
+			if(from.getName().matches("BlackX")) {
+				this.getServer().broadcastMessage("<" + ChatColor.BLACK + "GOD" + ChatColor.WHITE + "> " + ChatColor.LIGHT_PURPLE +  buffMsg);				
+			} else if (from.getName().matches("mejjad")){
+				this.getServer().broadcastMessage("<" + ChatColor.DARK_AQUA + "GOD" + ChatColor.WHITE + "> " + ChatColor.LIGHT_PURPLE +  buffMsg);
+			} else if (from.getName().matches("einand")){
+				this.getServer().broadcastMessage("<" + ChatColor.DARK_GREEN + "GOD" + ChatColor.WHITE + "> " + ChatColor.LIGHT_PURPLE +  buffMsg);
+			} else if (from.getName().matches("LilKiw")){
+				this.getServer().broadcastMessage("<" + ChatColor.AQUA + "GOD" + ChatColor.WHITE + "> " + ChatColor.LIGHT_PURPLE +  buffMsg);
+			} else if (from.getName().matches("Camrenn")){
+				this.getServer().broadcastMessage("<" + ChatColor.LIGHT_PURPLE + "GOD" + ChatColor.WHITE + "> " + ChatColor.LIGHT_PURPLE +  buffMsg);
+			} else if (from.getName().matches("Mksen")){
+				this.getServer().broadcastMessage("<" + ChatColor.YELLOW + "GOD" + ChatColor.WHITE + "> " + ChatColor.LIGHT_PURPLE +  buffMsg);
+			} else if (from.getName().matches("knipil")){
+				this.getServer().broadcastMessage("<" + ChatColor.DARK_PURPLE + "GOD" + ChatColor.WHITE + "> " + ChatColor.LIGHT_PURPLE +  buffMsg);
+			} else if (from.getName().matches("rweiand")){
+				this.getServer().broadcastMessage("<" + ChatColor.GOLD + "GOD" + ChatColor.WHITE + "> " + ChatColor.LIGHT_PURPLE +  buffMsg);
+			} else {
+				this.getServer().broadcastMessage("<" + ChatColor.RED + "GOD" + ChatColor.WHITE + "> " + ChatColor.LIGHT_PURPLE +  buffMsg);				
+			}
+			
+			this.log.info(from.getName() + ": <GOD> " + buffMsg);
+
+			Player[] players =  this.getServer().getOnlinePlayers();
+
+			for (Player p : players) {
+				info.tregmine.api.TregminePlayer locTregminePlayer = this.getPlayer((player.getName()));
+				if (locTregminePlayer.isAdmin()) {
+					player.sendMessage(ChatColor.DARK_AQUA + "/say used by: " + player.getChatName());
+				}
+			}
+			return true;
+		}		
+		
+		
+		
 		if(commandName.equals("who") || commandName.equals("playerlist") || commandName.equals("list")){
 			info.tregmine.commands.Who.run(this, player, args);
 			return true;
@@ -192,15 +246,15 @@ public class Tregmine extends JavaPlugin
 
 			for (Player tp : players) {
 				TregminePlayer to = this.getPlayer(tp);
-				
+
 				if (player.getChatChannel().equals(to.getChatChannel())) {
 					to.sendMessage("* " + player.getChatName() + ChatColor.WHITE + buf.toString() );
 				}
 			}
 			return true;
 		}
-		
-		
+
+
 		return false;
 	}
 }
