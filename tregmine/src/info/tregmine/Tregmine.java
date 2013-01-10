@@ -156,8 +156,8 @@ public class Tregmine extends JavaPlugin
 				this.getServer().broadcastMessage("<" + ChatColor.LIGHT_PURPLE + "GOD" + ChatColor.WHITE + "> " + ChatColor.LIGHT_PURPLE +  buffMsg);
 			} else if (from.getName().matches("Mksen")){
 				this.getServer().broadcastMessage("<" + ChatColor.YELLOW + "GOD" + ChatColor.WHITE + "> " + ChatColor.LIGHT_PURPLE +  buffMsg);
-			} else if (from.getName().matches("knipil")){
-				this.getServer().broadcastMessage("<" + ChatColor.DARK_PURPLE + "GOD" + ChatColor.WHITE + "> " + ChatColor.LIGHT_PURPLE +  buffMsg);
+			} else if (from.getName().matches("josh121297")){
+				this.getServer().broadcastMessage("<" + ChatColor.GRAY + "GOD" + ChatColor.WHITE + "> " + ChatColor.LIGHT_PURPLE +  buffMsg);
 			} else if (from.getName().matches("rweiand")){
 				this.getServer().broadcastMessage("<" + ChatColor.GOLD + "GOD" + ChatColor.WHITE + "> " + ChatColor.LIGHT_PURPLE +  buffMsg);
 			} else {
