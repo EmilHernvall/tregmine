@@ -15,13 +15,16 @@ import org.bukkit.Location;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+import org.bukkit.event.entity.EntityShootBowEvent;
 
 public class ZoneEntityListener implements Listener
 {
@@ -60,7 +63,6 @@ public class ZoneEntityListener implements Listener
 		}
 	}
 
-
 	@EventHandler
 	public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {	
 
@@ -68,17 +70,23 @@ public class ZoneEntityListener implements Listener
 			return;
 		}
 
+	    if(event.getCause() == DamageCause.PROJECTILE)
+	    {
+	        Projectile proj = (Projectile)event.getDamager();
+	        LivingEntity shooter = proj.getShooter();
+	        
+	        if(shooter instanceof Player) {
+	        	Player p = (Player) shooter;
+	        	p.sendMessage("You shoot");
+	        }
+
+	    }
+		
+		
+		
 		//	public void onEntityDamage(EntityDamageEvent event)	{
 		if (event.getEntity() instanceof Player && event instanceof EntityDamageByEntityEvent && ((EntityDamageByEntityEvent)event).getDamager() instanceof Player) {
 		Entity entity = event.getEntity();
-
-		entity.setFireTicks(1000);
-		
-		if (((EntityDamageByEntityEvent)event).getDamager() instanceof Player) {
-			Player p = (Player) event.getDamager();
-			p.sendMessage("Du skadar");
-		}
-		
 		
 		ZoneWorld world = plugin.getWorld(entity.getWorld());
 
