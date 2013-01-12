@@ -68,10 +68,8 @@ public class ZoneEntityListener implements Listener
 		}
 
 		//	public void onEntityDamage(EntityDamageEvent event)	{
+		if (event.getEntity() instanceof Player && event instanceof EntityDamageByEntityEvent && ((EntityDamageByEntityEvent)event).getDamager() instanceof Player) {
 		Entity entity = event.getEntity();
-		if (!(entity instanceof Player)) {
-			return;
-		}
 
 		ZoneWorld world = plugin.getWorld(entity.getWorld());
 
@@ -86,8 +84,6 @@ public class ZoneEntityListener implements Listener
 			player.setCurrentZone(currentZone);
 		}
 
-
-			if (event.getEntity() instanceof Player && event instanceof EntityDamageByEntityEvent && ((EntityDamageByEntityEvent)event).getDamager() instanceof Player) {
 				if (currentZone == null || !currentZone.isPvp()) {
 					event.setCancelled(true);
 				} else {
