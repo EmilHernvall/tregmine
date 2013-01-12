@@ -1,5 +1,6 @@
 package info.tregmine.teleport;
 
+import info.tregmine.api.TregminePlayer;
 import info.tregmine.database.ConnectionPool;
 
 import java.sql.Connection;
@@ -110,14 +111,26 @@ public class Warp {
 //				}
 
 				from.sendMessage(ChatColor.AQUA + "You must now stand still and wait " + delay + " seconds for the stars to align, allowing you to warp");
-				final Player tempfrom = from;
+				final TregminePlayer tempfrom = this.plugin.tregmine.getPlayer(from);
+				
 				final Location temppoint = warppoint;
 				
 				this.plugin.getServer().getScheduler().scheduleSyncDelayedTask(this.plugin,new Runnable() {
 					@Override
 					public void run() {
-
-				tempfrom.teleport(temppoint);
+						if (tempfrom.isAdmin()) {
+							tempfrom.teleport(temppoint);
+							return;
+						}
+						
+						if (tempfrom.getWorld().getName().matches(temppoint.getWorld().getName())) {
+							tempfrom.teleport(temppoint);
+							return;
+						} else {
+							tempfrom.sendMessage(ChatColor.RED + "You can't teleport between worlds");
+							return;
+						} 
+						
 					}},20*delay);
 
 			
