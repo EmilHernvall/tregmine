@@ -70,14 +70,38 @@ public class ZoneEntityListener implements Listener
 			return;
 		}
 
-	    if(event.getCause() == DamageCause.PROJECTILE)
-	    {
-	        Projectile proj = (Projectile)event.getDamager();
+	    if(event.getCause() == DamageCause.PROJECTILE)	    {
+
+	    	
+	    	
+	    	Projectile proj = (Projectile)event.getDamager();
 	        LivingEntity shooter = proj.getShooter();
 	        
 	        if(shooter instanceof Player) {
 	        	Player p = (Player) shooter;
-	        	p.sendMessage("You shoot");
+	        	
+	    		ZoneWorld world = plugin.getWorld(p.getWorld());
+
+	    		TregminePlayer player = tregmine.getPlayer(p);
+
+	    		Location location = player.getLocation();
+	    		Point pos = new Point(location.getBlockX(), location.getBlockZ());
+
+	    		Zone currentZone = player.getCurrentZone();
+	    		if (currentZone == null || !currentZone.contains(pos)) {
+	    			currentZone = world.findZone(pos);
+	    			player.setCurrentZone(currentZone);
+	    		}
+
+	    				if (currentZone == null || !currentZone.isPvp()) {
+	    					event.setCancelled(true);
+	    				} else {
+	    					event.setCancelled(false);
+	    				}
+
+	        	
+	        	
+	        	
 	        }
 
 	    }
