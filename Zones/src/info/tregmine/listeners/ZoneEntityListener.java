@@ -76,14 +76,20 @@ public class ZoneEntityListener implements Listener
 //		}
 //	}
 	
-//	@EventHandler
-	public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
+	@EventHandler
+	public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {	
+		
+		if(event.getEntity().getWorld().getName().matches("world_the_end")) {
+			return;
+		}
+		
 //	public void onEntityDamage(EntityDamageEvent event)	{
 		Entity entity = event.getEntity();
 		if (!(entity instanceof Player)) {
 			return;
 		}
 
+		
 		ZoneWorld world = plugin.getWorld(entity.getWorld());
 
 		TregminePlayer player = tregmine.getPlayer((Player)event.getEntity());
