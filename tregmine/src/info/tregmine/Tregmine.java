@@ -149,6 +149,7 @@ public class Tregmine extends JavaPlugin
 			ItemStack item = new ItemStack(Material.SKULL_ITEM, 1);
 			SkullMeta meta = (SkullMeta) item.getItemMeta();
 			meta.setOwner(args[0]);
+			meta.setDisplayName(args[0]);
 			PlayerInventory inv = player.getInventory();
 			inv.addItem(item);
 			player.updateInventory();
