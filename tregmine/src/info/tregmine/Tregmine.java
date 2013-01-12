@@ -94,6 +94,9 @@ public class Tregmine extends JavaPlugin
 	{
 		Player[] players = this.getServer().getOnlinePlayers();
 
+		this.getServer().getWorld("world_the_end").setPVP(true);
+		
+		
 		for (Player player : players) {
 			String onlineName = player.getName();
 			TregminePlayer tregPlayer = new TregminePlayer(player, onlineName);
@@ -135,6 +138,9 @@ public class Tregmine extends JavaPlugin
 			player = this.getPlayer(from);
 		}
 
+		if(commandName.equals("head") && player.isAdmin()) {
+			
+		}
 
 
 		if(commandName.equals("say") && player.isAdmin()) {
@@ -171,7 +177,7 @@ public class Tregmine extends JavaPlugin
 			for (Player p : players) {
 				info.tregmine.api.TregminePlayer locTregminePlayer = this.getPlayer((p.getName()));
 				if (locTregminePlayer.isAdmin()) {
-					player.sendMessage(ChatColor.DARK_AQUA + "/say used by: " + player.getChatName());
+					p.sendMessage(ChatColor.DARK_AQUA + "/say used by: " + player.getChatName());
 				}
 			}
 			return true;

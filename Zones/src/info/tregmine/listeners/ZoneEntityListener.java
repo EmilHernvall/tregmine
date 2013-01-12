@@ -29,7 +29,7 @@ public class ZoneEntityListener implements Listener
 			EnumSet.of(EntityType.CHICKEN, EntityType.COW, 
 					EntityType.PIG, EntityType.SHEEP, 
 					EntityType.SQUID, EntityType.WOLF,
-					EntityType.VILLAGER, EntityType.MUSHROOM_COW);
+					EntityType.VILLAGER, EntityType.MUSHROOM_COW, EntityType.OCELOT);
 	
 	private final ZonesPlugin plugin;
 	private final Tregmine tregmine;
@@ -76,7 +76,7 @@ public class ZoneEntityListener implements Listener
 //		}
 //	}
 	
-	@EventHandler
+//	@EventHandler
 	public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
 //	public void onEntityDamage(EntityDamageEvent event)	{
 		Entity entity = event.getEntity();

@@ -1,11 +1,14 @@
 name: Tregmine
 main: info.tregmine.Tregmine
-version: 3013
+version: 3102
 website: http://tregmine.info
 author: Ein Andersson
 description: Tregmine
 
 commands:
+  head:
+    description: show a list of who is online.
+    -usage: /who
   who:
     description: show a list of who is online.
     -usage: /who

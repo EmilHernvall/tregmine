@@ -127,7 +127,6 @@ public class Teleport extends JavaPlugin {
 					from.teleport(loc);
 					from.sendMessage(ChatColor.AQUA + "Like a drunken gnome, you fly across the world to " + playerName 
 							+ "'s home. Try not to hit any birds.");
-				} else {
 					from.sendMessage(ChatColor.RED + "Loading of home chunk failed, try /home again");
 				}
 			}
@@ -215,27 +214,7 @@ public class Teleport extends JavaPlugin {
 
 
 		if (commandName.matches("spawn")) {
-
-			if(tregminePlayer.getServer().getPort() == 1337) {
-				tregminePlayer.teleport(tregminePlayer.getWorld().getSpawnLocation());
-				return true;
-			}
-
-			long delay = 0;
-			if (tregminePlayer.isAdmin()) {
-				delay = 0;
-			}
-
-			from.sendMessage(ChatColor.AQUA + "You must now stand still and wait " + delay + " seconds for the stars to align, allowing you to teleport");
-
-			final Player tempfrom = from;
-			this.getServer().getScheduler().scheduleSyncDelayedTask(this,new Runnable() {
-				@Override
-				public void run() {
-					tempfrom.teleport(getServer().getWorld("world").getSpawnLocation());
-				}},20*delay);
-
-
+					from.teleport(from.getWorld().getSpawnLocation());
 			return true;
 		}
 

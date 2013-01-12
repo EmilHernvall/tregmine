@@ -45,6 +45,14 @@ public class Tp {
 			return;
 		}
 
+		if (_player.getMetaBoolean("builder")) {
+			_player.sendMessage(ChatColor.AQUA + "You started teleport to " + to.getName() + ChatColor.AQUA + " in " + ChatColor.BLUE + to.getWorld().getName() + ".");
+			to.sendMessage(ChatColor.AQUA + _player.getChatName() + " teleported to you!");
+			_player.teleport(to);
+			return;
+		}
+		
+		
 		if ((_player.getWorld().getName().matches(to.getWorld().getName()))) {
 			
 			if (_player.isDonator() && distance < 10000) {
@@ -62,5 +70,4 @@ public class Tp {
 			}
 		}
 	}
-
 }
