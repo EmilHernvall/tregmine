@@ -50,6 +50,7 @@ public class ZoneEntityListener implements Listener
 
 		ZoneWorld world = plugin.getWorld(entity.getWorld());
 		Zone zone = world.findZone(pos);
+		
 		if (zone == null || zone.hasHostiles()) {
 			return;
 		}
@@ -71,6 +72,12 @@ public class ZoneEntityListener implements Listener
 		if (event.getEntity() instanceof Player && event instanceof EntityDamageByEntityEvent && ((EntityDamageByEntityEvent)event).getDamager() instanceof Player) {
 		Entity entity = event.getEntity();
 
+		if (((EntityDamageByEntityEvent)event).getDamager() instanceof Player) {
+			Player p = (Player) event.getDamager();
+			p.sendMessage("Du skadar");
+		}
+		
+		
 		ZoneWorld world = plugin.getWorld(entity.getWorld());
 
 		TregminePlayer player = tregmine.getPlayer((Player)event.getEntity());

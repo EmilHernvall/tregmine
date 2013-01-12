@@ -52,7 +52,8 @@ public class Tregmine extends JavaPlugin
 		WorldCreator world = new WorldCreator("world"); 
 		world.environment(Environment.NORMAL);
 		world.createWorld();
-
+		
+		
 		WorldCreator NETHER = new WorldCreator("world_nether"); 
 		NETHER.environment(Environment.NETHER);
 		NETHER.createWorld();
