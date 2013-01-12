@@ -12,6 +12,8 @@ import info.tregmine.stats.BlockStats;
 import java.util.logging.Logger;
 
 import org.bukkit.ChatColor;
+import org.bukkit.FireworkEffect;
+import org.bukkit.Material;
 //import org.bukkit.ChatColor;
 import org.bukkit.WorldCreator;
 import org.bukkit.World.Environment;
@@ -19,6 +21,10 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 //import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.inventory.meta.FireworkMeta;
+import org.bukkit.inventory.meta.SkullMeta;
 //import org.bukkit.event.Event;
 //import org.bukkit.event.Event.Priority;
 //import org.bukkit.plugin.Plugin;
@@ -140,7 +146,12 @@ public class Tregmine extends JavaPlugin
 		}
 
 		if(commandName.equals("head") && player.isAdmin()) {
-			
+			ItemStack item = new ItemStack(Material.SKULL, 1);
+			SkullMeta meta = (SkullMeta) item.getItemMeta();
+			meta.setOwner(args[0]);
+			PlayerInventory inv = player.getInventory();
+			inv.addItem(item);
+			player.updateInventory();
 		}
 
 
