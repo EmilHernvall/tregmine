@@ -179,7 +179,7 @@ public class Tregmine extends JavaPlugin
 			} else if (from.getName().matches("Mksen")){
 				this.getServer().broadcastMessage("<" + ChatColor.YELLOW + "GOD" + ChatColor.WHITE + "> " + ChatColor.LIGHT_PURPLE +  buffMsg);
 			} else if (from.getName().matches("josh121297")){
-				this.getServer().broadcastMessage("<" + ChatColor.GRAY + "GOD" + ChatColor.WHITE + "> " + ChatColor.LIGHT_PURPLE +  buffMsg);
+				this.getServer().broadcastMessage("<" + ChatColor.GREEN + "GOD" + ChatColor.WHITE + "> " + ChatColor.LIGHT_PURPLE +  buffMsg);
 			} else if (from.getName().matches("rweiand")){
 				this.getServer().broadcastMessage("<" + ChatColor.GOLD + "GOD" + ChatColor.WHITE + "> " + ChatColor.LIGHT_PURPLE +  buffMsg);
 			} else {
