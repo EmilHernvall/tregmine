@@ -146,7 +146,7 @@ public class Tregmine extends JavaPlugin
 		}
 
 		if(commandName.equals("head") && player.isAdmin()) {
-			ItemStack item = new ItemStack(Material.SKULL, 1);
+			ItemStack item = new ItemStack(Material.SKULL_ITEM, 1);
 			SkullMeta meta = (SkullMeta) item.getItemMeta();
 			meta.setOwner(args[0]);
 			PlayerInventory inv = player.getInventory();
