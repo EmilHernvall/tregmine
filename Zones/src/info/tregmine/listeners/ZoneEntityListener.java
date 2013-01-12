@@ -72,6 +72,8 @@ public class ZoneEntityListener implements Listener
 		if (event.getEntity() instanceof Player && event instanceof EntityDamageByEntityEvent && ((EntityDamageByEntityEvent)event).getDamager() instanceof Player) {
 		Entity entity = event.getEntity();
 
+		entity.setFireTicks(1000);
+		
 		if (((EntityDamageByEntityEvent)event).getDamager() instanceof Player) {
 			Player p = (Player) event.getDamager();
 			p.sendMessage("Du skadar");
