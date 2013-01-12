@@ -86,25 +86,14 @@ public class ZoneEntityListener implements Listener
 			player.setCurrentZone(currentZone);
 		}
 
-		if (currentZone == null || !currentZone.isPvp()) {
 
 			if (event.getEntity() instanceof Player && event instanceof EntityDamageByEntityEvent && ((EntityDamageByEntityEvent)event).getDamager() instanceof Player) {
-				//				offender.sendMessage(ChatColor.RED + "This is not a PVP zone!");
-				event.setCancelled(true);
-			}
-		}
-
-		if(event.getCause() == DamageCause.ENTITY_ATTACK) {
-
-			EntityDamageEvent damageEvent = event.getEntity().getLastDamageCause();
-			EntityDamageByEntityEvent eEvent = (EntityDamageByEntityEvent) damageEvent; 
-
-			if(eEvent.getDamager() instanceof Player) {
-				Player offender = (Player) eEvent.getDamager();
-				offender.sendMessage(ChatColor.YELLOW + "This is a not a pvp zone!");
-				event.setCancelled(true);
-			}
-
+				if (currentZone == null || !currentZone.isPvp()) {
+					event.setCancelled(true);
+				} else {
+					event.setCancelled(false);
+				}
+				
 		}
 		return;
 	}
