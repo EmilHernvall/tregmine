@@ -155,6 +155,7 @@ public class Tregmine extends JavaPlugin
 			PlayerInventory inv = player.getInventory();
 			inv.addItem(item);
 			player.updateInventory();
+			player.sendMessage("Skull of " + args[0]);
 		}
 
 
