@@ -37,6 +37,13 @@ public class Tp {
 			_player.teleport(to);
 			return;
 		}
+		
+		double spawn = info.tregmine.api.math.Distance.calc2d(_player.getLocation(), _player.getWorld().getSpawnLocation());
+
+		if (spawn < 200) {
+			_player.sendMessage(ChatColor.RED + "The player are at spawn use /spawn instead");
+			return;
+		}
 
 		if (_player.getMetaBoolean("mentor")) {
 			_player.sendMessage(ChatColor.AQUA + "You started teleport to " + to.getName() + ChatColor.AQUA + " in " + ChatColor.BLUE + to.getWorld().getName() + ".");
