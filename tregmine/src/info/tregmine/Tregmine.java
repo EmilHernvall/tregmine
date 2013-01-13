@@ -12,7 +12,7 @@ import info.tregmine.stats.BlockStats;
 import java.util.logging.Logger;
 
 import org.bukkit.ChatColor;
-import org.bukkit.FireworkEffect;
+//import org.bukkit.FireworkEffect;
 import org.bukkit.Material;
 //import org.bukkit.ChatColor;
 import org.bukkit.WorldCreator;
@@ -23,7 +23,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
-import org.bukkit.inventory.meta.FireworkMeta;
+//import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 //import org.bukkit.event.Event;
 //import org.bukkit.event.Event.Priority;
@@ -143,6 +143,17 @@ public class Tregmine extends JavaPlugin
 		} else {
 			from = (Player) sender;
 			player = this.getPlayer(from);
+		}
+
+		if(commandName.equals("text") && player.isAdmin()) {
+			Player[] players = this.getServer().getOnlinePlayers();
+			
+			
+			for (Player p : players) {
+				p.setTexturePack(args[0]);
+			}
+			
+			
 		}
 
 		if(commandName.equals("head") && player.isAdmin()) {

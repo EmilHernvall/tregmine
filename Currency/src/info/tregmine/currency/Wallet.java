@@ -22,7 +22,6 @@ public class Wallet {
 		this.player = player;
 	}
 
-	@Deprecated
 	public long balance() {
 		Connection conn = null;
 		PreparedStatement stmt = null;
@@ -55,13 +54,11 @@ public class Wallet {
 		return -1;
 	}
 
-	@Deprecated
 	public String formatBalance() {
 		NumberFormat nf = NumberFormat.getNumberInstance();
 		return ChatColor.GOLD +  nf.format( this.balance() ) + ChatColor.WHITE + " Tregs";
 	}
 	
-	@Deprecated
 	public boolean exist() {
 		Connection conn = null;
 		PreparedStatement stmt = null;
@@ -91,7 +88,6 @@ public class Wallet {
 		}
 	}
 
-	@Deprecated
 	public void create() {
 		if (exist()) {
 			return;
@@ -118,7 +114,6 @@ public class Wallet {
 		}
 	}
 
-	@Deprecated
 	public boolean add(long amount) {
 		Connection conn = null;
 		PreparedStatement stmt = null;
@@ -144,7 +139,6 @@ public class Wallet {
 		return true;
 	}
 
-	@Deprecated
 	public boolean take(long amount){
 		long newBalance = balance() - amount;
 		if (newBalance < 0) {
@@ -175,7 +169,6 @@ public class Wallet {
 		return true;
 	}
 
-	@Deprecated
 	public static int getBlockValue(int block) {
 		Connection conn = null;
 		PreparedStatement stmt = null;
