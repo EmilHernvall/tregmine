@@ -150,13 +150,13 @@ public class Tregmine extends JavaPlugin
 			
 //			player.setTexturePack(args[0]);
 			for (Player p : players) {
-				p.sendMessage("You must press YES");
-				p.sendMessage("You must press YES");
-				p.sendMessage("You must press YES");
-				p.sendMessage("You must press YES");
-				p.sendMessage("You must press YES");
-				p.sendMessage("You must press YES");
-				p.sendMessage("You must press YES");
+				p.sendMessage(ChatColor.RED + "If you don't see a download message, you most logoff, remove your server.dat file");
+				p.sendMessage(ChatColor.RED + "If you don't see a download message, you most logoff, remove your server.dat file");
+				p.sendMessage(ChatColor.RED + "If you don't see a download message, you most logoff, remove your server.dat file");
+				p.sendMessage(ChatColor.RED + "If you don't see a download message, you most logoff, remove your server.dat file");
+				p.sendMessage(ChatColor.RED + "If you don't see a download message, you most logoff, remove your server.dat file");
+				p.sendMessage(ChatColor.RED + "If you don't see a download message, you most logoff, remove your server.dat file");
+				p.sendMessage(ChatColor.RED + "If you don't see a download message, you most logoff, remove your server.dat file");
 				p.setTexturePack(args[0]);
 			}
 			
