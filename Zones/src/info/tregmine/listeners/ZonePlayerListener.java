@@ -550,30 +550,15 @@ public class ZonePlayerListener implements Listener
 	{
 		player.sendMessage(ChatColor.RED + "[" + currentZone.getName() + "] " + 
 				currentZone.getTextEnter());
-		
-		if (this.plugin.pvp.containsKey(player.getName())) {
-			this.plugin.pvp.put(player.getName(), currentZone.isPvp());
-		}
-
-		
 		if (currentZone.isPvp()) {
 			player.sendMessage(ChatColor.RED + "[" + currentZone.getName() + "] " + 
 					"Warning! This is a PVP zone! Other players can damage or kill you here.");
-			
 			if (this.plugin.pvp.get(player.getName())) {
 				player.setTexturePack("https://dl.dropbox.com/u/5405236/mc/pvp.zip");
 			}
-			
-			
 		} else {
-			
-			if (!this.plugin.pvp.get(player.getName())) {
-				player.setTexturePack("https://dl.dropbox.com/u/5405236/mc/df.zip");
-			}
+			player.setTexturePack("https://dl.dropbox.com/u/5405236/mc/df.zip");
 		}
-		
-		this.plugin.pvp.put(player.getName(), currentZone.isPvp());
-		
 		if (perm != null) {
 			String permNotification = perm.getPermissionNotification();
 			player.sendMessage(ChatColor.RED + "[" + currentZone.getName() + "] " + 
