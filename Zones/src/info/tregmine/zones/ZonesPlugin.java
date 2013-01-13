@@ -45,6 +45,9 @@ public class ZonesPlugin extends JavaPlugin
 	private Map<String, ZoneWorld> worlds;
 	private Map<Integer, Zone> zones;
 
+	public Map<String, Boolean> pvp = new HashMap<String, Boolean>();
+
+	
 	@Override
 	public void onLoad() 
 	{
