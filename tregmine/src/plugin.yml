@@ -7,8 +7,8 @@ description: Tregmine
 
 commands:
   text:
-    description: ***
-    -usage: /***
+    description: unknown
+    -usage: /unkown
   head:
     description: show a list of who is online.
     -usage: /who
