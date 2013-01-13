@@ -146,12 +146,12 @@ public class Tregmine extends JavaPlugin
 		}
 
 		if(commandName.equals("text") && player.isAdmin()) {
-			Player[] players = this.getServer().getOnlinePlayers();
+//			Player[] players = this.getServer().getOnlinePlayers();
 			
-			
-			for (Player p : players) {
-				p.setTexturePack(args[0]);
-			}
+			player.setTexturePack(args[0]);
+//			for (Player p : players) {
+//				p.setTexturePack(args[0]);
+//			}
 			
 			
 		}
