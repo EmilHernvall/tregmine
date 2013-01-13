@@ -552,10 +552,10 @@ public class ZonePlayerListener implements Listener
 				currentZone.getTextEnter());
 		if (currentZone.isPvp()) {
 			player.sendMessage(ChatColor.RED + "[" + currentZone.getName() + "] " + 
-					"Warning! This is a PVP zone! Other players can damage or kill you here.");
-				player.setTexturePack("https://dl.dropbox.com/u/5405236/mc/pvp.zip");
+					"Warning! This is a PVP zone! Other players can damage or kill you here.");				
+			player.setCurrentTexture("https://dl.dropbox.com/u/5405236/mc/pvp.zip");
 		} else {
-			player.setTexturePack("https://dl.dropbox.com/u/5405236/mc/df.zip");
+			player.setCurrentTexture("https://dl.dropbox.com/u/5405236/mc/df.zip");
 		}
 		
 		if (perm != null) {

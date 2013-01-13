@@ -43,7 +43,7 @@ public class TregminePlayer extends PlayerDelegate
 	private String name;
 	private Zone currentZone = null;
 	private GuardianState guardianState = null;
-    private String password;
+	private String password;
 
 	public TregminePlayer(Player player, String _name) 
 	{
@@ -58,12 +58,12 @@ public class TregminePlayer extends PlayerDelegate
 		ResultSet rs = null;
 		try {
 			conn = ConnectionPool.getConnection();
-			
+
 			String sql = "SELECT * FROM user WHERE player = ?";
 			stmt = conn.prepareStatement(sql);
 			stmt.setString(1, name);
 			stmt.execute();
-			
+
 			rs = stmt.getResultSet();
 			return rs.next();
 		} catch (SQLException e) {
@@ -90,11 +90,11 @@ public class TregminePlayer extends PlayerDelegate
 		ResultSet rs = null;
 		try {
 			conn = ConnectionPool.getConnection();
-			
+
 			stmt = conn.prepareStatement("SELECT * FROM user JOIN  (user_settings) WHERE uid=id and player = ?");
 			stmt.setString(1, name);
 			stmt.execute();
-			
+
 			rs = stmt.getResultSet();
 			while (rs.next()) {
 				//TODO: Make this much nicer, this is bad code
@@ -124,7 +124,7 @@ public class TregminePlayer extends PlayerDelegate
 		PreparedStatement stmt = null;
 		try {
 			conn = ConnectionPool.getConnection();
-			
+
 			String sql = "INSERT INTO user (player) VALUE (?)";
 			stmt = conn.prepareStatement(sql);
 			stmt.setString(1, name);
@@ -160,7 +160,7 @@ public class TregminePlayer extends PlayerDelegate
 	{
 		return id;
 	}
-	
+
 	public boolean isAdmin() 
 	{
 		return getBoolean("admin");
@@ -215,13 +215,13 @@ public class TregminePlayer extends PlayerDelegate
 	{
 		this.guardianState = v;
 		switch (v) {
-			case ACTIVE:
-				setTempMetaString("color", "police");
-				break;
-			case INACTIVE:
-			case QUEUED:
-				setTempMetaString("color", "donator");
-				break;
+		case ACTIVE:
+			setTempMetaString("color", "police");
+			break;
+		case INACTIVE:
+		case QUEUED:
+			setTempMetaString("color", "donator");
+			break;
 		}
 		setTemporaryChatName(getNameColor() + getName());
 	}
@@ -235,27 +235,27 @@ public class TregminePlayer extends PlayerDelegate
 		if (_value == true) {
 			this.setMetaString(_key, "true");
 		}
-		
+
 		if (_value == false) {
 			this.setMetaString(_key, "false");
 		}
 
 	}
 
-	
+
 	public void setMetaString(String _key, String _value) 	{
 		Connection conn = null;
 		PreparedStatement stmt = null;
 		try {
 			conn = ConnectionPool.getConnection();
-			
+
 			String sqlDelete = "DELETE FROM `minecraft`.`user_settings` " +
 					"WHERE `user_settings`.`id` = ? AND `user_settings`.`key` = ?";
 			stmt = conn.prepareStatement(sqlDelete);
 			stmt.setString(1, settings.get("uid"));
 			stmt.setString(2, _key);
 			stmt.execute();
-			
+
 			stmt.close();
 			stmt = null;
 
@@ -263,7 +263,7 @@ public class TregminePlayer extends PlayerDelegate
 				this.settings.remove(_key);
 				return;
 			}
-			
+
 			String sqlInsert = "INSERT INTO user_settings (id,`key`,`value`) " +
 					"VALUE ((SELECT uid FROM user WHERE player = ?),?,?)";
 			stmt = conn.prepareStatement(sqlInsert);
@@ -271,12 +271,12 @@ public class TregminePlayer extends PlayerDelegate
 			stmt.setString(2, _key);
 			stmt.setString(3, _value);
 			stmt.execute();
-			
+
 			stmt.close();
 			stmt = null;
 
 			this.settings.put(_key, _value);
-			
+
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		} finally {
@@ -297,7 +297,7 @@ public class TregminePlayer extends PlayerDelegate
 			throw new RuntimeException(e);
 		}
 	}	
-	
+
 	public String getMetaString(String _key) 
 	{
 		return this.settings.get(_key);
@@ -322,7 +322,7 @@ public class TregminePlayer extends PlayerDelegate
 	{
 		return this.block.get(_key);
 	}
-	
+
 	public Integer getMetaInt(String _key) 
 	{
 		return this.integer.get(_key);
@@ -345,7 +345,7 @@ public class TregminePlayer extends PlayerDelegate
 			if (color.toLowerCase().matches("broker")) {
 				return ChatColor.DARK_RED;
 			}
-			
+
 			if (color.toLowerCase().matches("helper")) {
 				return ChatColor.YELLOW;
 			}
@@ -398,15 +398,15 @@ public class TregminePlayer extends PlayerDelegate
 		return ChatColor.WHITE;
 	}
 
-	
+
 	public String getSayName() 	{
 		return name;
 	}
 
 	public void setSayName() 	{
-//		return name;
+		//		return name;
 	}
-	
+
 	public String getChatName() 	{
 		return name;
 	}
@@ -419,70 +419,83 @@ public class TregminePlayer extends PlayerDelegate
 	public Boolean getInvis()	{
 		return this.getBoolean("invis");
 	}
-	
+
 	public void setTemporaryChatName(String _name)	{
 		name = _name;
-		
+
 		if (getChatName().length() > 16) {
 			this.setPlayerListName(name.substring(0, 15));
 		} else {
 			this.setPlayerListName(name);
 		}
 	}
-	
+
 	public void setCurrentZone(Zone zone) {
 		this.currentZone = zone;
 	}
 
-//	public void setCurrentZone(Lot lot) {
-//		this.currentZone = lot;
-//	}
+	//	public void setCurrentZone(Lot lot) {
+	//		this.currentZone = lot;
+	//	}
 
 	public Zone getCurrentZone() {
 		return currentZone;
 	}
-	
-    public void setPassword(String newPassword)
-    {
-        String hash = BCrypt.hashpw(newPassword, BCrypt.gensalt());
 
-        Connection conn = null;
-        PreparedStatement stmt = null;
-        try {
-            conn = ConnectionPool.getConnection();
+	public void setPassword(String newPassword)
+	{
+		String hash = BCrypt.hashpw(newPassword, BCrypt.gensalt());
 
-            String sql = "UPDATE user SET password = ? WHERE uid = ?";
-            stmt = conn.prepareStatement(sql);
-            stmt.setString(1, hash);
-            stmt.setInt(2, this.id);
-            stmt.execute();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } finally {
-            if (stmt != null) {
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		try {
+			conn = ConnectionPool.getConnection();
+
+			String sql = "UPDATE user SET password = ? WHERE uid = ?";
+			stmt = conn.prepareStatement(sql);
+			stmt.setString(1, hash);
+			stmt.setInt(2, this.id);
+			stmt.execute();
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		} finally {
+			if (stmt != null) {
 				try { stmt.close(); } catch (SQLException e) {}
 			}
 			if (conn != null) {
 				try { conn.close(); } catch (SQLException e) {}
 			}
-        }
-    }
+		}
+	}
 
-    
-    public void setChatChannel(String _channel) {
-    	this.setMetaString("channel", _channel.toUpperCase());
-    }
+	public boolean setCurrentTexture(String _url) {
 
-    public String getChatChannel() {
-    	if (this.getMetaString("channel") == null) {
-    		return "GLOBAL";
-    	}    	
-    	return this.getMetaString("channel").toUpperCase();
-    }
-    
-    
-    public boolean verifyPassword(String attempt)
-    {
-        return BCrypt.checkpw(attempt, this.password);
-    }
+		if(this.getMetaString("text") != null) {
+			return false;
+		}
+
+		if (!this.getMetaString("text").matches(_url)) {
+			this.setMetaString("text", _url);
+			return true;
+		}
+		return false;
+	}
+
+
+	public void setChatChannel(String _channel) {
+		this.setMetaString("channel", _channel.toUpperCase());
+	}
+
+	public String getChatChannel() {
+		if (this.getMetaString("channel") == null) {
+			return "GLOBAL";
+		}    	
+		return this.getMetaString("channel").toUpperCase();
+	}
+
+
+	public boolean verifyPassword(String attempt)
+	{
+		return BCrypt.checkpw(attempt, this.password);
+	}
 }
