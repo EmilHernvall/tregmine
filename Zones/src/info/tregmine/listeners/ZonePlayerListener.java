@@ -340,6 +340,7 @@ public class ZonePlayerListener implements Listener
 		if (currentZone == null || !currentZone.contains(currentPos)) {
 
 			if (currentZone != null && currentZone.contains(oldPos)) {
+				player.setCurrentTexture("https://dl.dropbox.com/u/5405236/mc/df.zip");	
 				player.sendMessage(ChatColor.RED + "[" + currentZone.getName() + "] " + currentZone.getTextExit());
 			}
 
