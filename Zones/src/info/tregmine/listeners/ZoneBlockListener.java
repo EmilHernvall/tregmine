@@ -76,20 +76,31 @@ public class ZoneBlockListener implements Listener
 						List<String> lore = new ArrayList<String>();
 						lore.add(ChatColor.GREEN + "MINED");
 						lore.add(ChatColor.WHITE + "by: " + player.getChatName() );
+
+						if (player.isGuardian()) {
+							lore.add(ChatColor.WHITE + "by: " + ChatColor.GOLD + player.getName() );
+						} else {
+							lore.add(ChatColor.WHITE + "by: " + player.getChatName() );
+						}
+
 						lore.add(ChatColor.WHITE + "Value: "+ ChatColor.GOLD + 0 + ChatColor.WHITE + " Treg" );
 						meta.setLore(lore);					
 						drop.setItemMeta(meta);
 						event.getBlock().getWorld().dropItem(event.getBlock().getLocation(), drop);
-//						player.sendMessage("Placed");
+						//						player.sendMessage("Placed");
 					} else {
 						List<String> lore = new ArrayList<String>();
 						lore.add(ChatColor.GREEN + "MINED");
-						lore.add(ChatColor.WHITE + "by: " + player.getChatName() );
+						if (player.isGuardian()) {
+							lore.add(ChatColor.WHITE + "by: " + ChatColor.GOLD + player.getName() );
+						} else {
+							lore.add(ChatColor.WHITE + "by: " + player.getChatName() );
+						}
 						lore.add(ChatColor.WHITE + "Value: "+ ChatColor.GOLD + rs.getInt("value") + ChatColor.WHITE + " Treg" );
 						meta.setLore(lore);					
 						drop.setItemMeta(meta);
 						event.getBlock().getWorld().dropItem(event.getBlock().getLocation(), drop);
-//						player.sendMessage("not placed");
+						//						player.sendMessage("not placed");
 						Wallet wallet = new Wallet (player.getName());
 						wallet.add(rs.getInt("value"));
 					}
@@ -113,9 +124,9 @@ public class ZoneBlockListener implements Listener
 		}
 
 
-		
+
 	}
-	
+
 	@EventHandler
 	public void onBlockBreak (BlockBreakEvent event) 
 	{
