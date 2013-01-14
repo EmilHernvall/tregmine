@@ -19,7 +19,7 @@ public class Url {
 			conn = ConnectionPool.getConnection();
 			
 	    	stmt = conn.prepareStatement("insert shorturl (link) values (?)"); 
-	    	stmt.setString(1, _url);
+	    	stmt.setString(0, _url);
 	    	stmt.execute();
 	    	stmt.close();
 		} catch (SQLException e) {
