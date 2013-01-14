@@ -470,6 +470,7 @@ public class TregminePlayer extends PlayerDelegate
 	}
 	
 	public void resendTexture() {
+		
 		if(this.getMetaString("text") == null) {
 			this.setMetaString("text", "https://dl.dropbox.com/u/5405236/mc/df.zip");
 			this.setTexturePack("https://dl.dropbox.com/u/5405236/mc/df.zip");

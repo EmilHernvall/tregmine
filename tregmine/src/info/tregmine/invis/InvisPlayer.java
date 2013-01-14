@@ -26,7 +26,11 @@ public class InvisPlayer implements  Listener  {
 			if (player.getMetaBoolean("invis")) {
 				Player[] players = plugin.getServer().getOnlinePlayers();
 				for (Player allplayer : players) {
-					allplayer.hidePlayer(event.getPlayer());
+					if (!allplayer.isOp()) {
+						allplayer.hidePlayer(event.getPlayer());
+					} else {
+						allplayer.showPlayer(event.getPlayer());
+					}
 				}				
 			} else {
 				Player[] players = plugin.getServer().getOnlinePlayers();
@@ -45,7 +49,11 @@ public class InvisPlayer implements  Listener  {
 				} else {
 					player.showPlayer(allplayer);
 				}
-
+				
+				if (player.isOp()) {
+					player.showPlayer(allplayer);
+				}
+				
 			}				
 		}
 

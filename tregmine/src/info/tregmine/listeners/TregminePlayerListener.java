@@ -264,8 +264,6 @@ public class TregminePlayerListener implements Listener {
 		if (tregPlayer.isGuardian()) {
 			tregPlayer.setGuardianState(TregminePlayer.GuardianState.QUEUED);
 		}
-		
-		tregPlayer.resendTexture();
 	}
 
 	@EventHandler
