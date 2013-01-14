@@ -10,6 +10,7 @@ import java.util.List;
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
 import info.tregmine.api.Zone;
+import info.tregmine.currency.Wallet;
 import info.tregmine.database.ConnectionPool;
 import info.tregmine.quadtree.Point;
 import info.tregmine.zones.Lot;
@@ -130,6 +131,8 @@ public class ZoneBlockListener implements Listener
 					meta.setLore(lore);					
 					drop.setItemMeta(meta);
 					event.getBlock().getWorld().dropItem(event.getBlock().getLocation(), drop);
+					Wallet wallet = new Wallet (player.getName());
+					wallet.add(rs.getInt("value"));
 				}
 
 			} catch (SQLException e) {
