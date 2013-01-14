@@ -145,15 +145,17 @@ public class Tregmine extends JavaPlugin
 		if("invis".matches(commandName) && player.isOp()) {
 			if ("off".matches(args[0])) {
 				for (Player p : this.getServer().getOnlinePlayers()) {					
-					p.canSee(player);
+					p.showPlayer(player);
 				}
+				player.sendMessage(ChatColor.YELLOW + "You can now be seen!");
 			} else if ("on".matches(args[0])) {
 				for (Player p : this.getServer().getOnlinePlayers()) {	
 					if (!p.isOp()) {
 						p.hidePlayer(player);
 					} else {
-						p.canSee(player);
+						p.showPlayer(player);
 					}
+					player.sendMessage(ChatColor.YELLOW + "*poof* no one knows where you are!");
 				}
 			} else {
 				player.sendMessage("Try /invis [on|off]");
