@@ -681,7 +681,7 @@ public abstract class PlayerDelegate implements Player
 	
 	@Override
 	public Player getPlayer() {
-		return null;
+		return this.getServer().getPlayer(this.getName());
 	}
 	
 	@Override
