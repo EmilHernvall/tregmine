@@ -1,8 +1,16 @@
 package info.tregmine.listeners;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
 import info.tregmine.api.Zone;
+import info.tregmine.database.ConnectionPool;
 import info.tregmine.quadtree.Point;
 import info.tregmine.zones.Lot;
 import info.tregmine.zones.ZoneWorld;
@@ -10,11 +18,14 @@ import info.tregmine.zones.ZonesPlugin;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 public class ZoneBlockListener implements Listener 
 {
@@ -82,6 +93,63 @@ public class ZoneBlockListener implements Listener
 		    	}
 	    	}
     	}
+    	
+    	if(event.isCancelled()) {
+    		return;
+    	}
+    	
+		for (ItemStack item : event.getBlock().getDrops() ) {
+
+			Connection conn = null;
+			PreparedStatement stmt = null;
+			ResultSet rs = null;
+			try {
+				conn = ConnectionPool.getConnection();
+
+				String sql = "SELECT value FROM items_destroyvalue WHERE itemid = ?";
+
+				stmt = conn.prepareStatement(sql);
+				stmt.setLong(1, item.getTypeId());
+				stmt.execute();
+
+				rs = stmt.getResultSet();
+
+				if (rs.first() ) {
+					event.setCancelled(true);
+					event.getBlock().setType(Material.AIR);
+					
+					ItemStack drop = new ItemStack(item.getType(), item.getAmount(), item.getData().getData());
+					
+					ItemMeta meta = drop.getItemMeta();
+					item.setType(Material.AIR);
+					List<String> lore = new ArrayList<String>();
+					lore.add(ChatColor.GREEN + "MINED");
+					lore.add(ChatColor.WHITE + "by: " + player.getChatName() );
+					lore.add(ChatColor.WHITE + "Value: " + rs.getInt("value") + ChatColor.WHITE + " Treg" );
+//					tregminePlayer.sendMessage(""+drop.toString());
+					meta.setLore(lore);					
+					drop.setItemMeta(meta);
+					event.getBlock().getWorld().dropItem(event.getBlock().getLocation(), drop);
+				}
+
+			} catch (SQLException e) {
+				throw new RuntimeException(e);
+			} finally {
+				if (rs != null) {
+					try { rs.close(); } catch (SQLException e) {} 
+				}
+				if (stmt != null) {
+					try { stmt.close(); } catch (SQLException e) {}
+				}
+				if (conn != null) {
+					try { conn.close(); } catch (SQLException e) {}
+				}
+			}
+			
+			
+		}
+
+    	
     }
     
 	@EventHandler

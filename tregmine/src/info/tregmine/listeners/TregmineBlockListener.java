@@ -70,57 +70,6 @@ public class TregmineBlockListener implements Listener {
 		}
 		plugin.blockStats.onBlockBreak(event);
 
-		for (ItemStack item : event.getBlock().getDrops() ) {
-
-			Connection conn = null;
-			PreparedStatement stmt = null;
-			ResultSet rs = null;
-			try {
-				conn = ConnectionPool.getConnection();
-
-				String sql = "SELECT value FROM items_destroyvalue WHERE itemid = ?";
-
-				stmt = conn.prepareStatement(sql);
-				stmt.setLong(1, item.getTypeId());
-				stmt.execute();
-
-				rs = stmt.getResultSet();
-
-				if (rs.first() ) {
-					event.setCancelled(true);
-					event.getBlock().setType(Material.AIR);
-					
-					ItemStack drop = new ItemStack(item.getType(), item.getAmount(), item.getData().getData());
-					
-					ItemMeta meta = drop.getItemMeta();
-					item.setType(Material.AIR);
-					List<String> lore = new ArrayList<String>();
-					lore.add(ChatColor.GREEN + "MINED");
-					lore.add(ChatColor.WHITE + "by: " + tregminePlayer.getChatName() );
-					lore.add(ChatColor.WHITE + "Value: " + ChatColor.MAGIC + "0000" + ChatColor.RESET + ChatColor.WHITE + " Treg" );
-					tregminePlayer.sendMessage(""+drop.toString());
-					meta.setLore(lore);					
-					drop.setItemMeta(meta);
-					event.getBlock().getWorld().dropItem(event.getBlock().getLocation(), drop);
-				}
-
-			} catch (SQLException e) {
-				throw new RuntimeException(e);
-			} finally {
-				if (rs != null) {
-					try { rs.close(); } catch (SQLException e) {} 
-				}
-				if (stmt != null) {
-					try { stmt.close(); } catch (SQLException e) {}
-				}
-				if (conn != null) {
-					try { conn.close(); } catch (SQLException e) {}
-				}
-			}
-			
-			
-		}
-
 	}
 
 	@EventHandler
