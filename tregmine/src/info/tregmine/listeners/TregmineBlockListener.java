@@ -98,7 +98,7 @@ public class TregmineBlockListener implements Listener {
 					lore.add(ChatColor.GREEN + "MINED");
 					lore.add(ChatColor.WHITE + "by: " + tregminePlayer.getChatName() );
 					lore.add(ChatColor.WHITE + "Value: " + ChatColor.MAGIC + "0000" + ChatColor.RESET + ChatColor.WHITE + " Treg" );
-					tregminePlayer.sendMessage("Value: " + ChatColor.GOLD + rs.getInt("value") + ChatColor.WHITE + " Treg");
+					tregminePlayer.sendMessage(""+drop.toString());
 					meta.setLore(lore);					
 					drop.setItemMeta(meta);
 					event.getBlock().getWorld().dropItem(event.getBlock().getLocation(), drop);
