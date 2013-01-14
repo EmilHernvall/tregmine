@@ -93,7 +93,8 @@ public class Item extends JavaPlugin {
 				List<String> lore = new ArrayList<String>();
 				lore.add(ChatColor.RED + "SPAWNED");
 				TregminePlayer p = this.tregmine.getPlayer(player);
-				lore.add(ChatColor.WHITE + "by: " + p.getName() );
+				lore.add(ChatColor.WHITE + "by: " + p.getChatChannel() );
+				lore.add(ChatColor.WHITE + "Value: " + ChatColor.MAGIC + "0" + ChatColor.RESET + ChatColor.WHITE + " Treg" );
 				meta.setLore(lore);
 				
 				item.setItemMeta(meta);
