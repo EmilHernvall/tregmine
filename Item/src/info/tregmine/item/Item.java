@@ -10,6 +10,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -83,6 +84,11 @@ public class Item extends JavaPlugin {
 					player.kickPlayer("Don't do that again ASSHOLE!");
 					return true;
 				}
+				
+				ItemMeta meta = item.getItemMeta();
+				meta.setDisplayName(ChatColor.GREEN + Material.getMaterial(matID).toString());
+				item.setItemMeta(meta);
+				
 				inv.addItem(item);
 				player.sendMessage("You received " + amount + " of " + ChatColor.DARK_AQUA + Material.getMaterial(matID).toString().toLowerCase() + ".");
 				this.log.info(player.getName() +" SPAWNED " + amount + ":" + Material.getMaterial(matID).toString());
