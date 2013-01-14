@@ -266,8 +266,6 @@ public class TregminePlayer extends PlayerDelegate
  
 			stmt = conn.prepareStatement(sqlDelete);
 			
-			System.out.print(stmt.getWarnings().toString());
-			
 			stmt.setString(1, settings.get("uid"));
 			stmt.setString(2, _key);
 			stmt.execute();
