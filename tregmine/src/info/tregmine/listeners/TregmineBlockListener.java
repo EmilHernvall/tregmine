@@ -88,8 +88,9 @@ public class TregmineBlockListener implements Listener {
 
 				if (rs.first() ) {
 					List<String> lore = new ArrayList<String>();
+					tregminePlayer.sendMessage(item.toString());
 					lore.add(ChatColor.GREEN + "MINED");
-					lore.add(ChatColor.WHITE + "by: " + tregminePlayer.getChatChannel() );
+					lore.add(ChatColor.WHITE + "by: " + tregminePlayer.getChatName() );
 					lore.add(ChatColor.WHITE + "Value: " + ChatColor.GOLD + rs.getInt("value") + ChatColor.WHITE + " Treg" );
 					meta.setLore(lore);
 				}
