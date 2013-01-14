@@ -125,7 +125,11 @@ public class TregminePlayerListener implements Listener {
 				if (item != null) {
 					ItemMeta meta = item.getItemMeta();
 					//			if (!meta.hasDisplayName()) {
-					meta.setDisplayName(ChatColor.RED + item.getType().name() +  " Spawnd by " + player.getName());
+					List<String> lore = new ArrayList<String>();
+					lore.add(ChatColor.RED + "CREATIVE");
+					TregminePlayer p = this.plugin.getPlayer(player);
+					lore.add(ChatColor.WHITE + "by: " + p.getChatName() );
+					meta.setLore(lore);
 					//			}
 					item.setItemMeta(meta);
 				}

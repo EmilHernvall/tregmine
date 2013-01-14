@@ -17,6 +17,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import info.tregmine.Tregmine; 
+import info.tregmine.api.TregminePlayer;
 
 
 public class Item extends JavaPlugin {
@@ -91,7 +92,8 @@ public class Item extends JavaPlugin {
 				//meta.setDisplayName(ChatColor.GREEN + Material.getMaterial(matID).toString() + " spawned by " + player.getName());
 				List<String> lore = new ArrayList<String>();
 				lore.add(ChatColor.RED + "SPAWNED");
-				lore.add(ChatColor.WHITE + "by: " + player.getName() );
+				TregminePlayer p = this.tregmine.getPlayer(player);
+				lore.add(ChatColor.WHITE + "by: " + p.getName() );
 				meta.setLore(lore);
 				
 				item.setItemMeta(meta);
