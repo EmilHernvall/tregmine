@@ -129,14 +129,18 @@ public class TregminePlayerListener implements Listener {
 
 			for (ItemStack item : player.getInventory().getContents()) {
 				if (item != null) {
-					player.sendMessage(item.getType().toString());
+					ItemMeta meta = item.getItemMeta();
+					//			if (!meta.hasDisplayName()) {
+					meta.setDisplayName(ChatColor.RED + item.getType().toString() +  " Spawnd by " + player.getName());
+					//			}
+					item.setItemMeta(meta);
 				}
 			}
 
 		}
 
 
-		player.sendMessage("CLOSE");
+//		player.sendMessage("CLOSE");
 
 
 
