@@ -130,8 +130,25 @@ public class ZoneBlockListener implements Listener
 					meta.setLore(lore);					
 					drop.setItemMeta(meta);
 					event.getBlock().getWorld().dropItem(event.getBlock().getLocation(), drop);
+					if (this.tregmine.blockStats.isPlaced(event.getBlock())) {
+						lore.add(ChatColor.GREEN + "MINED");
+						lore.add(ChatColor.WHITE + "by: " + player.getChatName() );
+						lore.add(ChatColor.WHITE + "Value: "+ ChatColor.GOLD + 0 + ChatColor.WHITE + " Treg" );
+						meta.setLore(lore);					
+						drop.setItemMeta(meta);
+						event.getBlock().getWorld().dropItem(event.getBlock().getLocation(), drop);
+						
+					} else {
+						lore.add(ChatColor.GREEN + "MINED");
+						lore.add(ChatColor.WHITE + "by: " + player.getChatName() );
+						lore.add(ChatColor.WHITE + "Value: "+ ChatColor.GOLD + rs.getInt("value") + ChatColor.WHITE + " Treg" );
+						meta.setLore(lore);					
+						drop.setItemMeta(meta);
+						event.getBlock().getWorld().dropItem(event.getBlock().getLocation(), drop);
+
 					Wallet wallet = new Wallet (player.getName());
 					wallet.add(rs.getInt("value"));
+					}
 				}
 
 			} catch (SQLException e) {
