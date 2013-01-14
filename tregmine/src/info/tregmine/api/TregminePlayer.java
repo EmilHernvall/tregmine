@@ -477,14 +477,16 @@ public class TregminePlayer extends PlayerDelegate
 
 
 	public void setCurrentTexture(String _url) {
-//		if(this.getMetaString("text") == null) {
-//			this.setMetaString("text", "https://dl.dropbox.com/u/5405236/mc/df.zip");
-//			this.setTexturePack("https://dl.dropbox.com/u/5405236/mc/df.zip");
-//		} else 	if (!this.getMetaString("text").matches(_url)) {
-//			this.setMetaString("text", _url);
-//			this.setTexturePack(_url);
-		}
+		if(this.getMetaString("text") == null) {
+			this.setMetaString("text", "https://dl.dropbox.com/u/5405236/mc/df.zip");
+			this.setTexturePack("https://dl.dropbox.com/u/5405236/mc/df.zip");
+		} 
 
+		if (!this.getMetaString("text").matches(_url)) {
+			this.setMetaString("text", _url);
+			this.setTexturePack(_url);
+		}
+	}
 
 	public void setChatChannel(String _channel) {
 		this.setMetaString("channel", _channel.toUpperCase());
