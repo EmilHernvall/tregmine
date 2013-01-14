@@ -7,27 +7,19 @@ import info.tregmine.listeners.TregmineEntityListener;
 import info.tregmine.listeners.TregminePlayerListener;
 import info.tregmine.listeners.TregmineWeatherListener;
 import info.tregmine.stats.BlockStats;
-//import info.tregmine.world.citadel.CitadelLimit;
 
 import java.util.logging.Logger;
 
 import org.bukkit.ChatColor;
-//import org.bukkit.FireworkEffect;
 import org.bukkit.Material;
-//import org.bukkit.ChatColor;
 import org.bukkit.WorldCreator;
 import org.bukkit.World.Environment;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-//import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
-//import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.inventory.meta.SkullMeta;
-//import org.bukkit.event.Event;
-//import org.bukkit.event.Event.Priority;
-//import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 
@@ -156,11 +148,13 @@ public class Tregmine extends JavaPlugin
 			
 		}
 
+		
+		
 		if(commandName.equals("head") && player.isAdmin()) {
 			ItemStack item = new ItemStack(Material.SKULL_ITEM, 1, (byte) 3);
 			SkullMeta meta = (SkullMeta) item.getItemMeta();
 			meta.setOwner(args[0]);
-			meta.setDisplayName("Head of " + args[0]);
+			meta.setDisplayName(ChatColor.YELLOW + "Head of " + args[0]);
 			item.setItemMeta(meta);
 			
 			PlayerInventory inv = player.getInventory();
