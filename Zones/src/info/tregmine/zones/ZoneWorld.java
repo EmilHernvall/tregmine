@@ -59,7 +59,7 @@ public class ZoneWorld
 		lotLookup.insert(lot.getRect(), lot);
 		lotNameLookup.put(lot.getName(), lot);
 	}
-	
+		
 	public boolean zoneExists(String name)
 	{
 		return zoneNameLookup.containsKey(name);

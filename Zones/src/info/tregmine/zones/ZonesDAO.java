@@ -137,7 +137,7 @@ public class ZonesDAO
 				zone.setHostiles("1".equals(rs.getString("zone_hostiles")));
 				zone.setTextEnter(rs.getString("zone_entermessage"));
 				zone.setTextExit(rs.getString("zone_exitmessage"));
-				
+				zone.setTexture(rs.getString("texture"));
 				zones.add(zone);
 			}
 		}

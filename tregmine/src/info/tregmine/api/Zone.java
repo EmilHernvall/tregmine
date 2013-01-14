@@ -11,6 +11,8 @@ import info.tregmine.quadtree.Rectangle;
 
 public class Zone 
 {
+	private String texture;
+
 	
 	public enum lotStatus {
 		dropzone(),
@@ -180,6 +182,19 @@ public class Zone
 		this.pvp = pvp;
 	}
 
+	public void setTexture(String _texture) {
+		this.texture = _texture;
+	}
+
+	public String getTexture() {
+		if (this.texture == null) {
+			return "";
+		} 
+		
+		return this.texture;
+	}
+
+	
 	public boolean hasHostiles() {
 		return hostiles;
 	}
