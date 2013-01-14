@@ -26,7 +26,7 @@ public class Chat implements Listener {
 		ChatColor txtColor = ChatColor.WHITE;
 
 		String newtext = info.tregmine.api.url.Url.getURL(event.getMessage());
-		sender.sendMessage(""+ newtext);
+		sender.sendMessage("EIN:"+ newtext);
 		
 		
 		for (Player player : players) {
