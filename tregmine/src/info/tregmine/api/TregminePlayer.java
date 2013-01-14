@@ -97,7 +97,7 @@ public class TregminePlayer extends PlayerDelegate
 
 			rs = stmt.getResultSet();
 			while (rs.next()) {
-				//TODO: Make this much nicer, this is bad code
+				System.out.println(rs.getString("key") +"->" + rs.getString("value"));
 				this.id = rs.getInt("uid");
 				settings.put("uid", rs.getString("uid"));
 				settings.put(rs.getString("key"), rs.getString("value"));
@@ -116,7 +116,7 @@ public class TregminePlayer extends PlayerDelegate
 			}
 		}
 		this.setTemporaryChatName(getNameColor() + name);
-//		this.resendTexture();
+		//		this.resendTexture();
 	}
 
 	public void create() 
@@ -435,10 +435,6 @@ public class TregminePlayer extends PlayerDelegate
 		this.currentZone = zone;
 	}
 
-	//	public void setCurrentZone(Lot lot) {
-	//		this.currentZone = lot;
-	//	}
-
 	public Zone getCurrentZone() {
 		return currentZone;
 	}
@@ -468,16 +464,16 @@ public class TregminePlayer extends PlayerDelegate
 			}
 		}
 	}
-	
+
 	public void resendTexture() {
-		
+
 		if(this.getMetaString("text") == null) {
 			this.setMetaString("text", "https://dl.dropbox.com/u/5405236/mc/df.zip");
 			this.setTexturePack("https://dl.dropbox.com/u/5405236/mc/df.zip");
 		} else {
 			this.setTexturePack(this.getMetaString("text"));
 		}
-		
+
 	}
 
 	public void setCurrentTexture(String _url) {
@@ -493,7 +489,6 @@ public class TregminePlayer extends PlayerDelegate
 		}
 	}
 
-
 	public void setChatChannel(String _channel) {
 		this.setMetaString("channel", _channel.toUpperCase());
 	}
@@ -505,9 +500,7 @@ public class TregminePlayer extends PlayerDelegate
 		return this.getMetaString("channel").toUpperCase();
 	}
 
-
-	public boolean verifyPassword(String attempt)
-	{
+	public boolean verifyPassword(String attempt) {
 		return BCrypt.checkpw(attempt, this.password);
 	}
 }

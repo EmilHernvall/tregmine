@@ -92,9 +92,6 @@ public class Tregmine extends JavaPlugin
 	public void onLoad() 
 	{
 		Player[] players = this.getServer().getOnlinePlayers();
-
-//		this.getServer().getWorld("world_the_end").setPVP(true);
-		
 		
 		for (Player player : players) {
 			String onlineName = player.getName();
