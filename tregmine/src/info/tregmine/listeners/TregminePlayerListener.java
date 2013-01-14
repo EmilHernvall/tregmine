@@ -30,6 +30,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerBucketFillEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
@@ -121,8 +122,13 @@ public class TregminePlayerListener implements Listener {
 
 
 	@EventHandler
-	public void onPlayerItemHeld(InventoryClickEvent event){
-		Player player =  (Player) event.getWhoClicked();
+	public void onPlayerItemHeld(InventoryCloseEvent event){
+		
+		Player player =  (Player) event.getPlayer();
+		
+		player.sendMessage("CLOSE");
+		
+		/*
 		ItemStack item =  event.getCurrentItem();
 
 		if (item.getType() != Material.AIR) {
@@ -139,6 +145,7 @@ public class TregminePlayerListener implements Listener {
 		} else {
 			player.sendMessage("Empty");
 		}
+*/
 	}
 
 
