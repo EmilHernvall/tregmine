@@ -116,7 +116,7 @@ public class TregminePlayer extends PlayerDelegate
 			}
 		}
 		this.setTemporaryChatName(getNameColor() + name);
-		this.resendTexture();
+//		this.resendTexture();
 	}
 
 	public void create() 
