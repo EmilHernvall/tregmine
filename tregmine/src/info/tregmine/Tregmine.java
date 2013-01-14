@@ -101,12 +101,12 @@ public class Tregmine extends JavaPlugin
 			TregminePlayer tregPlayer = new TregminePlayer(player, onlineName);
 			tregPlayer.load();
 			this.tregminePlayer.put(onlineName, tregPlayer);
-			player.sendMessage(ChatColor.AQUA + "Tregmine successfully loaded to build: " + this.getDescription().getVersion() );
-			player.sendMessage(ChatColor.AQUA + "Version explanation: X.Y.Z.G");
-			player.sendMessage(ChatColor.AQUA + "X new stuff added, When i make a brand new thing");
-			player.sendMessage(ChatColor.AQUA + "Y new function added, when i extend what current stuff can do");
-			player.sendMessage(ChatColor.AQUA + "Z bugfix that may change how function and stuff works");
-			player.sendMessage(ChatColor.AQUA + "G small bugfix like spelling errors");
+			player.sendMessage(ChatColor.GRAY + "Tregmine successfully loaded to build: " + this.getDescription().getVersion() );
+			player.sendMessage(ChatColor.GRAY + "Version explanation: X.Y.Z.G");
+			player.sendMessage(ChatColor.GRAY + "X new stuff added, When i make a brand new thing");
+			player.sendMessage(ChatColor.GRAY + "Y new function added, when i extend what current stuff can do");
+			player.sendMessage(ChatColor.GRAY + "Z bugfix that may change how function and stuff works");
+			player.sendMessage(ChatColor.GRAY + "G small bugfix like spelling errors");
 		}
 
 	}
@@ -142,6 +142,26 @@ public class Tregmine extends JavaPlugin
 			player = this.getPlayer(from);
 		}
 
+		if("invis".matches(commandName) && player.isOp()) {
+			if ("off".matches(args[0])) {
+				for (Player p : this.getServer().getOnlinePlayers()) {					
+					p.canSee(player);
+				}
+			} else if ("on".matches(args[0])) {
+				for (Player p : this.getServer().getOnlinePlayers()) {	
+					if (!p.isOp()) {
+						p.hidePlayer(player);
+					} else {
+						p.canSee(player);
+					}
+				}
+			} else {
+				player.sendMessage("Try /invis [on|off]");
+			}
+
+		}
+
+		
 		if(commandName.equals("text") && player.isAdmin()) {
 			Player[] players = this.getServer().getOnlinePlayers();
 			
