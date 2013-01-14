@@ -1,6 +1,8 @@
 package info.tregmine.item;
 
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 import org.bukkit.ChatColor;
@@ -87,6 +89,10 @@ public class Item extends JavaPlugin {
 				
 				ItemMeta meta = item.getItemMeta();
 				meta.setDisplayName(ChatColor.GREEN + Material.getMaterial(matID).toString() + " spawned by " + player.getName());
+				List<String> lore = new ArrayList<String>();
+				lore.add("test");
+				meta.setLore(lore);
+				
 				item.setItemMeta(meta);
 				
 				inv.addItem(item);
