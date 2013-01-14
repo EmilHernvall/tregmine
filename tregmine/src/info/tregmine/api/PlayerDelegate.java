@@ -774,6 +774,12 @@ public abstract class PlayerDelegate implements Player
 		delegate.hidePlayer(arg0);
 	}
 
+	public void hidePlayer(TregminePlayer arg0) {
+		Player player = arg0.getPlayer();
+		delegate.hidePlayer(player);
+	}
+	
+	
 	@Override
 	public void showPlayer(Player arg0) {
 		delegate.showPlayer(arg0);
