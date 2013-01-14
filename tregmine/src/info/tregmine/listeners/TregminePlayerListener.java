@@ -121,6 +121,8 @@ public class TregminePlayerListener implements Listener {
 
 	@EventHandler
 	public void onPlayerItemHeld(PlayerItemHeldEvent event){
+		event.getPlayer().sendMessage("TEST");
+		
 		if (event.getPlayer().getGameMode() == GameMode.CREATIVE) {
 			ItemStack item =  event.getPlayer().getItemOnCursor();
 			ItemMeta meta = item.getItemMeta();
