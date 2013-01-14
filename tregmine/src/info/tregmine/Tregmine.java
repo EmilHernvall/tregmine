@@ -147,6 +147,7 @@ public class Tregmine extends JavaPlugin
 				for (Player p : this.getServer().getOnlinePlayers()) {					
 					p.showPlayer(player.getPlayer());
 				}
+				player.setMetaBoolean("invis", false);
 				player.sendMessage(ChatColor.YELLOW + "You can now be seen!");
 			} else if ("on".matches(args[0])) {
 				for (Player p : this.getServer().getOnlinePlayers()) {	
@@ -156,6 +157,7 @@ public class Tregmine extends JavaPlugin
 						p.showPlayer(player.getPlayer());
 					}
 				}
+				player.setMetaBoolean("invis", true);
 				player.sendMessage(ChatColor.YELLOW + "*poof* no one knows where you are!");
 			} else {
 				player.sendMessage("Try /invis [on|off]");
