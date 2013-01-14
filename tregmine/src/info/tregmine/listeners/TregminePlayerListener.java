@@ -123,22 +123,24 @@ public class TregminePlayerListener implements Listener {
 
 	@EventHandler
 	public void onPlayerItemHeld(InventoryCloseEvent event){
-		
+
 		Player player =  (Player) event.getPlayer();
 		if (player.getGameMode() == GameMode.CREATIVE) {
-			
-			for (ItemStack item : player.getInventory().getContents()) {
-				player.sendMessage(item.getType().toString());
-			}
-			
-		}
-		
-			
-		player.sendMessage("CLOSE");
-		
 
-		
-		
+			for (ItemStack item : player.getInventory().getContents()) {
+				if (item != null) {
+					player.sendMessage(item.getType().toString());
+				}
+			}
+
+		}
+
+
+		player.sendMessage("CLOSE");
+
+
+
+
 		/*
 		ItemStack item =  event.getCurrentItem();
 
@@ -156,7 +158,7 @@ public class TregminePlayerListener implements Listener {
 		} else {
 			player.sendMessage("Empty");
 		}
-*/
+		 */
 	}
 
 
