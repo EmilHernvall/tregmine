@@ -29,6 +29,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerBucketFillEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
@@ -120,17 +121,19 @@ public class TregminePlayerListener implements Listener {
 	
 
 	@EventHandler
-	public void onPlayerItemHeld(PlayerItemHeldEvent event){
-		event.getPlayer().sendMessage("TEST");
+	public void onPlayerItemHeld(InventoryClickEvent event){
+		Player player =  (Player) event.getWhoClicked();
+		player.sendMessage("TEST");
 		
-		if (event.getPlayer().getGameMode() == GameMode.CREATIVE) {
-			ItemStack item =  event.getPlayer().getItemOnCursor();
+		if (player.getGameMode() == GameMode.CREATIVE) {
+			ItemStack item =  player.getItemOnCursor();
 			ItemMeta meta = item.getItemMeta();
 			if (!meta.hasDisplayName()) {
-				meta.setDisplayName("Spawnd by " + event.getPlayer().getName());
+				meta.setDisplayName("Spawnd by " + player.getName());
 			}
 			item.setItemMeta(meta);
 		}
+
 	}
 	
 	
