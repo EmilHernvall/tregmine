@@ -123,7 +123,7 @@ public class TregminePlayerListener implements Listener {
 	@EventHandler
 	public void onPlayerItemHeld(InventoryClickEvent event){
 		Player player =  (Player) event.getWhoClicked();
-		ItemStack item =  event.getCurrentItem();
+		ItemStack item =  event.getCursor();
 
 		if (item.getType() != Material.AIR) {
 			player.sendMessage(item.getType().toString());
