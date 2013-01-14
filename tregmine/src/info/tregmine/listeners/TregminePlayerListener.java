@@ -123,12 +123,14 @@ public class TregminePlayerListener implements Listener {
 	@EventHandler
 	public void onPlayerItemHeld(InventoryClickEvent event){
 		Player player =  (Player) event.getWhoClicked();
-		if (event.getCurrentItem().getType() != Material.AIR) {
-			player.sendMessage(event.getCurrentItem().getType().toString());
+		ItemStack item =  event.getCursor();
+
+		if (item.getType() != Material.AIR) {
+			player.sendMessage(item.getType().toString());
 
 
 			if (player.getGameMode() == GameMode.CREATIVE) {
-				ItemStack item =  event.getCurrentItem();
+				item =  event.getCursor();
 				ItemMeta meta = item.getItemMeta();
 				//			if (!meta.hasDisplayName()) {
 				meta.setDisplayName("Spawnd by " + player.getName());
