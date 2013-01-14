@@ -86,7 +86,7 @@ public class Item extends JavaPlugin {
 				}
 				
 				ItemMeta meta = item.getItemMeta();
-				meta.setDisplayName(ChatColor.GREEN + Material.getMaterial(matID).toString());
+				meta.setDisplayName(ChatColor.GREEN + Material.getMaterial(matID).toString() + " spawned by " + player.getName());
 				item.setItemMeta(meta);
 				
 				inv.addItem(item);
