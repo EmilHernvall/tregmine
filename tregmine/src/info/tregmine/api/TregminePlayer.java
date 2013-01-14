@@ -97,7 +97,6 @@ public class TregminePlayer extends PlayerDelegate
 
 			rs = stmt.getResultSet();
 			while (rs.next()) {
-				System.out.println(rs.getString("key") +"->" + rs.getString("value"));
 				this.id = rs.getInt("uid");
 				settings.put("uid", rs.getString("uid"));
 				settings.put(rs.getString("key"), rs.getString("value"));
@@ -253,8 +252,6 @@ public class TregminePlayer extends PlayerDelegate
 		
 		try {
 			conn = ConnectionPool.getConnection();
-			
-			System.out.print(conn);
 			
 			String sqlDelete = "DELETE FROM `user_settings` " +
 					"WHERE `user_settings`.`id` = ? AND `user_settings`.`key` = ?";
@@ -468,7 +465,7 @@ public class TregminePlayer extends PlayerDelegate
 
 
 	public void setCurrentTexture(String _url) {
-/*
+
 		if(this.getMetaString("text") == null) {
 			this.setMetaString("text", "https://dl.dropbox.com/u/5405236/mc/df.zip");
 			this.setTexturePack("https://dl.dropbox.com/u/5405236/mc/df.zip");
@@ -478,7 +475,7 @@ public class TregminePlayer extends PlayerDelegate
 			this.setMetaString("text", _url);
 			this.setTexturePack(_url);
 		}
-*/
+
 	}
 
 	public void setChatChannel(String _channel) {
