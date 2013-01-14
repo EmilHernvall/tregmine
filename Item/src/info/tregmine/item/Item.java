@@ -88,9 +88,10 @@ public class Item extends JavaPlugin {
 				}
 				
 				ItemMeta meta = item.getItemMeta();
-				meta.setDisplayName(ChatColor.GREEN + Material.getMaterial(matID).toString() + " spawned by " + player.getName());
+				//meta.setDisplayName(ChatColor.GREEN + Material.getMaterial(matID).toString() + " spawned by " + player.getName());
 				List<String> lore = new ArrayList<String>();
-				lore.add("test");
+				lore.add(ChatColor.RED + "SPAWNED");
+				lore.add(ChatColor.WHITE + "by: " + player.getName() );
 				meta.setLore(lore);
 				
 				item.setItemMeta(meta);
