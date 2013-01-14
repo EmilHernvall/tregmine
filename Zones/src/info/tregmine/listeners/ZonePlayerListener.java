@@ -13,6 +13,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -27,6 +28,7 @@ import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.util.Vector;
 
 public class ZonePlayerListener implements Listener
@@ -458,121 +460,141 @@ public class ZonePlayerListener implements Listener
 
 	@EventHandler
 	public void onPlayerTeleport(PlayerTeleportEvent event)
-	{		
-		//		event.getPlayer().sendMessage("Teleport " + event.getPlayer().getWorld().getName());
-		TregminePlayer player = tregmine.getPlayer(event.getPlayer());
+	{	
+		if (event.getCause() == TeleportCause.END_PORTAL) {
+			int nrEnt = event.getTo().getWorld().getLivingEntities().size();
+			int max = 1000;
+			int newEnt = max - nrEnt;
 
-		if (event.getTo().getWorld().getName().matches("world_the_end") && !player.isOp()) {
-			event.getPlayer().sendMessage(ChatColor.RED + "You can't teleport to someone in The End");
-			event.setCancelled(true);
-			return;
-		}
+			if (nrEnt <= max) {
 
-		//		if (event.getPlayer().getWorld().getName().matches("world_the_end")) {
-		//			event.getPlayer().sendMessage(ChatColor.RED + "You can't teleport to someone in The End");
-		//			event.setCancelled(true);
-		//			return;
-		//		}
-
-		if (event.getFrom().getWorld().getName().matches(event.getTo().getWorld().getName())) {
-			//			TregminePlayer player = tregmine.getPlayer(event.getPlayer());
-			ZoneWorld world = plugin.getWorld(player.getWorld());
-
-			Location movingFrom = event.getFrom();
-			Point oldPos = new Point(movingFrom.getBlockX(), movingFrom.getBlockZ());
-
-			Location movingTo = event.getTo();
-			Point currentPos = new Point(movingTo.getBlockX(), movingTo.getBlockZ());
-
-			Zone currentZone = player.getCurrentZone();
-
-
-			if (currentZone == null || !currentZone.contains(currentPos)) {
-
-				if (currentZone != null && currentZone.contains(oldPos)) {
-					player.sendMessage(currentZone.getTextExit());
+				for (int i = 0; i<newEnt;i++) {
+					event.getTo().getWorld().spawnEntity(event.getTo(), EntityType.GHAST);
 				}
 
-				currentZone = world.findZone(currentPos);
-				if (currentZone != null) {
-					Zone.Permission perm = currentZone.getUser(player.getName());
-
-					if (currentZone.getEnterDefault()) {
-						if (player.isAdmin()) {
-							// never applies to admins
-						}
-						else if (perm != null && perm == Zone.Permission.Banned) {
-							bannedMessage(currentZone, player);
-							event.setCancelled(true);
-							return;
-						}
-					} else {
-						if (player.isAdmin()) {
-							// never applies to admins
-						}
-						else if (perm == null) {
-							disallowedMessage(currentZone, player);
-							event.setCancelled(true);
-							return;
-						}
-						else if (perm == Zone.Permission.Banned) {
-							bannedMessage(currentZone, player);
-							event.setCancelled(true);
-							return;			    		
-						}
-					}
-
-					if (currentZone.isPvp() && !player.isAdmin()) {
-						event.setCancelled(true);
-						return;
-					}
+			} 
 
 
-					welcomeMessage(currentZone, player, perm);
-				}
-				player.setCurrentZone(currentZone);
-			}
 		}
-	}
 
-	private void disallowedMessage(Zone currentZone, TregminePlayer player)
-	{
-		player.sendMessage(ChatColor.RED + "[" + currentZone.getName() + "] " + 
-				"You are not allowed in this zone. Contact the zone owner.");
-	}
+		//			for (Entity ent : event.getTo().getWorld().getLivingEntities()) {
 
-	private void bannedMessage(Zone currentZone, TregminePlayer player)
-	{
-		player.sendMessage(ChatColor.RED + "[" + currentZone.getName() + "] " + 
-				"You are banned from " + currentZone.getName() + ".");
-	}
+		//			event.getTo().getWorld().getEntities()
 
-	private void welcomeMessage(Zone currentZone, TregminePlayer player, Zone.Permission perm)
-	{
-		if (currentZone.getTexture() == "") {
-			if (currentZone.isPvp()) {
-				player.setCurrentTexture("https://dl.dropbox.com/u/5405236/mc/pvp.zip");
+//		event.getPlayer().sendMessage("Teleport " + event.getPlayer().getWorld().getName());
+TregminePlayer player = tregmine.getPlayer(event.getPlayer());
+
+if (event.getTo().getWorld().getName().matches("world_the_end") && !player.isOp()) {
+	event.getPlayer().sendMessage(ChatColor.RED + "You can't teleport to someone in The End");
+	event.setCancelled(true);
+	return;
+}
+
+//		if (event.getPlayer().getWorld().getName().matches("world_the_end")) {
+//			event.getPlayer().sendMessage(ChatColor.RED + "You can't teleport to someone in The End");
+//			event.setCancelled(true);
+//			return;
+//		}
+
+if (event.getFrom().getWorld().getName().matches(event.getTo().getWorld().getName())) {
+	//			TregminePlayer player = tregmine.getPlayer(event.getPlayer());
+	ZoneWorld world = plugin.getWorld(player.getWorld());
+
+	Location movingFrom = event.getFrom();
+	Point oldPos = new Point(movingFrom.getBlockX(), movingFrom.getBlockZ());
+
+	Location movingTo = event.getTo();
+	Point currentPos = new Point(movingTo.getBlockX(), movingTo.getBlockZ());
+
+	Zone currentZone = player.getCurrentZone();
+
+
+	if (currentZone == null || !currentZone.contains(currentPos)) {
+
+		if (currentZone != null && currentZone.contains(oldPos)) {
+			player.sendMessage(currentZone.getTextExit());
+		}
+
+		currentZone = world.findZone(currentPos);
+		if (currentZone != null) {
+			Zone.Permission perm = currentZone.getUser(player.getName());
+
+			if (currentZone.getEnterDefault()) {
+				if (player.isAdmin()) {
+					// never applies to admins
+				}
+				else if (perm != null && perm == Zone.Permission.Banned) {
+					bannedMessage(currentZone, player);
+					event.setCancelled(true);
+					return;
+				}
 			} else {
-				player.setCurrentTexture("https://dl.dropbox.com/u/5405236/mc/df.zip");			
+				if (player.isAdmin()) {
+					// never applies to admins
+				}
+				else if (perm == null) {
+					disallowedMessage(currentZone, player);
+					event.setCancelled(true);
+					return;
+				}
+				else if (perm == Zone.Permission.Banned) {
+					bannedMessage(currentZone, player);
+					event.setCancelled(true);
+					return;			    		
+				}
 			}
 
-		} else {
-			player.setCurrentTexture( currentZone.getTexture() );
-		}
+			if (currentZone.isPvp() && !player.isAdmin()) {
+				event.setCancelled(true);
+				return;
+			}
 
-		player.sendMessage(ChatColor.RED + "[" + currentZone.getName() + "] " + 
-				currentZone.getTextEnter());
 
-		if (currentZone.isPvp()) {
-			player.sendMessage(ChatColor.RED + "[" + currentZone.getName() + "] " + 
-					"Warning! This is a PVP zone! Other players can damage or kill you here.");		
-		} else {
+			welcomeMessage(currentZone, player, perm);
 		}
-
-		if (perm != null) {
-			String permNotification = perm.getPermissionNotification();
-			player.sendMessage(ChatColor.RED + "[" + currentZone.getName() + "] " + 
-					permNotification);
-		}
+		player.setCurrentZone(currentZone);
 	}
+}
+}
+
+private void disallowedMessage(Zone currentZone, TregminePlayer player)
+{
+	player.sendMessage(ChatColor.RED + "[" + currentZone.getName() + "] " + 
+			"You are not allowed in this zone. Contact the zone owner.");
+}
+
+private void bannedMessage(Zone currentZone, TregminePlayer player)
+{
+	player.sendMessage(ChatColor.RED + "[" + currentZone.getName() + "] " + 
+			"You are banned from " + currentZone.getName() + ".");
+}
+
+private void welcomeMessage(Zone currentZone, TregminePlayer player, Zone.Permission perm)
+{
+	if (currentZone.getTexture() == "") {
+		if (currentZone.isPvp()) {
+			player.setCurrentTexture("https://dl.dropbox.com/u/5405236/mc/pvp.zip");
+		} else {
+			player.setCurrentTexture("https://dl.dropbox.com/u/5405236/mc/df.zip");			
+		}
+
+	} else {
+		player.setCurrentTexture( currentZone.getTexture() );
+	}
+
+	player.sendMessage(ChatColor.RED + "[" + currentZone.getName() + "] " + 
+			currentZone.getTextEnter());
+
+	if (currentZone.isPvp()) {
+		player.sendMessage(ChatColor.RED + "[" + currentZone.getName() + "] " + 
+				"Warning! This is a PVP zone! Other players can damage or kill you here.");		
+	} else {
+	}
+
+	if (perm != null) {
+		String permNotification = perm.getPermissionNotification();
+		player.sendMessage(ChatColor.RED + "[" + currentZone.getName() + "] " + 
+				permNotification);
+	}
+}
 }
