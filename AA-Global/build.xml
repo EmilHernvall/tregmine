@@ -9,7 +9,6 @@
 		<ant dir="../Currency" target="clean" inheritAll="false" />
 		<ant dir="../BasicCommands" target="clean" inheritAll="false" />
 		<ant dir="../BoxFill" target="clean" inheritAll="false" />
-		<ant dir="../Chat" target="clean" inheritAll="false" />
 		<ant dir="../ChestBless" target="clean" inheritAll="false" />
 		<ant dir="../Compass2" target="clean" inheritAll="false" />
 		<ant dir="../InventorySpy" target="clean" inheritAll="false" />
@@ -23,7 +22,6 @@
 		<ant dir="../Currency" target="jar" inheritAll="false" />
 		<ant dir="../BasicCommands" target="jar" inheritAll="false" />
 		<ant dir="../BoxFill" target="jar" inheritAll="false" />
-		<ant dir="../Chat" target="jar" inheritAll="false" />
 		<ant dir="../ChestBless" target="jar" inheritAll="false" />
 		<ant dir="../Compass2" target="jar" inheritAll="false" />
 		<ant dir="../InventorySpy" target="jar" inheritAll="false" />
@@ -37,7 +35,6 @@
     	<copy file="../Currency/Currency.jar" tofile="jar/Currency.jar" />
     	<copy file="../BasicCommands/BasicCommands.jar" tofile="jar/BasicCommands.jar" />
     	<copy file="../BoxFill/BoxFill.jar" tofile="jar/BoxFill.jar" />
-    	<copy file="../Chat/Chat.jar" tofile="jar/Chat.jar" />
     	<copy file="../ChestBless/ChestBless.jar" tofile="jar/ChestBless.jar" />
     	<copy file="../Compass2/Compass2.jar" tofile="jar/Compass.jar" />
     	<copy file="../InventorySpy/InventorySpy.jar" tofile="jar/InventorySpy.jar" />
