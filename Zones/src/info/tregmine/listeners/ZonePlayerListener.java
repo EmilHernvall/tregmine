@@ -108,8 +108,8 @@ public class ZonePlayerListener implements Listener
 
 		ZoneWorld world = plugin.getWorld(player.getWorld());
 
-		
-//		Block block = event.getBlockClicked();
+
+		//		Block block = event.getBlockClicked();
 		Location location = event.getBlock().getLocation();
 		Point pos = new Point(location.getBlockX(), location.getBlockZ());
 
@@ -154,34 +154,34 @@ public class ZonePlayerListener implements Listener
 				}
 			}
 		}
-		
+
 	}
-	
+
 	@EventHandler
 	public void onHangingBreakByEntityEvent(HangingBreakByEntityEvent event){
-		
+
 		Entity entity = event.getRemover();
-		
+
 		if (!(entity instanceof Player)) {
 			return;
 		}
-		
-		
+
+
 		TregminePlayer player = tregmine.getPlayer((Player) event.getRemover());
 
 		player.sendMessage("BREAKE");
-		
+
 		if (player.isAdmin()) {
 			return;
 		}
 
 		ZoneWorld world = plugin.getWorld(player.getWorld());
 
-		
-//		Block block = event.getBlockClicked();
-	
-		
-		
+
+		//		Block block = event.getBlockClicked();
+
+
+
 		Location location = player.getLocation();
 		Point pos = new Point(location.getBlockX(), location.getBlockZ());
 
@@ -228,8 +228,8 @@ public class ZonePlayerListener implements Listener
 		}
 
 	}
-	
-	
+
+
 	//	@SuppressWarnings("null")
 	@EventHandler
 	public void onPlayerInteract(PlayerInteractEvent event) 
@@ -388,12 +388,12 @@ public class ZonePlayerListener implements Listener
 
 	@EventHandler
 	public void onPlayerChangedWorld(PlayerChangedWorldEvent event) {
-//		event.getPlayer().sendMessage("ChangeWorld " + event.getPlayer().getWorld().getName());
+		//		event.getPlayer().sendMessage("ChangeWorld " + event.getPlayer().getWorld().getName());
 		TregminePlayer player = tregmine.getPlayer(event.getPlayer());
 		ZoneWorld world = plugin.getWorld(player.getWorld());
-		
-//		Location movingFrom = player.getLocation();
-//		Point oldPos = new Point(movingFrom.getBlockX(), movingFrom.getBlockZ());
+
+		//		Location movingFrom = player.getLocation();
+		//		Point oldPos = new Point(movingFrom.getBlockX(), movingFrom.getBlockZ());
 
 		Location movingTo = player.getLocation();
 		Point currentPos = new Point(movingTo.getBlockX(), movingTo.getBlockZ());
@@ -403,9 +403,9 @@ public class ZonePlayerListener implements Listener
 
 		if (currentZone == null || !currentZone.contains(currentPos)) {
 
-//			if (currentZone != null && currentZone.contains(oldPos)) {
-//				player.sendMessage(currentZone.getTextExit());
-//			}
+			//			if (currentZone != null && currentZone.contains(oldPos)) {
+			//				player.sendMessage(currentZone.getTextExit());
+			//			}
 
 			currentZone = world.findZone(currentPos);
 			if (currentZone != null) {
@@ -458,7 +458,7 @@ public class ZonePlayerListener implements Listener
 	@EventHandler
 	public void onPlayerTeleport(PlayerTeleportEvent event)
 	{		
-//		event.getPlayer().sendMessage("Teleport " + event.getPlayer().getWorld().getName());
+		//		event.getPlayer().sendMessage("Teleport " + event.getPlayer().getWorld().getName());
 		TregminePlayer player = tregmine.getPlayer(event.getPlayer());
 
 		if (event.getTo().getWorld().getName().matches("world_the_end") && !player.isOp()) {
@@ -474,7 +474,7 @@ public class ZonePlayerListener implements Listener
 		//		}
 
 		if (event.getFrom().getWorld().getName().matches(event.getTo().getWorld().getName())) {
-//			TregminePlayer player = tregmine.getPlayer(event.getPlayer());
+			//			TregminePlayer player = tregmine.getPlayer(event.getPlayer());
 			ZoneWorld world = plugin.getWorld(player.getWorld());
 
 			Location movingFrom = event.getFrom();
@@ -548,22 +548,26 @@ public class ZonePlayerListener implements Listener
 
 	private void welcomeMessage(Zone currentZone, TregminePlayer player, Zone.Permission perm)
 	{
-		player.sendMessage("Texture: " + currentZone.getTexture() );
-		if (currentZone.isPvp()) {
-			player.setCurrentTexture("https://dl.dropbox.com/u/5405236/mc/pvp.zip");
+		if (currentZone.getTexture() == "") {
+			if (currentZone.isPvp()) {
+				player.setCurrentTexture("https://dl.dropbox.com/u/5405236/mc/pvp.zip");
+			} else {
+				player.setCurrentTexture("https://dl.dropbox.com/u/5405236/mc/df.zip");			
+			}
+
 		} else {
-			player.setCurrentTexture("https://dl.dropbox.com/u/5405236/mc/df.zip");			
+			player.setCurrentTexture( currentZone.getTexture() );
 		}
-		
+
 		player.sendMessage(ChatColor.RED + "[" + currentZone.getName() + "] " + 
 				currentZone.getTextEnter());
-		
+
 		if (currentZone.isPvp()) {
 			player.sendMessage(ChatColor.RED + "[" + currentZone.getName() + "] " + 
 					"Warning! This is a PVP zone! Other players can damage or kill you here.");		
 		} else {
 		}
-		
+
 		if (perm != null) {
 			String permNotification = perm.getPermissionNotification();
 			player.sendMessage(ChatColor.RED + "[" + currentZone.getName() + "] " + 
