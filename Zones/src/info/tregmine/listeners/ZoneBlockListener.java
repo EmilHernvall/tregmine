@@ -159,10 +159,8 @@ public class ZoneBlockListener implements Listener
 					player.sendMessage(ChatColor.RED + "[" + currentZone.getName() + "] " + 
 							"You are banned from " + currentZone.getName() + ".");	    			
 				}
-				
-				mineForTreg(event);
+			}
 
-			} 
 			// if this zone has limited building privileges...
 			else {
 				// ...we only allow builders and owners to make changes.
@@ -172,6 +170,7 @@ public class ZoneBlockListener implements Listener
 					player.sendMessage(ChatColor.RED + "[" + currentZone.getName() + "] " + 
 							"You are not allowed to break blocks in " + currentZone.getName() + ".");
 				}
+				mineForTreg(event);
 			}
 		}
 		mineForTreg(event);
