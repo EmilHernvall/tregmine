@@ -70,7 +70,6 @@ public class TregmineBlockListener implements Listener {
 		plugin.blockStats.onBlockBreak(event);
 
 		for (ItemStack item : event.getBlock().getDrops() ) {
-			ItemMeta meta = item.getItemMeta();
 
 			Connection conn = null;
 			PreparedStatement stmt = null;
@@ -87,6 +86,7 @@ public class TregmineBlockListener implements Listener {
 				rs = stmt.getResultSet();
 
 				if (rs.first() ) {
+					ItemMeta meta = item.getItemMeta();
 					List<String> lore = new ArrayList<String>();
 					tregminePlayer.sendMessage(item.toString());
 					lore.add(ChatColor.GREEN + "MINED");
