@@ -248,7 +248,7 @@ public class TregminePlayer extends PlayerDelegate
 		Connection conn = null;
 		PreparedStatement stmt = null;
 		if (_value == null) {
-			_value = "";
+			_value = "null";
 		}
 		
 		try {
@@ -256,28 +256,15 @@ public class TregminePlayer extends PlayerDelegate
 			
 			System.out.print(conn);
 			
-			String sqlDelete = "DELETE FROM `minecraft`.`user_settings` " +
+			String sqlDelete = "DELETE FROM `user_settings` " +
 					"WHERE `user_settings`.`id` = ? AND `user_settings`.`key` = ?";
-
-			System.out.print("UID: " + settings.get("uid"));
-			System.out.print("_key: " + _key);
-			System.out.print("_value: " + _value);
-			System.out.print("SQL = " + sqlDelete);
- 
 			stmt = conn.prepareStatement(sqlDelete);
-			
 			stmt.setString(1, settings.get("uid"));
 			stmt.setString(2, _key);
 			stmt.execute();
-
-
 			stmt.close();
 			stmt = null;
 
-			if (_value == null) {
-				this.settings.remove(_key);
-				return;
-			}
 
 			String sqlInsert = "INSERT INTO user_settings (id,`key`,`value`) " +
 					"VALUE ((SELECT uid FROM user WHERE player = ?),?,?)";
