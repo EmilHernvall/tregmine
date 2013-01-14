@@ -80,7 +80,7 @@ public class ZoneBlockListener implements Listener
 						meta.setLore(lore);					
 						drop.setItemMeta(meta);
 						event.getBlock().getWorld().dropItem(event.getBlock().getLocation(), drop);
-						player.sendMessage("Placed");
+//						player.sendMessage("Placed");
 					} else {
 						List<String> lore = new ArrayList<String>();
 						lore.add(ChatColor.GREEN + "MINED");
@@ -89,7 +89,7 @@ public class ZoneBlockListener implements Listener
 						meta.setLore(lore);					
 						drop.setItemMeta(meta);
 						event.getBlock().getWorld().dropItem(event.getBlock().getLocation(), drop);
-						player.sendMessage("not placed");
+//						player.sendMessage("not placed");
 						Wallet wallet = new Wallet (player.getName());
 						wallet.add(rs.getInt("value"));
 					}
