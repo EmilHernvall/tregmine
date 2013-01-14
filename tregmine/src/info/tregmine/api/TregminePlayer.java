@@ -253,7 +253,9 @@ public class TregminePlayer extends PlayerDelegate
 		
 		try {
 			conn = ConnectionPool.getConnection();
-
+			
+			System.out.print(conn);
+			
 			String sqlDelete = "DELETE FROM `minecraft`.`user_settings` " +
 					"WHERE `user_settings`.`id` = ? AND `user_settings`.`key` = ?";
 
