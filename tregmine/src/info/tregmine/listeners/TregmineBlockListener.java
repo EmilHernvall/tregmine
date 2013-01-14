@@ -88,7 +88,11 @@ public class TregmineBlockListener implements Listener {
 
 				if (rs.first() ) {
 					event.setCancelled(true);
-					ItemMeta meta = item.getItemMeta();
+					event.getBlock().setType(Material.AIR);
+					
+					ItemStack drop = new ItemStack(item.getType(), item.getAmount(), item.getData().getData());
+					
+					ItemMeta meta = drop.getItemMeta();
 					item.setType(Material.AIR);
 					List<String> lore = new ArrayList<String>();
 					lore.add(ChatColor.GREEN + "MINED");
@@ -96,7 +100,8 @@ public class TregmineBlockListener implements Listener {
 					lore.add(ChatColor.WHITE + "Value: " + ChatColor.MAGIC + "0000" + ChatColor.RESET + ChatColor.WHITE + " Treg" );
 					tregminePlayer.sendMessage("Value: " + ChatColor.GOLD + rs.getInt("value") + ChatColor.WHITE + " Treg");
 					meta.setLore(lore);					
-					item.setItemMeta(meta);
+					drop.setItemMeta(meta);
+					event.getBlock().breakNaturally(drop);
 				}
 
 			} catch (SQLException e) {
