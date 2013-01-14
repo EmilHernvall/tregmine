@@ -491,9 +491,7 @@ public class TregminePlayer extends PlayerDelegate
 		if(this.getMetaString("text") == null) {
 			this.setMetaString("text", "https://dl.dropbox.com/u/5405236/mc/df.zip");
 			this.setTexturePack("https://dl.dropbox.com/u/5405236/mc/df.zip");
-		}
-
-		if (!this.getMetaString("text").matches(_url)) {
+		} else 	if (!this.getMetaString("text").matches(_url)) {
 			this.setMetaString("text", _url);
 			this.setTexturePack(_url);
 		}
