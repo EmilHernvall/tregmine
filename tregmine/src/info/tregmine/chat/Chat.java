@@ -25,6 +25,10 @@ public class Chat implements Listener {
 		String channel = sender.getChatChannel();
 		ChatColor txtColor = ChatColor.WHITE;
 
+		String newtext = info.tregmine.api.url.Url.getURL(event.getMessage());
+		sender.sendMessage(""+ newtext);
+		
+		
 		for (Player player : players) {
 			info.tregmine.api.TregminePlayer to = this.plugin.getPlayer(player);
 
@@ -43,13 +47,11 @@ public class Chat implements Listener {
 					channel = "";
 				}
 				
-				String newtext = info.tregmine.api.url.Url.getURL(event.getMessage());
-				
-				player.sendMessage(""+ newtext);
 				player.sendMessage(channel+"<" + sender.getChatName() + ChatColor.WHITE + "> " + txtColor + event.getMessage());
 			}
 		}
 		this.plugin.log.info(channel+"<" + sender.getName() + "> " + event.getMessage());
+		
 		event.setCancelled(true);
 	}
 }
