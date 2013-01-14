@@ -129,7 +129,7 @@ public class TregminePlayerListener implements Listener {
 					lore.add(ChatColor.RED + "CREATIVE");
 					TregminePlayer p = this.plugin.getPlayer(player);
 					lore.add(ChatColor.WHITE + "by: " + p.getChatName() );
-					lore.add(ChatColor.WHITE + "Value: " + ChatColor.MAGIC + "0" + ChatColor.RESET + ChatColor.WHITE + " Treg" );
+					lore.add(ChatColor.WHITE + "Value: " + ChatColor.MAGIC + "0000" + ChatColor.RESET + ChatColor.WHITE + " Treg" );
 					meta.setLore(lore);
 					//			}
 					item.setItemMeta(meta);
