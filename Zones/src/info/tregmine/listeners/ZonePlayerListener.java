@@ -461,8 +461,9 @@ public class ZonePlayerListener implements Listener
 	@EventHandler
 	public void onPlayerTeleport(PlayerTeleportEvent event)
 	{	
-		if (event.getCause() == TeleportCause.END_PORTAL) {
+		if (event.getCause().equals(TeleportCause.END_PORTAL)) {
 			this.plugin.tregmine.log.info("END PORTAL BY: " + event.getPlayer().getName());
+			
 			int nrEnt = event.getTo().getWorld().getLivingEntities().size();
 			int max = 1000;
 			int newEnt = max - nrEnt;
