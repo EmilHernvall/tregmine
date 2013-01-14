@@ -548,18 +548,19 @@ public class ZonePlayerListener implements Listener
 
 	private void welcomeMessage(Zone currentZone, TregminePlayer player, Zone.Permission perm)
 	{
+		if (currentZone.isPvp()) {
+			player.setCurrentTexture("https://dl.dropbox.com/u/5405236/mc/pvp.zip");
+		} else {
+			player.setCurrentTexture("https://dl.dropbox.com/u/5405236/mc/df.zip");			
+		}
+		
 		player.sendMessage(ChatColor.RED + "[" + currentZone.getName() + "] " + 
 				currentZone.getTextEnter());
+		
 		if (currentZone.isPvp()) {
 			player.sendMessage(ChatColor.RED + "[" + currentZone.getName() + "] " + 
 					"Warning! This is a PVP zone! Other players can damage or kill you here.");		
-			
-//			player.setCurrentTexture("https://dl.dropbox.com/u/5405236/mc/pvp.zip");
-			
 		} else {
-			
-//			player.setCurrentTexture("https://dl.dropbox.com/u/5405236/mc/df.zip");
-			
 		}
 		
 		if (perm != null) {
