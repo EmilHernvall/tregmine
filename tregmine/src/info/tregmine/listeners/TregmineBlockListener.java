@@ -88,25 +88,12 @@ public class TregmineBlockListener implements Listener {
 
 				if (rs.first() ) {
 					ItemMeta meta = item.getItemMeta();
-//					List<String> lore = new ArrayList<String>();
-//					tregminePlayer.sendMessage(item.toString());
-//					lore.add(ChatColor.GREEN + "MINED");
-//					lore.add(ChatColor.WHITE + "by: " + tregminePlayer.getChatName() );
-//					lore.add(ChatColor.WHITE + "Value: " + ChatColor.GOLD + rs.getInt("value") + ChatColor.WHITE + " Treg" );
-//					meta.setLore(lore);
-					
-//					List<String> lore = new ArrayList<String>();
-//					lore.add(ChatColor.RED + "SPAWNED");
-//					TregminePlayer p = this.tregmine.getPlayer(player);
-//					lore.add(ChatColor.WHITE + "by: " + p.getChatName() );
-//					lore.add(ChatColor.WHITE + "Value: " + ChatColor.MAGIC + "0000" + ChatColor.RESET + ChatColor.WHITE + " Treg" );
+					List<String> lore = new ArrayList<String>();
+					lore.add(ChatColor.GREEN + "MINED");
+					lore.add(ChatColor.WHITE + "by: " + tregminePlayer.getChatName() );
+					lore.add(ChatColor.WHITE + "Value: " + ChatColor.MAGIC + "0000" + ChatColor.RESET + ChatColor.WHITE + " Treg" );
 					tregminePlayer.sendMessage("Value: " + ChatColor.GOLD + rs.getInt("value") + ChatColor.WHITE + " Treg");
-//					meta.setLore(lore);
-					
-//					item.setItemMeta(meta);
-					
-					
-					
+					meta.setLore(lore);					
 					item.setItemMeta(meta);
 				}
 
