@@ -257,6 +257,8 @@ public class TregminePlayer extends PlayerDelegate
 			stmt.setString(2, _key);
 			stmt.execute();
 
+			System.out.print(settings.get("uid"));
+			
 			stmt.close();
 			stmt = null;
 
