@@ -123,7 +123,7 @@ public class TregminePlayerListener implements Listener {
 	@EventHandler
 	public void onPlayerItemHeld(InventoryClickEvent event){
 		Player player =  (Player) event.getWhoClicked();
-		player.sendMessage("TEST");
+		player.sendMessage(event.getCurrentItem().getType().toString());
 		
 		
 		if (player.getGameMode() == GameMode.CREATIVE) {
