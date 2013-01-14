@@ -39,65 +39,13 @@ public class ZoneBlockListener implements Listener
 		this.tregmine = instance.tregmine;
 	}
 
-	@EventHandler
-	public void onBlockBreak (BlockBreakEvent event) 
-	{
-		TregminePlayer player = tregmine.getPlayer(event.getPlayer());
-		if (player.isAdmin()) {
-			return;
-		}
-
-		ZoneWorld world = plugin.getWorld(player.getWorld());
-
-		Block block = event.getBlock();
-		Location location = block.getLocation();
-		Point pos = new Point(location.getBlockX(), location.getBlockZ());
-
-		Zone currentZone = player.getCurrentZone();
-		if (currentZone == null || !currentZone.contains(pos)) {
-			currentZone = world.findZone(pos);
-			player.setCurrentZone(currentZone);
-		}
-
-		if (currentZone != null) {
-			Zone.Permission perm = currentZone.getUser(player.getName());
-
-			Lot lot = world.findLot(pos);
-			if (lot != null) {
-				if (perm != Zone.Permission.Owner && !lot.isOwner(player.getName())) {
-					player.sendMessage(ChatColor.RED + "[" + currentZone.getName() + "] " + 
-							"You are not allowed to break blocks in lot " + lot.getName() + ".");
-					event.setCancelled(true);
-					return;
-				}
-
-				return;
-			}
-
-			// if everyone is allowed to build in this zone...
-			if (currentZone.getDestroyDefault()) {
-				// ...the only people that can't build are those that are banned
-				if (perm != null && perm == Zone.Permission.Banned) {
-					event.setCancelled(true);
-					player.sendMessage(ChatColor.RED + "[" + currentZone.getName() + "] " + 
-							"You are banned from " + currentZone.getName() + ".");	    			
-				}
-			} 
-			// if this zone has limited building privileges...
-			else {
-				// ...we only allow builders and owners to make changes.
-				if (perm == null || (perm != Zone.Permission.Maker && perm != Zone.Permission.Owner)) {
-					player.setFireTicks(50);
-					event.setCancelled(true);
-					player.sendMessage(ChatColor.RED + "[" + currentZone.getName() + "] " + 
-							"You are not allowed to break blocks in " + currentZone.getName() + ".");
-				}
-			}
-		}
+	public void mineForTreg(BlockBreakEvent event) {
 
 		if(event.isCancelled()) {
 			return;
 		}
+
+		TregminePlayer player = tregmine.getPlayer(event.getPlayer());
 
 		for (ItemStack item : event.getBlock().getDrops() ) {
 
@@ -164,6 +112,69 @@ public class ZoneBlockListener implements Listener
 
 		}
 
+
+		
+	}
+	
+	@EventHandler
+	public void onBlockBreak (BlockBreakEvent event) 
+	{
+		TregminePlayer player = tregmine.getPlayer(event.getPlayer());
+		if (player.isAdmin()) {
+			return;
+		}
+
+		ZoneWorld world = plugin.getWorld(player.getWorld());
+
+		Block block = event.getBlock();
+		Location location = block.getLocation();
+		Point pos = new Point(location.getBlockX(), location.getBlockZ());
+
+		Zone currentZone = player.getCurrentZone();
+		if (currentZone == null || !currentZone.contains(pos)) {
+			currentZone = world.findZone(pos);
+			player.setCurrentZone(currentZone);
+		}
+
+		if (currentZone != null) {
+			Zone.Permission perm = currentZone.getUser(player.getName());
+
+			Lot lot = world.findLot(pos);
+			if (lot != null) {
+				if (perm != Zone.Permission.Owner && !lot.isOwner(player.getName())) {
+					player.sendMessage(ChatColor.RED + "[" + currentZone.getName() + "] " + 
+							"You are not allowed to break blocks in lot " + lot.getName() + ".");
+					event.setCancelled(true);
+					return;
+				}
+
+				return;
+			}
+
+			// if everyone is allowed to build in this zone...
+			if (currentZone.getDestroyDefault()) {
+				// ...the only people that can't build are those that are banned
+				if (perm != null && perm == Zone.Permission.Banned) {
+					event.setCancelled(true);
+					player.sendMessage(ChatColor.RED + "[" + currentZone.getName() + "] " + 
+							"You are banned from " + currentZone.getName() + ".");	    			
+				}
+				
+				mineForTreg(event);
+
+			} 
+			// if this zone has limited building privileges...
+			else {
+				// ...we only allow builders and owners to make changes.
+				if (perm == null || (perm != Zone.Permission.Maker && perm != Zone.Permission.Owner)) {
+					player.setFireTicks(50);
+					event.setCancelled(true);
+					player.sendMessage(ChatColor.RED + "[" + currentZone.getName() + "] " + 
+							"You are not allowed to break blocks in " + currentZone.getName() + ".");
+				}
+			}
+		}
+		mineForTreg(event);
 
 	}
 
