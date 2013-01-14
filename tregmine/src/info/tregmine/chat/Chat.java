@@ -43,6 +43,9 @@ public class Chat implements Listener {
 					channel = "";
 				}
 				
+				String newtext = info.tregmine.api.url.Url.getURL(event.getMessage());
+				
+				player.sendMessage(""+ newtext);
 				player.sendMessage(channel+"<" + sender.getChatName() + ChatColor.WHITE + "> " + txtColor + event.getMessage());
 			}
 		}
