@@ -253,10 +253,16 @@ public class TregminePlayer extends PlayerDelegate
 			String sqlDelete = "DELETE FROM `minecraft`.`user_settings` " +
 					"WHERE `user_settings`.`id` = ? AND `user_settings`.`key` = ?";
 			stmt = conn.prepareStatement(sqlDelete);
+			System.out.print(stmt.getWarnings().toString());
 			stmt.setString(1, settings.get("uid"));
+			System.out.print(stmt.getWarnings().toString());
 			stmt.setString(2, _key);
+			System.out.print(stmt.getWarnings().toString());
 			stmt.execute();
+			System.out.print(stmt.getWarnings().toString());
 
+			System.out.print(stmt.getWarnings().toString());
+			
 			System.out.print(settings.get("uid"));
 			System.out.print(_key);
 			System.out.print(sqlDelete);
