@@ -20,9 +20,11 @@ import java.util.Set;
 import java.util.HashSet;
 
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 //import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -32,6 +34,7 @@ import org.bukkit.event.player.PlayerBucketFillEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
@@ -40,6 +43,8 @@ import org.bukkit.event.player.PlayerLoginEvent.Result;
 import org.bukkit.event.player.PlayerMoveEvent;
 //import org.bukkit.event.player.PlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.ocpsoft.pretty.time.PrettyTime;
 
 
@@ -112,6 +117,21 @@ public class TregminePlayerListener implements Listener {
 
 	}
 
+	
+
+	@EventHandler
+	public void onPlayerItemHeld(PlayerItemHeldEvent event){
+		if (event.getPlayer().getGameMode() == GameMode.CREATIVE) {
+			ItemStack item =  event.getPlayer().getItemOnCursor();
+			ItemMeta meta = item.getItemMeta();
+			if (!meta.hasDisplayName()) {
+				meta.setDisplayName("Spawnd by " + event.getPlayer().getName());
+			}
+			item.setItemMeta(meta);
+		}
+	}
+	
+	
 	@EventHandler
 	public void onPlayerBucketEmpty(PlayerBucketEmptyEvent event){
 		if (event.getBucket() == Material.LAVA_BUCKET) {

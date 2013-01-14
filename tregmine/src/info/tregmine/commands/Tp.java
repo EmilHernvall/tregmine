@@ -14,13 +14,13 @@ public class Tp {
 		Player pto = _plugin.getServer().getPlayer(_args[0]);
 		
 		if (pto == null) {
-			_player.sendMessage(ChatColor.RED + "Can no find a user with name" + _args[0] );
+			_player.sendMessage(ChatColor.RED + "Can't find a user with name " + _args[0] );
 			return;
 		}
 		info.tregmine.api.TregminePlayer to = _plugin.tregminePlayer.get(pto.getName());
 		
 		if (to.getMetaBoolean("invis")) {
-			_player.sendMessage(ChatColor.RED + "Can no find a user with name" + _args[0] );
+			_player.sendMessage(ChatColor.RED + "Can't find a user with name " + _args[0] );
 			return;
 		}
 
