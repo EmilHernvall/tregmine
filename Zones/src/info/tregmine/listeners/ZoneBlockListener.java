@@ -147,7 +147,7 @@ public class ZoneBlockListener implements Listener
 					event.setCancelled(true);
 					return;
 				}
-
+				mineForTreg(event);
 				return;
 			}
 
@@ -170,7 +170,6 @@ public class ZoneBlockListener implements Listener
 					player.sendMessage(ChatColor.RED + "[" + currentZone.getName() + "] " + 
 							"You are not allowed to break blocks in " + currentZone.getName() + ".");
 				}
-				mineForTreg(event);
 			}
 		}
 		mineForTreg(event);
