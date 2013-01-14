@@ -102,6 +102,11 @@ public class Tregmine extends JavaPlugin
 			tregPlayer.load();
 			this.tregminePlayer.put(onlineName, tregPlayer);
 			player.sendMessage(ChatColor.AQUA + "Tregmine successfully loaded to build: " + this.getDescription().getVersion() );
+			player.sendMessage(ChatColor.AQUA + "Version explanation: X.Y.Z.G");
+			player.sendMessage(ChatColor.AQUA + "X new stuff added, When i make a brand new thing");
+			player.sendMessage(ChatColor.AQUA + "Y new function added, when i extend what current stuff can do");
+			player.sendMessage(ChatColor.AQUA + "Z bugfix that may change how function and stuff works");
+			player.sendMessage(ChatColor.AQUA + "G small bugfix like spelling errors");
 		}
 
 	}
