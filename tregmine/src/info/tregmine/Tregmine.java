@@ -151,9 +151,9 @@ public class Tregmine extends JavaPlugin
 			} else if ("on".matches(args[0])) {
 				for (Player p : this.getServer().getOnlinePlayers()) {	
 					if (!p.isOp()) {
-						p.hidePlayer(player);
+						p.hidePlayer(player.getPlayer());
 					} else {
-						p.showPlayer(player);
+						p.showPlayer(player.getPlayer());
 					}
 				}
 				player.sendMessage(ChatColor.YELLOW + "*poof* no one knows where you are!");
