@@ -101,7 +101,7 @@ public class TregmineBlockListener implements Listener {
 					tregminePlayer.sendMessage("Value: " + ChatColor.GOLD + rs.getInt("value") + ChatColor.WHITE + " Treg");
 					meta.setLore(lore);					
 					drop.setItemMeta(meta);
-					event.getBlock().breakNaturally(drop);
+					event.getBlock().getWorld().dropItem(event.getBlock().getLocation(), drop);
 				}
 
 			} catch (SQLException e) {
