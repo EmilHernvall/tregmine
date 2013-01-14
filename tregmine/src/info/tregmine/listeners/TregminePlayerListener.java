@@ -118,26 +118,29 @@ public class TregminePlayerListener implements Listener {
 
 	}
 
-	
+
 
 	@EventHandler
 	public void onPlayerItemHeld(InventoryClickEvent event){
 		Player player =  (Player) event.getWhoClicked();
-		player.sendMessage(event.getCurrentItem().getType().toString());
-		
-		
-		if (player.getGameMode() == GameMode.CREATIVE) {
-			ItemStack item =  event.getCurrentItem();
-			ItemMeta meta = item.getItemMeta();
-//			if (!meta.hasDisplayName()) {
-				meta.setDisplayName("Spawnd by " + player.getName());
-//			}
-			item.setItemMeta(meta);
-		}
+		if (!event.getCurrentItem().equals(Material.AIR)) {
+			player.sendMessage(event.getCurrentItem().getType().toString());
 
+
+			if (player.getGameMode() == GameMode.CREATIVE) {
+				ItemStack item =  event.getCurrentItem();
+				ItemMeta meta = item.getItemMeta();
+				//			if (!meta.hasDisplayName()) {
+				meta.setDisplayName("Spawnd by " + player.getName());
+				//			}
+				item.setItemMeta(meta);
+			}
+		} else {
+			player.sendMessage("Empty");
+		}
 	}
-	
-	
+
+
 	@EventHandler
 	public void onPlayerBucketEmpty(PlayerBucketEmptyEvent event){
 		if (event.getBucket() == Material.LAVA_BUCKET) {
@@ -235,10 +238,10 @@ public class TregminePlayerListener implements Listener {
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		event.setJoinMessage(null);
 
-	if (!this.plugin.tregminePlayer.containsKey(event.getPlayer().getName())) {
-		event.getPlayer().kickPlayer("error loading profile!");
-	}
-		
+		if (!this.plugin.tregminePlayer.containsKey(event.getPlayer().getName())) {
+			event.getPlayer().kickPlayer("error loading profile!");
+		}
+
 		activateGuardians();
 	}        
 
@@ -251,11 +254,11 @@ public class TregminePlayerListener implements Listener {
 		TregminePlayer tregPlayer = new TregminePlayer(player, playerName);
 
 
-		
+
 		if (player.getLocation().getWorld().getName().matches("world_the_end")) {
 			player.teleport(this.plugin.getServer().getWorld("world").getSpawnLocation());
 		}
-		
+
 		if(tregPlayer.exists()) {
 			tregPlayer.load();
 		} else {
@@ -264,14 +267,14 @@ public class TregminePlayerListener implements Listener {
 		}
 
 
-		
+
 		if (tregPlayer.isBanned()) {
 			//			event.setKickMessage("You are not allowed on this server!");
 			event.disallow(Result.KICK_BANNED, "You shall not pass!");
 		} else  {
 			this.plugin.tregminePlayer.put(playerName, tregPlayer);
 		}
- 
+
 		if (tregPlayer.getMetaString("keyword") != null) {
 			String keyword = tregPlayer.getMetaString("keyword") + ".mc.tregmine.info:25565".toLowerCase();
 			this.plugin.log.warning("host: " + event.getHostname() );
@@ -310,13 +313,13 @@ public class TregminePlayerListener implements Listener {
 		activateGuardians();
 	}        
 
-//	@EventHandler
-//	public void onPlayerPreLogin(PlayerPreLoginEvent event) {
-//		Player player = this.plugin.getServer().getPlayer(event.getName());
-//		if (player != null) {
-//			player.kickPlayer("Sorry, we don't allow clones on this server.");
-//		}
-//	}
+	//	@EventHandler
+	//	public void onPlayerPreLogin(PlayerPreLoginEvent event) {
+	//		Player player = this.plugin.getServer().getPlayer(event.getName());
+	//		if (player != null) {
+	//			player.kickPlayer("Sorry, we don't allow clones on this server.");
+	//		}
+	//	}
 
 	@EventHandler
 	public void onPlayerMove(PlayerMoveEvent event)     { // if player move
