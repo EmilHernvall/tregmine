@@ -477,6 +477,7 @@ public class TregminePlayer extends PlayerDelegate
 
 
 	public void setCurrentTexture(String _url) {
+/*
 		if(this.getMetaString("text") == null) {
 			this.setMetaString("text", "https://dl.dropbox.com/u/5405236/mc/df.zip");
 			this.setTexturePack("https://dl.dropbox.com/u/5405236/mc/df.zip");
@@ -486,6 +487,7 @@ public class TregminePlayer extends PlayerDelegate
 			this.setMetaString("text", _url);
 			this.setTexturePack(_url);
 		}
+*/
 	}
 
 	public void setChatChannel(String _channel) {
