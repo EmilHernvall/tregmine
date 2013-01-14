@@ -48,7 +48,7 @@ public class Main extends JavaPlugin {
 */		
 		
 		
-		getServer().getPluginManager().registerEvents(new CurrencyPlayer(this), this);
+//		getServer().getPluginManager().registerEvents(new CurrencyPlayer(this), this);
 	}
 
 	@Override
