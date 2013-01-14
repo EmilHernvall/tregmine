@@ -100,7 +100,7 @@ public class TregmineBlockListener implements Listener {
 //					TregminePlayer p = this.tregmine.getPlayer(player);
 //					lore.add(ChatColor.WHITE + "by: " + p.getChatName() );
 //					lore.add(ChatColor.WHITE + "Value: " + ChatColor.MAGIC + "0000" + ChatColor.RESET + ChatColor.WHITE + " Treg" );
-					tregminePlayer.sendMessage(ChatColor.WHITE + "Value: " + ChatColor.MAGIC + "0000" + ChatColor.RESET + ChatColor.WHITE + " Treg");
+					tregminePlayer.sendMessage("Value: " + ChatColor.GOLD + rs.getInt("value") + ChatColor.WHITE + " Treg");
 //					meta.setLore(lore);
 					
 //					item.setItemMeta(meta);
