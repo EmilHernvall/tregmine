@@ -468,18 +468,16 @@ public class TregminePlayer extends PlayerDelegate
 		}
 	}
 
-	public boolean setCurrentTexture(String _url) {
+	public void setCurrentTexture(String _url) {
 
-		if(this.getMetaString("text") != null) {
-			return false;
+		if(this.getMetaString("text") == null) {
+			this.setMetaString("text", "https://dl.dropbox.com/u/5405236/mc/df.zip");
+			this.setMetaString("text", "https://dl.dropbox.com/u/5405236/mc/df.zip");
 		}
 
 		if (!this.getMetaString("text").matches(_url)) {
 			this.setMetaString("text", _url);
-			return true;
 		}
-		
-		return false;
 	}
 
 
