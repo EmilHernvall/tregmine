@@ -155,8 +155,8 @@ public class Tregmine extends JavaPlugin
 					} else {
 						p.showPlayer(player);
 					}
-					player.sendMessage(ChatColor.YELLOW + "*poof* no one knows where you are!");
 				}
+				player.sendMessage(ChatColor.YELLOW + "*poof* no one knows where you are!");
 			} else {
 				player.sendMessage("Try /invis [on|off]");
 			}

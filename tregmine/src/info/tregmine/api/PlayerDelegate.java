@@ -785,6 +785,12 @@ public abstract class PlayerDelegate implements Player
 		delegate.showPlayer(arg0);
 	}
 
+	public void showPlayer(TregminePlayer arg0) {
+		Player player = arg0.getPlayer();
+		delegate.hidePlayer(player);
+	}
+	
+	
 	@Override
 	public boolean addPotionEffect(PotionEffect arg0) {
 		return delegate.addPotionEffect(arg0);
