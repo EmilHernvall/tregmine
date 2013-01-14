@@ -132,6 +132,7 @@ public class ZoneBlockListener implements Listener
 	{
 		TregminePlayer player = tregmine.getPlayer(event.getPlayer());
 		if (player.isAdmin()) {
+			mineForTreg(event);
 			return;
 		}
 
