@@ -125,8 +125,9 @@ public class TregminePlayerListener implements Listener {
 		Player player =  (Player) event.getWhoClicked();
 		player.sendMessage("TEST");
 		
+		
 		if (player.getGameMode() == GameMode.CREATIVE) {
-			ItemStack item =  player.getItemOnCursor();
+			ItemStack item =  event.getCursor();
 			ItemMeta meta = item.getItemMeta();
 //			if (!meta.hasDisplayName()) {
 				meta.setDisplayName("Spawnd by " + player.getName());
