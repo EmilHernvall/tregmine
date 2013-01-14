@@ -4,7 +4,7 @@ version: 15
 website: http://tregmine.info
 author: Ein Andersson and Emil Hernvall
 description: Tregmine.info Zones
-depend: [tregmine]
+depend: Tregmine
 commands:
   zone:
     description: create and manage a zone.
