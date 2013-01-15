@@ -73,7 +73,8 @@ public class Main extends JavaPlugin {
 				if (balance >= 0) {
 						player.sendMessage("You have " + ChatColor.GOLD +  nf.format( balance ) + ChatColor.WHITE + " Tregs" );
 				} else {
-					player.sendMessage(ChatColor.RED + "You have have no wallet. Contact an administrator." );					
+					wallet.create();
+					player.sendMessage(ChatColor.AQUA + "Looks like you got your first wallet!" );
 				}
 				return true;
 			}
