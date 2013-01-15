@@ -18,6 +18,7 @@ import info.tregmine.zones.ZoneWorld;
 import info.tregmine.zones.ZonesPlugin;
 
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -44,9 +45,14 @@ public class ZoneBlockListener implements Listener
 		if(event.isCancelled()) {
 			return;
 		}
-
+		
 		TregminePlayer player = tregmine.getPlayer(event.getPlayer());
 
+		if (player.getGameMode().equals(GameMode.CREATIVE)) {
+			return;
+		}
+		
+		
 		for (ItemStack item : event.getBlock().getDrops() ) {
 
 			Connection conn = null;
