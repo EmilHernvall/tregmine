@@ -335,10 +335,6 @@ public class TregminePlayer extends PlayerDelegate
 	public ChatColor getNameColor() 
 	{
 		String color = this.settings.get("color");
-
-		if (ChatColor.getByChar(color) != null) {
-			return ChatColor.getByChar(color);
-		}
 		
 		if (this.settings.get("color") != null ) {
 			if (color.toLowerCase().matches("admin")) {
