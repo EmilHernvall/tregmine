@@ -209,19 +209,19 @@ public class BasicCommands extends JavaPlugin {
 		}
 
 		if (commandName.matches("tpblock") && isDonator) {
-			if (args[0].matches("on")) {
+			if ("on".matches(args[0])) {
 				tregminePlayer.setMetaString("tpblock", "true");
 				player.sendMessage("Teleportation is now blocked to you.");
 				return true;
 			}
 
-			if (args[0].matches("off")) {
+			if ("off".matches(args[0])) {
 				tregminePlayer.setMetaString("tpblock", "false");
 				player.sendMessage("Teleportation is now allowed to you.");
 				return true;
 			}
 
-			if (args[0].matches("status")) {
+			if ("status".matches(args[0])) {
 				player.sendMessage("Your tpblock is set to " + tregminePlayer.getMetaString("tpblock") + ".");
 				return true;
 			}
