@@ -98,7 +98,7 @@ public class Wallet {
 		try {
 			conn = ConnectionPool.getConnection();
 			
-			String sql = "INSERT INTO wallet (player, value) VALUES (?,'1000')";
+			String sql = "INSERT INTO wallet (player, value) VALUES (?,'10000')";
 			stmt = conn.prepareStatement(sql);
 			stmt.setString(1, player);
 			stmt.execute();

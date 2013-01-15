@@ -74,7 +74,7 @@ public class Main extends JavaPlugin {
 						player.sendMessage("You have " + ChatColor.GOLD +  nf.format( balance ) + ChatColor.WHITE + " Tregs" );
 				} else {
 					wallet.create();
-					player.sendMessage(ChatColor.AQUA + "Looks like you got your first wallet!" );
+					player.sendMessage(ChatColor.AQUA + "Looks like you got your first wallet! try the command again" );
 				}
 				return true;
 			}
@@ -87,7 +87,8 @@ public class Main extends JavaPlugin {
 					if (!tregminePlayer.isAdmin()) {
 						this.getServer().broadcastMessage(tregminePlayer.getChatName() + ChatColor.AQUA + " has " + ChatColor.GOLD + nf.format( balance ) + ChatColor.AQUA + " Tregs." );
 					} else {
-						player.sendMessage(tregminePlayer.getChatName() + " has " + ChatColor.GOLD +  "more" + ChatColor.WHITE + " Tregs than you." );						
+						wallet.create();
+						player.sendMessage(ChatColor.AQUA + "Looks like you got your first wallet! try the command again" );
 					}
 
 				} else {
