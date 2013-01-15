@@ -23,6 +23,7 @@ public class Url {
 			String sql = "SELECT * FROM shorturl WHERE link = ?";
 
 			stmt = conn.prepareStatement(sql);
+			stmt.setString(1, _url); 
 			stmt.execute();
 
 			rs = stmt.getResultSet();
