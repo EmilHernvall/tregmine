@@ -26,6 +26,10 @@ public class Chat implements Listener {
 		ChatColor txtColor = ChatColor.WHITE;
 
 		String text = info.tregmine.api.url.Url.replaceURL(event.getMessage());
+		if (text == null) {
+			text = event.getMessage();
+		}
+		
 		
 		for (Player player : players) {
 			info.tregmine.api.TregminePlayer to = this.plugin.getPlayer(player);
