@@ -20,7 +20,7 @@ public class Url {
 		try {
 			conn = ConnectionPool.getConnection();
 
-			String sql = "SELECT * FROM shorturl WHERE link = ?";
+			String sql = "SELECT urlID FROM shorturl WHERE link = ?";
 
 			stmt = conn.prepareStatement(sql);
 			stmt.setString(1, _url); 
