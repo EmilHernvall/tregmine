@@ -7,6 +7,9 @@ description: Tregmine
 depend: [Zones]
 
 commands:
+  settler:
+    description: unknown
+    -usage: /unkown
   donator:
     description: unknown
     -usage: /unkown
