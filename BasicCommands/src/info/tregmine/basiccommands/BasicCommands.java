@@ -42,14 +42,14 @@ public class BasicCommands extends JavaPlugin {
 	public final Logger log = Logger.getLogger("Minecraft");
 	public Tregmine tregmine = null;
 
-//	public Map<String, FireworkEffect.Builder> fireWorkEffect = new HashMap<String, FireworkEffect.Builder>();
-//	public Map<String, FireworkMeta> fireWorkMeta = new HashMap<String, FireworkMeta>();
-//	public Map<String, ItemStack> fireWork = new HashMap<String, ItemStack>();
-//	public Map<String, Boolean> property = new HashMap<String, Boolean>();
-	
+	//	public Map<String, FireworkEffect.Builder> fireWorkEffect = new HashMap<String, FireworkEffect.Builder>();
+	//	public Map<String, FireworkMeta> fireWorkMeta = new HashMap<String, FireworkMeta>();
+	//	public Map<String, ItemStack> fireWork = new HashMap<String, ItemStack>();
+	//	public Map<String, Boolean> property = new HashMap<String, Boolean>();
+
 	public Map<String, info.tregmine.api.firework.createFirework> firework = new HashMap<String, info.tregmine.api.firework.createFirework>();
 
-	
+
 	@Override
 	public void onEnable(){
 		Plugin test = this.getServer().getPluginManager().getPlugin("Tregmine");
@@ -102,36 +102,36 @@ public class BasicCommands extends JavaPlugin {
 
 		}
 
-		
+
 		if (commandName.matches("keyword")) {
-            if (args.length != 1) {
-                return false; 
-            }
-            if (args[0].length() < 1) {
-                tregminePlayer.sendMessage(ChatColor.RED + "Your keyword must be at least " +
-                    "1 characters long.");
-                return true;
-            }
+			if (args.length != 1) {
+				return false; 
+			}
+			if (args[0].length() < 1) {
+				tregminePlayer.sendMessage(ChatColor.RED + "Your keyword must be at least " +
+						"1 characters long.");
+				return true;
+			}
 
-            tregminePlayer.setMetaString("keyword", args[0].toLowerCase());
-            tregminePlayer.sendMessage(ChatColor.YELLOW + "From now on you can only log in by using ip " + args[0].toLowerCase() + ".mc.tregmine.info");
-            return true;
+			tregminePlayer.setMetaString("keyword", args[0].toLowerCase());
+			tregminePlayer.sendMessage(ChatColor.YELLOW + "From now on you can only log in by using ip " + args[0].toLowerCase() + ".mc.tregmine.info");
+			return true;
 		}
-		
-		
-		if (commandName.matches("password")) {
-            if (args.length != 1) {
-                return false; 
-            }
-            if (args[0].length() < 6) {
-                tregminePlayer.sendMessage(ChatColor.RED + "Your password must be at least " +
-                    "6 characters long.");
-                return true;
-            }
 
-            tregminePlayer.setPassword(args[0]);
-            tregminePlayer.sendMessage(ChatColor.YELLOW + "Your password has been changed.");
-            return true;
+
+		if (commandName.matches("password")) {
+			if (args.length != 1) {
+				return false; 
+			}
+			if (args[0].length() < 6) {
+				tregminePlayer.sendMessage(ChatColor.RED + "Your password must be at least " +
+						"6 characters long.");
+				return true;
+			}
+
+			tregminePlayer.setPassword(args[0]);
+			tregminePlayer.sendMessage(ChatColor.YELLOW + "Your password has been changed.");
+			return true;
 		}
 
 		if (commandName.matches("creative") && (tregminePlayer.isAdmin() || tregminePlayer.getMetaBoolean("builder"))) {
@@ -209,23 +209,25 @@ public class BasicCommands extends JavaPlugin {
 		}
 
 		if (commandName.matches("tpblock") && isDonator) {
-			if ("on".matches(args[0])) {
-				tregminePlayer.setMetaString("tpblock", "true");
-				player.sendMessage("Teleportation is now blocked to you.");
-				return true;
-			}
 
-			if ("off".matches(args[0])) {
-				tregminePlayer.setMetaString("tpblock", "false");
-				player.sendMessage("Teleportation is now allowed to you.");
-				return true;
-			}
+			if (args.length > 0) {
+				if ("on".matches(args[0])) {
+					tregminePlayer.setMetaString("tpblock", "true");
+					player.sendMessage("Teleportation is now blocked to you.");
+					return true;
+				}
 
-			if ("status".matches(args[0])) {
-				player.sendMessage("Your tpblock is set to " + tregminePlayer.getMetaString("tpblock") + ".");
-				return true;
-			}
+				if ("off".matches(args[0])) {
+					tregminePlayer.setMetaString("tpblock", "false");
+					player.sendMessage("Teleportation is now allowed to you.");
+					return true;
+				}
 
+				if ("status".matches(args[0])) {
+					player.sendMessage("Your tpblock is set to " + tregminePlayer.getMetaString("tpblock") + ".");
+					return true;
+				}
+			}
 			player.sendMessage(ChatColor.RED + "The commands are /tpblock on, /tpblock off and /tpblock status.");
 			return true;
 		}
@@ -280,21 +282,21 @@ public class BasicCommands extends JavaPlugin {
 					mob.setHealth(0);
 				}
 
-//				if(ent instanceof Chicken) {
-//					Chicken chicken = (Chicken) ent;
-//					chicken.setHealth(0);
-//				}
-				
+				//				if(ent instanceof Chicken) {
+				//					Chicken chicken = (Chicken) ent;
+				//					chicken.setHealth(0);
+				//				}
+
 				if(ent instanceof org.bukkit.entity.Animals) {
 					org.bukkit.entity.Animals animal = (org.bukkit.entity.Animals) ent;
 					animal.setHealth(0);
 				}
-				
+
 				if(ent instanceof Slime) {
 					Slime slime = (Slime) ent;
 					slime.setHealth(0);
 				}
-				
+
 				if (ent instanceof EnderDragon) {
 					EnderDragon dragon = (EnderDragon)ent;
 					dragon.setHealth(0);
@@ -364,7 +366,7 @@ public class BasicCommands extends JavaPlugin {
 
 				if (args[1].matches("donator") && player.isOp() ) {
 					vtregPlayer.setMetaString("donator", "true");
-//					vtregPlayer.setMetaString("compass", "true");
+					//					vtregPlayer.setMetaString("compass", "true");
 					vtregPlayer.setFlying(true);
 					vtregPlayer.setMetaString("color", "donator");
 					player.sendMessage(ChatColor.AQUA + "You made  " + vtregPlayer.getChatName() + " a donator." );
@@ -473,7 +475,7 @@ public class BasicCommands extends JavaPlugin {
 				for (int i = 0; i<amount;i++) {
 
 					if (mobtyp.isSpawnable() && mobtyp.isAlive()) {
-//						player.getWorld().spawnCreature(player.getLocation(), mobtyp);
+						//						player.getWorld().spawnCreature(player.getLocation(), mobtyp);
 						player.getWorld().spawnEntity(player.getLocation(), mobtyp);
 					}
 
@@ -535,23 +537,23 @@ public class BasicCommands extends JavaPlugin {
 	@Override
 	public void onLoad() {
 		final World world = this.getServer().getWorld("world");
-		
-		this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
-	
-            public void run() {
-    
-            	
-            	
-    			Location loc = world.getSpawnLocation();
-    			info.tregmine.api.firework.createFirework firework = new info.tregmine.api.firework.createFirework();
-    			firework.addColor(Color.BLUE);
-    			firework.addColor(Color.YELLOW);
-    			firework.addType(FireworkEffect.Type.STAR);
-    			firework.shot(loc);
-            }
 
-			
+		this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
+
+			public void run() {
+
+
+
+				Location loc = world.getSpawnLocation();
+				info.tregmine.api.firework.createFirework firework = new info.tregmine.api.firework.createFirework();
+				firework.addColor(Color.BLUE);
+				firework.addColor(Color.YELLOW);
+				firework.addType(FireworkEffect.Type.STAR);
+				firework.shot(loc);
+			}
+
+
 		},100L,200L);
-		
+
 	}
 }
