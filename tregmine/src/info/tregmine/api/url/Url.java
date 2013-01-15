@@ -46,7 +46,7 @@ public class Url {
 	}
 
 
-	public static String addDB(String _url){
+	public static Integer addDB(String _url){
 
 		if (urlID(_url) == null) {
 			return null;
