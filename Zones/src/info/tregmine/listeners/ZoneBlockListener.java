@@ -17,6 +17,8 @@ import info.tregmine.zones.Lot;
 import info.tregmine.zones.ZoneWorld;
 import info.tregmine.zones.ZonesPlugin;
 
+import net.minecraft.server.v1_4_6.Enchantment;
+
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -52,6 +54,9 @@ public class ZoneBlockListener implements Listener
 			return;
 		}
 		
+		if (player.getItemInHand().getEnchantments().containsKey(Enchantment.SILK_TOUCH)) {
+			return;
+		}
 		
 		for (ItemStack item : event.getBlock().getDrops() ) {
 
@@ -79,37 +84,21 @@ public class ZoneBlockListener implements Listener
 					item.setType(Material.AIR);
 
 					if (this.tregmine.blockStats.isPlaced(event.getBlock())) {
-						List<String> lore = new ArrayList<String>();
-						lore.add(ChatColor.GREEN + "MINED");
-						lore.add(ChatColor.WHITE + "by: " + player.getChatName() );
-
-						if (player.isGuardian()) {
-							lore.add(ChatColor.WHITE + "by: " + ChatColor.GOLD + player.getName() );
-						} else {
-							lore.add(ChatColor.WHITE + "by: " + player.getChatName() );
-						}
-
-						lore.add(ChatColor.WHITE + "Value: "+ ChatColor.GOLD + 0 + ChatColor.WHITE + " Treg" );
-						meta.setLore(lore);					
-						drop.setItemMeta(meta);
-						event.getBlock().getWorld().dropItem(event.getBlock().getLocation(), drop);
-						//						player.sendMessage("Placed");
 					} else {
-						List<String> lore = new ArrayList<String>();
-						lore.add(ChatColor.GREEN + "MINED");
-						if (player.isGuardian()) {
-							lore.add(ChatColor.WHITE + "by: " + ChatColor.GOLD + player.getName() );
-						} else {
-							lore.add(ChatColor.WHITE + "by: " + player.getChatName() );
-						}
-						lore.add(ChatColor.WHITE + "Value: "+ ChatColor.GOLD + rs.getInt("value") + ChatColor.WHITE + " Treg" );
-						meta.setLore(lore);					
-						drop.setItemMeta(meta);
-						event.getBlock().getWorld().dropItem(event.getBlock().getLocation(), drop);
-						//						player.sendMessage("not placed");
 						Wallet wallet = new Wallet (player.getName());
 						wallet.add(rs.getInt("value"));
 					}
+
+					player.sendMessage("id" + item.getTypeId() );
+					
+					List<String> lore = new ArrayList<String>();
+					lore.add(ChatColor.GREEN + "MINED");
+					lore.add("by: " + player.getChatName() );
+					lore.add("Value: "+ rs.getInt("value") + " Treg" );
+					meta.setLore(lore);					
+					drop.setItemMeta(meta);
+					event.getBlock().getWorld().dropItem(event.getBlock().getLocation(), drop);
+				
 				}
 
 			} catch (SQLException e) {
