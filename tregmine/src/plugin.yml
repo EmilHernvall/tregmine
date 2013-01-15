@@ -1,12 +1,18 @@
 name: Tregmine
 main: info.tregmine.Tregmine
-version: 11.3.2.0
+version: 12.0.0.0
 website: http://tregmine.info
 author: Ein Andersson
 description: Tregmine
 depend: [Zones]
 
 commands:
+  donator:
+    description: unknown
+    -usage: /unkown
+  op:
+    description: unknown
+    -usage: /unkown
   invis:
     description: unknown
     -usage: /unkown

