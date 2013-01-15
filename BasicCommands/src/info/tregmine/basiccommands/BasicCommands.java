@@ -220,8 +220,6 @@ public class BasicCommands extends JavaPlugin {
 					player.sendMessage(ChatColor.AQUA +"Teleportation is now blocked to you.");
 					return true;
 				}
-
-				return true;
 			}
 
 
