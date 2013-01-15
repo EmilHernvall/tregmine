@@ -111,6 +111,15 @@ public class Url {
 	public static String replaceURL(String _text){
 			String url = newURL(_text);
 			String old = getURL(_text);
+			
+			if (url == null) {
+				return null;
+			}
+
+			if (old == null) {
+				return null;
+			}
+			
 			return _text.replace(old, url);
 	}
 
