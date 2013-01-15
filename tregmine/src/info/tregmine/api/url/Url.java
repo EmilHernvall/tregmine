@@ -110,7 +110,7 @@ public class Url {
 	
 	public static String replaceURL(String _text){
 			String url = newURL(_text);
-			return _text.replaceAll(_text, url);
+			return _text.replace(_text, url);
 	}
 
 
