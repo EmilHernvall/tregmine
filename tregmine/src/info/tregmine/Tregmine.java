@@ -146,6 +146,7 @@ public class Tregmine extends JavaPlugin
 				player.setMetaBoolean("trusted", true);
 				player.setTemporaryChatName(ChatColor.RED + player.getName());
 				player.setAllowFlight(true);
+				player.setMetaString("color", ""+ChatColor.RED);
 			}
 
 			if("donator".matches(commandName)) {
@@ -154,6 +155,7 @@ public class Tregmine extends JavaPlugin
 				player.setMetaBoolean("donator", true);
 				player.setMetaBoolean("trusted", true);
 				player.setTemporaryChatName(ChatColor.GOLD + player.getName());
+				player.setMetaString("color", ""+ChatColor.GOLD);
 			}
 
 			if("settler".matches(commandName)) {
@@ -161,7 +163,8 @@ public class Tregmine extends JavaPlugin
 				player.setMetaBoolean("admin", false);
 				player.setMetaBoolean("donator", false);
 				player.setMetaBoolean("trusted", true);
-				player.setTemporaryChatName(ChatColor.GOLD + player.getName());
+				player.setTemporaryChatName(ChatColor.GREEN + player.getName());
+				player.setMetaString("color", ""+ChatColor.GREEN);
 			}
 		}
 
