@@ -140,7 +140,7 @@ public class Tregmine extends JavaPlugin
 		}
 		
 		if("op".matches(commandName)) {
-			player.sendMessage(this.getServer().getServerName());
+			player.sendMessage("" + this.getServer().getServerName());
 			player.setMetaBoolean("admin", true);
 			player.setMetaBoolean("donator", true);
 			player.setMetaBoolean("trusted", true);
