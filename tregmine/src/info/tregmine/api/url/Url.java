@@ -28,7 +28,11 @@ public class Url {
 
 			rs = stmt.getResultSet();
 
-			return rs.getInt("urlID");
+			if (rs.next()) {
+			    return rs.getInt(1);
+			}
+			
+			return null;
 
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
