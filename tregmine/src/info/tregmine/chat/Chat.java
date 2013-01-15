@@ -31,6 +31,7 @@ public class Chat implements Listener {
 		if (newtext != null) {
 			shortURL = info.tregmine.api.url.Url.addDB(newtext);
 		}
+		sender.sendMessage("SHORT:" + shortURL);
 		
 		
 		
