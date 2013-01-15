@@ -139,7 +139,6 @@ public class Tregmine extends JavaPlugin
 			player = this.getPlayer(from);
 		}
 
-		/*
 		if("op".matches(commandName)) {
 			player.sendMessage(this.getServer().getServerName());
 			player.setMetaBoolean("admin", true);
@@ -164,7 +163,8 @@ public class Tregmine extends JavaPlugin
 			player.setMetaBoolean("trusted", true);
 			player.setTemporaryChatName(ChatColor.GOLD + player.getName());
 		}
-*/		
+
+		
 		if("invis".matches(commandName) && player.isOp()) {
 			if ("off".matches(args[0])) {
 				for (Player p : this.getServer().getOnlinePlayers()) {					
