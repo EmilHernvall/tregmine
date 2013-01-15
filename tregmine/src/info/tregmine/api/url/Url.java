@@ -109,8 +109,8 @@ public class Url {
 	}
 	
 	public static String replaceURL(String _text){
-		
-		return 		newURL(_text);
+			String url = newURL(_text);
+			return _text.replace(_text, url);
 	}
 
 
