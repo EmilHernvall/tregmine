@@ -29,9 +29,9 @@ public class Url {
 			rs = stmt.getResultSet();
 
 			if (rs.next()) {
-			    return rs.getInt(1);
+				return rs.getInt(1);
 			}
-			
+
 			return null;
 
 		} catch (SQLException e) {
@@ -56,7 +56,7 @@ public class Url {
 		if (urlID(_url) == null) {
 			return null;
 		}
-		
+
 		Connection conn = null;
 		PreparedStatement stmt = null;
 		try {
@@ -97,6 +97,21 @@ public class Url {
 		return g;
 	}
 
+
+
+	public static String newURL(String _text){
+		String url = info.tregmine.api.url.Url.getURL(_text);
+		Integer urlID = null;
+		if (url != null) {
+			urlID = info.tregmine.api.url.Url.addDB(url);
+		}
+		return "http://tregmine.co/+" + urlID;
+	}
+	
+	public static String replaceURL(String _text){
+		
+		return 		newURL(_text);
+	}
 
 
 }
