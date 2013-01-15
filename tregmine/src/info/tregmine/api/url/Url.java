@@ -53,8 +53,8 @@ public class Url {
 
 	public static Integer addDB(String _url){
 
-		if (urlID(_url) == null) {
-			return null;
+		if (urlID(_url) != null) {
+			return urlID(_url);
 		}
 
 		Connection conn = null;
@@ -105,7 +105,7 @@ public class Url {
 		if (url != null) {
 			urlID = info.tregmine.api.url.Url.addDB(url);
 		}
-		return "http://tregmine.co/+" + urlID;
+		return "http://treg.co/" + urlID;
 	}
 	
 	public static String replaceURL(String _text){
