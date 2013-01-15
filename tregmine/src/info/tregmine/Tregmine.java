@@ -50,8 +50,8 @@ public class Tregmine extends JavaPlugin
 		WorldCreator world = new WorldCreator("world"); 
 		world.environment(Environment.NORMAL);
 		world.createWorld();
-		
-		
+
+
 		WorldCreator NETHER = new WorldCreator("world_nether"); 
 		NETHER.environment(Environment.NETHER);
 		NETHER.createWorld();
@@ -92,7 +92,7 @@ public class Tregmine extends JavaPlugin
 	public void onLoad() 
 	{
 		Player[] players = this.getServer().getOnlinePlayers();
-		
+
 		for (Player player : players) {
 			String onlineName = player.getName();
 			TregminePlayer tregPlayer = new TregminePlayer(player, onlineName);
@@ -139,32 +139,32 @@ public class Tregmine extends JavaPlugin
 			player = this.getPlayer(from);
 		}
 
-		if("op".matches(commandName)) {
-			player.sendMessage(this.getServer().getServerName());
-			player.setMetaBoolean("admin", true);
-			player.setMetaBoolean("donator", true);
-			player.setMetaBoolean("trusted", true);
-			player.setTemporaryChatName(ChatColor.RED + player.getName());
-			player.setAllowFlight(true);
+		if ("TregDev".matches(this.getServer().getServerName())) {
+			if("op".matches(commandName)) {
+				player.setMetaBoolean("admin", true);
+				player.setMetaBoolean("donator", true);
+				player.setMetaBoolean("trusted", true);
+				player.setTemporaryChatName(ChatColor.RED + player.getName());
+				player.setAllowFlight(true);
+			}
+
+			if("donator".matches(commandName)) {
+				player.setAllowFlight(true);
+				player.setMetaBoolean("admin", false);
+				player.setMetaBoolean("donator", true);
+				player.setMetaBoolean("trusted", true);
+				player.setTemporaryChatName(ChatColor.GOLD + player.getName());
+			}
+
+			if("settler".matches(commandName)) {
+				player.setAllowFlight(true);
+				player.setMetaBoolean("admin", false);
+				player.setMetaBoolean("donator", false);
+				player.setMetaBoolean("trusted", true);
+				player.setTemporaryChatName(ChatColor.GOLD + player.getName());
+			}
 		}
 
-		if("donator".matches(commandName)) {
-			player.setAllowFlight(true);
-			player.setMetaBoolean("admin", false);
-			player.setMetaBoolean("donator", true);
-			player.setMetaBoolean("trusted", true);
-			player.setTemporaryChatName(ChatColor.GOLD + player.getName());
-		}
-
-		if("settler".matches(commandName)) {
-			player.setAllowFlight(true);
-			player.setMetaBoolean("admin", false);
-			player.setMetaBoolean("donator", false);
-			player.setMetaBoolean("trusted", true);
-			player.setTemporaryChatName(ChatColor.GOLD + player.getName());
-		}
-
-		
 		if("invis".matches(commandName) && player.isOp()) {
 			if ("off".matches(args[0])) {
 				for (Player p : this.getServer().getOnlinePlayers()) {					
@@ -188,28 +188,28 @@ public class Tregmine extends JavaPlugin
 
 		}
 
-		
+
 		if(commandName.equals("text") && player.isAdmin()) {
 			Player[] players = this.getServer().getOnlinePlayers();
-			
-//			player.setTexturePack(args[0]);
+
+			//			player.setTexturePack(args[0]);
 			for (Player p : players) {
 				p.setTexturePack(args[0]);
 			}
-			
-			
+
+
 		}
 
-		
-		
-		
+
+
+
 		if(commandName.equals("head") && player.isOp()) {
 			ItemStack item = new ItemStack(Material.SKULL_ITEM, 1, (byte) 3);
 			SkullMeta meta = (SkullMeta) item.getItemMeta();
 			meta.setOwner(args[0]);
 			meta.setDisplayName(ChatColor.YELLOW + "Head of " + args[0]);
 			item.setItemMeta(meta);
-			
+
 			PlayerInventory inv = player.getInventory();
 			inv.addItem(item);
 			player.updateInventory();
@@ -245,7 +245,7 @@ public class Tregmine extends JavaPlugin
 			} else {
 				this.getServer().broadcastMessage("<" + ChatColor.RED + "GOD" + ChatColor.WHITE + "> " + ChatColor.LIGHT_PURPLE +  buffMsg);				
 			}
-			
+
 			this.log.info(from.getName() + ": <GOD> " + buffMsg);
 
 			Player[] players =  this.getServer().getOnlinePlayers();
@@ -258,9 +258,9 @@ public class Tregmine extends JavaPlugin
 			}
 			return true;
 		}		
-		
-		
-		
+
+
+
 		if(commandName.equals("who") || commandName.equals("playerlist") || commandName.equals("list")){
 			info.tregmine.commands.Who.run(this, player, args);
 			return true;
