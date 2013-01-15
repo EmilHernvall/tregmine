@@ -210,23 +210,36 @@ public class BasicCommands extends JavaPlugin {
 
 		if (commandName.matches("tpblock") && isDonator) {
 
-			if (args.length > 0) {
-				if ("on".matches(args[0])) {
-					tregminePlayer.setMetaString("tpblock", "true");
-					player.sendMessage("Teleportation is now blocked to you.");
-					return true;
-				}
-
-				if ("off".matches(args[0])) {
+			if (args.length < 1) {
+				if (tregminePlayer.getMetaBoolean("tpblock")) {
 					tregminePlayer.setMetaString("tpblock", "false");
-					player.sendMessage("Teleportation is now allowed to you.");
+					player.sendMessage(ChatColor.AQUA + "Teleportation is now allowed to you.");
+					return true;
+				} else {
+					tregminePlayer.setMetaString("tpblock", "true");
+					player.sendMessage(ChatColor.AQUA +"Teleportation is now blocked to you.");
 					return true;
 				}
 
-				if ("status".matches(args[0])) {
-					player.sendMessage("Your tpblock is set to " + tregminePlayer.getMetaString("tpblock") + ".");
-					return true;
-				}
+				return true;
+			}
+
+
+			if ("on".matches(args[0])) {
+				tregminePlayer.setMetaString("tpblock", "true");
+				player.sendMessage(ChatColor.AQUA +"Teleportation is now blocked to you.");
+				return true;
+			}
+
+			if ("off".matches(args[0])) {
+				tregminePlayer.setMetaString("tpblock", "false");
+				player.sendMessage(ChatColor.AQUA +"Teleportation is now allowed to you.");
+				return true;
+			}
+
+			if ("status".matches(args[0])) {
+				player.sendMessage("Your tpblock is set to " + tregminePlayer.getMetaString("tpblock") + ".");
+				return true;
 			}
 			player.sendMessage(ChatColor.RED + "The commands are /tpblock on, /tpblock off and /tpblock status.");
 			return true;
