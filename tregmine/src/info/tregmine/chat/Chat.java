@@ -29,7 +29,7 @@ public class Chat implements Listener {
 		String shortURL = null;
 		sender.sendMessage("EIN:"+ newtext);
 		if (newtext != null) {
-			shortURL = info.tregmine.api.url.Url.addDB(newtext);
+			shortURL = "" + info.tregmine.api.url.Url.addDB(newtext);
 		}
 		sender.sendMessage("SHORT:" + shortURL);
 		
