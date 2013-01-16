@@ -22,6 +22,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -188,6 +189,15 @@ public class TregminePlayerListener implements Listener {
 			event.setCancelled(true);
 		}
 
+		if(event.getClickedBlock().getType().equals(Material.STONE_BUTTON)) {
+			Location loc = event.getPlayer().getLocation();
+			Block standOn = event.getPlayer().getWorld().getBlockAt(loc.getBlockX(), loc.getBlockY()-1, loc.getBlockZ());
+			tregminePlayer.sendMessage("" + standOn.getType().toString());
+			
+		}
+		
+		
+		
 		if (event.getPlayer().getItemInHand().getTypeId() == Material.PAPER.getId() 
 				&& event.getAction() == Action.RIGHT_CLICK_BLOCK ) {
 
