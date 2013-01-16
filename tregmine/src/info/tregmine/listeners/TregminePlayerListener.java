@@ -23,7 +23,7 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.block.Chest;
+//import org.bukkit.block.Chest;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -218,6 +218,8 @@ public class TregminePlayerListener implements Listener {
 								tp.setY(tp.getBlockY() + 1.5);
 								tp.setZ(tp.getBlockZ() + 0.5);
 								tp.setX(tp.getBlockX() + 0.5);
+								tp.setYaw(event.getPlayer().getLocation().getYaw());
+								tp.setPitch(event.getPlayer().getLocation().getPitch());
 								
 								tregminePlayer.teleport(tp);
 								
