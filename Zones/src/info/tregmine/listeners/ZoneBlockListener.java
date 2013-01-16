@@ -50,7 +50,8 @@ public class ZoneBlockListener implements Listener
 		
 		TregminePlayer player = tregmine.getPlayer(event.getPlayer());
 		
-		if (player.getItemInHand().getType().equals(Material.SPONGE)) {
+		
+		if (event.getBlock().getType().equals(Material.SPONGE)) {
 			event.setCancelled(true);
 			return;
 		}
