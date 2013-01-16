@@ -2,6 +2,14 @@ package info.tregmine.api.url;
 
 import info.tregmine.database.ConnectionPool;
 
+//import java.io.BufferedReader;
+import java.io.IOException;
+//import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -9,9 +17,57 @@ import java.sql.SQLException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.swing.text.BadLocationException;
+import javax.swing.text.EditorKit;
+import javax.swing.text.html.HTMLDocument;
+import javax.swing.text.html.HTMLEditorKit;
+
 
 public class Url {
 
+	public static String getTitle(String _text) {
+		String _url = info.tregmine.api.url.Url.getURL(_text);
+		
+		
+		try {
+			URL url = new URL(_url);
+			try {
+				URLConnection connection = url.openConnection();
+				
+				Reader reader = new InputStreamReader(connection.getInputStream());
+				
+				EditorKit kit = new HTMLEditorKit();
+				HTMLDocument doc = (HTMLDocument)kit.createDefaultDocument();
+				
+				HTMLDocument htmlDoc = (HTMLDocument) kit.createDefaultDocument();
+
+				try {
+					kit.read(reader, doc, 0);
+				} catch (BadLocationException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				
+				String title = (String) htmlDoc.getProperty(HTMLDocument.TitleProperty);
+				return title;
+				
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		
+		
+		
+		return null;
+	}
+	
+	
 	public static Integer urlID(String _url){
 
 		Connection conn = null;
