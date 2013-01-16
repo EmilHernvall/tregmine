@@ -206,6 +206,12 @@ public class TregminePlayerListener implements Listener {
 					tregminePlayer.sendMessage("0: " + sign.getLine(0));
 
 					if (sign.getLine(0).contains("up")) {
+						double i = standOn.getLocation().getY();
+								
+						while (i < 255) {
+							tregminePlayer.sendMessage("" +i);
+						};
+						
 						tregminePlayer.sendMessage("Going up");
 					}
 
