@@ -210,6 +210,8 @@ public class TregminePlayerListener implements Listener {
 								
 						while (i < 255) {
 							tregminePlayer.sendMessage("" +i);
+							
+							i++;
 						};
 						
 						tregminePlayer.sendMessage("Going up");
