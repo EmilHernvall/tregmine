@@ -9,8 +9,14 @@ import org.bukkit.ChatColor;
 		FILLED (ChatColor.RED + "FILLED"),
 		CREATIVE (ChatColor.YELLOW + "CREATIVE");
 
+		private String colorString = null;
 
-		Created (String _created){
+		Created (String _text){
+			this.colorString = _text;
 		};
+		
+		public String toColorString() {
+			return colorString;
+		}
 		
 }

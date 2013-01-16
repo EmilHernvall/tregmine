@@ -146,6 +146,12 @@ public class Tregmine extends JavaPlugin
 				player.sendMessage(info.tregmine.api.lore.Created.FILLED.toString());
 				player.sendMessage(info.tregmine.api.lore.Created.CREATIVE.toString());
 				player.sendMessage(info.tregmine.api.lore.Created.SPAWNED.toString());
+				
+				player.sendMessage(info.tregmine.api.lore.Created.MINED.toColorString());
+				player.sendMessage(info.tregmine.api.lore.Created.FILLED.toColorString());
+				player.sendMessage(info.tregmine.api.lore.Created.CREATIVE.toColorString());
+				player.sendMessage(info.tregmine.api.lore.Created.SPAWNED.toColorString());
+
 			}
 			
 			
