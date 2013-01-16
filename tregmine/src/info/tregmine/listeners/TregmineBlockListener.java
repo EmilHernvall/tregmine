@@ -48,6 +48,12 @@ public class TregmineBlockListener implements Listener {
 		if (tregminePlayer.isAdmin()) {
 			event.setCancelled(false);
 		}
+		
+		
+		if (event.getBlock().getType().equals(Material.SPONGE)) {
+			event.setCancelled(true);
+			return;
+		}
 
 		plugin.blockStats.onBlockPlace(event);
 	}
