@@ -202,7 +202,7 @@ public class TregminePlayerListener implements Listener {
 					tregminePlayer.sendMessage("Found a sign");
 					Sign sign = (Sign) event.getClickedBlock().getState();
 					
-					if ("up".matches(sign.getLine(0))) {
+					if ("up".matches(sign.getLine(1))) {
 						tregminePlayer.sendMessage("Going up");
 					}
 
