@@ -210,7 +210,7 @@ public class TregminePlayerListener implements Listener {
 								
 						while (i < 81) {
 							Location sl = null;
-							Block sponge = event.getPlayer().getWorld().getBlockAt(event.getClickedBlock().getLocation().getBlockX(),  event.getClickedBlock().getLocation().getBlockY()+i, event.getClickedBlock().getLocation().getBlockZ());
+							Block sponge = event.getPlayer().getWorld().getBlockAt(standOn.getLocation().getBlockX(),  standOn.getLocation().getBlockY(), standOn.getLocation().getBlockZ());
 							tregminePlayer.sendMessage("" + i + "-" + sponge.getLocation().getBlockY());
 							
 						
