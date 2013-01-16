@@ -1,6 +1,10 @@
 package info.tregmine.api.lore;
 
+import java.util.List;
+
 import org.bukkit.ChatColor;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 	public enum Created {
 
@@ -18,5 +22,33 @@ import org.bukkit.ChatColor;
 		public String toColorString() {
 			return colorString;
 		}
+
+		public static Created valueOf(ItemStack _stack) {
+			ItemMeta meta = _stack.getItemMeta();
+			List<String> lore = meta.getLore();
+			
+			if (lore == null || lore.get(0) == null) {
+				return null;
+			}
+			
+			if (lore.get(0).matches(Created.CREATIVE.colorString)) {
+				return Created.CREATIVE;
+			}
+
+			if (lore.get(0).matches(Created.FILLED.colorString)) {
+				return Created.FILLED;
+			}
+
+			if (lore.get(0).matches(Created.SPAWNED.colorString)) {
+				return Created.SPAWNED;
+			}
+			
+			if (lore.get(0).matches(Created.MINED.colorString)) {
+				return Created.MINED;
+			}
+			
+			return null;
+		}
+
 		
 }

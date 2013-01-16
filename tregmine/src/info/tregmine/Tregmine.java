@@ -142,16 +142,16 @@ public class Tregmine extends JavaPlugin
 		if ("TregDev".matches(this.getServer().getServerName())) {
 			
 			if("te".matches(commandName)) {
-				player.sendMessage(info.tregmine.api.lore.Created.MINED.toString());
-				player.sendMessage(info.tregmine.api.lore.Created.FILLED.toString());
-				player.sendMessage(info.tregmine.api.lore.Created.CREATIVE.toString());
-				player.sendMessage(info.tregmine.api.lore.Created.SPAWNED.toString());
-				
 				player.sendMessage(info.tregmine.api.lore.Created.MINED.toColorString());
 				player.sendMessage(info.tregmine.api.lore.Created.FILLED.toColorString());
 				player.sendMessage(info.tregmine.api.lore.Created.CREATIVE.toColorString());
 				player.sendMessage(info.tregmine.api.lore.Created.SPAWNED.toColorString());
-
+				
+				info.tregmine.api.lore.Created c = info.tregmine.api.lore.Created.valueOf(player.getItemInHand());
+				
+				player.sendMessage("" + c.toColorString() + ":" + c.toString());
+				
+				
 			}
 			
 			
