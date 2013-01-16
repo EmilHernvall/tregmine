@@ -199,11 +199,11 @@ public class TregminePlayerListener implements Listener {
 				Block signBlock = event.getPlayer().getWorld().getBlockAt(event.getClickedBlock().getLocation().getBlockX(), event.getClickedBlock().getLocation().getBlockY()+1, event.getClickedBlock().getLocation().getBlockZ());
 
 				if(signBlock.getState() instanceof Sign) {
-					tregminePlayer.sendMessage("Found a sign");
+//					tregminePlayer.sendMessage("Found a sign");
 					
 					Sign sign = (Sign) signBlock.getState();
 
-					tregminePlayer.sendMessage("0: " + sign.getLine(0));
+//					tregminePlayer.sendMessage("0: " + sign.getLine(0));
 
 					if (sign.getLine(0).contains("up")) {
 						int i = standOn.getLocation().getBlockY();
@@ -251,7 +251,7 @@ public class TregminePlayerListener implements Listener {
 				}
 
 
-				tregminePlayer.sendMessage("" + standOn.getType().toString());
+//				tregminePlayer.sendMessage("" + standOn.getType().toString());
 			}
 
 		}
