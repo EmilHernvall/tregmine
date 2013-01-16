@@ -210,6 +210,14 @@ public class TregminePlayerListener implements Listener {
 								
 						while (i < 255) {
 							tregminePlayer.sendMessage("" +i);
+							Location sl = null;
+							Block sponge = event.getPlayer().getWorld().getBlockAt(event.getClickedBlock().getLocation().getBlockX(), (int) (event.getClickedBlock().getLocation().getBlockY()+i), event.getClickedBlock().getLocation().getBlockZ());
+							
+							if (sponge.getType().equals(Material.SPONGE)) {
+								sl = sponge.getLocation();
+								i=256;
+								tregminePlayer.sendMessage("Found spong at" + sl.toString());
+							}
 							
 							i++;
 						};
