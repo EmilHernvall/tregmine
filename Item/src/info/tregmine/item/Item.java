@@ -91,7 +91,7 @@ public class Item extends JavaPlugin {
 				ItemMeta meta = item.getItemMeta();
 				//meta.setDisplayName(ChatColor.GREEN + Material.getMaterial(matID).toString() + " spawned by " + player.getName());
 				List<String> lore = new ArrayList<String>();
-				lore.add(ChatColor.RED + "SPAWNED");
+				lore.add(info.tregmine.api.lore.Created.SPAWNED.toColorString());
 				TregminePlayer p = this.tregmine.getPlayer(player);
 				lore.add(ChatColor.WHITE + "by: " + p.getChatName() );
 				lore.add(ChatColor.WHITE + "Value: " + ChatColor.MAGIC + "0000" + ChatColor.RESET + ChatColor.WHITE + " Treg" );

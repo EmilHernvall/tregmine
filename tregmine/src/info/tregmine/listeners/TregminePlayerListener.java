@@ -126,7 +126,7 @@ public class TregminePlayerListener implements Listener {
 					ItemMeta meta = item.getItemMeta();
 					//			if (!meta.hasDisplayName()) {
 					List<String> lore = new ArrayList<String>();
-					lore.add(ChatColor.RED + "CREATIVE");
+					lore.add(info.tregmine.api.lore.Created.CREATIVE.toColorString());
 					TregminePlayer p = this.plugin.getPlayer(player);
 					lore.add(ChatColor.WHITE + "by: " + p.getChatName() );
 					lore.add(ChatColor.WHITE + "Value: " + ChatColor.MAGIC + "0000" + ChatColor.RESET + ChatColor.WHITE + " Treg" );
