@@ -201,6 +201,11 @@ public class TregminePlayerListener implements Listener {
 				if(signBlock.getState() instanceof Sign) {
 					tregminePlayer.sendMessage("Found a sign");
 					Sign sign = (Sign) event.getClickedBlock().getState();
+
+					tregminePlayer.sendMessage("1: " + sign.getLine(1));
+					tregminePlayer.sendMessage("2: " + sign.getLine(2));
+					tregminePlayer.sendMessage("3: " + sign.getLine(3));
+					tregminePlayer.sendMessage("4: " + sign.getLine(4));
 					
 					if ("up".matches(sign.getLine(1))) {
 						tregminePlayer.sendMessage("Going up");
