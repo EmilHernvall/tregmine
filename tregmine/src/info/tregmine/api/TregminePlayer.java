@@ -30,9 +30,9 @@ public class TregminePlayer extends PlayerDelegate
 {
 	public enum GuardianState
 	{
-		ACTIVE, // nuvarande aktiv
-		INACTIVE, // har kört /normal
-		QUEUED; // väntar på att aktiveras
+		ACTIVE,
+		INACTIVE,
+		QUEUED;
 	};
 
 	private HashMap<String,String> settings = new HashMap<String,String>();
