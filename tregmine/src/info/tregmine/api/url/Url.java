@@ -28,10 +28,6 @@ public class Url {
 	public static String getTitle(String _text) {
 		String _url = info.tregmine.api.url.Url.getURL(_text);
 		
-		if (_url == null) {
-			return null;
-		}
-		
 		try {
 			URL url = new URL(_url);
 			try {
@@ -47,27 +43,22 @@ public class Url {
 				try {
 					kit.read(reader, doc, 0);
 				} catch (BadLocationException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
+					return null;
 				}
 				
 				
 				String title = (String) htmlDoc.getProperty(HTMLDocument.TitleProperty);
-				return title;
+				return "Title: " + title;
 				
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
+				return null;
 			}
 		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return null;
 		}
-
-		
-		
-		
-		return null;
 	}
 	
 	
