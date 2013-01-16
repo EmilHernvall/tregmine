@@ -26,7 +26,6 @@ public class Chat implements Listener {
 		ChatColor txtColor = ChatColor.WHITE;
 
 		String text = info.tregmine.api.url.Url.replaceURL(event.getMessage());
-		String title = info.tregmine.api.url.Url.getTitle(event.getMessage());
 
 		if (text == null) {
 			text = event.getMessage();
@@ -52,9 +51,6 @@ public class Chat implements Listener {
 				}
 
 				player.sendMessage(channel+"<" + sender.getChatName() + ChatColor.WHITE + "> " + txtColor + text);
-				if (title != null) {
-					player.sendMessage(ChatColor.YELLOW + title);
-				}
 			}
 		}
 		this.plugin.log.info(channel+"<" + sender.getName() + "> " + text);

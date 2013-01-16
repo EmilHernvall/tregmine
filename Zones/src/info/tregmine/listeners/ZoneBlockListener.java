@@ -88,6 +88,8 @@ public class ZoneBlockListener implements Listener
 						Wallet wallet = new Wallet (player.getName());
 						wallet.add(rs.getInt("value"));
 					}
+				
+					
 					List<String> lore = new ArrayList<String>();
 
 							lore.add(ChatColor.GREEN + "MINED");

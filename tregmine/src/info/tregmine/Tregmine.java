@@ -140,6 +140,14 @@ public class Tregmine extends JavaPlugin
 		}
 
 		if ("TregDev".matches(this.getServer().getServerName())) {
+			if("te".matches(commandName)) {
+				player.sendMessage(info.tregmine.api.lore.Created.MINED.toString());
+				player.sendMessage(info.tregmine.api.lore.Created.FILLED.toString());
+				player.sendMessage(info.tregmine.api.lore.Created.CREATIVE.toString());
+				player.sendMessage(info.tregmine.api.lore.Created.SPAWNED.toString());
+			}
+			
+			
 			if("op".matches(commandName)) {
 				player.setMetaBoolean("admin", true);
 				player.setMetaBoolean("donator", true);
