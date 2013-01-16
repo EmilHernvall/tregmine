@@ -211,9 +211,6 @@ public class TregminePlayerListener implements Listener {
 						while (i < 255) {
 							i++;
 							Block sponge = event.getPlayer().getWorld().getBlockAt(standOn.getLocation().getBlockX(),  i, standOn.getLocation().getBlockZ());
-							tregminePlayer.sendMessage("" + i + "-" + sponge.getLocation().getBlockY());
-							
-						
 							
 							if (sponge.getType().equals(Material.SPONGE)) {
 								i=256;
@@ -226,10 +223,31 @@ public class TregminePlayerListener implements Listener {
 								
 							}
 						};
-						
-						tregminePlayer.sendMessage("Going up");
+						tregminePlayer.sendMessage(ChatColor.YELLOW +"Going up");
 					}
 
+					if (sign.getLine(0).contains("down")) {
+						int i = standOn.getLocation().getBlockY();
+								
+						while (i > 0) {
+							i--;
+							Block sponge = event.getPlayer().getWorld().getBlockAt(standOn.getLocation().getBlockX(),  i, standOn.getLocation().getBlockZ());
+							
+							if (sponge.getType().equals(Material.SPONGE)) {
+								i=0;
+								Location tp = sponge.getLocation();
+								tp.setY(tp.getBlockY() + 1.5);
+								tp.setZ(tp.getBlockZ() + 0.5);
+								tp.setX(tp.getBlockX() + 0.5);
+								
+								tregminePlayer.teleport(tp);
+								
+							}
+						};
+						tregminePlayer.sendMessage(ChatColor.YELLOW +"Going down");
+					}
+					
+					
 				}
 
 
