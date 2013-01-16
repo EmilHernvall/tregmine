@@ -28,6 +28,9 @@ public class Url {
 	public static String getTitle(String _text) {
 		String _url = info.tregmine.api.url.Url.getURL(_text);
 		
+		if (_url == null) {
+			return null;
+		}
 		
 		try {
 			URL url = new URL(_url);
