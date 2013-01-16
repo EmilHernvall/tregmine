@@ -243,11 +243,13 @@ public class Tregmine extends JavaPlugin
 				this.getServer().broadcastMessage("<" + ChatColor.YELLOW + "GOD" + ChatColor.WHITE + "> " + ChatColor.LIGHT_PURPLE +  buffMsg);
 			} else if (from.getName().matches("josh121297")){
 				this.getServer().broadcastMessage("<" + ChatColor.GREEN + "GOD" + ChatColor.WHITE + "> " + ChatColor.LIGHT_PURPLE +  buffMsg);
+			} else if (from.getName().matches("GeorgeBombadil")){
+				this.getServer().broadcastMessage("<" + ChatColor.DARK_RED + "GOD" + ChatColor.WHITE + "> " + ChatColor.LIGHT_PURPLE +  buffMsg);
 			} else if (from.getName().matches("rweiand")){
 				this.getServer().broadcastMessage("<" + ChatColor.GOLD + "GOD" + ChatColor.WHITE + "> " + ChatColor.LIGHT_PURPLE +  buffMsg);
 			} else {
 				this.getServer().broadcastMessage("<" + ChatColor.RED + "GOD" + ChatColor.WHITE + "> " + ChatColor.LIGHT_PURPLE +  buffMsg);				
-			}
+			} 
 
 			this.log.info(from.getName() + ": <GOD> " + buffMsg);
 

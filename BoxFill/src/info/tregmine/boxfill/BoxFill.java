@@ -86,10 +86,10 @@ public class BoxFill extends JavaPlugin {
 				this.getServer().getPluginManager().disablePlugin(this);
 			}
 		}
-		
+
 		getServer().getPluginManager().registerEvents(new BoxFillBlockListener(this), this);
 
-//		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_INTERACT, boxfillblockListener, Priority.Highest, this);
+		//		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_INTERACT, boxfillblockListener, Priority.Highest, this);
 
 		undoHistory = new History();
 		copyHistory = new History();
@@ -100,7 +100,7 @@ public class BoxFill extends JavaPlugin {
 	}
 
 	@Override
-//	@SuppressWarnings("null")
+	//	@SuppressWarnings("null")
 	public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args) {
 		String commandName = command.getName().toLowerCase();
 		Player player = null;
@@ -235,9 +235,15 @@ public class BoxFill extends JavaPlugin {
 
 				// replacers
 				if (mat != null && toMat != null) {
+
+
 					if (toMat != null && Arrays.binarySearch(disallowedMaterials, toMat.getItemType()) > 0) {
-						player.sendMessage(ChatColor.RED + "Disabled!");
-						return true;
+
+						if (!player.isOp()) {
+							player.sendMessage(ChatColor.RED + "Disabled!");
+							return true;
+						}
+						
 					}
 
 					player.sendMessage("You replaced " + ChatColor.DARK_AQUA + mat.toString() + "("+ mat.getItemTypeId() + ")" + 

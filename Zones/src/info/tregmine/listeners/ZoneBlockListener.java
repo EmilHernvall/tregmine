@@ -69,7 +69,7 @@ public class ZoneBlockListener implements Listener
 				String sql = "SELECT value FROM items_destroyvalue WHERE itemid = ?";
 
 				stmt = conn.prepareStatement(sql);
-				stmt.setLong(1, item.getTypeId());
+				stmt.setLong(1, event.getBlock().getTypeId());
 				stmt.execute();
 
 				rs = stmt.getResultSet();
@@ -93,6 +93,7 @@ public class ZoneBlockListener implements Listener
 							lore.add(ChatColor.GREEN + "MINED");
 							lore.add(ChatColor.WHITE + "by: " + player.getChatName());
 							lore.add(ChatColor.WHITE + "Value: "+ rs.getInt("value") + " Treg" );
+							lore.add(ChatColor.WHITE + "World: "+ event.getBlock().getWorld().getName() + " Treg" );
 							
 					meta.setLore(lore);					
 					drop.setItemMeta(meta);
