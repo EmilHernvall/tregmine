@@ -93,7 +93,7 @@ public class ZoneBlockListener implements Listener
 							lore.add(ChatColor.GREEN + "MINED");
 							lore.add(ChatColor.WHITE + "by: " + player.getChatName());
 							lore.add(ChatColor.WHITE + "Value: "+ rs.getInt("value") + " Treg" );
-							lore.add(ChatColor.WHITE + "World: "+ event.getBlock().getWorld().getName() + " Treg" );
+							lore.add(ChatColor.WHITE + "World: "+ event.getBlock().getWorld().getName());
 							
 					meta.setLore(lore);					
 					drop.setItemMeta(meta);
