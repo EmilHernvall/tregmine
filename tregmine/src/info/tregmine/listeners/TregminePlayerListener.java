@@ -23,6 +23,8 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.Chest;
+import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -140,7 +142,7 @@ public class TregminePlayerListener implements Listener {
 		}
 
 
-//		player.sendMessage("CLOSE");
+		//		player.sendMessage("CLOSE");
 
 
 
@@ -192,12 +194,27 @@ public class TregminePlayerListener implements Listener {
 		if(event.getClickedBlock().getType().equals(Material.STONE_BUTTON)) {
 			Location loc = event.getPlayer().getLocation();
 			Block standOn = event.getPlayer().getWorld().getBlockAt(loc.getBlockX(), loc.getBlockY()-1, loc.getBlockZ());
-			tregminePlayer.sendMessage("" + standOn.getType().toString());
-			
+
+			if(Material.SPONGE.equals(standOn.getType())) {
+				Block signBlock = event.getPlayer().getWorld().getBlockAt(event.getClickedBlock().getLocation().getBlockX(), event.getClickedBlock().getLocation().getBlockY()+1, event.getClickedBlock().getLocation().getBlockZ());
+
+				if(signBlock.getState() instanceof Sign) {
+					Sign sign = (Sign) event.getClickedBlock().getState();
+					
+					if ("up".matches(sign.getLine(0))) {
+						tregminePlayer.sendMessage("Going up");
+					}
+
+				}
+
+
+				tregminePlayer.sendMessage("" + standOn.getType().toString());
+			}
+
 		}
-		
-		
-		
+
+
+
 		if (event.getPlayer().getItemInHand().getTypeId() == Material.PAPER.getId() 
 				&& event.getAction() == Action.RIGHT_CLICK_BLOCK ) {
 
