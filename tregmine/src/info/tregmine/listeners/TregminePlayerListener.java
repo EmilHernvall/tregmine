@@ -204,8 +204,8 @@ public class TregminePlayerListener implements Listener {
 					Sign sign = (Sign) signBlock.getState();
 
 					tregminePlayer.sendMessage("0: " + sign.getLine(0));
-					
-					if (ChatColor.stripColor("up").matches(sign.getLine(0))) {
+
+					if (sign.getLine(0).contains("up")) {
 						tregminePlayer.sendMessage("Going up");
 					}
 
