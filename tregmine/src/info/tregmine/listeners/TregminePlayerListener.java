@@ -241,6 +241,8 @@ public class TregminePlayerListener implements Listener {
 								tp.setY(tp.getBlockY() + 1.5);
 								tp.setZ(tp.getBlockZ() + 0.5);
 								tp.setX(tp.getBlockX() + 0.5);
+								tp.setYaw(event.getPlayer().getLocation().getYaw());
+								tp.setPitch(event.getPlayer().getLocation().getPitch());
 								
 								tregminePlayer.teleport(tp);
 								
