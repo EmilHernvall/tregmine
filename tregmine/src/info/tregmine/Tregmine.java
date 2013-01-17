@@ -11,7 +11,11 @@ import info.tregmine.stats.BlockStats;
 import java.util.logging.Logger;
 
 import org.bukkit.ChatColor;
+//import org.bukkit.Color;
+//import org.bukkit.FireworkEffect;
+//import org.bukkit.Location;
 import org.bukkit.Material;
+//import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.World.Environment;
 import org.bukkit.command.Command;
@@ -26,6 +30,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -40,6 +45,10 @@ public class Tregmine extends JavaPlugin
 	public final BlockStats blockStats = new BlockStats(this);
 
 	public Map<String, TregminePlayer> tregminePlayer = new HashMap<String, TregminePlayer>();
+
+//	public Map<String, Boolean> hasVoted = new HashMap<String, Boolean>();
+	public LinkedList <String> hasVoted = new LinkedList<String>();
+
 
 	public int version = 0;
 	public int amount = 0;
@@ -77,9 +86,9 @@ public class Tregmine extends JavaPlugin
 		getServer().getPluginManager().registerEvents(new info.tregmine.chat.Chat(this), this);
 
 
-		getServer().getPluginManager().registerEvents(new info.tregmine.vote.voter(), this);
-		
-		
+		getServer().getPluginManager().registerEvents(new info.tregmine.vote.voter(this), this);
+
+
 		getServer().getPluginManager().registerEvents(new info.tregmine.sign.Color(), this);
 	}
 
@@ -111,6 +120,21 @@ public class Tregmine extends JavaPlugin
 			player.sendMessage(ChatColor.GRAY + "Z bugfix that may change how function and stuff works");
 			player.sendMessage(ChatColor.GRAY + "G small bugfix like spelling errors");
 		}
+
+		this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
+
+			public void run() {
+
+					while(hasVoted.size() > 0) {
+						String name = hasVoted.removeFirst();
+						getServer().broadcastMessage(name + "has voted and will now revice 2,000 Tregs");
+					}
+
+			}
+
+
+		},100L,20L);
+
 
 	}
 
@@ -146,7 +170,7 @@ public class Tregmine extends JavaPlugin
 		}
 
 		if ("TregDev".matches(this.getServer().getServerName())) {
-			
+
 			if("te".matches(commandName)) {
 
 				ItemStack item = new ItemStack(Material.PAPER, amount, (byte) 0);
@@ -160,13 +184,13 @@ public class Tregmine extends JavaPlugin
 				lore.add(ChatColor.WHITE + "Value: 25.000" + ChatColor.WHITE + " Tregs" );
 				meta.setLore(lore);
 				meta.setDisplayName(ChatColor.GREEN + "DIRT -> SPONG Coupon");
-				
+
 				item.setItemMeta(meta);
-				
-				
+
+
 			}
-			
-			
+
+
 			if("op".matches(commandName)) {
 				player.setMetaBoolean("admin", true);
 				player.setMetaBoolean("donator", true);
