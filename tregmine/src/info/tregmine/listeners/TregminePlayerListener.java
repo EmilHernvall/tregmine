@@ -191,7 +191,8 @@ public class TregminePlayerListener implements Listener {
 			event.setCancelled(true);
 		}
 
-		if(event.getClickedBlock().getType().equals(Material.STONE_BUTTON)) {
+		
+		if(Material.STONE_BUTTON.equals(event.getClickedBlock().getType())) {
 			Location loc = event.getPlayer().getLocation();
 			Block standOn = event.getPlayer().getWorld().getBlockAt(loc.getBlockX(), loc.getBlockY()-1, loc.getBlockZ());
 
