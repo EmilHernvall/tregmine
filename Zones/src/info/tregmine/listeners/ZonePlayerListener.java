@@ -192,7 +192,12 @@ public class ZonePlayerListener implements Listener
 
 		if (currentZone != null) {
 			Zone.Permission perm = currentZone.getUser(player.getName());
-
+			
+			if(perm == null) {
+				player.sendMessage("ERROR");
+			}
+			
+			
 			Lot lot = world.findLot(pos);
 			if (lot != null) {
 				if (perm != Zone.Permission.Owner && !lot.isOwner(player.getName())) {
