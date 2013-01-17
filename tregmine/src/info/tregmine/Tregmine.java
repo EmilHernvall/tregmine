@@ -128,7 +128,8 @@ public class Tregmine extends JavaPlugin
 
 					while(hasVoted.size() > 0) {
 						String name = hasVoted.removeFirst();
-						getServer().broadcastMessage(name + " has voted and will now revice 2,000 Tregs");
+						getServer().broadcastMessage(ChatColor.YELLOW + name + " has voted and will now receive 2,000 Tregs");
+						getServer().broadcastMessage(ChatColor.YELLOW + name + " Read more at http://treg.co/82 what you can get");
 						Wallet wallet = new Wallet(name);
 						wallet.add(2000);
 					}
