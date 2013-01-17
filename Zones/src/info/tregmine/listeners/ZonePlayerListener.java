@@ -191,10 +191,13 @@ public class ZonePlayerListener implements Listener
 		}
 
 		if (currentZone != null) {
-			Zone.Permission perm = currentZone.getUser(player.getName());
-			
-			if(perm == null) {
+			Zone.Permission perm;
+			try {
+				perm = currentZone.getUser(player.getName());
+			} catch (Exception e) {
 				player.sendMessage("ERROR");
+				e.printStackTrace();
+				return;
 			}
 			
 			
