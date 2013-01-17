@@ -46,8 +46,8 @@ public class LookupPlayer implements  Listener  {
 		info.tregmine.api.TregminePlayer tregminePlayer = this.plugin.tregminePlayer.get(player.getName());
 
 
-		
-		
+
+
 		if (cl != null) {
 			Location l1 = cl.getLocation(ip);
 			if (l1 == null) {
@@ -61,9 +61,9 @@ public class LookupPlayer implements  Listener  {
 			tregminePlayer.setMetaString("postalCode", l1.postalCode);
 			tregminePlayer.setMetaString("region", l1.region);
 			tregminePlayer.setMetaString("hostname", host);
-			
-			
-			
+
+
+
 			if(!event.getPlayer().isOp()) {
 				if(tregminePlayer.getMetaBoolean("hiddenlocation")) {
 				} else {
@@ -83,12 +83,14 @@ public class LookupPlayer implements  Listener  {
 			event.getPlayer().sendMessage("You are NOT allowed to fly");
 			event.getPlayer().setAllowFlight(false);
 		}
-		
+
+		event.getPlayer().sendMessage(ChatColor.WHITE + "<" + ChatColor.RED + "GOD"+ ChatColor.WHITE + ">"+ ChatColor.GREEN + "Don't forget that you can get free stuff by voting http://treg.co/82");
+
 		Connection conn = null;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		String all = "";
-		
+
 		try {
 			conn = ConnectionPool.getConnection();
 
@@ -116,9 +118,9 @@ public class LookupPlayer implements  Listener  {
 				try { conn.close(); } catch (SQLException e) {}
 			}
 		}
-				
+
 		this.plugin.log.info("ALIAS: " + all);
-		
+
 		Player[] players = plugin.getServer().getOnlinePlayers();
 		for (Player allplayer : players) {
 			info.tregmine.api.TregminePlayer allP = this.plugin.tregminePlayer.get(allplayer.getName());
@@ -129,7 +131,7 @@ public class LookupPlayer implements  Listener  {
 				}
 			}
 		} 
-				
+
 		if (tregminePlayer.getMetaBoolean("builder")) {
 			event.getPlayer().setGameMode(GameMode.CREATIVE);
 		} else {
