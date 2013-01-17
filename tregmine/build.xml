@@ -3,6 +3,7 @@
 	<property name="src" value="src" />
 	<property name="build" value="bin" />
 	<property name="lib" value="../AA-Global/lib" />
+    <property name="currencylib" value="../Currency/Currency.jar" />
 	<property name="build.compiler" value="modern" />
 	
 	<target name="init">
@@ -23,7 +24,8 @@
 			<compilerarg value="-Xlint:unchecked"/>
 			
 			<classpath>
-				<pathelement path="${build}"/>
+	                <pathelement path="${currencylib}"/>
+			    	<pathelement path="${build}"/>
 				<fileset dir="${lib}">
 					<include name="**/*.jar"/>
 				</fileset>
