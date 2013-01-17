@@ -2,6 +2,7 @@ package info.tregmine;
 
 
 import info.tregmine.api.TregminePlayer;
+import info.tregmine.currency.Wallet;
 import info.tregmine.listeners.TregmineBlockListener;
 import info.tregmine.listeners.TregmineEntityListener;
 import info.tregmine.listeners.TregminePlayerListener;
@@ -127,7 +128,9 @@ public class Tregmine extends JavaPlugin
 
 					while(hasVoted.size() > 0) {
 						String name = hasVoted.removeFirst();
-						getServer().broadcastMessage(name + "has voted and will now revice 2,000 Tregs");
+						getServer().broadcastMessage(name + " has voted and will now revice 2,000 Tregs");
+						Wallet wallet = new Wallet(name);
+						wallet.add(2000);
 					}
 
 			}
