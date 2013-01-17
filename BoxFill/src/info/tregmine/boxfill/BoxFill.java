@@ -213,9 +213,13 @@ public class BoxFill extends JavaPlugin {
 
 				// regular fills
 				if (mat != null && toMat == null) {
-					if (mat != null && Arrays.binarySearch(disallowedMaterials, mat.getItemType()) > 0) {
-						player.sendMessage(ChatColor.RED + "Disabled!");
-						return true;
+
+
+					if (!player.isOp()) {
+						if (mat != null && Arrays.binarySearch(disallowedMaterials, mat.getItemType()) > 0) {
+							player.sendMessage(ChatColor.RED + "Disabled!");
+							return true;
+						}
 					}
 
 					player.sendMessage("You filled with " + ChatColor.DARK_AQUA  + mat.toString() + "("+ mat.getItemTypeId() + ")");
@@ -243,7 +247,7 @@ public class BoxFill extends JavaPlugin {
 							player.sendMessage(ChatColor.RED + "Disabled!");
 							return true;
 						}
-						
+
 					}
 
 					player.sendMessage("You replaced " + ChatColor.DARK_AQUA + mat.toString() + "("+ mat.getItemTypeId() + ")" + 

@@ -52,8 +52,10 @@ public class ZoneBlockListener implements Listener
 		
 		
 		if (event.getBlock().getType().equals(Material.SPONGE)) {
-			event.setCancelled(true);
-			return;
+			if(!event.getPlayer().isOp()) {
+				event.setCancelled(true);
+				return;
+			}
 		}
 	
 		

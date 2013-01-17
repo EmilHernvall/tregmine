@@ -51,8 +51,10 @@ public class TregmineBlockListener implements Listener {
 		
 		
 		if (event.getBlock().getType().equals(Material.SPONGE)) {
-			event.setCancelled(true);
-			return;
+			if(!event.getPlayer().isOp()) {
+				event.setCancelled(true);
+				return;
+			}
 		}
 
 		plugin.blockStats.onBlockPlace(event);
