@@ -77,6 +77,9 @@ public class Tregmine extends JavaPlugin
 		getServer().getPluginManager().registerEvents(new info.tregmine.chat.Chat(this), this);
 
 
+		getServer().getPluginManager().registerEvents(new info.tregmine.vote.voter(), this);
+		
+		
 		getServer().getPluginManager().registerEvents(new info.tregmine.sign.Color(), this);
 	}
 
