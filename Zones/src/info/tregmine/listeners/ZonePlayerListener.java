@@ -511,6 +511,7 @@ if (event.getFrom().getWorld().getName().matches(event.getTo().getWorld().getNam
 	if (currentZone == null || !currentZone.contains(currentPos)) {
 
 		if (currentZone != null && currentZone.contains(oldPos)) {
+			player.setCurrentTexture("https://dl.dropbox.com/u/5405236/mc/df.zip");			
 			player.sendMessage(currentZone.getTextExit());
 		}
 
