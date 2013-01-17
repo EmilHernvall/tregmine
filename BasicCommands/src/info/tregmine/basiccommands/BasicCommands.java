@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
+import org.bukkit.Server;
 //import org.bukkit.FireworkEffect;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -547,14 +548,14 @@ public class BasicCommands extends JavaPlugin {
 
 	@Override
 	public void onLoad() {
-		final World world = this.getServer().getWorld("world");
-
+		final Server server = this.getServer();
+		
 		this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
 
 			public void run() {
-
-
-
+//				final World world = this.getServer().getWorld("world");
+				World world = server.getWorld("world");
+				
 				Location loc = world.getSpawnLocation();
 				info.tregmine.api.firework.createFirework firework = new info.tregmine.api.firework.createFirework();
 				firework.addColor(Color.BLUE);
