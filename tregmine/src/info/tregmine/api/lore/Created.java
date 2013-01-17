@@ -11,6 +11,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 		MINED  (ChatColor.GREEN + "MINED"),
 		SPAWNED (ChatColor.RED + "SPAWNED"),
 		FILLED (ChatColor.RED + "FILLED"),
+		PURCHASED (ChatColor.AQUA + "PURCHASED"),
 		UNKOWN ("UNKNOWN"),
 		CREATIVE (ChatColor.YELLOW + "CREATIVE");
 

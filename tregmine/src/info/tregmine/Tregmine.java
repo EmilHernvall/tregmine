@@ -19,11 +19,14 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -142,14 +145,20 @@ public class Tregmine extends JavaPlugin
 		if ("TregDev".matches(this.getServer().getServerName())) {
 			
 			if("te".matches(commandName)) {
-				player.sendMessage(info.tregmine.api.lore.Created.MINED.toColorString());
-				player.sendMessage(info.tregmine.api.lore.Created.FILLED.toColorString());
-				player.sendMessage(info.tregmine.api.lore.Created.CREATIVE.toColorString());
-				player.sendMessage(info.tregmine.api.lore.Created.SPAWNED.toColorString());
+
+				ItemStack item = new ItemStack(Material.PAPER, amount, (byte) 0);
+				PlayerInventory inv = player.getInventory();
+
+				ItemMeta meta = item.getItemMeta();
+				List<String> lore = new ArrayList<String>();
+				lore.add(info.tregmine.api.lore.Created.PURCHASED.toColorString());
+				TregminePlayer p = this.getPlayer(player);
+				lore.add(ChatColor.WHITE + "by: " + p.getName() );
+				lore.add(ChatColor.WHITE + "Value: 25.000" + ChatColor.WHITE + " Tregs" );
+				meta.setLore(lore);
+				meta.setDisplayName(ChatColor.GREEN + "DIRT -> SPONG Coupon");
 				
-				info.tregmine.api.lore.Created c = info.tregmine.api.lore.Created.valueOf(player.getItemInHand());
-				
-				player.sendMessage("" + c.toColorString() + ":" + c.toString());
+				item.setItemMeta(meta);
 				
 				
 			}
