@@ -4,7 +4,7 @@ version: 14.1.2.0
 website: http://tregmine.info
 author: Ein Andersson
 description: Tregmine
-depend: [Zones]
+depend: [Zones, Votifier]
 
 commands:
   te:
