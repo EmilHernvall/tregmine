@@ -17,6 +17,7 @@ public class Tp {
 			_player.sendMessage(ChatColor.RED + "Can't find a user with name " + _args[0] );
 			return;
 		}
+		
 		info.tregmine.api.TregminePlayer to = _plugin.tregminePlayer.get(pto.getName());
 		
 		if (to.getMetaBoolean("invis")) {
@@ -38,7 +39,7 @@ public class Tp {
 			return;
 		}
 		
-		double spawn = info.tregmine.api.math.Distance.calc2d(_player.getLocation(), _player.getWorld().getSpawnLocation());
+		double spawn = info.tregmine.api.math.Distance.calc2d(_player.getLocation(), to.getWorld().getSpawnLocation());
 
 		if (spawn < 200) {
 			_player.sendMessage(ChatColor.RED + "The player are at spawn use /spawn instead");
@@ -67,14 +68,15 @@ public class Tp {
 				to.sendMessage(ChatColor.AQUA + _player.getChatName() + " teleported to you!");
 				_player.teleport(to);
 				return;
-			}
-
-			if (_player.isTrusted() && distance < 100) {
+			} else 	if (_player.isTrusted() && distance < 100) {
 				_player.sendMessage(ChatColor.AQUA + "You started teleport to " + to.getName() + ChatColor.AQUA + " in " + ChatColor.BLUE + to.getWorld().getName() + ".");
 				to.sendMessage(ChatColor.AQUA + _player.getChatName() + " teleported to you!");
 				_player.teleport(to);
 				return;
+			} else {
+				_player.sendMessage(ChatColor.RED + to.getChatName() + " are to far way for you to teleport.");				
 			}
+			
 		}
 	}
 }
