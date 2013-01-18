@@ -259,8 +259,10 @@ public class ZonePlayerListener implements Listener
 //			Zone zone = world.findZone(currentPos);
 			Lot lot = world.findLot(currentPos);
 			
-			if (block.getLine(0).toLowerCase().contains("forsale")) {
-				player.sendMessage("" + lot.getName());				
+			player.sendMessage("" + lot.getName());				
+
+			if (block.getLine(0).contains("FOR SALE")) {
+				player.sendMessage("for sale" + lot.getName());				
 			}
 			
 		}
