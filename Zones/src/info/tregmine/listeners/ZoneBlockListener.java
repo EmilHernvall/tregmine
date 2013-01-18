@@ -63,9 +63,9 @@ public class ZoneBlockListener implements Listener
 		if (event.getBlock().getType().equals(Material.PAPER)) {
 
 			ItemStack paper = player.getItemInHand();
-			ItemMeta meta = paper.getItemMeta();
+			ItemMeta papermeta = paper.getItemMeta();
 
-			player.sendMessage("NAME: " + meta.getDisplayName());
+			player.sendMessage("NAME: " + papermeta.getDisplayName());
 			
 //			if (Created.valueOf(item).equals(Created.PURCHASED)) {
 //				player.sendMessage("KOPT");

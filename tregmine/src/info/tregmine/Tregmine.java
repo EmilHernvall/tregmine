@@ -119,7 +119,7 @@ public class Tregmine extends JavaPlugin
 //			player.sendMessage(ChatColor.GRAY + "X new stuff added, When i make a brand new thing");
 //			player.sendMessage(ChatColor.GRAY + "Y new function added, when i extend what current stuff can do");
 //			player.sendMessage(ChatColor.GRAY + "Z bugfix that may change how function and stuff works");
-			player.sendMessage(ChatColor.GRAY + "G small bugfix like spelling errors");
+//			player.sendMessage(ChatColor.GRAY + "G small bugfix like spelling errors");
 		}
 
 		this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
@@ -191,7 +191,7 @@ public class Tregmine extends JavaPlugin
 			lore.add(ChatColor.WHITE + "by: " + p.getName() );
 			lore.add(ChatColor.WHITE + "Value: 25.000" + ChatColor.WHITE + " Tregs" );
 			meta.setLore(lore);
-			meta.setDisplayName(ChatColor.GREEN + "DIRT -> SPONG Coupon");
+//			meta.setDisplayName(ChatColor.GREEN + "DIRT -> SPONG Coupon");
 
 			item.setItemMeta(meta);
 			inv.addItem(item);
