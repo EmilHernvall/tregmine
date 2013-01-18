@@ -289,6 +289,7 @@ public class ZonePlayerListener implements Listener
 							dao.addLotUser(lot.getId(), userId);
 							player.sendMessage(ChatColor.YELLOW + "You are now owner of " + lot.getName());
 							this.plugin.tregmine.log.info(player.getName() + " got " + lot.getName() + " for " + price);
+							this.plugin.tregmine.log.info(seller + " sold " + lot.getName() + " for " + price);
 							
 							swallet.add(price);
 							
