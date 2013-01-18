@@ -591,12 +591,17 @@ private void welcomeMessage(Zone currentZone, TregminePlayer player, Zone.Permis
 		player.setCurrentTexture( currentZone.getTexture() );
 	}
 
+	String text = "";
+	if (currentZone.getMainOwner() != null) {
+		text = " MainOwner:" + currentZone.getMainOwner();
+	}
+	
 	player.sendMessage(ChatColor.RED + "[" + currentZone.getName() + "] " + 
-			currentZone.getTextEnter() + " MainOwner:" + currentZone.getMainOwner());
+			currentZone.getTextEnter() + text);
 
 	if (currentZone.isPvp()) {
 		player.sendMessage(ChatColor.RED + "[" + currentZone.getName() + "] " + 
-				"Warning! This is a PVP zone! Other players can damage or kill you here.");		
+				"Warning! This is a PVP zone! Other players can damage or kill you here."  + text);		
 	} else {
 	}
 
