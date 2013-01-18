@@ -195,7 +195,7 @@ public class Tregmine extends JavaPlugin
 
 			item.setItemMeta(meta);
 			inv.addItem(item);
-			
+			player.updateInventory();
 			
 		}
 
