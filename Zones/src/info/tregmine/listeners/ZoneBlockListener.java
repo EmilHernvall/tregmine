@@ -61,18 +61,19 @@ public class ZoneBlockListener implements Listener
 		}
 
 		if (event.getPlayer().getItemInHand().equals(Material.PAPER)) {
-	
+
 			ItemStack paper = player.getItemInHand();
 			ItemMeta papermeta = paper.getItemMeta();
 
-			player.sendMessage("NAME: " + papermeta.getDisplayName());
-			
-//			if (Created.valueOf(item).equals(Created.PURCHASED)) {
-//				player.sendMessage("KOPT");
-//			}
+			if (papermeta.hasDisplayName()) {
+				player.sendMessage("NAME: " + papermeta.getDisplayName());
+			}
+			//			if (Created.valueOf(item).equals(Created.PURCHASED)) {
+			//				player.sendMessage("KOPT");
+			//			}
 
-				//		List<String> lore = new ArrayList<String>();
-//				lore.add(Created.PURCHASED.toColorString());
+			//		List<String> lore = new ArrayList<String>();
+			//				lore.add(Created.PURCHASED.toColorString());
 			//		TregminePlayer p = this.getPlayer(player);
 			//		lore.add(ChatColor.WHITE + "by: " + p.getName() );
 			//		lore.add(ChatColor.WHITE + "Value: 25.000" + ChatColor.WHITE + " Tregs" );
