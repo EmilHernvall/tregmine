@@ -1,12 +1,15 @@
 name: Tregmine
 main: info.tregmine.Tregmine
-version: 17.7.5.1
+version: 18.0.0.0
 website: http://tregmine.info
 author: Ein Andersson
 description: Tregmine
 depend: [Zones, Votifier, Currency]
 
 commands:
+  book:
+    description: unknown
+    -usage: /unkown
   te:
     description: unknown
     -usage: /unkown

@@ -24,6 +24,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -179,6 +180,24 @@ public class Tregmine extends JavaPlugin
 			player = this.getPlayer(from);
 		}
 
+		if("book".matches(commandName)) {
+
+			if("player".matches(args[0]) && player.isOp()) {
+				ItemStack book = new ItemStack(Material.WRITTEN_BOOK, 1);
+				BookMeta bookmeta = (BookMeta) book.getItemMeta();
+
+				bookmeta.setAuthor("Tregmine");
+				bookmeta.setTitle(args[1] + " Profile");
+				
+				book.setItemMeta(bookmeta);
+				
+				PlayerInventory inv = player.getInventory();
+				inv.addItem(book);
+			}
+
+		}
+		
+		
 		if("te".matches(commandName) && player.isOp()) {
 
 			ItemStack item = new ItemStack(Material.PAPER, 1);
