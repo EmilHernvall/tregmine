@@ -608,7 +608,10 @@ public class ZonesPlugin extends JavaPlugin
 			return;
 		}
 
-		String name = args[1];
+				
+		Zone tzone = world.findZone(new Point(b1.getX(), b1.getZ()));
+		String name = args[1] + "." + tzone.getName();
+		
 		if (world.lotExists(name)) {
 			player.sendMessage(ChatColor.RED + "A lot named " + name + " does already exist.");
 			return;
@@ -651,7 +654,7 @@ public class ZonesPlugin extends JavaPlugin
 			Lot lot = new Lot();
 			lot.setZoneId(zone.getId());
 			lot.setRect(rect);
-			lot.setName(args[1]);
+			lot.setName(args[1] + "." + zone.getName() );
 			lot.addOwner(playerName);
 
 			try {
@@ -664,7 +667,7 @@ public class ZonesPlugin extends JavaPlugin
 			dao.addLot(lot);
 			dao.addLotUser(lot.getId(), userId);
 
-			player.sendMessage(ChatColor.YELLOW + "[" + zone.getName() + "] Lot " + args[1] + " created for player " + playerName + ".");
+			player.sendMessage(ChatColor.YELLOW + "[" + zone.getName() + "] Lot " + args[1] + "."+ zone.getName() + " created for player " + playerName + ".");
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		} finally {

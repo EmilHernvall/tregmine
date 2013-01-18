@@ -74,7 +74,7 @@ public class Tp {
 				_player.teleport(to);
 				return;
 			} else {
-				_player.sendMessage(ChatColor.RED + to.getChatName() + " are to far way for you to teleport.");				
+				_player.sendMessage(to.getChatName() + ChatColor.RED + " are to far way for you to teleport.");				
 			}
 			
 		}
