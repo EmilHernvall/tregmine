@@ -181,7 +181,7 @@ public class Tregmine extends JavaPlugin
 
 		if("te".matches(commandName) && player.isAdmin()) {
 
-			ItemStack item = new ItemStack(Material.PAPER, amount, (byte) 0);
+			ItemStack item = new ItemStack(Material.PAPER, 1);
 			PlayerInventory inv = player.getInventory();
 
 			ItemMeta meta = item.getItemMeta();
@@ -191,7 +191,7 @@ public class Tregmine extends JavaPlugin
 			lore.add(ChatColor.WHITE + "by: " + p.getName() );
 			lore.add(ChatColor.WHITE + "Value: 25.000" + ChatColor.WHITE + " Tregs" );
 			meta.setLore(lore);
-//			meta.setDisplayName(ChatColor.GREEN + "DIRT -> SPONG Coupon");
+			meta.setDisplayName(ChatColor.GREEN + "DIRT -> SPONG Coupon");
 
 			item.setItemMeta(meta);
 			inv.addItem(item);
