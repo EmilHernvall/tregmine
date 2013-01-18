@@ -47,7 +47,7 @@ public class Tregmine extends JavaPlugin
 
 	public Map<String, TregminePlayer> tregminePlayer = new HashMap<String, TregminePlayer>();
 
-//	public Map<String, Boolean> hasVoted = new HashMap<String, Boolean>();
+	//	public Map<String, Boolean> hasVoted = new HashMap<String, Boolean>();
 	public LinkedList <String> hasVoted = new LinkedList<String>();
 
 
@@ -126,13 +126,30 @@ public class Tregmine extends JavaPlugin
 
 			public void run() {
 
-					while(hasVoted.size() > 0) {
-						String name = hasVoted.removeFirst();
-						getServer().broadcastMessage(ChatColor.YELLOW + name + " has voted and will now receive 2,000 Tregs");
-						getServer().broadcastMessage(ChatColor.YELLOW + name + " Read more at http://treg.co/82 what you can get");
-						Wallet wallet = new Wallet(name);
-						wallet.add(2000);
+				while(hasVoted.size() > 0) {
+					String name = hasVoted.removeFirst();
+
+					for (Player p : getServer().getOnlinePlayers()) {
+
+						TregminePlayer player = getPlayer(p.getName());
+
+						if (player != null) {
+								Long time = Long.parseLong(player.getMetaString("voteTime"));
+							if (time > System.currentTimeMillis()) {
+
+							} else {
+								getServer().broadcastMessage(ChatColor.YELLOW + name + " has voted and will now receive 2,000 Tregs");
+								getServer().broadcastMessage(ChatColor.YELLOW + name + " Read more at http://treg.co/82 what you can get");
+							}
+
+							player.setMetaString("voteTime", ""+System.currentTimeMillis() + 86400000);
+							Wallet wallet = new Wallet(name);
+							wallet.add(2000);
+						}
+
 					}
+
+				}
 
 			}
 

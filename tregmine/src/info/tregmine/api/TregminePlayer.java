@@ -331,7 +331,7 @@ public class TregminePlayer extends PlayerDelegate
 	{
 		this.integer.put(_key, _value);
 	}
-
+	
 	public ChatColor getNameColor() 
 	{
 		String color = this.settings.get("color");
