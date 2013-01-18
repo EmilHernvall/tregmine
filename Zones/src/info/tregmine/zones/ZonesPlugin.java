@@ -269,7 +269,7 @@ public class ZonesPlugin extends JavaPlugin
 		zone.setTextExit("Now leaving " + name + ".");
 		zone.addUser(player.getName(), Zone.Permission.Owner);
 
-		zone.setMainOwner(args[3]);
+		zone.setMainOwner(args[2]);
 
 		player.sendMessage(ChatColor.RED + "Creating zone at " + rect);
 
