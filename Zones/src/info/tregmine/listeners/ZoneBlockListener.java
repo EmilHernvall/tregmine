@@ -60,8 +60,8 @@ public class ZoneBlockListener implements Listener
 			}
 		}
 
-		if (event.getBlock().getType().equals(Material.PAPER)) {
-
+		if (event.getPlayer().getItemInHand().equals(Material.PAPER)) {
+	
 			ItemStack paper = player.getItemInHand();
 			ItemMeta papermeta = paper.getItemMeta();
 
