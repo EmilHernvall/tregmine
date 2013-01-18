@@ -119,7 +119,7 @@ public class Tregmine extends JavaPlugin
 			//			player.sendMessage(ChatColor.GRAY + "X new stuff added, When i make a brand new thing");
 			//			player.sendMessage(ChatColor.GRAY + "Y new function added, when i extend what current stuff can do");
 			//			player.sendMessage(ChatColor.GRAY + "Z bugfix that may change how function and stuff works");
-			//			player.sendMessage(ChatColor.GRAY + "G small bugfix like spelling errors");
+			player.sendMessage(ChatColor.GRAY + "G small bugfix like spelling errors");
 		}
 
 		this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
@@ -130,16 +130,11 @@ public class Tregmine extends JavaPlugin
 					String name = hasVoted.removeFirst();
 
 
-//					TregminePlayer player = getPlayer(p.getName());
-
 					getServer().broadcastMessage(ChatColor.YELLOW + name + " has voted and will now receive 2,000 Tregs");
 					getServer().broadcastMessage(ChatColor.YELLOW + name + " Read more at http://treg.co/82 what you can get");
 
 
-					Wallet wallet = new Wallet(name);
-					wallet.add(2000);
 				}
-
 
 			}
 
