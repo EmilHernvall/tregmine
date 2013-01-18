@@ -12,6 +12,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.Sign;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -246,6 +247,20 @@ public class ZonePlayerListener implements Listener
 			return;
 		}
 
+		if(event.getClickedBlock().getState() instanceof Sign) {
+			TregminePlayer player = tregmine.getPlayer(event.getPlayer());
+			Sign block = (Sign) event.getClickedBlock();
+			Point currentPos = new Point(block.getX(), block.getZ());
+			ZoneWorld world = plugin.getWorld(block.getWorld());
+//			Zone zone = world.findZone(currentPos);
+			Lot lot = world.findLot(currentPos);
+			
+			if ("for sale".equals(block.getLine(0).toLowerCase())) {
+				player.sendMessage("" + lot.getName());				
+			}
+			
+		}
+		
 		if (event.getPlayer().getItemInHand().getType() != Material.STICK) {
 			return;
 		}
