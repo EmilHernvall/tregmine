@@ -65,7 +65,7 @@ public class ZoneBlockListener implements Listener
 			ItemStack item = player.getItemInHand();
 			ItemMeta meta = item.getItemMeta();
 
-			player.sendMessage(meta.getDisplayName());
+			player.sendMessage("NAME: " + meta.getDisplayName());
 			
 //			if (Created.valueOf(item).equals(Created.PURCHASED)) {
 //				player.sendMessage("KOPT");
