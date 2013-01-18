@@ -363,7 +363,7 @@ public class ZonesPlugin extends JavaPlugin
 			return;
 		}
 
-		if (zone.getMainOwner().toLowerCase().equals(player.getName().toLowerCase())) {
+		if (!zone.getMainOwner().toLowerCase().equals(player.getName().toLowerCase())) {
 			player.sendMessage(zone.getMainOwner() + ":" + player.getName());
 			
 			if (Permission.Owner.equals(perm.Owner)) {
