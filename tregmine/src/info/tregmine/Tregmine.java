@@ -179,7 +179,7 @@ public class Tregmine extends JavaPlugin
 			player = this.getPlayer(from);
 		}
 
-		if("te".matches(commandName) && player.isAdmin()) {
+		if("te".matches(commandName) && player.isOp()) {
 
 			ItemStack item = new ItemStack(Material.PAPER, 1);
 			PlayerInventory inv = player.getInventory();
