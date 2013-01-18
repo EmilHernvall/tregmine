@@ -296,6 +296,7 @@ public class ZonePlayerListener implements Listener
 							if(this.plugin.getServer().getPlayer(seller).isOnline()) {
 								this.plugin.getServer().getPlayer(seller).sendMessage(ChatColor.YELLOW + player.getChatName() + ChatColor.YELLOW + " just got your lot " + lot.getName());
 							}
+							event.getClickedBlock().breakNaturally();
 							
 						} catch (SQLException e) {
 							throw new RuntimeException(e);
