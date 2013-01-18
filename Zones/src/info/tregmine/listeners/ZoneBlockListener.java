@@ -64,11 +64,20 @@ public class ZoneBlockListener implements Listener
 		if (event.getPlayer().getItemInHand().getType().equals(Material.PAPER)) {
 			ItemStack paper = player.getItemInHand();
 			ItemMeta papermeta = paper.getItemMeta();
-			player.sendMessage("NAME: " + paper.getType().toString());
+//			player.sendMessage("NAME: " + paper.getType().toString());
 
 			
 			if (papermeta.hasDisplayName()) {
 				player.sendMessage("NAME: " + papermeta.getDisplayName());
+				String Cupong = ChatColor.GREEN + "DIRT -> SPONG Coupon";
+			
+				if (Cupong.matches(papermeta.getDisplayName())) {
+					event.getBlock().setType(Material.SPONGE);
+					event.getPlayer().getItemInHand().setType(Material.AIR);
+				}
+				
+				event.setCancelled(true);
+
 			}
 			
 			//			if (Created.valueOf(item).equals(Created.PURCHASED)) {
@@ -82,7 +91,6 @@ public class ZoneBlockListener implements Listener
 			//		lore.add(ChatColor.WHITE + "Value: 25.000" + ChatColor.WHITE + " Tregs" );
 			//		meta.setLore(lore);
 			//		meta.setDisplayName(ChatColor.GREEN + "DIRT -> SPONG Coupon");
-			event.setCancelled(true);
 			return;
 		}
 
