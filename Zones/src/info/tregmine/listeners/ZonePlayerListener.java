@@ -251,7 +251,7 @@ public class ZonePlayerListener implements Listener
 			
 			TregminePlayer player = tregmine.getPlayer(event.getPlayer());
 			
-			Sign block = (Sign) event.getClickedBlock().getWorld().getBlockAt(event.getClickedBlock().getLocation());
+			Sign block = (Sign) event.getClickedBlock().getWorld().getBlockAt(event.getClickedBlock().getLocation()).getState();
 			
 			Point currentPos = new Point(block.getX(), block.getZ());
 			
