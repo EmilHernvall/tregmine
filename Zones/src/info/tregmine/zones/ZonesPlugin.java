@@ -47,7 +47,7 @@ public class ZonesPlugin extends JavaPlugin
 
 	public Map<String, Boolean> pvp = new HashMap<String, Boolean>();
 
-	
+
 	@Override
 	public void onLoad() 
 	{
@@ -264,7 +264,7 @@ public class ZonesPlugin extends JavaPlugin
 		zone.setWorld(world.getName());
 		zone.setName(name);
 		zone.addRect(rect);
-		
+
 		zone.setTextEnter("Welcome to " + name + "!");
 		zone.setTextExit("Now leaving " + name + ".");
 		zone.addUser(player.getName(), Zone.Permission.Owner);
@@ -363,15 +363,17 @@ public class ZonesPlugin extends JavaPlugin
 			return;
 		}
 
-		if (!zone.getMainOwner().toLowerCase().equals(player.getName().toLowerCase()) && !player.isAdmin()) {
-			player.sendMessage(zone.getMainOwner() + ":" + player.getName());
-			
-			if (Permission.Owner.equals(perm.Owner) && zone.getMainOwner() != null) {
-				player.sendMessage(ChatColor.RED + "Only the main owner may add new owners");
-				return;
+		if (zone.getMainOwner() != null) {
+			if (!zone.getMainOwner().toLowerCase().equals(player.getName().toLowerCase()) && !player.isAdmin()) {
+				player.sendMessage(zone.getMainOwner() + ":" + player.getName());
+
+				if (Permission.Owner.equals(perm.Owner)) {
+					player.sendMessage(ChatColor.RED + "Only the main owner may add new owners");
+					return;
+				}
 			}
 		}
-		
+
 		if (zone.getUser(player.getName()) != Permission.Owner && !player.isAdmin()) {
 			player.sendMessage(ChatColor.RED + "[" + zone.getName() + "] " + "You do not have permission to add users to this zone.");
 			return;
@@ -622,12 +624,12 @@ public class ZonesPlugin extends JavaPlugin
 		}
 
 		Block tb1 = player.getBlock("zb1");
-//		Block tb2 = player.getBlock("zb2");
-				
+		//		Block tb2 = player.getBlock("zb2");
+
 		Zone tzone = world.findZone(new Point(tb1.getX(), tb1.getZ()));
-		
+
 		String name = args[1] + "." + tzone.getName();
-		
+
 		if (world.lotExists(name)) {
 			player.sendMessage(ChatColor.RED + "A lot named " + name + " does already exist.");
 			return;
@@ -738,10 +740,10 @@ public class ZonesPlugin extends JavaPlugin
 			}
 
 			if ("kick".equals(args[0])) {
-				
+
 			}
 
-			
+
 			if ("addowner".equals(args[0])) {
 
 				if (lot.isOwner(playerName)) {
