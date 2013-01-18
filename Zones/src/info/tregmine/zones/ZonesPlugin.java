@@ -363,10 +363,10 @@ public class ZonesPlugin extends JavaPlugin
 			return;
 		}
 
-		if (!zone.getMainOwner().toLowerCase().equals(player.getName().toLowerCase())) {
+		if (!zone.getMainOwner().toLowerCase().equals(player.getName().toLowerCase()) && !player.isAdmin()) {
 			player.sendMessage(zone.getMainOwner() + ":" + player.getName());
 			
-			if (Permission.Owner.equals(perm.Owner)) {
+			if (Permission.Owner.equals(perm.Owner) && zone.getMainOwner() != null) {
 				player.sendMessage(ChatColor.RED + "Only the main owner may add new owners");
 				return;
 			}
