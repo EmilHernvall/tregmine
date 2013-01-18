@@ -25,6 +25,8 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.HumanEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -73,8 +75,7 @@ public class ZoneBlockListener implements Listener
 			
 				if (Cupong.matches(papermeta.getDisplayName())) {
 					event.getBlock().setType(Material.SPONGE);
-					event.getPlayer().getItemInHand().setAmount(event.getPlayer().getItemInHand().getAmount()-1);
-//					event.getPlayer().setItemInHand(event.getPlayer().getItemInHand().setAmount(event.getPlayer().getItemInHand().getAmount()-1));
+					event.getPlayer().getItemInHand().setType(Material.AIR);
 				}
 				
 				event.setCancelled(true);
