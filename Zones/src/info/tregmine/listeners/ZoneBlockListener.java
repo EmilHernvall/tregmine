@@ -61,7 +61,7 @@ public class ZoneBlockListener implements Listener
 		}
 
 
-		if (event.getPlayer().getItemInHand().getType().equals(Material.PAPER)) {
+		if (event.getPlayer().getItemInHand().getType().equals(Material.PAPER) && event.getBlock().getType().equals(Material.DIRT)) {
 			ItemStack paper = player.getItemInHand();
 			ItemMeta papermeta = paper.getItemMeta();
 //			player.sendMessage("NAME: " + paper.getType().toString());
@@ -73,7 +73,8 @@ public class ZoneBlockListener implements Listener
 			
 				if (Cupong.matches(papermeta.getDisplayName())) {
 					event.getBlock().setType(Material.SPONGE);
-					event.getPlayer().getItemInHand().setType(Material.AIR);
+					event.getPlayer().getItemInHand().setAmount(event.getPlayer().getItemInHand().getAmount()-1);
+//					event.getPlayer().setItemInHand(event.getPlayer().getItemInHand().setAmount(event.getPlayer().getItemInHand().getAmount()-1));
 				}
 				
 				event.setCancelled(true);
