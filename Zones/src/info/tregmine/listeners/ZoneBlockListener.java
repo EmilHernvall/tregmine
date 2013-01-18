@@ -66,7 +66,7 @@ public class ZoneBlockListener implements Listener
 
 			ItemMeta meta = item.getItemMeta();
 			if (Created.valueOf(item).equals(Created.PURCHASED)) {
-				player.sendMessage("KÖPT");
+				player.sendMessage("KOPT");
 			}
 
 				//		List<String> lore = new ArrayList<String>();
