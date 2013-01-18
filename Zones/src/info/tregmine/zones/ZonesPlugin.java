@@ -364,6 +364,7 @@ public class ZonesPlugin extends JavaPlugin
 		}
 
 		if (zone.getMainOwner() != player.getName()) {
+			
 			if (Permission.Owner.equals(perm.Owner)) {
 				player.sendMessage(ChatColor.RED + "Only the main owner may add new owners");
 				return;

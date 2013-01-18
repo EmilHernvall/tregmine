@@ -592,7 +592,7 @@ private void welcomeMessage(Zone currentZone, TregminePlayer player, Zone.Permis
 	}
 
 	player.sendMessage(ChatColor.RED + "[" + currentZone.getName() + "] " + 
-			currentZone.getTextEnter());
+			currentZone.getTextEnter() + " MainOwner:" + currentZone.getMainOwner());
 
 	if (currentZone.isPvp()) {
 		player.sendMessage(ChatColor.RED + "[" + currentZone.getName() + "] " + 
