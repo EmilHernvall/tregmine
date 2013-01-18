@@ -66,22 +66,27 @@ public class ZoneBlockListener implements Listener
 		if (event.getPlayer().getItemInHand().getType().equals(Material.PAPER) && event.getBlock().getType().equals(Material.DIRT)) {
 			ItemStack paper = player.getItemInHand();
 			ItemMeta papermeta = paper.getItemMeta();
-//			player.sendMessage("NAME: " + paper.getType().toString());
+			//			player.sendMessage("NAME: " + paper.getType().toString());
 
-			
+
 			if (papermeta.hasDisplayName()) {
 				player.sendMessage("NAME: " + papermeta.getDisplayName());
 				String Cupong = ChatColor.GREEN + "DIRT -> SPONG Coupon";
-			
+
 				if (Cupong.matches(papermeta.getDisplayName())) {
 					event.getBlock().setType(Material.SPONGE);
-					event.getPlayer().getItemInHand().setType(Material.AIR);
+
+					paper.setAmount( paper.getAmount() - 1);
+
+					if(paper.getAmount() <= 0) {
+						event.getPlayer().setItemInHand(new ItemStack(Material.AIR));
+					}
 				}
-				
+
 				event.setCancelled(true);
 
 			}
-			
+
 			//			if (Created.valueOf(item).equals(Created.PURCHASED)) {
 			//				player.sendMessage("KOPT");
 			//			}
