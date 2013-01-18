@@ -87,12 +87,13 @@ public class Main extends JavaPlugin {
 					if (!tregminePlayer.isAdmin()) {
 						this.getServer().broadcastMessage(tregminePlayer.getChatName() + ChatColor.AQUA + " has " + ChatColor.GOLD + nf.format( balance ) + ChatColor.AQUA + " Tregs." );
 					} else {
-						wallet.create();
-						player.sendMessage(ChatColor.AQUA + "Looks like you got your first wallet! try the command again" );
+//						wallet.create();
+						this.getServer().broadcastMessage(tregminePlayer.getChatName() + ChatColor.AQUA + " has " + ChatColor.GOLD + nf.format( balance ) + ChatColor.AQUA + " Tregs." );
 					}
 
 				} else {
-					this.getServer().broadcastMessage(tregminePlayer.getChatName() + ChatColor.RED + " has no wallet. Contact an administrator.");
+					wallet.create();
+					player.sendMessage(ChatColor.AQUA + "Looks like you got your first wallet! try the command again" );
 				}
 				return true;
 			}
