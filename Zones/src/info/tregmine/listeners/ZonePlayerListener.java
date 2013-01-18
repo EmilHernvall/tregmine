@@ -274,7 +274,9 @@ public class ZonePlayerListener implements Listener
 				} else {
 					Wallet wallet = new Wallet(player.getName());
 					int price = Integer.parseInt(ChatColor.stripColor( block.getLine(1) ).trim() );
-					
+					String  seller = ChatColor.stripColor( block.getLine(1) ).trim();
+					Wallet swallet = new Wallet(seller);
+
 					if (wallet.take(price))  {
 
 						Connection conn = null;
@@ -283,9 +285,17 @@ public class ZonePlayerListener implements Listener
 							ZonesDAO dao = new ZonesDAO(conn);
 							int userId = dao.getUserId(player.getName());
 							lot.addOwner(player.getName());
+							lot.deleteOwner(seller);
 							dao.addLotUser(lot.getId(), userId);
 							player.sendMessage(ChatColor.YELLOW + "You are now owner of " + lot.getName());
 							this.plugin.tregmine.log.info(player.getName() + " got " + lot.getName() + " for " + price);
+							
+							swallet.add(price);
+							
+							if(this.plugin.getServer().getPlayer(seller).isOnline()) {
+								this.plugin.getServer().getPlayer(seller).sendMessage(ChatColor.YELLOW + player.getChatName() + ChatColor.YELLOW + " just got your lot " + lot.getName());
+							}
+							
 						} catch (SQLException e) {
 							throw new RuntimeException(e);
 						} finally {
