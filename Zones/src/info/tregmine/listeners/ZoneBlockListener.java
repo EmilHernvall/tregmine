@@ -76,7 +76,7 @@ public class ZoneBlockListener implements Listener
 			//		lore.add(ChatColor.WHITE + "Value: 25.000" + ChatColor.WHITE + " Tregs" );
 			//		meta.setLore(lore);
 			//		meta.setDisplayName(ChatColor.GREEN + "DIRT -> SPONG Coupon");
-			
+			event.setCancelled(true);
 			return;
 		}
 
