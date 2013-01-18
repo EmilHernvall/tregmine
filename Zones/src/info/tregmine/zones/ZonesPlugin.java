@@ -608,8 +608,11 @@ public class ZonesPlugin extends JavaPlugin
 			return;
 		}
 
+		Block tb1 = player.getBlock("zb1");
+//		Block tb2 = player.getBlock("zb2");
 				
-		Zone tzone = world.findZone(new Point(b1.getX(), b1.getZ()));
+		Zone tzone = world.findZone(new Point(tb1.getX(), tb1.getZ()));
+		
 		String name = args[1] + "." + tzone.getName();
 		
 		if (world.lotExists(name)) {
