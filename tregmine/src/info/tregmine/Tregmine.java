@@ -137,7 +137,7 @@ public class Tregmine extends JavaPlugin
 							Wallet wallet = new Wallet(name);
 							wallet.add(2000);
 							log.info(name + " got " + name + " Tregs for VOTING");
-							getPlayer(name).setMetaInt("votecount", getPlayer(name).getMetaInt("votecount")+1);
+//							getPlayer(name).setMetaInt("votecount", getPlayer(name).getMetaInt("votecount")+1);
 
 				}
 
@@ -185,11 +185,25 @@ public class Tregmine extends JavaPlugin
 			if("player".matches(args[0]) && player.isOp()) {
 				ItemStack book = new ItemStack(Material.WRITTEN_BOOK, 1);
 				BookMeta bookmeta = (BookMeta) book.getItemMeta();
-
+				TregminePlayer p = getPlayer(args[1]);
+				
+				if (p == null) {
+					
+					player.sendMessage(ChatColor.RED + "Only works for someone who is online");
+					
+					return false;
+				}
+				
 				bookmeta.setAuthor("Tregmine");
 				bookmeta.setTitle(args[1] + " Profile");
 				
+				bookmeta.addPage(ChatColor.RED + "RED");
+				bookmeta.addPage(ChatColor.BLUE + "blue" + '\n' + "NEW LINE?");
+
+				
 				book.setItemMeta(bookmeta);
+				
+				
 				
 				PlayerInventory inv = player.getInventory();
 				inv.addItem(book);
