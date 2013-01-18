@@ -133,16 +133,18 @@ public class Tregmine extends JavaPlugin
 
 						TregminePlayer player = getPlayer(p.getName());
 
+						if (player.getName().matches(name) ) {
+							player.setMetaString("voteTime", ""+System.currentTimeMillis() + 86400000);
+						}
+						
 						if (player != null) {
 								Long time = Long.parseLong(player.getMetaString("voteTime"));
 							if (time > System.currentTimeMillis()) {
-
 							} else {
 								getServer().broadcastMessage(ChatColor.YELLOW + name + " has voted and will now receive 2,000 Tregs");
 								getServer().broadcastMessage(ChatColor.YELLOW + name + " Read more at http://treg.co/82 what you can get");
 							}
 
-							player.setMetaString("voteTime", ""+System.currentTimeMillis() + 86400000);
 							Wallet wallet = new Wallet(name);
 							wallet.add(2000);
 						}
