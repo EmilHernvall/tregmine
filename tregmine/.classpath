@@ -5,7 +5,6 @@
 	<classpathentry kind="lib" path="/AA-Global/lib/bukkit-0.0.1-SNAPSHOT.jar"/>
 	<classpathentry kind="lib" path="/AA-Global/lib/commons-dbcp-1.4.jar"/>
 	<classpathentry kind="lib" path="/AA-Global/lib/commons-pool-1.5.6.jar"/>
-	<classpathentry kind="lib" path="/AA-Global/lib/craftbukkit-0.0.1-SNAPSHOT.jar"/>
 	<classpathentry kind="lib" path="/AA-Global/lib/ebean-2.7.0.jar"/>
 	<classpathentry kind="lib" path="/AA-Global/lib/mysql-connector-java-bin.jar"/>
 	<classpathentry kind="lib" path="/AA-Global/lib/mysql-connector-java-bin.old.jar"/>
