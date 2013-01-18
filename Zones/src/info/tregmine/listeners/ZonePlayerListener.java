@@ -248,9 +248,13 @@ public class ZonePlayerListener implements Listener
 		}
 
 		if(event.getClickedBlock().getState() instanceof Sign) {
+			
 			TregminePlayer player = tregmine.getPlayer(event.getPlayer());
-			Sign block = (Sign) event.getClickedBlock();
+			
+			Sign block = (Sign) event.getClickedBlock().getWorld().getBlockAt(event.getClickedBlock().getLocation());
+			
 			Point currentPos = new Point(block.getX(), block.getZ());
+			
 			ZoneWorld world = plugin.getWorld(block.getWorld());
 //			Zone zone = world.findZone(currentPos);
 			Lot lot = world.findLot(currentPos);
