@@ -138,6 +138,7 @@ public class ZonesDAO
 				zone.setTextEnter(rs.getString("zone_entermessage"));
 				zone.setTextExit(rs.getString("zone_exitmessage"));
 				zone.setTexture(rs.getString("texture"));
+				zone.setMainOwner(rs.getString("owner"));				
 				zones.add(zone);
 			}
 		}
@@ -166,7 +167,7 @@ public class ZonesDAO
 		int id = 0;
 		try {
 			String sql = "INSERT INTO zone (zone_world, zone_name, zone_enterdefault, zone_placedefault, " + 
-					"zone_destroydefault, zone_pvp, zone_hostiles, zone_entermessage, zone_exitmessage) VALUES (?,?,?,?,?,?,?,?,?)";
+					"zone_destroydefault, zone_pvp, zone_hostiles, zone_entermessage, zone_exitmessage, owner) VALUES (?,?,?,?,?,?,?,?,?,?)";
 			
 			stmt = conn.prepareStatement(sql);
 			stmt.setString(1, zone.getWorld());
@@ -178,6 +179,7 @@ public class ZonesDAO
 			stmt.setString(7, zone.hasHostiles() ? "1" : "0");
 			stmt.setString(8, zone.getTextEnter());
 			stmt.setString(9, zone.getTextExit());
+			stmt.setString(10, zone.getMainOwner());
 			stmt.execute();
 			
 			stmt.execute("SELECT LAST_INSERT_ID()");

@@ -105,6 +105,9 @@ public class Zone
 	
 	private String textEnter;
 	private String textExit;
+
+	private String mainOwner;
+	
 	
 	private Map<String, Permission> users;
 	
@@ -118,6 +121,15 @@ public class Zone
 		return id;
 	}
 
+	public String getMainOwner() {
+		return this.mainOwner;
+	}
+	
+	public void setMainOwner(String _owner) {
+		this.mainOwner = _owner;
+	}
+
+	
 	public void setId(int id) {
 		this.id = id;
 	}

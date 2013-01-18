@@ -244,8 +244,8 @@ public class ZonesPlugin extends JavaPlugin
 			return;
 		}
 
-		if (args.length < 2) {
-			player.sendMessage("syntax: /zone create [name]");
+		if (args.length < 3) {
+			player.sendMessage("syntax: /zone create [name] [owner]");
 			return;
 		}
 
@@ -264,9 +264,12 @@ public class ZonesPlugin extends JavaPlugin
 		zone.setWorld(world.getName());
 		zone.setName(name);
 		zone.addRect(rect);
+		
 		zone.setTextEnter("Welcome to " + name + "!");
 		zone.setTextExit("Now leaving " + name + ".");
 		zone.addUser(player.getName(), Zone.Permission.Owner);
+
+		zone.setMainOwner(args[3]);
 
 		player.sendMessage(ChatColor.RED + "Creating zone at " + rect);
 
@@ -291,6 +294,7 @@ public class ZonesPlugin extends JavaPlugin
 			dao.createZone(zone);
 			dao.addRectangle(zone.getId(), rect);
 			dao.addUser(zone.getId(), userId, Zone.Permission.Owner);
+
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		} finally {
