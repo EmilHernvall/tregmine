@@ -17,13 +17,13 @@ import info.tregmine.zones.Lot;
 import info.tregmine.zones.ZoneWorld;
 import info.tregmine.zones.ZonesPlugin;
 
-import net.minecraft.server.v1_4_6.Enchantment;
 
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -64,9 +64,14 @@ public class ZoneBlockListener implements Listener
 			return;
 		}
 		
-		if (player.getItemInHand().getEnchantments().containsKey(Enchantment.SILK_TOUCH)) {
+		if (player.getItemInHand().containsEnchantment(Enchantment.SILK_TOUCH)) {
 			return;
 		}
+		
+		if (player.getItemInHand().containsEnchantment(Enchantment.LOOT_BONUS_BLOCKS)) {
+			return;
+		}
+
 		
 		for (ItemStack item : event.getBlock().getDrops() ) {
 
