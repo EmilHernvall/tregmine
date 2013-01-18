@@ -273,8 +273,8 @@ public class ZonePlayerListener implements Listener
 					return;
 				} else {
 					Wallet wallet = new Wallet(player.getName());
-					int price = Integer.parseInt(block.getLine(1));
-
+					int price = Integer.getInteger(block.getLine(1));
+					
 					if (wallet.take(price))  {
 
 						Connection conn = null;
