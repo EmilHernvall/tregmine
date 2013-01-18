@@ -115,11 +115,11 @@ public class Tregmine extends JavaPlugin
 			tregPlayer.load();
 			this.tregminePlayer.put(onlineName, tregPlayer);
 			player.sendMessage(ChatColor.GRAY + "Tregmine successfully loaded to build: " + this.getDescription().getVersion() );
-			player.sendMessage(ChatColor.GRAY + "Version explanation: X.Y.Z.G");
-			player.sendMessage(ChatColor.GRAY + "X new stuff added, When i make a brand new thing");
-			player.sendMessage(ChatColor.GRAY + "Y new function added, when i extend what current stuff can do");
-			player.sendMessage(ChatColor.GRAY + "Z bugfix that may change how function and stuff works");
-			player.sendMessage(ChatColor.GRAY + "G small bugfix like spelling errors");
+			//			player.sendMessage(ChatColor.GRAY + "Version explanation: X.Y.Z.G");
+			//			player.sendMessage(ChatColor.GRAY + "X new stuff added, When i make a brand new thing");
+			//			player.sendMessage(ChatColor.GRAY + "Y new function added, when i extend what current stuff can do");
+			//			player.sendMessage(ChatColor.GRAY + "Z bugfix that may change how function and stuff works");
+			//			player.sendMessage(ChatColor.GRAY + "G small bugfix like spelling errors");
 		}
 
 		this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
@@ -129,29 +129,17 @@ public class Tregmine extends JavaPlugin
 				while(hasVoted.size() > 0) {
 					String name = hasVoted.removeFirst();
 
-					for (Player p : getServer().getOnlinePlayers()) {
 
-						TregminePlayer player = getPlayer(p.getName());
+//					TregminePlayer player = getPlayer(p.getName());
 
-						if (player.getName().matches(name) ) {
-							player.setMetaString("voteTime", ""+System.currentTimeMillis() + 86400000);
-						}
-						
-						if (player != null) {
-								Long time = Long.parseLong(player.getMetaString("voteTime"));
-							if (time > System.currentTimeMillis()) {
-							} else {
-								getServer().broadcastMessage(ChatColor.YELLOW + name + " has voted and will now receive 2,000 Tregs");
-								getServer().broadcastMessage(ChatColor.YELLOW + name + " Read more at http://treg.co/82 what you can get");
-							}
+					getServer().broadcastMessage(ChatColor.YELLOW + name + " has voted and will now receive 2,000 Tregs");
+					getServer().broadcastMessage(ChatColor.YELLOW + name + " Read more at http://treg.co/82 what you can get");
 
-							Wallet wallet = new Wallet(name);
-							wallet.add(2000);
-						}
 
-					}
-
+					Wallet wallet = new Wallet(name);
+					wallet.add(2000);
 				}
+
 
 			}
 
