@@ -179,6 +179,27 @@ public class Tregmine extends JavaPlugin
 			player = this.getPlayer(from);
 		}
 
+		if("te".matches(commandName) && player.isAdmin()) {
+
+			ItemStack item = new ItemStack(Material.PAPER, amount, (byte) 0);
+			PlayerInventory inv = player.getInventory();
+
+			ItemMeta meta = item.getItemMeta();
+			List<String> lore = new ArrayList<String>();
+			lore.add(info.tregmine.api.lore.Created.PURCHASED.toColorString());
+			TregminePlayer p = this.getPlayer(player);
+			lore.add(ChatColor.WHITE + "by: " + p.getName() );
+			lore.add(ChatColor.WHITE + "Value: 25.000" + ChatColor.WHITE + " Tregs" );
+			meta.setLore(lore);
+			meta.setDisplayName(ChatColor.GREEN + "DIRT -> SPONG Coupon");
+
+			item.setItemMeta(meta);
+			inv.addItem(item);
+			
+			
+		}
+
+		
 		if ("TregDev".matches(this.getServer().getServerName())) {
 
 			if("te".matches(commandName)) {

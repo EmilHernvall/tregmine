@@ -10,6 +10,7 @@ import java.util.List;
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
 import info.tregmine.api.Zone;
+import info.tregmine.api.lore.Created;
 import info.tregmine.currency.Wallet;
 import info.tregmine.database.ConnectionPool;
 import info.tregmine.quadtree.Point;
@@ -29,6 +30,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 
 public class ZoneBlockListener implements Listener 
@@ -47,32 +49,49 @@ public class ZoneBlockListener implements Listener
 		if(event.isCancelled()) {
 			return;
 		}
-		
+
 		TregminePlayer player = tregmine.getPlayer(event.getPlayer());
-		
-		
+
+
 		if (event.getBlock().getType().equals(Material.SPONGE)) {
 			if(!event.getPlayer().isOp()) {
 				event.setCancelled(true);
 				return;
 			}
 		}
-	
-		
+
+		if (event.getBlock().getType().equals(Material.PAPER)) {
+
+			ItemStack item = player.getItemInHand();
+
+			ItemMeta meta = item.getItemMeta();
+			if (Created.valueOf(item).equals(Created.PURCHASED)) {
+				player.sendMessage("KÖPT");
+			}
+
+				//		List<String> lore = new ArrayList<String>();
+//				lore.add(Created.PURCHASED.toColorString());
+			//		TregminePlayer p = this.getPlayer(player);
+			//		lore.add(ChatColor.WHITE + "by: " + p.getName() );
+			//		lore.add(ChatColor.WHITE + "Value: 25.000" + ChatColor.WHITE + " Tregs" );
+			//		meta.setLore(lore);
+			//		meta.setDisplayName(ChatColor.GREEN + "DIRT -> SPONG Coupon");
+		}
+
 
 		if (player.getGameMode().equals(GameMode.CREATIVE)) {
 			return;
 		}
-		
+
 		if (player.getItemInHand().containsEnchantment(Enchantment.SILK_TOUCH)) {
 			return;
 		}
-		
+
 		if (player.getItemInHand().containsEnchantment(Enchantment.LOOT_BONUS_BLOCKS)) {
 			return;
 		}
 
-		
+
 		for (ItemStack item : event.getBlock().getDrops() ) {
 
 			Connection conn = null;
@@ -103,19 +122,19 @@ public class ZoneBlockListener implements Listener
 						Wallet wallet = new Wallet (player.getName());
 						wallet.add(rs.getInt("value"));
 					}
-				
-					
+
+
 					List<String> lore = new ArrayList<String>();
 
-							lore.add(info.tregmine.api.lore.Created.MINED.toColorString());
-							lore.add(ChatColor.WHITE + "by: " + player.getChatName());
-							lore.add(ChatColor.WHITE + "Value: "+ rs.getInt("value") + " Treg" );
-							lore.add(ChatColor.WHITE + "World: "+ event.getBlock().getWorld().getName());
-							
+					lore.add(info.tregmine.api.lore.Created.MINED.toColorString());
+					lore.add(ChatColor.WHITE + "by: " + player.getChatName());
+					lore.add(ChatColor.WHITE + "Value: "+ rs.getInt("value") + " Treg" );
+					lore.add(ChatColor.WHITE + "World: "+ event.getBlock().getWorld().getName());
+
 					meta.setLore(lore);					
 					drop.setItemMeta(meta);
 					event.getBlock().getWorld().dropItem(event.getBlock().getLocation(), drop);
-				
+
 				}
 
 			} catch (SQLException e) {
