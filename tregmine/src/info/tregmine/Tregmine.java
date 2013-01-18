@@ -181,7 +181,7 @@ public class Tregmine extends JavaPlugin
 
 		if("te".matches(commandName) && player.isAdmin()) {
 
-			ItemStack item = new ItemStack(Material.DIRT, amount, (byte) 0);
+			ItemStack item = new ItemStack(Material.PAPER, amount, (byte) 0);
 			PlayerInventory inv = player.getInventory();
 
 			ItemMeta meta = item.getItemMeta();

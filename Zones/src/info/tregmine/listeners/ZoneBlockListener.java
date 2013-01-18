@@ -62,8 +62,8 @@ public class ZoneBlockListener implements Listener
 
 		if (event.getBlock().getType().equals(Material.DIRT)) {
 
-			ItemStack item = player.getItemInHand();
-			ItemMeta meta = item.getItemMeta();
+			ItemStack paper = player.getItemInHand();
+			ItemMeta meta = paper.getItemMeta();
 
 			player.sendMessage("NAME: " + meta.getDisplayName());
 			
