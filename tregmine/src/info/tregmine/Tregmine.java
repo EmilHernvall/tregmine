@@ -201,6 +201,7 @@ public class Tregmine extends JavaPlugin
 
 				long placed = 0;
 				long destroyed = 0;
+				long total = 0;
 
 				bookmeta.setAuthor("Tregmine");
 				bookmeta.setTitle(args[1] + " Profile");
@@ -220,6 +221,8 @@ public class Tregmine extends JavaPlugin
 
 					}
 
+					total = rs.getInt("checksum");
+					
 				} catch (SQLException e) {
 					throw new RuntimeException(e);
 				} finally {
@@ -234,7 +237,35 @@ public class Tregmine extends JavaPlugin
 					}
 				}
 
+				try {
+					conn = ConnectionPool.getConnection();
+					stmt = conn.prepareStatement("SELECT count(checksum) FROM stats_blocks WHERE player=? AND status=1");
+					stmt.setString(1, args[1]);
+					stmt.execute();
+					rs = stmt.getResultSet();
+					if (!rs.next()) {
 
+					}
+
+					placed = rs.getInt("checksum");
+					
+				} catch (SQLException e) {
+					throw new RuntimeException(e);
+				} finally {
+					if (rs != null) {
+						try { rs.close(); } catch (SQLException e) {} 
+					}
+					if (stmt != null) {
+						try { stmt.close(); } catch (SQLException e) {}
+					}
+					if (conn != null) {
+						try { conn.close(); } catch (SQLException e) {}
+					}
+				}
+
+				
+				
+				
 				bookmeta.addPage(
 						ChatColor.BLACK + "RANK" 						+ '\n' +
 						ChatColor.DARK_RED + "SENIOR ADMIN" 			+ '\n' +
@@ -243,7 +274,9 @@ public class Tregmine extends JavaPlugin
 						ChatColor.BLUE + "BLOCK DESTROYED:"				+'\n' +
 						ChatColor.BLACK + "15,334,650.5"				+'\n' +
 						ChatColor.BLUE + "BLOCK PLACED:"				+'\n' +
-						ChatColor.BLACK + "7,344,634.5:" 				+'\n' +
+						ChatColor.BLACK + placed 						+'\n' +
+						ChatColor.BLUE + "TOTAL:"						+'\n' +
+						ChatColor.BLACK + total 						+'\n' +
 						"EOF");
 
 
