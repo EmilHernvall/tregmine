@@ -213,7 +213,7 @@ public class Tregmine extends JavaPlugin
 				ResultSet rs = null;
 				try {
 					conn = ConnectionPool.getConnection();
-					stmt = conn.prepareStatement("SELECT count(checksum) FROM stats_blocks WHERE player=?");
+					stmt = conn.prepareStatement("SELECT count(checksum) as count FROM stats_blocks WHERE player=?");
 					stmt.setString(1, args[1]);
 					stmt.execute();
 					rs = stmt.getResultSet();
@@ -221,7 +221,7 @@ public class Tregmine extends JavaPlugin
 
 					}
 
-					total = rs.getInt("checksum");
+					total = rs.getInt("count");
 					
 				} catch (SQLException e) {
 					throw new RuntimeException(e);
@@ -239,7 +239,7 @@ public class Tregmine extends JavaPlugin
 
 				try {
 					conn = ConnectionPool.getConnection();
-					stmt = conn.prepareStatement("SELECT count(checksum) FROM stats_blocks WHERE player=? AND status=1");
+					stmt = conn.prepareStatement("SELECT count(checksum) as count FROM stats_blocks WHERE player=? AND status=1");
 					stmt.setString(1, args[1]);
 					stmt.execute();
 					rs = stmt.getResultSet();
@@ -247,7 +247,7 @@ public class Tregmine extends JavaPlugin
 
 					}
 
-					placed = rs.getInt("checksum");
+					placed = rs.getInt("count");
 					
 				} catch (SQLException e) {
 					throw new RuntimeException(e);
@@ -267,8 +267,6 @@ public class Tregmine extends JavaPlugin
 				
 				
 				bookmeta.addPage(
-						ChatColor.BLACK + "RANK" 						+ '\n' +
-						ChatColor.DARK_RED + "SENIOR ADMIN" 			+ '\n' +
 						ChatColor.BLUE + "JOIN-DATE:"					+'\n' +
 						ChatColor.BLACK + "16/10/12 (dd-mm-yy"			+'\n' +
 						ChatColor.BLUE + "BLOCK DESTROYED:"				+'\n' +
