@@ -3,12 +3,17 @@ package info.tregmine;
 
 import info.tregmine.api.TregminePlayer;
 import info.tregmine.currency.Wallet;
+import info.tregmine.database.ConnectionPool;
 import info.tregmine.listeners.TregmineBlockListener;
 import info.tregmine.listeners.TregmineEntityListener;
 import info.tregmine.listeners.TregminePlayerListener;
 import info.tregmine.listeners.TregmineWeatherListener;
 import info.tregmine.stats.BlockStats;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.logging.Logger;
 
 import org.bukkit.ChatColor;
@@ -116,11 +121,11 @@ public class Tregmine extends JavaPlugin
 			tregPlayer.load();
 			this.tregminePlayer.put(onlineName, tregPlayer);
 			player.sendMessage(ChatColor.GRAY + "Tregmine successfully loaded to build: " + this.getDescription().getVersion() );
-//			player.sendMessage(ChatColor.GRAY + "Version explanation: X.Y.Z.G");
-//			player.sendMessage(ChatColor.GRAY + "X new stuff added, When i make a brand new thing");
-//			player.sendMessage(ChatColor.GRAY + "Y new function added, when i extend what current stuff can do");
-//			player.sendMessage(ChatColor.GRAY + "Z bugfix that may change how function and stuff works");
-//			player.sendMessage(ChatColor.GRAY + "G small bugfix like spelling errors");
+			//			player.sendMessage(ChatColor.GRAY + "Version explanation: X.Y.Z.G");
+			//			player.sendMessage(ChatColor.GRAY + "X new stuff added, When i make a brand new thing");
+			//			player.sendMessage(ChatColor.GRAY + "Y new function added, when i extend what current stuff can do");
+			//			player.sendMessage(ChatColor.GRAY + "Z bugfix that may change how function and stuff works");
+			//			player.sendMessage(ChatColor.GRAY + "G small bugfix like spelling errors");
 		}
 
 		this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
@@ -131,13 +136,13 @@ public class Tregmine extends JavaPlugin
 					String name = hasVoted.removeFirst();
 
 
-								getServer().broadcastMessage(ChatColor.YELLOW + name + " has voted and will now receive 2,000 Tregs");
-								getServer().broadcastMessage(ChatColor.YELLOW + name + " Read more at http://treg.co/82 what you can get");
+					getServer().broadcastMessage(ChatColor.YELLOW + name + " has voted and will now receive 2,000 Tregs");
+					getServer().broadcastMessage(ChatColor.YELLOW + name + " Read more at http://treg.co/82 what you can get");
 
-							Wallet wallet = new Wallet(name);
-							wallet.add(2000);
-							log.info(name + " got " + name + " Tregs for VOTING");
-//							getPlayer(name).setMetaInt("votecount", getPlayer(name).getMetaInt("votecount")+1);
+					Wallet wallet = new Wallet(name);
+					wallet.add(2000);
+					log.info(name + " got " + name + " Tregs for VOTING");
+					//							getPlayer(name).setMetaInt("votecount", getPlayer(name).getMetaInt("votecount")+1);
 
 				}
 
@@ -186,41 +191,73 @@ public class Tregmine extends JavaPlugin
 				ItemStack book = new ItemStack(Material.WRITTEN_BOOK, 1);
 				BookMeta bookmeta = (BookMeta) book.getItemMeta();
 				TregminePlayer p = getPlayer(args[1]);
-				
+
 				if (p == null) {
-					
+
 					player.sendMessage(ChatColor.RED + "Only works for someone who is online");
-					
+
 					return false;
 				}
-				
+
+				long placed = 0;
+				long destroyed = 0;
+
 				bookmeta.setAuthor("Tregmine");
 				bookmeta.setTitle(args[1] + " Profile");
-				
-				bookmeta.addPage(ChatColor.DARK_RED + "einand's profile");
-				bookmeta.addPage(
-									ChatColor.BLACK + "RANK" 						+ '\n' +
-									ChatColor.DARK_RED + "SENIOR ADMIN" 			+ '\n' +
-									ChatColor.BLUE + "JOIN-DATE:"					+'\n' +
-									ChatColor.BLACK + "16/10/12 (dd-mm-yy"			+'\n' +
-									ChatColor.BLUE + "BLOCK DESTROYED:"				+'\n' +
-									ChatColor.BLACK + "15,334,650.5"				+'\n' +
-									ChatColor.BLUE + "BLOCK PLACED:"				+'\n' +
-									ChatColor.BLACK + "7,344,634.5:" 				+'\n' +
-								"EOF");
 
-				
+				bookmeta.addPage(ChatColor.DARK_RED + "einand's profile");
+
+				Connection conn = null;
+				PreparedStatement stmt = null;
+				ResultSet rs = null;
+				try {
+					conn = ConnectionPool.getConnection();
+					stmt = conn.prepareStatement("SELECT count(checksum) FROM stats_blocks WHERE player=?");
+					stmt.setString(1, args[1]);
+					stmt.execute();
+					rs = stmt.getResultSet();
+					if (!rs.next()) {
+
+					}
+
+				} catch (SQLException e) {
+					throw new RuntimeException(e);
+				} finally {
+					if (rs != null) {
+						try { rs.close(); } catch (SQLException e) {} 
+					}
+					if (stmt != null) {
+						try { stmt.close(); } catch (SQLException e) {}
+					}
+					if (conn != null) {
+						try { conn.close(); } catch (SQLException e) {}
+					}
+				}
+
+
+				bookmeta.addPage(
+						ChatColor.BLACK + "RANK" 						+ '\n' +
+						ChatColor.DARK_RED + "SENIOR ADMIN" 			+ '\n' +
+						ChatColor.BLUE + "JOIN-DATE:"					+'\n' +
+						ChatColor.BLACK + "16/10/12 (dd-mm-yy"			+'\n' +
+						ChatColor.BLUE + "BLOCK DESTROYED:"				+'\n' +
+						ChatColor.BLACK + "15,334,650.5"				+'\n' +
+						ChatColor.BLUE + "BLOCK PLACED:"				+'\n' +
+						ChatColor.BLACK + "7,344,634.5:" 				+'\n' +
+						"EOF");
+
+
 				book.setItemMeta(bookmeta);
-				
-				
-				
+
+
+
 				PlayerInventory inv = player.getInventory();
 				inv.addItem(book);
 			}
 
 		}
-		
-		
+
+
 		if("te".matches(commandName) && player.isOp()) {
 
 			ItemStack item = new ItemStack(Material.PAPER, 1);
@@ -238,10 +275,10 @@ public class Tregmine extends JavaPlugin
 			item.setItemMeta(meta);
 			inv.addItem(item);
 			player.updateInventory();
-			
+
 		}
 
-		
+
 		if ("TregDev".matches(this.getServer().getServerName())) {
 
 			if("te".matches(commandName)) {
