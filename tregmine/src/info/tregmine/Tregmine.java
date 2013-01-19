@@ -217,7 +217,7 @@ public class Tregmine extends JavaPlugin
 						ResultSet rs = null;
 						try {
 							conn = ConnectionPool.getConnection();
-							stmt = conn.prepareStatement("SELECT count(checksum) as count FROM stats_blocks WHERE player=?");
+							stmt = conn.prepareStatement("SELECT count(player) as count FROM stats_blocks WHERE player=?");
 							stmt.setString(1, args[1]);
 							stmt.execute();
 							rs = stmt.getResultSet();
@@ -243,7 +243,7 @@ public class Tregmine extends JavaPlugin
 
 						try {
 							conn = ConnectionPool.getConnection();
-							stmt = conn.prepareStatement("SELECT count(checksum) as count FROM stats_blocks WHERE player=? AND status=1");
+							stmt = conn.prepareStatement("SELECT count(player) as count FROM stats_blocks WHERE player=? AND status=1");
 							stmt.setString(1, args[1]);
 							stmt.execute();
 							rs = stmt.getResultSet();
@@ -270,7 +270,7 @@ public class Tregmine extends JavaPlugin
 
 						try {
 							conn = ConnectionPool.getConnection();
-							stmt = conn.prepareStatement("SELECT count(checksum) as count FROM stats_blocks WHERE player=? AND status=0");
+							stmt = conn.prepareStatement("SELECT count(player) as count FROM stats_blocks WHERE player=? AND status=0");
 							stmt.setString(1, args[1]);
 							stmt.execute();
 							rs = stmt.getResultSet();
@@ -304,7 +304,7 @@ public class Tregmine extends JavaPlugin
 
 							}
 
-							joinDate = rs.getDate("time").toGMTString();
+							joinDate = rs.getDate("time").toString();
 							id = rs.getInt("uid");
 
 						} catch (SQLException e) {
