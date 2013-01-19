@@ -190,23 +190,16 @@ public class Tregmine extends JavaPlugin
 
 			if("player".matches(args[0]) && player.isOp()) {
 
-				final TregminePlayer p = player;
+				final TregminePlayer fPlayer = player;
 				
 				this.getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
 
 					public void run() {
 
-						p.sendMessage(ChatColor.YELLOW + "Starting to generate book");
+						fPlayer.sendMessage(ChatColor.YELLOW + "Starting to generate book for " + args[1] );
 						ItemStack book = new ItemStack(Material.WRITTEN_BOOK, 1);
 						BookMeta bookmeta = (BookMeta) book.getItemMeta();
-						TregminePlayer p = getPlayer(args[1]);
-
-						if (p == null) {
-
-							p.sendMessage(ChatColor.RED + "Only works for someone who is online");
-
-							return;
-						}
+//						TregminePlayer p = getPlayer(args[1]);
 
 						long placed = 0;
 						long destroyed = 0;
@@ -347,7 +340,7 @@ public class Tregmine extends JavaPlugin
 
 
 
-						PlayerInventory inv = p.getInventory();
+						PlayerInventory inv = fPlayer.getInventory();
 						inv.addItem(book);
 					}
 				},20L);
