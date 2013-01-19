@@ -324,7 +324,7 @@ public class Tregmine extends JavaPlugin
 				bookmeta.addPage(
 						ChatColor.BLUE + "ID:"							+'\n' +
 						ChatColor.BLACK + id							+'\n' +
-						ChatColor.BLUE + "JOIN-DATE:"					+'\n' +
+						ChatColor.BLUE + "JOIN-TIME (GMT):"				+'\n' +
 						ChatColor.BLACK + joinDate						+'\n' +
 						ChatColor.BLUE + "BLOCK DESTROYED:"				+'\n' +
 						ChatColor.BLACK + destroyed						+'\n' +
