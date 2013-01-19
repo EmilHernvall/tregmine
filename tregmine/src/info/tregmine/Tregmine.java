@@ -197,8 +197,13 @@ public class Tregmine extends JavaPlugin
 				bookmeta.setAuthor("Tregmine");
 				bookmeta.setTitle(args[1] + " Profile");
 				
-				bookmeta.addPage(ChatColor.RED + "RED");
-				bookmeta.addPage(ChatColor.BLUE + "blue" + '\n' + "NEW LINE?");
+				bookmeta.addPage(ChatColor.DARK_RED + "einand's profile");
+				bookmeta.addPage(
+									ChatColor.BLACK + "RANK" + ChatColor.DARK_RED + "SENIOR ADMIN" + '\n' +
+									ChatColor.BLACK + "JOIN-DATE" + ChatColor.BLACK + "16/09/10" + '\n' +
+									ChatColor.BLACK + "BLOCK DESTROYED" + ChatColor.BLACK + "15,334,650.5" + '\n' +
+									ChatColor.BLACK + "BLOCK PLACED" + ChatColor.BLACK + "7,344,634.5" + '\n' +
+								"EOF");
 
 				
 				book.setItemMeta(bookmeta);
