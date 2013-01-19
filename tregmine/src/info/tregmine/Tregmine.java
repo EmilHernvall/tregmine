@@ -304,7 +304,7 @@ public class Tregmine extends JavaPlugin
 					}
 
 					joinDate = rs.getDate("time").toGMTString();
-					id = rs.getInt("id");
+					id = rs.getInt("uid");
 					
 				} catch (SQLException e) {
 					throw new RuntimeException(e);
