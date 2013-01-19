@@ -199,10 +199,14 @@ public class Tregmine extends JavaPlugin
 				
 				bookmeta.addPage(ChatColor.DARK_RED + "einand's profile");
 				bookmeta.addPage(
-									ChatColor.BLACK + "RANK" + ChatColor.DARK_RED + "SENIOR ADMIN" + '\n' +
-									ChatColor.BLACK + "JOIN-DATE" + ChatColor.BLACK + "16/09/10" + '\n' +
-									ChatColor.BLACK + "BLOCK DESTROYED" + ChatColor.BLACK + "15,334,650.5" + '\n' +
-									ChatColor.BLACK + "BLOCK PLACED" + ChatColor.BLACK + "7,344,634.5" + '\n' +
+									ChatColor.BLACK + "RANK" 						+ '\n' +
+									ChatColor.DARK_RED + "SENIOR ADMIN" 			+ '\n' +
+									ChatColor.BLUE + "JOIN-DATE:"					+'\n' +
+									ChatColor.BLACK + "16/10/12 (dd-mm-yy"			+'\n' +
+									ChatColor.BLUE + "BLOCK DESTROYED:"				+'\n' +
+									ChatColor.BLACK + "15,334,650.5"				+'\n' +
+									ChatColor.BLUE + "BLOCK PLACED:"				+'\n' +
+									ChatColor.BLACK + "7,344,634.5:" 				+'\n' +
 								"EOF");
 
 				
