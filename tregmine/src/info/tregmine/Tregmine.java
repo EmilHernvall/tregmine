@@ -196,7 +196,7 @@ public class Tregmine extends JavaPlugin
 
 					public void run() {
 
-
+						p.sendMessage(ChatColor.YELLOW + "Starting to generate book");
 						ItemStack book = new ItemStack(Material.WRITTEN_BOOK, 1);
 						BookMeta bookmeta = (BookMeta) book.getItemMeta();
 						TregminePlayer p = getPlayer(args[1]);
