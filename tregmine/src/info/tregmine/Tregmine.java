@@ -347,7 +347,7 @@ public class Tregmine extends JavaPlugin
 
 
 
-						PlayerInventory inv = player.getInventory();
+						PlayerInventory inv = p.getInventory();
 						inv.addItem(book);
 					}
 				},20L);
