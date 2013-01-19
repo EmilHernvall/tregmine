@@ -150,9 +150,9 @@ public class Tregmine extends JavaPlugin
 
 
 		},100L,20L);
-
-
 	}
+
+
 
 	public TregminePlayer getPlayer(String name)	{
 		return tregminePlayer.get(name);
@@ -163,7 +163,7 @@ public class Tregmine extends JavaPlugin
 	}
 
 	@SuppressWarnings("deprecation")
-	public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args) {
+	public boolean onCommand(CommandSender sender, Command command, String commandLabel, final String[] args) {
 		String commandName = command.getName().toLowerCase();
 		Player from = null;
 		TregminePlayer player = null;
@@ -189,162 +189,171 @@ public class Tregmine extends JavaPlugin
 		if("book".matches(commandName)) {
 
 			if("player".matches(args[0]) && player.isOp()) {
-				ItemStack book = new ItemStack(Material.WRITTEN_BOOK, 1);
-				BookMeta bookmeta = (BookMeta) book.getItemMeta();
-				TregminePlayer p = getPlayer(args[1]);
 
-				if (p == null) {
-
-					player.sendMessage(ChatColor.RED + "Only works for someone who is online");
-
-					return false;
-				}
-
-				long placed = 0;
-				long destroyed = 0;
-				long total = 0;
-				int  id = 0;
-				String joinDate = "";
-
-				bookmeta.setAuthor("Tregmine");
-				bookmeta.setTitle(ChatColor.GREEN + args[1] + "'s Profile");
-
-				bookmeta.addPage(ChatColor.GREEN + args[1] + "'s profile");
-
-				Connection conn = null;
-				PreparedStatement stmt = null;
-				ResultSet rs = null;
-				try {
-					conn = ConnectionPool.getConnection();
-					stmt = conn.prepareStatement("SELECT count(checksum) as count FROM stats_blocks WHERE player=?");
-					stmt.setString(1, args[1]);
-					stmt.execute();
-					rs = stmt.getResultSet();
-					if (!rs.next()) {
-
-					}
-
-					total = rs.getInt("count");
-					
-				} catch (SQLException e) {
-					throw new RuntimeException(e);
-				} finally {
-					if (rs != null) {
-						try { rs.close(); } catch (SQLException e) {} 
-					}
-					if (stmt != null) {
-						try { stmt.close(); } catch (SQLException e) {}
-					}
-					if (conn != null) {
-						try { conn.close(); } catch (SQLException e) {}
-					}
-				}
-
-				try {
-					conn = ConnectionPool.getConnection();
-					stmt = conn.prepareStatement("SELECT count(checksum) as count FROM stats_blocks WHERE player=? AND status=1");
-					stmt.setString(1, args[1]);
-					stmt.execute();
-					rs = stmt.getResultSet();
-					if (!rs.next()) {
-
-					}
-
-					placed = rs.getInt("count");
-					
-				} catch (SQLException e) {
-					throw new RuntimeException(e);
-				} finally {
-					if (rs != null) {
-						try { rs.close(); } catch (SQLException e) {} 
-					}
-					if (stmt != null) {
-						try { stmt.close(); } catch (SQLException e) {}
-					}
-					if (conn != null) {
-						try { conn.close(); } catch (SQLException e) {}
-					}
-				}
-
+				final TregminePlayer p = player;
 				
-				try {
-					conn = ConnectionPool.getConnection();
-					stmt = conn.prepareStatement("SELECT count(checksum) as count FROM stats_blocks WHERE player=? AND status=0");
-					stmt.setString(1, args[1]);
-					stmt.execute();
-					rs = stmt.getResultSet();
-					if (!rs.next()) {
+				this.getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
 
+					public void run() {
+
+
+						ItemStack book = new ItemStack(Material.WRITTEN_BOOK, 1);
+						BookMeta bookmeta = (BookMeta) book.getItemMeta();
+						TregminePlayer p = getPlayer(args[1]);
+
+						if (p == null) {
+
+							p.sendMessage(ChatColor.RED + "Only works for someone who is online");
+
+							return;
+						}
+
+						long placed = 0;
+						long destroyed = 0;
+						long total = 0;
+						int  id = 0;
+						String joinDate = "";
+
+						bookmeta.setAuthor("Tregmine");
+						bookmeta.setTitle(ChatColor.GREEN + args[1] + "'s Profile");
+
+						bookmeta.addPage(ChatColor.GREEN + args[1] + "'s profile");
+
+						Connection conn = null;
+						PreparedStatement stmt = null;
+						ResultSet rs = null;
+						try {
+							conn = ConnectionPool.getConnection();
+							stmt = conn.prepareStatement("SELECT count(checksum) as count FROM stats_blocks WHERE player=?");
+							stmt.setString(1, args[1]);
+							stmt.execute();
+							rs = stmt.getResultSet();
+							if (!rs.next()) {
+
+							}
+
+							total = rs.getInt("count");
+
+						} catch (SQLException e) {
+							throw new RuntimeException(e);
+						} finally {
+							if (rs != null) {
+								try { rs.close(); } catch (SQLException e) {} 
+							}
+							if (stmt != null) {
+								try { stmt.close(); } catch (SQLException e) {}
+							}
+							if (conn != null) {
+								try { conn.close(); } catch (SQLException e) {}
+							}
+						}
+
+						try {
+							conn = ConnectionPool.getConnection();
+							stmt = conn.prepareStatement("SELECT count(checksum) as count FROM stats_blocks WHERE player=? AND status=1");
+							stmt.setString(1, args[1]);
+							stmt.execute();
+							rs = stmt.getResultSet();
+							if (!rs.next()) {
+
+							}
+
+							placed = rs.getInt("count");
+
+						} catch (SQLException e) {
+							throw new RuntimeException(e);
+						} finally {
+							if (rs != null) {
+								try { rs.close(); } catch (SQLException e) {} 
+							}
+							if (stmt != null) {
+								try { stmt.close(); } catch (SQLException e) {}
+							}
+							if (conn != null) {
+								try { conn.close(); } catch (SQLException e) {}
+							}
+						}
+
+
+						try {
+							conn = ConnectionPool.getConnection();
+							stmt = conn.prepareStatement("SELECT count(checksum) as count FROM stats_blocks WHERE player=? AND status=0");
+							stmt.setString(1, args[1]);
+							stmt.execute();
+							rs = stmt.getResultSet();
+							if (!rs.next()) {
+
+							}
+
+							destroyed = rs.getInt("count");
+
+						} catch (SQLException e) {
+							throw new RuntimeException(e);
+						} finally {
+							if (rs != null) {
+								try { rs.close(); } catch (SQLException e) {} 
+							}
+							if (stmt != null) {
+								try { stmt.close(); } catch (SQLException e) {}
+							}
+							if (conn != null) {
+								try { conn.close(); } catch (SQLException e) {}
+							}
+						}
+
+						try {
+							conn = ConnectionPool.getConnection();
+							stmt = conn.prepareStatement("SELECT * FROM user WHERE player=?");
+							stmt.setString(1, args[1]);
+							stmt.execute();
+							rs = stmt.getResultSet();
+							if (!rs.next()) {
+
+							}
+
+							joinDate = rs.getDate("time").toGMTString();
+							id = rs.getInt("uid");
+
+						} catch (SQLException e) {
+							throw new RuntimeException(e);
+						} finally {
+							if (rs != null) {
+								try { rs.close(); } catch (SQLException e) {} 
+							}
+							if (stmt != null) {
+								try { stmt.close(); } catch (SQLException e) {}
+							}
+							if (conn != null) {
+								try { conn.close(); } catch (SQLException e) {}
+							}
+						}
+
+
+						bookmeta.addPage(
+								ChatColor.BLUE + "ID:"							+'\n' +
+								ChatColor.BLACK + id							+'\n' +
+								ChatColor.BLUE + "JOIN-TIME (GMT):"				+'\n' +
+								ChatColor.BLACK + joinDate						+'\n' +
+								ChatColor.BLUE + "BLOCK DESTROYED:"				+'\n' +
+								ChatColor.BLACK + destroyed						+'\n' +
+								ChatColor.BLUE + "BLOCK PLACED:"				+'\n' +
+								ChatColor.BLACK + placed 						+'\n' +
+								ChatColor.BLUE + "TOTAL:"						+'\n' +
+								ChatColor.BLACK + total 						+'\n' +
+								"EOF");
+
+
+						book.setItemMeta(bookmeta);
+
+
+
+						PlayerInventory inv = player.getInventory();
+						inv.addItem(book);
 					}
+				},20L);
 
-					destroyed = rs.getInt("count");
-					
-				} catch (SQLException e) {
-					throw new RuntimeException(e);
-				} finally {
-					if (rs != null) {
-						try { rs.close(); } catch (SQLException e) {} 
-					}
-					if (stmt != null) {
-						try { stmt.close(); } catch (SQLException e) {}
-					}
-					if (conn != null) {
-						try { conn.close(); } catch (SQLException e) {}
-					}
-				}
-				
-				try {
-					conn = ConnectionPool.getConnection();
-					stmt = conn.prepareStatement("SELECT * FROM user WHERE player=?");
-					stmt.setString(1, args[1]);
-					stmt.execute();
-					rs = stmt.getResultSet();
-					if (!rs.next()) {
-
-					}
-
-					joinDate = rs.getDate("time").toGMTString();
-					id = rs.getInt("uid");
-					
-				} catch (SQLException e) {
-					throw new RuntimeException(e);
-				} finally {
-					if (rs != null) {
-						try { rs.close(); } catch (SQLException e) {} 
-					}
-					if (stmt != null) {
-						try { stmt.close(); } catch (SQLException e) {}
-					}
-					if (conn != null) {
-						try { conn.close(); } catch (SQLException e) {}
-					}
-				}
-
-				
-				bookmeta.addPage(
-						ChatColor.BLUE + "ID:"							+'\n' +
-						ChatColor.BLACK + id							+'\n' +
-						ChatColor.BLUE + "JOIN-TIME (GMT):"				+'\n' +
-						ChatColor.BLACK + joinDate						+'\n' +
-						ChatColor.BLUE + "BLOCK DESTROYED:"				+'\n' +
-						ChatColor.BLACK + destroyed						+'\n' +
-						ChatColor.BLUE + "BLOCK PLACED:"				+'\n' +
-						ChatColor.BLACK + placed 						+'\n' +
-						ChatColor.BLUE + "TOTAL:"						+'\n' +
-						ChatColor.BLACK + total 						+'\n' +
-						"EOF");
-
-
-				book.setItemMeta(bookmeta);
-
-
-
-				PlayerInventory inv = player.getInventory();
-				inv.addItem(book);
 			}
-
 		}
-
 
 		if("te".matches(commandName) && player.isOp()) {
 
