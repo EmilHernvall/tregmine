@@ -14,6 +14,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.logging.Logger;
 
 import org.bukkit.ChatColor;
@@ -36,6 +38,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -196,6 +199,9 @@ public class Tregmine extends JavaPlugin
 
 					public void run() {
 
+						DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+						Date date = new Date();
+
 						fPlayer.sendMessage(ChatColor.YELLOW + "Starting to generate book for " + args[1] );
 						ItemStack book = new ItemStack(Material.WRITTEN_BOOK, 1);
 						BookMeta bookmeta = (BookMeta) book.getItemMeta();
@@ -210,7 +216,7 @@ public class Tregmine extends JavaPlugin
 						bookmeta.setAuthor("Tregmine");
 						bookmeta.setTitle(ChatColor.GREEN + args[1] + "'s Profile");
 
-						bookmeta.addPage(ChatColor.GREEN + args[1] + "'s profile");
+						bookmeta.addPage(ChatColor.GREEN + args[1] + "'s profile" + '\n' + "date:"+'\n'+ date.toString());
 
 						Connection conn = null;
 						PreparedStatement stmt = null;
