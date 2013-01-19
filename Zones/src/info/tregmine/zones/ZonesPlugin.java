@@ -245,7 +245,7 @@ public class ZonesPlugin extends JavaPlugin
 		}
 
 		if (args.length < 3) {
-			player.sendMessage("syntax: /zone create [name] [owner]");
+			player.sendMessage("syntax: /zone create [zone-name] [owner]");
 			return;
 		}
 

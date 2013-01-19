@@ -29,10 +29,19 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 public class ZoneEntityListener implements Listener
 {
 	private static final Set<EntityType> allowedMobs = 
-			EnumSet.of(EntityType.CHICKEN, EntityType.COW, 
-					EntityType.PIG, EntityType.SHEEP, 
-					EntityType.SQUID, EntityType.WOLF,
-					EntityType.VILLAGER, EntityType.MUSHROOM_COW, EntityType.OCELOT);
+			EnumSet.of(
+					EntityType.CHICKEN,
+					EntityType.COW, 
+					EntityType.PIG,
+					EntityType.SHEEP, 
+					EntityType.SQUID,
+					EntityType.WOLF,
+					EntityType.IRON_GOLEM,
+					EntityType.BAT,
+					EntityType.VILLAGER,
+					EntityType.MUSHROOM_COW,
+					EntityType.OCELOT
+					);
 
 	private final ZonesPlugin plugin;
 	private final Tregmine tregmine;
