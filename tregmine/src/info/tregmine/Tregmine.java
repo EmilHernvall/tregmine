@@ -207,9 +207,9 @@ public class Tregmine extends JavaPlugin
 				String joinDate = "";
 
 				bookmeta.setAuthor("Tregmine");
-				bookmeta.setTitle(args[1] + " Profile");
+				bookmeta.setTitle(ChatColor.YELLOW + args[1] + "'s Profile");
 
-				bookmeta.addPage(ChatColor.DARK_RED + "einand's profile");
+				bookmeta.addPage(ChatColor.YELLOW + args[1] + "'s profile");
 
 				Connection conn = null;
 				PreparedStatement stmt = null;
