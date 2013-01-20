@@ -37,6 +37,7 @@ public class ZoneEntityListener implements Listener
 					EntityType.SQUID,
 					EntityType.WOLF,
 					EntityType.IRON_GOLEM,
+					EntityType.SNOWMAN,
 					EntityType.BAT,
 					EntityType.VILLAGER,
 					EntityType.MUSHROOM_COW,
