@@ -132,8 +132,8 @@ public class ZoneBlockListener implements Listener
 				rs = stmt.getResultSet();
 
 				if (rs.first() ) {
-					event.setCancelled(true);
-					event.getBlock().setType(Material.AIR);
+//					event.setCancelled(true);
+//					event.getBlock().setType(Material.AIR);
 
 					ItemStack drop = new ItemStack(item.getType(), item.getAmount(), item.getData().getData());
 
@@ -156,7 +156,7 @@ public class ZoneBlockListener implements Listener
 
 					meta.setLore(lore);					
 					drop.setItemMeta(meta);
-					event.getBlock().getWorld().dropItem(event.getBlock().getLocation(), drop);
+//					event.getBlock().getWorld().dropItem(event.getBlock().getLocation(), drop);
 
 				}
 
