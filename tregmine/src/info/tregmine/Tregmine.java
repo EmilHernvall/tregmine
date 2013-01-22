@@ -361,13 +361,13 @@ public class Tregmine extends JavaPlugin
 
 			player.sendMessage("blackout");
 			
-			if ("blind".matches(args[2])) {
+			if ("blind".matches(args[0])) {
 				PotionEffect ef = new PotionEffect(PotionEffectType.BLINDNESS, 60, 10);
 				target.getPlayer().addPotionEffect(ef);
 				player.sendMessage("Blind");
 			}
 			
-			if ("confuse".matches(args[2])) {
+			if ("confuse".matches(args[0])) {
 				PotionEffect ef = new PotionEffect(PotionEffectType.CONFUSION, 60, 10);
 				target.getPlayer().addPotionEffect(ef);
 				player.sendMessage("Confuse");
