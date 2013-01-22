@@ -3,6 +3,8 @@ package info.tregmine.teleport;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 public class Tp {
 
@@ -39,6 +41,8 @@ public class Tp {
 //						tempto.sendMessage(ChatColor.AQUA + tempfrom.getName() + " teleported to you!");
 						tempfrom.teleport(tempto.getLocation());
 						tempfrom.setNoDamageTicks(200);
+						PotionEffect ef = new PotionEffect(PotionEffectType.BLINDNESS, 60, 100);
+						tempfrom.getPlayer().addPotionEffect(ef);
 					}},20*0);
 				succeed = true;
 			}
@@ -57,6 +61,8 @@ public class Tp {
 						tempto.sendMessage(ChatColor.AQUA + tempfrom.getName() + " teleported to you!");
 						tempfrom.teleport(tempto.getLocation());
 						tempfrom.setNoDamageTicks(200);
+						PotionEffect ef = new PotionEffect(PotionEffectType.BLINDNESS, 60, 100);
+						tempfrom.getPlayer().addPotionEffect(ef);
 					}},20*1);
 				succeed = true;
 			}
@@ -76,6 +82,8 @@ public class Tp {
 							tempto.sendMessage(ChatColor.AQUA + tempfrom.getName() + " teleported to you!");
 							tempfrom.teleport(tempto.getLocation());
 							tempfrom.setNoDamageTicks(200);
+							PotionEffect ef = new PotionEffect(PotionEffectType.BLINDNESS, 60, 100);
+							tempfrom.getPlayer().addPotionEffect(ef);
 						}},20*30);
 					succeed = true;
 				}
@@ -93,6 +101,8 @@ public class Tp {
 							tempto.sendMessage(ChatColor.AQUA + tempfrom.getName() + " teleported to you!");
 							tempfrom.teleport(tempto.getLocation());
 							tempfrom.setNoDamageTicks(200);
+							PotionEffect ef = new PotionEffect(PotionEffectType.BLINDNESS, 60, 100);
+							tempfrom.getPlayer().addPotionEffect(ef);
 						}},20*30);
 					succeed = true;
 				}

@@ -13,6 +13,8 @@ import org.bukkit.Location;
 import org.bukkit.World;
 //import org.bukkit.entity.Player;
 import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 public class Warp {
 	private final Teleport plugin;
@@ -120,6 +122,8 @@ public class Warp {
 					public void run() {
 						if (tempfrom.isAdmin()) {
 							tempfrom.teleport(temppoint);
+							PotionEffect ef = new PotionEffect(PotionEffectType.BLINDNESS, 60, 100);
+							tempfrom.getPlayer().addPotionEffect(ef);
 							return;
 						}
 						

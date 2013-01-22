@@ -368,7 +368,7 @@ public class Tregmine extends JavaPlugin
 			}
 			
 			if ("invis".matches(args[0])) {
-				PotionEffect ef = new PotionEffect(PotionEffectType.INVISIBILITY, 600000, 10);
+				PotionEffect ef = new PotionEffect(PotionEffectType.INVISIBILITY, 1600000, 100);
 				target.getPlayer().addPotionEffect(ef);
 				player.sendMessage("Blind");
 			}

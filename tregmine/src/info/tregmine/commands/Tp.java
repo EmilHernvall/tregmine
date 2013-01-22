@@ -4,6 +4,8 @@ package info.tregmine.commands;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
@@ -36,6 +38,8 @@ public class Tp {
 		if (_player.isAdmin()) {
 			_player.sendMessage(ChatColor.AQUA + "You started teleport to " + to.getChatName() + ChatColor.AQUA + " in " + ChatColor.BLUE + to.getWorld().getName() + ".");
 			_player.teleport(to);
+			PotionEffect ef = new PotionEffect(PotionEffectType.BLINDNESS, 60, 100);
+			_player.getPlayer().addPotionEffect(ef);
 			return;
 		}
 		
@@ -50,6 +54,8 @@ public class Tp {
 			_player.sendMessage(ChatColor.AQUA + "You started teleport to " + to.getName() + ChatColor.AQUA + " in " + ChatColor.BLUE + to.getWorld().getName() + ".");
 			to.sendMessage(ChatColor.AQUA + _player.getChatName() + " teleported to you!");
 			_player.teleport(to);
+			PotionEffect ef = new PotionEffect(PotionEffectType.BLINDNESS, 60, 100);
+			_player.getPlayer().addPotionEffect(ef);
 			return;
 		}
 
@@ -67,11 +73,15 @@ public class Tp {
 				_player.sendMessage(ChatColor.AQUA + "You started teleport to " + to.getName() + ChatColor.AQUA + " in " + ChatColor.BLUE + to.getWorld().getName() + ".");
 				to.sendMessage(ChatColor.AQUA + _player.getChatName() + " teleported to you!");
 				_player.teleport(to);
+				PotionEffect ef = new PotionEffect(PotionEffectType.BLINDNESS, 60, 100);
+				_player.getPlayer().addPotionEffect(ef);
 				return;
 			} else 	if (_player.isTrusted() && distance < 100) {
 				_player.sendMessage(ChatColor.AQUA + "You started teleport to " + to.getName() + ChatColor.AQUA + " in " + ChatColor.BLUE + to.getWorld().getName() + ".");
 				to.sendMessage(ChatColor.AQUA + _player.getChatName() + " teleported to you!");
 				_player.teleport(to);
+				PotionEffect ef = new PotionEffect(PotionEffectType.BLINDNESS, 60, 100);
+				_player.getPlayer().addPotionEffect(ef);
 				return;
 			} else {
 				_player.sendMessage(to.getChatName() + ChatColor.RED + " are to far way for you to teleport.");				
