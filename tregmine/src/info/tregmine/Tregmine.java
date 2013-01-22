@@ -35,6 +35,8 @@ import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 
 import java.util.ArrayList;
@@ -194,7 +196,7 @@ public class Tregmine extends JavaPlugin
 			if("player".matches(args[0]) && player.isOp()) {
 
 				final TregminePlayer fPlayer = player;
-				
+
 				this.getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
 
 					public void run() {
@@ -205,7 +207,7 @@ public class Tregmine extends JavaPlugin
 						fPlayer.sendMessage(ChatColor.YELLOW + "Starting to generate book for " + args[1] );
 						ItemStack book = new ItemStack(Material.WRITTEN_BOOK, 1);
 						BookMeta bookmeta = (BookMeta) book.getItemMeta();
-//						TregminePlayer p = getPlayer(args[1]);
+						//						TregminePlayer p = getPlayer(args[1]);
 
 						long placed = 0;
 						long destroyed = 0;
@@ -353,6 +355,23 @@ public class Tregmine extends JavaPlugin
 
 			}
 		}
+		if("blackout".matches(commandName) && player.isGuardian()) {
+			Player target = getServer().getPlayer(args[0]);
+
+			
+			if ("blind".matches(args[1])) {
+				PotionEffect ef = new PotionEffect(PotionEffectType.BLINDNESS, 60, 10);
+				target.getPlayer().addPotionEffect(ef);
+			}
+			
+			if ("confuse".matches(args[1])) {
+				PotionEffect ef = new PotionEffect(PotionEffectType.CONFUSION, 60, 10);
+				target.getPlayer().addPotionEffect(ef);
+			}
+			
+			
+		}
+
 
 		if("te".matches(commandName) && player.isOp()) {
 
