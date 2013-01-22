@@ -356,9 +356,10 @@ public class Tregmine extends JavaPlugin
 			}
 		}
 		
-		if("blackout".matches(commandName) && player.isGuardian()) {
+		if("blackout".matches(commandName) && player.isAdmin()) {
 			Player target = getServer().getPlayer(args[1]);
 
+			player.sendMessage("blackout");
 			
 			if ("blind".matches(args[2])) {
 				PotionEffect ef = new PotionEffect(PotionEffectType.BLINDNESS, 60, 10);
