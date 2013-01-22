@@ -355,18 +355,21 @@ public class Tregmine extends JavaPlugin
 
 			}
 		}
+		
 		if("blackout".matches(commandName) && player.isGuardian()) {
-			Player target = getServer().getPlayer(args[0]);
+			Player target = getServer().getPlayer(args[1]);
 
 			
-			if ("blind".matches(args[1])) {
+			if ("blind".matches(args[2])) {
 				PotionEffect ef = new PotionEffect(PotionEffectType.BLINDNESS, 60, 10);
 				target.getPlayer().addPotionEffect(ef);
+				player.sendMessage("Blind");
 			}
 			
-			if ("confuse".matches(args[1])) {
+			if ("confuse".matches(args[2])) {
 				PotionEffect ef = new PotionEffect(PotionEffectType.CONFUSION, 60, 10);
 				target.getPlayer().addPotionEffect(ef);
+				player.sendMessage("Confuse");
 			}
 			
 			
