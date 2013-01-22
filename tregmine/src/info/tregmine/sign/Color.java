@@ -16,7 +16,7 @@ public class Color implements Listener {
 			String newLine = splitLine[0]; 
 			for(int j=1;j<splitLine.length;j++) 
 			{ 
-				if(splitLine[j].length()==0 || "0123456789abcdefABCDEFKH".indexOf(splitLine[j].charAt(0))==-1) 
+				if(splitLine[j].length()==0 || "0123456789abcdefknomrlABCDEFKLNOMR".indexOf(splitLine[j].charAt(0))==-1) 
 				{ 
 					newLine+="#"; 
 				} 
