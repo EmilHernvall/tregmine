@@ -409,6 +409,9 @@ public class TregminePlayerListener implements Listener {
 		//			String message = String.format(quitMessages[msgIndex], tregP.getChatName());
 		//			this.plugin.getServer().broadcastMessage(message);
 		//		}
+		
+		TregminePlayer player = this.plugin.getPlayer(event.getPlayer());
+		this.plugin.getServer().broadcastMessage(player.getChatName() + ChatColor.YELLOW + " disconnected because of Delario accidently stumbled on this internet connection cable, you may now sue Xmart for it.");
 
 		this.plugin.tregminePlayer.remove(event.getPlayer().getName());
 		this.plugin.log.info("Unloaded settings for " + event.getPlayer().getName() + ".");
