@@ -27,7 +27,7 @@ public class DeathEntity implements Listener  {
 		 if (event instanceof PlayerDeathEvent) {
 			 Player player = (Player) event.getEntity();
              PlayerDeathEvent e = (PlayerDeathEvent) event;
-             e.setDeathMessage(ChatColor.DARK_GRAY + player.getName() + " " + Insult.random());
+             e.setDeathMessage(ChatColor.DARK_GRAY + "DIED - " + player.getName() + " " + Insult.random());
          }
 	}
 
