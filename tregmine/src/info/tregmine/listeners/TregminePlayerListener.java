@@ -98,7 +98,20 @@ public class TregminePlayerListener implements Listener {
 		ChatColor.YELLOW + "Quit - " + "%s" + ChatColor.YELLOW + " <reserved space for ads. Contact a Senior Admin. Only 200k!>",
 		ChatColor.YELLOW + "Quit - " + "%s" + ChatColor.YELLOW + " disconnected? What is this!? Impossibru!",
 		ChatColor.YELLOW + "Quit - " + "%s" + ChatColor.YELLOW + " Be sure to visit the rifton general store! Follow the red line at /warp rifton",
-		ChatColor.YELLOW + "Quit - " + "%s" + ChatColor.YELLOW + " Come to Exon (Near sunspot)"
+		ChatColor.YELLOW + "Quit - " + "%s" + ChatColor.YELLOW + " Come to Exon (Near sunspot)",
+		ChatColor.YELLOW + "Quit - " + "%s" + ChatColor.YELLOW + " his/her mom called.",
+		ChatColor.YELLOW + "Quit - " + "%s" + ChatColor.YELLOW + " toliet brb",
+		ChatColor.YELLOW + "Quit - " + "%s" + ChatColor.YELLOW + " found a lose cable and eat it",
+		ChatColor.YELLOW + "Quit - " + "%s" + ChatColor.YELLOW + " just hade a taste of einands wrath",
+		ChatColor.YELLOW + "Quit - " + "%s" + ChatColor.YELLOW + " found the true END of minecraft",
+		ChatColor.YELLOW + "Quit - " + "%s" + ChatColor.YELLOW + " sorry was that the kick button",		
+		ChatColor.YELLOW + "Quit - " + "%s" + ChatColor.YELLOW + " was not accidently banned by" +ChatColor.DARK_RED + "BlackX",		
+		ChatColor.YELLOW + "Quit - " + "%s" + ChatColor.YELLOW + " found love elswhere",		
+		ChatColor.YELLOW + "Quit - " + "%s" + ChatColor.YELLOW + " raqe quit this server",
+		ChatColor.YELLOW + "Quit - " + "%s" + ChatColor.YELLOW + " Tregmine will miss you a LOT, i hope your away time is almost as plesant as being here",
+		ChatColor.YELLOW + "Quit - " + "%s" + ChatColor.YELLOW + " NOOOOOO What did i do?",
+		ChatColor.YELLOW + "Quit - " + "%s" + ChatColor.YELLOW + " Voz just got an eargasm (or is it a eyegasm)",
+		ChatColor.YELLOW + "Quit - " + "%s" + ChatColor.YELLOW + " maybe i won't be back tomorrow."
 	};
 	
 	private final Tregmine plugin;
