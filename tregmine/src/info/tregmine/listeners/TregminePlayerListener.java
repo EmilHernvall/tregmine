@@ -10,6 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Random;
 import java.util.TimeZone;
 import java.util.List;
 import java.util.ArrayList;
@@ -69,7 +70,7 @@ public class TregminePlayerListener implements Listener {
 			return order * (a.getGuardianRank() - b.getGuardianRank());
 		}
 	}
-	/*
+
 	private final static String[] quitMessages = new String[] {
 		ChatColor.YELLOW + "Quit - " + "%s" + ChatColor.YELLOW + " deserted from the battlefield with a hearty good bye!",
 		ChatColor.YELLOW + "Quit - " + "%s" + ChatColor.YELLOW + " stole the cookies and ran!",
@@ -99,7 +100,7 @@ public class TregminePlayerListener implements Listener {
 		ChatColor.YELLOW + "Quit - " + "%s" + ChatColor.YELLOW + " Be sure to visit the rifton general store! Follow the red line at /warp rifton",
 		ChatColor.YELLOW + "Quit - " + "%s" + ChatColor.YELLOW + " Come to Exon (Near sunspot)"
 	};
-	 */
+	
 	private final Tregmine plugin;
 
 	public TregminePlayerListener(Tregmine instance) {
@@ -401,17 +402,17 @@ public class TregminePlayerListener implements Listener {
 	@EventHandler
 	public void onPlayerQuit(PlayerQuitEvent event) {
 		event.setQuitMessage(null);
-		//		TregminePlayer tregP = this.plugin.tregminePlayer.get(event.getPlayer().getName());
+				TregminePlayer tregP = this.plugin.tregminePlayer.get(event.getPlayer().getName());
 
-		//		if(!event.getPlayer().isOp()) {
-		//			Random rand = new Random();
-		//			int msgIndex = rand.nextInt(quitMessages.length);
-		//			String message = String.format(quitMessages[msgIndex], tregP.getChatName());
-		//			this.plugin.getServer().broadcastMessage(message);
-		//		}
+				if(!event.getPlayer().isOp()) {
+					Random rand = new Random();
+					int msgIndex = rand.nextInt(quitMessages.length);
+					String message = String.format(quitMessages[msgIndex], tregP.getChatName());
+					this.plugin.getServer().broadcastMessage(message);
+				}
 		
-		TregminePlayer player = this.plugin.getPlayer(event.getPlayer());
-		this.plugin.getServer().broadcastMessage(player.getChatName() + ChatColor.YELLOW + " disconnected because of Delario accidently stumbled on this internet connection cable, you may now sue Xmart for it.");
+//		TregminePlayer player = this.plugin.getPlayer(event.getPlayer());
+//		this.plugin.getServer().broadcastMessage(player.getChatName() + ChatColor.YELLOW + " disconnected because of Delario accidently stumbled on this internet connection cable, you may now sue Xmart for it.");
 
 		this.plugin.tregminePlayer.remove(event.getPlayer().getName());
 		this.plugin.log.info("Unloaded settings for " + event.getPlayer().getName() + ".");
