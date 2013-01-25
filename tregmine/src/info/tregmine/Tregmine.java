@@ -375,7 +375,7 @@ public class Tregmine extends JavaPlugin
 
 			
 			if ("confuse".matches(args[0])) {
-				PotionEffect ef = new PotionEffect(PotionEffectType.CONFUSION, 60, 10);
+				PotionEffect ef = new PotionEffect(PotionEffectType.CONFUSION, 600, 10);
 				target.getPlayer().addPotionEffect(ef);
 				player.sendMessage("Confuse");
 			}

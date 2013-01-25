@@ -445,7 +445,7 @@ public class BasicCommands extends JavaPlugin {
 			v.eject();
 		}
 
-		if (commandName.matches("newspawn") && isAdmin) {
+		if (commandName.matches("newspawn") && player.isOp()) {
 			player.getWorld().setSpawnLocation(player.getLocation().getBlockX(), player.getLocation().getBlockY(), player.getLocation().getBlockZ());
 			return true;
 		}
