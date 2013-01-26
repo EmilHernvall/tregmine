@@ -45,6 +45,7 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.kitteh.tag.PlayerReceiveNameTagEvent;
 import org.ocpsoft.pretty.time.PrettyTime;
 
 
@@ -113,7 +114,7 @@ public class TregminePlayerListener implements Listener {
 		ChatColor.DARK_GRAY + "Quit - " + "%s" + ChatColor.DARK_GRAY + " Voz just got an eargasm (or is it a eyegasm)",
 		ChatColor.DARK_GRAY + "Quit - " + "%s" + ChatColor.DARK_GRAY + " maybe i won't be back tomorrow."
 	};
-	
+
 	private final Tregmine plugin;
 
 	public TregminePlayerListener(Tregmine instance) {
@@ -130,6 +131,14 @@ public class TregminePlayerListener implements Listener {
 
 	}
 
+
+	@EventHandler
+	public void onNameTag(PlayerReceiveNameTagEvent event) {
+//		if (event.getPlayer().getName().equals("einand")) {
+//			event.setTag(ChatColor.DARK_RED + "einand");
+//		}
+		event.setTag(plugin.getPlayer(event.getPlayer().getName()).getChatName());
+	}	
 
 
 	@EventHandler
@@ -208,8 +217,8 @@ public class TregminePlayerListener implements Listener {
 		if (event.getClickedBlock() == null) {
 			return;
 		}
-		
-		
+
+
 		if(Material.STONE_BUTTON.equals(event.getClickedBlock().getType())) {
 			Location loc = event.getPlayer().getLocation();
 			Block standOn = event.getPlayer().getWorld().getBlockAt(loc.getBlockX(), loc.getBlockY()-1, loc.getBlockZ());
@@ -218,19 +227,19 @@ public class TregminePlayerListener implements Listener {
 				Block signBlock = event.getPlayer().getWorld().getBlockAt(event.getClickedBlock().getLocation().getBlockX(), event.getClickedBlock().getLocation().getBlockY()+1, event.getClickedBlock().getLocation().getBlockZ());
 
 				if(signBlock.getState() instanceof Sign) {
-//					tregminePlayer.sendMessage("Found a sign");
-					
+					//					tregminePlayer.sendMessage("Found a sign");
+
 					Sign sign = (Sign) signBlock.getState();
 
-//					tregminePlayer.sendMessage("0: " + sign.getLine(0));
+					//					tregminePlayer.sendMessage("0: " + sign.getLine(0));
 
 					if (sign.getLine(0).contains("up")) {
 						int i = standOn.getLocation().getBlockY();
-								
+
 						while (i < 255) {
 							i++;
 							Block sponge = event.getPlayer().getWorld().getBlockAt(standOn.getLocation().getBlockX(),  i, standOn.getLocation().getBlockZ());
-							
+
 							if (sponge.getType().equals(Material.SPONGE)) {
 								i=256;
 								Location tp = sponge.getLocation();
@@ -239,9 +248,9 @@ public class TregminePlayerListener implements Listener {
 								tp.setX(tp.getBlockX() + 0.5);
 								tp.setYaw(event.getPlayer().getLocation().getYaw());
 								tp.setPitch(event.getPlayer().getLocation().getPitch());
-								
+
 								tregminePlayer.teleport(tp);
-								
+
 							}
 						};
 						tregminePlayer.sendMessage(ChatColor.YELLOW +"Going up");
@@ -249,11 +258,11 @@ public class TregminePlayerListener implements Listener {
 
 					if (sign.getLine(0).contains("down")) {
 						int i = standOn.getLocation().getBlockY();
-								
+
 						while (i > 0) {
 							i--;
 							Block sponge = event.getPlayer().getWorld().getBlockAt(standOn.getLocation().getBlockX(),  i, standOn.getLocation().getBlockZ());
-							
+
 							if (sponge.getType().equals(Material.SPONGE)) {
 								i=0;
 								Location tp = sponge.getLocation();
@@ -262,19 +271,19 @@ public class TregminePlayerListener implements Listener {
 								tp.setX(tp.getBlockX() + 0.5);
 								tp.setYaw(event.getPlayer().getLocation().getYaw());
 								tp.setPitch(event.getPlayer().getLocation().getPitch());
-								
+
 								tregminePlayer.teleport(tp);
-								
+
 							}
 						};
 						tregminePlayer.sendMessage(ChatColor.YELLOW +"Going down");
 					}
-					
-					
+
+
 				}
 
 
-//				tregminePlayer.sendMessage("" + standOn.getType().toString());
+				//				tregminePlayer.sendMessage("" + standOn.getType().toString());
 			}
 
 		}
@@ -415,17 +424,17 @@ public class TregminePlayerListener implements Listener {
 	@EventHandler
 	public void onPlayerQuit(PlayerQuitEvent event) {
 		event.setQuitMessage(null);
-				TregminePlayer tregP = this.plugin.tregminePlayer.get(event.getPlayer().getName());
+		TregminePlayer tregP = this.plugin.tregminePlayer.get(event.getPlayer().getName());
 
-				if(!event.getPlayer().isOp()) {
-					Random rand = new Random();
-					int msgIndex = rand.nextInt(quitMessages.length);
-					String message = String.format(quitMessages[msgIndex], tregP.getChatName());
-					this.plugin.getServer().broadcastMessage(message);
-				}
-		
-//		TregminePlayer player = this.plugin.getPlayer(event.getPlayer());
-//		this.plugin.getServer().broadcastMessage(player.getChatName() + ChatColor.YELLOW + " disconnected because of Delario accidently stumbled on this internet connection cable, you may now sue Xmart for it.");
+		if(!event.getPlayer().isOp()) {
+			Random rand = new Random();
+			int msgIndex = rand.nextInt(quitMessages.length);
+			String message = String.format(quitMessages[msgIndex], tregP.getChatName());
+			this.plugin.getServer().broadcastMessage(message);
+		}
+
+		//		TregminePlayer player = this.plugin.getPlayer(event.getPlayer());
+		//		this.plugin.getServer().broadcastMessage(player.getChatName() + ChatColor.YELLOW + " disconnected because of Delario accidently stumbled on this internet connection cable, you may now sue Xmart for it.");
 
 		this.plugin.tregminePlayer.remove(event.getPlayer().getName());
 		this.plugin.log.info("Unloaded settings for " + event.getPlayer().getName() + ".");
