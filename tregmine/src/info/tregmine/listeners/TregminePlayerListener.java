@@ -137,7 +137,9 @@ public class TregminePlayerListener implements Listener {
 //		if (event.getPlayer().getName().equals("einand")) {
 //			event.setTag(ChatColor.DARK_RED + "einand");
 //		}
-		event.setTag(plugin.getPlayer(event.getPlayer().getName()).getChatName());
+		
+		
+		event.setTag(plugin.getPlayer(event.getNamedPlayer().getName()).getChatName());
 	}	
 
 
