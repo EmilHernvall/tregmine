@@ -75,7 +75,15 @@ public class Tregmine extends JavaPlugin
 		world.environment(Environment.NORMAL);
 		world.createWorld();
 
+		WorldCreator treton = new WorldCreator("treton"); 
+		treton.environment(Environment.NORMAL);
+		treton.createWorld();
+		
+		WorldCreator alpha = new WorldCreator("alpha"); 
+		alpha.environment(Environment.NORMAL);
+		alpha.createWorld();
 
+		
 		WorldCreator NETHER = new WorldCreator("world_nether"); 
 		NETHER.environment(Environment.NETHER);
 		NETHER.createWorld();
@@ -375,7 +383,8 @@ public class Tregmine extends JavaPlugin
 
 			
 			if ("confuse".matches(args[0])) {
-				PotionEffect ef = new PotionEffect(PotionEffectType.CONFUSION, 600, 10);
+				PotionEffect ef = new PotionEffect(PotionEffectType.CONFUSION, 600
+						, 10);
 				target.getPlayer().addPotionEffect(ef);
 				player.sendMessage("Confuse");
 			}
