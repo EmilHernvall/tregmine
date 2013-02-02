@@ -91,7 +91,7 @@ public class TregminePlayerListener implements Listener {
 		ChatColor.DARK_GRAY + "Quit - " + "%s" + ChatColor.DARK_GRAY + " went to browse Tregmine's forums instead!",
 		ChatColor.DARK_GRAY + "Quit - " + "%s" + ChatColor.DARK_GRAY + " was scared away by einand! :(",
 		ChatColor.DARK_GRAY + "Quit - " + "%s" + "'s" + ChatColor.DARK_GRAY + " CPU was killed by the Rendermen!",
-		ChatColor.DARK_GRAY + "Quit - " + "%s" + ChatColor.DARK_GRAY + " fell off the map!",
+		ChatColor.DARK_GRAY + "Quit - " + "%s" + ChatColor.DARK_GRAY + " You don't know notaro1997, you don't know his life, you don't know his story.",
 		ChatColor.DARK_GRAY + "Quit - " + "%s" + ChatColor.DARK_GRAY + " logged out on accident!",
 		ChatColor.DARK_GRAY + "Quit - " + "%s" + ChatColor.DARK_GRAY + " found the IRL warp!",
 		ChatColor.DARK_GRAY + "Quit - " + "%s" + ChatColor.DARK_GRAY + " left the game due to IRL chunk error issues!",
