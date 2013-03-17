@@ -155,7 +155,6 @@ public class Tregmine extends JavaPlugin
 					Wallet wallet = new Wallet(name);
 					wallet.add(2000);
 					log.info(name + " got " + name + " Tregs for VOTING");
-					//							getPlayer(name).setMetaInt("votecount", getPlayer(name).getMetaInt("votecount")+1);
 
 				}
 

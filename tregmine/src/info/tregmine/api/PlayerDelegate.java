@@ -1062,4 +1062,25 @@ public abstract class PlayerDelegate implements Player
 	public void setMaxHealth(int arg0) {
 		delegate.setMaxHealth(arg0);
 	}
+	@Override
+	public String getCustomName() {
+		return delegate.getCustomName();
+	}
+
+	@Override
+	public boolean isCustomNameVisible() {
+		return delegate.isCustomNameVisible();
+	}
+
+	@Override
+	public void setCustomName(String arg0) {
+		delegate.setCustomName(arg0);
+	}
+
+	@Override
+	public void setCustomNameVisible(boolean arg0) {
+		delegate.setCustomNameVisible(arg0);
+	}
+
+	
 }
