@@ -10,7 +10,7 @@ import java.util.List;
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
 import info.tregmine.api.Zone;
-import info.tregmine.api.lore.Created;
+//import info.tregmine.api.lore.Created;
 import info.tregmine.currency.Wallet;
 import info.tregmine.database.ConnectionPool;
 import info.tregmine.quadtree.Point;
@@ -25,14 +25,14 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.HumanEntity;
-import org.bukkit.entity.Player;
+//import org.bukkit.entity.HumanEntity;
+//import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
+//import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 
 public class ZoneBlockListener implements Listener 
