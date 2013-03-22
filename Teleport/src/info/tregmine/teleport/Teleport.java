@@ -71,17 +71,6 @@ public class Teleport extends JavaPlugin {
 
 			if (args.length == 0) {
 				Location loc = home.get();
-				
-				if (!loc.getWorld().getName().matches(from.getWorld().getName())) {
-					from.sendMessage(ChatColor.RED + "You can't use a home thats in another world!");
-					return true;
-				}
-				
-				
-				if (info.tregmine.api.math.Distance.calc2d(this.getServer().getWorld("world").getSpawnLocation(), loc) < 700) {
-					from.sendMessage(ChatColor.RED + "Telogric lift malfunctioned. Teleportation failed, to close to spawn.");
-					return true;
-				}
 			
 				
 				if (loc == null) {
@@ -92,6 +81,12 @@ public class Teleport extends JavaPlugin {
 				loc.getWorld().loadChunk(loc.getWorld().getChunkAt(loc));
 
 				if (loc.getWorld().isChunkLoaded(loc.getWorld().getChunkAt(loc))){
+					
+					if (info.tregmine.api.math.Distance.calc2d(this.getServer().getWorld("world").getSpawnLocation(), loc) < 700) {
+						from.sendMessage(ChatColor.RED + "Telogric lift malfunctioned. Teleportation failed, to close to spawn.");
+						return true;
+					}
+					
 					from.teleport(loc);
 					from.sendMessage(ChatColor.AQUA + "Hoci poci, little gnome. Magic worked, you're in your home!");
 				} else {
