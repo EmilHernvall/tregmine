@@ -72,6 +72,12 @@ public class Teleport extends JavaPlugin {
 			if (args.length == 0) {
 				Location loc = home.get();
 				
+				if (!loc.getWorld().getName().matches(from.getWorld().getName())) {
+					from.sendMessage("You can't use a home thats in another world!");
+					return true;
+				}
+				
+				
 				if (info.tregmine.api.math.Distance.calc2d(this.getServer().getWorld("world").getSpawnLocation(), loc) < 700) {
 					from.sendMessage(ChatColor.RED + "Telogric lift malfunctioned. Teleportation failed, to close to spawn.");
 					return true;
