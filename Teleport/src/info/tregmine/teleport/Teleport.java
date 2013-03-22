@@ -73,7 +73,7 @@ public class Teleport extends JavaPlugin {
 				Location loc = home.get();
 				
 				if (!loc.getWorld().getName().matches(from.getWorld().getName())) {
-					from.sendMessage("You can't use a home thats in another world!");
+					from.sendMessage(ChatColor.RED + "You can't use a home thats in another world!");
 					return true;
 				}
 				
