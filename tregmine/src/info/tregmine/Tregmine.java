@@ -78,6 +78,14 @@ public class Tregmine extends JavaPlugin
 		WorldCreator treton = new WorldCreator("treton"); 
 		treton.environment(Environment.NORMAL);
 		treton.createWorld();
+
+		WorldCreator vanilla = new WorldCreator("vanilla"); 
+		vanilla.environment(Environment.NORMAL);
+		vanilla.createWorld();
+
+		WorldCreator einhome = new WorldCreator("einhome"); 
+		einhome.environment(Environment.THE_END);
+		einhome.createWorld();
 		
 		WorldCreator alpha = new WorldCreator("alpha"); 
 		alpha.environment(Environment.NORMAL);
