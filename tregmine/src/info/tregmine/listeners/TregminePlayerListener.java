@@ -102,17 +102,17 @@ public class TregminePlayerListener implements Listener {
 		ChatColor.DARK_GRAY + "Quit - " + "%s" + ChatColor.DARK_GRAY + " Come to Exon (Near sunspot)",
 		ChatColor.DARK_GRAY + "Quit - " + "%s" + ChatColor.DARK_GRAY + " his/her mom called.",
 		ChatColor.DARK_GRAY + "Quit - " + "%s" + ChatColor.DARK_GRAY + " toliet brb",
-		ChatColor.DARK_GRAY + "Quit - " + "%s" + ChatColor.DARK_GRAY + " found a lose cable and eat it",
-		ChatColor.DARK_GRAY + "Quit - " + "%s" + ChatColor.DARK_GRAY + " just hade a taste of einands wrath",
-		ChatColor.DARK_GRAY + "Quit - " + "%s" + ChatColor.DARK_GRAY + " found the true END of minecraft",
-		ChatColor.DARK_GRAY + "Quit - " + "%s" + ChatColor.DARK_GRAY + " sorry was that the kick button",		
-		ChatColor.DARK_GRAY + "Quit - " + "%s" + ChatColor.DARK_GRAY + " was not accidently banned by" +ChatColor.DARK_RED + "BlackX",		
+		ChatColor.DARK_GRAY + "Quit - " + "%s" + ChatColor.DARK_GRAY + " found a lose cable and ate it.",
+		ChatColor.DARK_GRAY + "Quit - " + "%s" + ChatColor.DARK_GRAY + " just had a taste of einands wrath.",
+		ChatColor.DARK_GRAY + "Quit - " + "%s" + ChatColor.DARK_GRAY + " found the true END of minecraft.",
+		ChatColor.DARK_GRAY + "Quit - " + "%s" + ChatColor.DARK_GRAY + " sorry was that the kick button?",		
+		ChatColor.DARK_GRAY + "Quit - " + "%s" + ChatColor.DARK_GRAY + " was not accidently banned by " + ChatColor.DARK_RED + "BlackX",		
 		ChatColor.DARK_GRAY + "Quit - " + "%s" + ChatColor.DARK_GRAY + " found love elswhere",		
-		ChatColor.DARK_GRAY + "Quit - " + "%s" + ChatColor.DARK_GRAY + " raqe quit this server",
-		ChatColor.DARK_GRAY + "Quit - " + "%s" + ChatColor.DARK_GRAY + " Tregmine will miss you a LOT, i hope your away time is almost as plesant as being here",
+		ChatColor.DARK_GRAY + "Quit - " + "%s" + ChatColor.DARK_GRAY + " rage quit this server",
+		ChatColor.DARK_GRAY + "Quit - " + "%s" + ChatColor.DARK_GRAY + " Tregmine will miss you a LOT, I hope your away time is almost as pleasant as being here",
 		ChatColor.DARK_GRAY + "Quit - " + "%s" + ChatColor.DARK_GRAY + " NOOOOOO What did i do?",
 		ChatColor.DARK_GRAY + "Quit - " + "%s" + ChatColor.DARK_GRAY + " Voz just got an eargasm (or is it a eyegasm)",
-		ChatColor.DARK_GRAY + "Quit - " + "%s" + ChatColor.DARK_GRAY + " maybe i won't be back tomorrow."
+		ChatColor.DARK_GRAY + "Quit - " + "%s" + ChatColor.DARK_GRAY + " maybe I won't be back tomorrow."
 	};
 
 	private final Tregmine plugin;
@@ -182,7 +182,7 @@ public class TregminePlayerListener implements Listener {
 			if (player.getGameMode() == GameMode.CREATIVE) {
 				ItemMeta meta = item.getItemMeta();
 				//			if (!meta.hasDisplayName()) {
-				meta.setDisplayName("Spawnd by " + player.getName());
+				meta.setDisplayName("Spawned by " + player.getName());
 				//			}
 				item.setItemMeta(meta);
 			}
