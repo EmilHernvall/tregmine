@@ -403,12 +403,12 @@ public class Tregmine extends JavaPlugin
 			List<String> lore = new ArrayList<String>();
 
 //			lore.add(ChatColor.GOLD + "EASTER EGG");
-			lore.add(ChatColor.WHITE + "Found by: " + player.getChatName());
+//			lore.add(ChatColor.WHITE + "Found by: " + player.getChatName());
 
 			
 			ItemMeta meta = drop.getItemMeta();
 			meta.setDisplayName(ChatColor.YELLOW + "EASTER EGG");
-			meta.setLore(lore);					
+//			meta.setLore(lore);					
 //			drop.setItemMeta(meta);
 //			event.getBlock().getWorld().dropItem(event.getBlock().getLocation(), drop);
 			player.getWorld().dropItemNaturally(player.getLocation(), drop);
