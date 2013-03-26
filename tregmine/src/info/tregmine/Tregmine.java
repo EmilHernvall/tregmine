@@ -14,16 +14,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.logging.Logger;
 
 import org.bukkit.ChatColor;
-//import org.bukkit.Color;
-//import org.bukkit.FireworkEffect;
-//import org.bukkit.Location;
 import org.bukkit.Material;
-//import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.World.Environment;
 import org.bukkit.command.Command;
@@ -185,7 +179,6 @@ public class Tregmine extends JavaPlugin
 		return tregminePlayer.get(player.getName());
 	}
 
-	@SuppressWarnings("deprecation")
 	public boolean onCommand(CommandSender sender, Command command, String commandLabel, final String[] args) {
 		String commandName = command.getName().toLowerCase();
 		Player from = null;
@@ -219,7 +212,7 @@ public class Tregmine extends JavaPlugin
 
 					public void run() {
 
-						DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+//						DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 						Date date = new Date();
 
 						fPlayer.sendMessage(ChatColor.YELLOW + "Starting to generate book for " + args[1] );
@@ -429,7 +422,7 @@ public class Tregmine extends JavaPlugin
 			if("te".matches(commandName)) {
 
 				ItemStack item = new ItemStack(Material.PAPER, amount, (byte) 0);
-				PlayerInventory inv = player.getInventory();
+//				PlayerInventory inv = player.getInventory();
 
 				ItemMeta meta = item.getItemMeta();
 				List<String> lore = new ArrayList<String>();
