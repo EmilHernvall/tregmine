@@ -400,7 +400,7 @@ public class Tregmine extends JavaPlugin
 			
 			ItemStack drop = new ItemStack(Material.MONSTER_EGG, 1, (byte)65);
 
-			List<String> lore = new ArrayList<String>();
+//			List<String> lore = new ArrayList<String>();
 
 //			lore.add(ChatColor.GOLD + "EASTER EGG");
 //			lore.add(ChatColor.WHITE + "Found by: " + player.getChatName());
@@ -409,7 +409,7 @@ public class Tregmine extends JavaPlugin
 			ItemMeta meta = drop.getItemMeta();
 			meta.setDisplayName(ChatColor.YELLOW + "EASTER EGG");
 //			meta.setLore(lore);					
-//			drop.setItemMeta(meta);
+			drop.setItemMeta(meta);
 //			event.getBlock().getWorld().dropItem(event.getBlock().getLocation(), drop);
 			player.getWorld().dropItemNaturally(player.getLocation(), drop);
 
