@@ -397,21 +397,19 @@ public class Tregmine extends JavaPlugin
 
 		if("te".matches(commandName) && player.isOp()) {
 
-			ItemStack item = new ItemStack(Material.PAPER, 1);
-			PlayerInventory inv = player.getInventory();
+			
+			ItemStack drop = new ItemStack(Material.MONSTER_EGG, 1, (byte)65);
 
-			ItemMeta meta = item.getItemMeta();
 			List<String> lore = new ArrayList<String>();
-			lore.add(info.tregmine.api.lore.Created.PURCHASED.toColorString());
-			TregminePlayer p = this.getPlayer(player);
-			lore.add(ChatColor.WHITE + "by: " + p.getName() );
-			lore.add(ChatColor.WHITE + "Value: 25.000" + ChatColor.WHITE + " Tregs" );
-			meta.setLore(lore);
-			meta.setDisplayName(ChatColor.GREEN + "DIRT -> SPONG Coupon");
 
-			item.setItemMeta(meta);
-			inv.addItem(item);
-			player.updateInventory();
+			lore.add(ChatColor.GOLD + "EASTER EGG");
+			lore.add(ChatColor.WHITE + "Found by: " + player.getChatName());
+
+			ItemMeta meta = drop.getItemMeta();
+			meta.setLore(lore);					
+			drop.setItemMeta(meta);
+//			event.getBlock().getWorld().dropItem(event.getBlock().getLocation(), drop);
+			player.getWorld().dropItemNaturally(player.getLocation(), drop);
 
 		}
 

@@ -146,7 +146,7 @@ public class ZoneBlockListener implements Listener
 						wallet.add(rs.getInt("value"));
 					}
 
-
+/*
 					List<String> lore = new ArrayList<String>();
 
 					lore.add(info.tregmine.api.lore.Created.MINED.toColorString());
@@ -157,7 +157,20 @@ public class ZoneBlockListener implements Listener
 					meta.setLore(lore);					
 					drop.setItemMeta(meta);
 //					event.getBlock().getWorld().dropItem(event.getBlock().getLocation(), drop);
+*/
+/*
+					ItemStack drop = new ItemStack(Material., item.getAmount(), item.getData().getData());
 
+					List<String> lore = new ArrayList<String>();
+
+					lore.add(ChatColor.GOLD + "EASTER EGG");
+					lore.add(ChatColor.WHITE + "Found by: " + player.getChatName());
+
+					meta.setLore(lore);					
+					drop.setItemMeta(meta);
+//					event.getBlock().getWorld().dropItem(event.getBlock().getLocation(), drop);
+	*/				
+					
 				}
 
 			} catch (SQLException e) {
