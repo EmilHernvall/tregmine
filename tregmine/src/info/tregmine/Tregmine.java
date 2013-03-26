@@ -42,7 +42,6 @@ import java.util.Map;
 
 /**
  * @author Ein Andersson - www.tregmine.info
- * @version 0.8
  */
 public class Tregmine extends JavaPlugin 
 {
