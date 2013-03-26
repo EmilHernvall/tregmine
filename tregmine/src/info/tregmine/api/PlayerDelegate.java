@@ -20,6 +20,7 @@ import org.bukkit.Note;
 import org.bukkit.Server;
 import org.bukkit.Sound;
 import org.bukkit.Statistic;
+import org.bukkit.WeatherType;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.conversations.Conversation;
@@ -53,11 +54,11 @@ import org.bukkit.util.Vector;
 public abstract class PlayerDelegate implements Player 
 {
 	private Player delegate;
-	
+
 	protected PlayerDelegate(Player player) {
 		this.delegate = player;
 	}
-	
+
 	@Override
 	public PlayerInventory getInventory() {
 		return delegate.getInventory();
@@ -553,37 +554,37 @@ public abstract class PlayerDelegate implements Player
 	public void updateInventory() {
 		delegate.updateInventory();
 	}
-	
+
 	@Override
 	public void setWhitelisted(boolean arg0)
 	{
 		delegate.setWhitelisted(arg0);
 	}
-	
+
 	@Override
 	public void setExhaustion(float arg0)
 	{
 		delegate.setExhaustion(arg0);
 	}
-		
+
 	@Override
 	public void setLevel(int arg0)
 	{
 		delegate.setLevel(arg0);
 	}
-	
+
 	@Override
 	public int getFoodLevel()
 	{
 		return delegate.getFoodLevel();
 	}
-	
+
 	@Override
 	public void sendMap(MapView arg0)
 	{
 		delegate.sendMap(arg0);
 	}
-	
+
 	@Override
 	public float getExhaustion() {
 		return delegate.getExhaustion();
@@ -638,7 +639,7 @@ public abstract class PlayerDelegate implements Player
 	public void setBanned(boolean arg0) {
 		delegate.setBanned(arg0);
 	}
-	
+
 	@Override
 	public Location getBedSpawnLocation() {
 		return delegate.getBedSpawnLocation();
@@ -653,7 +654,7 @@ public abstract class PlayerDelegate implements Player
 	public void setSprinting(boolean arg0) {
 		delegate.setSprinting(arg0);
 	}
-	
+
 	@Override
 	public String getPlayerListName() {
 		return delegate.getPlayerListName();
@@ -678,12 +679,12 @@ public abstract class PlayerDelegate implements Player
 	public Map<String, Object> serialize() {
 		return delegate.serialize();
 	}
-	
+
 	@Override
 	public Player getPlayer() {
 		return this.getServer().getPlayer(this.getName());
 	}
-	
+
 	@Override
 	public int getMaxHealth()
 	{
@@ -743,7 +744,7 @@ public abstract class PlayerDelegate implements Player
 	public void sendPluginMessage(Plugin arg0, String arg1, byte[] arg2) {
 		delegate.sendPluginMessage(arg0, arg1, arg2);	
 	}
-	
+
 	@Override
 	public void playEffect(EntityEffect arg0) {
 		delegate.playEffect(arg0);
@@ -758,12 +759,12 @@ public abstract class PlayerDelegate implements Player
 	public void setAllowFlight(boolean arg0) {
 		delegate.setAllowFlight(arg0);		
 	}
-	
+
 	@Override
 	public void setBedSpawnLocation(Location arg0) {
 		delegate.setBedSpawnLocation(arg0);
 	}
-	
+
 	@Override
 	public boolean canSee(Player arg0) {
 		return delegate.canSee(arg0);
@@ -778,8 +779,8 @@ public abstract class PlayerDelegate implements Player
 		Player player = arg0.getPlayer();
 		delegate.hidePlayer(player);
 	}
-	
-	
+
+
 	@Override
 	public void showPlayer(Player arg0) {
 		delegate.showPlayer(arg0);
@@ -789,8 +790,8 @@ public abstract class PlayerDelegate implements Player
 		Player player = arg0.getPlayer();
 		delegate.hidePlayer(player);
 	}
-	
-	
+
+
 	@Override
 	public boolean addPotionEffect(PotionEffect arg0) {
 		return delegate.addPotionEffect(arg0);
@@ -803,7 +804,7 @@ public abstract class PlayerDelegate implements Player
 
 	@Override
 	public boolean addPotionEffects(Collection<PotionEffect> arg0) {
-//		return delegate.addPotionEffect(arg0);
+		//		return delegate.addPotionEffect(arg0);
 		return false;
 	}
 
@@ -825,7 +826,7 @@ public abstract class PlayerDelegate implements Player
 	@Override
 	public <T> void playEffect(Location arg0, Effect arg1, T arg2) {
 		delegate.playEffect(arg0, arg1, arg2);
-		}
+	}
 
 	@Override
 	public void closeInventory() {
@@ -941,7 +942,7 @@ public abstract class PlayerDelegate implements Player
 	public Snowball throwSnowball() {
 		return null;
 	}
-	
+
 	@Override
 	public boolean isFlying() {
 		return delegate.isFlying();
@@ -965,7 +966,7 @@ public abstract class PlayerDelegate implements Player
 	@Override
 	public int getExpToLevel() {
 		return delegate.getExpToLevel();
-		}
+	}
 
 	@Override
 	public boolean hasLineOfSight(Entity arg0) {
@@ -990,13 +991,13 @@ public abstract class PlayerDelegate implements Player
 	@Override
 	public void setFlySpeed(float arg0) throws IllegalArgumentException {
 		delegate.setFlySpeed(arg0);
-		}
+	}
 
 	@Override
 	public void setWalkSpeed(float arg0) throws IllegalArgumentException {
 		delegate.setWalkSpeed(arg0);
 	}
-	
+
 	@Override
 	public void playSound(Location arg0, Sound arg1, float arg2, float arg3) {
 		delegate.playSound(arg0, arg1, arg2, arg3);		
@@ -1010,7 +1011,7 @@ public abstract class PlayerDelegate implements Player
 	@Override
 	public void giveExpLevels(int arg0) {
 		delegate.giveExpLevels(arg0);
-		
+
 	}
 
 	@Override
@@ -1082,5 +1083,24 @@ public abstract class PlayerDelegate implements Player
 		delegate.setCustomNameVisible(arg0);
 	}
 
-	
+	@Override
+	public WeatherType getPlayerWeather() {
+		return delegate.getPlayerWeather();
+	}
+
+	@SuppressWarnings("deprecation")
+	@Override
+	public boolean isOnGround() {
+		return delegate.isOnGround();
+	}
+
+	@Override
+	public void resetPlayerWeather() {
+		delegate.resetPlayerWeather();
+	}
+
+	@Override
+	public void setPlayerWeather(WeatherType arg0) {
+		delegate.setPlayerWeather(arg0);
+	}
 }

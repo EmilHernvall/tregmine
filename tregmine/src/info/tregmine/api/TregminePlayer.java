@@ -11,20 +11,8 @@ import java.util.HashMap;
 //import java.util.List;
 
 import org.bukkit.ChatColor;
-//import org.bukkit.Location;
-//import org.bukkit.Location;
-//import org.bukkit.Sound;
-//import org.bukkit.Effect;
-//import org.bukkit.Location;
 import org.bukkit.block.Block;
-//import org.bukkit.entity.Entity;
-//import org.bukkit.conversations.Conversation;
-//import org.bukkit.entity.Arrow;
-//import org.bukkit.entity.Egg;
-//import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
-//import org.bukkit.inventory.Inventory;
-//import org.bukkit.inventory.EntityEquipment;
 
 public class TregminePlayer extends PlayerDelegate
 {
@@ -492,4 +480,6 @@ public class TregminePlayer extends PlayerDelegate
 	public boolean verifyPassword(String attempt) {
 		return BCrypt.checkpw(attempt, this.password);
 	}
+
+
 }
