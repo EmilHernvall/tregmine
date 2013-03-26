@@ -132,15 +132,15 @@ public class TregminePlayerListener implements Listener {
 	}
 
 
-	@EventHandler
-	public void onNameTag(PlayerReceiveNameTagEvent event) {
+//	@EventHandler
+//	public void onNameTag(PlayerReceiveNameTagEvent event) {
 //		if (event.getPlayer().getName().equals("einand")) {
 //			event.setTag(ChatColor.DARK_RED + "einand");
 //		}
 		
 		
-		event.setTag(plugin.getPlayer(event.getNamedPlayer().getName()).getChatName());
-	}	
+//		event.setTag(plugin.getPlayer(event.getNamedPlayer().getName()).getChatName());
+//	}	
 
 
 	@EventHandler
