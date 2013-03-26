@@ -32,12 +32,12 @@ public class Machines implements Listener {
 
 	@EventHandler
 	public void buttons(PlayerInteractEvent event) {
-
+		
 		if(event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_AIR) return;
-
+		
 		if(event.getAction() == Action.LEFT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_BLOCK){
+			
 			Block block = event.getClickedBlock();
-
 			TregminePlayer tregminePlayer = this.tregmine.tregminePlayer.get(event.getPlayer());
 			if(block.getType() == Material.STONE_BUTTON){
 				Location location = block.getLocation();
@@ -56,13 +56,12 @@ public class Machines implements Listener {
 						lore.add(ChatColor.WHITE + " Value: 25,000 Tregs");
 						meta.setLore(lore);
 						meta.setDisplayName(ChatColor.GREEN + "Sponge Coupon");
-						//						wallet.take(25000);
-
+//                                              wallet.take(25000);
 						item.setItemMeta(meta);
 						inventory.addItem(item);
 						tregminePlayer.updateInventory();
+						tregminePlayer.sendMessage(ChatColor.AQUA + "You received 1 coupon for 25,000 Tregs.");
 						plugin.log.info(tregminePlayer.getName() + " :COUPONBUTTON");
-
 					}else{
 						tregminePlayer.sendMessage(ChatColor.RED + "You need at least 25,000 tregs for this button.");
 					}
