@@ -141,24 +141,29 @@ public class ZoneBlockListener implements Listener
 //					ItemMeta meta = drop.getItemMeta();
 //					item.setType(Material.AIR);
 
-				    Random ran = new Random( System.currentTimeMillis() );
-				    int  rand = ran.nextInt(1000);
-					if (player.isOp()) {
-						player.sendMessage("" + rand);
-					}
-				    
-				    if (rand == 500) {
-						ItemStack drop = new ItemStack(Material.MONSTER_EGG, 1, (byte)65);
-						ItemMeta meta = drop.getItemMeta();
-						meta.setDisplayName(ChatColor.YELLOW + "EASTER EGG");
-						drop.setItemMeta(meta);
-						player.getWorld().dropItemNaturally(event.getBlock().getLocation(), drop);
-				    }
 					
 					if (this.tregmine.blockStats.isPlaced(event.getBlock())) {
 					} else {
+
+					    Random ran = new Random( System.currentTimeMillis() );
+					    int  rand = ran.nextInt(1000);
+						if (player.isOp()) {
+							player.sendMessage("" + rand);
+						}
+					    
+					    if (rand == 500) {
+							ItemStack drop = new ItemStack(Material.MONSTER_EGG, 1, (byte)65);
+							ItemMeta meta = drop.getItemMeta();
+							meta.setDisplayName(ChatColor.YELLOW + "EASTER EGG");
+							drop.setItemMeta(meta);
+							player.getWorld().dropItemNaturally(event.getBlock().getLocation(), drop);
+					    }
+						
+						
 						Wallet wallet = new Wallet (player.getName());
 						wallet.add(rs.getInt("value"));
+						
+						
 					}
 
 /*
