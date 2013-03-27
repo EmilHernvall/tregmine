@@ -4,8 +4,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+//import java.util.ArrayList;
+//import java.util.List;
+import java.util.Random;
 
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
@@ -135,11 +136,22 @@ public class ZoneBlockListener implements Listener
 //					event.setCancelled(true);
 //					event.getBlock().setType(Material.AIR);
 
-					ItemStack drop = new ItemStack(item.getType(), item.getAmount(), item.getData().getData());
+//					ItemStack drop = new ItemStack(item.getType(), item.getAmount(), item.getData().getData());
 
-					ItemMeta meta = drop.getItemMeta();
-					item.setType(Material.AIR);
+//					ItemMeta meta = drop.getItemMeta();
+//					item.setType(Material.AIR);
 
+				    Random ran = new Random( System.currentTimeMillis() );
+				    int  rand = ran.nextInt(1000);
+					
+				    if (rand == 500) {
+						ItemStack drop = new ItemStack(Material.MONSTER_EGG, 1, (byte)65);
+						ItemMeta meta = drop.getItemMeta();
+						meta.setDisplayName(ChatColor.YELLOW + "EASTER EGG");
+						drop.setItemMeta(meta);
+						player.getWorld().dropItemNaturally(event.getBlock().getLocation(), drop);
+				    }
+					
 					if (this.tregmine.blockStats.isPlaced(event.getBlock())) {
 					} else {
 						Wallet wallet = new Wallet (player.getName());

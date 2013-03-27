@@ -45,7 +45,7 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.kitteh.tag.PlayerReceiveNameTagEvent;
+//import org.kitteh.tag.PlayerReceiveNameTagEvent;
 import org.ocpsoft.pretty.time.PrettyTime;
 
 
