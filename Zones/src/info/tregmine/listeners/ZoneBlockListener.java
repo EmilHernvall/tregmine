@@ -143,7 +143,10 @@ public class ZoneBlockListener implements Listener
 
 				    Random ran = new Random( System.currentTimeMillis() );
 				    int  rand = ran.nextInt(1000);
-					
+					if (player.isOp()) {
+						player.sendMessage("" + rand);
+					}
+				    
 				    if (rand == 500) {
 						ItemStack drop = new ItemStack(Material.MONSTER_EGG, 1, (byte)65);
 						ItemMeta meta = drop.getItemMeta();
