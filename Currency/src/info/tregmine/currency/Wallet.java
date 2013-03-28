@@ -3,7 +3,7 @@ package info.tregmine.currency;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-import info.tregmine.api.TregminePlayer;
+//import info.tregmine.api.TregminePlayer;
 import info.tregmine.database.ConnectionPool;
 
 import java.sql.Connection;
@@ -16,10 +16,6 @@ public class Wallet {
 	String player;
 
 	public Wallet(Player player) {
-		this.player = player.getName();
-	}
-
-	public Wallet(TregminePlayer player) {
 		this.player = player.getName();
 	}
 	
