@@ -20,7 +20,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 public class Machines implements Listener {
 
-	public Tregmine tregmine = null;
 	private final Tregmine plugin;
 
 	public Machines(Tregmine instance) {
@@ -35,8 +34,8 @@ public class Machines implements Listener {
 		if(event.getAction() == Action.LEFT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_BLOCK){
 			Block block = event.getClickedBlock();
 			int hash = info.tregmine.api.math.Checksum.block(block);
-			TregminePlayer tregminePlayer = this.tregmine.tregminePlayer.get(event.getPlayer());
-			if(block.getType().equals(Material.STONE_BUTTON)){
+			TregminePlayer tregminePlayer = this.plugin.tregminePlayer.get(event.getPlayer());
+				if(Material.STONE_BUTTON.equals(block.getType())){
 				if(hash == -1189228543){
 					Wallet wallet = new Wallet(tregminePlayer);
 					if(wallet.take(25000)){
