@@ -8,10 +8,8 @@ import info.tregmine.api.TregminePlayer;
 import info.tregmine.currency.Wallet;
 
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-//import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
@@ -32,19 +30,14 @@ public class Machines implements Listener {
 
 	@EventHandler
 	public void buttons(PlayerInteractEvent event) {
-		
+
 		if(event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_AIR) return;
-		
 		if(event.getAction() == Action.LEFT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_BLOCK){
-			
 			Block block = event.getClickedBlock();
+			int hash = info.tregmine.api.math.Checksum.block(block);
 			TregminePlayer tregminePlayer = this.tregmine.tregminePlayer.get(event.getPlayer());
-			if(block.getType() == Material.STONE_BUTTON){
-				Location location = block.getLocation();
-				int x = location.getBlockX();
-				int y = location.getBlockY();
-				int z = location.getBlockZ();
-				if(x == -7573 && y == 70 && z == 560){
+			if(block.getType().equals(Material.STONE_BUTTON)){
+				if(hash == -1189228543){
 					Wallet wallet = new Wallet(tregminePlayer);
 					if(wallet.take(25000)){
 						ItemStack item = new ItemStack(Material.PAPER, 1);
@@ -55,8 +48,7 @@ public class Machines implements Listener {
 						lore.add(ChatColor.WHITE + "By: " + tregminePlayer.getName());
 						lore.add(ChatColor.WHITE + " Value: 25,000 Tregs");
 						meta.setLore(lore);
-						meta.setDisplayName(ChatColor.GREEN + "Sponge Coupon");
-//                                              wallet.take(25000);
+						meta.setDisplayName(ChatColor.GREEN + "DIRT -> SPONG Coupon");
 						item.setItemMeta(meta);
 						inventory.addItem(item);
 						tregminePlayer.updateInventory();
