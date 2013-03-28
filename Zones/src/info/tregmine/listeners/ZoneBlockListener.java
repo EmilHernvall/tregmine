@@ -118,6 +118,9 @@ public class ZoneBlockListener implements Listener
 
 		for (ItemStack item : event.getBlock().getDrops() ) {
 
+			//TODO: just added this to remove the annoying not used message
+			item.getData();
+			
 			Connection conn = null;
 			PreparedStatement stmt = null;
 			ResultSet rs = null;
