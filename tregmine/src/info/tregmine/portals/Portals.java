@@ -26,9 +26,11 @@ public class Portals implements Listener {
 
 		if(button == info.tregmine.api.math.Checksum.block(block)){
 
-			if (inventory.getSize() > 0) {
-				player.sendMessage(ChatColor.RED + "You carry to much for the portal magic to work");
-				return;
+			for (int i = 0; i < inventory.getSize(); i++) {
+				if (inventory.getItem(i) != null) {
+					player.sendMessage(ChatColor.RED + "You carry to much for the portal magic to work");
+					return;
+				}
 			}
 
 			player.teleport(loc);
