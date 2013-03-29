@@ -5,6 +5,7 @@ import info.tregmine.api.TregminePlayer;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
@@ -20,7 +21,7 @@ public class Portals implements Listener {
 		plugin.getServer();
 	}
 
-	private void portalButton(int button, Block block, TregminePlayer player, Location loc) {
+	private void portalButton(int button, Block block, Player player, Location loc) {
 		Inventory inventory = player.getInventory();
 
 		if(button == info.tregmine.api.math.Checksum.block(block)){
@@ -43,10 +44,12 @@ public class Portals implements Listener {
 		if(event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_AIR) return;
 
 		Block block = event.getClickedBlock();
-		TregminePlayer player = plugin.getPlayer(event.getPlayer());
-
+//		TregminePlayer player = plugin.getPlayer(event.getPlayer());
+		Player player = event.getPlayer();
+		
 		// Portal in tower of einhome
 		portalButton(-1488547832, block, player, 	this.plugin.getServer().getWorld("world").getSpawnLocation());
+
 
 		
 		// Portal in elva
