@@ -7,6 +7,9 @@ description: Tregmine
 depend: [Zones, Votifier, Currency]
 
 commands:
+  help:
+    description: unknown
+    -usage: /unkown
   blackout:
     description: unknown
     -usage: /unkown

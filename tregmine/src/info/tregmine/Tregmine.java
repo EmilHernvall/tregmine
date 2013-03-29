@@ -202,6 +202,10 @@ public class Tregmine extends JavaPlugin
 			player = this.getPlayer(from);
 		}
 
+		if("help".matches(commandName)) {
+			return true;
+		}
+
 		if("book".matches(commandName)) {
 
 			if("player".matches(args[0]) && player.isOp()) {
