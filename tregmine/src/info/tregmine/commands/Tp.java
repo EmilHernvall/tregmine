@@ -44,7 +44,7 @@ public class Tp {
 		}
 		
 		if (!to.getWorld().getName().contentEquals((_player.getWorld().getName()))) {
-			_player.sendMessage(ChatColor.RED + "You can't teleport to a player in another world, use our portal service");
+			_player.sendMessage(ChatColor.RED + "You can't teleport to a player in another world, use our TregPort portal service.");
 		}
 		
 		double spawn = info.tregmine.api.math.Distance.calc2d(_player.getLocation(), to.getWorld().getSpawnLocation());

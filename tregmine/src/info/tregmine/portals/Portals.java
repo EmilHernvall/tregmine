@@ -34,7 +34,7 @@ public class Portals implements Listener {
 			}
 
 			player.teleport(loc);
-			player.sendMessage(ChatColor.YELLOW + "Thanks for using TregPort's services");
+			player.sendMessage(ChatColor.YELLOW + "Thanks for traveling with TregPort!");
 		}
 	}
 
