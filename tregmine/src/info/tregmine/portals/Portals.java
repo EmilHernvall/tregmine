@@ -28,7 +28,7 @@ public class Portals implements Listener {
 
 			for (int i = 0; i < inventory.getSize(); i++) {
 				if (inventory.getItem(i) != null) {
-					player.sendMessage(ChatColor.RED + "You carry to much for the portal magic to work");
+					player.sendMessage(ChatColor.RED + "You are carrying too much for the portal's magic to work.");
 					return;
 				}
 			}
