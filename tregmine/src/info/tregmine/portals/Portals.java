@@ -47,29 +47,30 @@ public class Portals implements Listener {
 		TregminePlayer player = plugin.getPlayer(event.getPlayer());
 
 		// Portal in tower of einhome
-		portalButton(-1488547832, block, player, "world", player.getServer().getWorld("world").getSpawnLocation());
+		portalButton(-1488547832, block, player, "world", 		this.plugin.getServer().getWorld("world").getSpawnLocation());
 
+		
 		// Portal in elva
-		portalButton(-1559526734, block, player,	"world", player.getServer().getWorld("world").getSpawnLocation());
-		portalButton(-1349166371, block, player,	"treton", player.getServer().getWorld("treton").getSpawnLocation());
-		portalButton(1371197620, block, player, 	"citadel", player.getServer().getWorld("citadel").getSpawnLocation());
+		portalButton(-1559526734, block, player,	"world",	this.plugin.getServer().getWorld("world").getSpawnLocation());
+		portalButton(-1349166371, block, player,	"treton",	this.plugin.getServer().getWorld("treton").getSpawnLocation());
+		portalButton(1371197620, block, player, 	"citadel",	this.plugin.getServer().getWorld("citadel").getSpawnLocation());
 
 		// portals in world
-		portalButton(-973919203, block, player, 	"treton", player.getServer().getWorld("treton").getSpawnLocation());
-		portalButton(-1559526734, block, player,	"treton", player.getServer().getWorld("treton").getSpawnLocation());
-		portalButton(1259780606, block, player,		"citadel", player.getServer().getWorld("citadel").getSpawnLocation());
-		portalButton(690186900, block, player,		"elva", player.getServer().getWorld("elva").getSpawnLocation());
-		portalButton(209068875, block, player,		"einhome", player.getServer().getWorld("einhome").getSpawnLocation());
+		portalButton(-973919203, block, player, 	"treton",	this.plugin.getServer().getWorld("treton").getSpawnLocation());
+		portalButton(-1559526734, block, player,	"treton",	this.plugin.getServer().getWorld("treton").getSpawnLocation());
+		portalButton(1259780606, block, player,		"citadel",	this.plugin.getServer().getWorld("citadel").getSpawnLocation());
+		portalButton(690186900, block, player,		"elva", 	this.plugin.getServer().getWorld("elva").getSpawnLocation());
+		portalButton(209068875, block, player,		"einhome",	this.plugin.getServer().getWorld("einhome").getSpawnLocation());
 		
 		// portals in TRETON
-		portalButton(45939467, block, player,		"world", player.getServer().getWorld("world").getSpawnLocation());
-		portalButton(-1408237330, block, player,	"citadel", player.getServer().getWorld("citadel").getSpawnLocation());
-		portalButton(559131756, block, player,		"elva", player.getServer().getWorld("elva").getSpawnLocation());
+		portalButton(45939467, block, player,		"world",	this.plugin.getServer().getWorld("world").getSpawnLocation());
+		portalButton(-1408237330, block, player,	"citadel",	this.plugin.getServer().getWorld("citadel").getSpawnLocation());
+		portalButton(559131756, block, player,		"elva",		this.plugin.getServer().getWorld("elva").getSpawnLocation());
 
 		// portals in CITADEL
-		portalButton(1609346891, block, player,		"world", player.getServer().getWorld("world").getSpawnLocation());
-		portalButton(-449465967, block, player,		"treton", player.getServer().getWorld("treton").getSpawnLocation());
-		portalButton(1112623336, block, player,		"elva", player.getServer().getWorld("elva").getSpawnLocation());
+		portalButton(1609346891, block, player,		"world",	this.plugin.getServer().getWorld("world").getSpawnLocation());
+		portalButton(-449465967, block, player,		"treton",	this.plugin.getServer().getWorld("treton").getSpawnLocation());
+		portalButton(1112623336, block, player,		"elva",		this.plugin.getServer().getWorld("elva").getSpawnLocation());
 	}
 	
 
