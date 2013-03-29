@@ -33,8 +33,15 @@ public class Portals implements Listener {
 				}
 			}
 
-			player.teleport(loc);
-			player.sendMessage(ChatColor.YELLOW + "Thanks for traveling with TregPort!");
+			loc.getWorld().loadChunk(loc.getWorld().getChunkAt(loc));
+
+			if (loc.getWorld().isChunkLoaded(loc.getWorld().getChunkAt(loc))){
+
+				player.teleport(loc);
+				player.sendMessage(ChatColor.YELLOW + "Thanks for traveling with TregPort!");
+			} else {
+				player.sendMessage(ChatColor.RED + "Portal needs some preperation please try again!");
+			}
 		}
 	}
 
