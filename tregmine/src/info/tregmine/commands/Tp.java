@@ -43,6 +43,10 @@ public class Tp {
 			return;
 		}
 		
+		if (!to.getWorld().getName().contentEquals((_player.getWorld().getName()))) {
+			_player.sendMessage(ChatColor.RED + "You can't teleport to a player in another world, use our portal service");
+		}
+		
 		double spawn = info.tregmine.api.math.Distance.calc2d(_player.getLocation(), to.getWorld().getSpawnLocation());
 
 		if (spawn < 200) {
