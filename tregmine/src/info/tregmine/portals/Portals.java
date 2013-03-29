@@ -57,7 +57,7 @@ public class Portals implements Listener {
 		// Portal in tower of einhome
 		portalButton(-1488547832, block, player, 	this.plugin.getServer().getWorld("world").getSpawnLocation());
 
-
+		
 		
 		// Portal in elva
 		portalButton(-1559526734, block, player,	this.plugin.getServer().getWorld("world").getSpawnLocation());
@@ -66,7 +66,7 @@ public class Portals implements Listener {
 		
 		// portals in world
 		portalButton(-973919203, block, player,		this.plugin.getServer().getWorld("treton").getSpawnLocation());
-		portalButton(-1559526734, block, player,	this.plugin.getServer().getWorld("treton").getSpawnLocation());
+		portalButton(-777405698, block, player,		this.plugin.getServer().getWorld("treton").getSpawnLocation());
 		portalButton(1259780606, block, player,		this.plugin.getServer().getWorld("citadel").getSpawnLocation());
 		portalButton(690186900, block, player,		this.plugin.getServer().getWorld("elva").getSpawnLocation());
 		portalButton(209068875, block, player,		this.plugin.getServer().getWorld("einhome").getSpawnLocation());
