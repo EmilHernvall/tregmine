@@ -35,12 +35,9 @@ public class Machines implements Listener {
 			Block block = event.getClickedBlock();
 			int hash = info.tregmine.api.math.Checksum.block(block);
 			TregminePlayer tregminePlayer = plugin.getPlayer(event.getPlayer());
-			
 				if(Material.STONE_BUTTON.equals(block.getType())){
 				if(hash == -1189228543){
-					
 					Wallet wallet = new Wallet(tregminePlayer.getPlayer().getName());
-					
 					if(wallet.take(25000)){
 						ItemStack item = new ItemStack(Material.PAPER, 1);
 						PlayerInventory inventory = tregminePlayer.getInventory();
@@ -48,9 +45,9 @@ public class Machines implements Listener {
 						List<String> lore = new ArrayList<String>();
 						lore.add(info.tregmine.api.lore.Created.PURCHASED.toColorString());
 						lore.add(ChatColor.WHITE + "By: " + tregminePlayer.getName());
-						lore.add(ChatColor.WHITE + " Value: 25,000 Tregs");
+						lore.add(ChatColor.WHITE + "Value: 25,000 Tregs");
 						meta.setLore(lore);
-						meta.setDisplayName(ChatColor.GREEN + "DIRT -> SPONG Coupon");
+						meta.setDisplayName(ChatColor.GREEN + "DIRT -> SPONGE Coupon");
 						item.setItemMeta(meta);
 						inventory.addItem(item);
 						tregminePlayer.updateInventory();
@@ -60,7 +57,7 @@ public class Machines implements Listener {
 						tregminePlayer.sendMessage(ChatColor.RED + "You need at least 25,000 tregs for this button.");
 					}
 				}
-			}
+			}	
 		}
 	}
 }

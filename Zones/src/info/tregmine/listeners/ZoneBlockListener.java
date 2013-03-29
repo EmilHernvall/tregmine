@@ -72,7 +72,7 @@ public class ZoneBlockListener implements Listener
 
 			if (papermeta.hasDisplayName()) {
 				player.sendMessage("NAME: " + papermeta.getDisplayName());
-				String Cupong = ChatColor.GREEN + "DIRT -> SPONG Coupon";
+				String Cupong = ChatColor.GREEN + "DIRT -> SPONGE Coupon";
 
 				if (Cupong.matches(papermeta.getDisplayName())) {
 					event.getBlock().setType(Material.SPONGE);
