@@ -21,16 +21,15 @@ public class Portals implements Listener {
 	}
 
 	private void portalButton(int button, Block block, TregminePlayer player, String world, Location loc) {
-//		Location loc =  new Location(player.getServer().getWorld(world), x,y,z, yaw, pitch);
+		//		Location loc =  new Location(player.getServer().getWorld(world), x,y,z, yaw, pitch);
 		Inventory inventory = player.getInventory();
 
-		if (inventory.getSize() > 0) {
-			player.sendMessage(ChatColor.RED + "You carry to much for the portal magic to work");
-			return;
-		}
+		if(button == info.tregmine.api.math.Checksum.block(block)){
 
-		int hash = info.tregmine.api.math.Checksum.block(block);
-		if(button == hash){
+			if (inventory.getSize() > 0) {
+				player.sendMessage(ChatColor.RED + "You carry to much for the portal magic to work");
+				return;
+			}
 
 			player.teleport(loc);
 			player.sendMessage(ChatColor.YELLOW + "Thanks for using TregPort's services");
@@ -41,13 +40,12 @@ public class Portals implements Listener {
 	@EventHandler
 	public void buttons(PlayerInteractEvent event) {
 		if(event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_AIR) return;
-		if(event.getAction() == Action.LEFT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_BLOCK){
-			Block block = event.getClickedBlock();
-			TregminePlayer player = plugin.getPlayer(event.getPlayer());
 
-			portalButton(-1488547832, block, player, "world", player.getServer().getWorld("world").getSpawnLocation());
-			
-		}
+		Block block = event.getClickedBlock();
+		TregminePlayer player = plugin.getPlayer(event.getPlayer());
+
+		portalButton(-1488547832, block, player, "world", player.getServer().getWorld("world").getSpawnLocation());
+
 
 
 	}
