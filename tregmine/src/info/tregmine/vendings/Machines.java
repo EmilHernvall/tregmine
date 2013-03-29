@@ -47,7 +47,7 @@ public class Machines implements Listener {
 						lore.add(ChatColor.WHITE + "By: " + tregminePlayer.getName());
 						lore.add(ChatColor.WHITE + "Value: 25,000 Tregs");
 						meta.setLore(lore);
-						meta.setDisplayName(ChatColor.GREEN + "DIRT -> SPONG Coupon");
+						meta.setDisplayName(ChatColor.GREEN + "DIRT -> SPONGE Coupon");
 						item.setItemMeta(meta);
 						inventory.addItem(item);
 						tregminePlayer.updateInventory();
