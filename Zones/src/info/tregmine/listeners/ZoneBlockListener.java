@@ -72,9 +72,10 @@ public class ZoneBlockListener implements Listener
 
 			if (papermeta.hasDisplayName()) {
 				player.sendMessage("NAME: " + papermeta.getDisplayName());
-				String Cupong = ChatColor.GREEN + "DIRT -> SPONGE Coupon";
+				String Cupong = ChatColor.GREEN + "DIRT -> SPONGE Coupon"; 
+				String oldCupong = ChatColor.GREEN + "DIRT -> SPONG Coupon"; // So the old ones before the new spelling work too.
 
-				if (Cupong.matches(papermeta.getDisplayName())) {
+				if (Cupong.matches(papermeta.getDisplayName()) || oldCupong.matches(papermeta.getDisplayName())) {
 					event.getBlock().setType(Material.SPONGE);
 
 					paper.setAmount( paper.getAmount() - 1);
