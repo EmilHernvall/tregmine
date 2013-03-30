@@ -19,6 +19,7 @@ import org.bukkit.command.CommandSender;
 //import org.bukkit.entity.Chicken;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
 //import org.bukkit.entity.Firework;
 //import org.bukkit.entity.Firework;
 //import org.bukkit.entity.LivingEntity;
@@ -487,8 +488,17 @@ public class BasicCommands extends JavaPlugin {
 				for (int i = 0; i<amount;i++) {
 
 					if (mobtyp.isSpawnable() && mobtyp.isAlive()) {
+
+
 						//						player.getWorld().spawnCreature(player.getLocation(), mobtyp);
-						player.getWorld().spawnEntity(player.getLocation(), mobtyp);
+
+
+
+						if (args.length == 3) {
+						LivingEntity ent = (LivingEntity) player.getWorld().spawnEntity(player.getLocation(), mobtyp);
+							ent.setCustomName(args[2]);
+							ent.setCustomNameVisible(true);
+						}
 					}
 
 				} 
@@ -549,13 +559,13 @@ public class BasicCommands extends JavaPlugin {
 	@Override
 	public void onLoad() {
 		final Server server = this.getServer();
-		
+
 		this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
 
 			public void run() {
-//				final World world = this.getServer().getWorld("world");
+				//				final World world = this.getServer().getWorld("world");
 				World world = server.getWorld("world");
-				
+
 				Location loc = world.getSpawnLocation();
 				info.tregmine.api.firework.createFirework firework = new info.tregmine.api.firework.createFirework();
 				firework.addColor(Color.BLUE);
