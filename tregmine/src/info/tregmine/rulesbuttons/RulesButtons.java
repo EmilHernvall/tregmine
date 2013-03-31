@@ -2,6 +2,8 @@ package info.tregmine.rulesbuttons;
 
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
+
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -19,23 +21,62 @@ public class RulesButtons implements Listener {
 		plugin.getServer();
 	}
 
-	@EventHandler
-	public void rulesButtons(PlayerInteractEvent event) {
+	private void rulesButton(int hash, Block block, TregminePlayer player, Location location){
+		if(hash == info.tregmine.api.math.Checksum.block(block)){
+			if(location.getWorld().isChunkLoaded(location.getWorld().getChunkAt(location))){
+				player.teleport(location);
+				player.sendMessage(ChatColor.YELLOW + "Please answer all of the questions truthfully.");
+			}else{
+				player.sendMessage(ChatColor.RED + "Please press the button again.");
+			}
+		}
+	}
 
+	@EventHandler
+	public void buttons(PlayerInteractEvent event) {
 		if(event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_AIR) return;
 		if(event.getAction() == Action.LEFT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_BLOCK){
 			Block block = event.getClickedBlock();
+			TregminePlayer player = this.plugin.getPlayer(event.getPlayer());
 			int hash = info.tregmine.api.math.Checksum.block(block);
-			TregminePlayer tregminePlayer = plugin.getPlayer(event.getPlayer());
-			if(Material.STONE_BUTTON.equals(block.getType())){
-				if(hash == 1877332415){
-					// if(tregminePlayer.isTrusted()){
-					Location testing = new Location(plugin.getServer().getWorld("world"), 518438, 35, -19339);
-					tregminePlayer.teleport(testing);
-					plugin.log.info(tregminePlayer.getName() + " :RULESTELEPORTBUTTON");
-					// }
+			Location testing = new Location(this.plugin.getServer().getWorld("world"), 518438, 35, -19339);	
+			if(Material.STONE_BUTTON.equals(block.getType())){	
+				rulesButton(1877332415, block, player, testing);
+				rulesButton(-924947481, block, player, testing);
+				rulesButton(85949858, block, player, testing);
+				rulesButton(-1429498554, block, player, testing);
+				rulesButton(-971352064, block, player, testing);
+				rulesButton(1849106396, block, player, testing);
+				rulesButton(-2127468414, block, player, testing);
+				rulesButton(-247322806, block, player, testing);
+				rulesButton(-1305526942, block, player, testing);
+				rulesButton(-2067561090, block, player, testing);
+				rulesButton(1202164071, block, player, testing);
+				rulesButton(-902824856, block, player, testing);
+				rulesButton(-934884643, block, player, testing);
+				rulesButton(-172850495, block, player, testing);
+				rulesButton(2076302251, block, player, testing);
+				this.plugin.log.info(player.getName() + " :TestingButton");
+				if(hash == 897221221){
+					if(!player.isTrusted()){
+						player.setMetaString("color", "trial");
+						player.setMetaString("trusted", "true");
+						player.setTemporaryChatName(player.getNameColor() + player.getName());
+						player.sendMessage(ChatColor.GREEN + "Welcome! You are now a settler!");
+						this.plugin.getServer().broadcastMessage(ChatColor.GREEN + player.getName() + " was made a settler!");
+						this.plugin.log.info(player.getName() + " Was made a settler.");
+					}
+				}
+				if(hash == -440366243){
+					if(!player.isTrusted()){
+						player.setMetaString("color", "child");
+						player.setTemporaryChatName(player.getNameColor() + player.getName());
+						player.sendMessage(ChatColor.GREEN + "You were made a child.");
+						this.plugin.getServer().broadcastMessage(ChatColor.AQUA + player.getName() + " was made a child.");
+						this.plugin.log.info(player.getName() + " Was made a child.");
+					}
 				}
 			}
-		}	
+		}
 	}
-}
+}	
