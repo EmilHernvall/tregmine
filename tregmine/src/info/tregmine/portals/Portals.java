@@ -1,6 +1,6 @@
 package info.tregmine.portals;
 import info.tregmine.Tregmine;
-import info.tregmine.api.TregminePlayer;
+//import info.tregmine.api.TregminePlayer;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
