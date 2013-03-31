@@ -64,16 +64,16 @@ public class RulesButtons implements Listener {
 						player.setTemporaryChatName(player.getNameColor() + player.getName());
 						player.sendMessage(ChatColor.GREEN + "Welcome! You are now a settler!");
 						this.plugin.getServer().broadcastMessage(ChatColor.GREEN + player.getName() + " was made a settler!");
-						this.plugin.log.info(player.getName() + " Was made a settler.");
+						this.plugin.log.info(player.getName() + " Was made a settler via a rules button.");
 					}
 				}
 				if(hash == -440366243){
 					if(!player.isTrusted()){
 						player.setMetaString("color", "child");
 						player.setTemporaryChatName(player.getNameColor() + player.getName());
-						player.sendMessage(ChatColor.GREEN + "You were made a child.");
+						player.sendMessage(ChatColor.AQUA + "You were made a child.");
 						this.plugin.getServer().broadcastMessage(ChatColor.AQUA + player.getName() + " was made a child.");
-						this.plugin.log.info(player.getName() + " Was made a child.");
+						this.plugin.log.info(player.getName() + " Was made a child via a rules button.");
 					}
 				}
 			}
