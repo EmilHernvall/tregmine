@@ -129,7 +129,7 @@ public class BlockStats {
 		ResultSet rs = null;
 		try {
 			conn = ConnectionPool.getConnection();
-			
+
 			String sql = "SELECT * FROM stats_blocks WHERE checksum = ? and status = '1'";
 			
 			stmt = conn.prepareStatement(sql);
