@@ -121,6 +121,7 @@ public class BlockStats {
 		Location block = inBlock.getLocation();
 		java.util.zip.CRC32 crc32 = new java.util.zip.CRC32();
 		String pos = block.getX() + "," + block.getY() + "," + block.getZ();
+		String world = block.getWorld().getName();
 		crc32.update(pos.getBytes());
 		long checksum = crc32.getValue();
     	
@@ -130,10 +131,11 @@ public class BlockStats {
 		try {
 			conn = ConnectionPool.getConnection();
 
-			String sql = "SELECT * FROM stats_blocks WHERE checksum = ? and status = '1'";
+			String sql = "SELECT * FROM stats_blocks WHERE checksum = ? and world = ? and status = '1'";
 			
 			stmt = conn.prepareStatement(sql);
 			stmt.setLong(1, checksum);
+			stmt.setString(2, world);
 			stmt.execute();
 			
 			rs = stmt.getResultSet();
