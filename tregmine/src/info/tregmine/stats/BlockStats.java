@@ -121,7 +121,7 @@ public class BlockStats {
 		Location block = inBlock.getLocation();
 		java.util.zip.CRC32 crc32 = new java.util.zip.CRC32();
 		String pos = block.getX() + "," + block.getY() + "," + block.getZ();
-		String world = block.getWorld().getName();
+//		String world = block.getWorld().getName();
 		crc32.update(pos.getBytes());
 		long checksum = crc32.getValue();
     	
