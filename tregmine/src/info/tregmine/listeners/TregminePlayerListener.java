@@ -301,6 +301,7 @@ public class TregminePlayerListener implements Listener {
 			crc32.update(pos.getBytes());
 			long checksum = crc32.getValue();
 			String timezone = tregminePlayer.getTimezone(); 
+			String world = block.getWorld().getName();
 
 			SimpleDateFormat dfm = new SimpleDateFormat("dd/MM/yy hh:mm:ss a");
 			dfm.setTimeZone(TimeZone.getTimeZone(timezone));
@@ -310,10 +311,11 @@ public class TregminePlayerListener implements Listener {
 			ResultSet rs = null;
 			try {
 				conn = ConnectionPool.getConnection();
-
-				stmt = conn.prepareStatement("SELECT * FROM  stats_blocks WHERE checksum = ? " +
+				stmt = conn.prepareStatement("SELECT * FROM  stats_blocks WHERE checksum = ? and world = ?" +
 						"ORDER BY time DESC LIMIT 5");
 				stmt.setLong(1, checksum);
+				stmt.setString(2, world);
+
 				stmt.execute();
 
 				rs = stmt.getResultSet();
