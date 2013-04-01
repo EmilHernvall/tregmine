@@ -57,7 +57,7 @@ public class TregmineBlockListener implements Listener {
 			}
 		}
 
-//		plugin.blockStats.onBlockPlace(event);
+		plugin.blockStats.onBlockPlace(event);
 	}
 
 	@EventHandler
@@ -76,7 +76,7 @@ public class TregmineBlockListener implements Listener {
 		if (tregminePlayer.isAdmin()) {
 			event.setCancelled(false);
 		}
-//		plugin.blockStats.onBlockBreak(event);
+		plugin.blockStats.onBlockBreak(event);
 
 	}
 
