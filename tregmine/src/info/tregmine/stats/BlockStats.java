@@ -131,11 +131,11 @@ public class BlockStats {
 		try {
 			conn = ConnectionPool.getConnection();
 			
-			String sql = "SELECT * FROM stats_blocks WHERE checksum = ? and world = ? and status = '1'";
+			String sql = "SELECT * FROM stats_blocks WHERE checksum = ? and status = '1'";
 			
 			stmt = conn.prepareStatement(sql);
 			stmt.setLong(1, checksum);
-			stmt.setString(2, world);
+//			stmt.setString(2, world);
 			stmt.execute();
 			
 			rs = stmt.getResultSet();
