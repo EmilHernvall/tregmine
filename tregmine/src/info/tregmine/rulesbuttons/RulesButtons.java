@@ -23,11 +23,18 @@ public class RulesButtons implements Listener {
 
 	private void rulesButton(int hash, Block block, TregminePlayer player, Location location){
 		if(hash == info.tregmine.api.math.Checksum.block(block)){
-			if(location.getWorld().isChunkLoaded(location.getWorld().getChunkAt(location))){
-				player.teleport(location);
-				player.sendMessage(ChatColor.YELLOW + "Please answer all of the questions truthfully.");
+			if(player.getChatName().contains(ChatColor.DARK_PURPLE.toString()) || 
+					player.isAdmin() || (!player.isTrusted() && 
+							!player.getChatName().contains(ChatColor.GRAY.toString()))){
+				// Only admins, and coders can go here. (Coders to test the buttons)
+				if(location.getWorld().isChunkLoaded(location.getWorld().getChunkAt(location))){
+					player.teleport(location);
+					player.sendMessage(ChatColor.YELLOW + "Please answer all of the questions truthfully.");
+				}else{
+					player.sendMessage(ChatColor.RED + "Please press the button again.");
+				}
 			}else{
-				player.sendMessage(ChatColor.RED + "Please press the button again.");
+				player.sendMessage(ChatColor.RED + "You have already taken the test!");
 			}
 		}
 	}
@@ -40,11 +47,7 @@ public class RulesButtons implements Listener {
 			TregminePlayer player = this.plugin.getPlayer(event.getPlayer());
 			int hash = info.tregmine.api.math.Checksum.block(block);
 			Location testing = new Location(this.plugin.getServer().getWorld("world"), 518438, 35, -19339);	
-			if(Material.STONE_BUTTON.equals(block.getType()) && 
-					(player.getChatName().contains(ChatColor.DARK_PURPLE.toString()) || 
-							player.isAdmin() || (!player.isTrusted() && 
-									!player.getChatName().contains(ChatColor.GRAY.toString())))){	
-				// Only admins, and coders can go here. (Coders to test the buttons)
+			if(Material.STONE_BUTTON.equals(block.getType())){	
 				rulesButton(1877332415, block, player, testing);
 				// Button in /warp rules
 				rulesButton(-924947481, block, player, testing);
@@ -87,8 +90,6 @@ public class RulesButtons implements Listener {
 						player.sendMessage(ChatColor.RED + "You dont have permission to press this button.");
 					}
 				}
-			}else{
-				player.sendMessage(ChatColor.RED + "You have already taken the test!");
 			}
 		}
 	}
