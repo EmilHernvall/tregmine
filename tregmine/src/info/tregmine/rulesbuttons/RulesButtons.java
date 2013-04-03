@@ -40,8 +40,13 @@ public class RulesButtons implements Listener {
 			TregminePlayer player = this.plugin.getPlayer(event.getPlayer());
 			int hash = info.tregmine.api.math.Checksum.block(block);
 			Location testing = new Location(this.plugin.getServer().getWorld("world"), 518438, 35, -19339);	
-			if(Material.STONE_BUTTON.equals(block.getType())){	
+			if(Material.STONE_BUTTON.equals(block.getType()) && 
+					(player.getChatName().contains(ChatColor.DARK_PURPLE.toString()) || 
+							player.isAdmin() || (!player.isTrusted() && 
+									!player.getChatName().contains(ChatColor.GRAY.toString())))){	
+				// Only admins, and coders can go here. (Coders to test the buttons)
 				rulesButton(1877332415, block, player, testing);
+				// Button in /warp rules
 				rulesButton(-924947481, block, player, testing);
 				rulesButton(85949858, block, player, testing);
 				rulesButton(-1429498554, block, player, testing);
@@ -58,24 +63,32 @@ public class RulesButtons implements Listener {
 				rulesButton(2076302251, block, player, testing);
 				this.plugin.log.info(player.getName() + " :TestingButton");
 				if(hash == 897221221){
-					if(!player.isTrusted()){
+					if(!player.isTrusted() && !player.getChatName().contains(ChatColor.GRAY.toString())){ 
+						// This prevents the hardwarned from becoming "un-wanred"
 						player.setMetaString("color", "trial");
 						player.setMetaString("trusted", "true");
 						player.setTemporaryChatName(player.getNameColor() + player.getName());
 						player.sendMessage(ChatColor.GREEN + "Welcome! You are now a settler!");
 						this.plugin.getServer().broadcastMessage(ChatColor.GREEN + player.getName() + " was made a settler!");
 						this.plugin.log.info(player.getName() + " Was made a settler via a rules button.");
+					}else{
+						player.sendMessage(ChatColor.RED + "You dont have permission to press this button.");
 					}
 				}
 				if(hash == -440366243){
-					if(!player.isTrusted()){
+					if(!player.isTrusted() && !player.getChatName().contains(ChatColor.GRAY.toString())){ 
+						// This prevents the hardwarned from becoming "un-wanred"
 						player.setMetaString("color", "child");
 						player.setTemporaryChatName(player.getNameColor() + player.getName());
 						player.sendMessage(ChatColor.AQUA + "You were made a child.");
 						this.plugin.getServer().broadcastMessage(ChatColor.AQUA + player.getName() + " was made a child.");
 						this.plugin.log.info(player.getName() + " Was made a child via a rules button.");
+					}else{
+						player.sendMessage(ChatColor.RED + "You dont have permission to press this button.");
 					}
 				}
+			}else{
+				player.sendMessage(ChatColor.RED + "You have already taken the test!");
 			}
 		}
 	}
