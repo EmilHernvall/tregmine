@@ -2,7 +2,10 @@ package info.tregmine.death;
 
 //import java.util.Random;
 
+import java.util.List;
+
 import info.tregmine.Tregmine;
+import info.tregmine.api.TregminePlayer;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -28,18 +31,21 @@ public class DeathEntity implements Listener  {
 	@EventHandler
 	public void onEntityDeath (EntityDeathEvent event) {
 		 if (event instanceof PlayerDeathEvent) {
-			 Player player = (Player) event.getEntity();
+			 Player temppl = (Player) event.getEntity();
              PlayerDeathEvent e = (PlayerDeathEvent) event;
-             
+             TregminePlayer player = plugin.getPlayer(temppl);
              
  			ItemStack item = new ItemStack(Material.SKULL_ITEM, 1, (byte) 3);
  			SkullMeta meta = (SkullMeta) item.getItemMeta();
  			meta.setOwner(player.getName());
  			meta.setDisplayName(ChatColor.GRAY + player.getName());
- 			item.setItemMeta(meta);
+ 			List<String> lore = meta.getLore();
+			String death = ChatColor.DARK_GRAY + "DIED - " + player.getName() + " " + Insult.random();
+			lore.add(death);
+			item.setItemMeta(meta);
             player.getWorld().dropItemNaturally(player.getLocation(), item);
              
-             e.setDeathMessage(ChatColor.DARK_GRAY + "DIED - " + player.getName() + " " + Insult.random());
+             e.setDeathMessage(death);
          }
 	}
 
