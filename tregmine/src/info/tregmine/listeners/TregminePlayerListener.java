@@ -45,6 +45,7 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.kitteh.tag.PlayerReceiveNameTagEvent;
 //import org.kitteh.tag.PlayerReceiveNameTagEvent;
 import org.ocpsoft.pretty.time.PrettyTime;
 
@@ -132,15 +133,10 @@ public class TregminePlayerListener implements Listener {
 	}
 
 
-//	@EventHandler
-//	public void onNameTag(PlayerReceiveNameTagEvent event) {
-//		if (event.getPlayer().getName().equals("einand")) {
-//			event.setTag(ChatColor.DARK_RED + "einand");
-//		}
-		
-		
-//		event.setTag(plugin.getPlayer(event.getNamedPlayer().getName()).getChatName());
-//	}	
+	@EventHandler
+	public void onNameTag(PlayerReceiveNameTagEvent event) {
+		event.setTag(plugin.getPlayer(event.getNamedPlayer().getName()).getChatName());
+	}	
 
 
 	@EventHandler

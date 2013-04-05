@@ -108,9 +108,9 @@ public class Tregmine extends JavaPlugin
 		getServer().getPluginManager().registerEvents(new info.tregmine.sign.Color(), this);
 		getServer().getPluginManager().registerEvents(new info.tregmine.portals.Portals(this), this);
 		
-		getServer().getPluginManager().registerEvents(new info.tregmine.buttons.vendings.Machines(this), this);
-		getServer().getPluginManager().registerEvents(new info.tregmine.buttons.rulesbuttons.RulesButtons(this), this);
-		getServer().getPluginManager().registerEvents(new info.tregmine.buttons.forabuttons.ForaChatButtons(this), this);
+//		getServer().getPluginManager().registerEvents(new info.tregmine.buttons.vendings.Machines(this), this);
+//		getServer().getPluginManager().registerEvents(new info.tregmine.buttons.rulesbuttons.RulesButtons(this), this);
+//		getServer().getPluginManager().registerEvents(new info.tregmine.buttons.forabuttons.ForaChatButtons(this), this);
 		
 	}
 
