@@ -200,16 +200,9 @@ public class TregminePlayerListener implements Listener {
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		info.tregmine.api.TregminePlayer tregminePlayer = this.plugin.tregminePlayer.get(event.getPlayer().getName());
 
-		if (!tregminePlayer.isTrusted()) {
-			event.setCancelled(true);
-		}
-
-		if (tregminePlayer.isAdmin()) {
-			event.setCancelled(false);
-		}
-
 		if (tregminePlayer.getWorld().getName().matches("alpha")) {
 			event.setCancelled(true);
+			return;
 		}
 
 		if (event.getClickedBlock() == null) {
