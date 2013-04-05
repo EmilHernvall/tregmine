@@ -44,7 +44,7 @@ public class DeathEntity implements Listener  {
  			meta.setDisplayName(ChatColor.GRAY + player.getName());
 
 			List<String> lore = new ArrayList<String>();
-			lore.add(e.getDeathMessage());
+			lore.add(ChatColor.stripColor(e.getDeathMessage()));
 
 			meta.setLore(lore);
 			
