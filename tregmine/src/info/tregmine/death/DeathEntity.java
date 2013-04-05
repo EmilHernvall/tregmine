@@ -33,17 +33,18 @@ public class DeathEntity implements Listener  {
 		 if (event instanceof PlayerDeathEvent) {
 			Player player = (Player) event.getEntity();
             PlayerDeathEvent e = (PlayerDeathEvent) event;
-            //TregminePlayer player = plugin.getPlayer(temppl);
- 			String death = ChatColor.DARK_GRAY + "DIED - " + player.getName() + " " + Insult.random();
+
+            String death = ChatColor.DARK_GRAY + "DIED - " + player.getName() + " " + Insult.random();
              
  			ItemStack item = new ItemStack(Material.SKULL_ITEM, 1, (byte) 3);
  			SkullMeta meta = (SkullMeta) item.getItemMeta();
  			meta.setOwner(player.getName());
  			meta.setDisplayName(ChatColor.GRAY + player.getName());
  			List<String> lore = meta.getLore();
- 			
+
+//			lore.add(death);
+			lore.set(0, death);
 			
-			lore.add(death);
 			item.setItemMeta(meta);
             player.getWorld().dropItemNaturally(player.getLocation(), item);
              
