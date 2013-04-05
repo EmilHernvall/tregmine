@@ -35,11 +35,14 @@ public class ForaChatButtons implements Listener{
 					if("notaro1997".equals(player.getName())){
 						plugin.getServer().broadcastMessage(ChatColor.DARK_PURPLE + "You just got yo ass wooped by notaro1997!");
 						// Is this okay to have Ein? ;)
-					}
-					if(wallet.take(15000)){
-						plugin.getServer().broadcastMessage(ChatColor.YELLOW + "You got a bitchslap from " + player.getName() + "!");
-						player.sendMessage(ChatColor.GREEN + "15,000 Tregs were removed from your wallet.");
-						this.plugin.log.info(player.getName() + " :BitchslapButton");
+					}else{
+						if(wallet.take(15000)){
+							plugin.getServer().broadcastMessage(ChatColor.YELLOW + "You got a bitchslap from " + player.getName() + "!");
+							player.sendMessage(ChatColor.GREEN + "15,000 Tregs were removed from your wallet.");
+							this.plugin.log.info(player.getName() + " :BitchslapButton");
+						}else{
+							player.sendMessage(ChatColor.RED + "You need at least 15,000 Tregs!");
+						}
 					}
 				}
 			}	
