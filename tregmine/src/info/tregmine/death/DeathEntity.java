@@ -2,6 +2,7 @@ package info.tregmine.death;
 
 //import java.util.Random;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import info.tregmine.Tregmine;
@@ -17,7 +18,7 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
+//import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
 public class DeathEntity implements Listener  {
@@ -41,12 +42,14 @@ public class DeathEntity implements Listener  {
  			SkullMeta meta = (SkullMeta) item.getItemMeta();
  			meta.setOwner(player.getName());
  			meta.setDisplayName(ChatColor.GRAY + player.getName());
+
+			List<String> lore = new ArrayList<String>();
+			lore.add(e.getDeathMessage());
+
+			meta.setLore(lore);
+			
 			item.setItemMeta(meta);
 
- 			ItemMeta secondMeta =  item.getItemMeta();
- 			List<String> lore = secondMeta.getLore();
-			lore.add(death);
-			item.setItemMeta(secondMeta);
 
 			
 			
