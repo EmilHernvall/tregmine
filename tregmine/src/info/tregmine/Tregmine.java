@@ -75,16 +75,16 @@ public class Tregmine extends JavaPlugin
 		WorldCreator vanilla = new WorldCreator("elva"); 
 		vanilla.environment(Environment.NORMAL);
 		vanilla.createWorld();		
-		
+
 		WorldCreator einhome = new WorldCreator("einhome"); 
 		einhome.environment(Environment.NORMAL);
 		einhome.createWorld();
-		
+
 		WorldCreator alpha = new WorldCreator("alpha"); 
 		alpha.environment(Environment.NORMAL);
 		alpha.createWorld();
 
-		
+
 		WorldCreator NETHER = new WorldCreator("world_nether"); 
 		NETHER.environment(Environment.NETHER);
 		NETHER.createWorld();
@@ -107,11 +107,11 @@ public class Tregmine extends JavaPlugin
 
 		getServer().getPluginManager().registerEvents(new info.tregmine.sign.Color(), this);
 		getServer().getPluginManager().registerEvents(new info.tregmine.portals.Portals(this), this);
-		
-//		getServer().getPluginManager().registerEvents(new info.tregmine.buttons.vendings.Machines(this), this);
-//		getServer().getPluginManager().registerEvents(new info.tregmine.buttons.rulesbuttons.RulesButtons(this), this);
-//		getServer().getPluginManager().registerEvents(new info.tregmine.buttons.forabuttons.ForaChatButtons(this), this);
-		
+
+		getServer().getPluginManager().registerEvents(new info.tregmine.buttons.vendings.Machines(this), this);
+		getServer().getPluginManager().registerEvents(new info.tregmine.buttons.rulesbuttons.RulesButtons(this), this);
+		getServer().getPluginManager().registerEvents(new info.tregmine.buttons.forabuttons.ForaChatButtons(this), this);
+
 	}
 
 	@Override
@@ -213,7 +213,7 @@ public class Tregmine extends JavaPlugin
 
 					public void run() {
 
-//						DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+						//						DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 						Date date = new Date();
 
 						fPlayer.sendMessage(ChatColor.YELLOW + "Starting to generate book for " + args[1] );
@@ -367,39 +367,39 @@ public class Tregmine extends JavaPlugin
 
 			}
 		}
-		
+
 		if("blackout".matches(commandName) && player.isAdmin()) {
 			Player target = getServer().getPlayer(args[1]);
 
 			player.sendMessage("blackout");
-			
+
 			if ("blind".matches(args[0])) {
 				PotionEffect ef = new PotionEffect(PotionEffectType.BLINDNESS, 60, 100);
 				target.getPlayer().addPotionEffect(ef);
 				player.sendMessage("Blind");
 			}
-			
+
 			if ("invis".matches(args[0])) {
 				PotionEffect ef = new PotionEffect(PotionEffectType.INVISIBILITY, 1600000, 100);
 				target.getPlayer().addPotionEffect(ef);
 				player.sendMessage("Blind");
 			}
 
-			
+
 			if ("confuse".matches(args[0])) {
 				PotionEffect ef = new PotionEffect(PotionEffectType.CONFUSION, 600
 						, 10);
 				target.getPlayer().addPotionEffect(ef);
 				player.sendMessage("Confuse");
 			}
-			
-			
+
+
 		}
 
 
 		if("te".matches(commandName) && player.isOp()) {
 
-			
+
 			ItemStack drop = new ItemStack(Material.MONSTER_EGG, 1, (byte)65);
 			ItemMeta meta = drop.getItemMeta();
 			meta.setDisplayName(ChatColor.YELLOW + "EASTER EGG");
@@ -414,7 +414,7 @@ public class Tregmine extends JavaPlugin
 			if("te".matches(commandName)) {
 
 				ItemStack item = new ItemStack(Material.PAPER, amount, (byte) 0);
-//				PlayerInventory inv = player.getInventory();
+				//				PlayerInventory inv = player.getInventory();
 
 				ItemMeta meta = item.getItemMeta();
 				List<String> lore = new ArrayList<String>();
