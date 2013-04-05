@@ -29,14 +29,13 @@ public class Machines implements Listener {
 
 	@EventHandler
 	public void buttons(PlayerInteractEvent event) {
-
 		if(event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_AIR) return;
 		if(event.getAction() == Action.LEFT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_BLOCK){
 			Block block = event.getClickedBlock();
 			int hash = info.tregmine.api.math.Checksum.block(block);
 			TregminePlayer tregminePlayer = plugin.getPlayer(event.getPlayer());
 			if(Material.STONE_BUTTON.equals(block.getType())){
-				if(hash == -1189228543){
+				if(hash == -1189228543 || hash == -895459437){
 					Wallet wallet = new Wallet(tregminePlayer.getPlayer().getName());
 					if(wallet.take(25000)){
 						ItemStack item = new ItemStack(Material.PAPER, 1);
