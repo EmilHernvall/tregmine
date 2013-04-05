@@ -1,4 +1,4 @@
-package info.tregmine.rulesbuttons;
+package info.tregmine.buttons.rulesbuttons;
 
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;

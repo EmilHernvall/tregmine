@@ -1,4 +1,4 @@
-package info.tregmine.forabuttons;
+package info.tregmine.buttons.forabuttons;
 
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
@@ -12,12 +12,12 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-public class ChatButtons implements Listener{
+public class ForaChatButtons implements Listener{
 
 
 	private final Tregmine plugin;
 
-	public ChatButtons(Tregmine instance) {
+	public ForaChatButtons(Tregmine instance) {
 		plugin = instance;
 		plugin.getServer();
 	}

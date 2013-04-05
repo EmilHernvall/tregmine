@@ -91,7 +91,6 @@ public class Tregmine extends JavaPlugin
 
 		getServer().getPluginManager().registerEvents(new info.tregmine.lookup.LookupPlayer(this), this);
 
-
 		getServer().getPluginManager().registerEvents(new TregminePlayerListener(this), this);
 		getServer().getPluginManager().registerEvents(new TregmineBlockListener(this), this);
 		getServer().getPluginManager().registerEvents(new TregmineEntityListener(this), this);
@@ -99,23 +98,19 @@ public class Tregmine extends JavaPlugin
 
 		getServer().getPluginManager().registerEvents(new info.tregmine.invis.InvisPlayer(this), this);
 
-
 		getServer().getPluginManager().registerEvents(new info.tregmine.death.DeathEntity(this), this);
 		getServer().getPluginManager().registerEvents(new info.tregmine.death.DeathPlayer(this), this);
 
-
 		getServer().getPluginManager().registerEvents(new info.tregmine.chat.Chat(this), this);
-
 
 		getServer().getPluginManager().registerEvents(new info.tregmine.vote.voter(this), this);
 
-
 		getServer().getPluginManager().registerEvents(new info.tregmine.sign.Color(), this);
-
-		getServer().getPluginManager().registerEvents(new info.tregmine.vendings.Machines(this), this);
 		getServer().getPluginManager().registerEvents(new info.tregmine.portals.Portals(this), this);
-		getServer().getPluginManager().registerEvents(new info.tregmine.rulesbuttons.RulesButtons(this), this);
-		getServer().getPluginManager().registerEvents(new info.tregmine.forabuttons.ChatButtons(this), this);
+		
+		getServer().getPluginManager().registerEvents(new info.tregmine.buttons.vendings.Machines(this), this);
+		getServer().getPluginManager().registerEvents(new info.tregmine.buttons.rulesbuttons.RulesButtons(this), this);
+		getServer().getPluginManager().registerEvents(new info.tregmine.buttons.forabuttons.ForaChatButtons(this), this);
 		
 	}
 

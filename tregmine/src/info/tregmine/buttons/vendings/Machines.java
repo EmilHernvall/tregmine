@@ -1,4 +1,4 @@
-package info.tregmine.vendings;
+package info.tregmine.buttons.vendings;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +35,7 @@ public class Machines implements Listener {
 			Block block = event.getClickedBlock();
 			int hash = info.tregmine.api.math.Checksum.block(block);
 			TregminePlayer tregminePlayer = plugin.getPlayer(event.getPlayer());
-				if(Material.STONE_BUTTON.equals(block.getType())){
+			if(Material.STONE_BUTTON.equals(block.getType())){
 				if(hash == -1189228543){
 					Wallet wallet = new Wallet(tregminePlayer.getPlayer().getName());
 					if(wallet.take(25000)){
