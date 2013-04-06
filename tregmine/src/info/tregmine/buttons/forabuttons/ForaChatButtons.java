@@ -58,10 +58,7 @@ public class ForaChatButtons implements Listener{
 				}
 				if(hash == -2074540467){
 					// Heaven and Hell button.
-					if(player.getWorld().getBlockAt(614, 33, -105).getType().equals(Material.WATER) && 
-							player.getWorld().getBlockAt(614, 33, -104).getType().equals(Material.WATER) &&
-							player.getWorld().getBlockAt(614, 33, -103).getType().equals(Material.WATER) &&
-							player.getWorld().getBlockAt(614, 33, -102).getType().equals(Material.WATER)){
+					if(player.getWorld().getBlockAt(614, 33, -102).getType().equals(Material.WATER)){
 						
 						player.getWorld().getBlockAt(614, 33, -105).setType(Material.AIR);
 						player.getWorld().getBlockAt(614, 33, -104).setType(Material.AIR);
@@ -87,7 +84,6 @@ public class ForaChatButtons implements Listener{
 						player.getWorld().getBlockAt(614, 21, -105).setType(Material.AIR);
 						player.getWorld().getBlockAt(614, 20, -105).setType(Material.AIR);
 						
-						
 						player.getWorld().getBlockAt(614, 32, -104).setType(Material.AIR);
 						player.getWorld().getBlockAt(614, 31, -104).setType(Material.AIR);
 						player.getWorld().getBlockAt(614, 30, -104).setType(Material.AIR);
@@ -101,7 +97,6 @@ public class ForaChatButtons implements Listener{
 						player.getWorld().getBlockAt(614, 22, -104).setType(Material.AIR);
 						player.getWorld().getBlockAt(614, 21, -104).setType(Material.AIR);
 						player.getWorld().getBlockAt(614, 20, -104).setType(Material.AIR);
-						
 						
 						player.getWorld().getBlockAt(614, 32, -103).setType(Material.AIR);
 						player.getWorld().getBlockAt(614, 31, -103).setType(Material.AIR);
@@ -117,7 +112,6 @@ public class ForaChatButtons implements Listener{
 						player.getWorld().getBlockAt(614, 21, -103).setType(Material.AIR);
 						player.getWorld().getBlockAt(614, 20, -103).setType(Material.AIR);
 						
-						
 						player.getWorld().getBlockAt(614, 32, -102).setType(Material.AIR);
 						player.getWorld().getBlockAt(614, 31, -102).setType(Material.AIR);
 						player.getWorld().getBlockAt(614, 30, -102).setType(Material.AIR);
@@ -132,13 +126,21 @@ public class ForaChatButtons implements Listener{
 						player.getWorld().getBlockAt(614, 21, -102).setType(Material.AIR);
 						player.getWorld().getBlockAt(614, 20, -102).setType(Material.AIR);
 						
+						this.plugin.log.info(player.getName() + ": HeavenHellButton");
 					}
-					if(player.getWorld().getBlockAt(614, 33, -105).getType().equals(Material.LAVA) && 
-							player.getWorld().getBlockAt(614, 33, -104).getType().equals(Material.LAVA) &&
-							player.getWorld().getBlockAt(614, 33, -103).getType().equals(Material.LAVA) &&
-							player.getWorld().getBlockAt(614, 33, -102).getType().equals(Material.LAVA)){
+					
+					if(player.getWorld().getBlockAt(614, 33, -102).getType().equals(Material.LAVA)){
 						
 						player.getWorld().getBlockAt(614, 33, -105).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 33, -104).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 33, -103).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 33, -102).setType(Material.AIR);
+						
+						player.getWorld().getBlockAt(614, 33, -105).setType(Material.WATER);
+						player.getWorld().getBlockAt(614, 33, -104).setType(Material.WATER);
+						player.getWorld().getBlockAt(614, 33, -103).setType(Material.WATER);
+						player.getWorld().getBlockAt(614, 33, -102).setType(Material.WATER);
+						
 						player.getWorld().getBlockAt(614, 32, -105).setType(Material.AIR);
 						player.getWorld().getBlockAt(614, 31, -105).setType(Material.AIR);
 						player.getWorld().getBlockAt(614, 30, -105).setType(Material.AIR);
@@ -153,7 +155,6 @@ public class ForaChatButtons implements Listener{
 						player.getWorld().getBlockAt(614, 21, -105).setType(Material.AIR);
 						player.getWorld().getBlockAt(614, 20, -105).setType(Material.AIR);
 						
-						player.getWorld().getBlockAt(614, 33, -104).setType(Material.AIR);
 						player.getWorld().getBlockAt(614, 32, -104).setType(Material.AIR);
 						player.getWorld().getBlockAt(614, 31, -104).setType(Material.AIR);
 						player.getWorld().getBlockAt(614, 30, -104).setType(Material.AIR);
@@ -168,7 +169,6 @@ public class ForaChatButtons implements Listener{
 						player.getWorld().getBlockAt(614, 21, -104).setType(Material.AIR);
 						player.getWorld().getBlockAt(614, 20, -104).setType(Material.AIR);
 						
-						player.getWorld().getBlockAt(614, 33, -103).setType(Material.AIR);
 						player.getWorld().getBlockAt(614, 32, -103).setType(Material.AIR);
 						player.getWorld().getBlockAt(614, 31, -103).setType(Material.AIR);
 						player.getWorld().getBlockAt(614, 30, -103).setType(Material.AIR);
@@ -183,7 +183,6 @@ public class ForaChatButtons implements Listener{
 						player.getWorld().getBlockAt(614, 21, -103).setType(Material.AIR);
 						player.getWorld().getBlockAt(614, 20, -103).setType(Material.AIR);
 						
-						player.getWorld().getBlockAt(614, 33, -102).setType(Material.AIR);
 						player.getWorld().getBlockAt(614, 32, -102).setType(Material.AIR);
 						player.getWorld().getBlockAt(614, 31, -102).setType(Material.AIR);
 						player.getWorld().getBlockAt(614, 30, -102).setType(Material.AIR);
@@ -198,10 +197,6 @@ public class ForaChatButtons implements Listener{
 						player.getWorld().getBlockAt(614, 21, -102).setType(Material.AIR);
 						player.getWorld().getBlockAt(614, 20, -102).setType(Material.AIR);
 						
-						player.getWorld().getBlockAt(614, 33, -105).setType(Material.WATER);
-						player.getWorld().getBlockAt(614, 33, -104).setType(Material.WATER);
-						player.getWorld().getBlockAt(614, 33, -103).setType(Material.WATER);
-						player.getWorld().getBlockAt(614, 33, -102).setType(Material.WATER);
 						this.plugin.log.info(player.getName() + ": HeavenHellButton");
 					}
 				}
@@ -299,7 +294,7 @@ public class ForaChatButtons implements Listener{
 							player.sendMessage(ChatColor.DARK_AQUA + player.getName() + ", please message notaro1997 what you want your message to be.");
 						}
 						if(player.getName().equals("Annaschwander")){
-							player.sendMessage(ChatColor.DARK_AQUA + player.getName() + ", please message notaro1997 what you want your message to be.");
+							plugin.getServer().broadcastMessage(ChatColor.BLUE + "You just got Baby SHEEEEEEP'd by Annaschwander");
 						}
 						if(player.getName().equals("TSubstance")){
 							player.sendMessage(ChatColor.DARK_AQUA + player.getName() + ", please message notaro1997 what you want your message to be.");
