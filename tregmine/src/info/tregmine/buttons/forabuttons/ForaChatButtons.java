@@ -38,7 +38,7 @@ public class ForaChatButtons implements Listener{
 						player.sendMessage(ChatColor.GREEN + "15,000 Tregs were removed from your wallet.");
 						this.plugin.log.info(player.getName() + ": BitchslapButton");
 					}else{
-						player.sendMessage(ChatColor.RED + "You need at least 15,000 Tregs for thit button!");
+						player.sendMessage(ChatColor.RED + "You need at least 15,000 Tregs for this button!");
 					}
 				}
 				if(hash == -432802918){
@@ -48,7 +48,7 @@ public class ForaChatButtons implements Listener{
 						player.sendMessage(ChatColor.GREEN + "15,000 Tregs were removed from your wallet.");
 						this.plugin.log.info(player.getName() + ": HugButton");
 					}else{
-						player.sendMessage(ChatColor.RED + "You need at least 15,000 Tregs for thit button!");
+						player.sendMessage(ChatColor.RED + "You need at least 15,000 Tregs for this button!");
 					}
 				}
 				if(hash == -1484999952){
@@ -76,81 +76,122 @@ public class ForaChatButtons implements Listener{
 					if(player.isAdmin() || player.isGuardian() || player.getChatName().contains(ChatColor.DARK_PURPLE.toString())){
 						if(player.getName().equals("notaro1997")){
 							plugin.getServer().broadcastMessage(ChatColor.DARK_PURPLE + "You just got yo' ass wooped by notaro1997!");
-						}else if(player.getName().equals("sumerian45")){
+						}
+						if(player.getName().equals("sumerian45")){
 							player.sendMessage(ChatColor.DARK_AQUA + player.getName() + ", please message notaro1997 what you want your message to be.");
-						}else if(player.getName().equals("eukey1337")){
+						}
+						if(player.getName().equals("eukey1337")){
 							player.sendMessage(ChatColor.DARK_AQUA + player.getName() + ", please message notaro1997 what you want your message to be.");
-						}else if(player.getName().equals("Will_owns")){
+						}
+						if(player.getName().equals("Will_owns")){
 							player.sendMessage(ChatColor.DARK_AQUA + player.getName() + ", please message notaro1997 what you want your message to be.");
-						}else if(player.getName().equals("stevoe")){
+						}
+						if(player.getName().equals("stevoe")){
 							player.sendMessage(ChatColor.DARK_AQUA + player.getName() + ", please message notaro1997 what you want your message to be.");
-						}else if(player.getName().equals("EpicOstrich")){
+						}
+						if(player.getName().equals("EpicOstrich")){
 							player.sendMessage(ChatColor.DARK_AQUA + player.getName() + ", please message notaro1997 what you want your message to be.");
-						}else if(player.getName().equals("JAYT8")){
+						}
+						if(player.getName().equals("JAYT8")){
 							player.sendMessage(ChatColor.DARK_AQUA + player.getName() + ", please message notaro1997 what you want your message to be.");
-						}else if(player.getName().equals("LilKiw")){
+						}
+						if(player.getName().equals("LilKiw")){
 							player.sendMessage(ChatColor.DARK_AQUA + player.getName() + ", please message notaro1997 what you want your message to be.");
-						}else if(player.getName().equals("sweetheart3445")){
+						}
+						if(player.getName().equals("sweetheart3445")){
 							player.sendMessage(ChatColor.DARK_AQUA + player.getName() + ", please message notaro1997 what you want your message to be.");
-						}else if(player.getName().equals("Camrenn")){
+						}
+						if(player.getName().equals("Camrenn")){
 							player.sendMessage(ChatColor.DARK_AQUA + player.getName() + ", please message notaro1997 what you want your message to be.");
-						}else if(player.getName().equals("frazerp123")){
+						}
+						if(player.getName().equals("frazerp123")){
 							player.sendMessage(ChatColor.DARK_AQUA + player.getName() + ", please message notaro1997 what you want your message to be.");
-						}else if(player.getName().equals("mguerra12")){
+						}
+						if(player.getName().equals("mguerra12")){
 							player.sendMessage(ChatColor.DARK_AQUA + player.getName() + ", please message notaro1997 what you want your message to be.");
-						}else if(player.getName().equals("chrille0100")){
+						}
+						if(player.getName().equals("chrille0100")){
 							player.sendMessage(ChatColor.DARK_AQUA + player.getName() + ", please message notaro1997 what you want your message to be.");
-						}else if(player.getName().equals("OrangeSlurpie")){
+						}
+						if(player.getName().equals("OrangeSlurpie")){
 							player.sendMessage(ChatColor.DARK_AQUA + player.getName() + ", please message notaro1997 what you want your message to be.");
-						}else if(player.getName().equals("mejjad")){
+						}
+						if(player.getName().equals("mejjad")){
 							player.sendMessage(ChatColor.DARK_AQUA + player.getName() + ", please message notaro1997 what you want your message to be.");
-						}else if(player.getName().equals("einand")){
+						}
+						if(player.getName().equals("einand")){
 							player.sendMessage(ChatColor.DARK_AQUA + player.getName() + ", please message notaro1997 what you want your message to be.");
-						}else if(player.getName().equals("rweiand")){
+						}
+						if(player.getName().equals("rweiand")){
 							player.sendMessage(ChatColor.DARK_AQUA + player.getName() + ", please message notaro1997 what you want your message to be.");
-						}else if(player.getName().equals("BlackX")){
+						}
+						if(player.getName().equals("BlackX")){
 							player.sendMessage(ChatColor.DARK_AQUA + player.getName() + ", please message notaro1997 what you want your message to be.");
-						}else if(player.getName().equals("GeorgeBombadil")){
+						}
+						if(player.getName().equals("GeorgeBombadil")){
 							player.sendMessage(ChatColor.DARK_AQUA + player.getName() + ", please message notaro1997 what you want your message to be.");
-						}else if(player.getName().equals("Mksen")){
+						}
+						if(player.getName().equals("Mksen")){
 							player.sendMessage(ChatColor.DARK_AQUA + player.getName() + ", please message notaro1997 what you want your message to be.");
-						}else if(player.getName().equals("NoraDraft")){
+						}
+						if(player.getName().equals("NoraDraft")){
 							player.sendMessage(ChatColor.DARK_AQUA + player.getName() + ", please message notaro1997 what you want your message to be.");
-						}else if(player.getName().equals("Tix92")){
+						}
+						if(player.getName().equals("Tix92")){
 							player.sendMessage(ChatColor.DARK_AQUA + player.getName() + ", please message notaro1997 what you want your message to be.");
-						}else if(player.getName().equals("lachieb")){
+						}
+						if(player.getName().equals("lachieb")){
 							player.sendMessage(ChatColor.DARK_AQUA + player.getName() + ", please message notaro1997 what you want your message to be.");
-						}else if(player.getName().equals("alphacarter")){
+						}
+						if(player.getName().equals("alphacarter")){
 							player.sendMessage(ChatColor.DARK_AQUA + player.getName() + ", please message notaro1997 what you want your message to be.");
-						}else if(player.getName().equals("cko_germany")){
+						}
+						if(player.getName().equals("cko_germany")){
 							player.sendMessage(ChatColor.DARK_AQUA + player.getName() + ", please message notaro1997 what you want your message to be.");
-						}else if(player.getName().equals("Jaeee")){
+						}
+						if(player.getName().equals("Jaeee")){
 							player.sendMessage(ChatColor.DARK_AQUA + player.getName() + ", please message notaro1997 what you want your message to be.");
-						}else if(player.getName().equals("The_Odd_Mexican")){
+						}
+						if(player.getName().equals("The_Odd_Mexican")){
 							player.sendMessage(ChatColor.DARK_AQUA + player.getName() + ", please message notaro1997 what you want your message to be.");
-						}else if(player.getName().equals("mrturnip45")){
+						}
+						if(player.getName().equals("mrturnip45")){
 							player.sendMessage(ChatColor.DARK_AQUA + player.getName() + ", please message notaro1997 what you want your message to be.");
-						}else if(player.getName().equals("Zwips")){
+						}
+						if(player.getName().equals("Zwips")){
 							player.sendMessage(ChatColor.DARK_AQUA + player.getName() + ", please message notaro1997 what you want your message to be.");
-						}else if(player.getName().equals("toddtedd")){
+						}
+						if(player.getName().equals("toddtedd")){
 							player.sendMessage(ChatColor.DARK_AQUA + player.getName() + ", please message notaro1997 what you want your message to be.");
-						}else if(player.getName().equals("Annaschwander")){
+						}
+						if(player.getName().equals("Annaschwander")){
 							player.sendMessage(ChatColor.DARK_AQUA + player.getName() + ", please message notaro1997 what you want your message to be.");
-						}else if(player.getName().equals("TSubstance")){
+						}
+						if(player.getName().equals("TSubstance")){
 							player.sendMessage(ChatColor.DARK_AQUA + player.getName() + ", please message notaro1997 what you want your message to be.");
-						}else if(player.getName().equals("RudyCortez2")){
+						}
+						if(player.getName().equals("RudyCortez2")){
 							player.sendMessage(ChatColor.DARK_AQUA + player.getName() + ", please message notaro1997 what you want your message to be.");
-						}else if(player.getName().equals("Seelenlos")){
+						}
+						if(player.getName().equals("Seelenlos")){
 							player.sendMessage(ChatColor.DARK_AQUA + player.getName() + ", please message notaro1997 what you want your message to be.");
-						}else if(player.getName().equals("Silver_Shadow166")){
+						}
+						if(player.getName().equals("Silver_Shadow166")){
 							player.sendMessage(ChatColor.DARK_AQUA + player.getName() + ", please message notaro1997 what you want your message to be.");
-						}else if(player.getName().equals("sucage")){
+						}
+						if(player.getName().equals("sucage")){
 							player.sendMessage(ChatColor.DARK_AQUA + player.getName() + ", please message notaro1997 what you want your message to be.");
-						}else if(player.getName().equals("HiTiHiTi")){
+						}
+						if(player.getName().equals("HiTiHiTi")){
 							player.sendMessage(ChatColor.DARK_AQUA + player.getName() + ", please message notaro1997 what you want your message to be.");
-						}else if(player.getName().equals("baku1999")){
+						}
+						if(player.getName().equals("baku1999")){
 							player.sendMessage(ChatColor.DARK_AQUA + player.getName() + ", please message notaro1997 what you want your message to be.");
-						}else if(player.getName().equals("klonrocks")){
+						}
+						if(player.getName().equals("klonrocks")){
+							player.sendMessage(ChatColor.DARK_AQUA + player.getName() + ", please message notaro1997 what you want your message to be.");
+						}
+						if(player.getName().equals("leafy251")){ //for testing
 							player.sendMessage(ChatColor.DARK_AQUA + player.getName() + ", please message notaro1997 what you want your message to be.");
 						}
 					}else{
