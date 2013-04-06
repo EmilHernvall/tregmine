@@ -291,7 +291,7 @@ public class ForaChatButtons implements Listener{
 							player.sendMessage(ChatColor.DARK_AQUA + player.getName() + ", please message notaro1997 what you want your message to be.");
 						}
 						if(player.getName().equals("toddtedd")){
-							player.sendMessage(ChatColor.DARK_AQUA + player.getName() + ", please message notaro1997 what you want your message to be.");
+							plugin.getServer().broadcastMessage(ChatColor.BLUE + "Your friend just got assassinated by toddtedd");
 						}
 						if(player.getName().equals("Annaschwander")){
 							plugin.getServer().broadcastMessage(ChatColor.BLUE + "You just got Baby SHEEEEEEP'd by Annaschwander");
@@ -315,7 +315,7 @@ public class ForaChatButtons implements Listener{
 							player.sendMessage(ChatColor.DARK_AQUA + player.getName() + ", please message notaro1997 what you want your message to be.");
 						}
 						if(player.getName().equals("baku1999")){
-							plugin.getServer().broadcastMessage(ChatColor.BLUE + "You just got PWND by baku1999!");
+							plugin.getServer().broadcastMessage(ChatColor.BLUE + "Your ass just got dropped by baku1999");
 						}
 						if(player.getName().equals("klonrocks")){
 							player.sendMessage(ChatColor.DARK_AQUA + player.getName() + ", please message notaro1997 what you want your message to be.");
