@@ -59,11 +59,133 @@ public class ForaChatButtons implements Listener{
 				if(hash == -2074540467){
 					// Heaven and Hell button.
 					if(player.getWorld().getBlockAt(614, 33, -105).getType().equals(Material.WATER)){
+						
+						player.getWorld().getBlockAt(614, 33, -105).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 32, -105).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 31, -105).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 30, -105).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 29, -105).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 28, -105).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 27, -105).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 26, -105).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 25, -105).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 24, -105).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 23, -105).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 22, -105).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 21, -105).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 20, -105).setType(Material.AIR);
+						
+						player.getWorld().getBlockAt(614, 33, -104).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 32, -104).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 31, -104).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 30, -104).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 29, -104).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 28, -104).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 27, -104).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 26, -104).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 25, -104).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 24, -104).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 23, -104).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 22, -104).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 21, -104).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 20, -104).setType(Material.AIR);
+						
+						player.getWorld().getBlockAt(614, 33, -103).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 32, -103).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 31, -103).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 30, -103).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 29, -103).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 28, -103).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 27, -103).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 26, -103).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 25, -103).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 24, -103).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 23, -103).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 22, -103).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 21, -103).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 20, -103).setType(Material.AIR);
+						
+						player.getWorld().getBlockAt(614, 33, -102).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 32, -102).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 31, -102).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 30, -102).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 29, -102).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 28, -102).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 27, -102).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 26, -102).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 25, -102).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 24, -102).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 23, -102).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 22, -102).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 21, -102).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 20, -102).setType(Material.AIR);
+						
 						player.getWorld().getBlockAt(614, 33, -105).setType(Material.LAVA);
 						player.getWorld().getBlockAt(614, 33, -104).setType(Material.LAVA);
 						player.getWorld().getBlockAt(614, 33, -103).setType(Material.LAVA);
 						player.getWorld().getBlockAt(614, 33, -102).setType(Material.LAVA);
 					}else{
+						
+						player.getWorld().getBlockAt(614, 33, -105).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 32, -105).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 31, -105).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 30, -105).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 29, -105).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 28, -105).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 27, -105).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 26, -105).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 25, -105).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 24, -105).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 23, -105).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 22, -105).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 21, -105).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 20, -105).setType(Material.AIR);
+						
+						player.getWorld().getBlockAt(614, 33, -104).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 32, -104).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 31, -104).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 30, -104).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 29, -104).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 28, -104).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 27, -104).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 26, -104).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 25, -104).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 24, -104).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 23, -104).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 22, -104).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 21, -104).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 20, -104).setType(Material.AIR);
+						
+						player.getWorld().getBlockAt(614, 33, -103).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 32, -103).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 31, -103).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 30, -103).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 29, -103).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 28, -103).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 27, -103).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 26, -103).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 25, -103).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 24, -103).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 23, -103).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 22, -103).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 21, -103).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 20, -103).setType(Material.AIR);
+						
+						player.getWorld().getBlockAt(614, 33, -102).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 32, -102).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 31, -102).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 30, -102).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 29, -102).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 28, -102).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 27, -102).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 26, -102).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 25, -102).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 24, -102).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 23, -102).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 22, -102).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 21, -102).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 20, -102).setType(Material.AIR);
+						
 						player.getWorld().getBlockAt(614, 33, -105).setType(Material.WATER);
 						player.getWorld().getBlockAt(614, 33, -104).setType(Material.WATER);
 						player.getWorld().getBlockAt(614, 33, -103).setType(Material.WATER);
