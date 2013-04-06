@@ -61,6 +61,15 @@ public class ForaChatButtons implements Listener{
 					if(player.getWorld().getBlockAt(614, 33, -105).getType().equals(Material.WATER)){
 						
 						player.getWorld().getBlockAt(614, 33, -105).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 33, -104).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 33, -103).setType(Material.AIR);
+						player.getWorld().getBlockAt(614, 33, -102).setType(Material.AIR);
+						
+						player.getWorld().getBlockAt(614, 33, -105).setType(Material.LAVA);
+						player.getWorld().getBlockAt(614, 33, -104).setType(Material.LAVA);
+						player.getWorld().getBlockAt(614, 33, -103).setType(Material.LAVA);
+						player.getWorld().getBlockAt(614, 33, -102).setType(Material.LAVA);
+						
 						player.getWorld().getBlockAt(614, 32, -105).setType(Material.AIR);
 						player.getWorld().getBlockAt(614, 31, -105).setType(Material.AIR);
 						player.getWorld().getBlockAt(614, 30, -105).setType(Material.AIR);
@@ -75,7 +84,7 @@ public class ForaChatButtons implements Listener{
 						player.getWorld().getBlockAt(614, 21, -105).setType(Material.AIR);
 						player.getWorld().getBlockAt(614, 20, -105).setType(Material.AIR);
 						
-						player.getWorld().getBlockAt(614, 33, -104).setType(Material.AIR);
+						
 						player.getWorld().getBlockAt(614, 32, -104).setType(Material.AIR);
 						player.getWorld().getBlockAt(614, 31, -104).setType(Material.AIR);
 						player.getWorld().getBlockAt(614, 30, -104).setType(Material.AIR);
@@ -90,7 +99,7 @@ public class ForaChatButtons implements Listener{
 						player.getWorld().getBlockAt(614, 21, -104).setType(Material.AIR);
 						player.getWorld().getBlockAt(614, 20, -104).setType(Material.AIR);
 						
-						player.getWorld().getBlockAt(614, 33, -103).setType(Material.AIR);
+						
 						player.getWorld().getBlockAt(614, 32, -103).setType(Material.AIR);
 						player.getWorld().getBlockAt(614, 31, -103).setType(Material.AIR);
 						player.getWorld().getBlockAt(614, 30, -103).setType(Material.AIR);
@@ -105,7 +114,7 @@ public class ForaChatButtons implements Listener{
 						player.getWorld().getBlockAt(614, 21, -103).setType(Material.AIR);
 						player.getWorld().getBlockAt(614, 20, -103).setType(Material.AIR);
 						
-						player.getWorld().getBlockAt(614, 33, -102).setType(Material.AIR);
+						
 						player.getWorld().getBlockAt(614, 32, -102).setType(Material.AIR);
 						player.getWorld().getBlockAt(614, 31, -102).setType(Material.AIR);
 						player.getWorld().getBlockAt(614, 30, -102).setType(Material.AIR);
@@ -120,10 +129,6 @@ public class ForaChatButtons implements Listener{
 						player.getWorld().getBlockAt(614, 21, -102).setType(Material.AIR);
 						player.getWorld().getBlockAt(614, 20, -102).setType(Material.AIR);
 						
-						player.getWorld().getBlockAt(614, 33, -105).setType(Material.LAVA);
-						player.getWorld().getBlockAt(614, 33, -104).setType(Material.LAVA);
-						player.getWorld().getBlockAt(614, 33, -103).setType(Material.LAVA);
-						player.getWorld().getBlockAt(614, 33, -102).setType(Material.LAVA);
 					}else{
 						
 						player.getWorld().getBlockAt(614, 33, -105).setType(Material.AIR);
