@@ -53,7 +53,7 @@ public class ForaChatButtons implements Listener{
 				}
 				if(hash == -1484999952){
 					// Random button
-					player.sendMessage(ChatColor.DARK_AQUA + "Have an idea for this button? Message notaro1997 when he is online.");
+					player.sendMessage(ChatColor.DARK_AQUA + "Have an idea for this button? Message notaro1997.");
 					this.plugin.log.info(player.getName() + ": TestButton");
 				}
 				if(hash == -2074540467){
