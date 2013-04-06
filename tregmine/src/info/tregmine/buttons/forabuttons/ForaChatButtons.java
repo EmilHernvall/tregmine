@@ -58,7 +58,10 @@ public class ForaChatButtons implements Listener{
 				}
 				if(hash == -2074540467){
 					// Heaven and Hell button.
-					if(player.getWorld().getBlockAt(614, 33, -105).getType().equals(Material.WATER)){
+					if(player.getWorld().getBlockAt(614, 33, -105).getType().equals(Material.WATER) && 
+							player.getWorld().getBlockAt(614, 33, -104).getType().equals(Material.WATER) &&
+							player.getWorld().getBlockAt(614, 33, -103).getType().equals(Material.WATER) &&
+							player.getWorld().getBlockAt(614, 33, -102).getType().equals(Material.WATER)){
 						
 						player.getWorld().getBlockAt(614, 33, -105).setType(Material.AIR);
 						player.getWorld().getBlockAt(614, 33, -104).setType(Material.AIR);
@@ -129,7 +132,11 @@ public class ForaChatButtons implements Listener{
 						player.getWorld().getBlockAt(614, 21, -102).setType(Material.AIR);
 						player.getWorld().getBlockAt(614, 20, -102).setType(Material.AIR);
 						
-					}else{
+					}
+					if(player.getWorld().getBlockAt(614, 33, -105).getType().equals(Material.LAVA) && 
+							player.getWorld().getBlockAt(614, 33, -104).getType().equals(Material.LAVA) &&
+							player.getWorld().getBlockAt(614, 33, -103).getType().equals(Material.LAVA) &&
+							player.getWorld().getBlockAt(614, 33, -102).getType().equals(Material.LAVA)){
 						
 						player.getWorld().getBlockAt(614, 33, -105).setType(Material.AIR);
 						player.getWorld().getBlockAt(614, 32, -105).setType(Material.AIR);
@@ -313,12 +320,9 @@ public class ForaChatButtons implements Listener{
 							player.sendMessage(ChatColor.DARK_AQUA + player.getName() + ", please message notaro1997 what you want your message to be.");
 						}
 						if(player.getName().equals("baku1999")){
-							player.sendMessage(ChatColor.DARK_AQUA + player.getName() + ", please message notaro1997 what you want your message to be.");
+							plugin.getServer().broadcastMessage(ChatColor.BLUE + "You just got PWND by baku1999!");
 						}
 						if(player.getName().equals("klonrocks")){
-							player.sendMessage(ChatColor.DARK_AQUA + player.getName() + ", please message notaro1997 what you want your message to be.");
-						}
-						if(player.getName().equals("leafy251")){ //for testing
 							player.sendMessage(ChatColor.DARK_AQUA + player.getName() + ", please message notaro1997 what you want your message to be.");
 						}
 					}else{
