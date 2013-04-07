@@ -1,5 +1,8 @@
 package info.tregmine.buttons.forabuttons;
 
+import java.text.NumberFormat;
+import java.util.Random;
+
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
 import info.tregmine.currency.Wallet;
@@ -14,7 +17,6 @@ import org.bukkit.event.player.PlayerInteractEvent;
 
 public class ForaChatButtons implements Listener{
 
-
 	private final Tregmine plugin;
 
 	public ForaChatButtons(Tregmine instance) {
@@ -22,6 +24,8 @@ public class ForaChatButtons implements Listener{
 		plugin.getServer();
 	}
 
+	Random random = new Random();
+	
 	@EventHandler
 	public void foraButtons(PlayerInteractEvent event) {
 		if(event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_AIR) return;
@@ -52,9 +56,40 @@ public class ForaChatButtons implements Listener{
 					}
 				}
 				if(hash == -1484999952){
-					// Random button
-					player.sendMessage(ChatColor.DARK_AQUA + "Have an idea for this button? Message notaro1997.");
-					this.plugin.log.info(player.getName() + ": TestButton");
+					// Lottery Button!!!!
+					int amount = this.plugin.lottery.size() * 5000;
+					if(wallet.take(5000)){
+						if(!this.plugin.lottery.contains(player.getName())){
+							plugin.lottery.add(player.getName());
+							player.sendMessage(ChatColor.YELLOW + "You have been added to the lottery! 5,000 Tregs were taken from your wallet.");
+							player.sendMessage(ChatColor.YELLOW + "Amount of money in lottery: " + ChatColor.DARK_AQUA + amount + " Tregs.");
+						}else{
+							player.sendMessage(ChatColor.RED + "You have already joined. Amount in lottery: " + amount + " Tregs.");
+						}
+					}else{
+						player.sendMessage(ChatColor.RED + "This button costs 5,000 Tregs!");
+					}
+					this.plugin.log.info(player.getName() + ": LotteryButton");
+				}
+				if(hash == -1352574340){
+					String lottery = this.plugin.lottery.get(random.nextInt(this.plugin.lottery.size()));
+					int amount = this.plugin.lottery.size() * 5000;
+					NumberFormat format = NumberFormat.getNumberInstance();
+					Wallet lotteryWallet = new Wallet(lottery);
+					if(player.isAdmin() || player.getChatName().contains(ChatColor.DARK_PURPLE.toString())){	
+						try{
+						lotteryWallet.add(amount);
+						plugin.getPlayer(lottery).sendMessage(ChatColor.DARK_AQUA + "You won the lottery! You have been given " + format.format(amount) + " Tregs!");
+						player.sendMessage(ChatColor.DARK_AQUA + "The winner is:" + lottery);
+						this.plugin.lottery.clear();
+						player.sendMessage(ChatColor.GREEN + "The lottery has been cleared.");
+						plugin.getServer().broadcastMessage(ChatColor.AQUA + "The winner of the lottery is: " + plugin.getPlayer(lottery).getChatName());
+						}catch(Exception error){
+							player.sendMessage(ChatColor.RED + "There has been an error. The winner may now be online.");
+						}
+					}else{
+						player.sendMessage(ChatColor.RED + "You must be admin to press this!");
+					}
 				}
 				if(hash == -2074540467){
 					// Heaven and Hell button.
