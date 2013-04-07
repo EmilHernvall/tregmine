@@ -94,6 +94,7 @@ public class ForaChatButtons implements Listener{
 					}else{
 						player.sendMessage(ChatColor.RED + "You must be admin to press this!");
 					}
+					this.plugin.log.info(player.getName() + ": LotteryButton");
 				}
 				if(hash == -2074540467){
 					// Heaven and Hell button.
@@ -243,7 +244,7 @@ public class ForaChatButtons implements Listener{
 					// Admin/Guardian button.
 					if(player.isAdmin() || player.isGuardian() || player.getChatName().contains(ChatColor.DARK_PURPLE.toString())){
 						if(player.getName().equals("notaro1997")){
-							plugin.getServer().broadcastMessage(ChatColor.DARK_PURPLE + "You just got yo' ass wooped by notaro1997!");
+							this.plugin.getServer().broadcastMessage(ChatColor.DARK_PURPLE + "You just got yo' ass wooped by notaro1997!");
 						}
 						if(player.getName().equals("sumerian45")){
 							player.sendMessage(ChatColor.DARK_AQUA + player.getName() + ", please message notaro1997 what you want your message to be.");
@@ -270,7 +271,7 @@ public class ForaChatButtons implements Listener{
 							player.sendMessage(ChatColor.DARK_AQUA + player.getName() + ", please message notaro1997 what you want your message to be.");
 						}
 						if(player.getName().equals("Camrenn")){
-							plugin.getServer().broadcastMessage(ChatColor.RED + "Someone just received a cake from Camrenn");	
+							this.plugin.getServer().broadcastMessage(ChatColor.RED + "Someone just received a cake from Camrenn");	
 						}
 						if(player.getName().equals("frazerp123")){
 							player.sendMessage(ChatColor.DARK_AQUA + player.getName() + ", please message notaro1997 what you want your message to be.");
@@ -312,7 +313,7 @@ public class ForaChatButtons implements Listener{
 							player.sendMessage(ChatColor.DARK_AQUA + player.getName() + ", please message notaro1997 what you want your message to be.");
 						}
 						if(player.getName().equals("alphacarter")){
-							player.sendMessage(ChatColor.DARK_AQUA + player.getName() + ", please message notaro1997 what you want your message to be.");
+							this.plugin.getServer().broadcastMessage(ChatColor.BLUE + "Alphacarter just gave you the Jake Burnett");
 						}
 						if(player.getName().equals("cko_germany")){
 							player.sendMessage(ChatColor.DARK_AQUA + player.getName() + ", please message notaro1997 what you want your message to be.");
@@ -330,10 +331,10 @@ public class ForaChatButtons implements Listener{
 							player.sendMessage(ChatColor.DARK_AQUA + player.getName() + ", please message notaro1997 what you want your message to be.");
 						}
 						if(player.getName().equals("toddtedd")){
-							plugin.getServer().broadcastMessage(ChatColor.BLUE + "Your friend just got assassinated by toddtedd");
+							this.plugin.getServer().broadcastMessage(ChatColor.BLUE + "Your friend just got assassinated by toddtedd");
 						}
 						if(player.getName().equals("Annaschwander")){
-							plugin.getServer().broadcastMessage(ChatColor.BLUE + "You just got Baby SHEEEEEEP'd by Annaschwander");
+							this.plugin.getServer().broadcastMessage(ChatColor.BLUE + "You just got Baby SHEEEEEEP'd by Annaschwander");
 						}
 						if(player.getName().equals("TSubstance")){
 							player.sendMessage(ChatColor.DARK_AQUA + player.getName() + ", please message notaro1997 what you want your message to be.");
@@ -354,7 +355,7 @@ public class ForaChatButtons implements Listener{
 							player.sendMessage(ChatColor.DARK_AQUA + player.getName() + ", please message notaro1997 what you want your message to be.");
 						}
 						if(player.getName().equals("baku1999")){
-							plugin.getServer().broadcastMessage(ChatColor.BLUE + "Your ass just got dropped by baku1999");
+							this.plugin.getServer().broadcastMessage(ChatColor.BLUE + "Your ass just got dropped by baku1999");
 						}
 						if(player.getName().equals("klonrocks")){
 							player.sendMessage(ChatColor.DARK_AQUA + player.getName() + ", please message notaro1997 what you want your message to be.");
