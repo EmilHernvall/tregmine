@@ -1,6 +1,6 @@
 package info.tregmine.buttons.forabuttons;
 
-import java.text.NumberFormat;
+//import java.text.NumberFormat;
 import java.util.Random;
 
 import info.tregmine.Tregmine;
@@ -60,7 +60,7 @@ public class ForaChatButtons implements Listener{
 					}
 				}
 				if(hash == -1484999952){
-					// Lottery Button!!!!
+/*
 					int amount = this.plugin.lottery.size() * 5000;
 					if(wallet.take(5000)){
 						if(!this.plugin.lottery.contains(player.getName())){
@@ -95,6 +95,7 @@ public class ForaChatButtons implements Listener{
 						player.sendMessage(ChatColor.RED + "You must be admin to press this!");
 					}
 					this.plugin.log.info(player.getName() + ": LotteryButton");
+*/
 				}
 				if(hash == -2074540467){
 					// Heaven and Hell button.
