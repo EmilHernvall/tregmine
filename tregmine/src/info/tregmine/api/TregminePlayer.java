@@ -175,6 +175,7 @@ public class TregminePlayer extends PlayerDelegate
 		return getBoolean("child");
 	}
 
+	@Deprecated
 	public boolean isImmortal() 
 	{
 		return getBoolean("immortal");
@@ -385,11 +386,12 @@ public class TregminePlayer extends PlayerDelegate
 		return ChatColor.WHITE;
 	}
 
-
+	@Deprecated
 	public String getSayName() 	{
 		return name;
 	}
 
+	@Deprecated
 	public void setSayName() 	{
 		//		return name;
 	}
