@@ -115,6 +115,30 @@ public class Tregmine extends JavaPlugin
 		
 		// this.lottery = new ArrayList<String>();
 
+		this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
+
+			public void run() {
+
+				while(hasVoted.size() > 0) {
+					String name = hasVoted.removeFirst();
+
+
+					getServer().broadcastMessage(ChatColor.YELLOW + name + " has voted and will now receive 2,000 Tregs");
+					getServer().broadcastMessage(ChatColor.YELLOW + name + " Read more at http://treg.co/82 what you can get");
+
+					Wallet wallet = new Wallet(name);
+					wallet.add(2000);
+					log.info(name + " got " + name + " Tregs for VOTING");
+
+				}
+
+			}
+
+
+		},100L,20L);
+		
+		
+		
 	}
 
 	@Override
@@ -146,27 +170,6 @@ public class Tregmine extends JavaPlugin
 			//			player.sendMessage(ChatColor.GRAY + "G small bugfix like spelling errors");
 		}
 
-		this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
-
-			public void run() {
-
-				while(hasVoted.size() > 0) {
-					String name = hasVoted.removeFirst();
-
-
-					getServer().broadcastMessage(ChatColor.YELLOW + name + " has voted and will now receive 2,000 Tregs");
-					getServer().broadcastMessage(ChatColor.YELLOW + name + " Read more at http://treg.co/82 what you can get");
-
-					Wallet wallet = new Wallet(name);
-					wallet.add(2000);
-					log.info(name + " got " + name + " Tregs for VOTING");
-
-				}
-
-			}
-
-
-		},100L,20L);
 	}
 
 

@@ -66,6 +66,27 @@ public class BasicCommands extends JavaPlugin {
 		}
 
 		getServer().getPluginManager().registerEvents(new BasicCommandsBlock(this), this);
+
+		final Server server = this.getServer();
+
+		this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
+
+			public void run() {
+				//				final World world = this.getServer().getWorld("world");
+				World world = server.getWorld("world");
+
+				Location loc = world.getSpawnLocation();
+				info.tregmine.api.firework.createFirework firework = new info.tregmine.api.firework.createFirework();
+				firework.addColor(Color.BLUE);
+				firework.addColor(Color.YELLOW);
+				firework.addType(FireworkEffect.Type.STAR);
+				firework.shot(loc);
+			}
+
+
+		},100L,200L);
+	
+	
 	}
 
 	@Override
@@ -558,24 +579,6 @@ public class BasicCommands extends JavaPlugin {
 
 	@Override
 	public void onLoad() {
-		final Server server = this.getServer();
-
-		this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
-
-			public void run() {
-				//				final World world = this.getServer().getWorld("world");
-				World world = server.getWorld("world");
-
-				Location loc = world.getSpawnLocation();
-				info.tregmine.api.firework.createFirework firework = new info.tregmine.api.firework.createFirework();
-				firework.addColor(Color.BLUE);
-				firework.addColor(Color.YELLOW);
-				firework.addType(FireworkEffect.Type.STAR);
-				firework.shot(loc);
-			}
-
-
-		},100L,200L);
 
 	}
 }
