@@ -53,7 +53,7 @@ public class Machines implements Listener {
 						tregminePlayer.sendMessage(ChatColor.AQUA + "You received 1 coupon for 25,000 Tregs.");
 						plugin.log.info(tregminePlayer.getName() + " :COUPONBUTTON");
 					}else{
-						tregminePlayer.sendMessage(ChatColor.RED + "You need at least 25,000 tregs for this button.");
+						tregminePlayer.sendMessage(ChatColor.RED + "You need at least 25,000 Tregs for this button!");
 					}
 				}
 			}	
