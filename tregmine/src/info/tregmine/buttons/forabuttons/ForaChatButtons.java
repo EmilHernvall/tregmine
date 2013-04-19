@@ -280,8 +280,8 @@ public class ForaChatButtons implements Listener{
 						if(player.getName().equals("frazerp123")){
 							player.sendMessage(ChatColor.DARK_AQUA + player.getName() + ", please message notaro1997 what you want your message to be.");
 						}
-						if(player.getName().equals("mguerra12")){
-							this.plugin.getServer().broadcastMessage(ChatColor.RED + "mguerra12 just hugged you so hard, you passed out");
+						if(player.getName().equals("mguerra11")){
+							this.plugin.getServer().broadcastMessage(ChatColor.RED + "mguerra11 just hugged you so hard, you passed out");
 						}
 						if(player.getName().equals("chrille0100")){
 							player.sendMessage(ChatColor.DARK_AQUA + player.getName() + ", please message notaro1997 what you want your message to be.");
