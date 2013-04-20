@@ -482,6 +482,4 @@ public class TregminePlayer extends PlayerDelegate
 	public boolean verifyPassword(String attempt) {
 		return BCrypt.checkpw(attempt, this.password);
 	}
-
-
 }
