@@ -25,13 +25,12 @@ public class DonateSigns implements Listener {
 	}
 
 	@EventHandler
-	public void buttons(PlayerInteractEvent event) {
+	public void donateSigns(PlayerInteractEvent event) {
 		if(event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_AIR) return;
 		if(event.getAction() == Action.LEFT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_BLOCK){
 			Block block = event.getClickedBlock();
 			Block signBlock = event.getPlayer().getWorld().getBlockAt(block.getLocation().getBlockX(), block.getLocation().getBlockY() + 1, block.getLocation().getBlockZ());
 			Sign sign = (Sign) signBlock.getState();
-			String donate = sign.getLine(0);
 			int amount = Integer.parseInt(sign.getLine(1));
 			String player = sign.getLine(3);
 			TregminePlayer tregminePlayer = plugin.getPlayer(event.getPlayer());
@@ -39,7 +38,7 @@ public class DonateSigns implements Listener {
 			Wallet targetWallet = new Wallet(player);
 			if(Material.STONE_BUTTON.equals(block.getType()) || Material.WOOD_BUTTON.equals(block.getType())){
 				if(signBlock.getState() instanceof Sign){
-					if(donate.equals(sign.getLine(0))){
+					if("donate".equalsIgnoreCase(sign.getLine(0))){
 						if(wallet.take(amount)){
 							targetWallet.add(amount);
 							tregminePlayer.sendMessage(ChatColor.GOLD + "You donated " + ChatColor.AQUA + amount + ChatColor.GOLD + " Tregs to " + player);
