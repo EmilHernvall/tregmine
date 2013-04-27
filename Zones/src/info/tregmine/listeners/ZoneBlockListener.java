@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 //import java.util.ArrayList;
 //import java.util.List;
-import java.util.Random;
+//import java.util.Random;
 
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
@@ -137,64 +137,16 @@ public class ZoneBlockListener implements Listener
 				rs = stmt.getResultSet();
 
 				if (rs.first() ) {
-//					event.setCancelled(true);
-//					event.getBlock().setType(Material.AIR);
-
-//					ItemStack drop = new ItemStack(item.getType(), item.getAmount(), item.getData().getData());
-
-//					ItemMeta meta = drop.getItemMeta();
-//					item.setType(Material.AIR);
 
 					
 					if (this.tregmine.blockStats.isPlaced(event.getBlock())) {
+						player.sendMessage("This block was placed before");
 					} else {
-
-					    Random ran = new Random( System.currentTimeMillis() );
-					    int  rand = ran.nextInt(1000);
-						if (player.isOp()) {
-							player.sendMessage("" + rand);
-						}
-					    
-					    if (rand == 500) {
-							ItemStack drop = new ItemStack(Material.MONSTER_EGG, 1, (byte)65);
-							ItemMeta meta = drop.getItemMeta();
-							meta.setDisplayName(ChatColor.YELLOW + "EASTER EGG");
-							drop.setItemMeta(meta);
-							player.getWorld().dropItemNaturally(event.getBlock().getLocation(), drop);
-					    }
-						
-						
+						player.sendMessage("This block gave you " + rs.getInt("value") + " tregs");
 						Wallet wallet = new Wallet (player.getName());
 						wallet.add(rs.getInt("value"));
-						
-						
 					}
 
-/*
-					List<String> lore = new ArrayList<String>();
-
-					lore.add(info.tregmine.api.lore.Created.MINED.toColorString());
-					lore.add(ChatColor.WHITE + "by: " + player.getChatName());
-					lore.add(ChatColor.WHITE + "Value: "+ rs.getInt("value") + " Treg" );
-					lore.add(ChatColor.WHITE + "World: "+ event.getBlock().getWorld().getName());
-
-					meta.setLore(lore);					
-					drop.setItemMeta(meta);
-//					event.getBlock().getWorld().dropItem(event.getBlock().getLocation(), drop);
-*/
-/*
-					ItemStack drop = new ItemStack(Material., item.getAmount(), item.getData().getData());
-
-					List<String> lore = new ArrayList<String>();
-
-					lore.add(ChatColor.GOLD + "EASTER EGG");
-					lore.add(ChatColor.WHITE + "Found by: " + player.getChatName());
-
-					meta.setLore(lore);					
-					drop.setItemMeta(meta);
-//					event.getBlock().getWorld().dropItem(event.getBlock().getLocation(), drop);
-	*/				
-					
 				}
 
 			} catch (SQLException e) {
