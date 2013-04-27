@@ -324,10 +324,6 @@ public class BasicCommands extends JavaPlugin {
 
 			for (Entity ent : player.getWorld().getLivingEntities()) {
 
-
-				player.sendMessage(ChatColor.YELLOW + "You nuked all mobs within "+ distance +" meters");
-				player.sendMessage(ChatColor.YELLOW +  "say /nuke <number> to select a larger or smaller distance");
-
 				if (info.tregmine.api.math.Distance.calc2d(player.getLocation(), ent.getLocation()) <= distance) {
 
 					if(ent instanceof Monster) {
