@@ -140,9 +140,9 @@ public class ZoneBlockListener implements Listener
 
 					
 					if (this.tregmine.blockStats.isPlaced(event.getBlock())) {
-						player.sendMessage("This block was placed before");
+//						player.sendMessage("This block was placed before");
 					} else {
-						player.sendMessage("This block gave you " + rs.getInt("value") + " tregs");
+//						player.sendMessage("This block gave you " + rs.getInt("value") + " tregs");
 						Wallet wallet = new Wallet (player.getName());
 						wallet.add(rs.getInt("value"));
 					}
