@@ -309,18 +309,24 @@ public class BasicCommands extends JavaPlugin {
 		info.tregmine.api.TregminePlayer tP = this.tregmine.tregminePlayer.get(player.getName());
 
 		if (commandName.matches("nuke") && (tP.isGuardian() || tP.isAdmin())) {
-			player.sendMessage("You nuked all mobs in this world!");
+//			player.sendMessage("You nuked all mobs in this world!");
+
+			int distance;
+
+			try {
+				distance = Integer.parseInt( args[0] );
+			} catch (Exception e) {
+				distance = 160;
+			}
+			
+			player.sendMessage(ChatColor.YELLOW + "You nuked all mobs within "+ distance +" meters");
+			player.sendMessage(ChatColor.YELLOW +  "say /nuke <number> to select a larger or smaller distance");
+
 			for (Entity ent : player.getWorld().getLivingEntities()) {
-				int distance;
 
-				try {
-					distance = Integer.parseInt( args[1] );
-				} catch (Exception e) {
-					distance = 160;
-				}
 
-				player.sendMessage("You nuked all mobs within "+ distance +" meters");
-				player.sendMessage("say /nuke <number> to select a larger or smaller distance");
+				player.sendMessage(ChatColor.YELLOW + "You nuked all mobs within "+ distance +" meters");
+				player.sendMessage(ChatColor.YELLOW +  "say /nuke <number> to select a larger or smaller distance");
 
 				if (info.tregmine.api.math.Distance.calc2d(player.getLocation(), ent.getLocation()) <= distance) {
 
@@ -350,6 +356,7 @@ public class BasicCommands extends JavaPlugin {
 					}
 				}
 			}
+
 			return true;
 		}
 
