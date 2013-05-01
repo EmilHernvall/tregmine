@@ -85,8 +85,8 @@ public class BasicCommands extends JavaPlugin {
 
 
 		},100L,200L);
-	
-	
+
+
 	}
 
 	@Override
@@ -309,34 +309,50 @@ public class BasicCommands extends JavaPlugin {
 		info.tregmine.api.TregminePlayer tP = this.tregmine.tregminePlayer.get(player.getName());
 
 		if (commandName.matches("nuke") && (tP.isGuardian() || tP.isAdmin())) {
-			player.sendMessage("You nuked all mobs in this world!");
-			for (Entity ent : player.getWorld().getLivingEntities()) {
-				if(ent instanceof Monster) {
-					Monster mob = (Monster) ent;
-					mob.setHealth(0);
-				}
+//			player.sendMessage("You nuked all mobs in this world!");
 
-				//				if(ent instanceof Chicken) {
-				//					Chicken chicken = (Chicken) ent;
-				//					chicken.setHealth(0);
-				//				}
+			int distance;
 
-				if(ent instanceof org.bukkit.entity.Animals) {
-					org.bukkit.entity.Animals animal = (org.bukkit.entity.Animals) ent;
-					animal.setHealth(0);
-				}
-
-				if(ent instanceof Slime) {
-					Slime slime = (Slime) ent;
-					slime.setHealth(0);
-				}
-
-				if (ent instanceof EnderDragon) {
-					EnderDragon dragon = (EnderDragon)ent;
-					dragon.setHealth(0);
-				}
-
+			try {
+				distance = Integer.parseInt( args[0] );
+			} catch (Exception e) {
+				distance = 160;
 			}
+			
+			player.sendMessage(ChatColor.YELLOW + "You nuked all mobs within "+ distance +" meters");
+			player.sendMessage(ChatColor.YELLOW +  "say /nuke <number> to select a larger or smaller distance");
+
+			for (Entity ent : player.getWorld().getLivingEntities()) {
+
+				if (info.tregmine.api.math.Distance.calc2d(player.getLocation(), ent.getLocation()) <= distance) {
+
+					if(ent instanceof Monster) {
+						Monster mob = (Monster) ent;
+						mob.setHealth(0);
+					}
+
+					//				if(ent instanceof Chicken) {
+					//					Chicken chicken = (Chicken) ent;
+					//					chicken.setHealth(0);
+					//				}
+
+					if(ent instanceof org.bukkit.entity.Animals) {
+						org.bukkit.entity.Animals animal = (org.bukkit.entity.Animals) ent;
+						animal.setHealth(0);
+					}
+
+					if(ent instanceof Slime) {
+						Slime slime = (Slime) ent;
+						slime.setHealth(0);
+					}
+
+					if (ent instanceof EnderDragon) {
+						EnderDragon dragon = (EnderDragon)ent;
+						dragon.setHealth(0);
+					}
+				}
+			}
+
 			return true;
 		}
 
@@ -516,7 +532,7 @@ public class BasicCommands extends JavaPlugin {
 
 
 						if (args.length == 3) {
-						LivingEntity ent = (LivingEntity) player.getWorld().spawnEntity(player.getLocation(), mobtyp);
+							LivingEntity ent = (LivingEntity) player.getWorld().spawnEntity(player.getLocation(), mobtyp);
 							ent.setCustomName(args[2]);
 							ent.setCustomNameVisible(true);
 						}
