@@ -74,7 +74,7 @@ public class LookupPlayer implements  Listener  {
 
 		}
 
-		if(tregminePlayer.getNameColor() == ChatColor.GOLD || tregminePlayer.isAdmin() || tregminePlayer.isGuardian() || tregminePlayer.getMetaBoolean("builder")) {
+		if(tregminePlayer.getNameColor() == ChatColor.GOLD || tregminePlayer.getNameColor() == ChatColor.DARK_PURPLE || tregminePlayer.isAdmin() || tregminePlayer.isGuardian() || tregminePlayer.getMetaBoolean("builder")) {
 			event.getPlayer().sendMessage("You are allowed to fly");
 			event.getPlayer().setAllowFlight(true);
 			//			tregminePlayer.setAllowFlight(true);
@@ -84,7 +84,7 @@ public class LookupPlayer implements  Listener  {
 			event.getPlayer().setAllowFlight(false);
 		}
 
-		event.getPlayer().sendMessage(ChatColor.WHITE + "<" + ChatColor.RED + "GOD"+ ChatColor.WHITE + ">"+ ChatColor.GREEN + "Don't forget that you can get free stuff by voting http://treg.co/82");
+		event.getPlayer().sendMessage(ChatColor.WHITE + "<" + ChatColor.RED + "GOD"+ ChatColor.WHITE + ">"+ ChatColor.GREEN + " Don't forget that you can get free stuff by voting http://treg.co/82");
 
 		Connection conn = null;
 		PreparedStatement stmt = null;
