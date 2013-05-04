@@ -201,7 +201,7 @@ public class BasicCommandsBlock implements Listener {
 			// Preview button
 			if (info.tregmine.api.math.Checksum.block(block) == -1250389219) {
 				if (!this.plugin.firework.containsKey(player.getName())) {
-					player.sendMessage(ChatColor.RED + "You most go and set some fireworks propertys first");
+					player.sendMessage(ChatColor.RED + "You must set some fireworks properties first");
 					return;
 				}
 
@@ -212,7 +212,7 @@ public class BasicCommandsBlock implements Listener {
 
 						info.tregmine.api.firework.createFirework FireWork = plugin.firework.get(player.getName());
 						FireWork.shot(loc);
-						player.sendMessage("<" + ChatColor.GREEN + "ELF" + ChatColor.WHITE + "> Shoting your firework now!");
+						player.sendMessage("<" + ChatColor.GREEN + "ELF" + ChatColor.WHITE + "> Shooting your firework now!");
 					}
 				}, 600L);
 			}

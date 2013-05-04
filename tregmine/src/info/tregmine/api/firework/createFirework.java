@@ -22,8 +22,6 @@ public class createFirework {
 	private int colorCounter = 0;
 	private int duration = 1;
 
-
-
 	public void addColor(Color _color) {
 
 		if (colorCounter > 0) {
