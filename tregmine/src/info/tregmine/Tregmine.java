@@ -16,6 +16,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Logger;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.WorldCreator;
@@ -55,7 +56,7 @@ public class Tregmine extends JavaPlugin
 	public LinkedList <String> hasVoted = new LinkedList<String>();
 
 	// public ArrayList<String> lottery;
-	
+
 	public int version = 0;
 	public int amount = 0;
 
@@ -109,11 +110,11 @@ public class Tregmine extends JavaPlugin
 		getServer().getPluginManager().registerEvents(new info.tregmine.sign.Color(), this);
 		getServer().getPluginManager().registerEvents(new info.tregmine.portals.Portals(this), this);
 
-//		getServer().getPluginManager().registerEvents(new info.tregmine.buttons.vendings.Machines(this), this);
-//		getServer().getPluginManager().registerEvents(new info.tregmine.buttons.rulesbuttons.RulesButtons(this), this);
-//		getServer().getPluginManager().registerEvents(new info.tregmine.buttons.forabuttons.ForaButtons(this), this);
-//		getServer().getPluginManager().registerEvents(new info.tregmine.donatesigns.DonateSigns(this), this);
-		
+		//		getServer().getPluginManager().registerEvents(new info.tregmine.buttons.vendings.Machines(this), this);
+		//		getServer().getPluginManager().registerEvents(new info.tregmine.buttons.rulesbuttons.RulesButtons(this), this);
+		//		getServer().getPluginManager().registerEvents(new info.tregmine.buttons.forabuttons.ForaButtons(this), this);
+		//		getServer().getPluginManager().registerEvents(new info.tregmine.donatesigns.DonateSigns(this), this);
+
 		// this.lottery = new ArrayList<String>();
 
 		this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
@@ -137,9 +138,9 @@ public class Tregmine extends JavaPlugin
 
 
 		},100L,20L);
-		
-		
-		
+
+
+
 	}
 
 	@Override
@@ -638,8 +639,52 @@ public class Tregmine extends JavaPlugin
 			}
 			return true;
 		}
-
-
+		if(commandName.equalsIgnoreCase("g")){
+			TregminePlayer tregminePlayer = this.tregminePlayer.get(player.getName());
+			if(tregminePlayer.isGuardian()){
+				for(Player online : Bukkit.getOnlinePlayers()){
+					TregminePlayer Guardians = this.tregminePlayer.get(online.getName());
+					if(Guardians.isGuardian()){
+						if(args.length >= 1){
+							Player target = Bukkit.getPlayer(args[0]);
+							if(target != null){
+								int i = 1; 
+								int para = args.length;
+								String msg = "";
+								while(i < para){
+									msg = msg + " " + args[i];
+									i++;
+								}
+								Guardians.sendMessage(ChatColor.BLUE + "Guardian Message: " + tregminePlayer.getDisplayName() + ": " + ChatColor.YELLOW + msg);
+							}
+						}
+					}
+				}
+			}
+		}
+		if(commandName.equalsIgnoreCase("a")){
+			TregminePlayer tregminePlayer = this.tregminePlayer.get(player.getName());
+			if(tregminePlayer.isAdmin()){
+				for(Player online : Bukkit.getOnlinePlayers()){
+					TregminePlayer Admins = this.tregminePlayer.get(online.getName());
+					if(Admins.isAdmin()){
+						if(args.length >= 1){
+							Player target = Bukkit.getPlayer(args[0]);
+							if(target != null){
+								int i = 1; 
+								int para = args.length;
+								String msg = "";
+								while(i < para){
+									msg = msg + " " + args[i];
+									i++;
+								}
+								Admins.sendMessage(ChatColor.RED + "Admin Message: " + tregminePlayer.getDisplayName() + ": " + ChatColor.YELLOW + msg);
+							}
+						}
+					}
+				}
+			}
+		}
 		return false;
 	}
 }
