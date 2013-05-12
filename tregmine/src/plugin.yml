@@ -64,4 +64,10 @@ commands:
   say:
     description: talk as good
     -usage: /say message
+  g:
+    description: Perform a guardian message.
+    -usage: /g message
+  a:
+    description: Perform an admin message.
+    -usage: /a message
         
