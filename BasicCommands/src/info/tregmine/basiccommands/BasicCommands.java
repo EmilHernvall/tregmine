@@ -7,11 +7,13 @@ import java.util.logging.Logger;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
+import org.bukkit.Material;
 import org.bukkit.Server;
 //import org.bukkit.FireworkEffect;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.block.CreatureSpawner;
 //import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -309,7 +311,7 @@ public class BasicCommands extends JavaPlugin {
 		info.tregmine.api.TregminePlayer tP = this.tregmine.tregminePlayer.get(player.getName());
 
 		if (commandName.matches("nuke") && (tP.isGuardian() || tP.isAdmin())) {
-//			player.sendMessage("You nuked all mobs in this world!");
+			//			player.sendMessage("You nuked all mobs in this world!");
 
 			int distance;
 
@@ -318,7 +320,7 @@ public class BasicCommands extends JavaPlugin {
 			} catch (Exception e) {
 				distance = 160;
 			}
-			
+
 			player.sendMessage(ChatColor.YELLOW + "You nuked all mobs within "+ distance +" meters");
 			player.sendMessage(ChatColor.YELLOW +  "say /nuke <number> to select a larger or smaller distance");
 
@@ -589,7 +591,24 @@ public class BasicCommands extends JavaPlugin {
 			player.getInventory().clear();
 			return true;
 		}
-
+		if(commandName.matches("setspawner") && tregminePlayer.isAdmin()){
+			if(args.length == 1){
+				if(player.getTargetBlock(null, 15).getType().equals(Material.MOB_SPAWNER)){
+					CreatureSpawner spawner = (CreatureSpawner) player.getTargetBlock(null, 15).getState();
+					try{
+						spawner.setSpawnedType(EntityType.valueOf(args[0].toUpperCase()));
+					}catch(Exception error){
+						player.sendMessage(ChatColor.RED + "There was an error, maybe no valid mob type?");
+					}
+				}else{
+					player.sendMessage(ChatColor.RED + "Please point at a spawner.");
+				}
+			}else{
+				player.sendMessage(ChatColor.RED + "Type /spawner <mobname> whilst pointing at a spawner");
+			}
+		}else{
+			player.sendMessage(ChatColor.RED + "Only an Admin can use this command!");
+		}
 		return false;
 	}
 

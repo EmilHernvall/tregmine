@@ -93,3 +93,6 @@ commands:
   cname:
     description: change your nickname and its color.
     -usage: /cname color nick
+  setspawner:
+    description: change the mob in a spawner.
+    -usage: /setspawner
