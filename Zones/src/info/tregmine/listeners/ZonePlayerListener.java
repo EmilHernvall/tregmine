@@ -14,6 +14,7 @@ import info.tregmine.zones.ZonesDAO;
 import info.tregmine.zones.ZonesPlugin;
 import info.tregmine.zones.Lot;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -36,6 +37,11 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
+import org.bukkit.scoreboard.DisplaySlot;
+import org.bukkit.scoreboard.Objective;
+import org.bukkit.scoreboard.Score;
+import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.ScoreboardManager;
 import org.bukkit.util.Vector;
 
 public class ZonePlayerListener implements Listener
@@ -665,9 +671,34 @@ public class ZonePlayerListener implements Listener
 
 		String text = "";
 		if (currentZone.getMainOwner() != null) {
-			text = " MainOwner:" + currentZone.getMainOwner();
+//			text = " MainOwner:" + currentZone.getMainOwner();
 		}
 
+	    final Player mcplayer = player.getPlayer();
+        if (mcplayer.isOnline())
+        {
+
+        	final ScoreboardManager manager = Bukkit.getScoreboardManager();
+        	Scoreboard board = manager.getNewScoreboard();
+        	 
+        	Objective objective = board.registerNewObjective(currentZone.getName(), "2");
+        	objective.setDisplaySlot(DisplaySlot.SIDEBAR);
+        	objective.setDisplayName("" + ChatColor.AQUA + "" + currentZone.getName());
+        	         	
+        	Score score = objective.getScore(Bukkit.getOfflinePlayer(ChatColor.GOLD + "Main owner: " + currentZone.getMainOwner())); //Get a fake offline player
+        	score.setScore(0);
+        	mcplayer.setScoreboard(board);
+        	
+        
+        Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() { 
+        	public void run() {
+        		mcplayer.setScoreboard(manager.getNewScoreboard());
+        	}
+        	}, 400); //400 = 20 seconds. 1 second = 20 ticks, 20*20=400
+        
+        }
+
+		
 		player.sendMessage(ChatColor.RED + "[" + currentZone.getName() + "] " + 
 				currentZone.getTextEnter() + text);
 
