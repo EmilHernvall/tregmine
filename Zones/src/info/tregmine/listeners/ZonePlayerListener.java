@@ -683,7 +683,7 @@ public class ZonePlayerListener implements Listener
 
 			Objective objective = board.registerNewObjective(currentZone.getName(), "2");
 
-			objective.setDisplaySlot(DisplaySlot.PLAYER_LIST);
+			objective.setDisplaySlot(DisplaySlot.SIDEBAR);
 
 			if(currentZone.getName().length() > 13) {
 				objective.setDisplayName(ChatColor.AQUA + currentZone.getName().substring(1 ,13));
@@ -705,7 +705,7 @@ public class ZonePlayerListener implements Listener
 				}
 			}
 
-			score.setScore(0);
+			score.setScore(currentZone.getId());
 			mcplayer.setScoreboard(board);
 
 /*
