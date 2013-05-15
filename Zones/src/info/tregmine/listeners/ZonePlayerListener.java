@@ -691,7 +691,7 @@ public class ZonePlayerListener implements Listener
             	objective.setDisplayName(ChatColor.AQUA + currentZone.getName());
         	}
         	
-        	Score score = null;
+        	Score score = objective.getScore(Bukkit.getOfflinePlayer("Unkown"));
         	
         	if(currentZone.getMainOwner().length() > 13) {
         	 score = objective.getScore(Bukkit.getOfflinePlayer(ChatColor.GOLD + currentZone.getMainOwner().substring(1,13))); //Get a fake offline player
