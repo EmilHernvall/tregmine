@@ -685,7 +685,7 @@ public class ZonePlayerListener implements Listener
         	
         	objective.setDisplaySlot(DisplaySlot.SIDEBAR);
         	
-        	if(currentZone.getName().length() < 13) {
+        	if(currentZone.getName().length() > 13) {
         		objective.setDisplayName(ChatColor.AQUA + currentZone.getName().substring(1 ,13));
         	} else {
             	objective.setDisplayName(ChatColor.AQUA + currentZone.getName());
@@ -693,7 +693,7 @@ public class ZonePlayerListener implements Listener
         	
         	Score score = null;
         	
-        	if(currentZone.getMainOwner().length() < 13) {
+        	if(currentZone.getMainOwner().length() > 13) {
         	 score = objective.getScore(Bukkit.getOfflinePlayer(ChatColor.GOLD + currentZone.getMainOwner().substring(1,13))); //Get a fake offline player
         	} else {
              score = objective.getScore(Bukkit.getOfflinePlayer(ChatColor.GOLD + currentZone.getMainOwner())); //Get a fake offline player     
