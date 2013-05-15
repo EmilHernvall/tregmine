@@ -296,14 +296,14 @@ public class ZonePlayerListener implements Listener
 							player.sendMessage(ChatColor.YELLOW + "You are now owner of " + lot.getName());
 							this.plugin.tregmine.log.info(player.getName() + " got " + lot.getName() + " for " + price);
 							this.plugin.tregmine.log.info(seller + " sold " + lot.getName() + " for " + price);
-							
+
 							swallet.add(price);
-							
+
 							if(this.plugin.getServer().getPlayer(seller).isOnline()) {
 								this.plugin.getServer().getPlayer(seller).sendMessage(ChatColor.YELLOW + player.getChatName() + ChatColor.YELLOW + " just got your lot " + lot.getName());
 							}
 							event.getClickedBlock().breakNaturally();
-							
+
 						} catch (SQLException e) {
 							throw new RuntimeException(e);
 						} finally {
@@ -671,47 +671,53 @@ public class ZonePlayerListener implements Listener
 
 		String text = "";
 		if (currentZone.getMainOwner() != null) {
-//			text = " MainOwner:" + currentZone.getMainOwner();
+			//			text = " MainOwner:" + currentZone.getMainOwner();
 		}
 
-	    final Player mcplayer = player.getPlayer();
-        if (mcplayer.isOnline())
-        {
+		final Player mcplayer = player.getPlayer();
+		if (mcplayer.isOnline())
+		{
 
-        	final ScoreboardManager manager = Bukkit.getScoreboardManager();
-        	Scoreboard board = manager.getNewScoreboard();
-        	 
-        	Objective objective = board.registerNewObjective(currentZone.getName(), "2");
-        	
-        	objective.setDisplaySlot(DisplaySlot.SIDEBAR);
-        	
-        	if(currentZone.getName().length() > 13) {
-        		objective.setDisplayName(ChatColor.AQUA + currentZone.getName().substring(1 ,13));
-        	} else {
-            	objective.setDisplayName(ChatColor.AQUA + currentZone.getName());
-        	}
-        	
-        	Score score = objective.getScore(Bukkit.getOfflinePlayer("Unkown"));
-        	
-        	if(currentZone.getMainOwner().length() > 13) {
-        	 score = objective.getScore(Bukkit.getOfflinePlayer(ChatColor.GOLD + currentZone.getMainOwner().substring(1,13))); //Get a fake offline player
-        	} else {
-             score = objective.getScore(Bukkit.getOfflinePlayer(ChatColor.GOLD + currentZone.getMainOwner())); //Get a fake offline player     
-        	}
-        	
-        	score.setScore(0);
-        	mcplayer.setScoreboard(board);
-        	
-        
-        Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() { 
-        	public void run() {
-        		mcplayer.setScoreboard(manager.getNewScoreboard());
-        	}
-        	}, 400); //400 = 20 seconds. 1 second = 20 ticks, 20*20=400
-        
-        }
+			final ScoreboardManager manager = Bukkit.getScoreboardManager();
+			Scoreboard board = manager.getNewScoreboard();
 
-		
+			Objective objective = board.registerNewObjective(currentZone.getName(), "2");
+
+			objective.setDisplaySlot(DisplaySlot.SIDEBAR);
+
+			if(currentZone.getName().length() > 13) {
+				objective.setDisplayName(ChatColor.AQUA + currentZone.getName().substring(1 ,13));
+			} else {
+				objective.setDisplayName(ChatColor.AQUA + currentZone.getName());
+			}
+
+
+			Score score = null;
+			
+			if (currentZone.getMainOwner() == null) {
+				 score = objective.getScore(Bukkit.getOfflinePlayer("Unkown"));
+			} else {
+
+				if(currentZone.getMainOwner().length() > 13) {
+					score = objective.getScore(Bukkit.getOfflinePlayer(ChatColor.GOLD + currentZone.getMainOwner().substring(1,13))); //Get a fake offline player
+				} else {
+					score = objective.getScore(Bukkit.getOfflinePlayer(ChatColor.GOLD + currentZone.getMainOwner())); //Get a fake offline player     
+				}
+			}
+
+			score.setScore(0);
+			mcplayer.setScoreboard(board);
+
+
+			Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() { 
+				public void run() {
+					mcplayer.setScoreboard(manager.getNewScoreboard());
+				}
+			}, 400); //400 = 20 seconds. 1 second = 20 ticks, 20*20=400
+
+		}
+
+
 		player.sendMessage(ChatColor.RED + "[" + currentZone.getName() + "] " + 
 				currentZone.getTextEnter() + text);
 
