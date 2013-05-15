@@ -2,6 +2,7 @@ package info.tregmine.lookup;
 
 
 import info.tregmine.Tregmine;
+import info.tregmine.currency.Wallet;
 import info.tregmine.database.ConnectionPool;
 
 import java.io.IOException;
@@ -13,12 +14,19 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+//import org.bukkit.plugin.Plugin;
+import org.bukkit.scoreboard.DisplaySlot;
+import org.bukkit.scoreboard.Objective;
+import org.bukkit.scoreboard.Score;
+import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.ScoreboardManager;
 
 import com.maxmind.geoip.Location;
 import com.maxmind.geoip.LookupService;
@@ -139,5 +147,35 @@ public class LookupPlayer implements  Listener  {
 				event.getPlayer().setGameMode(GameMode.SURVIVAL);
 			}			
 		}
+		
+
+	    final Player mcplayer = event.getPlayer();
+        if (mcplayer.isOnline())
+        {
+
+        	final ScoreboardManager manager = Bukkit.getScoreboardManager();
+        	Scoreboard board = manager.getNewScoreboard();
+        	 
+        	Objective objective = board.registerNewObjective("1", "2");
+        	objective.setDisplaySlot(DisplaySlot.SIDEBAR);
+        	objective.setDisplayName("" + ChatColor.DARK_RED + "" + ChatColor.BOLD + "Welcome to Tregmine!");
+        	 
+        	Wallet wallet = new Wallet(mcplayer.getName());
+        	
+        	Score score = objective.getScore(Bukkit.getOfflinePlayer(ChatColor.BLACK + "Your Balance:")); //Get a fake offline player
+        	score.setScore((int)wallet.balance());
+        	mcplayer.setScoreboard(board);
+        	
+        
+        Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() { 
+        	public void run() {
+        		mcplayer.setScoreboard(manager.getNewScoreboard());
+        	}
+        	}, 400); //400 = 20 seconds. 1 second = 20 ticks, 20*20=400
+        
+        }
+		
+		
+		
 	}    
 }
