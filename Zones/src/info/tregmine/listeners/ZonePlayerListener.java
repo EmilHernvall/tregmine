@@ -708,13 +708,12 @@ public class ZonePlayerListener implements Listener
 			score.setScore(currentZone.getId());
 			mcplayer.setScoreboard(board);
 
-/*
+
 			Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() { 
 				public void run() {
 					mcplayer.setScoreboard(manager.getNewScoreboard());
 				}
 			}, 400); //400 = 20 seconds. 1 second = 20 ticks, 20*20=400
-*/
 			
 		}
 
