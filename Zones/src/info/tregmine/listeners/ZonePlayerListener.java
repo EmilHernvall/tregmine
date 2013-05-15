@@ -683,7 +683,7 @@ public class ZonePlayerListener implements Listener
 
 			Objective objective = board.registerNewObjective(currentZone.getName(), "2");
 
-			objective.setDisplaySlot(DisplaySlot.SIDEBAR);
+			objective.setDisplaySlot(DisplaySlot.PLAYER_LIST);
 
 			if(currentZone.getName().length() > 13) {
 				objective.setDisplayName(ChatColor.AQUA + currentZone.getName().substring(1 ,13));
@@ -708,13 +708,14 @@ public class ZonePlayerListener implements Listener
 			score.setScore(0);
 			mcplayer.setScoreboard(board);
 
-
+/*
 			Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() { 
 				public void run() {
 					mcplayer.setScoreboard(manager.getNewScoreboard());
 				}
 			}, 400); //400 = 20 seconds. 1 second = 20 ticks, 20*20=400
-
+*/
+			
 		}
 
 
