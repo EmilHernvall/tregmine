@@ -682,10 +682,23 @@ public class ZonePlayerListener implements Listener
         	Scoreboard board = manager.getNewScoreboard();
         	 
         	Objective objective = board.registerNewObjective(currentZone.getName(), "2");
+        	
         	objective.setDisplaySlot(DisplaySlot.SIDEBAR);
-        	objective.setDisplayName(ChatColor.AQUA + currentZone.getName().substring(0 ,13));
-        	         	
-        	Score score = objective.getScore(Bukkit.getOfflinePlayer(ChatColor.GOLD + currentZone.getMainOwner().substring(0,13))); //Get a fake offline player
+        	
+        	if(currentZone.getName().length() < 13) {
+        		objective.setDisplayName(ChatColor.AQUA + currentZone.getName().substring(1 ,13));
+        	} else {
+            	objective.setDisplayName(ChatColor.AQUA + currentZone.getName());
+        	}
+        	
+        	Score score = null;
+        	
+        	if(currentZone.getMainOwner().length() < 13) {
+        	 score = objective.getScore(Bukkit.getOfflinePlayer(ChatColor.GOLD + currentZone.getMainOwner().substring(1,13))); //Get a fake offline player
+        	} else {
+             score = objective.getScore(Bukkit.getOfflinePlayer(ChatColor.GOLD + currentZone.getMainOwner())); //Get a fake offline player     
+        	}
+        	
         	score.setScore(0);
         	mcplayer.setScoreboard(board);
         	
