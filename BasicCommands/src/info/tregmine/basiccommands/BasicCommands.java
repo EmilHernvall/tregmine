@@ -591,6 +591,7 @@ public class BasicCommands extends JavaPlugin {
 			player.getInventory().clear();
 			return true;
 		}
+		
 		if(commandName.matches("setspawner") && tregminePlayer.isAdmin()){
 			if(args.length == 1){
 				if(player.getTargetBlock(null, 15).getType().equals(Material.MOB_SPAWNER)){
@@ -606,9 +607,11 @@ public class BasicCommands extends JavaPlugin {
 			}else{
 				player.sendMessage(ChatColor.RED + "Type /spawner <mobname> whilst pointing at a spawner");
 			}
-		}else{
-			player.sendMessage(ChatColor.RED + "Only an Admin can use this command!");
+			return true;
 		}
+
+		
+		
 		return false;
 	}
 
