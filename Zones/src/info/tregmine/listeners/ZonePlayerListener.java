@@ -683,7 +683,7 @@ public class ZonePlayerListener implements Listener
         	 
         	Objective objective = board.registerNewObjective(currentZone.getName(), "2");
         	objective.setDisplaySlot(DisplaySlot.SIDEBAR);
-        	objective.setDisplayName("" + ChatColor.AQUA + "" + currentZone.getName());
+        	objective.setDisplayName("" + ChatColor.AQUA + "" + substring( currentZone.getName() ,0 ,16));
         	         	
         	Score score = objective.getScore(Bukkit.getOfflinePlayer(ChatColor.GOLD + "Main owner: " + currentZone.getMainOwner())); //Get a fake offline player
         	score.setScore(0);
@@ -713,5 +713,11 @@ public class ZonePlayerListener implements Listener
 			player.sendMessage(ChatColor.RED + "[" + currentZone.getName() + "] " + 
 					permNotification);
 		}
+	}
+
+
+	private String substring(String name, int i, int j) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
