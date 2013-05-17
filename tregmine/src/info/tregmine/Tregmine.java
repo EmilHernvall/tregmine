@@ -646,8 +646,6 @@ public class Tregmine extends JavaPlugin
 					TregminePlayer Guardians = this.tregminePlayer.get(online.getName());
 					if(Guardians.isGuardian()){
 						if(args.length >= 1){
-							Player target = Bukkit.getPlayer(args[0]);
-							if(target != null){
 								int i = 1; 
 								int para = args.length;
 								String msg = "";
@@ -656,7 +654,6 @@ public class Tregmine extends JavaPlugin
 									i++;
 								}
 								Guardians.sendMessage(ChatColor.BLUE + "Guardian Message: " + tregminePlayer.getDisplayName() + ": " + ChatColor.YELLOW + msg);
-							}
 						}else{
 							tregminePlayer.sendMessage(ChatColor.RED + "Correct use: /g <Message to all guardians>");
 						}
@@ -673,8 +670,6 @@ public class Tregmine extends JavaPlugin
 					TregminePlayer Admins = this.tregminePlayer.get(online.getName());
 					if(Admins.isAdmin()){
 						if(args.length >= 1){
-							Player target = Bukkit.getPlayer(args[0]);
-							if(target != null){
 								int i = 1; 
 								int para = args.length;
 								String msg = "";
@@ -683,7 +678,6 @@ public class Tregmine extends JavaPlugin
 									i++;
 								}
 								Admins.sendMessage(ChatColor.RED + "Admin Message: " + tregminePlayer.getDisplayName() + ": " + ChatColor.YELLOW + msg);
-							}
 						}else{
 							tregminePlayer.sendMessage(ChatColor.RED + "Correct use: /a <Message to all admins>");
 						}
