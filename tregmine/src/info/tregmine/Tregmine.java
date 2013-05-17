@@ -113,7 +113,7 @@ public class Tregmine extends JavaPlugin
 		getServer().getPluginManager().registerEvents(new info.tregmine.buttons.vendings.Machines(this), this);
 		getServer().getPluginManager().registerEvents(new info.tregmine.buttons.rulesbuttons.RulesButtons(this), this);
 		getServer().getPluginManager().registerEvents(new info.tregmine.buttons.forabuttons.ForaButtons(this), this);
-//		getServer().getPluginManager().registerEvents(new info.tregmine.donatesigns.DonateSigns(this), this);
+		//		getServer().getPluginManager().registerEvents(new info.tregmine.donatesigns.DonateSigns(this), this);
 
 		// this.lottery = new ArrayList<String>();
 
@@ -165,11 +165,11 @@ public class Tregmine extends JavaPlugin
 			tregPlayer.load();
 			this.tregminePlayer.put(onlineName, tregPlayer);
 			player.sendMessage(ChatColor.GRAY + "Tregmine successfully loaded to build: " + this.getDescription().getVersion() );
-//			player.sendMessage(ChatColor.GRAY + "Version explanation: X.Y.Z.G");
-//			player.sendMessage(ChatColor.GRAY + "X new stuff added, When i make a brand new thing");
-//			player.sendMessage(ChatColor.GRAY + "Y new function added, when i extend what current stuff can do");
-//			player.sendMessage(ChatColor.GRAY + "Z bugfix that may change how function and stuff works");
-//			player.sendMessage(ChatColor.GRAY + "G small bugfix like spelling errors");
+			//			player.sendMessage(ChatColor.GRAY + "Version explanation: X.Y.Z.G");
+			//			player.sendMessage(ChatColor.GRAY + "X new stuff added, When i make a brand new thing");
+			//			player.sendMessage(ChatColor.GRAY + "Y new function added, when i extend what current stuff can do");
+			//			player.sendMessage(ChatColor.GRAY + "Z bugfix that may change how function and stuff works");
+			//			player.sendMessage(ChatColor.GRAY + "G small bugfix like spelling errors");
 		}
 
 	}
@@ -221,13 +221,13 @@ public class Tregmine extends JavaPlugin
 
 					public void run() {
 
-//						DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+						//						DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 						Date date = new Date();
 
 						fPlayer.sendMessage(ChatColor.YELLOW + "Starting to generate book for " + args[1] );
 						ItemStack book = new ItemStack(Material.WRITTEN_BOOK, 1);
 						BookMeta bookmeta = (BookMeta) book.getItemMeta();
-//						TregminePlayer p = getPlayer(args[1]);
+						//						TregminePlayer p = getPlayer(args[1]);
 
 						long placed = 0;
 						long destroyed = 0;
@@ -422,7 +422,7 @@ public class Tregmine extends JavaPlugin
 			if("te".matches(commandName)) {
 
 				ItemStack item = new ItemStack(Material.PAPER, amount, (byte) 0);
-//				PlayerInventory inv = player.getInventory();
+				//				PlayerInventory inv = player.getInventory();
 
 				ItemMeta meta = item.getItemMeta();
 				List<String> lore = new ArrayList<String>();
@@ -494,7 +494,7 @@ public class Tregmine extends JavaPlugin
 		if(commandName.equals("text") && player.isAdmin()) {
 			Player[] players = this.getServer().getOnlinePlayers();
 
-//			player.setTexturePack(args[0]);
+			//			player.setTexturePack(args[0]);
 			for (Player p : players) {
 				p.setTexturePack(args[0]);
 			}
@@ -646,14 +646,14 @@ public class Tregmine extends JavaPlugin
 					TregminePlayer Guardians = this.tregminePlayer.get(online.getName());
 					if(Guardians.isGuardian()){
 						if(args.length >= 1){
-								int i = 1; 
-								int para = args.length;
-								String msg = "";
-								while(i < para){
-									msg = msg + " " + args[i];
-									i++;
-								}
-								Guardians.sendMessage(ChatColor.BLUE + "Guardian Message: " + tregminePlayer.getDisplayName() + ": " + ChatColor.YELLOW + msg);
+							int i = 1; 
+							int para = args.length;
+							String msg = "";
+							while(i < para){
+								msg = msg + " " + args[i];
+								i++;
+							}
+							Guardians.sendMessage(ChatColor.BLUE + "Guardian Message: " + tregminePlayer.getDisplayName() + ": " + ChatColor.YELLOW + msg);
 						}else{
 							tregminePlayer.sendMessage(ChatColor.RED + "Correct use: /g <Message to all guardians>");
 						}
@@ -670,21 +670,21 @@ public class Tregmine extends JavaPlugin
 					TregminePlayer Admins = this.tregminePlayer.get(online.getName());
 					if(Admins.isAdmin()){
 						if(args.length >= 1){
-								int i = 1; 
-								int para = args.length;
-								String msg = "";
-								while(i < para){
-									msg = msg + " " + args[i];
-									i++;
-								}
-								Admins.sendMessage(ChatColor.RED + "Admin Message: " + tregminePlayer.getDisplayName() + ": " + ChatColor.YELLOW + msg);
+							int i = 1; 
+							int para = args.length;
+							String msg = "";
+							while(i < para){
+								msg = msg + " " + args[i];
+								i++;
+							}
+							Admins.sendMessage(ChatColor.RED + "Admin Message: " + tregminePlayer.getDisplayName() + ": " + ChatColor.YELLOW + msg);
 						}else{
 							tregminePlayer.sendMessage(ChatColor.RED + "Correct use: /a <Message to all admins>");
 						}
-					}else{
-						tregminePlayer.sendMessage(ChatColor.RED + "You must be an Admin to use this command!");
 					}
 				}
+			}else{
+				tregminePlayer.sendMessage(ChatColor.RED + "You must be an Admin to use this command!");
 			}
 		}
 		return false;
