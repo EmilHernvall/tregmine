@@ -113,7 +113,7 @@ public class Tregmine extends JavaPlugin
 		getServer().getPluginManager().registerEvents(new info.tregmine.buttons.vendings.Machines(this), this);
 		getServer().getPluginManager().registerEvents(new info.tregmine.buttons.rulesbuttons.RulesButtons(this), this);
 		getServer().getPluginManager().registerEvents(new info.tregmine.buttons.forabuttons.ForaButtons(this), this);
-		//		getServer().getPluginManager().registerEvents(new info.tregmine.donatesigns.DonateSigns(this), this);
+		//getServer().getPluginManager().registerEvents(new info.tregmine.donatesigns.DonateSigns(this), this);
 
 		// this.lottery = new ArrayList<String>();
 
@@ -646,12 +646,9 @@ public class Tregmine extends JavaPlugin
 					TregminePlayer Guardians = this.tregminePlayer.get(online.getName());
 					if(Guardians.isGuardian()){
 						if(args.length >= 1){
-							int i = 1; 
-							int para = args.length;
-							String msg = "";
-							while(i < para){
-								msg = msg + " " + args[i];
-								i++;
+							String msg = args[0];
+							for(int i=1; i < args.length; i++) {
+								msg += " " + args[i];
 							}
 							Guardians.sendMessage(ChatColor.BLUE + "Guardian Message: " + tregminePlayer.getDisplayName() + ": " + ChatColor.YELLOW + msg);
 						}else{
@@ -670,12 +667,9 @@ public class Tregmine extends JavaPlugin
 					TregminePlayer Admins = this.tregminePlayer.get(online.getName());
 					if(Admins.isAdmin()){
 						if(args.length >= 1){
-							int i = 1; 
-							int para = args.length;
-							String msg = "";
-							while(i < para){
-								msg = msg + " " + args[i];
-								i++;
+							String msg = args[0];
+							for(int i=1; i < args.length; i++) {
+								msg += " " + args[i];
 							}
 							Admins.sendMessage(ChatColor.RED + "Admin Message: " + tregminePlayer.getDisplayName() + ": " + ChatColor.YELLOW + msg);
 						}else{
