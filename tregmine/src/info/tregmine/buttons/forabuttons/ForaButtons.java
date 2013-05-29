@@ -281,7 +281,7 @@ public class ForaButtons implements Listener{
 							player.sendMessage(ChatColor.DARK_AQUA + player.getName() + ", please message notaro1997 what you want your message to be.");
 						}
 						if(player.getName().equals("mguerra11")){
-							this.plugin.getServer().broadcastMessage(ChatColor.RED + "mguerra11 just hugged you so hard, you passed out");
+							this.plugin.getServer().broadcastMessage(ChatColor.DARK_RED + "mguerra11 just hugged you so hard, you passed out");
 						}
 						if(player.getName().equals("chrille0100")){
 							player.sendMessage(ChatColor.DARK_AQUA + player.getName() + ", please message notaro1997 what you want your message to be.");
@@ -347,7 +347,7 @@ public class ForaButtons implements Listener{
 							player.sendMessage(ChatColor.DARK_AQUA + player.getName() + ", please message notaro1997 what you want your message to be.");
 						}
 						if(player.getName().equals("Silver_Shadow166")){
-							player.sendMessage(ChatColor.DARK_AQUA + player.getName() + ", please message notaro1997 what you want your message to be.");
+							this.plugin.getServer().broadcastMessage(ChatColor.BLUE + "You just got butt plugged by Silver_Shadow166"); //... what.
 						}
 						if(player.getName().equals("sucage")){
 							player.sendMessage(ChatColor.DARK_AQUA + player.getName() + ", please message notaro1997 what you want your message to be.");
@@ -355,8 +355,8 @@ public class ForaButtons implements Listener{
 						if(player.getName().equals("HiTiHiTi")){
 							player.sendMessage(ChatColor.DARK_AQUA + player.getName() + ", please message notaro1997 what you want your message to be.");
 						}
-						if(player.getName().equals("baku1999")){
-							this.plugin.getServer().broadcastMessage(ChatColor.BLUE + "Your ass just got dropped by baku1999");
+						if(player.getName().equals("TyboltX")){
+							this.plugin.getServer().broadcastMessage(ChatColor.BLUE + "Your ass just got dropped by TyboltX");
 						}
 						if(player.getName().equals("klonrocks")){
 							player.sendMessage(ChatColor.DARK_AQUA + player.getName() + ", please message notaro1997 what you want your message to be.");
