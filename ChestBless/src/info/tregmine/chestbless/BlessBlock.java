@@ -47,13 +47,32 @@ public class BlessBlock implements Listener {
 			int checksum4 = (loc.getBlockX() + "," + (loc.getBlockZ()-1) + "," + loc.getBlockY() + "," + loc.getWorld().getName()).hashCode();
 
 			if (this.plugin.chests.containsKey(checksum1) || this.plugin.chests.containsKey(checksum2) || this.plugin.chests.containsKey(checksum3) || this.plugin.chests.containsKey(checksum4)) {
-				player.sendMessage(ChatColor.RED + "You can't place a " +
-						" next to a already blessed one.");
+				player.sendMessage(ChatColor.RED + "You can't place a chest next to one that is already blessed.");
 				event.setCancelled(true);
 				return;
 			}
 		}
 
-
+		if (block.getType() == Material.HOPPER) {
+			Player player = event.getPlayer();
+			info.tregmine.api.TregminePlayer tregminePlayer = this.plugin.tregmine.tregminePlayer.get(player.getName());
+			Location loc = block.getLocation();
+			int checksum1 = (loc.getBlockX() + "," + loc.getBlockZ() + "," + (loc.getBlockY() - 1) + "," + loc.getWorld().getName()) .hashCode();
+			int checksum = (loc.getBlockX() + "," + loc.getBlockZ() + "," + loc.getBlockY() + "," + loc.getWorld().getName()).hashCode();
+			if (this.plugin.chests.containsKey(checksum1)) {
+				if (this.plugin.chests.containsKey(checksum)) {
+					String name = this.plugin.chests.get(checksum);
+					if (!player.getName().matches(name)) {
+						if (!tregminePlayer.isAdmin()) {
+							player.sendMessage(ChatColor.RED + "You can't place a hopper under a blessed chest.");
+							event.setCancelled(true);
+						}
+					} else {
+						player.sendMessage(ChatColor.AQUA + "You placed a hopper under a blessed chest");
+						event.setCancelled(false);
+					}
+				}
+			}
+		}
 	}
 }
