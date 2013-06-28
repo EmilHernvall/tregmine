@@ -4,7 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
+import java.util.Map;
+import java.util.HashMap ;
 //import java.util.List;
 
 import org.bukkit.ChatColor;
@@ -20,467 +21,230 @@ public class TregminePlayer extends PlayerDelegate
     public enum GuardianState
     {
         ACTIVE,
-            INACTIVE,
-            QUEUED;
+        INACTIVE,
+        QUEUED;
     };
 
-    private HashMap<String,String> settings = new HashMap<String,String>();
-    private HashMap<String,Block> block = new HashMap<String,Block>();
-    private HashMap<String,Integer> integer = new HashMap<String,Integer>();
+    private final static Map<String, ChatColor> COLORS =
+        new HashMap<String, ChatColor>() {{
+            put("admin", ChatColor.RED);
+            put("broker", ChatColor.DARK_RED);
+            put("helper", ChatColor.YELLOW);
+            put("purle", ChatColor.DARK_PURPLE);
+            put("donator", ChatColor.GOLD);
+            put("trusted", ChatColor.DARK_GREEN);
+            put("warned", ChatColor.GRAY);
+            put("trial", ChatColor.GREEN);
+            put("vampire", ChatColor.DARK_RED);
+            put("hunter", ChatColor.BLUE);
+            put("pink", ChatColor.LIGHT_PURPLE);
+            put("child", ChatColor.AQUA);
+            put("mentor", ChatColor.DARK_AQUA);
+            put("police", ChatColor.BLUE);
+        }};
 
+    // Persistent values
     private int id = 0;
-    private String name;
+    private String name = null;
+    private String password = null;
+    private String keyword = null;
+    private String countryName = null;
+    private String city = null;
+    private String ip = null;
+    private String postalCode = null;
+    private String region = null;
+    private String hostName = null;
+    private String color = "trial";
+    private String timezone = "Europe/Stockholm";
+    private boolean hiddenLocation = false;
+    private boolean invisible = false;
+    private boolean admin = false;
+    private boolean donator = false;
+    private boolean banned = false;
+    private boolean trusted = false;
+    private boolean child = false;
+    private boolean guardian = false;
+    private boolean builder = false;
+    private boolean teleportShield = false;
+    private int guardianRank = 0;
+
+    // Onetime state
+    private String chatChannel = "GLOBAL";
+    private String texture = "https://dl.dropbox.com/u/5405236/mc/df.zip";
     private Zone currentZone = null;
     private GuardianState guardianState = null;
-    private String password;
+    private String blessTarget = null;
+
+    // Player state for block fill
+    private Block fillBlock1 = null;
+    private Block fillBlock2 = null;
+    private int fillBlockCounter = 0;
+
+    // Player state for zone creation
+    private Block zoneBlock1 = null;
+    private Block zoneBlock2 = null;
+    private int zoneBlockCounter = 0;
+    private int targetZoneId = 0;
 
     public TregminePlayer(Player player)
     {
         super(player);
+
         this.name = player.getName();
     }
 
-    public boolean exists()
+    public void setId(int v) { this.id = v; }
+    public int getId() { return id; }
+
+    public String getChatName() { return name; }
+
+    public void setTemporaryChatName(String name)
     {
-        Connection conn = null;
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-        try {
-            conn = ConnectionPool.getConnection();
-
-            String sql = "SELECT * FROM user WHERE player = ?";
-            stmt = conn.prepareStatement(sql);
-            stmt.setString(1, name);
-            stmt.execute();
-
-            rs = stmt.getResultSet();
-            return rs.next();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } finally {
-            if (rs != null) {
-                try { rs.close(); } catch (SQLException e) {}
-            }
-            if (stmt != null) {
-                try { stmt.close(); } catch (SQLException e) {}
-            }
-            if (conn != null) {
-                try { conn.close(); } catch (SQLException e) {}
-            }
-        }
-    }
-
-    public void load()
-    {
-        settings.clear();
-
-        Connection conn = null;
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-        try {
-            conn = ConnectionPool.getConnection();
-
-            stmt = conn.prepareStatement("SELECT * FROM user JOIN  (user_settings) WHERE uid=id and player = ?");
-            stmt.setString(1, name);
-            stmt.execute();
-
-            rs = stmt.getResultSet();
-            while (rs.next()) {
-                this.id = rs.getInt("uid");
-                settings.put("uid", rs.getString("uid"));
-                settings.put(rs.getString("key"), rs.getString("value"));
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } finally {
-            if (rs != null) {
-                try { rs.close(); } catch (SQLException e) {}
-            }
-            if (stmt != null) {
-                try { stmt.close(); } catch (SQLException e) {}
-            }
-            if (conn != null) {
-                try { conn.close(); } catch (SQLException e) {}
-            }
-        }
-        this.setTemporaryChatName(getNameColor() + name);
-        //		this.resendTexture();
-    }
-
-    public void create()
-    {
-        Connection conn = null;
-        PreparedStatement stmt = null;
-        try {
-            conn = ConnectionPool.getConnection();
-
-            String sql = "INSERT INTO user (player) VALUE (?)";
-            stmt = conn.prepareStatement(sql);
-            stmt.setString(1, name);
-            stmt.execute();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } finally {
-            if (stmt != null) {
-                try { stmt.close(); } catch (SQLException e) {}
-            }
-            if (conn != null) {
-                try { conn.close(); } catch (SQLException e) {}
-            }
-        }
-    }
-
-    private boolean getBoolean(String key)
-    {
-        String value = this.settings.get(key);
-
-        try {
-            if (value.contains("true")) {
-                return true;
-            } else {
-                return false;
-            }
-        } catch (Exception  e) {
-            return false;
-        }
-    }
-
-    public int getId()
-    {
-        return id;
-    }
-
-    public boolean isAdmin()
-    {
-        return getBoolean("admin");
-    }
-
-    public boolean isDonator()
-    {
-        return getBoolean("donator");
-    }
-
-    @Override
-    public boolean isBanned()
-    {
-        return getBoolean("banned");
-    }
-
-    public boolean isTrusted()
-    {
-        return getBoolean("trusted");
-    }
-
-    public boolean isChild()
-    {
-        return getBoolean("child");
-    }
-
-    @Deprecated
-    public boolean isImmortal()
-    {
-        return getBoolean("immortal");
-    }
-
-    public boolean isGuardian()
-    {
-        return getMetaString("guardian") != null;
-    }
-
-    public int getGuardianRank()
-    {
-        try {
-            return Integer.parseInt(getMetaString("guardian"));
-        } catch (NumberFormatException e) {
-            return -1;
-        }
-    }
-
-    public GuardianState getGuardianState()
-    {
-        return guardianState;
-    }
-
-    public void setGuardianState(GuardianState v)
-    {
-        this.guardianState = v;
-        switch (v) {
-            case ACTIVE:
-                setTempMetaString("color", "police");
-                break;
-            case INACTIVE:
-            case QUEUED:
-                setTempMetaString("color", "donator");
-                break;
-        }
-        setTemporaryChatName(getNameColor() + getName());
-    }
-
-    public boolean getMetaBoolean(String _key)
-    {
-        return getBoolean(_key);
-    }
-
-    public void setMetaBoolean(String _key, Boolean _value) 	{
-        if (_value == true) {
-            this.setMetaString(_key, "true");
-        }
-
-        if (_value == false) {
-            this.setMetaString(_key, "false");
-        }
-
-    }
-
-
-    public void setMetaString(String _key, String _value) 	{
-        Connection conn = null;
-        PreparedStatement stmt = null;
-        if (_value == null) {
-            _value = "null";
-        }
-
-        try {
-            conn = ConnectionPool.getConnection();
-
-            String sqlDelete = "DELETE FROM `user_settings` " +
-                "WHERE `user_settings`.`id` = ? AND `user_settings`.`key` = ?";
-            stmt = conn.prepareStatement(sqlDelete);
-            stmt.setString(1, settings.get("uid"));
-            stmt.setString(2, _key);
-            stmt.execute();
-            stmt.close();
-            stmt = null;
-
-
-            String sqlInsert = "INSERT INTO user_settings (id,`key`,`value`) " +
-                "VALUE ((SELECT uid FROM user WHERE player = ?),?,?)";
-            stmt = conn.prepareStatement(sqlInsert);
-            stmt.setString(1, this.getName());
-            stmt.setString(2, _key);
-            stmt.setString(3, _value);
-            stmt.execute();
-
-            stmt.close();
-            stmt = null;
-
-            this.settings.put(_key, _value);
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } finally {
-            if (stmt != null) {
-                try { stmt.close(); } catch (SQLException e) {}
-            }
-            if (conn != null) {
-                try { conn.close(); } catch (SQLException e) {}
-            }
-        }
-    }
-
-    public void setTempMetaString(String _key, String _value)
-    {
-        try {
-            this.settings.put(_key, _value);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }	
-
-    public String getMetaString(String _key)
-    {
-        return this.settings.get(_key);
-    }
-
-    public String getTimezone()
-    {
-        String value = this.settings.get("timezone");
-        if (value == null) {
-            return "Europe/Stockholm";
-        } else {
-            return value;
-        }
-    }
-
-    public void setBlock(String _key, Block _block)
-    {
-        this.block.put(_key, _block);
-    }
-
-    public Block getBlock(String _key)
-    {
-        return this.block.get(_key);
-    }
-
-    public Integer getMetaInt(String _key)
-    {
-        return this.integer.get(_key);
-    }
-
-    public void setMetaInt(String _key, Integer _value)
-    {
-        this.integer.put(_key, _value);
-    }
-
-    public ChatColor getNameColor()
-    {
-        String color = this.settings.get("color");
-
-        if (this.settings.get("color") != null ) {
-            if (color.toLowerCase().matches("admin")) {
-                return ChatColor.RED;
-            }
-
-            if (color.toLowerCase().matches("broker")) {
-                return ChatColor.DARK_RED;
-            }
-
-            if (color.toLowerCase().matches("helper")) {
-                return ChatColor.YELLOW;
-            }
-
-            if (color.toLowerCase().matches("purle")) {
-                return ChatColor.DARK_PURPLE;
-            }
-
-            if (color.toLowerCase().matches("donator")) {
-                return ChatColor.GOLD;
-            }
-
-            if (color.toLowerCase().matches("trusted")) {
-                return ChatColor.DARK_GREEN;
-            }
-
-            if (color.toLowerCase().matches("warned")) {
-                return ChatColor.GRAY;
-            }
-
-            if (color.toLowerCase().matches("trial")) {
-                return ChatColor.GREEN;
-            }
-
-            if (color.toLowerCase().matches("vampire")) {
-                return ChatColor.DARK_RED;
-            }
-
-            if (color.toLowerCase().matches("hunter")) {
-                return ChatColor.BLUE;
-            }
-
-            if (color.toLowerCase().matches("pink")) {
-                return ChatColor.LIGHT_PURPLE;
-            }
-
-            if (color.toLowerCase().matches("child")) {
-                return ChatColor.AQUA;
-            }
-
-            if (color.toLowerCase().matches("mentor")) {
-                return ChatColor.DARK_AQUA;
-            }
-
-            if (color.toLowerCase().matches("police")) {
-                return ChatColor.BLUE;
-            }
-
-        }
-        return ChatColor.WHITE;
-    }
-
-    @Deprecated
-    public String getSayName() 	{
-        return name;
-    }
-
-    @Deprecated
-    public void setSayName() 	{
-        //		return name;
-    }
-
-    public String getChatName() 	{
-        return name;
-    }
-
-
-    public void setInvis(Boolean _value)	{
-        this.setMetaBoolean("invis", _value);
-    }
-
-    public Boolean getInvis()	{
-        return this.getBoolean("invis");
-    }
-
-    public void setTemporaryChatName(String _name)	{
-        name = _name;
+        this.name = name;
 
         if (getChatName().length() > 16) {
-            this.setPlayerListName(name.substring(0, 15));
+            setPlayerListName(name.substring(0, 15));
         } else {
-            this.setPlayerListName(name);
+            setPlayerListName(name);
         }
-    }
-
-    public void setCurrentZone(Zone zone) {
-        this.currentZone = zone;
-    }
-
-    public Zone getCurrentZone() {
-        return currentZone;
     }
 
     public void setPassword(String newPassword)
     {
-        String hash = BCrypt.hashpw(newPassword, BCrypt.gensalt());
+        password = BCrypt.hashpw(newPassword, BCrypt.gensalt());
+    }
 
-        Connection conn = null;
-        PreparedStatement stmt = null;
-        try {
-            conn = ConnectionPool.getConnection();
+    public String getPasswordHash()
+    {
+        return password;
+    }
 
-            String sql = "UPDATE user SET password = ? WHERE uid = ?";
-            stmt = conn.prepareStatement(sql);
-            stmt.setString(1, hash);
-            stmt.setInt(2, this.id);
-            stmt.execute();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } finally {
-            if (stmt != null) {
-                try { stmt.close(); } catch (SQLException e) {}
-            }
-            if (conn != null) {
-                try { conn.close(); } catch (SQLException e) {}
-            }
+    public boolean verifyPassword(String attempt)
+    {
+        return BCrypt.checkpw(attempt, password);
+    }
+
+    public String getKeyword() { return keyword; }
+    public void setKeyword(String v) { this.keyword = v; }
+
+    public String getCountryName() { return countryName; }
+    public void setCountryName(String v) { this.countryName = v; }
+
+    public String getCity() { return city; }
+    public void setCity(String v) { this.city = v; }
+
+    public String getIp() { return ip; }
+    public void setIp(String v) { this.ip = v; }
+
+    public String getPostalCode() { return postalCode; }
+    public void setPostalCode(String v) { this.postalCode = v; }
+
+    public String getRegion() { return region; }
+    public void setRegion(String v) { this.region = v; }
+
+    public String getHostName() { return hostName; }
+    public void setHostName(String v) { this.hostName = v; }
+
+    public boolean hasHiddenLocation() { return hiddenLocation; }
+    public void setHiddenLocation(boolean v) { this.hiddenLocation = v; }
+
+    public void setAdmin(boolean v) { this.admin = v; }
+    public boolean isAdmin() { return admin; }
+
+    public void setDonator(boolean v) { this.donator = v; }
+    public boolean isDonator() { return donator; }
+
+    public void setBanned(boolean v) { this.banned = v; }
+    @Override
+    public boolean isBanned() { return banned; }
+
+    public void setTrusted(boolean v) { this.trusted = v; }
+    public boolean isTrusted() { return trusted; }
+
+    public void setChild(boolean v) { this.child = v; }
+    public boolean isChild() { return child; }
+
+    public void setGuardian(boolean v) { this.guardian = v; }
+    public boolean isGuardian() { return guardian; }
+
+    public void setBuilder(boolean v) { this.builder = v; }
+    public boolean isBuilder() { return builder; }
+
+    public void setGuardianRank(int v) { this.guardianRank = v; }
+    public int getGuardianRank() { return guardianRank; }
+
+    public GuardianState getGuardianState() { return guardianState; }
+    public void setGuardianState(GuardianState v)
+    {
+        this.guardianState = v;
+
+        switch (v) {
+            case ACTIVE:
+                this.color = "police";
+                break;
+            case INACTIVE:
+            case QUEUED:
+                this.color = "donator";
+                break;
+        }
+
+        setTemporaryChatName(getNameColor() + getName());
+    }
+
+    public void setTimezone(String v) { this.timezone = v; }
+    public String getTimezone() { return timezone; }
+
+    public ChatColor getNameColor() { return COLORS.get(color); }
+    public String getColor() { return color; }
+    public void setNameColor(String v) { this.color = v; }
+
+    public void setInvisible(boolean v) { this.invisible = v; }
+    public Boolean isInvisible() { return invisible; }
+
+    public void setCurrentZone(Zone zone) { this.currentZone = zone; }
+    public Zone getCurrentZone() { return currentZone; }
+
+    public void setCurrentTexture(String url)
+    {
+        if (url == null) {
+            this.texture = "https://dl.dropbox.com/u/5405236/mc/df.zip";
+        }
+
+        if (!url.equals(this.texture)) {
+            this.texture = url;
+            setTexturePack(url);
         }
     }
 
+    public void setChatChannel(String v) { this.chatChannel = v; }
+    public String getChatChannel() { return chatChannel; }
 
-    public void setCurrentTexture(String _url) {
+    public void setBlessTarget(String v) { this.blessTarget = v; }
+    public String getBlessTarget() { return blessTarget; }
 
-        if(this.getMetaString("text") == null) {
-            this.setMetaString("text", "https://dl.dropbox.com/u/5405236/mc/df.zip");
-            this.setTexturePack("https://dl.dropbox.com/u/5405236/mc/df.zip");
-        }
+    public void setTeleportShield(boolean v) { this.teleportShield = v; }
+    public boolean hasTeleportShield() { return teleportShield; }
 
-        if (!this.getMetaString("text").matches(_url)) {
-            this.setMetaString("text", _url);
-            this.setTexturePack(_url);
-        }
+    // block fill state
+    public void setFillBlock1(Block v) { this.fillBlock1 = v; }
+    public Block getFillBlock1() { return fillBlock1; }
 
-    }
+    public void setFillBlock2(Block v) { this.fillBlock2 = v; }
+    public Block getFillBlock2() { return fillBlock2; }
 
-    public void setChatChannel(String _channel) {
-        this.setMetaString("channel", _channel.toUpperCase());
-    }
+    public void setFillBlockCounter(int v) { this.fillBlockCounter = v; }
+    public int getFillBlockCounter() { return fillBlockCounter; }
 
-    public String getChatChannel() {
-        if (this.getMetaString("channel") == null) {
-            return "GLOBAL";
-        }    	
-        return this.getMetaString("channel").toUpperCase();
-    }
+    // zones state
+    public void setZoneBlock1(Block v) { this.zoneBlock1 = v; }
+    public Block getZoneBlock1() { return zoneBlock1; }
 
-    public boolean verifyPassword(String attempt) {
-        return BCrypt.checkpw(attempt, this.password);
-    }
+    public void setZoneBlock2(Block v) { this.zoneBlock2 = v; }
+    public Block getZoneBlock2() { return zoneBlock2; }
+
+    public void setZoneBlockCounter(int v) { this.zoneBlockCounter = v; }
+    public int getZoneBlockCounter() { return zoneBlockCounter; }
+
+    public void setTargetZoneId(int v) { this.targetZoneId = v; }
+    public int getTargetZoneId() { return targetZoneId; }
 }

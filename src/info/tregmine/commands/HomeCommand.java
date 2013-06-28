@@ -70,7 +70,7 @@ public class HomeCommand extends AbstractCommand
 
     private boolean save(TregminePlayer player)
     {
-        if (!player.isGuardian() && !player.isAdmin()) {
+        if (!player.isDonator()) {
             return false;
         }
 
@@ -113,6 +113,10 @@ public class HomeCommand extends AbstractCommand
 
     private boolean teleportTo(TregminePlayer player, String playerName)
     {
+        if (!player.isGuardian() && !player.isAdmin()) {
+            return false;
+        }
+
         Connection conn = null;
         Location loc = null;
         try {

@@ -50,7 +50,7 @@ public class MsgCommand extends AbstractCommand
 
         // Show message in senders terminal, as long as the recipient isn't
         // invisible, to prevent /msg from giving away hidden players presence
-        if (!recvPlayer.getMetaBoolean("invis")) {
+        if (!recvPlayer.isInvisible()) {
             player.sendMessage(GREEN + "(to) " + recvPlayer.getChatName() + GREEN +
                                ": "  + message);
         }

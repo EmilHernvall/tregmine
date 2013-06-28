@@ -1,11 +1,16 @@
 package info.tregmine.commands;
 
+import java.sql.Connection;
+import java.sql.SQLException;
+
 import static org.bukkit.ChatColor.*;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
+import info.tregmine.database.ConnectionPool;
+import info.tregmine.database.DBPlayerDAO;
 
 public class KeywordCommand extends AbstractCommand
 {
@@ -29,9 +34,25 @@ public class KeywordCommand extends AbstractCommand
             return true;
         }
 
-        player.setMetaString("keyword", keyword.toLowerCase());
+        player.setKeyword(keyword.toLowerCase());
         player.sendMessage(YELLOW + "From now on you can only log in by using ip " + 
                            keyword.toLowerCase() + ".mc.tregmine.info");
+
+        Connection conn = null;
+        try {
+            conn = ConnectionPool.getConnection();
+
+            DBPlayerDAO playerDAO = new DBPlayerDAO(conn);
+            playerDAO.updatePlayerKeyword(player);
+        }
+        catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        finally {
+            if (conn != null) {
+                try { conn.close(); } catch (SQLException e) {}
+            }
+        }
 
         return true;
     }

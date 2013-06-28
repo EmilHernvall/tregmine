@@ -5,21 +5,22 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.Comparator;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.Server;
-import org.bukkit.World;
 import org.bukkit.World.Environment;
+import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -34,7 +35,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitScheduler;
-import org.bukkit.GameMode;
 
 import info.tregmine.quadtree.IntersectionException;
 
@@ -42,6 +42,7 @@ import info.tregmine.api.TregminePlayer;
 import info.tregmine.database.ConnectionPool;
 import info.tregmine.database.DBChestBlessDAO;
 import info.tregmine.database.DBZonesDAO;
+import info.tregmine.database.DBPlayerDAO;
 import info.tregmine.zones.Lot;
 import info.tregmine.zones.Zone;
 import info.tregmine.zones.ZoneWorld;
@@ -134,16 +135,16 @@ public class Tregmine extends JavaPlugin
         pluginMgm.registerEvents(new ZonePlayerListener(this), this);
 
         // Declaration of all commands
-        getCommand("a").setExecutor(
-            new NotifyCommand(this, "a") {
+        getCommand("admins").setExecutor(
+            new NotifyCommand(this, "admins") {
                 @Override
                 public boolean isTarget(TregminePlayer player) {
                     return player.isAdmin();
                 }
             });
 
-        getCommand("g").setExecutor(
-            new NotifyCommand(this, "g") {
+        getCommand("guardians").setExecutor(
+            new NotifyCommand(this, "guardians") {
                 @Override
                 public boolean isTarget(TregminePlayer player) {
                     return player.isGuardian();
@@ -172,7 +173,7 @@ public class Tregmine extends JavaPlugin
         getCommand("newspawn").setExecutor(new NewSpawnCommand(this));
         getCommand("normal").setExecutor(new NormalCommand(this));
         getCommand("nuke").setExecutor(new NukeCommand(this));
-        getCommand("password").setExecutor(new KeywordCommand(this));
+        getCommand("password").setExecutor(new PasswordCommand(this));
         getCommand("pos").setExecutor(new PositionCommand(this));
         getCommand("regeneratechunk").setExecutor(new RegenerateChunkCommand(this));
         getCommand("say").setExecutor(new SayCommand(this));
@@ -187,6 +188,7 @@ public class Tregmine extends JavaPlugin
         getCommand("tpshield").setExecutor(new TeleportShieldCommand(this));
         getCommand("tpto").setExecutor(new TeleportToCommand(this));
         getCommand("user").setExecutor(new UserCommand(this));
+        getCommand("wallet").setExecutor(new WalletCommand(this));
         getCommand("warp").setExecutor(new WarpCommand(this));
         getCommand("zone").setExecutor(new ZoneCommand(this));
     }
@@ -207,22 +209,42 @@ public class Tregmine extends JavaPlugin
     @Override
     public void onLoad()
     {
-        Player[] players = server.getOnlinePlayers();
-        for (Player player : players) {
-            TregminePlayer tregPlayer = new TregminePlayer(player);
-            tregPlayer.load();
-            addPlayer(tregPlayer);
-
-            player.sendMessage(ChatColor.GRAY + "Tregmine successfully loaded " +
-                    "to build: " + this.getDescription().getVersion());
-        }
-
         Connection conn = null;
         try {
+            DBPlayerDAO playerDAO = new DBPlayerDAO(conn);
+
+            Player[] players = getServer().getOnlinePlayers();
+            for (Player player : players) {
+                TregminePlayer tregPlayer = playerDAO.getPlayer(player);
+                addPlayer(tregPlayer);
+
+                player.sendMessage(ChatColor.GRAY + "Tregmine successfully loaded " +
+                        "to build: " + this.getDescription().getVersion());
+            }
+
             conn = ConnectionPool.getConnection();
 
             DBChestBlessDAO chestBlessDAO = new DBChestBlessDAO(conn);
             this.blessedBlocks = chestBlessDAO.loadBlessedChests();
+        }
+        catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        finally {
+            if (conn != null) {
+                try { conn.close(); } catch (SQLException e) {}
+            }
+        }
+    }
+
+    public void reloadPlayer(TregminePlayer player)
+    {
+        Connection conn = null;
+        try {
+            DBPlayerDAO playerDAO = new DBPlayerDAO(conn);
+
+            TregminePlayer tregPlayer = playerDAO.getPlayer(player.getDelegate());
+            addPlayer(tregPlayer);
         }
         catch (SQLException e) {
             throw new RuntimeException(e);

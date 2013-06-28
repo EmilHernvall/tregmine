@@ -25,7 +25,7 @@ public class RegenerateChunkCommand extends AbstractCommand
         }
 
         World world = player.getWorld();
-        Block b1 = player.getBlock("b1");
+        Block b1 = player.getFillBlock1();
         Chunk chunk = b1.getChunk();
         world.regenerateChunk(chunk.getX(), chunk.getZ());
 

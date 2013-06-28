@@ -27,7 +27,7 @@ public class BoxFillBlockListener implements Listener
         }
 
         TregminePlayer player = plugin.getPlayer(event.getPlayer());
-        if (!player.isAdmin() && !player.getMetaBoolean("builder")) {
+        if (!player.isAdmin() && !player.isBuilder()) {
             return;
         }
 
@@ -39,22 +39,22 @@ public class BoxFillBlockListener implements Listener
         int count;
 
         try {
-            count = player.getMetaInt("bcf");
+            count = player.getFillBlockCounter();
         } catch (Exception  e) {
             count = 0;
         }
 
         if (count == 0) {
-            player.setBlock("b1", block);
-            player.setBlock("b2", null);
+            player.setFillBlock1(block);
+            player.setFillBlock2(null);
             event.getPlayer().sendMessage("First block set");
-            player.setMetaInt("bcf", 1);
+            player.setFillBlockCounter(1);
         }
 
         if (count == 1) {
-            player.setBlock("b2", block);
+            player.setFillBlock2(block);
             event.getPlayer().sendMessage("Second block set");
-            player.setMetaInt("bcf", 0);
+            player.setFillBlockCounter(0);
         }
     }
 }

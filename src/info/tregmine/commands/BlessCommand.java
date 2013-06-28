@@ -35,7 +35,7 @@ public class BlessCommand extends AbstractCommand
         TregminePlayer candidate = candidates.get(0);
         player.sendMessage(AQUA + "You will bless following " +
                 "blocks to " + candidate.getChatName() + ".");
-        player.setMetaString("chestbless", candidate.getName());
+        player.setBlessTarget(candidate.getName());
 
         return true;
     }

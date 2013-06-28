@@ -35,7 +35,7 @@ public class CompassListener implements Listener
     {
         TregminePlayer tregminePlayer = plugin.getPlayer(event.getPlayer());
 
-        if (tregminePlayer.getMetaBoolean("compass") && event.getAnimationType() == PlayerAnimationType.ARM_SWING  && event.getPlayer().getItemInHand().getType() == Material.COMPASS) {
+        if (tregminePlayer.isDonator() && event.getAnimationType() == PlayerAnimationType.ARM_SWING  && event.getPlayer().getItemInHand().getType() == Material.COMPASS) {
             Player player = event.getPlayer();
             Block target = player.getTargetBlock(null, 300);
             Block b1 = player.getWorld().getBlockAt(new Location(player.getWorld(), target.getX(),target.getY()+1,target.getZ()));
@@ -55,42 +55,6 @@ public class CompassListener implements Listener
                     player.teleport(loc);
                 } else {
                     player.sendMessage(ChatColor.RED + "I think its a stupid idea to teleport in to a wall");
-                }
-            }
-        }
-
-
-        if (tregminePlayer.getMetaBoolean("oldcompass") && event.getAnimationType() == PlayerAnimationType.ARM_SWING  && event.getPlayer().getItemInHand().getType() == Material.COMPASS) {
-
-            float pitch = event.getPlayer().getLocation().getPitch();
-            float yaw = event.getPlayer().getLocation().getYaw();
-
-            TargetBlock thePlayerBlockTarget = new TargetBlock(event.getPlayer());
-            Block theTargetBlock = thePlayerBlockTarget.getTargetBlock();
-
-            if ( theTargetBlock != null ) {
-
-                for (int i=0; i<100; i++) {
-
-                    int landingType = event.getPlayer().getWorld().getBlockAt(	theTargetBlock.getX(),
-                            theTargetBlock.getY() + i,
-                            theTargetBlock.getZ()).getTypeId();
-                    int landingAbove = event.getPlayer().getWorld().getBlockAt(	theTargetBlock.getX(),
-                            theTargetBlock.getY() + i + 1,
-                            theTargetBlock.getZ()).getTypeId();
-                    if (landingType == 0 && landingAbove == 0){
-                        Location theLoc = theTargetBlock.getLocation();
-
-                        theLoc.setX(theLoc.getX() + .5);
-                        theLoc.setZ(theLoc.getZ() + .5);
-                        theLoc.setY(theLoc.getY() + i);
-                        theLoc.setPitch(pitch);
-                        theLoc.setYaw(yaw);
-                        if(theLoc.getY() < 255) {
-                            event.getPlayer().teleport(theLoc);
-                        }
-                        break;
-                    }
                 }
             }
         }

@@ -1,30 +1,25 @@
 package info.tregmine.listeners;
 
-import info.tregmine.Tregmine;
-import info.tregmine.api.TregminePlayer;
-import info.tregmine.database.ConnectionPool;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Random;
-import java.util.TimeZone;
-import java.util.List;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.Collections;
-import java.util.Set;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Random;
+import java.util.Set;
+import java.util.TimeZone;
 
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-//import org.bukkit.block.Chest;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -38,15 +33,18 @@ import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
-import org.bukkit.event.player.PlayerLoginEvent;
-import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerLoginEvent.Result;
+import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-//import org.kitteh.tag.PlayerReceiveNameTagEvent;
-//import org.kitteh.tag.PlayerReceiveNameTagEvent;
+
+import info.tregmine.Tregmine;
+import info.tregmine.api.TregminePlayer;
+import info.tregmine.database.ConnectionPool;
+import info.tregmine.database.DBPlayerDAO;
 
 public class TregminePlayerListener implements Listener
 {
@@ -89,25 +87,21 @@ public class TregminePlayerListener implements Listener
             ChatColor.DARK_GRAY + "Quit - " + "%s" + ChatColor.DARK_GRAY + " is not banned yet!",
             ChatColor.DARK_GRAY + "Quit - " + "%s" + ChatColor.DARK_GRAY + " has left our world!",
             ChatColor.DARK_GRAY + "Quit - " + "%s" + ChatColor.DARK_GRAY + " went to browse Tregmine's forums instead!",
-            ChatColor.DARK_GRAY + "Quit - " + "%s" + ChatColor.DARK_GRAY + " was scared away by einand! :(",
             ChatColor.DARK_GRAY + "Quit - " + "%s" + "'s" + ChatColor.DARK_GRAY + " CPU was killed by the Rendermen!",
-            ChatColor.DARK_GRAY + "Quit - " + "%s" + ChatColor.DARK_GRAY + " You don't know notaro1997, you don't know his life, you don't know his story.",
             ChatColor.DARK_GRAY + "Quit - " + "%s" + ChatColor.DARK_GRAY + " logged out on accident!",
             ChatColor.DARK_GRAY + "Quit - " + "%s" + ChatColor.DARK_GRAY + " found the IRL warp!",
             ChatColor.DARK_GRAY + "Quit - " + "%s" + ChatColor.DARK_GRAY + " left the game due to IRL chunk error issues!",
             ChatColor.DARK_GRAY + "Quit - " + "%s" + ChatColor.DARK_GRAY + " left the Matrix. Say hi to Morpheus!",
-            ChatColor.DARK_GRAY + "Quit - " + "%s" + ChatColor.DARK_GRAY + " <reserved space for ads. Contact a Senior Admin. Only 200k!>",
             ChatColor.DARK_GRAY + "Quit - " + "%s" + ChatColor.DARK_GRAY + " disconnected? What is this!? Impossibru!",
             ChatColor.DARK_GRAY + "Quit - " + "%s" + ChatColor.DARK_GRAY + " Be sure to visit the rifton general store! Follow the red line at /warp rifton",
             ChatColor.DARK_GRAY + "Quit - " + "%s" + ChatColor.DARK_GRAY + " Come to Exon (Near sunspot)",
             ChatColor.DARK_GRAY + "Quit - " + "%s" + ChatColor.DARK_GRAY + " his/her mom called.",
             ChatColor.DARK_GRAY + "Quit - " + "%s" + ChatColor.DARK_GRAY + " toliet brb",
             ChatColor.DARK_GRAY + "Quit - " + "%s" + ChatColor.DARK_GRAY + " found a lose cable and ate it.",
-            ChatColor.DARK_GRAY + "Quit - " + "%s" + ChatColor.DARK_GRAY + " just had a taste of einands wrath.",
             ChatColor.DARK_GRAY + "Quit - " + "%s" + ChatColor.DARK_GRAY + " found the true END of minecraft.",
-            ChatColor.DARK_GRAY + "Quit - " + "%s" + ChatColor.DARK_GRAY + " sorry was that the kick button?",		
-            ChatColor.DARK_GRAY + "Quit - " + "%s" + ChatColor.DARK_GRAY + " was not accidently banned by " + ChatColor.DARK_RED + "BlackX",		
-            ChatColor.DARK_GRAY + "Quit - " + "%s" + ChatColor.DARK_GRAY + " found love elswhere",		
+            ChatColor.DARK_GRAY + "Quit - " + "%s" + ChatColor.DARK_GRAY + " sorry was that the kick button?",
+            ChatColor.DARK_GRAY + "Quit - " + "%s" + ChatColor.DARK_GRAY + " was not accidently banned by " + ChatColor.DARK_RED + "BlackX",
+            ChatColor.DARK_GRAY + "Quit - " + "%s" + ChatColor.DARK_GRAY + " found love elswhere",
             ChatColor.DARK_GRAY + "Quit - " + "%s" + ChatColor.DARK_GRAY + " rage quit this server",
             ChatColor.DARK_GRAY + "Quit - " + "%s" + ChatColor.DARK_GRAY + " Tregmine will miss you a LOT, I hope your away time is almost as pleasant as being here",
             ChatColor.DARK_GRAY + "Quit - " + "%s" + ChatColor.DARK_GRAY + " NOOOOOO What did i do?",
@@ -117,9 +111,9 @@ public class TregminePlayerListener implements Listener
 
     private final Tregmine plugin;
 
-    public TregminePlayerListener(Tregmine instance) {
+    public TregminePlayerListener(Tregmine instance)
+    {
         plugin = instance;
-        plugin.getServer();
     }
 
     @EventHandler
@@ -199,7 +193,7 @@ public class TregminePlayerListener implements Listener
     @EventHandler
     public void onPreCommand(PlayerCommandPreprocessEvent event)
     {
-        Tregmine.LOGGER.info("COMMAND: " + event.getPlayer().getName() + "::" + event.getMessage());
+        //Tregmine.LOGGER.info("COMMAND: " + event.getPlayer().getName() + "::" + event.getMessage());
     }
 
     @EventHandler
@@ -212,50 +206,95 @@ public class TregminePlayerListener implements Listener
             event.getPlayer().kickPlayer("error loading profile!");
         }
 
+        if (event.getPlayer().getName() != null) {
+
+            if (player.isInvisible()) {
+                Player[] players = plugin.getServer().getOnlinePlayers();
+                for (Player allplayer : players) {
+                    if (!allplayer.isOp()) {
+                        allplayer.hidePlayer(event.getPlayer());
+                    } else {
+                        allplayer.showPlayer(event.getPlayer());
+                    }
+                }
+            } else {
+                Player[] players = plugin.getServer().getOnlinePlayers();
+                for (Player allplayer : players) {
+                    allplayer.showPlayer(event.getPlayer());
+                }
+            }
+
+            Player[] players = plugin.getServer().getOnlinePlayers();
+            for (Player allplayer : players) {
+                TregminePlayer aplayer = plugin.getPlayer(allplayer);
+                if (aplayer.isInvisible()) {
+                    player.hidePlayer(allplayer);
+                } else {
+                    player.showPlayer(allplayer);
+                }
+
+                if (player.isOp()) {
+                    player.showPlayer(allplayer);
+                }
+
+            }
+        }
+
         activateGuardians();
     }
 
     @EventHandler
     public void onPlayerLogin(PlayerLoginEvent event)
     {
-        Player player = event.getPlayer();
+        TregminePlayer player = null;
+        Connection conn = null;
+        try {
+            conn = ConnectionPool.getConnection();
 
-        TregminePlayer tregPlayer = new TregminePlayer(player);
+            DBPlayerDAO playerDAO = new DBPlayerDAO(conn);
+            player = playerDAO.getPlayer(event.getPlayer());
+
+            if (player == null) {
+                player = playerDAO.createPlayer(event.getPlayer());
+            }
+        }
+        catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        finally {
+            if (conn != null) {
+                try { conn.close(); } catch (SQLException e) {}
+            }
+        }
 
         if (player.getLocation().getWorld().getName().matches("world_the_end")) {
             player.teleport(this.plugin.getServer().getWorld("world").getSpawnLocation());
         }
 
-        if(tregPlayer.exists()) {
-            tregPlayer.load();
-        } else {
-            tregPlayer.create();
-            tregPlayer.load();
-        }
-
-        if (tregPlayer.isBanned()) {
+        if (player.isBanned()) {
             event.disallow(Result.KICK_BANNED, "You shall not pass!");
         } else  {
-            this.plugin.addPlayer(tregPlayer);
+            this.plugin.addPlayer(player);
         }
 
-        if (tregPlayer.getMetaString("keyword") != null) {
-            String keyword = tregPlayer.getMetaString("keyword") + ".mc.tregmine.info:25565".toLowerCase();
+        if (player.getKeyword() != null) {
+            String keyword = player.getKeyword() +
+                ".mc.tregmine.info:25565".toLowerCase();
             Tregmine.LOGGER.warning("host: " + event.getHostname() );
             Tregmine.LOGGER.warning("keyword:" + keyword );
 
             if (keyword.equals(event.getHostname().toLowerCase()) || keyword.matches("mc.tregmine.info")) {
-                Tregmine.LOGGER.warning(tregPlayer.getName() +  " keyword :: success" );
+                Tregmine.LOGGER.warning(player.getName() +  " keyword :: success" );
             } else {
-                Tregmine.LOGGER.warning(tregPlayer.getName() +  " keyword :: faild" );
+                Tregmine.LOGGER.warning(player.getName() +  " keyword :: faild" );
                 event.disallow(Result.KICK_BANNED, "Wrong keyword!");
             }
         } else {
-            Tregmine.LOGGER.warning(tregPlayer.getName() +  " keyword :: notset" );
+            Tregmine.LOGGER.warning(player.getName() +  " keyword :: notset" );
         }
 
-        if (tregPlayer.isGuardian()) {
-            tregPlayer.setGuardianState(TregminePlayer.GuardianState.QUEUED);
+        if (player.isGuardian()) {
+            player.setGuardianState(TregminePlayer.GuardianState.QUEUED);
         }
     }
 
@@ -263,17 +302,17 @@ public class TregminePlayerListener implements Listener
     public void onPlayerQuit(PlayerQuitEvent event)
     {
         event.setQuitMessage(null);
-        TregminePlayer tregP = this.plugin.getPlayer(event.getPlayer());
 
-        if (!event.getPlayer().isOp()) {
+        TregminePlayer player = plugin.getPlayer(event.getPlayer());
+        if (!player.isOp()) {
             Random rand = new Random();
             int msgIndex = rand.nextInt(quitMessages.length);
-            String message = String.format(quitMessages[msgIndex], tregP.getChatName());
-            this.plugin.getServer().broadcastMessage(message);
+            String message = String.format(quitMessages[msgIndex], player.getChatName());
+            plugin.getServer().broadcastMessage(message);
         }
 
-        plugin.removePlayer(tregP);
-        Tregmine.LOGGER.info("Unloaded settings for " + event.getPlayer().getName() + ".");
+        plugin.removePlayer(player);
+        Tregmine.LOGGER.info("Unloaded settings for " + player.getName() + ".");
 
         activateGuardians();
     }

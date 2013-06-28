@@ -33,7 +33,7 @@ public class NukeCommand extends AbstractCommand
             distance = Integer.parseInt(args[0]);
         } catch (NumberFormatException e) {
             distance = 160;
-        } catch (NullPointerException e) {
+        } catch (ArrayIndexOutOfBoundsException e) {
             distance = 160;
         }
 

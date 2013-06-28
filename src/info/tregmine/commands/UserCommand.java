@@ -1,6 +1,8 @@
 package info.tregmine.commands;
 
 import java.util.List;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 import static org.bukkit.ChatColor.*;
 import org.bukkit.Server;
@@ -15,6 +17,8 @@ import org.bukkit.entity.Entity;
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
 import info.tregmine.api.math.Distance;
+import info.tregmine.database.ConnectionPool;
+import info.tregmine.database.DBPlayerDAO;
 
 public class UserCommand extends AbstractCommand
 {
@@ -36,22 +40,26 @@ public class UserCommand extends AbstractCommand
         if ("make".equalsIgnoreCase(args[0])) {
             return make(player, args);
         }
-        else if ("reload".equalsIgnoreCase(args[0])) {
-            return reload(player, args);
+        else if ("reload".equalsIgnoreCase(args[0]) && args.length == 2) {
+            try {
+                return reload(player, args[1]);
+            } catch (ArrayIndexOutOfBoundsException e) {
+                return false;
+            }
         }
 
         return true;
     }
 
-    private boolean reload(TregminePlayer player, String[] args)
+    private boolean reload(TregminePlayer player, String pattern)
     {
-        List<TregminePlayer> candidates = tregmine.matchPlayer(args[1]);
+        List<TregminePlayer> candidates = tregmine.matchPlayer(pattern);
         if (candidates.size() != 1) {
             return true;
         }
 
         Player candidate = candidates.get(0);
-        tregmine.getPlayer(candidate).load();
+        tregmine.reloadPlayer(player);
         player.sendMessage("Player reloaded "+ candidate.getDisplayName());
         return true;
    }
@@ -68,84 +76,78 @@ public class UserCommand extends AbstractCommand
         TregminePlayer victim = candidates.get(0);
 
         if ("settler".equalsIgnoreCase(args[1])) {
-            victim.setMetaString("color", "trial");
-            victim.setMetaString("trusted", "true");
+            victim.setNameColor("trial");
+            victim.setTrusted(true);
             victim.setTemporaryChatName(victim.getNameColor() + victim.getName());
 
             player.sendMessage(AQUA + "You made " + victim.getChatName() + AQUA + " settler of this server." );
             victim.sendMessage("Welcome! You are now made settler.");
             LOGGER.info(victim.getName() + " was given settler rights by " + player.getName() + ".");
-            return true;
         }
+        else if ("warn".equalsIgnoreCase(args[1])) {
+            victim.setNameColor("warned");
+            victim.setTemporaryChatName(victim.getNameColor() + victim.getName());
 
-        if ("warn".equalsIgnoreCase(args[1])) {
-            victim.setMetaString("color", "warned");
             player.sendMessage(AQUA + "You warned " + victim.getChatName() + ".");
             victim.sendMessage("You are now warned");
             LOGGER.info(victim.getName() + " was warned by " + player.getName() + ".");
-            victim.setTemporaryChatName(victim.getNameColor() + victim.getName());
-            return true;
         }
+        else if ("hardwarn".equalsIgnoreCase(args[1])) {
+            victim.setNameColor("warned");
+            victim.setTrusted(false);
+            victim.setTemporaryChatName(victim.getNameColor() + victim.getName());
 
-        if ("hardwarn".equalsIgnoreCase(args[1])) {
-            victim.setMetaString("color", "warned");
-            victim.setMetaString("trusted", "false");
             player.sendMessage(AQUA + "You warned " + victim.getChatName() + " and removed his building rights." );
             victim.sendMessage("You are now warned and bereft of your building rights.");
             LOGGER.info(victim.getName() + " was hardwarned by " + player.getName() + ".");
+        }
+        else if ("resident".equalsIgnoreCase(args[1]) && player.isOp()) {
+            victim.setNameColor("trusted");
+            victim.setTrusted(true);
             victim.setTemporaryChatName(victim.getNameColor() + victim.getName());
-            return true;
-        }
 
-        if ("trial".equalsIgnoreCase(args[1])) {
-            player.sendMessage(RED + "Please use /user make settler name");
-        }
-
-        if ("resident".equalsIgnoreCase(args[1]) && player.isOp()) {
-            victim.setMetaString("color", "trusted");
-            victim.setMetaString("trusted", "true");
             LOGGER.info(victim.getName() + " was given trusted rights by " + player.getChatName() + ".");
             player.sendMessage(AQUA + "You made " + victim.getChatName() + AQUA + " a resident." );
             victim.sendMessage("Welcome! You are now a resident");
-            victim.setTemporaryChatName(victim.getNameColor() + victim.getName());
-            return true;
         }
-
-        if ("donator".equalsIgnoreCase(args[1])) {
-            victim.setMetaString("donator", "true");
-            //victim.setMetaString("compass", "true");
+        else if ("donator".equalsIgnoreCase(args[1])) {
+            victim.setDonator(true);
             victim.setFlying(true);
-            victim.setMetaString("color", "donator");
+            victim.setNameColor("donator");
+            victim.setTemporaryChatName(victim.getNameColor() + victim.getName());
+
             player.sendMessage(AQUA + "You made  " + victim.getChatName() + " a donator." );
             LOGGER.info(victim.getName() + " was made donator by" + player.getChatName() + ".");
             victim.sendMessage("Congratulations, you are now a donator!");
-            victim.setTemporaryChatName(victim.getNameColor() + victim.getName());
-            return true;
         }
+        else if ("child".equalsIgnoreCase(args[1])) {
+            victim.setChild(true);
+            victim.setNameColor("child");
 
-        if ("child".equalsIgnoreCase(args[1])) {
-            victim.setMetaString("color", "child");
             player.sendMessage(AQUA + "You made  " + victim.getChatName() + " a child." );
             LOGGER.info(victim.getName() + " was made child by" + player.getChatName() + ".");
             victim.setTemporaryChatName(victim.getNameColor() + victim.getName());
-            return true;
+        }
+        else {
+            return false;
         }
 
-        if ("guardian".equalsIgnoreCase(args[1]) && player.isOp()) {
-            if (victim.isDonator()) {
-                victim.setMetaString("police", "true");
-                victim.setMetaString("color", "police");
+        Connection conn = null;
+        try {
+            conn = ConnectionPool.getConnection();
 
-                player.sendMessage(AQUA + "You made  " + victim.getChatName() + " a police." );
-                LOGGER.info(victim.getName() + " was made police by" + player.getChatName() + ".");
-                victim.sendMessage("Congratulations, you are now a police!");
-            } else {
-                player.sendMessage(AQUA + "Sorry this person is not a  " + GOLD + " donator." );
+            DBPlayerDAO playerDAO = new DBPlayerDAO(conn);
+            playerDAO.updatePlayerPermissions(victim);
+        }
+        catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        finally {
+            if (conn != null) {
+                try { conn.close(); } catch (SQLException e) {}
             }
-            victim.setTemporaryChatName(victim.getNameColor() + victim.getName());
-            return true;
         }
 
-        return false;
+        return true;
     }
 }

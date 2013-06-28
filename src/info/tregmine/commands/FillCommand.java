@@ -86,7 +86,7 @@ public class FillCommand extends AbstractCommand
     @Override
     public boolean handlePlayer(TregminePlayer player, String[] args)
     {
-        if (!player.isAdmin() && !player.getMetaBoolean("builder")) {
+        if (!player.isAdmin() && !player.isBuilder()) {
             return false;
         }
 
@@ -110,7 +110,7 @@ public class FillCommand extends AbstractCommand
             return true;
         }
 
-        Block b1 = player.getBlock("b1");
+        Block b1 = player.getFillBlock1();
 
         if (args.length > 0 && "paste".equals(args[0])) {
             if (b1 == null) {
@@ -136,7 +136,7 @@ public class FillCommand extends AbstractCommand
             return true;
         }
 
-        Block b2 = player.getBlock("b2");
+        Block b2 = player.getFillBlock2();
 
         if(b1 == null || b2 == null) {
             player.sendMessage(DARK_AQUA + "You need to select two corners!");

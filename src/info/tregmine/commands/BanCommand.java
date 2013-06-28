@@ -1,6 +1,8 @@
 package info.tregmine.commands;
 
 import java.util.List;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 import static org.bukkit.ChatColor.*;
 import org.bukkit.Server;
@@ -8,6 +10,8 @@ import org.bukkit.entity.Player;
 
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
+import info.tregmine.database.ConnectionPool;
+import info.tregmine.database.DBPlayerDAO;
 
 public class BanCommand extends AbstractCommand
 {
@@ -35,8 +39,24 @@ public class BanCommand extends AbstractCommand
 
         TregminePlayer victim = candidates.get(0);
 
-        victim.setMetaString("banned", "true");
+        victim.setBanned(true);
         victim.kickPlayer("banned by " + player.getName());
+
+        Connection conn = null;
+        try {
+            conn = ConnectionPool.getConnection();
+
+            DBPlayerDAO playerDAO = new DBPlayerDAO(conn);
+            playerDAO.updatePlayerPermissions(victim);
+        }
+        catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        finally {
+            if (conn != null) {
+                try { conn.close(); } catch (SQLException e) {}
+            }
+        }
 
         Server server = tregmine.getServer();
         server.broadcastMessage(victim.getChatName() + RED + " was banned by " +

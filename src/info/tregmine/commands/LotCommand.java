@@ -64,8 +64,7 @@ public class LotCommand extends AbstractCommand
             return;
         }
 
-        Block tb1 = player.getBlock("zb1");
-        //		Block tb2 = player.getBlock("zb2");
+        Block tb1 = player.getZoneBlock1();
 
         Zone tzone = world.findZone(new Point(tb1.getX(), tb1.getZ()));
 
@@ -87,11 +86,11 @@ public class LotCommand extends AbstractCommand
 
             if (userId == -1) {
                 player.sendMessage(RED + "Player " + args[2] + " was not found.");
-                return;			
+                return;
             }
 
-            Block b1 = player.getBlock("zb1");
-            Block b2 = player.getBlock("zb2");
+            Block b1 = player.getZoneBlock1();
+            Block b2 = player.getZoneBlock2();
 
             Zone zone = world.findZone(new Point(b1.getX(), b1.getZ()));
 

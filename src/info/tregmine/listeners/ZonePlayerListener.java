@@ -326,7 +326,7 @@ public class ZonePlayerListener implements Listener
         String type = null;
         if (zone != null) {
             Zone.Permission perm = zone.getUser(player.getName());
-            if (perm != Zone.Permission.Owner && !player.getMetaBoolean("zones")) {
+            if (perm != Zone.Permission.Owner && !player.isAdmin()) {
                 return;
             }
             if (lot != null) {
@@ -339,7 +339,7 @@ public class ZonePlayerListener implements Listener
         else {
             // outside of any existing zone, this can only be used by people
             // with zones permission.
-            if (!player.getMetaBoolean("zones")) {
+            if (!player.isAdmin()) {
                 return;
             }
             type = "zone";
@@ -347,33 +347,32 @@ public class ZonePlayerListener implements Listener
 
         int count;
         try {
-            count = player.getMetaInt("zcf");
+            count = player.getZoneBlockCounter();
         } catch (Exception  e) {
             count = 0;
         }
 
         if (count == 0) {
-            player.setBlock("zb1", block);
-            player.setBlock("zb2", null);
+            player.setZoneBlock1(block);
+            player.setZoneBlock2(null);
             event.getPlayer().sendMessage("First block set of new " + type + ".");
-            player.setMetaInt("zcf", 1);
+            player.setZoneBlockCounter(1);
             if (zone != null) {
-                player.setMetaInt("zone", zone.getId());
+                player.setTargetZoneId(zone.getId());
             } else {
-                player.setMetaInt("zone", 0);
+                player.setTargetZoneId(0);
             }
         }
-
-        if (count == 1) {
-            int zf = player.getMetaInt("zone");
+        else if (count == 1) {
+            int zf = player.getTargetZoneId();
             if (zf != 0 && zf != zone.getId()) {
                 player.sendMessage("The full extent of the lot must be in the same zone.");
                 return;
             }
 
-            player.setBlock("zb2", block);
+            player.setZoneBlock2(block);
             player.sendMessage("Second block set of new " + type + ".");
-            player.setMetaInt("zcf", 0);
+            player.setZoneBlockCounter(1);
         }
     }
 

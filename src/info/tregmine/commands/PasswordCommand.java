@@ -1,11 +1,16 @@
 package info.tregmine.commands;
 
+import java.sql.Connection;
+import java.sql.SQLException;
+
 import static org.bukkit.ChatColor.*;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
+import info.tregmine.database.ConnectionPool;
+import info.tregmine.database.DBPlayerDAO;
 
 public class PasswordCommand extends AbstractCommand
 {
@@ -31,6 +36,22 @@ public class PasswordCommand extends AbstractCommand
 
         player.setPassword(password);
         player.sendMessage(YELLOW + "Your password has been changed.");
+
+        Connection conn = null;
+        try {
+            conn = ConnectionPool.getConnection();
+
+            DBPlayerDAO playerDAO = new DBPlayerDAO(conn);
+            playerDAO.updatePassword(player);
+        }
+        catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        finally {
+            if (conn != null) {
+                try { conn.close(); } catch (SQLException e) {}
+            }
+        }
 
         return true;
     }

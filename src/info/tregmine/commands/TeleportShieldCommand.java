@@ -23,11 +23,11 @@ public class TeleportShieldCommand extends AbstractCommand
         }
 
         if (args.length < 1) {
-            if (player.getMetaBoolean("tpblock")) {
-                player.setMetaString("tpblock", "false");
+            if (player.hasTeleportShield()) {
+                player.setTeleportShield(false);
                 player.sendMessage(AQUA + "Teleportation is now allowed to you.");
             } else {
-                player.setMetaString("tpblock", "true");
+                player.setTeleportShield(true);
                 player.sendMessage(AQUA +"Teleportation is now blocked to you.");
             }
             return true;
@@ -36,17 +36,18 @@ public class TeleportShieldCommand extends AbstractCommand
         String state = args[0];
 
         if ("on".equalsIgnoreCase(state)) {
-            player.setMetaString("tpblock", "true");
+            player.setTeleportShield(true);
             player.sendMessage(AQUA +"Teleportation is now blocked to you.");
             return true;
         }
         else if ("off".equalsIgnoreCase(state)) {
-            player.setMetaString("tpblock", "false");
+            player.setTeleportShield(false);
             player.sendMessage(AQUA +"Teleportation is now allowed to you.");
             return true;
         }
         else if ("status".equalsIgnoreCase(state)) {
-            player.sendMessage("Your tpblock is set to " + player.getMetaString("tpblock") + ".");
+            player.sendMessage("Your tpblock is set to " + 
+                    player.hasTeleportShield() + ".");
             return true;
         }
 

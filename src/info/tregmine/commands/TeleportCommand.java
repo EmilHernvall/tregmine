@@ -69,11 +69,11 @@ public class TeleportCommand extends AbstractCommand
 
         TregminePlayer target = candidates.get(0);
 
-        if (target.getMetaBoolean("invis")) {
+        if (target.isInvisible()) {
             return true;
         }
 
-        if (target.getMetaBoolean("tpblock") && !player.isAdmin()) {
+        if (target.hasTeleportShield() && !player.isAdmin()) {
             player.sendMessage(RED + target.getName() + AQUA +
                                "'s teloptical deflector absorbed all motion. " +
                                "Teleportation failed.");

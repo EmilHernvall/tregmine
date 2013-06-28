@@ -52,11 +52,11 @@ public class ZoneCommand extends AbstractCommand
             return true;
         }
 
-        if ("create".equals(args[0]) && player.getMetaBoolean("zones")) {
+        if ("create".equals(args[0]) && player.isAdmin()) {
             createZone(player, args);
             return true;
         }
-        else if ("delete".equals(args[0]) && player.getMetaBoolean("zones")) {
+        else if ("delete".equals(args[0]) && player.isAdmin()) {
             deleteZone(player, args);
             return true;
         }
@@ -76,7 +76,7 @@ public class ZoneCommand extends AbstractCommand
             changeValue(player, args);
             return true;
         }
-        else if ("pvp".equals(args[0]) && player.getMetaBoolean("zones")) {
+        else if ("pvp".equals(args[0]) && player.isAdmin()) {
             changeValue(player, args);
             return true;
         }
@@ -122,8 +122,8 @@ public class ZoneCommand extends AbstractCommand
             return;
         }
 
-        Block b1 = player.getBlock("zb1");
-        Block b2 = player.getBlock("zb2");
+        Block b1 = player.getZoneBlock1();
+        Block b2 = player.getZoneBlock2();
 
         Rectangle rect = new Rectangle(b1.getX(), b1.getZ(), b2.getX(), b2.getZ());
 

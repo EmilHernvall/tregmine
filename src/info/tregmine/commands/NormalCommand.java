@@ -19,12 +19,12 @@ public class NormalCommand extends AbstractCommand
     public boolean handlePlayer(TregminePlayer player, String[] args)
     {
         if (player.isAdmin()) {
-            player.setTempMetaString("admin", "false");
+            player.setAdmin(false);
             player.setTemporaryChatName(GOLD + player.getName());
             player.sendMessage(YELLOW + "You are no longer admin, until you " +
                                "reconnect!");
-        } else if (player.getMetaBoolean("builder")) {
-            player.setTempMetaString("builder", "false");
+        } else if (player.isBuilder()) {
+            player.setBuilder(false);
             player.setTemporaryChatName(GOLD + player.getName());
             player.sendMessage(YELLOW + "You are no longer builder, until you " +
                                "reconnect!");

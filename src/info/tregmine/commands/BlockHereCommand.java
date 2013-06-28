@@ -19,7 +19,7 @@ public class BlockHereCommand extends AbstractCommand
     @Override
     public boolean handlePlayer(TregminePlayer player, String[] args)
     {
-        if (!player.isAdmin() && !player.getMetaBoolean("builder")) {
+        if (!player.isAdmin() && !player.isBuilder()) {
             return false;
         }
 

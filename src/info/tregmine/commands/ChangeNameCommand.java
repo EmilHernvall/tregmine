@@ -19,6 +19,9 @@ public class ChangeNameCommand extends AbstractCommand
     @Override
     public boolean handlePlayer(TregminePlayer player, String[] args)
     {
+        if (args.length != 2) {
+            return false;
+        }
         if (!player.isAdmin()) {
             return false;
         }

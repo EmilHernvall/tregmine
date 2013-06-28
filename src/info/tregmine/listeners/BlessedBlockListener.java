@@ -64,10 +64,10 @@ public class BlessedBlockListener implements Listener
 
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK &&
             player.getItemInHand().getType() == Material.BONE &&
-            (player.isAdmin() || player.getMetaBoolean("mentor")) &&
+            (player.isAdmin() || player.isGuardian()) &&
             allowedMaterials.contains(block.getType())) {
 
-            String name = player.getMetaString("chestbless");
+            String name = player.getBlessTarget();
             if (name == null) {
                 player.sendMessage(ChatColor.RED + "Use /bless [name] first!");
                 return;

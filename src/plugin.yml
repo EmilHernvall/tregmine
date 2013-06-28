@@ -1,78 +1,142 @@
 name: Tregmine
 main: info.tregmine.Tregmine
-version: 46.01.01.00
+version: 1.0.0
 website: http://tregmine.info
-author: Ein Andersson
+author: Ein Andersson, Emil Hernvall
 description: Tregmine
-depend: [Zones, Votifier]
 
 commands:
-  wallet:
-    description: allows you to handle your wallet. You can check your balance, show your balance to others and send a specified amount to players.
-    -usage: /wallet give <player> <amount> \
-      /wallet tell \
-      /wallet balance
-  help:
-    description: unknown
-    -usage: /unkown
-  blackout:
-    description: unknown
-    -usage: /unkown
-  book:
-    description: unknown
-    -usage: /unkown
-  te:
-    description: unknown
-    -usage: /unkown
-  settler:
-    description: unknown
-    -usage: /unkown
-  donator:
-    description: unknown
-    -usage: /unkown
-  op:
-    description: unknown
-    -usage: /unkown
-  invis:
-    description: unknown
-    -usage: /unkown
-  text:
-    description: unknown
-    -usage: /unkown
-  head:
-    description: show a list of who is online.
-    -usage: /who
-  who:
-    description: show a list of who is online.
-    -usage: /who
-  tp:
-    description: teleport to specified player.
-    -usage: /tp <player>
+  admins:
+    description: Send a message to all active admins
+    -usage: /admins message
+  guardians:
+    description: Send a message to all active guardians
+    -usage: /guardians message
+  creative:
+    description: Switch to creative mode (admins and builders only)
+    -usage: /creative
+  survival:
+    description: Switch to survival mode (admins and builders only)
+    -usage: /survival
+  action:
+    description: Indicates an action in chat
+    -usage: /action message
+  ban:
+    description: Ban the specified player
+    -usage: /ban player
+  bless:
+    description: Specify the player for which the next block will be blessed
+    -usage: /bless player
+  blockhere:
+    description: Create a block of dirt beneath your feet (admins and builders only)
+    -usage: /blockhere
+  cname:
+    description: Change your name and color (admin only)
+    -usage: /cname color new_name
   channel:
-    description: Join a chat channel
-    -usage: /channel channelname
+    description: Change to the specified channel
+    -usage: /channel channel_name
+  clean:
+    description: Clean your inventory
+    -usage: /clean
+  createmob:
+    description: Create mobs from empty air (admin only)
+    -usage: /createmob mob_type amount [name]
+  createwarp:
+    description: Create a warp at your present location (admin only)
+    -usage: /createwarp warp_name
+  fill:
+    description: Fill, replace and copy blocks using a wooden spade (admins and builders only)
+    -usage: /fill
   force:
-    description: Join a chat channel
-    -usage: /channel channelname
-  m:
-    description: send a private message
-    -usage: /m <player> message
+    description: Force someone into a channel
+    -usage: /force player channel
+  give:
+    description: Give a user an item (admin only)
+    -usage: /give player item amount data
+  home:
+    description: Teleport to, or set, your home
+    -usage: /home
+  item:
+    description: Spawn an item
+    -usage: /item item amount data (admin only)
+  keyword:
+    description: Set your keyword
+    -usage: /keyword keyword
+  kick:
+    description: Kick a player (admins and guardians only)
+    -usage: /unkown
+  lot:
+    description: Manage your lot
+    -usage: /lot
   msg:
-    description: send a private message
-    -usage: /m <player> message
-  tell:
-    description: send a private message
-    -usage: /m <player> message
-  me:
-    description: send a private message
-    -usage: /m <player> message
+    description: Message another player
+    -usage: /msg player message
+  newspawn:
+    description: Temporarily change the spawn on this map (admin only)
+    -usage: /newspawn
+  normal:
+    description: Become a normal player until you sign back on (admins, guardians and builders only)
+    -usage: /normal
+  nuke:
+    description: Kill all mobs on this map (admins and guardians only)
+    -usage: /nuke
+  password:
+    description: Set your password
+    -usage: /password password
+  pos:
+    description: Prints your position to the console
+    -usage: /pos
+  regeneratechunk:
+    description: Regenerate the current chunk (admin only)
+    -usage: /regeneratechunk
   say:
-    description: talk as good
+    description: Speak as god (admins only)
     -usage: /say message
-  g:
-    description: Perform a guardian message.
-    -usage: /g message
-  a:
-    description: Perform an admin message.
-    -usage: /a message
-        
+  sendto:
+    description: Send a player to another world (admins only)
+    -usage: /sendto player world
+  setspawner:
+    description: Change a mob spawners type (admins only)
+    -usage: /setspawner
+  spawn:
+    description: Go back to spawn
+    -usage: /spawn
+  summon:
+    description: Summon a player to your location
+    -usage: /summon player
+  testfill:
+    description: Like fill, but with fake blocks (admins and builders only)
+    -usage: /testfill
+  tp:
+    description: Teleport to a player
+    -usage: /tp player
+  tpshield:
+    description: Prevent players from teleporting to you (donators only)
+    -usage: /tpshield
+  tpto:
+    description: Teleport to specified coordinates (admin only)
+    -usage: /tpto x y z
+  time:
+    description: Change the time of day (donators only)
+    -usage: /time day|night|normal
+  user:
+    description: Modify a users permissions (admins and guardians only)
+    -usage: /user
+  wallet:
+    description: Modify your wallet
+    -usage: /wallet
+  warp:
+    description: Warp to a specified city
+    -usage: /warp city
+  zone:
+    description: Modify a zone
+    -usage: /zone
+
+aliases:
+  me: action
+  m: msg
+  a: admins
+  g: guardians
+  s: summon
+  tpshield: tpblock

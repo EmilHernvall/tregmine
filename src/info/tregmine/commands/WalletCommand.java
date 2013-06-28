@@ -180,6 +180,10 @@ public class WalletCommand extends AbstractCommand
     @Override
     public boolean handlePlayer(TregminePlayer player, String[] args)
     {
+        if (args.length == 0) {
+            return false;
+        }
+
         String cmd = args[0];
 
         if ("tell".equalsIgnoreCase(cmd)) {
