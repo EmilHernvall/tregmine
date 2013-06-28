@@ -1,3 +1,0 @@
-#!/bin/bash
-wget http://artifacts.lukegb.com/artifactory/plugins-snapshot/org/bukkit/bukkit/0.0.1-SNAPSHOT/bukkit-0.0.1-SNAPSHOT.jar -O bukkit-0.0.1-SNAPSHOT.jar
-wget http://artifacts.lukegb.com/artifactory/plugins-snapshot/org/bukkit/craftbukkit/0.0.1-SNAPSHOT/craftbukkit-0.0.1-SNAPSHOT.jar -O craftbukkit-0.0.1-SNAPSHOT.jar 
