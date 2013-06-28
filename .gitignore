@@ -1,0 +1,6 @@
+tags
+*.swp
+*~
+build.sh
+make.log
+/bin
