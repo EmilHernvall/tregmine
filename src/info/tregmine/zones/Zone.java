@@ -107,7 +107,6 @@ public class Zone
 
     private String mainOwner;
 
-
     private Map<String, Permission> users;
 
     public Zone()
@@ -127,7 +126,6 @@ public class Zone
     public void setMainOwner(String _owner) {
         this.mainOwner = _owner;
     }
-
 
     public void setId(int id) {
         this.id = id;

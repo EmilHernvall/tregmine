@@ -68,7 +68,7 @@ public class TregminePlayer extends PlayerDelegate
     private boolean teleportShield = false;
     private int guardianRank = 0;
 
-    // Onetime state
+    // One-time state
     private String chatChannel = "GLOBAL";
     private String texture = "https://dl.dropbox.com/u/5405236/mc/df.zip";
     private Zone currentZone = null;

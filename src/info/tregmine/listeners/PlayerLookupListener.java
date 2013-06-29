@@ -15,72 +15,17 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.scheduler.BukkitScheduler;
-import org.bukkit.scoreboard.DisplaySlot;
-import org.bukkit.scoreboard.Objective;
-import org.bukkit.scoreboard.Score;
-import org.bukkit.scoreboard.Scoreboard;
-import org.bukkit.scoreboard.ScoreboardManager;
 
 import com.maxmind.geoip.Location;
 import com.maxmind.geoip.LookupService;
 
 import info.tregmine.Tregmine;
 import info.tregmine.database.ConnectionPool;
-import info.tregmine.database.DBWalletDAO;
 import info.tregmine.database.DBPlayerDAO;
 import info.tregmine.api.TregminePlayer;
 
 public class PlayerLookupListener implements  Listener
 {
-    private static class ScoreboardRunnable implements Runnable
-    {
-        private TregminePlayer player;
-
-        public ScoreboardRunnable(TregminePlayer player)
-        {
-            this.player = player;
-        }
-
-        @Override
-        public void run()
-        {
-            if (!player.isOnline()) {
-                return;
-            }
-
-            ScoreboardManager manager = Bukkit.getScoreboardManager();
-            Scoreboard board = manager.getNewScoreboard();
-
-            Objective objective = board.registerNewObjective("1", "2");
-            objective.setDisplaySlot(DisplaySlot.SIDEBAR);
-            objective.setDisplayName("" + ChatColor.DARK_RED + "" +
-                    ChatColor.BOLD + "Welcome to Tregmine!");
-
-            Connection conn = null;
-            try {
-                conn = ConnectionPool.getConnection();
-
-                DBWalletDAO walletDAO = new DBWalletDAO(conn);
-
-                // Get a fake offline player
-                Score score = objective.getScore(Bukkit.getOfflinePlayer(
-                            ChatColor.BLACK + "Your Balance:"));
-                score.setScore((int)walletDAO.balance(player.getName()));
-            }
-            catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
-            finally {
-                if (conn != null) {
-                    try { conn.close(); } catch (SQLException e) {}
-                }
-            }
-
-            player.setScoreboard(board);
-        }
-    }
-
     private Tregmine plugin;
     private LookupService cl = null;
 
@@ -88,7 +33,8 @@ public class PlayerLookupListener implements  Listener
     {
         plugin = instance;
         try {
-            cl = new LookupService("GeoIPCity.dat", LookupService.GEOIP_MEMORY_CACHE );
+            cl = new LookupService("GeoIPCity.dat",
+                                   LookupService.GEOIP_MEMORY_CACHE );
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -136,19 +82,6 @@ public class PlayerLookupListener implements  Listener
             if (conn != null) {
                 try { conn.close(); } catch (SQLException e) {}
             }
-        }
-
-        if (player.isDonator() ||
-            player.isAdmin() ||
-            player.isGuardian() ||
-            player.isBuilder()) {
-
-            player.sendMessage("You are allowed to fly");
-            player.setAllowFlight(true);
-        } else {
-            player.sendMessage("no-z-cheat");
-            player.sendMessage("You are NOT allowed to fly");
-            player.setAllowFlight(false);
         }
 
         PreparedStatement stmt = null;
@@ -203,22 +136,5 @@ public class PlayerLookupListener implements  Listener
                 }
             }
         }
-
-        if (player.isBuilder()) {
-            player.setGameMode(GameMode.CREATIVE);
-        } else if (!player.isOp()) {
-            player.setGameMode(GameMode.SURVIVAL);
-        }
-
-        Server server = plugin.getServer();
-        BukkitScheduler scheduler = server.getScheduler();
-
-        Runnable runnable = new ScoreboardRunnable(player);
-        runnable.run();
-
-        //400 = 20 seconds. 1 second = 20 ticks, 20*20=400
-        scheduler.scheduleSyncDelayedTask(plugin,
-                                          runnable,
-                                          400);
     }
 }

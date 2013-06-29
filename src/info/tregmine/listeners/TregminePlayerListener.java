@@ -15,6 +15,7 @@ import java.util.Random;
 import java.util.Set;
 import java.util.TimeZone;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -40,11 +41,18 @@ import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.scoreboard.DisplaySlot;
+import org.bukkit.scoreboard.Objective;
+import org.bukkit.scoreboard.Score;
+import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.ScoreboardManager;
 
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
 import info.tregmine.database.ConnectionPool;
 import info.tregmine.database.DBPlayerDAO;
+import info.tregmine.database.DBWalletDAO;
+import info.tregmine.api.util.ScoreboardClearTask;
 
 public class TregminePlayerListener implements Listener
 {
@@ -208,8 +216,9 @@ public class TregminePlayerListener implements Listener
 
         if (event.getPlayer().getName() != null) {
 
+            Player[] players = plugin.getServer().getOnlinePlayers();
+
             if (player.isInvisible()) {
-                Player[] players = plugin.getServer().getOnlinePlayers();
                 for (Player allplayer : players) {
                     if (!allplayer.isOp()) {
                         allplayer.hidePlayer(event.getPlayer());
@@ -218,13 +227,11 @@ public class TregminePlayerListener implements Listener
                     }
                 }
             } else {
-                Player[] players = plugin.getServer().getOnlinePlayers();
                 for (Player allplayer : players) {
                     allplayer.showPlayer(event.getPlayer());
                 }
             }
 
-            Player[] players = plugin.getServer().getOnlinePlayers();
             for (Player allplayer : players) {
                 TregminePlayer aplayer = plugin.getPlayer(allplayer);
                 if (aplayer.isInvisible()) {
@@ -236,11 +243,64 @@ public class TregminePlayerListener implements Listener
                 if (player.isOp()) {
                     player.showPlayer(allplayer);
                 }
-
             }
         }
 
+        if (player.isDonator() ||
+            player.isAdmin() ||
+            player.isGuardian() ||
+            player.isBuilder()) {
+
+            player.sendMessage("You are allowed to fly");
+            player.setAllowFlight(true);
+        } else {
+            player.sendMessage("no-z-cheat");
+            player.sendMessage("You are NOT allowed to fly");
+            player.setAllowFlight(false);
+        }
+
+        if (player.isBuilder()) {
+            player.setGameMode(GameMode.CREATIVE);
+        } else if (!player.isOp()) {
+            player.setGameMode(GameMode.SURVIVAL);
+        }
+
+        if (player.isOnline()) {
+            ScoreboardManager manager = Bukkit.getScoreboardManager();
+            Scoreboard board = manager.getNewScoreboard();
+
+            Objective objective = board.registerNewObjective("1", "2");
+            objective.setDisplaySlot(DisplaySlot.SIDEBAR);
+            objective.setDisplayName("" + ChatColor.DARK_RED + "" +
+                    ChatColor.BOLD + "Welcome to Tregmine!");
+
+            Connection conn = null;
+            try {
+                conn = ConnectionPool.getConnection();
+
+                DBWalletDAO walletDAO = new DBWalletDAO(conn);
+
+                // Get a fake offline player
+                Score score = objective.getScore(Bukkit.getOfflinePlayer(
+                            ChatColor.BLACK + "Your Balance:"));
+                score.setScore((int)walletDAO.balance(player.getName()));
+            }
+            catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+            finally {
+                if (conn != null) {
+                    try { conn.close(); } catch (SQLException e) {}
+                }
+            }
+
+            player.setScoreboard(board);
+
+            ScoreboardClearTask.start(plugin, player);
+        }
+
         activateGuardians();
+
     }
 
     @EventHandler

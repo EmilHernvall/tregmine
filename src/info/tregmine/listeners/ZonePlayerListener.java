@@ -7,6 +7,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Entity;
@@ -16,16 +18,13 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
-//import org.bukkit.event.hanging.HangingBreakEvent;
 import org.bukkit.event.hanging.HangingPlaceEvent;
-//import org.bukkit.event.painting.PaintingBreakByEntityEvent;
-//import org.bukkit.event.painting.PaintingPlaceEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
+import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Score;
@@ -38,9 +37,10 @@ import info.tregmine.api.TregminePlayer;
 import info.tregmine.database.ConnectionPool;
 import info.tregmine.database.DBZonesDAO;
 import info.tregmine.quadtree.Point;
-import info.tregmine.zones.ZoneWorld;
 import info.tregmine.zones.Lot;
 import info.tregmine.zones.Zone;
+import info.tregmine.zones.ZoneWorld;
+import info.tregmine.api.util.ScoreboardClearTask;
 
 public class ZonePlayerListener implements Listener
 {
@@ -236,73 +236,12 @@ public class ZonePlayerListener implements Listener
         }
     }
 
-    //	@SuppressWarnings("null")
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event)
     {
         if (event.getAction() != Action.RIGHT_CLICK_BLOCK) {
             return;
         }
-
-        /*if(event.getClickedBlock().getState() instanceof Sign) {
-
-            TregminePlayer player = plugin.getPlayer(event.getPlayer());
-
-            Sign block = (Sign) event.getClickedBlock().getState();
-
-            Point currentPos = new Point(block.getX(), block.getZ());
-
-            ZoneWorld world = plugin.getWorld(block.getWorld());
-            Lot lot = world.findLot(currentPos);
-
-            if (block.getLine(0).contains("FOR SALE")) {
-                if (lot.isOwner(player.getName())) {
-                    player.sendMessage(ChatColor.YELLOW + "You already owns this " + lot.getName());
-                    return;
-                } else {
-                    Wallet wallet = new Wallet(player.getName());
-                    int price = Integer.parseInt(ChatColor.stripColor( block.getLine(1) ).trim() );
-                    String  seller = ChatColor.stripColor( block.getLine(2) ).trim();
-                    Wallet swallet = new Wallet(seller);
-
-                    if (wallet.take(price))  {
-
-                        Connection conn = null;
-                        try {
-                            conn = ConnectionPool.getConnection();
-                            DBZonesDAO dao = new DBZonesDAO(conn);
-                            int userId = dao.getUserId(player.getName());
-                            lot.addOwner(player.getName());
-                            lot.deleteOwner(seller);
-                            dao.addLotUser(lot.getId(), userId);
-                            player.sendMessage(ChatColor.YELLOW + "You are now owner of " + lot.getName());
-                            plugin.log.info(player.getName() + " got " + lot.getName() + " for " + price);
-                            plugin.log.info(seller + " sold " + lot.getName() + " for " + price);
-
-                            swallet.add(price);
-
-                            if(this.plugin.getServer().getPlayer(seller).isOnline()) {
-                                this.plugin.getServer().getPlayer(seller).sendMessage(ChatColor.YELLOW + player.getChatName() + ChatColor.YELLOW + " just got your lot " + lot.getName());
-                            }
-                            event.getClickedBlock().breakNaturally();
-
-                        } catch (SQLException e) {
-                            throw new RuntimeException(e);
-                        } finally {
-                            if (conn != null) {
-                                try { conn.close(); } catch (SQLException e) {}
-                            }
-                        }
-
-                    }
-
-
-                }
-
-                player.sendMessage("for sale" + lot.getName());				
-            }
-
-        }*/
 
         if (event.getPlayer().getItemInHand().getType() != Material.STICK) {
             return;
@@ -509,38 +448,38 @@ public class ZonePlayerListener implements Listener
     @EventHandler
     public void onPlayerTeleport(PlayerTeleportEvent event)
     {
+        TregminePlayer player = plugin.getPlayer(event.getPlayer());
+
+        Location src = event.getFrom();
+        World srcWorld = src.getWorld();
+        Location dst = event.getTo();
+        World dstWorld = dst.getWorld();
+
         if (event.getCause().equals(TeleportCause.END_PORTAL)) {
-            Tregmine.LOGGER.info("END PORTAL BY: " + event.getPlayer().getName());
+            Tregmine.LOGGER.info("Portal by: " + player.getName());
 
             int nrEnt = event.getTo().getWorld().getLivingEntities().size();
             int max = 1000;
             int newEnt = max - nrEnt;
 
             if (nrEnt <= max) {
-
                 for (int i = 0; i<newEnt;i++) {
-                    event.getTo().getWorld().spawnEntity(event.getTo(), EntityType.GHAST);
+                    dstWorld.spawnEntity(dst, EntityType.GHAST);
                 }
-
             }
         }
 
-        TregminePlayer player = plugin.getPlayer(event.getPlayer());
-
-        if (event.getTo().getWorld().getName().matches("world_the_end") && !player.isOp()) {
-            event.getPlayer().sendMessage(ChatColor.RED + "You can't teleport to someone in The End");
+        if ("world_the_end".equals(dstWorld.getName()) && !player.isOp()) {
+            player.sendMessage(ChatColor.RED + "You can't teleport to someone in The End");
             event.setCancelled(true);
             return;
         }
 
-        if (event.getFrom().getWorld().getName().matches(event.getTo().getWorld().getName())) {
+        if (srcWorld.getName().equals(dstWorld.getName())) {
             ZoneWorld world = plugin.getWorld(player.getWorld());
 
-            Location movingFrom = event.getFrom();
-            Point oldPos = new Point(movingFrom.getBlockX(), movingFrom.getBlockZ());
-
-            Location movingTo = event.getTo();
-            Point currentPos = new Point(movingTo.getBlockX(), movingTo.getBlockZ());
+            Point oldPos = new Point(src.getBlockX(), src.getBlockZ());
+            Point currentPos = new Point(dst.getBlockX(), dst.getBlockZ());
 
             Zone currentZone = player.getCurrentZone();
 
@@ -591,7 +530,7 @@ public class ZonePlayerListener implements Listener
                 player.setCurrentZone(currentZone);
             }
         }
-        }
+    }
 
     private void disallowedMessage(Zone currentZone, TregminePlayer player)
     {
@@ -618,63 +557,53 @@ public class ZonePlayerListener implements Listener
             player.setCurrentTexture( currentZone.getTexture() );
         }
 
-        String text = "";
+        /*String text = "";
         if (currentZone.getMainOwner() != null) {
-            //			text = " MainOwner:" + currentZone.getMainOwner();
-        }
+            text = " MainOwner:" + currentZone.getMainOwner();
+        }*/
 
-        final Player mcplayer = player.getPlayer();
-        if (mcplayer.isOnline())
-        {
+        if (player.isOnline()) {
 
-            final ScoreboardManager manager = Bukkit.getScoreboardManager();
+            ScoreboardManager manager = Bukkit.getScoreboardManager();
             Scoreboard board = manager.getNewScoreboard();
 
-            Objective objective = board.registerNewObjective(currentZone.getName(), "2");
+            Objective objective =
+                board.registerNewObjective(currentZone.getName(), "2");
 
             objective.setDisplaySlot(DisplaySlot.SIDEBAR);
 
-            if(currentZone.getName().length() > 13) {
-                objective.setDisplayName(ChatColor.AQUA + currentZone.getName().substring(1 ,13));
-            } else {
-                objective.setDisplayName(ChatColor.AQUA + currentZone.getName());
+            String zoneName = currentZone.getName();
+            int maxLen = 13;
+            if (zoneName.length() > maxLen) {
+                zoneName = zoneName.substring(1, maxLen);
+            }
+            objective.setDisplayName(ChatColor.AQUA + zoneName);
+
+            String mainOwner = currentZone.getMainOwner();
+            if (mainOwner.length() > maxLen) {
+                mainOwner = mainOwner.substring(1, maxLen);
             }
 
-
-            Score score = null;
-
-            if (currentZone.getMainOwner() == null) {
-                score = objective.getScore(Bukkit.getOfflinePlayer("Unkown"));
+            OfflinePlayer fakePlayer = null;
+            if (currentZone.getMainOwner() != null) {
+                fakePlayer = Bukkit.getOfflinePlayer(ChatColor.GOLD + mainOwner);
             } else {
-
-                if(currentZone.getMainOwner().length() > 13) {
-                    score = objective.getScore(Bukkit.getOfflinePlayer(ChatColor.GOLD + currentZone.getMainOwner().substring(1,13))); //Get a fake offline player
-                } else {
-                    score = objective.getScore(Bukkit.getOfflinePlayer(ChatColor.GOLD + currentZone.getMainOwner())); //Get a fake offline player
-                }
+                fakePlayer = Bukkit.getOfflinePlayer("Unkown");
             }
 
+            Score score = objective.getScore(fakePlayer);
             score.setScore(currentZone.getId());
-            mcplayer.setScoreboard(board);
+            player.setScoreboard(board);
 
-
-            Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin,
-                new Runnable() {
-                    public void run() {
-                        mcplayer.setScoreboard(manager.getNewScoreboard());
-                    }
-                }, 400); //400 = 20 seconds. 1 second = 20 ticks, 20*20=400
-
+            ScoreboardClearTask.start(plugin, player);
         }
 
-
         player.sendMessage(ChatColor.RED + "[" + currentZone.getName() + "] " +
-                currentZone.getTextEnter() + text);
+                currentZone.getTextEnter());
 
         if (currentZone.isPvp()) {
             player.sendMessage(ChatColor.RED + "[" + currentZone.getName() + "] " +
-                    "Warning! This is a PVP zone! Other players can damage or kill you here."  + text);		
-        } else {
+                "Warning! This is a PVP zone! Other players can damage or kill you here.");
         }
 
         if (perm != null) {

@@ -139,8 +139,8 @@ public class DBZonesDAO
                 zone.setHostiles("1".equals(rs.getString("zone_hostiles")));
                 zone.setTextEnter(rs.getString("zone_entermessage"));
                 zone.setTextExit(rs.getString("zone_exitmessage"));
-                zone.setTexture(rs.getString("texture"));
-                zone.setMainOwner(rs.getString("owner"));				
+                zone.setTexture(rs.getString("zone_texture"));
+                zone.setMainOwner(rs.getString("zone_owner"));
                 zones.add(zone);
             }
         }
@@ -168,8 +168,10 @@ public class DBZonesDAO
         ResultSet rs = null;
         int id = 0;
         try {
-            String sql = "INSERT INTO zone (zone_world, zone_name, zone_enterdefault, zone_placedefault, " +
-                "zone_destroydefault, zone_pvp, zone_hostiles, zone_entermessage, zone_exitmessage, owner) VALUES (?,?,?,?,?,?,?,?,?,?)";
+            String sql = "INSERT INTO zone (zone_world, zone_name, " +
+                "zone_enterdefault, zone_placedefault, zone_destroydefault, " +
+                "zone_pvp, zone_hostiles, zone_entermessage, zone_exitmessage, " +
+                "zone_owner) VALUES (?,?,?,?,?,?,?,?,?,?)";
 
             stmt = conn.prepareStatement(sql);
             stmt.setString(1, zone.getWorld());
