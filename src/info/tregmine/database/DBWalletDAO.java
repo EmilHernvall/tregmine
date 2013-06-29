@@ -150,32 +150,4 @@ public class DBWalletDAO
 
         return true;
     }
-
-    public int getBlockValue(int block)
-    {
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-        try {
-            String sql = "SELECT i.`value` FROM items_destroyvalue i WHERE i.itemid = ?";
-            stmt = conn.prepareStatement(sql);
-            stmt.setInt(1, block);
-            stmt.execute();
-
-            rs = stmt.getResultSet();
-            if (rs.next()) {
-                return rs.getInt("value");
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } finally {
-            if (rs != null) {
-                try { rs.close(); } catch (SQLException e) {}
-            }
-            if (stmt != null) {
-                try { stmt.close(); } catch (SQLException e) {}
-            }
-        }
-
-        return 0;
-    }
 }

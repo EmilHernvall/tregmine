@@ -15,6 +15,7 @@ import java.util.TreeMap;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -64,7 +65,8 @@ public class Tregmine extends JavaPlugin
     private Server server;
 
     private Map<String, TregminePlayer> players;
-    private Map<Integer, String> blessedBlocks;
+    private Map<Integer, TregminePlayer> playersById;
+    private Map<Location, Integer> blessedBlocks;
 
     private Map<String, ZoneWorld> worlds;
     private Map<Integer, Zone> zones;
@@ -76,6 +78,7 @@ public class Tregmine extends JavaPlugin
 
         // Set up all data structures
         players = new HashMap<String, TregminePlayer>();
+        playersById = new HashMap<Integer, TregminePlayer>();
 
         worlds =
             new TreeMap<String, ZoneWorld>(
@@ -116,6 +119,23 @@ public class Tregmine extends JavaPlugin
         WorldCreator nether = new WorldCreator("world_nether");
         nether.environment(Environment.NETHER);
         nether.createWorld();
+
+        // Load blessed blocks
+        Connection conn = null;
+        try {
+            conn = ConnectionPool.getConnection();
+
+            DBChestBlessDAO chestBlessDAO = new DBChestBlessDAO(conn);
+            this.blessedBlocks = chestBlessDAO.loadBlessedChests(getServer());
+        }
+        catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        finally {
+            if (conn != null) {
+                try { conn.close(); } catch (SQLException e) {}
+            }
+        }
 
         // Register all listeners
         PluginManager pluginMgm = server.getPluginManager();
@@ -203,6 +223,7 @@ public class Tregmine extends JavaPlugin
         for (Player player : players) {
             player.sendMessage(ChatColor.AQUA + "Tregmine successfully unloaded " +
                     "build: " + getDescription().getVersion());
+            removePlayer(player);
         }
     }
 
@@ -211,6 +232,8 @@ public class Tregmine extends JavaPlugin
     {
         Connection conn = null;
         try {
+            conn = ConnectionPool.getConnection();
+
             DBPlayerDAO playerDAO = new DBPlayerDAO(conn);
 
             Player[] players = getServer().getOnlinePlayers();
@@ -221,11 +244,6 @@ public class Tregmine extends JavaPlugin
                 player.sendMessage(ChatColor.GRAY + "Tregmine successfully loaded " +
                         "to build: " + this.getDescription().getVersion());
             }
-
-            conn = ConnectionPool.getConnection();
-
-            DBChestBlessDAO chestBlessDAO = new DBChestBlessDAO(conn);
-            this.blessedBlocks = chestBlessDAO.loadBlessedChests();
         }
         catch (SQLException e) {
             throw new RuntimeException(e);
@@ -274,7 +292,8 @@ public class Tregmine extends JavaPlugin
                         zoneWorld.addZone(zone);
                         this.zones.put(zone.getId(), zone);
                     } catch (IntersectionException e) {
-                        LOGGER.warning("Failed to load zone " + zone.getName() + " with id " + zone.getId() + ".");
+                        LOGGER.warning("Failed to load zone " + zone.getName() +
+                                       " with id " + zone.getId() + ".");
                     }
                 }
 
@@ -283,7 +302,8 @@ public class Tregmine extends JavaPlugin
                     try {
                         zoneWorld.addLot(lot);
                     } catch (IntersectionException e) {
-                        LOGGER.warning("Failed to load lot " + lot.getName() + " with id " + lot.getId() + ".");
+                        LOGGER.warning("Failed to load lot " + lot.getName() +
+                                       " with id " + lot.getId() + ".");
                     }
                 }
 
@@ -308,11 +328,18 @@ public class Tregmine extends JavaPlugin
     public void addPlayer(TregminePlayer player)
     {
         players.put(player.getName(), player);
+        playersById.put(player.getId(), player);
     }
 
-    public void removePlayer(TregminePlayer player)
+    public void removePlayer(Player p)
     {
+        TregminePlayer player = players.get(p.getName());
+        if (player == null) {
+            return;
+        }
+
         players.remove(player.getName());
+        playersById.remove(player.getId());
     }
 
     public TregminePlayer getPlayer(String name)
@@ -323,6 +350,30 @@ public class Tregmine extends JavaPlugin
     public TregminePlayer getPlayer(Player player)
     {
         return players.get(player.getName());
+    }
+
+    public TregminePlayer getPlayer(int id)
+    {
+        if (playersById.containsKey(id)) {
+            return playersById.get(id);
+        }
+
+        Connection conn = null;
+        TregminePlayer target = null;
+        try {
+            conn = ConnectionPool.getConnection();
+
+            DBPlayerDAO playerDAO = new DBPlayerDAO(conn);
+            return playerDAO.getPlayer(id);
+        }
+        catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        finally {
+            if (conn != null) {
+                try { conn.close(); } catch (SQLException e) {}
+            }
+        }
     }
 
     public List<TregminePlayer> matchPlayer(String pattern)
@@ -344,7 +395,7 @@ public class Tregmine extends JavaPlugin
         return decoratedMatches;
     }
 
-    public Map<Integer, String> getBlessedBlocks()
+    public Map<Location, Integer> getBlessedBlocks()
     {
         return blessedBlocks;
     }

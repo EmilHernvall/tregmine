@@ -73,7 +73,7 @@ public class TregminePlayer extends PlayerDelegate
     private String texture = "https://dl.dropbox.com/u/5405236/mc/df.zip";
     private Zone currentZone = null;
     private GuardianState guardianState = null;
-    private String blessTarget = null;
+    private int blessTarget = 0;
 
     // Player state for block fill
     private Block fillBlock1 = null;
@@ -91,6 +91,13 @@ public class TregminePlayer extends PlayerDelegate
         super(player);
 
         this.name = player.getName();
+    }
+
+    public TregminePlayer(String name)
+    {
+        super(null);
+
+        this.name = name;
     }
 
     public void setId(int v) { this.id = v; }
@@ -219,8 +226,8 @@ public class TregminePlayer extends PlayerDelegate
     public void setChatChannel(String v) { this.chatChannel = v; }
     public String getChatChannel() { return chatChannel; }
 
-    public void setBlessTarget(String v) { this.blessTarget = v; }
-    public String getBlessTarget() { return blessTarget; }
+    public void setBlessTarget(int v) { this.blessTarget = v; }
+    public int getBlessTarget() { return blessTarget; }
 
     public void setTeleportShield(boolean v) { this.teleportShield = v; }
     public boolean hasTeleportShield() { return teleportShield; }

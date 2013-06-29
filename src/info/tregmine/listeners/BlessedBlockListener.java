@@ -10,6 +10,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.util.Vector;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -67,8 +68,14 @@ public class BlessedBlockListener implements Listener
             (player.isAdmin() || player.isGuardian()) &&
             allowedMaterials.contains(block.getType())) {
 
-            String name = player.getBlessTarget();
-            if (name == null) {
+            int targetId = player.getBlessTarget();
+            if (targetId == 0) {
+                player.sendMessage(ChatColor.RED + "Use /bless [name] first!");
+                return;
+            }
+
+            TregminePlayer target = plugin.getPlayer(targetId);
+            if (target == null) {
                 player.sendMessage(ChatColor.RED + "Use /bless [name] first!");
                 return;
             }
@@ -115,21 +122,22 @@ public class BlessedBlockListener implements Listener
             }
 
             Location loc = block.getLocation();
-            int checksum = (loc.getBlockX() + "," + loc.getBlockZ() + "," + loc.getBlockY() + "," + loc.getWorld().getName()).hashCode();
+            if (target.isOnline()) {
+                target.sendMessage(ChatColor.AQUA + "Your god blessed it in your name!");
+            }
+            player.sendMessage(ChatColor.AQUA + "You blessed for " + target.getName() + ".");
+            Tregmine.LOGGER.info(player.getName() + " Blessed a block " + loc +
+                                 " to " + target.getName() + ".");
 
-            plugin.getServer().getPlayer(name).sendMessage(ChatColor.AQUA + "Your god blessed it in your name!");
-            player.sendMessage(ChatColor.AQUA + "You blessed for " + name + ".");
-            Tregmine.LOGGER.info(player.getName() + " Blessed a block " + checksum + " to " + name + ".");
-
-            Map<Integer, String> blessedBlocks = plugin.getBlessedBlocks();
-            blessedBlocks.put(checksum, name);
+            Map<Location, Integer> blessedBlocks = plugin.getBlessedBlocks();
+            blessedBlocks.put(loc, targetId);
 
             Connection conn = null;
             try {
                 conn = ConnectionPool.getConnection();
 
                 DBChestBlessDAO chestBlessDAO = new DBChestBlessDAO(conn);
-                chestBlessDAO.saveBless(checksum, name, player.getWorld().getName());
+                chestBlessDAO.saveBless(target, loc);
             }
             catch (SQLException e) {
                 throw new RuntimeException(e);
@@ -150,16 +158,18 @@ public class BlessedBlockListener implements Listener
             allowedMaterials.contains(block.getType())) {
 
             Location loc = block.getLocation();
-            int checksum = (loc.getBlockX() + "," + loc.getBlockZ() + "," + loc.getBlockY() + "," + loc.getWorld().getName()).hashCode();
 
-            Map<Integer, String> blessedBlocks = plugin.getBlessedBlocks();
-            if (blessedBlocks.containsKey(checksum)) {
-                String name = blessedBlocks.get(checksum);
-                if(!name.equalsIgnoreCase(player.getName())) {
+            Map<Location, Integer> blessedBlocks = plugin.getBlessedBlocks();
+            if (blessedBlocks.containsKey(loc)) {
+                int id = blessedBlocks.get(loc);
+                TregminePlayer target = plugin.getPlayer(id);
+                if (id != player.getId()) {
                     if (player.isAdmin()) {
-                        player.sendMessage(ChatColor.YELLOW + "Blessed to: "+ name + "." );
+                        player.sendMessage(ChatColor.YELLOW + "Blessed to: " +
+                                target.getName() + "." );
                     } else {
-                        player.sendMessage(ChatColor.RED + "Blessed to: "+ name + ".");
+                        player.sendMessage(ChatColor.RED + "Blessed to: " +
+                                target.getName() + ".");
                         event.setCancelled(true);
                     }
                 } else {
@@ -175,11 +185,10 @@ public class BlessedBlockListener implements Listener
     public void onBlockBreak (BlockBreakEvent event)
     {
         Location loc = event.getBlock().getLocation();
-        int checksum = (loc.getBlockX() + "," + loc.getBlockZ() + "," + loc.getBlockY() + "," + loc.getWorld().getName()).hashCode();
         Player player = event.getPlayer();
 
-        Map<Integer, String> blessedBlocks = plugin.getBlessedBlocks();
-        if (blessedBlocks.containsKey(checksum)) {
+        Map<Location, Integer> blessedBlocks = plugin.getBlessedBlocks();
+        if (blessedBlocks.containsKey(loc)) {
             player.sendMessage(ChatColor.RED + "You can't destroy a blessed item.");
             event.setCancelled(true);
             return;
@@ -191,20 +200,21 @@ public class BlessedBlockListener implements Listener
     {
         Block block = event.getBlockPlaced();
 
+        Map<Location, Integer> blessedBlocks = plugin.getBlessedBlocks();
         if (block.getType() == Material.CHEST) {
             Player player = event.getPlayer();
 
             Location loc = block.getLocation();
-            int checksum1 = ((loc.getBlockX()+1) + "," + loc.getBlockZ() + "," + loc.getBlockY() + "," + loc.getWorld().getName()).hashCode();
-            int checksum2 = ((loc.getBlockX()-1) + "," + loc.getBlockZ() + "," + loc.getBlockY() + "," + loc.getWorld().getName()).hashCode();
-            int checksum3 = (loc.getBlockX() + "," + (loc.getBlockZ()+1) + "," + loc.getBlockY() + "," + loc.getWorld().getName()).hashCode();
-            int checksum4 = (loc.getBlockX() + "," + (loc.getBlockZ()-1) + "," + loc.getBlockY() + "," + loc.getWorld().getName()).hashCode();
+            Location loc1 = loc.add(new Vector(1, 0, 0));
+            Location loc2 = loc.subtract(new Vector(1, 0, 0));
+            Location loc3 = loc.add(new Vector(0, 0, 1));
+            Location loc4 = loc.subtract(new Vector(0, 0, 1));
 
-            Map<Integer, String> blessedBlocks = plugin.getBlessedBlocks();
-            if (blessedBlocks.containsKey(checksum1) ||
-                blessedBlocks.containsKey(checksum2) ||
-                blessedBlocks.containsKey(checksum3) ||
-                blessedBlocks.containsKey(checksum4)) {
+            if (blessedBlocks.containsKey(loc1) ||
+                blessedBlocks.containsKey(loc2) ||
+                blessedBlocks.containsKey(loc3) ||
+                blessedBlocks.containsKey(loc4)) {
+
                 player.sendMessage(ChatColor.RED + "You can't place a chest next to one that is already blessed.");
                 event.setCancelled(true);
                 return;
@@ -214,18 +224,10 @@ public class BlessedBlockListener implements Listener
             TregminePlayer player = plugin.getPlayer(event.getPlayer());
 
             Location loc = block.getLocation();
-            int checksum = (loc.getBlockX() + "," +
-                            loc.getBlockZ() + "," +
-                            loc.getBlockY() + "," +
-                            loc.getWorld().getName()).hashCode();
-            int checksum1 = (loc.getBlockX() + "," +
-                             loc.getBlockZ() + "," +
-                             (loc.getBlockY() - 1) + "," +
-                             loc.getWorld().getName()).hashCode();
+            Location loc1 = loc.subtract(new Vector(0, 0, 1));
 
-            Map<Integer, String> blessedBlocks = plugin.getBlessedBlocks();
-            if (blessedBlocks.containsKey(checksum1) &&
-                blessedBlocks.containsKey(checksum)) {
+            if (blessedBlocks.containsKey(loc) ||
+                blessedBlocks.containsKey(loc)) {
 
                 player.sendMessage(ChatColor.RED + "You can't place a hopper under a blessed chest.");
                 event.setCancelled(true);

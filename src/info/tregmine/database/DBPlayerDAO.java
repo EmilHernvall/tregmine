@@ -21,6 +21,41 @@ public class DBPlayerDAO
         this.conn = conn;
     }
 
+    public TregminePlayer getPlayer(int id)
+    throws SQLException
+    {
+        TregminePlayer player;
+
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        try {
+            stmt = conn.prepareStatement("SELECT * FROM `user` " +
+                                         "WHERE uid = ?");
+            stmt.setInt(1, id);
+            stmt.execute();
+
+            rs = stmt.getResultSet();
+            if (!rs.next()) {
+                return null;
+            }
+
+            player = new TregminePlayer(rs.getString("player"));
+            player.setId(rs.getInt("uid"));
+            player.setPassword(rs.getString("password"));
+        } finally {
+            if (rs != null) {
+                try { rs.close(); } catch (SQLException e) {}
+            }
+            if (stmt != null) {
+                try { stmt.close(); } catch (SQLException e) {}
+            }
+        }
+
+        loadSettings(player);
+
+        return player;
+    }
+
     public TregminePlayer getPlayer(Player player)
     throws SQLException
     {
@@ -56,14 +91,22 @@ public class DBPlayerDAO
         } finally {
             if (rs != null) {
                 try { rs.close(); } catch (SQLException e) {}
-                rs = null;
             }
             if (stmt != null) {
                 try { stmt.close(); } catch (SQLException e) {}
-                stmt = null;
             }
         }
 
+        loadSettings(player);
+
+        return player;
+    }
+
+    private void loadSettings(TregminePlayer player)
+    throws SQLException
+    {
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
         try {
             stmt = conn.prepareStatement("SELECT * FROM user_settings " +
                                          "WHERE id = ?");
@@ -125,8 +168,6 @@ public class DBPlayerDAO
                 try { stmt.close(); } catch (SQLException e) {}
             }
         }
-
-        return player;
     }
 
     public TregminePlayer createPlayer(Player wrap)
