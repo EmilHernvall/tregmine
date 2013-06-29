@@ -31,14 +31,12 @@ public class WalletCommand extends AbstractCommand
             conn = ConnectionPool.getConnection();
             DBWalletDAO walletDAO = new DBWalletDAO(conn);
 
-            long balance = walletDAO.balance(player.getName());
+            long balance = walletDAO.balance(player);
             if (balance >= 0) {
                 player.sendMessage("You have " + GOLD + FORMAT.format(balance) +
                                    WHITE + " Tregs." );
             } else {
-                walletDAO.create(player.getName());
-                player.sendMessage(AQUA + "Looks like you got your first wallet! " +
-                                   "Try the command again!" );
+                player.sendMessage(RED + "An error occured.");
             }
         }
         catch (SQLException e) {
@@ -60,7 +58,7 @@ public class WalletCommand extends AbstractCommand
             conn = ConnectionPool.getConnection();
             DBWalletDAO walletDAO = new DBWalletDAO(conn);
 
-            long balance = walletDAO.balance(player.getName());
+            long balance = walletDAO.balance(player);
             if (balance >= 0) {
                 Server server = tregmine.getServer();
                 if (!player.isAdmin()) {
@@ -73,9 +71,7 @@ public class WalletCommand extends AbstractCommand
                                             " Tregs." );
                 }
             } else {
-                walletDAO.create(player.getName());
-                player.sendMessage(AQUA + "Looks like you got your first wallet! " +
-                                   "Try the command again!" );
+                player.sendMessage(RED + "An error occured.");
             }
         }
         catch (SQLException e) {
@@ -104,10 +100,10 @@ public class WalletCommand extends AbstractCommand
             conn = ConnectionPool.getConnection();
             DBWalletDAO walletDAO = new DBWalletDAO(conn);
 
-            long newAmount = walletDAO.balance(player.getName()) - amount;
+            long newAmount = walletDAO.balance(player) - amount;
             if (newAmount >= 0) {
-                walletDAO.add(target.getName(), amount);
-                walletDAO.take(player.getName(), amount);
+                walletDAO.add(target, amount);
+                walletDAO.take(player, amount);
                 player.sendMessage(AQUA + "You donated to " + target.getChatName() +
                                    " " + GOLD + FORMAT.format(amount) + AQUA +
                                    " Tregs.");
@@ -115,9 +111,9 @@ public class WalletCommand extends AbstractCommand
                                    FORMAT.format(amount) + AQUA +" Tregs from a " +
                                    "secret admirer.");
                 LOGGER.info(amount+ ":TREG_DONATED " + player.getName() +
-                            "(" + walletDAO.balance(player.getName()) + ")" +
+                            "(" + walletDAO.balance(player) + ")" +
                             " => " + target.getName() +
-                            "(" + walletDAO.balance(target.getName()) + ")");
+                            "(" + walletDAO.balance(target) + ")");
             } else {
                 player.sendMessage(RED + "You cant give more then you have!");
             }
@@ -148,19 +144,19 @@ public class WalletCommand extends AbstractCommand
             conn = ConnectionPool.getConnection();
             DBWalletDAO walletDAO = new DBWalletDAO(conn);
 
-            long newAmount = walletDAO.balance(player.getName()) - amount;
+            long newAmount = walletDAO.balance(player) - amount;
             if (newAmount >= 0) {
-                walletDAO.add(target.getName(), amount);
-                walletDAO.take(player.getName(), amount);
+                walletDAO.add(target, amount);
+                walletDAO.take(player, amount);
                 player.sendMessage(AQUA + "You gave " + target.getChatName() + " " +
                                    GOLD + FORMAT.format(amount) + AQUA +" Tregs.");
                 target.sendMessage(AQUA + "You received " + GOLD +
                                    FORMAT.format(amount) + AQUA +" Tregs from " +
                                    player.getChatName() + ".");
                 LOGGER.info(amount+ ":TREG " + player.getName() +
-                            "(" + walletDAO.balance(player.getName()) + ")" +
+                            "(" + walletDAO.balance(player) + ")" +
                             " => " + target.getName() +
-                            "(" + walletDAO.balance(target.getName()) + ")");
+                            "(" + walletDAO.balance(target) + ")");
             } else {
                 player.sendMessage(RED + "You cant give more then you have!");
             }

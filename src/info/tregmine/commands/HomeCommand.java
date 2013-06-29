@@ -117,12 +117,18 @@ public class HomeCommand extends AbstractCommand
             return false;
         }
 
+        TregminePlayer target = tregmine.getPlayerOffline(playerName);
+        if (target == null) {
+            player.sendMessage(RED + playerName + " was not found in database.");
+            return true;
+        }
+
         Connection conn = null;
         Location loc = null;
         try {
             conn = ConnectionPool.getConnection();
             DBHomeDAO homeDAO = new DBHomeDAO(conn);
-            homeDAO.getHome(playerName, tregmine.getServer());
+            homeDAO.getHome(target.getId(), tregmine.getServer());
         }
         catch (SQLException e) {
             throw new RuntimeException(e);

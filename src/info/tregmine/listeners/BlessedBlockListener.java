@@ -74,7 +74,7 @@ public class BlessedBlockListener implements Listener
                 return;
             }
 
-            TregminePlayer target = plugin.getPlayer(targetId);
+            TregminePlayer target = plugin.getPlayerOffline(targetId);
             if (target == null) {
                 player.sendMessage(ChatColor.RED + "Use /bless [name] first!");
                 return;
@@ -100,9 +100,7 @@ public class BlessedBlockListener implements Listener
                     conn = ConnectionPool.getConnection();
                     DBWalletDAO walletDAO = new DBWalletDAO(conn);
 
-                    long newbalance = walletDAO.balance(player.getName()) - amount;
-                    if (newbalance >= 0) {
-                        walletDAO.take(player.getName(), amount);
+                    if (walletDAO.take(player, amount)) {
                         player.sendMessage(ChatColor.LIGHT_PURPLE + (amount +
                                            " tregs was taken from you"));
                     } else {
@@ -162,7 +160,7 @@ public class BlessedBlockListener implements Listener
             Map<Location, Integer> blessedBlocks = plugin.getBlessedBlocks();
             if (blessedBlocks.containsKey(loc)) {
                 int id = blessedBlocks.get(loc);
-                TregminePlayer target = plugin.getPlayer(id);
+                TregminePlayer target = plugin.getPlayerOffline(id);
                 if (id != player.getId()) {
                     if (player.isAdmin()) {
                         player.sendMessage(ChatColor.YELLOW + "Blessed to: " +

@@ -8,7 +8,6 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
-import info.tregmine.api.url.Url;
 
 public class ChatListener implements Listener
 {
@@ -25,9 +24,8 @@ public class ChatListener implements Listener
         TregminePlayer sender = plugin.getPlayer(event.getPlayer());
 
         String channel = sender.getChatChannel();
-        ChatColor txtColor = ChatColor.WHITE;
 
-        String text = Url.replaceURL(event.getMessage());
+        String text = event.getMessage();
 
         if (text == null) {
             text = event.getMessage();
@@ -37,10 +35,9 @@ public class ChatListener implements Listener
         for (Player player : players) {
             TregminePlayer to = plugin.getPlayer(player);
 
+            ChatColor txtColor = ChatColor.WHITE;
             if (sender.equals(to)) {
                 txtColor = ChatColor.GRAY;
-            } else {
-                txtColor = ChatColor.WHITE;
             }
 
             if (sender.getChatChannel().equals(to.getChatChannel())) {

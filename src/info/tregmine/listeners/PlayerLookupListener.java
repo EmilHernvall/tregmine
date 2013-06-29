@@ -90,9 +90,10 @@ public class PlayerLookupListener implements  Listener
         try {
             conn = ConnectionPool.getConnection();
 
-            stmt = conn.prepareStatement("SELECT user.player FROM user, " +
-                    "user_settings WHERE user.uid=user_settings.id AND " +
-                    "user_settings.value=? ORDER BY time DESC LIMIT 5");
+            stmt = conn.prepareStatement("SELECT player_name FROM player " +
+                    "INNER JOIN player_property USING (player_id) " +
+                    "WHERE property_key = 'ip' AND property_value = ? " +
+                    "ORDER BY player_created DESC LIMIT 5");
             stmt.setString(1, ip);
             stmt.execute();
 
@@ -102,7 +103,7 @@ public class PlayerLookupListener implements  Listener
             String delim = "";
             while (rs.next()) {
                 buffer.append(delim);
-                buffer.append(rs.getString("player"));
+                buffer.append(rs.getString("player_name"));
                 delim = ", ";
             }
 

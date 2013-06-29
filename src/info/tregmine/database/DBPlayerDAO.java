@@ -29,8 +29,8 @@ public class DBPlayerDAO
         PreparedStatement stmt = null;
         ResultSet rs = null;
         try {
-            stmt = conn.prepareStatement("SELECT * FROM `user` " +
-                                         "WHERE uid = ?");
+            stmt = conn.prepareStatement("SELECT * FROM player " +
+                                         "WHERE player_id = ?");
             stmt.setInt(1, id);
             stmt.execute();
 
@@ -39,9 +39,9 @@ public class DBPlayerDAO
                 return null;
             }
 
-            player = new TregminePlayer(rs.getString("player"));
-            player.setId(rs.getInt("uid"));
-            player.setPassword(rs.getString("password"));
+            player = new TregminePlayer(rs.getString("player_name"));
+            player.setId(rs.getInt("player_id"));
+            player.setPassword(rs.getString("player_password"));
         } finally {
             if (rs != null) {
                 try { rs.close(); } catch (SQLException e) {}
@@ -76,8 +76,8 @@ public class DBPlayerDAO
         PreparedStatement stmt = null;
         ResultSet rs = null;
         try {
-            stmt = conn.prepareStatement("SELECT * FROM `user` " +
-                                         "WHERE player = ?");
+            stmt = conn.prepareStatement("SELECT * FROM player " +
+                                         "WHERE player_name = ?");
             stmt.setString(1, player.getName());
             stmt.execute();
 
@@ -86,8 +86,8 @@ public class DBPlayerDAO
                 return null;
             }
 
-            player.setId(rs.getInt("uid"));
-            player.setPassword(rs.getString("password"));
+            player.setId(rs.getInt("player_id"));
+            player.setPassword(rs.getString("player_password"));
         } finally {
             if (rs != null) {
                 try { rs.close(); } catch (SQLException e) {}
@@ -108,15 +108,15 @@ public class DBPlayerDAO
         PreparedStatement stmt = null;
         ResultSet rs = null;
         try {
-            stmt = conn.prepareStatement("SELECT * FROM user_settings " +
-                                         "WHERE id = ?");
+            stmt = conn.prepareStatement("SELECT * FROM player_property " +
+                                         "WHERE player_id = ?");
             stmt.setInt(1, player.getId());
             stmt.execute();
 
             rs = stmt.getResultSet();
             while (rs.next()) {
-                String key = rs.getString("key");
-                String value = rs.getString("value");
+                String key = rs.getString("property_key");
+                String value = rs.getString("property_value");
                 if ("admin".equals(key)) {
                     player.setAdmin(Boolean.valueOf(value));
                 } else if ("builder".equals(key)) {
@@ -178,7 +178,7 @@ public class DBPlayerDAO
         PreparedStatement stmt = null;
         ResultSet rs = null;
         try {
-            String sql = "INSERT INTO user (player) VALUE (?)";
+            String sql = "INSERT INTO player (player_name) VALUE (?)";
             stmt = conn.prepareStatement(sql);
             stmt.setString(1, player.getName());
             stmt.execute();
@@ -256,13 +256,12 @@ public class DBPlayerDAO
 
         PreparedStatement stmt = null;
         try {
-            String sqlInsert = "REPLACE INTO user_settings (id, `key`, `value`, username) " +
-                               "VALUE (?, ?, ?, ?)";
+            String sqlInsert = "REPLACE INTO player_property (player_id, " +
+                "property_key, property_value) VALUE (?, ?, ?)";
             stmt = conn.prepareStatement(sqlInsert);
             stmt.setInt(1, player.getId());
             stmt.setString(2, key);
             stmt.setString(3, value);
-            stmt.setString(4, player.getName());
             stmt.execute();
 
         } finally {
@@ -277,7 +276,7 @@ public class DBPlayerDAO
     {
         PreparedStatement stmt = null;
         try {
-            String sql = "UPDATE user SET password = ? WHERE uid = ?";
+            String sql = "UPDATE player SET player_password = ? WHERE player_id = ?";
             stmt = conn.prepareStatement(sql);
             stmt.setString(1, player.getPasswordHash());
             stmt.setInt(2, player.getId());

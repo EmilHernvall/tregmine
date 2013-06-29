@@ -352,7 +352,31 @@ public class Tregmine extends JavaPlugin
         return players.get(player.getName());
     }
 
-    public TregminePlayer getPlayer(int id)
+    public TregminePlayer getPlayerOffline(String name)
+    {
+        if (players.containsKey(name)) {
+            return players.get(name);
+        }
+
+        Connection conn = null;
+        TregminePlayer target = null;
+        try {
+            conn = ConnectionPool.getConnection();
+
+            DBPlayerDAO playerDAO = new DBPlayerDAO(conn);
+            return playerDAO.getPlayer(name);
+        }
+        catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        finally {
+            if (conn != null) {
+                try { conn.close(); } catch (SQLException e) {}
+            }
+        }
+    }
+
+    public TregminePlayer getPlayerOffline(int id)
     {
         if (playersById.containsKey(id)) {
             return playersById.get(id);

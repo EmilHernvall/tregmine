@@ -21,6 +21,10 @@ public class ScoreboardClearTask implements Runnable
     @Override
     public void run()
     {
+        if (!player.isOnline()) {
+            return;
+        }
+
         ScoreboardManager manager = Bukkit.getScoreboardManager();
         player.setScoreboard(manager.getNewScoreboard());
     }

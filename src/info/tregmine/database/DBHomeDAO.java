@@ -24,8 +24,10 @@ public class DBHomeDAO
     {
         PreparedStatement stmt = null;
         try {
-            stmt = conn.prepareStatement("insert into home (name, x, y, z, yaw, pitch, world, time) values (?, ?, ?, ?, ?, ?, ?, ?)");
-            stmt.setString(1, player.getName());
+            stmt = conn.prepareStatement("INSERT INTO player_home (player_id, " +
+                    "home_x, home_y, home_z, home_yaw, home_pitch, home_world, " +
+                    "home_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+            stmt.setInt(1, player.getId());
             stmt.setDouble(2, loc.getX());
             stmt.setDouble(3, loc.getY());
             stmt.setDouble(4, loc.getZ());
@@ -45,16 +47,17 @@ public class DBHomeDAO
 
     public Location getHome(TregminePlayer player)
     {
-        return getHome(player.getName(), player.getServer());
+        return getHome(player.getId(), player.getServer());
     }
 
-    public Location getHome(String name, Server server)
+    public Location getHome(int playerId, Server server)
     {
         PreparedStatement stmt = null;
         ResultSet rs = null;
         try {
-            stmt = conn.prepareStatement("SELECT * FROM home WHERE name = ? ORDER BY time DESC");
-            stmt.setString(1, name);
+            stmt = conn.prepareStatement("SELECT * FROM player_home " +
+                                         "WHERE player_id = ? ORDER BY time DESC");
+            stmt.setInt(1, playerId);
             stmt.execute();
 
             rs = stmt.getResultSet();

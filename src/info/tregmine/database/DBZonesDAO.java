@@ -29,7 +29,8 @@ public class DBZonesDAO
         PreparedStatement stmt = null;
         ResultSet rs = null;
         try {
-            stmt = conn.prepareStatement("SELECT uid FROM user WHERE player = ?");
+            stmt = conn.prepareStatement("SELECT player_id FROM player " +
+                                         "WHERE player_name = ?");
             stmt.setString(1, player);
             stmt.execute();
 
@@ -90,13 +91,15 @@ public class DBZonesDAO
         ResultSet rs = null;
         Map<String, Zone.Permission> permissions = new HashMap<String, Zone.Permission>();
         try {
-            stmt = conn.prepareStatement("SELECT * FROM zone_user INNER JOIN user ON user_id = uid WHERE zone_id = ?");
+            stmt = conn.prepareStatement("SELECT * FROM zone_user " +
+                                         "INNER JOIN player ON user_id = player_id " +
+                                         "WHERE zone_id = ?");
             stmt.setInt(1, zoneId);
             stmt.execute();
 
             rs = stmt.getResultSet();
             while (rs.next()) {
-                String player = rs.getString("player");
+                String player = rs.getString("player_name");
                 Zone.Permission permission =
                     Zone.Permission.fromString(rs.getString("user_perm"));
 
@@ -398,7 +401,7 @@ public class DBZonesDAO
         List<String> owners = new ArrayList<String>();
         try {
             stmt = conn.prepareStatement("SELECT * FROM zone_lotuser " +
-                    "INNER JOIN user ON uid = user_id " +
+                    "INNER JOIN player ON player_id = user_id " +
                     "WHERE lot_id = ?");
 
             stmt.setInt(1, lotId);

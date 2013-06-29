@@ -3,14 +3,14 @@ package info.tregmine.database;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-//import info.tregmine.api.TregminePlayer;
-import info.tregmine.database.ConnectionPool;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.NumberFormat;
+
+import info.tregmine.api.TregminePlayer;
+import info.tregmine.database.ConnectionPool;
 
 public class DBWalletDAO
 {
@@ -21,7 +21,7 @@ public class DBWalletDAO
         this.conn = conn;
     }
 
-    public long balance(String player)
+    public long balance(TregminePlayer player)
     {
         Connection conn = null;
         PreparedStatement stmt = null;
@@ -29,13 +29,14 @@ public class DBWalletDAO
         try {
             conn = ConnectionPool.getConnection();
 
-            stmt = conn.prepareStatement("SELECT w.`value` FROM wallet w WHERE w.player = ?");
-            stmt.setString(1, player);
+            stmt = conn.prepareStatement("SELECT player_wallet FROM player " +
+                                         "WHERE player_id = ?");
+            stmt.setInt(1, player.getId());
             stmt.execute();
 
             rs = stmt.getResultSet();
             if (rs.next()) {
-                return rs.getLong("value");
+                return rs.getLong("player_wallet");
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -54,66 +55,22 @@ public class DBWalletDAO
         return -1;
     }
 
-    public String formattedBalance(String player)
+    public String formattedBalance(TregminePlayer player)
     {
         NumberFormat nf = NumberFormat.getNumberInstance();
         return ChatColor.GOLD + nf.format(balance(player)) +
                ChatColor.WHITE + " Tregs";
     }
 
-    public boolean exists(String player)
-    {
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-        try {
-            String sql = "SELECT * FROM wallet w WHERE w.player = ?";
-            stmt = conn.prepareStatement(sql);
-            stmt.setString(1, player);
-            stmt.execute();
-
-            rs = stmt.getResultSet();
-            return rs.next();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } finally {
-            if (rs != null) {
-                try { rs.close(); } catch (SQLException e) {}
-            }
-            if (stmt != null) {
-                try { stmt.close(); } catch (SQLException e) {}
-            }
-        }
-    }
-
-    public void create(String player)
-    {
-        if (exists(player)) {
-            return;
-        }
-
-        PreparedStatement stmt = null;
-        try {
-            String sql = "INSERT INTO wallet (player, value) VALUES (?,'10000')";
-            stmt = conn.prepareStatement(sql);
-            stmt.setString(1, player);
-            stmt.execute();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } finally {
-            if (stmt != null) {
-                try { stmt.close(); } catch (SQLException e) {}
-            }
-        }
-    }
-
-    public boolean add(String player, long amount)
+    public boolean add(TregminePlayer player, long amount)
     {
         PreparedStatement stmt = null;
         try {
-            String sql = "UPDATE wallet SET value = value + ? WHERE player = ?";
+            String sql = "UPDATE player SET player_wallet = player_wallet + ? " +
+                         "WHERE player_id = ?";
             stmt = conn.prepareStatement(sql);
             stmt.setLong(1, amount);
-            stmt.setString(2, player);
+            stmt.setInt(2, player.getId());
             stmt.execute();
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -126,7 +83,7 @@ public class DBWalletDAO
         return true;
     }
 
-    public boolean take(String player, long amount)
+    public boolean take(TregminePlayer player, long amount)
     {
         long newBalance = balance(player) - amount;
         if (newBalance < 0) {
@@ -135,10 +92,11 @@ public class DBWalletDAO
 
         PreparedStatement stmt = null;
         try {
-            String sql = "UPDATE wallet SET value = value - ? WHERE player = ?";
+            String sql = "UPDATE player SET player_wallet = player_wallet - ? " +
+                         "WHERE player_id = ?";
             stmt = conn.prepareStatement(sql);
             stmt.setLong(1, amount);
-            stmt.setString(2, player);
+            stmt.setInt(2, player.getId());
             stmt.execute();
         } catch (SQLException e) {
             throw new RuntimeException(e);

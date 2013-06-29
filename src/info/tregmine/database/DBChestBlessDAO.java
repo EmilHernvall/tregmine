@@ -76,7 +76,6 @@ public class DBChestBlessDAO
     private World getWorld(Server server, String name)
     {
         for (World world : server.getWorlds()) {
-            System.out.println("cmp: " + name + " " + world.getName());
             if (name.equalsIgnoreCase(world.getName())) {
                 return world;
             }

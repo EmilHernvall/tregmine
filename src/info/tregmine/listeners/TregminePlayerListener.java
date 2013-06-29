@@ -283,7 +283,7 @@ public class TregminePlayerListener implements Listener
                 // Get a fake offline player
                 Score score = objective.getScore(Bukkit.getOfflinePlayer(
                             ChatColor.BLACK + "Your Balance:"));
-                score.setScore((int)walletDAO.balance(player.getName()));
+                score.setScore((int)walletDAO.balance(player));
             }
             catch (SQLException e) {
                 throw new RuntimeException(e);
