@@ -92,29 +92,9 @@ public class Tregmine extends JavaPlugin
         zones = new HashMap<Integer, Zone>();
 
         // Set up all worlds
-        WorldCreator citadelCreator = new WorldCreator("citadel");
-        citadelCreator.environment(Environment.NORMAL);
-        citadelCreator.createWorld();
-
         WorldCreator world = new WorldCreator("world");
         world.environment(Environment.NORMAL);
         world.createWorld();
-
-        WorldCreator treton = new WorldCreator("treton");
-        treton.environment(Environment.NORMAL);
-        treton.createWorld();
-
-        WorldCreator vanilla = new WorldCreator("elva");
-        vanilla.environment(Environment.NORMAL);
-        vanilla.createWorld();
-
-        WorldCreator einhome = new WorldCreator("einhome");
-        einhome.environment(Environment.NORMAL);
-        einhome.createWorld();
-
-        WorldCreator alpha = new WorldCreator("alpha");
-        alpha.environment(Environment.NORMAL);
-        alpha.createWorld();
 
         WorldCreator nether = new WorldCreator("world_nether");
         nether.environment(Environment.NETHER);

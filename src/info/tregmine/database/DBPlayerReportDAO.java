@@ -46,7 +46,7 @@ public class DBPlayerReportDAO
                 report.setMessage(rs.getString("report_message"));
                 report.setTimestamp(new Date(rs.getInt("report_timestamp")*1000l));
 
-                int validUntil = rs.getInt("report_timestamp");
+                int validUntil = rs.getInt("report_validuntil");
                 if (validUntil != 0) {
                     report.setValidUntil(new Date(validUntil*1000l));
                 }

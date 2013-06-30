@@ -49,8 +49,10 @@ import org.bukkit.scoreboard.ScoreboardManager;
 
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
+import info.tregmine.api.PlayerReport;
 import info.tregmine.database.ConnectionPool;
 import info.tregmine.database.DBPlayerDAO;
+import info.tregmine.database.DBPlayerReportDAO;
 import info.tregmine.database.DBWalletDAO;
 import info.tregmine.api.util.ScoreboardClearTask;
 
@@ -300,7 +302,6 @@ public class TregminePlayerListener implements Listener
         }
 
         activateGuardians();
-
     }
 
     @EventHandler
@@ -317,6 +318,43 @@ public class TregminePlayerListener implements Listener
             if (player == null) {
                 player = playerDAO.createPlayer(event.getPlayer());
             }
+
+            DBPlayerReportDAO reportDAO = new DBPlayerReportDAO(conn);
+            List<PlayerReport> reports = reportDAO.getReportsBySubject(player);
+            for (PlayerReport report : reports) {
+                Date validUntil = report.getValidUntil();
+                if (validUntil == null) {
+                    Tregmine.LOGGER.info("Skipping invalid");
+                    continue;
+                }
+                if (validUntil.getTime() < System.currentTimeMillis()) {
+                    Tregmine.LOGGER.info("Skipping expired: " + validUntil);
+                    continue;
+                }
+
+                if (report.getAction() == PlayerReport.Action.SOFTWARN) {
+                    Tregmine.LOGGER.info("Found softwarn");
+                    player.setNameColor("warned");
+                }
+                else if (report.getAction() == PlayerReport.Action.HARDWARN) {
+                    Tregmine.LOGGER.info("Found hardwarn");
+                    player.setNameColor("warned");
+                    player.setTrusted(false);
+                }
+                else if (report.getAction() == PlayerReport.Action.BAN) {
+                    Tregmine.LOGGER.info("Found ban");
+                    event.disallow(Result.KICK_BANNED, report.getMessage());
+                    return;
+                }
+                else {
+                    Tregmine.LOGGER.info("Found " + report.getAction());
+                }
+            }
+
+            player.setTemporaryChatName(player.getNameColor() +
+                                        player.getName());
+
+            this.plugin.addPlayer(player);
         }
         catch (SQLException e) {
             throw new RuntimeException(e);
@@ -329,12 +367,6 @@ public class TregminePlayerListener implements Listener
 
         if (player.getLocation().getWorld().getName().matches("world_the_end")) {
             player.teleport(this.plugin.getServer().getWorld("world").getSpawnLocation());
-        }
-
-        if (player.isBanned()) {
-            event.disallow(Result.KICK_BANNED, "You shall not pass!");
-        } else  {
-            this.plugin.addPlayer(player);
         }
 
         if (player.getKeyword() != null) {
