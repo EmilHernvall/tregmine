@@ -1,4 +1,4 @@
-<project name="anvil" default="compile" basedir=".">
+<project name="world_importer" default="compile" basedir=".">
 
     <property name="src" value="src" />
     <property name="build" value="bin" />
@@ -30,6 +30,15 @@
 
         </javac>
 
+    </target>
+
+    <target name="jar" depends="compile">
+        <jar destfile="${ant.project.name}.jar" basedir="${build}">
+            <manifest>
+                <attribute name="Main-Class" value="info.tregmine.importer.Main" />
+                <attribute name="Class-Path" value="lib/bukkit.jar lib/mysql-connector-java-bin.jar" />
+            </manifest>
+        </jar>
     </target>
 
     <target name="clean" depends="init">

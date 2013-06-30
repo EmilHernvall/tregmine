@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 5.1.66, for debian-linux-gnu (x86_64)
+-- MySQL dump 10.13  Distrib 5.5.31, for debian-linux-gnu (x86_64)
 --
--- Host: localhost    Database: tregmine1
+-- Host: localhost    Database: tregmine
 -- ------------------------------------------------------
--- Server version	5.1.66-0+squeeze1
+-- Server version	5.5.31-0ubuntu0.12.04.2
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -16,306 +16,132 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `X_OLD_chat`
+-- Table structure for table `inventory`
 --
 
-DROP TABLE IF EXISTS `X_OLD_chat`;
+DROP TABLE IF EXISTS `inventory`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `X_OLD_chat` (
-  `player` varchar(32) NOT NULL,
-  `text` varchar(256) NOT NULL,
-  `to` varchar(32) NOT NULL,
-  `time` bigint(20) NOT NULL,
-  KEY `player` (`player`,`text`(255),`to`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE TABLE `inventory` (
+  `inventory_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `player_id` int(10) unsigned DEFAULT NULL,
+  `inventory_checksum` int(11) DEFAULT NULL,
+  `inventory_x` int(11) DEFAULT NULL,
+  `inventory_y` int(11) DEFAULT NULL,
+  `inventory_z` int(11) DEFAULT NULL,
+  `inventory_world` varchar(32) COLLATE utf8_swedish_ci DEFAULT NULL,
+  `inventory_type` enum('block','player') COLLATE utf8_swedish_ci DEFAULT 'block',
+  PRIMARY KEY (`inventory_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `X_OLD_homes`
+-- Dumping data for table `inventory`
 --
 
-DROP TABLE IF EXISTS `X_OLD_homes`;
+LOCK TABLES `inventory` WRITE;
+/*!40000 ALTER TABLE `inventory` DISABLE KEYS */;
+INSERT INTO `inventory` VALUES (1,1,-219894647,-119,71,36,'world','block');
+/*!40000 ALTER TABLE `inventory` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `player`
+--
+
+DROP TABLE IF EXISTS `player`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `X_OLD_homes` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(45) NOT NULL,
-  `x` double NOT NULL,
-  `y` double NOT NULL,
-  `z` double NOT NULL,
-  `rotX` float NOT NULL,
-  `rotY` float NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=latin1;
+CREATE TABLE `player` (
+  `player_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `player_name` varchar(46) COLLATE utf8_swedish_ci DEFAULT NULL,
+  `player_password` varchar(64) COLLATE utf8_swedish_ci DEFAULT NULL,
+  `player_email` varchar(255) COLLATE utf8_swedish_ci DEFAULT NULL,
+  `player_confirmed` enum('0','1') COLLATE utf8_swedish_ci DEFAULT '0',
+  `player_created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `player_wallet` bigint(20) DEFAULT '10000',
+  UNIQUE KEY `uid` (`player_id`),
+  KEY `player` (`player_name`),
+  KEY `password` (`player_password`)
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `X_OLD_users`
+-- Dumping data for table `player`
 --
 
-DROP TABLE IF EXISTS `X_OLD_users`;
+LOCK TABLES `player` WRITE;
+/*!40000 ALTER TABLE `player` DISABLE KEYS */;
+INSERT INTO `player` VALUES (1,'knipil',NULL,NULL,'0','2013-06-28 20:16:09',10000);
+/*!40000 ALTER TABLE `player` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `player_home`
+--
+
+DROP TABLE IF EXISTS `player_home`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `X_OLD_users` (
-  `name` varchar(32) NOT NULL,
-  `groups` varchar(64) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `chestbless`
---
-
-DROP TABLE IF EXISTS `chestbless`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `chestbless` (
-  `checksum` int(11) NOT NULL,
-  `world` varchar(32) COLLATE utf8_swedish_ci NOT NULL,
-  `player` varchar(32) COLLATE utf8_swedish_ci NOT NULL,
-  `error` tinyint(4) NOT NULL DEFAULT '1',
-  UNIQUE KEY `chs` (`checksum`),
-  KEY `checksum` (`checksum`,`world`,`player`)
+CREATE TABLE `player_home` (
+  `home_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `player_id` int(10) unsigned DEFAULT NULL,
+  `home_name` varchar(32) COLLATE utf8_swedish_ci DEFAULT NULL,
+  `home_x` double DEFAULT NULL,
+  `home_y` double DEFAULT NULL,
+  `home_z` double DEFAULT NULL,
+  `home_pitch` double DEFAULT NULL,
+  `home_yaw` double DEFAULT NULL,
+  `home_world` varchar(32) COLLATE utf8_swedish_ci DEFAULT NULL,
+  `home_time` double DEFAULT NULL,
+  PRIMARY KEY (`home_id`),
+  KEY `player_idx` (`player_id`,`home_time`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `home`
+-- Dumping data for table `player_home`
 --
 
-DROP TABLE IF EXISTS `home`;
+LOCK TABLES `player_home` WRITE;
+/*!40000 ALTER TABLE `player_home` DISABLE KEYS */;
+/*!40000 ALTER TABLE `player_home` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `player_property`
+--
+
+DROP TABLE IF EXISTS `player_property`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `home` (
-  `name` varchar(32) CHARACTER SET latin1 NOT NULL,
-  `x` double NOT NULL,
-  `y` double NOT NULL,
-  `z` double NOT NULL,
-  `pitch` float NOT NULL,
-  `yaw` float NOT NULL,
-  `world` varchar(32) CHARACTER SET latin1 NOT NULL,
-  `time` double NOT NULL,
-  UNIQUE KEY `name` (`name`,`x`,`y`,`z`,`pitch`,`yaw`,`world`,`time`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `items_destroyvalue`
---
-
-DROP TABLE IF EXISTS `items_destroyvalue`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `items_destroyvalue` (
-  `itemid` int(11) NOT NULL,
-  `name` varchar(12) COLLATE utf8_swedish_ci NOT NULL,
-  `value` int(11) NOT NULL,
-  UNIQUE KEY `itemid` (`itemid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `items_spawnvalue`
---
-
-DROP TABLE IF EXISTS `items_spawnvalue`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `items_spawnvalue` (
-  `itemid` int(11) NOT NULL,
-  `value` int(11) NOT NULL,
-  UNIQUE KEY `itemid` (`itemid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `log`
---
-
-DROP TABLE IF EXISTS `log`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `log` (
-  `player` varchar(32) COLLATE utf8_swedish_ci NOT NULL,
-  `to` varchar(32) COLLATE utf8_swedish_ci DEFAULT NULL,
-  `command` varchar(12) COLLATE utf8_swedish_ci NOT NULL,
-  `flags` varchar(32) COLLATE utf8_swedish_ci NOT NULL,
-  `time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `succeded` tinyint(1) NOT NULL,
-  KEY `succeded` (`succeded`),
-  KEY `player` (`player`,`command`,`flags`,`time`,`to`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `motd`
---
-
-DROP TABLE IF EXISTS `motd`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `motd` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `rid` int(11) NOT NULL,
-  `line1` varchar(32) COLLATE utf8_swedish_ci NOT NULL,
-  `line2` varchar(32) COLLATE utf8_swedish_ci NOT NULL,
-  `line3` varchar(32) COLLATE utf8_swedish_ci NOT NULL,
-  `line4` varchar(32) COLLATE utf8_swedish_ci NOT NULL,
-  `line5` varchar(32) COLLATE utf8_swedish_ci NOT NULL,
-  `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  KEY `line1` (`line1`,`line2`,`line3`,`line4`,`date`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `rank`
---
-
-DROP TABLE IF EXISTS `rank`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `rank` (
-  `rid` int(11) NOT NULL AUTO_INCREMENT,
-  `rank` varchar(16) COLLATE utf8_swedish_ci NOT NULL,
-  `color` int(11) DEFAULT NULL,
-  PRIMARY KEY (`rid`),
-  UNIQUE KEY `rid` (`rid`,`rank`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `rank_command`
---
-
-DROP TABLE IF EXISTS `rank_command`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `rank_command` (
-  `rid` int(11) NOT NULL,
-  `command` varchar(16) COLLATE utf8_swedish_ci NOT NULL,
-  KEY `rid` (`rid`,`command`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `shorturl`
---
-
-DROP TABLE IF EXISTS `shorturl`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `shorturl` (
-  `urlID` int(11) NOT NULL AUTO_INCREMENT,
-  `link` varchar(256) NOT NULL,
-  PRIMARY KEY (`urlID`),
-  UNIQUE KEY `urlID` (`urlID`)
-) ENGINE=MyISAM AUTO_INCREMENT=2546 DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `stats_blocks`
---
-
-DROP TABLE IF EXISTS `stats_blocks`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `stats_blocks` (
-  `checksum` double NOT NULL,
-  `player` varchar(46) NOT NULL,
-  `x` int(11) NOT NULL,
-  `y` int(11) NOT NULL,
-  `z` int(11) NOT NULL,
-  `time` double NOT NULL,
-  `status` smallint(6) NOT NULL,
-  `blockid` double NOT NULL,
-  `world` varchar(16) NOT NULL DEFAULT 'world',
-  KEY `status` (`status`),
-  KEY `blockid` (`blockid`),
-  KEY `world` (`world`),
-  KEY `time` (`time`),
-  KEY `player` (`player`),
-  KEY `checksum` (`checksum`,`player`,`x`,`y`,`z`,`time`,`world`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `stats_sign`
---
-
-DROP TABLE IF EXISTS `stats_sign`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `stats_sign` (
-  `checksum` double NOT NULL,
-  `player` varchar(64) COLLATE utf8_swedish_ci NOT NULL,
-  `x` double NOT NULL,
-  `z` double NOT NULL,
-  `y` double NOT NULL,
-  `text` varchar(256) COLLATE utf8_swedish_ci NOT NULL,
-  `world` varchar(32) COLLATE utf8_swedish_ci NOT NULL,
-  `time` double NOT NULL,
-  KEY `tabelindex` (`checksum`,`player`,`x`,`z`,`y`,`text`)
+CREATE TABLE `player_property` (
+  `player_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `property_key` varchar(255) COLLATE utf8_swedish_ci NOT NULL DEFAULT '',
+  `property_value` varchar(255) COLLATE utf8_swedish_ci DEFAULT NULL,
+  `property_created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`player_id`,`property_key`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `stats_user`
+-- Dumping data for table `player_property`
 --
 
-DROP TABLE IF EXISTS `stats_user`;
+LOCK TABLES `player_property` WRITE;
+/*!40000 ALTER TABLE `player_property` DISABLE KEYS */;
+INSERT INTO `player_property` VALUES (1,'ip','127.0.0.1','2013-06-30 19:22:46'),(1,'hostName','localhost','2013-06-30 19:22:46'),(1,'timezone','Europe/Stockholm','2013-06-30 19:22:46'),(1,'admin','true','2013-06-28 20:25:51'),(1,'donator','true','2013-06-28 20:26:02'),(1,'color','vampire','2013-06-30 19:22:46');
+/*!40000 ALTER TABLE `player_property` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `player_report`
+--
+
+DROP TABLE IF EXISTS `player_report`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `stats_user` (
-  `uid` int(11) NOT NULL,
-  `key` varchar(16) COLLATE utf8_swedish_ci NOT NULL,
-  `value` int(11) NOT NULL,
-  KEY `uid` (`uid`,`key`,`value`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `test`
---
-
-DROP TABLE IF EXISTS `test`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `test` (
-  `test` int(11) NOT NULL AUTO_INCREMENT,
-  PRIMARY KEY (`test`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `user`
---
-
-DROP TABLE IF EXISTS `user`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `user` (
-  `uid` bigint(20) NOT NULL AUTO_INCREMENT,
-  `player` varchar(46) CHARACTER SET latin1 NOT NULL,
-  `password` varchar(64) COLLATE utf8_swedish_ci DEFAULT NULL,
-  `email` varchar(255) COLLATE utf8_swedish_ci DEFAULT NULL,
-  `confirmed` tinyint(1) NOT NULL DEFAULT '0',
-  `time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'first time this user is create (first visit on server)',
-  UNIQUE KEY `uid` (`uid`),
-  KEY `player` (`player`),
-  KEY `password` (`password`)
-) ENGINE=MyISAM AUTO_INCREMENT=44114 DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `user_report`
---
-
-DROP TABLE IF EXISTS `user_report`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `user_report` (
+CREATE TABLE `player_report` (
   `report_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `subject_id` int(10) unsigned NOT NULL,
   `issuer_id` int(10) unsigned NOT NULL,
@@ -330,35 +156,13 @@ CREATE TABLE `user_report` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `user_settings`
+-- Dumping data for table `player_report`
 --
 
-DROP TABLE IF EXISTS `user_settings`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `user_settings` (
-  `id` bigint(20) NOT NULL,
-  `key` varchar(16) COLLATE utf8_swedish_ci NOT NULL,
-  `value` varchar(128) COLLATE utf8_swedish_ci NOT NULL,
-  `username` varchar(32) COLLATE utf8_swedish_ci NOT NULL DEFAULT 'unknown' COMMENT 'DONT USE FOR LOOKUP, its only for when you look in to the database direct',
-  `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  KEY `id` (`id`,`key`,`value`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `wallet`
---
-
-DROP TABLE IF EXISTS `wallet`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `wallet` (
-  `player` varchar(24) CHARACTER SET utf8 NOT NULL,
-  `value` bigint(20) NOT NULL DEFAULT '100',
-  UNIQUE KEY `player` (`player`,`value`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+LOCK TABLES `player_report` WRITE;
+/*!40000 ALTER TABLE `player_report` DISABLE KEYS */;
+/*!40000 ALTER TABLE `player_report` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `warps`
@@ -381,19 +185,14 @@ CREATE TABLE `warps` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `web_vote_topic`
+-- Dumping data for table `warps`
 --
 
-DROP TABLE IF EXISTS `web_vote_topic`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `web_vote_topic` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `topic` varchar(160) NOT NULL,
-  `creator` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
+LOCK TABLES `warps` WRITE;
+/*!40000 ALTER TABLE `warps` DISABLE KEYS */;
+INSERT INTO `warps` VALUES ('test',-204.7451882545257,78,172.67658034940334,18,-193.05,'world');
+/*!40000 ALTER TABLE `warps` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `zone`
@@ -413,12 +212,22 @@ CREATE TABLE `zone` (
   `zone_hostiles` enum('0','1') COLLATE utf8_swedish_ci DEFAULT '1',
   `zone_entermessage` varchar(250) COLLATE utf8_swedish_ci NOT NULL,
   `zone_exitmessage` varchar(250) COLLATE utf8_swedish_ci NOT NULL,
-  `texture` text COLLATE utf8_swedish_ci,
-  `owner` varchar(24) COLLATE utf8_swedish_ci DEFAULT NULL,
+  `zone_texture` text COLLATE utf8_swedish_ci,
+  `zone_owner` varchar(24) COLLATE utf8_swedish_ci DEFAULT NULL,
   PRIMARY KEY (`zone_id`),
   UNIQUE KEY `name` (`zone_name`)
-) ENGINE=MyISAM AUTO_INCREMENT=903 DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=904 DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `zone`
+--
+
+LOCK TABLES `zone` WRITE;
+/*!40000 ALTER TABLE `zone` DISABLE KEYS */;
+INSERT INTO `zone` VALUES (903,'world','great_woods','1','1','1','0','0','Welcome to great_woods!','Now leaving great_woods.',NULL,'knipil');
+/*!40000 ALTER TABLE `zone` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `zone_lot`
@@ -437,8 +246,17 @@ CREATE TABLE `zone_lot` (
   `lot_y2` int(10) NOT NULL,
   `special` int(11) DEFAULT NULL,
   PRIMARY KEY (`lot_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11185 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `zone_lot`
+--
+
+LOCK TABLES `zone_lot` WRITE;
+/*!40000 ALTER TABLE `zone_lot` DISABLE KEYS */;
+/*!40000 ALTER TABLE `zone_lot` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `zone_lotuser`
@@ -453,6 +271,15 @@ CREATE TABLE `zone_lotuser` (
   PRIMARY KEY (`lot_id`,`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `zone_lotuser`
+--
+
+LOCK TABLES `zone_lotuser` WRITE;
+/*!40000 ALTER TABLE `zone_lotuser` DISABLE KEYS */;
+/*!40000 ALTER TABLE `zone_lotuser` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `zone_rect`
@@ -470,8 +297,18 @@ CREATE TABLE `zone_rect` (
   `rect_y2` int(10) DEFAULT NULL,
   PRIMARY KEY (`rect_id`),
   KEY `zone_id` (`zone_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=902 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `zone_rect`
+--
+
+LOCK TABLES `zone_rect` WRITE;
+/*!40000 ALTER TABLE `zone_rect` DISABLE KEYS */;
+INSERT INTO `zone_rect` VALUES (1,903,-281,230,-11,-30);
+/*!40000 ALTER TABLE `zone_rect` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `zone_user`
@@ -487,6 +324,16 @@ CREATE TABLE `zone_user` (
   PRIMARY KEY (`zone_id`,`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `zone_user`
+--
+
+LOCK TABLES `zone_user` WRITE;
+/*!40000 ALTER TABLE `zone_user` DISABLE KEYS */;
+INSERT INTO `zone_user` VALUES (903,1,'owner');
+/*!40000 ALTER TABLE `zone_user` ENABLE KEYS */;
+UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -497,4 +344,4 @@ CREATE TABLE `zone_user` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2013-06-28 17:04:38
+-- Dump completed on 2013-06-30 21:26:13

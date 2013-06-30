@@ -84,23 +84,6 @@ public class UserCommand extends AbstractCommand
             victim.sendMessage("Welcome! You are now made settler.");
             LOGGER.info(victim.getName() + " was given settler rights by " + player.getName() + ".");
         }
-        else if ("warn".equalsIgnoreCase(args[1])) {
-            victim.setNameColor("warned");
-            victim.setTemporaryChatName(victim.getNameColor() + victim.getName());
-
-            player.sendMessage(AQUA + "You warned " + victim.getChatName() + ".");
-            victim.sendMessage("You are now warned");
-            LOGGER.info(victim.getName() + " was warned by " + player.getName() + ".");
-        }
-        else if ("hardwarn".equalsIgnoreCase(args[1])) {
-            victim.setNameColor("warned");
-            victim.setTrusted(false);
-            victim.setTemporaryChatName(victim.getNameColor() + victim.getName());
-
-            player.sendMessage(AQUA + "You warned " + victim.getChatName() + " and removed his building rights." );
-            victim.sendMessage("You are now warned and bereft of your building rights.");
-            LOGGER.info(victim.getName() + " was hardwarned by " + player.getName() + ".");
-        }
         else if ("resident".equalsIgnoreCase(args[1]) && player.isOp()) {
             victim.setNameColor("trusted");
             victim.setTrusted(true);

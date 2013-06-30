@@ -1,6 +1,7 @@
 package info.tregmine.commands;
 
 import java.util.List;
+import java.util.Date;
 import java.sql.Connection;
 import java.sql.SQLException;
 
@@ -10,14 +11,26 @@ import org.bukkit.entity.Player;
 
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
+import info.tregmine.api.PlayerReport;
 import info.tregmine.database.ConnectionPool;
-import info.tregmine.database.DBPlayerDAO;
+import info.tregmine.database.DBPlayerReportDAO;
 
 public class BanCommand extends AbstractCommand
 {
     public BanCommand(Tregmine tregmine)
     {
         super(tregmine, "ban");
+    }
+
+    private String argsToMessage(String[] args)
+    {
+        StringBuffer buf = new StringBuffer();
+        for (int i = 1; i < args.length; ++i) {
+            buf.append(" ");
+            buf.append(args[i]);
+        }
+
+        return buf.toString();
     }
 
     @Override
@@ -27,11 +40,15 @@ public class BanCommand extends AbstractCommand
             return false;
         }
 
-        if (args.length != 1) {
+        if (args.length < 2) {
+            player.sendMessage(DARK_AQUA + "/ban <player> <message>");
             return false;
         }
 
-        List<TregminePlayer> candidates = tregmine.matchPlayer(args[0]);
+        String pattern = args[0];
+        String message = argsToMessage(args);
+
+        List<TregminePlayer> candidates = tregmine.matchPlayer(pattern);
         if (candidates.size() != 1) {
             // TODO: List users
             return true;
@@ -39,15 +56,23 @@ public class BanCommand extends AbstractCommand
 
         TregminePlayer victim = candidates.get(0);
 
-        victim.setBanned(true);
-        victim.kickPlayer("banned by " + player.getName());
+        victim.kickPlayer("Banned by " + player.getName() + ": " + message);
 
         Connection conn = null;
         try {
             conn = ConnectionPool.getConnection();
 
-            DBPlayerDAO playerDAO = new DBPlayerDAO(conn);
-            playerDAO.updatePlayerPermissions(victim);
+            PlayerReport report = new PlayerReport();
+            report.setSubjectId(victim.getId());
+            report.setIssuerId(player.getId());
+            report.setAction(PlayerReport.Action.BAN);
+            report.setMessage(message);
+            // three days default
+            report.setValidUntil(
+                new Date(System.currentTimeMillis() + 3*86400*1000l));
+
+            DBPlayerReportDAO reportDAO = new DBPlayerReportDAO(conn);
+            reportDAO.insertReport(report);
         }
         catch (SQLException e) {
             throw new RuntimeException(e);

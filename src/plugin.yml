@@ -90,6 +90,9 @@ commands:
   regeneratechunk:
     description: Regenerate the current chunk (admin only)
     -usage: /regeneratechunk
+  report:
+    description: Adds a report to the players record
+    -usage: /report player message
   say:
     description: Speak as god (admins only)
     -usage: /say message
@@ -126,6 +129,9 @@ commands:
   wallet:
     description: Modify your wallet
     -usage: /wallet
+  warn:
+    description: Warn a user
+    -usage: /warp <hard|soft> <player> <message>
   warp:
     description: Warp to a specified city
     -usage: /warp city

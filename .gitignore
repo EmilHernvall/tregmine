@@ -1,7 +1,9 @@
 tags
 *.swp
+*.swo
 *~
 build.sh
 make.log
 /bin
 /world_importer/bin
+/world_importer/citadel

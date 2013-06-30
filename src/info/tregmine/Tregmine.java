@@ -196,6 +196,7 @@ public class Tregmine extends JavaPlugin
         getCommand("password").setExecutor(new PasswordCommand(this));
         getCommand("pos").setExecutor(new PositionCommand(this));
         getCommand("regeneratechunk").setExecutor(new RegenerateChunkCommand(this));
+        getCommand("report").setExecutor(new ReportCommand(this));
         getCommand("say").setExecutor(new SayCommand(this));
         getCommand("sendto").setExecutor(new SendToCommand(this));
         getCommand("setspawner").setExecutor(new SetSpawnerCommand(this));
@@ -209,6 +210,7 @@ public class Tregmine extends JavaPlugin
         getCommand("tpto").setExecutor(new TeleportToCommand(this));
         getCommand("user").setExecutor(new UserCommand(this));
         getCommand("wallet").setExecutor(new WalletCommand(this));
+        getCommand("warn").setExecutor(new WarnCommand(this));
         getCommand("warp").setExecutor(new WarpCommand(this));
         getCommand("zone").setExecutor(new ZoneCommand(this));
     }

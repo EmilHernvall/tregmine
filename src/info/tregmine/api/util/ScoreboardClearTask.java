@@ -25,8 +25,12 @@ public class ScoreboardClearTask implements Runnable
             return;
         }
 
-        ScoreboardManager manager = Bukkit.getScoreboardManager();
-        player.setScoreboard(manager.getNewScoreboard());
+        try {
+            ScoreboardManager manager = Bukkit.getScoreboardManager();
+            player.setScoreboard(manager.getNewScoreboard());
+        } catch (IllegalStateException e) {
+            // We don't really care
+        }
     }
 
     public static void start(Plugin plugin, TregminePlayer player)
