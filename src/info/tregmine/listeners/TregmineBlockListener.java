@@ -33,15 +33,16 @@ import info.tregmine.api.TregminePlayer;
 
 public class TregmineBlockListener implements Listener
 {
-    private final Tregmine plugin;
+    private Tregmine plugin;
 
-    public TregmineBlockListener(Tregmine instance) {
-        plugin = instance;
-        plugin.getServer();
+    public TregmineBlockListener(Tregmine instance)
+    {
+        this.plugin = instance;
     }
 
     @EventHandler
-    public void onBlockPlace (BlockPlaceEvent event){
+    public void onBlockPlace(BlockPlaceEvent event)
+    {
         TregminePlayer tregminePlayer = plugin.getPlayer(event.getPlayer());
 
         if (!tregminePlayer.isTrusted()) {
@@ -53,7 +54,7 @@ public class TregmineBlockListener implements Listener
         }
 
         if (event.getBlock().getType().equals(Material.SPONGE)) {
-            if(!event.getPlayer().isOp()) {
+            if (!event.getPlayer().isOp()) {
                 event.setCancelled(true);
                 return;
             }
@@ -61,12 +62,14 @@ public class TregmineBlockListener implements Listener
     }
 
     @EventHandler
-    public void onBlockBurn (BlockBurnEvent event) {
+    public void onBlockBurn(BlockBurnEvent event)
+    {
         event.setCancelled(true);
     }
 
     @EventHandler
-    public void onBlockBreak(BlockBreakEvent event) {
+    public void onBlockBreak(BlockBreakEvent event)
+    {
         TregminePlayer tregminePlayer = plugin.getPlayer(event.getPlayer());
 
         if (!tregminePlayer.isTrusted()) {
@@ -76,16 +79,11 @@ public class TregmineBlockListener implements Listener
         if (tregminePlayer.isAdmin()) {
             event.setCancelled(false);
         }
-
     }
 
     @EventHandler
-    public void onBlockCanBuild (BlockCanBuildEvent event) {
-        //Test
-    }
-
-    @EventHandler
-    public void onLeavesDecay(LeavesDecayEvent event) {
+    public void onLeavesDecay(LeavesDecayEvent event)
+    {
         Location l = event.getBlock().getLocation();
         Block  fence = event.getBlock().getWorld().getBlockAt(l.getBlockX(),l.getBlockY()-1, l.getBlockZ());
 
@@ -94,26 +92,16 @@ public class TregmineBlockListener implements Listener
         }
     }
 
-    //@EventHandler
-    //public void onBlockFlow(BlockFromToEvent event) {
-    //}
-
-    //@EventHandler
-    //public void onSignChange(SignChangeEvent event){
-    //}
-
-
     @EventHandler
-    public void onBlockIgnite(BlockIgniteEvent event) {
+    public void onBlockIgnite(BlockIgniteEvent event)
+    {
         event.setCancelled(true);
-
 
         Location loc = event.getBlock().getLocation();
         Block block = event.getBlock().getWorld().getBlockAt(loc.getBlockX(), loc.getBlockY()-1, loc.getBlockZ());
 
-        if(block.getType() == Material.OBSIDIAN) {
+        if (block.getType() == Material.OBSIDIAN) {
             event.setCancelled(false);
         }
-
     }
 }

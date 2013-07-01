@@ -9,40 +9,26 @@ import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.event.entity.EntityExplodeEvent;
 
+public class TregmineEntityListener  implements Listener
+{
+    private Tregmine plugin;
 
-public class TregmineEntityListener  implements Listener  {
-	private final Tregmine plugin;
+    public TregmineEntityListener(Tregmine instance)
+    {
+        this.plugin = instance;
+    }
 
-	public TregmineEntityListener(Tregmine instance) {
-		plugin = instance;
-		plugin.getServer();
-	}
+    @EventHandler
+    public void onCreatureSpawn(CreatureSpawnEvent event)
+    {
+        if (event.getSpawnReason() == SpawnReason.SPAWNER_EGG) {
+            event.setCancelled(true);
+        }
+    }
 
-	@EventHandler
-	public void onCreatureSpawn(CreatureSpawnEvent event) 	{
-		if (event.getSpawnReason() == SpawnReason.SPAWNER_EGG) {
-			event.setCancelled(true);
-		}
-	}
-	
-	
-	@EventHandler
-	public void onEntityExplode (EntityExplodeEvent event) {
-
-		if(event.getLocation().getWorld().getName().matches("world")) {
-			event.setCancelled(true);
-		}
-
-		if(event.getLocation().getWorld().getName().matches("citadel")) {
-			event.setCancelled(true);
-		}
-
-		if(event.getLocation().getWorld().getName().matches("alpha")) {
-			event.setCancelled(true);
-		}
-		
-		if(event.getLocation().getWorld().getName().matches("creative")) {
-			event.setCancelled(true);
-		}
-	}
+    @EventHandler
+    public void onEntityExplode(EntityExplodeEvent event)
+    {
+        event.setCancelled(true);
+    }
 }
