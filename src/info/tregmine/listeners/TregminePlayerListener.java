@@ -216,35 +216,34 @@ public class TregminePlayerListener implements Listener
             event.getPlayer().kickPlayer("error loading profile!");
         }
 
-        if (event.getPlayer().getName() != null) {
+        List<TregminePlayer> players = plugin.getOnlinePlayers();
+        if (player.isInvisible()) {
+            player.sendMessage(ChatColor.YELLOW + "You are now invisible!");
 
-            Player[] players = plugin.getServer().getOnlinePlayers();
-
-            if (player.isInvisible()) {
-                for (Player allplayer : players) {
-                    if (!allplayer.isOp()) {
-                        allplayer.hidePlayer(event.getPlayer());
-                    } else {
-                        allplayer.showPlayer(event.getPlayer());
-                    }
-                }
-            } else {
-                for (Player allplayer : players) {
-                    allplayer.showPlayer(event.getPlayer());
+            // Hide the new player from all existing players
+            for (TregminePlayer current : players) {
+                if (!current.isOp()) {
+                    current.hidePlayer(player);
+                } else {
+                    current.showPlayer(player);
                 }
             }
+        } else {
+            for (Player current : players) {
+                current.showPlayer(player);
+            }
+        }
 
-            for (Player allplayer : players) {
-                TregminePlayer aplayer = plugin.getPlayer(allplayer);
-                if (aplayer.isInvisible()) {
-                    player.hidePlayer(allplayer);
-                } else {
-                    player.showPlayer(allplayer);
-                }
+        // Hide currently invisible players from the player that just signed on
+        for (TregminePlayer current : players) {
+            if (current.isInvisible()) {
+                player.hidePlayer(current);
+            } else {
+                player.showPlayer(current);
+            }
 
-                if (player.isOp()) {
-                    player.showPlayer(allplayer);
-                }
+            if (player.isOp()) {
+                player.showPlayer(current);
             }
         }
 

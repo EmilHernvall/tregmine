@@ -57,6 +57,9 @@ commands:
   home:
     description: Teleport to, or set, your home
     -usage: /home
+  inv:
+    description: Look in a players inventory (admin only)
+    -usage: /inv <player>
   item:
     description: Spawn an item
     -usage: /item item amount data (admin only)
@@ -126,11 +129,14 @@ commands:
   user:
     description: Modify a users permissions (admins and guardians only)
     -usage: /user
+  vanish:
+    description: Become invisible (admin only)
+    -usage: /vanish <on|off>
   wallet:
     description: Modify your wallet
     -usage: /wallet
   warn:
-    description: Warn a user
+    description: Warn a user (guardian and admin only)
     -usage: /warp <hard|soft> <player> <message>
   warp:
     description: Warp to a specified city

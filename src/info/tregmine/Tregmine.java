@@ -164,6 +164,7 @@ public class Tregmine extends JavaPlugin
         getCommand("force").setExecutor(new ForceCommand(this));
         getCommand("give").setExecutor(new GiveCommand(this));
         getCommand("home").setExecutor(new HomeCommand(this));
+        getCommand("inv").setExecutor(new InventoryCommand(this));
         getCommand("item").setExecutor(new ItemCommand(this));
         getCommand("keyword").setExecutor(new KeywordCommand(this));
         getCommand("kick").setExecutor(new KickCommand(this));
@@ -188,6 +189,7 @@ public class Tregmine extends JavaPlugin
         getCommand("tpshield").setExecutor(new TeleportShieldCommand(this));
         getCommand("tpto").setExecutor(new TeleportToCommand(this));
         getCommand("user").setExecutor(new UserCommand(this));
+        getCommand("vanish").setExecutor(new VanishCommand(this));
         getCommand("wallet").setExecutor(new WalletCommand(this));
         getCommand("warn").setExecutor(new WarnCommand(this));
         getCommand("warp").setExecutor(new WarpCommand(this));
@@ -304,6 +306,16 @@ public class Tregmine extends JavaPlugin
     public Zone getZone(int zoneId)
     {
         return zones.get(zoneId);
+    }
+
+    public List<TregminePlayer> getOnlinePlayers()
+    {
+        List<TregminePlayer> players = new ArrayList<TregminePlayer>();
+        for (Player player : server.getOnlinePlayers()) {
+            players.add(getPlayer(player));
+        }
+
+        return players;
     }
 
     public void addPlayer(TregminePlayer player)
