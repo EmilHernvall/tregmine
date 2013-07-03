@@ -1,4 +1,4 @@
-<project name="tregmine_blocklog" default="compile" basedir=".">
+<project name="tregmine_gamemagic" default="compile" basedir=".">
 
     <property name="src" value="src" />
     <property name="build" value="bin" />
