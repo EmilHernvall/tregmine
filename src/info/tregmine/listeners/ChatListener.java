@@ -22,6 +22,9 @@ public class ChatListener implements Listener
     public void onPlayerChat(AsyncPlayerChatEvent event)
     {
         TregminePlayer sender = plugin.getPlayer(event.getPlayer());
+        if (sender.isTrading()) {
+            return;
+        }
 
         String channel = sender.getChatChannel();
 

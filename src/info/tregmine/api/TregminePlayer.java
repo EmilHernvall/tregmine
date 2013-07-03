@@ -74,6 +74,7 @@ public class TregminePlayer extends PlayerDelegate
     private Zone currentZone = null;
     private GuardianState guardianState = null;
     private int blessTarget = 0;
+    private boolean isTrading = false;
 
     // Player state for block fill
     private Block fillBlock1 = null;
@@ -232,6 +233,9 @@ public class TregminePlayer extends PlayerDelegate
     public void setTeleportShield(boolean v) { this.teleportShield = v; }
     public boolean hasTeleportShield() { return teleportShield; }
 
+    public void setIsTrading(boolean v) { this.isTrading = v; }
+    public boolean isTrading() { return isTrading; }
+
     // block fill state
     public void setFillBlock1(Block v) { this.fillBlock1 = v; }
     public Block getFillBlock1() { return fillBlock1; }
@@ -254,4 +258,16 @@ public class TregminePlayer extends PlayerDelegate
 
     public void setTargetZoneId(int v) { this.targetZoneId = v; }
     public int getTargetZoneId() { return targetZoneId; }
+
+    @Override
+    public boolean equals(Object obj)
+    {
+        return ((TregminePlayer)obj).getId() == getId();
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return getId();
+    }
 }

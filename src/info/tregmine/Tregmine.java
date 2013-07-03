@@ -188,6 +188,7 @@ public class Tregmine extends JavaPlugin
         getCommand("tp").setExecutor(new TeleportCommand(this));
         getCommand("tpshield").setExecutor(new TeleportShieldCommand(this));
         getCommand("tpto").setExecutor(new TeleportToCommand(this));
+        getCommand("trade").setExecutor(new TradeCommand(this));
         getCommand("user").setExecutor(new UserCommand(this));
         getCommand("vanish").setExecutor(new VanishCommand(this));
         getCommand("wallet").setExecutor(new WalletCommand(this));

@@ -51,3 +51,29 @@ ALTER TABLE player_property CHANGE COLUMN id player_id INTEGER UNSIGNED,
                             CHANGE COLUMN created property_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
 
 ALTER TABLE user_report RENAME player_report;
+
+CREATE TABLE player_login (
+    login_id INT UNSIGNED AUTO_INCREMENT,
+    player_id INT UNSIGNED,
+    login_timestamp INT UNSIGNED,
+    login_action ENUM ('login', 'logout'),
+    PRIMARY KEY (login_id)
+);
+
+CREATE TABLE player_transaction (
+    transaction_id INT UNSIGNED AUTO_INCREMENT,
+    sender_id INT UNSIGNED,
+    recipient_id INT UNSIGNED,
+    transaction_timestamp INT UNSIGNED,
+    transaction_amount INT UNSIGNED,
+    PRIMARY KEY (transaction_id)
+);
+
+CREATE TABLE player_chatlog (
+    chatlog_id INT UNSIGNED AUTO_INCREMENT,
+    player_id INT UNSIGNED,
+    chatlog_timestamp INT UNSIGNED,
+    chatlog_channel VARCHAR (64),
+    chatlog_message VARCHAR (255),
+    PRIMARY KEY (chatlog_id)
+);

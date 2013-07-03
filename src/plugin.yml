@@ -8,142 +8,145 @@ description: Tregmine
 commands:
   admins:
     description: Send a message to all active admins
-    -usage: /admins message
+    usage: /admins message
   guardians:
     description: Send a message to all active guardians
-    -usage: /guardians message
+    usage: /guardians message
   creative:
     description: Switch to creative mode (admins and builders only)
-    -usage: /creative
+    usage: /creative
   survival:
     description: Switch to survival mode (admins and builders only)
-    -usage: /survival
+    usage: /survival
   action:
     description: Indicates an action in chat
-    -usage: /action message
+    usage: /action message
   ban:
     description: Ban the specified player
-    -usage: /ban player
+    usage: /ban player
   bless:
     description: Specify the player for which the next block will be blessed
-    -usage: /bless player
+    usage: /bless player
   blockhere:
     description: Create a block of dirt beneath your feet (admins and builders only)
-    -usage: /blockhere
+    usage: /blockhere
   cname:
     description: Change your name and color (admin only)
-    -usage: /cname color new_name
+    usage: /cname color new_name
   channel:
     description: Change to the specified channel
-    -usage: /channel channel_name
+    usage: /channel channel_name
   clean:
     description: Clean your inventory
-    -usage: /clean
+    usage: /clean
   createmob:
     description: Create mobs from empty air (admin only)
-    -usage: /createmob mob_type amount [name]
+    usage: /createmob mob_type amount [name]
   createwarp:
     description: Create a warp at your present location (admin only)
-    -usage: /createwarp warp_name
+    usage: /createwarp warp_name
   fill:
     description: Fill, replace and copy blocks using a wooden spade (admins and builders only)
-    -usage: /fill
+    usage: /fill
   force:
     description: Force someone into a channel
-    -usage: /force player channel
+    usage: /force player channel
   give:
     description: Give a user an item (admin only)
-    -usage: /give player item amount data
+    usage: /give player item amount data
   home:
     description: Teleport to, or set, your home
-    -usage: /home
+    usage: /home
   inv:
     description: Look in a players inventory (admin only)
-    -usage: /inv <player>
+    usage: /inv <player>
   item:
     description: Spawn an item
-    -usage: /item item amount data (admin only)
+    usage: /item item amount data (admin only)
   keyword:
     description: Set your keyword
-    -usage: /keyword keyword
+    usage: /keyword keyword
   kick:
     description: Kick a player (admins and guardians only)
-    -usage: /unkown
+    usage: /unkown
   lot:
     description: Manage your lot
-    -usage: /lot
+    usage: /lot
   msg:
     description: Message another player
-    -usage: /msg player message
+    usage: /msg player message
   newspawn:
     description: Temporarily change the spawn on this map (admin only)
-    -usage: /newspawn
+    usage: /newspawn
   normal:
     description: Become a normal player until you sign back on (admins, guardians and builders only)
-    -usage: /normal
+    usage: /normal
   nuke:
     description: Kill all mobs on this map (admins and guardians only)
-    -usage: /nuke
+    usage: /nuke
   password:
     description: Set your password
-    -usage: /password password
+    usage: /password password
   pos:
     description: Prints your position to the console
-    -usage: /pos
+    usage: /pos
   regeneratechunk:
     description: Regenerate the current chunk (admin only)
-    -usage: /regeneratechunk
+    usage: /regeneratechunk
   report:
     description: Adds a report to the players record
-    -usage: /report player message
+    usage: /report player message
   say:
     description: Speak as god (admins only)
-    -usage: /say message
+    usage: /say message
   sendto:
     description: Send a player to another world (admins only)
-    -usage: /sendto player world
+    usage: /sendto player world
   setspawner:
     description: Change a mob spawners type (admins only)
-    -usage: /setspawner
+    usage: /setspawner
   spawn:
     description: Go back to spawn
-    -usage: /spawn
+    usage: /spawn
   summon:
     description: Summon a player to your location
-    -usage: /summon player
+    usage: /summon player
+  trade:
+    description: Trade safely
+    usage: /trade player
   testfill:
     description: Like fill, but with fake blocks (admins and builders only)
-    -usage: /testfill
+    usage: /testfill
   tp:
     description: Teleport to a player
-    -usage: /tp player
+    usage: /tp player
   tpshield:
     description: Prevent players from teleporting to you (donators only)
-    -usage: /tpshield
+    usage: /tpshield
   tpto:
     description: Teleport to specified coordinates (admin only)
-    -usage: /tpto x y z
+    usage: /tpto x y z
   time:
     description: Change the time of day (donators only)
-    -usage: /time day|night|normal
+    usage: /time day|night|normal
   user:
     description: Modify a users permissions (admins and guardians only)
-    -usage: /user
+    usage: /user
   vanish:
     description: Become invisible (admin only)
-    -usage: /vanish <on|off>
+    usage: /vanish <on|off>
   wallet:
     description: Modify your wallet
-    -usage: /wallet
+    usage: /wallet
   warn:
     description: Warn a user (guardian and admin only)
-    -usage: /warp <hard|soft> <player> <message>
+    usage: /warn <hard|soft> <player> <message>
   warp:
     description: Warp to a specified city
-    -usage: /warp city
+    usage: /warp city
   zone:
     description: Modify a zone
-    -usage: /zone
+    usage: /zone
 
 aliases:
   me: action
