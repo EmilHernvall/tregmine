@@ -1,0 +1,51 @@
+<project name="tregmine_blocklog" default="compile" basedir=".">
+
+    <property name="src" value="src" />
+    <property name="build" value="bin" />
+    <property name="lib" value="lib" />
+    <property name="build.compiler" value="modern" />
+
+    <target name="init">
+        <tstamp />
+        <mkdir dir="${build}" />
+        <ant dir="../" target="jar" inheritAll="false" />
+        <copy file="../tregmine.jar" tofile="lib/tregmine.jar" />
+        <copy file="../lib/bukkit.jar" tofile="lib/bukkit.jar" />
+        <copy file="${src}/plugin.yml" todir="${build}" />
+    </target>
+
+    <target name="compile" depends="init">
+
+        <javac 
+            includeantruntime="false"
+            srcdir="${src}" 
+            destdir="${build}"
+            debug="on"
+            debuglevel="lines,vars,source">
+
+            <compilerarg value="-Xlint:unchecked"/>
+
+            <classpath>
+                <pathelement path="${build}"/>
+                <fileset dir="${lib}">
+                    <include name="**/*.jar"/>
+                </fileset>
+            </classpath>
+
+        </javac>
+
+    </target>
+
+    <target name="clean" depends="init">
+        <delete dir="${build}"/>
+    </target>
+
+    <target name="jar" depends="compile">
+        <jar destfile="${ant.project.name}.jar" basedir="${build}">
+            <manifest>
+                <attribute name="Class-Path" value="tregmine.jar" />
+            </manifest>
+        </jar>
+    </target>
+
+</project>
