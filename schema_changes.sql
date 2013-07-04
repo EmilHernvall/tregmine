@@ -81,10 +81,13 @@ CREATE TABLE player_chatlog (
 CREATE TABLE inventory_item (
     item_id INT UNSIGNED AUTO_INCREMENT,
     inventory_id INT UNSIGNED,
+    item_slot INT UNSIGNED,
     item_material INT UNSIGNED,
     item_data INT UNSIGNED,
     item_meta TEXT,
-    PRIMAR KEY (item_id)
+    item_count INT UNSIGNED,
+    PRIMARY KEY (item_id),
+    INDEX inventory_idx (inventory_id)
 );
 
 CREATE TABLE trade (
@@ -102,6 +105,8 @@ CREATE TABLE trade_item (
     item_material INT UNSIGNED,
     item_data INT UNSIGNED,
     item_meta TEXT,
+    item_count INT UNSIGNED,
     PRIMAR KEY (item_id)
 );
 
+ALTER TABLE inventory MODIFY COLUMN inventory_type ENUM ('chest', 'player', 'player_armor');

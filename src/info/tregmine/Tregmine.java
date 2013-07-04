@@ -41,7 +41,7 @@ import info.tregmine.quadtree.IntersectionException;
 
 import info.tregmine.api.TregminePlayer;
 import info.tregmine.database.ConnectionPool;
-import info.tregmine.database.DBChestBlessDAO;
+import info.tregmine.database.DBInventoryDAO;
 import info.tregmine.database.DBZonesDAO;
 import info.tregmine.database.DBPlayerDAO;
 import info.tregmine.database.DBLogDAO;
@@ -106,8 +106,8 @@ public class Tregmine extends JavaPlugin
         try {
             conn = ConnectionPool.getConnection();
 
-            DBChestBlessDAO chestBlessDAO = new DBChestBlessDAO(conn);
-            this.blessedBlocks = chestBlessDAO.loadBlessedChests(getServer());
+            DBInventoryDAO inventoryDAO = new DBInventoryDAO(conn);
+            this.blessedBlocks = inventoryDAO.loadBlessedBlocks(getServer());
         }
         catch (SQLException e) {
             throw new RuntimeException(e);

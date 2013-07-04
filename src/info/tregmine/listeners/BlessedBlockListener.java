@@ -1,5 +1,7 @@
 package info.tregmine.listeners;
 
+import java.util.List;
+import java.util.ArrayList;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.Map;
@@ -10,6 +12,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.Chest;
 import org.bukkit.util.Vector;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -18,11 +21,17 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.inventory.InventoryOpenEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.configuration.file.YamlConfiguration;
 
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
 import info.tregmine.database.ConnectionPool;
-import info.tregmine.database.DBChestBlessDAO;
+import info.tregmine.database.DBInventoryDAO;
 import info.tregmine.database.DBWalletDAO;
 
 public class BlessedBlockListener implements Listener
@@ -134,8 +143,10 @@ public class BlessedBlockListener implements Listener
             try {
                 conn = ConnectionPool.getConnection();
 
-                DBChestBlessDAO chestBlessDAO = new DBChestBlessDAO(conn);
-                chestBlessDAO.saveBless(target, loc);
+                DBInventoryDAO invDAO = new DBInventoryDAO(conn);
+                invDAO.insertInventory(target,
+                                       loc,
+                                       DBInventoryDAO.InventoryType.BLOCK);
             }
             catch (SQLException e) {
                 throw new RuntimeException(e);
@@ -175,12 +186,11 @@ public class BlessedBlockListener implements Listener
                     event.setCancelled(false);
                 }
             }
-            return;
         }
     }
 
     @EventHandler
-    public void onBlockBreak (BlockBreakEvent event)
+    public void onBlockBreak(BlockBreakEvent event)
     {
         Location loc = event.getBlock().getLocation();
         Player player = event.getPlayer();
@@ -194,7 +204,7 @@ public class BlessedBlockListener implements Listener
     }
 
     @EventHandler
-    public void onBlockPlace (BlockPlaceEvent event)
+    public void onBlockPlace(BlockPlaceEvent event)
     {
         Block block = event.getBlockPlaced();
 
