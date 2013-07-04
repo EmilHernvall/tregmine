@@ -77,3 +77,31 @@ CREATE TABLE player_chatlog (
     chatlog_message VARCHAR (255),
     PRIMARY KEY (chatlog_id)
 );
+
+CREATE TABLE inventory_item (
+    item_id INT UNSIGNED AUTO_INCREMENT,
+    inventory_id INT UNSIGNED,
+    item_material INT UNSIGNED,
+    item_data INT UNSIGNED,
+    item_meta TEXT,
+    PRIMAR KEY (item_id)
+);
+
+CREATE TABLE trade (
+    trade_id INT UNSIGNED AUTO_INCREMENT,
+    sender_id INT UNSIGNED,
+    recipient_id INT UNSIGNED,
+    trade_timestamp INT UNSIGNED,
+    trade_amount INT UNSIGNED,
+    PRIMARY KEY (transaction_id)
+);
+
+CREATE TABLE trade_item (
+    item_id INT UNSIGNED AUTO_INCREMENT,
+    trade_id INT UNSIGNED,
+    item_material INT UNSIGNED,
+    item_data INT UNSIGNED,
+    item_meta TEXT,
+    PRIMAR KEY (item_id)
+);
+

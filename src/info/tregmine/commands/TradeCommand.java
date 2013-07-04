@@ -261,6 +261,9 @@ public class TradeCommand
 
                 if (walletDAO.take(second, ctx.bid)) {
                     walletDAO.add(first, ctx.bid);
+                    walletDAO.insertTransaction(second.getId(),
+                                                first.getId(),
+                                                ctx.bid);
                     first.sendMessage(YELLOW + "[Trade] " + ctx.bid + " tregs was " +
                                       "added to your wallet!");
                     second.sendMessage(YELLOW + "[Trade] " + ctx.bid + " tregs was " +

@@ -100,10 +100,12 @@ public class WalletCommand extends AbstractCommand
             conn = ConnectionPool.getConnection();
             DBWalletDAO walletDAO = new DBWalletDAO(conn);
 
-            long newAmount = walletDAO.balance(player) - amount;
-            if (newAmount >= 0) {
+            if (walletDAO.take(player, amount)) {
                 walletDAO.add(target, amount);
-                walletDAO.take(player, amount);
+                walletDAO.insertTransaction(player.getId(),
+                                            target.getId(),
+                                            amount);
+
                 player.sendMessage(AQUA + "You donated to " + target.getChatName() +
                                    " " + GOLD + FORMAT.format(amount) + AQUA +
                                    " Tregs.");
@@ -144,10 +146,12 @@ public class WalletCommand extends AbstractCommand
             conn = ConnectionPool.getConnection();
             DBWalletDAO walletDAO = new DBWalletDAO(conn);
 
-            long newAmount = walletDAO.balance(player) - amount;
-            if (newAmount >= 0) {
+            if (walletDAO.take(player, amount)) {
                 walletDAO.add(target, amount);
-                walletDAO.take(player, amount);
+                walletDAO.insertTransaction(player.getId(),
+                                            target.getId(),
+                                            amount);
+
                 player.sendMessage(AQUA + "You gave " + target.getChatName() + " " +
                                    GOLD + FORMAT.format(amount) + AQUA +" Tregs.");
                 target.sendMessage(AQUA + "You received " + GOLD +

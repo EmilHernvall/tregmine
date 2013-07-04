@@ -54,6 +54,7 @@ import info.tregmine.database.ConnectionPool;
 import info.tregmine.database.DBPlayerDAO;
 import info.tregmine.database.DBPlayerReportDAO;
 import info.tregmine.database.DBWalletDAO;
+import info.tregmine.database.DBLogDAO;
 import info.tregmine.api.util.ScoreboardClearTask;
 
 public class TregminePlayerListener implements Listener
@@ -323,32 +324,27 @@ public class TregminePlayerListener implements Listener
             for (PlayerReport report : reports) {
                 Date validUntil = report.getValidUntil();
                 if (validUntil == null) {
-                    Tregmine.LOGGER.info("Skipping invalid");
                     continue;
                 }
                 if (validUntil.getTime() < System.currentTimeMillis()) {
-                    Tregmine.LOGGER.info("Skipping expired: " + validUntil);
                     continue;
                 }
 
                 if (report.getAction() == PlayerReport.Action.SOFTWARN) {
-                    Tregmine.LOGGER.info("Found softwarn");
                     player.setNameColor("warned");
                 }
                 else if (report.getAction() == PlayerReport.Action.HARDWARN) {
-                    Tregmine.LOGGER.info("Found hardwarn");
                     player.setNameColor("warned");
                     player.setTrusted(false);
                 }
                 else if (report.getAction() == PlayerReport.Action.BAN) {
-                    Tregmine.LOGGER.info("Found ban");
                     event.disallow(Result.KICK_BANNED, report.getMessage());
                     return;
                 }
-                else {
-                    Tregmine.LOGGER.info("Found " + report.getAction());
-                }
             }
+
+            DBLogDAO logDAO = new DBLogDAO(conn);
+            logDAO.insertLogin(player, false);
 
             player.setTemporaryChatName(player.getNameColor() +
                                         player.getName());
@@ -392,9 +388,26 @@ public class TregminePlayerListener implements Listener
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event)
     {
+        TregminePlayer player = plugin.getPlayer(event.getPlayer());
+
         event.setQuitMessage(null);
 
-        TregminePlayer player = plugin.getPlayer(event.getPlayer());
+        Connection conn = null;
+        try {
+            conn = ConnectionPool.getConnection();
+
+            DBLogDAO logDAO = new DBLogDAO(conn);
+            logDAO.insertLogin(player, true);
+        }
+        catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        finally {
+            if (conn != null) {
+                try { conn.close(); } catch (SQLException e) {}
+            }
+        }
+
         if (!player.isOp()) {
             Random rand = new Random();
             int msgIndex = rand.nextInt(quitMessages.length);

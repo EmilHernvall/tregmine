@@ -1,5 +1,8 @@
 package info.tregmine.listeners;
 
+import java.sql.Connection;
+import java.sql.SQLException;
+
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -8,6 +11,8 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
+import info.tregmine.database.ConnectionPool;
+import info.tregmine.database.DBLogDAO;
 
 public class ChatListener implements Listener
 {
@@ -44,15 +49,33 @@ public class ChatListener implements Listener
             }
 
             if (sender.getChatChannel().equals(to.getChatChannel())) {
-                if (sender.getChatChannel().matches("GLOBAL")) {
-                    channel = "";
+                if ("GLOBAL".equalsIgnoreCase(sender.getChatChannel())) {
+                    player.sendMessage("<" + sender.getChatName() +
+                                       ChatColor.WHITE + "> " + txtColor + text);
+                } else {
+                    player.sendMessage(channel + " <" + sender.getChatName() +
+                                       ChatColor.WHITE + "> " + txtColor + text);
                 }
-
-                player.sendMessage(channel+"<" + sender.getChatName() + ChatColor.WHITE + "> " + txtColor + text);
             }
         }
 
-        Tregmine.LOGGER.info(channel+"<" + sender.getName() + "> " + text);
+        Tregmine.LOGGER.info(channel + " <" + sender.getName() + "> " + text);
+
+        Connection conn = null;
+        try {
+            conn = ConnectionPool.getConnection();
+
+            DBLogDAO logDAO = new DBLogDAO(conn);
+            logDAO.insertChatMessage(sender, channel, text);
+        }
+        catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        finally {
+            if (conn != null) {
+                try { conn.close(); } catch (SQLException e) {}
+            }
+        }
 
         event.setCancelled(true);
     }

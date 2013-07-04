@@ -54,7 +54,7 @@ public class TregminePlayer extends PlayerDelegate
     private String postalCode = null;
     private String region = null;
     private String hostName = null;
-    private String color = "trial";
+    private String color = "white";
     private String timezone = "Europe/Stockholm";
     private boolean hiddenLocation = false;
     private boolean invisible = false;

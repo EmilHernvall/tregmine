@@ -108,4 +108,25 @@ public class DBWalletDAO
 
         return true;
     }
+
+    public void insertTransaction(int srcId, int recvId, int amount)
+    {
+        PreparedStatement stmt = null;
+        try {
+            String sql = "INSERT INTO transaction (sender_id, recipient_id, " +
+                         "transaction_timestamp, transaction_amount) ";
+            sql += "VALUES (?, ?, unix_timestamp(), ?)";
+            stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, srcId);
+            stmt.setInt(2, recvId);
+            stmt.setInt(3, amount);
+            stmt.execute();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            if (stmt != null) {
+                try { stmt.close(); } catch (SQLException e) {}
+            }
+        }
+    }
 }

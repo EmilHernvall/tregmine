@@ -44,6 +44,7 @@ import info.tregmine.database.ConnectionPool;
 import info.tregmine.database.DBChestBlessDAO;
 import info.tregmine.database.DBZonesDAO;
 import info.tregmine.database.DBPlayerDAO;
+import info.tregmine.database.DBLogDAO;
 import info.tregmine.zones.Lot;
 import info.tregmine.zones.Zone;
 import info.tregmine.zones.ZoneWorld;
@@ -203,12 +204,30 @@ public class Tregmine extends JavaPlugin
     {
         server.getScheduler().cancelTasks(this);
 
-        Player[] players = server.getOnlinePlayers();
-        for (Player player : players) {
-            player.sendMessage(ChatColor.AQUA + "Tregmine successfully unloaded " +
-                    "build: " + getDescription().getVersion());
-            removePlayer(player);
+        Connection conn = null;
+        try {
+            conn = ConnectionPool.getConnection();
+
+            // Add a record of logout to db for all players
+            DBLogDAO logDAO = new DBLogDAO(conn);
+            for (TregminePlayer player : getOnlinePlayers()) {
+                player.sendMessage(ChatColor.AQUA + "Tregmine successfully unloaded " +
+                        "build: " + getDescription().getVersion());
+
+                logDAO.insertLogin(player, true);
+
+                removePlayer(player);
+            }
         }
+        catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        finally {
+            if (conn != null) {
+                try { conn.close(); } catch (SQLException e) {}
+            }
+        }
+
     }
 
     @Override
@@ -219,6 +238,7 @@ public class Tregmine extends JavaPlugin
             conn = ConnectionPool.getConnection();
 
             DBPlayerDAO playerDAO = new DBPlayerDAO(conn);
+            DBLogDAO logDAO = new DBLogDAO(conn);
 
             Player[] players = getServer().getOnlinePlayers();
             for (Player player : players) {
@@ -227,6 +247,8 @@ public class Tregmine extends JavaPlugin
 
                 player.sendMessage(ChatColor.GRAY + "Tregmine successfully loaded " +
                         "to build: " + this.getDescription().getVersion());
+
+                logDAO.insertLogin(tregPlayer, false);
             }
         }
         catch (SQLException e) {

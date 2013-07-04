@@ -59,9 +59,6 @@ public class MsgCommand extends AbstractCommand
         recvPlayer.sendMessage(GREEN + "(msg) " + player.getChatName() + GREEN +
                                ": " + message);
 
-        // Log to console
-        LOGGER.info(player.getName() + " => " + recvPlayer.getName() + message);
-
         return true;
     }
 }
