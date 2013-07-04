@@ -110,3 +110,4 @@ CREATE TABLE trade_item (
 );
 
 ALTER TABLE inventory MODIFY COLUMN inventory_type ENUM ('chest', 'player', 'player_armor');
+ALTER TABLE inventory_item MODIFY COLUMN item_data INT;

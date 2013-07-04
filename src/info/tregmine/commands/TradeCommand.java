@@ -201,9 +201,15 @@ public class TradeCommand
             int amount = 0;
             try {
                 amount = Integer.parseInt(args[1]);
+                if (amount < 0) {
+                    player.sendMessage(RED + "[Trade] You have to bid an integer " +
+                                       "number of tregs.");
+                    return;
+                }
             } catch (NumberFormatException e) {
                 player.sendMessage(RED + "[Trade] You have to bid an integer " +
                                    "number of tregs.");
+                return;
             }
 
             Connection conn = null;

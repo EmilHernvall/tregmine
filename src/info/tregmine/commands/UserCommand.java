@@ -95,7 +95,7 @@ public class UserCommand extends AbstractCommand
         }
         else if ("donator".equalsIgnoreCase(args[1])) {
             victim.setDonator(true);
-            victim.setFlying(true);
+            victim.setAllowFlight(true);
             victim.setNameColor("donator");
             victim.setTemporaryChatName(victim.getNameColor() + victim.getName());
 

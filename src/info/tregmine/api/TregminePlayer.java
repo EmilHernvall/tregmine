@@ -29,18 +29,19 @@ public class TregminePlayer extends PlayerDelegate
         new HashMap<String, ChatColor>() {{
             put("admin", ChatColor.RED);
             put("broker", ChatColor.DARK_RED);
-            put("helper", ChatColor.YELLOW);
-            put("purle", ChatColor.DARK_PURPLE);
-            put("donator", ChatColor.GOLD);
-            put("trusted", ChatColor.DARK_GREEN);
-            put("warned", ChatColor.GRAY);
-            put("trial", ChatColor.GREEN);
-            put("vampire", ChatColor.DARK_RED);
-            put("hunter", ChatColor.BLUE);
-            put("pink", ChatColor.LIGHT_PURPLE);
             put("child", ChatColor.AQUA);
+            put("donator", ChatColor.GOLD);
+            put("helper", ChatColor.YELLOW);
+            put("hunter", ChatColor.BLUE);
             put("mentor", ChatColor.DARK_AQUA);
+            put("pink", ChatColor.LIGHT_PURPLE);
             put("police", ChatColor.BLUE);
+            put("purle", ChatColor.DARK_PURPLE);
+            put("trial", ChatColor.GREEN);
+            put("trusted", ChatColor.DARK_GREEN);
+            put("vampire", ChatColor.DARK_RED);
+            put("warned", ChatColor.GRAY);
+            put("white", ChatColor.WHITE);
         }};
 
     // Persistent values

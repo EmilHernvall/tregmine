@@ -113,7 +113,7 @@ public class DBWalletDAO
     {
         PreparedStatement stmt = null;
         try {
-            String sql = "INSERT INTO transaction (sender_id, recipient_id, " +
+            String sql = "INSERT INTO player_transaction (sender_id, recipient_id, " +
                          "transaction_timestamp, transaction_amount) ";
             sql += "VALUES (?, ?, unix_timestamp(), ?)";
             stmt = conn.prepareStatement(sql);
