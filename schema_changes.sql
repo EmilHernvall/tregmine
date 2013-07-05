@@ -90,6 +90,15 @@ CREATE TABLE inventory_item (
     INDEX inventory_idx (inventory_id)
 );
 
+CREATE TABLE player_orelog (
+    orelog_id INT UNSIGNED AUTO_INCREMENT,
+    player_id INT UNSIGNED,
+    orelog_material INT UNSIGNED,
+    orelog_timestamp INT UNSIGNED,
+    PRIMARY KEY (orelog_id),
+    INDEX player_idx (player_id, orelog_timestamp)
+);
+
 CREATE TABLE trade (
     trade_id INT UNSIGNED AUTO_INCREMENT,
     sender_id INT UNSIGNED,
