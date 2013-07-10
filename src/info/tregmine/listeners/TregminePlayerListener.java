@@ -23,6 +23,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Item;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
@@ -39,28 +40,28 @@ import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.PlayerInventory;
 
 import info.tregmine.Tregmine;
-import info.tregmine.api.TregminePlayer;
 import info.tregmine.api.PlayerReport;
+import info.tregmine.api.TregminePlayer;
+import info.tregmine.api.lore.Created;
+import info.tregmine.api.util.ScoreboardClearTask;
 import info.tregmine.database.ConnectionPool;
+import info.tregmine.database.DBInventoryDAO;
+import info.tregmine.database.DBLogDAO;
 import info.tregmine.database.DBPlayerDAO;
 import info.tregmine.database.DBPlayerReportDAO;
 import info.tregmine.database.DBWalletDAO;
-import info.tregmine.database.DBInventoryDAO;
 import static info.tregmine.database.DBInventoryDAO.InventoryType;
-import info.tregmine.database.DBLogDAO;
-import info.tregmine.api.util.ScoreboardClearTask;
-import info.tregmine.api.lore.Created;
 
 public class TregminePlayerListener implements Listener
 {
@@ -510,28 +511,34 @@ public class TregminePlayerListener implements Listener
             return;
         }
 
-        if (event.getPlayer().getWorld().getName().matches("alpha")) {
+        if ("alpha".equalsIgnoreCase(player.getWorld().getName())) {
             event.setCancelled(true);
+            return;
         }
+
+        Item item = event.getItem();
     }
 
     @EventHandler
     public void onPlayerDropItem(PlayerDropItemEvent event)
     {
-        TregminePlayer tregminePlayer = this.plugin.getPlayer(event.getPlayer());
+        TregminePlayer player = this.plugin.getPlayer(event.getPlayer());
 
-        if (tregminePlayer.isAdmin()) {
+        if (player.isAdmin()) {
             return;
         }
 
-        if (!tregminePlayer.isTrusted()) {
+        if (!player.isTrusted()) {
             event.setCancelled(true);
             return;
         }
 
-        if (event.getPlayer().getWorld().getName().matches("alpha")) {
+        if ("alpha".equalsIgnoreCase(player.getWorld().getName())) {
             event.setCancelled(true);
+            return;
         }
+
+        Item item = event.getItemDrop();
     }
 
     @EventHandler

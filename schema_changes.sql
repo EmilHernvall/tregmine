@@ -90,22 +90,13 @@ CREATE TABLE inventory_item (
     INDEX inventory_idx (inventory_id)
 );
 
-CREATE TABLE player_orelog (
-    orelog_id INT UNSIGNED AUTO_INCREMENT,
-    player_id INT UNSIGNED,
-    orelog_material INT UNSIGNED,
-    orelog_timestamp INT UNSIGNED,
-    PRIMARY KEY (orelog_id),
-    INDEX player_idx (player_id, orelog_timestamp)
-);
-
 CREATE TABLE trade (
     trade_id INT UNSIGNED AUTO_INCREMENT,
     sender_id INT UNSIGNED,
     recipient_id INT UNSIGNED,
     trade_timestamp INT UNSIGNED,
     trade_amount INT UNSIGNED,
-    PRIMARY KEY (transaction_id)
+    PRIMARY KEY (trade_id)
 );
 
 CREATE TABLE trade_item (
@@ -115,8 +106,29 @@ CREATE TABLE trade_item (
     item_data INT UNSIGNED,
     item_meta TEXT,
     item_count INT UNSIGNED,
-    PRIMAR KEY (item_id)
+    PRIMARY KEY (item_id)
 );
 
 ALTER TABLE inventory MODIFY COLUMN inventory_type ENUM ('chest', 'player', 'player_armor');
 ALTER TABLE inventory_item MODIFY COLUMN item_data INT;
+
+CREATE TABLE player_orelog (
+    orelog_id INT UNSIGNED AUTO_INCREMENT,
+    player_id INT UNSIGNED,
+    orelog_material INT UNSIGNED,
+    orelog_timestamp INT UNSIGNED,
+    PRIMARY KEY (orelog_id),
+    INDEX player_idx (player_id, orelog_timestamp)
+);
+
+CREATE TABLE player_givelog (
+    givelog_id INT UNSIGNED AUTO_INCREMENT,
+    sender_id INT UNSIGNED,
+    recipient_id INT UNSIGNED,
+    givelog_material INT UNSIGNED,
+    givelog_data INT UNSIGNED,
+    givelog_meta TEXT,
+    givelog_count INT UNSIGNED,
+    givelog_timestamp INT UNSIGNED,
+    PRIMARY KEY (givelog_id)
+);

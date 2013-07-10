@@ -22,6 +22,7 @@ import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
 import info.tregmine.database.ConnectionPool;
 import info.tregmine.database.DBWalletDAO;
+import info.tregmine.database.DBTradeDAO;
 
 public class TradeCommand
     extends AbstractCommand
@@ -257,19 +258,27 @@ public class TradeCommand
                 return;
             }
 
-            // Withdraw ctx.bid tregs from second players wallet
-            // Ad ctx.bid tregs from first players wallet
+            ItemStack[] contents = ctx.inventory.getContents();
 
+            // Withdraw ctx.bid tregs from second players wallet
+            // Add ctx.bid tregs from first players wallet
             Connection conn = null;
             try {
                 conn = ConnectionPool.getConnection();
                 DBWalletDAO walletDAO = new DBWalletDAO(conn);
+                DBTradeDAO tradeDAO = new DBTradeDAO(conn);
 
                 if (walletDAO.take(second, ctx.bid)) {
                     walletDAO.add(first, ctx.bid);
                     walletDAO.insertTransaction(second.getId(),
                                                 first.getId(),
                                                 ctx.bid);
+
+                    int tradeId = tradeDAO.insertTrade(first.getId(),
+                                                       second.getId(),
+                                                       ctx.bid);
+                    tradeDAO.insertStacks(tradeId, contents);
+
                     first.sendMessage(YELLOW + "[Trade] " + ctx.bid + " tregs was " +
                                       "added to your wallet!");
                     second.sendMessage(YELLOW + "[Trade] " + ctx.bid + " tregs was " +
@@ -290,7 +299,6 @@ public class TradeCommand
             }
 
             // Move items to second players inventory
-            ItemStack[] contents = ctx.inventory.getContents();
             Inventory secondInv = second.getInventory();
             for (ItemStack stack : contents) {
                 if (stack == null) {
