@@ -13,9 +13,9 @@
 
     <target name="compile" depends="init">
 
-        <javac 
+        <javac
             includeantruntime="false"
-            srcdir="${src}" 
+            srcdir="${src}"
             destdir="${build}"
             debug="on"
             debuglevel="lines,vars,source">
@@ -40,7 +40,13 @@
     <target name="jar" depends="compile">
         <jar destfile="${ant.project.name}.jar" basedir="${build}">
             <manifest>
-                <attribute name="Class-Path" value="lib/quadtree.jar lib/commons-dbcp-1.4.jar lib/Votifier.jar lib/commons-pool-1.5.6.jar" />
+                <attribute name="Class-Path"
+                    value="lib/quadtree.jar
+                           lib/commons-dbcp-1.4.jar
+                           lib/Votifier.jar
+                           lib/servlet-api.jar
+                           lib/jetty-all.jar
+                           lib/commons-pool-1.5.6.jar" />
             </manifest>
         </jar>
     </target>

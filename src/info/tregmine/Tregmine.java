@@ -9,18 +9,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.logging.Logger;
+import java.util.logging.Level;
 
 import org.bukkit.Location;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
-import org.bukkit.Server;
 import org.bukkit.World.Environment;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitScheduler;
 import info.tregmine.quadtree.IntersectionException;
+
+import org.eclipse.jetty.server.Server;
 
 import info.tregmine.api.TregminePlayer;
 import info.tregmine.database.ConnectionPool;
@@ -34,6 +37,7 @@ import info.tregmine.zones.ZoneWorld;
 
 import info.tregmine.listeners.*;
 import info.tregmine.commands.*;
+import info.tregmine.web.*;
 
 /**
  * @author Ein Andersson
@@ -46,7 +50,10 @@ public class Tregmine extends JavaPlugin
 
     public final static Logger LOGGER = Logger.getLogger("Minecraft");
 
-    private Server server;
+    private org.bukkit.Server server;
+
+    private Server webServer;
+    private WebHandler webHandler;
 
     private Map<String, TregminePlayer> players;
     private Map<Integer, TregminePlayer> playersById;
@@ -183,6 +190,22 @@ public class Tregmine extends JavaPlugin
         getCommand("warn").setExecutor(new WarnCommand(this));
         getCommand("warp").setExecutor(new WarpCommand(this));
         getCommand("zone").setExecutor(new ZoneCommand(this));
+
+        try {
+            webHandler = new WebHandler(this);
+            webHandler.addAction(new VersionAction.Factory());
+            webHandler.addAction(new OperatorListAction.Factory());
+
+            webServer = new Server(9192);
+            webServer.setHandler(webHandler);
+            webServer.start();
+        }
+        catch (Exception e) {
+            LOGGER.log(Level.WARNING, "Failed to start web server!", e);
+        }
+
+        BukkitScheduler scheduler = server.getScheduler();
+        scheduler.scheduleSyncRepeatingTask(this, webHandler, 0, 20);
     }
 
     // run when plugin is disabled
