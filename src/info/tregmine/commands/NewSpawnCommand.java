@@ -1,13 +1,7 @@
 package info.tregmine.commands;
 
-import java.util.List;
-
-import static org.bukkit.ChatColor.*;
-import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.Location;
-import org.bukkit.entity.Player;
-
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
 
@@ -32,9 +26,9 @@ public class NewSpawnCommand extends AbstractCommand
         }
 
         Location loc = player.getLocation();
-        world.setSpawnLocation(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
+        world.setSpawnLocation(loc.getBlockX(), loc.getBlockY(),
+                loc.getBlockZ());
 
         return true;
     }
 }
-

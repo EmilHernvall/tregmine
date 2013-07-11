@@ -14,44 +14,30 @@ public class Zone
     private String texture;
 
     public enum lotStatus {
-        dropzone,
-        bank;
+        dropzone, bank;
     }
 
-    public enum Permission
-    {
+    public enum Permission {
         // can modify the zone in any way
-        Owner(
-            "%s is now an owner of %s.",
-            "You are now an owner of %s.",
-            "%s is no longer an owner of %s.",
-            "You are no longer an owner of %s.",
-            "You are an owner in this zone."
-        ),
+        Owner("%s is now an owner of %s.", "You are now an owner of %s.",
+                "%s is no longer an owner of %s.",
+                "You are no longer an owner of %s.",
+                "You are an owner in this zone."),
         // can build in the zone
-        Maker(
-            "%s is now a maker in %s.",
-            "You are now a maker in %s.",
-            "%s is no longer a maker in %s.",
-            "You are no longer a maker in %s.",
-            "You are a maker in this zone."
-        ),
+        Maker("%s is now a maker in %s.", "You are now a maker in %s.",
+                "%s is no longer a maker in %s.",
+                "You are no longer a maker in %s.",
+                "You are a maker in this zone."),
         // is allowed in the zone, if this isn't the default
-        Allowed(
-            "%s is now allowed in %s.",
-            "You are now allowed in %s.",
-            "%s is no longer allowed in %s.",
-            "You are no longer allowd in %s.",
-            "You are allowed in this zone."
-        ),
+        Allowed("%s is now allowed in %s.", "You are now allowed in %s.",
+                "%s is no longer allowed in %s.",
+                "You are no longer allowd in %s.",
+                "You are allowed in this zone."),
         // banned from the zone
-        Banned(
-            "%s is now banned from %s.",
-            "You have been banned from %s.",
-            "%s is no longer banned in %s.",
-            "You are no longer banned in %s.",
-            "You are banned from this zone."
-        );
+        Banned("%s is now banned from %s.", "You have been banned from %s.",
+                "%s is no longer banned in %s.",
+                "You are no longer banned in %s.",
+                "You are banned from this zone.");
 
         private String addedConfirmation;
         private String addedNotification;
@@ -60,7 +46,8 @@ public class Zone
         private String permNotification;
 
         private Permission(String addedConfirmation, String addedNotification,
-                String delConfirmation, String delNotification, String permNotification)
+                String delConfirmation, String delNotification,
+                String permNotification)
         {
             this.addedConfirmation = addedConfirmation;
             this.addedNotification = addedNotification;
@@ -69,21 +56,43 @@ public class Zone
             this.permNotification = permNotification;
         }
 
-        public String getAddedConfirmation() { return addedConfirmation; }
-        public String getAddedNotification() { return addedNotification; }
-        public String getDeletedConfirmation() { return delConfirmation; }
-        public String getDeletedNotification() { return delNotification; }
-        public String getPermissionNotification() { return permNotification; }
+        public String getAddedConfirmation()
+        {
+            return addedConfirmation;
+        }
+
+        public String getAddedNotification()
+        {
+            return addedNotification;
+        }
+
+        public String getDeletedConfirmation()
+        {
+            return delConfirmation;
+        }
+
+        public String getDeletedNotification()
+        {
+            return delNotification;
+        }
+
+        public String getPermissionNotification()
+        {
+            return permNotification;
+        }
 
         public static Permission fromString(String type)
         {
             if ("owner".equalsIgnoreCase(type)) {
                 return Permission.Owner;
-            } else if ("maker".equalsIgnoreCase(type)) {
+            }
+            else if ("maker".equalsIgnoreCase(type)) {
                 return Permission.Maker;
-            } else if ("allowed".equalsIgnoreCase(type)) {
+            }
+            else if ("allowed".equalsIgnoreCase(type)) {
                 return Permission.Allowed;
-            } else if ("banned".equalsIgnoreCase(type)) {
+            }
+            else if ("banned".equalsIgnoreCase(type)) {
                 return Permission.Banned;
             }
 
@@ -115,87 +124,108 @@ public class Zone
         users = new HashMap<String, Permission>();
     }
 
-    public int getId() {
+    public int getId()
+    {
         return id;
     }
 
-    public String getMainOwner() {
+    public String getMainOwner()
+    {
         return this.mainOwner;
     }
 
-    public void setMainOwner(String _owner) {
+    public void setMainOwner(String _owner)
+    {
         this.mainOwner = _owner;
     }
 
-    public void setId(int id) {
+    public void setId(int id)
+    {
         this.id = id;
     }
 
-    public String getWorld() {
+    public String getWorld()
+    {
         return world;
     }
 
-    public void setWorld(String world) {
+    public void setWorld(String world)
+    {
         this.world = world;
     }
 
-    public String getName() {
+    public String getName()
+    {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(String name)
+    {
         this.name = name;
     }
 
-    public List<Rectangle> getRects() {
+    public List<Rectangle> getRects()
+    {
         return rects;
     }
 
-    public void addRect(Rectangle rect) {
+    public void addRect(Rectangle rect)
+    {
         rects.add(rect);
     }
 
-    public void setRects(List<Rectangle> rects) {
+    public void setRects(List<Rectangle> rects)
+    {
         this.rects = rects;
     }
 
-    public boolean getEnterDefault() {
+    public boolean getEnterDefault()
+    {
         return enterDefault;
     }
 
-    public void setEnterDefault(boolean enterDefault) {
+    public void setEnterDefault(boolean enterDefault)
+    {
         this.enterDefault = enterDefault;
     }
 
-    public boolean getPlaceDefault() {
+    public boolean getPlaceDefault()
+    {
         return placeDefault;
     }
 
-    public void setPlaceDefault(boolean placeDefault) {
+    public void setPlaceDefault(boolean placeDefault)
+    {
         this.placeDefault = placeDefault;
     }
 
-    public boolean getDestroyDefault() {
+    public boolean getDestroyDefault()
+    {
         return destroyDefault;
     }
 
-    public void setDestroyDefault(boolean destroyDefault) {
+    public void setDestroyDefault(boolean destroyDefault)
+    {
         this.destroyDefault = destroyDefault;
     }
 
-    public boolean isPvp() {
+    public boolean isPvp()
+    {
         return pvp;
     }
 
-    public void setPvp(boolean pvp) {
+    public void setPvp(boolean pvp)
+    {
         this.pvp = pvp;
     }
 
-    public void setTexture(String _texture) {
+    public void setTexture(String _texture)
+    {
         this.texture = _texture;
     }
 
-    public String getTexture() {
+    public String getTexture()
+    {
         if (this.texture == null) {
             return "";
         }
@@ -203,36 +233,43 @@ public class Zone
         return this.texture;
     }
 
-
-    public boolean hasHostiles() {
+    public boolean hasHostiles()
+    {
         return hostiles;
     }
 
-    public void setHostiles(boolean hostiles) {
+    public void setHostiles(boolean hostiles)
+    {
         this.hostiles = hostiles;
     }
 
-    public String getTextEnter() {
+    public String getTextEnter()
+    {
         return textEnter;
     }
 
-    public void setTextEnter(String textEnter) {
+    public void setTextEnter(String textEnter)
+    {
         this.textEnter = textEnter;
     }
 
-    public String getTextExit() {
+    public String getTextExit()
+    {
         return textExit;
     }
 
-    public void setTextExit(String textExit) {
+    public void setTextExit(String textExit)
+    {
         this.textExit = textExit;
     }
 
-    public void setUsers(Map<String, Permission> v) {
+    public void setUsers(Map<String, Permission> v)
+    {
         this.users = v;
     }
 
-    public void addUser(String name, Permission perm) {
+    public void addUser(String name, Permission perm)
+    {
         users.put(name, perm);
     }
 
@@ -246,11 +283,13 @@ public class Zone
         return users.keySet();
     }
 
-    public Permission getUser(String name) {
+    public Permission getUser(String name)
+    {
         return users.get(name);
     }
 
-    public boolean contains(Point p) {
+    public boolean contains(Point p)
+    {
         for (Rectangle rect : rects) {
             if (rect.contains(p)) {
                 return true;

@@ -2,12 +2,8 @@ package info.tregmine.database;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.NumberFormat;
-
 import info.tregmine.api.TregminePlayer;
-import info.tregmine.database.ConnectionPool;
 
 public class DBLogDAO
 {
@@ -22,8 +18,9 @@ public class DBLogDAO
     {
         PreparedStatement stmt = null;
         try {
-            String sql = "INSERT INTO player_login (player_id, login_timestamp, " +
-                         "login_action) ";
+            String sql =
+                    "INSERT INTO player_login (player_id, login_timestamp, "
+                            + "login_action) ";
             sql += "VALUES (?, unix_timestamp(), ?)";
             stmt = conn.prepareStatement(sql);
             stmt.setInt(1, player.getId());
@@ -33,19 +30,22 @@ public class DBLogDAO
             throw new RuntimeException(e);
         } finally {
             if (stmt != null) {
-                try { stmt.close(); } catch (SQLException e) {}
+                try {
+                    stmt.close();
+                } catch (SQLException e) {
+                }
             }
         }
     }
 
-    public void insertChatMessage(TregminePlayer player,
-                                  String channel,
-                                  String message)
+    public void insertChatMessage(TregminePlayer player, String channel,
+            String message)
     {
         PreparedStatement stmt = null;
         try {
-            String sql = "INSERT INTO player_chatlog (player_id, chatlog_timestamp, " +
-                         "chatlog_channel, chatlog_message) ";
+            String sql =
+                    "INSERT INTO player_chatlog (player_id, chatlog_timestamp, "
+                            + "chatlog_channel, chatlog_message) ";
             sql += "VALUES (?, unix_timestamp(), ?, ?)";
             stmt = conn.prepareStatement(sql);
             stmt.setInt(1, player.getId());
@@ -56,7 +56,10 @@ public class DBLogDAO
             throw new RuntimeException(e);
         } finally {
             if (stmt != null) {
-                try { stmt.close(); } catch (SQLException e) {}
+                try {
+                    stmt.close();
+                } catch (SQLException e) {
+                }
             }
         }
     }

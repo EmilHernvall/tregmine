@@ -1,8 +1,6 @@
 package info.tregmine.commands;
 
 import static org.bukkit.ChatColor.*;
-import org.bukkit.Server;
-import org.bukkit.entity.Player;
 import org.bukkit.Location;
 import org.bukkit.entity.Animals;
 import org.bukkit.entity.Slime;
@@ -37,8 +35,10 @@ public class NukeCommand extends AbstractCommand
             distance = 160;
         }
 
-        player.sendMessage(YELLOW + "You nuked all mobs within "+ distance +" meters");
-        player.sendMessage(YELLOW +  "say /nuke <number> to select a larger or smaller distance");
+        player.sendMessage(YELLOW + "You nuked all mobs within " + distance
+                + " meters");
+        player.sendMessage(YELLOW
+                + "say /nuke <number> to select a larger or smaller distance");
 
         Location loc = player.getLocation();
         for (Entity ent : player.getWorld().getLivingEntities()) {
@@ -47,11 +47,11 @@ public class NukeCommand extends AbstractCommand
             }
 
             if (ent instanceof Monster) {
-                Monster mob = (Monster)ent;
+                Monster mob = (Monster) ent;
                 mob.setHealth(0);
             }
             else if (ent instanceof Animals) {
-                Animals animal = (Animals)ent;
+                Animals animal = (Animals) ent;
                 animal.setHealth(0);
             }
             else if (ent instanceof Slime) {
@@ -59,7 +59,7 @@ public class NukeCommand extends AbstractCommand
                 slime.setHealth(0);
             }
             else if (ent instanceof EnderDragon) {
-                EnderDragon dragon = (EnderDragon)ent;
+                EnderDragon dragon = (EnderDragon) ent;
                 dragon.setHealth(0);
             }
         }

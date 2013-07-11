@@ -56,484 +56,573 @@ public abstract class PlayerDelegate implements Player
 {
     private Player delegate;
 
-    protected PlayerDelegate(Player player) {
+    protected PlayerDelegate(Player player)
+    {
         this.delegate = player;
     }
 
-    public void setDelegate(Player v) { this.delegate = v; }
-    public Player getDelegate() { return delegate; }
+    public void setDelegate(Player v)
+    {
+        this.delegate = v;
+    }
+
+    public Player getDelegate()
+    {
+        return delegate;
+    }
 
     private void checkState()
     {
         if (delegate == null) {
-            throw new IllegalStateException("Can't be used when delegate isn't set.");
+            throw new IllegalStateException(
+                    "Can't be used when delegate isn't set.");
         }
     }
 
     @Override
-    public PlayerInventory getInventory() {
+    public PlayerInventory getInventory()
+    {
         checkState();
         return delegate.getInventory();
     }
 
     @Override
-    public ItemStack getItemInHand() {
+    public ItemStack getItemInHand()
+    {
         checkState();
         return delegate.getItemInHand();
     }
 
     @Override
-    public String getName() {
+    public String getName()
+    {
         checkState();
         return delegate.getName();
     }
 
     @Override
-    public int getSleepTicks() {
+    public int getSleepTicks()
+    {
         checkState();
         return delegate.getSleepTicks();
     }
 
     @Override
-    public boolean isSleeping() {
+    public boolean isSleeping()
+    {
         checkState();
         return delegate.isSleeping();
     }
 
     @Override
-    public void setItemInHand(ItemStack arg0) {
+    public void setItemInHand(ItemStack arg0)
+    {
         checkState();
         delegate.setItemInHand(arg0);
     }
 
     @Override
-    public void damage(int arg0) {
+    public void damage(int arg0)
+    {
         checkState();
         delegate.damage(arg0);
     }
 
     @Override
-    public void damage(int arg0, Entity arg1) {
+    public void damage(int arg0, Entity arg1)
+    {
         checkState();
         delegate.damage(arg0, arg1);
     }
 
     @Override
-    public double getEyeHeight() {
+    public double getEyeHeight()
+    {
         checkState();
         return delegate.getEyeHeight();
     }
 
     @Override
-    public double getEyeHeight(boolean arg0) {
+    public double getEyeHeight(boolean arg0)
+    {
         checkState();
         return delegate.getEyeHeight(arg0);
     }
 
     @Override
-    public Location getEyeLocation() {
+    public Location getEyeLocation()
+    {
         checkState();
         return delegate.getEyeLocation();
     }
 
     @Override
-    public int getHealth() {
+    public int getHealth()
+    {
         checkState();
         return delegate.getHealth();
     }
 
     @Override
-    public int getLastDamage() {
+    public int getLastDamage()
+    {
         checkState();
         return delegate.getLastDamage();
     }
 
     @Override
-    public List<Block> getLastTwoTargetBlocks(HashSet<Byte> arg0, int arg1) {
+    public List<Block> getLastTwoTargetBlocks(HashSet<Byte> arg0, int arg1)
+    {
         checkState();
         return delegate.getLastTwoTargetBlocks(arg0, arg1);
     }
 
     @Override
-    public List<Block> getLineOfSight(HashSet<Byte> arg0, int arg1) {
+    public List<Block> getLineOfSight(HashSet<Byte> arg0, int arg1)
+    {
         checkState();
         return delegate.getLineOfSight(arg0, arg1);
     }
 
     @Override
-    public int getMaximumAir() {
+    public int getMaximumAir()
+    {
         checkState();
         return delegate.getMaximumAir();
     }
 
     @Override
-    public int getMaximumNoDamageTicks() {
+    public int getMaximumNoDamageTicks()
+    {
         checkState();
         return delegate.getMaximumNoDamageTicks();
     }
 
     @Override
-    public int getNoDamageTicks() {
+    public int getNoDamageTicks()
+    {
         checkState();
         return delegate.getNoDamageTicks();
     }
 
     @Override
-    public int getRemainingAir() {
+    public int getRemainingAir()
+    {
         checkState();
         return delegate.getRemainingAir();
     }
 
     @Override
-    public Block getTargetBlock(HashSet<Byte> arg0, int arg1) {
+    public Block getTargetBlock(HashSet<Byte> arg0, int arg1)
+    {
         checkState();
         return delegate.getTargetBlock(arg0, arg1);
     }
 
     @Override
-    public Entity getVehicle() {
+    public Entity getVehicle()
+    {
         checkState();
         return delegate.getVehicle();
     }
 
     @Override
-    public boolean isInsideVehicle() {
+    public boolean isInsideVehicle()
+    {
         checkState();
         return delegate.isInsideVehicle();
     }
 
     @Override
-    public boolean leaveVehicle() {
+    public boolean leaveVehicle()
+    {
         checkState();
         return delegate.leaveVehicle();
     }
 
     @Override
-    public void setHealth(int arg0) {
+    public void setHealth(int arg0)
+    {
         checkState();
         delegate.setHealth(arg0);
     }
 
     @Override
-    public void setLastDamage(int arg0) {
+    public void setLastDamage(int arg0)
+    {
         checkState();
         delegate.setLastDamage(arg0);
     }
 
     @Override
-    public void setMaximumAir(int arg0) {
+    public void setMaximumAir(int arg0)
+    {
         checkState();
         delegate.setMaximumAir(arg0);
     }
 
     @Override
-    public void setMaximumNoDamageTicks(int arg0) {
+    public void setMaximumNoDamageTicks(int arg0)
+    {
         checkState();
         delegate.setMaximumNoDamageTicks(arg0);
     }
 
     @Override
-    public void setNoDamageTicks(int arg0) {
+    public void setNoDamageTicks(int arg0)
+    {
         checkState();
         delegate.setNoDamageTicks(arg0);
     }
 
     @Override
-    public void setRemainingAir(int arg0) {
+    public void setRemainingAir(int arg0)
+    {
         checkState();
         delegate.setRemainingAir(arg0);
     }
 
     @Override
-    public boolean eject() {
+    public boolean eject()
+    {
         checkState();
         return delegate.eject();
     }
 
     @Override
-    public int getEntityId() {
+    public int getEntityId()
+    {
         checkState();
         return delegate.getEntityId();
     }
 
     @Override
-    public float getFallDistance() {
+    public float getFallDistance()
+    {
         checkState();
         return delegate.getFallDistance();
     }
 
     @Override
-    public int getFireTicks() {
+    public int getFireTicks()
+    {
         checkState();
         return delegate.getFireTicks();
     }
 
     @Override
-    public EntityDamageEvent getLastDamageCause() {
+    public EntityDamageEvent getLastDamageCause()
+    {
         checkState();
         return delegate.getLastDamageCause();
     }
 
     @Override
-    public Location getLocation() {
+    public Location getLocation()
+    {
         checkState();
         return delegate.getLocation();
     }
 
     @Override
-    public int getMaxFireTicks() {
+    public int getMaxFireTicks()
+    {
         checkState();
         return delegate.getMaxFireTicks();
     }
 
     @Override
-    public List<Entity> getNearbyEntities(double arg0, double arg1, double arg2) {
+    public List<Entity> getNearbyEntities(double arg0, double arg1, double arg2)
+    {
         checkState();
         return delegate.getNearbyEntities(arg0, arg1, arg2);
     }
 
     @Override
-    public Entity getPassenger() {
+    public Entity getPassenger()
+    {
         checkState();
         return delegate.getPassenger();
     }
 
     @Override
-    public Server getServer() {
+    public Server getServer()
+    {
         checkState();
         return delegate.getServer();
     }
 
     @Override
-    public UUID getUniqueId() {
+    public UUID getUniqueId()
+    {
         checkState();
         return delegate.getUniqueId();
     }
 
     @Override
-    public Vector getVelocity() {
+    public Vector getVelocity()
+    {
         checkState();
         return delegate.getVelocity();
     }
 
     @Override
-    public World getWorld() {
+    public World getWorld()
+    {
         checkState();
         return delegate.getWorld();
     }
 
     @Override
-    public boolean isDead() {
+    public boolean isDead()
+    {
         checkState();
         return delegate.isDead();
     }
 
     @Override
-    public boolean isEmpty() {
+    public boolean isEmpty()
+    {
         checkState();
         return delegate.isEmpty();
     }
 
     @Override
-    public void remove() {
+    public void remove()
+    {
         checkState();
         delegate.remove();
     }
 
     @Override
-    public void setFallDistance(float arg0) {
+    public void setFallDistance(float arg0)
+    {
         checkState();
         delegate.setFallDistance(arg0);
     }
 
     @Override
-    public void setFireTicks(int arg0) {
+    public void setFireTicks(int arg0)
+    {
         checkState();
         delegate.setFireTicks(arg0);
     }
 
     @Override
-    public void setLastDamageCause(EntityDamageEvent arg0) {
+    public void setLastDamageCause(EntityDamageEvent arg0)
+    {
         checkState();
         delegate.setLastDamageCause(arg0);
     }
 
     @Override
-    public boolean setPassenger(Entity arg0) {
+    public boolean setPassenger(Entity arg0)
+    {
         checkState();
         return delegate.setPassenger(arg0);
     }
 
     @Override
-    public void setVelocity(Vector arg0) {
+    public void setVelocity(Vector arg0)
+    {
         checkState();
         delegate.setVelocity(arg0);
     }
 
     @Override
-    public boolean teleport(Location arg0) {
+    public boolean teleport(Location arg0)
+    {
         checkState();
         return delegate.teleport(arg0);
     }
 
     @Override
-    public boolean teleport(Entity arg0) {
+    public boolean teleport(Entity arg0)
+    {
         checkState();
         return delegate.teleport(arg0);
     }
 
     @Override
-    public PermissionAttachment addAttachment(Plugin arg0) {
+    public PermissionAttachment addAttachment(Plugin arg0)
+    {
         checkState();
         return delegate.addAttachment(arg0);
     }
 
     @Override
-    public PermissionAttachment addAttachment(Plugin arg0, int arg1) {
+    public PermissionAttachment addAttachment(Plugin arg0, int arg1)
+    {
         checkState();
         return delegate.addAttachment(arg0, arg1);
     }
 
     @Override
-    public PermissionAttachment addAttachment(Plugin arg0, String arg1, boolean arg2) {
+    public PermissionAttachment addAttachment(Plugin arg0, String arg1,
+            boolean arg2)
+    {
         checkState();
         return delegate.addAttachment(arg0, arg1, arg2);
     }
 
     @Override
-    public PermissionAttachment addAttachment(Plugin arg0, String arg1, boolean arg2, int arg3) {
+    public PermissionAttachment addAttachment(Plugin arg0, String arg1,
+            boolean arg2, int arg3)
+    {
         checkState();
         return delegate.addAttachment(arg0, arg1, arg2, arg3);
     }
 
     @Override
-    public Set<PermissionAttachmentInfo> getEffectivePermissions() {
+    public Set<PermissionAttachmentInfo> getEffectivePermissions()
+    {
         checkState();
         return delegate.getEffectivePermissions();
     }
 
     @Override
-    public boolean hasPermission(String arg0) {
+    public boolean hasPermission(String arg0)
+    {
         checkState();
         return delegate.hasPermission(arg0);
     }
 
     @Override
-    public boolean hasPermission(Permission arg0) {
+    public boolean hasPermission(Permission arg0)
+    {
         checkState();
         return delegate.hasPermission(arg0);
     }
 
     @Override
-    public boolean isPermissionSet(String arg0) {
+    public boolean isPermissionSet(String arg0)
+    {
         checkState();
         return delegate.isPermissionSet(arg0);
     }
 
     @Override
-    public boolean isPermissionSet(Permission arg0) {
+    public boolean isPermissionSet(Permission arg0)
+    {
         checkState();
         return delegate.isPermissionSet(arg0);
     }
 
     @Override
-    public void recalculatePermissions() {
+    public void recalculatePermissions()
+    {
         checkState();
         delegate.recalculatePermissions();
     }
 
     @Override
-    public void removeAttachment(PermissionAttachment arg0) {
+    public void removeAttachment(PermissionAttachment arg0)
+    {
         checkState();
         delegate.removeAttachment(arg0);
     }
 
     @Override
-    public boolean isOp() {
+    public boolean isOp()
+    {
         checkState();
         return delegate.isOp();
     }
 
     @Override
-    public void setOp(boolean arg0) {
+    public void setOp(boolean arg0)
+    {
         checkState();
         delegate.setOp(arg0);
     }
 
     @Override
-    public void sendMessage(String arg0) {
+    public void sendMessage(String arg0)
+    {
         checkState();
         delegate.sendMessage(arg0);
     }
 
     @Override
-    public void awardAchievement(Achievement arg0) {
+    public void awardAchievement(Achievement arg0)
+    {
         checkState();
         delegate.awardAchievement(arg0);
     }
 
     @Override
-    public void chat(String arg0) {
+    public void chat(String arg0)
+    {
         checkState();
         delegate.chat(arg0);
     }
 
     @Override
-    public InetSocketAddress getAddress() {
+    public InetSocketAddress getAddress()
+    {
         checkState();
         return delegate.getAddress();
     }
 
     @Override
-    public Location getCompassTarget() {
+    public Location getCompassTarget()
+    {
         checkState();
         return delegate.getCompassTarget();
     }
 
     @Override
-    public String getDisplayName() {
+    public String getDisplayName()
+    {
         checkState();
         return delegate.getDisplayName();
     }
 
     @Override
-    public long getPlayerTime() {
+    public long getPlayerTime()
+    {
         checkState();
         return delegate.getPlayerTime();
     }
 
     @Override
-    public long getPlayerTimeOffset() {
+    public long getPlayerTimeOffset()
+    {
         checkState();
         return delegate.getPlayerTimeOffset();
     }
 
     @Override
-    public void incrementStatistic(Statistic arg0) {
+    public void incrementStatistic(Statistic arg0)
+    {
         checkState();
         delegate.incrementStatistic(arg0);
     }
 
     @Override
-    public void incrementStatistic(Statistic arg0, int arg1) {
+    public void incrementStatistic(Statistic arg0, int arg1)
+    {
         checkState();
         delegate.incrementStatistic(arg0, arg1);
     }
 
     @Override
-    public void incrementStatistic(Statistic arg0, Material arg1) {
+    public void incrementStatistic(Statistic arg0, Material arg1)
+    {
         checkState();
         delegate.incrementStatistic(arg0, arg1);
     }
 
     @Override
-    public void incrementStatistic(Statistic arg0, Material arg1, int arg2) {
+    public void incrementStatistic(Statistic arg0, Material arg1, int arg2)
+    {
         checkState();
         delegate.incrementStatistic(arg0, arg1, arg2);
     }
 
     @Override
-    public boolean isOnline() {
+    public boolean isOnline()
+    {
         if (delegate == null) {
             return false;
         }
@@ -542,128 +631,150 @@ public abstract class PlayerDelegate implements Player
     }
 
     @Override
-    public boolean isPlayerTimeRelative() {
+    public boolean isPlayerTimeRelative()
+    {
         checkState();
         return delegate.isPlayerTimeRelative();
     }
 
     @Override
-    public boolean isSleepingIgnored() {
+    public boolean isSleepingIgnored()
+    {
         checkState();
         return delegate.isSleepingIgnored();
     }
 
     @Override
-    public boolean isSneaking() {
+    public boolean isSneaking()
+    {
         checkState();
         return delegate.isSneaking();
     }
 
     @Override
-    public void kickPlayer(String arg0) {
+    public void kickPlayer(String arg0)
+    {
         checkState();
         delegate.kickPlayer(arg0);
     }
 
     @Override
-    public void loadData() {
+    public void loadData()
+    {
         checkState();
         delegate.loadData();
     }
 
     @Override
-    public boolean performCommand(String arg0) {
+    public boolean performCommand(String arg0)
+    {
         checkState();
         return delegate.performCommand(arg0);
     }
 
     @Override
-    public void playEffect(Location arg0, Effect arg1, int arg2) {
+    public void playEffect(Location arg0, Effect arg1, int arg2)
+    {
         checkState();
         delegate.playEffect(arg0, arg1, arg2);
     }
 
     @Override
-    public void playNote(Location arg0, byte arg1, byte arg2) {
+    public void playNote(Location arg0, byte arg1, byte arg2)
+    {
         checkState();
         delegate.playNote(arg0, arg1, arg2);
     }
 
     @Override
-    public void playNote(Location arg0, Instrument arg1, Note arg2) {
+    public void playNote(Location arg0, Instrument arg1, Note arg2)
+    {
         checkState();
         delegate.playNote(arg0, arg1, arg2);
     }
 
     @Override
-    public void resetPlayerTime() {
+    public void resetPlayerTime()
+    {
         checkState();
         delegate.resetPlayerTime();
     }
 
     @Override
-    public void saveData() {
+    public void saveData()
+    {
         checkState();
         delegate.saveData();
     }
 
     @Override
-    public void sendBlockChange(Location arg0, Material arg1, byte arg2) {
+    public void sendBlockChange(Location arg0, Material arg1, byte arg2)
+    {
         checkState();
         delegate.sendBlockChange(arg0, arg1, arg2);
     }
 
     @Override
-    public void sendBlockChange(Location arg0, int arg1, byte arg2) {
+    public void sendBlockChange(Location arg0, int arg1, byte arg2)
+    {
         checkState();
         delegate.sendBlockChange(arg0, arg1, arg2);
     }
 
     @Override
-    public boolean sendChunkChange(Location arg0, int arg1, int arg2, int arg3, byte[] arg4) {
+    public boolean sendChunkChange(Location arg0, int arg1, int arg2, int arg3,
+            byte[] arg4)
+    {
         checkState();
         return delegate.sendChunkChange(arg0, arg1, arg2, arg3, arg4);
     }
 
     @Override
-    public void sendRawMessage(String arg0) {
+    public void sendRawMessage(String arg0)
+    {
         checkState();
         delegate.sendRawMessage(arg0);
     }
 
     @Override
-    public void setCompassTarget(Location arg0) {
+    public void setCompassTarget(Location arg0)
+    {
         checkState();
         delegate.setCompassTarget(arg0);
     }
 
     @Override
-    public void setDisplayName(String arg0) {
+    public void setDisplayName(String arg0)
+    {
         checkState();
         delegate.setDisplayName(arg0);
     }
 
     @Override
-    public void setPlayerTime(long arg0, boolean arg1) {
+    public void setPlayerTime(long arg0, boolean arg1)
+    {
         checkState();
         delegate.setPlayerTime(arg0, arg1);
     }
 
     @Override
-    public void setSleepingIgnored(boolean arg0) {
+    public void setSleepingIgnored(boolean arg0)
+    {
         checkState();
         delegate.setSleepingIgnored(arg0);
     }
 
     @Override
-    public void setSneaking(boolean arg0) {
+    public void setSneaking(boolean arg0)
+    {
         checkState();
         delegate.setSneaking(true);
     }
 
     @SuppressWarnings("deprecation")
     @Override
-    public void updateInventory() {
+    public void updateInventory()
+    {
         checkState();
         delegate.updateInventory();
     }
@@ -704,121 +815,141 @@ public abstract class PlayerDelegate implements Player
     }
 
     @Override
-    public float getExhaustion() {
+    public float getExhaustion()
+    {
         checkState();
         return delegate.getExhaustion();
     }
 
     @Override
-    public int getLevel() {
+    public int getLevel()
+    {
         checkState();
         return delegate.getLevel();
     }
 
     @Override
-    public float getSaturation() {
+    public float getSaturation()
+    {
         checkState();
         return delegate.getSaturation();
     }
 
     @Override
-    public int getTotalExperience() {
+    public int getTotalExperience()
+    {
         checkState();
         return delegate.getTotalExperience();
     }
 
     @Override
-    public void setFoodLevel(int arg0) {
+    public void setFoodLevel(int arg0)
+    {
         checkState();
         delegate.setFoodLevel(arg0);
     }
 
     @Override
-    public void setSaturation(float arg0) {
+    public void setSaturation(float arg0)
+    {
         checkState();
         delegate.setSaturation(arg0);
     }
 
     @Override
-    public void setTotalExperience(int arg0) {
+    public void setTotalExperience(int arg0)
+    {
         checkState();
         delegate.setTotalExperience(arg0);
     }
 
     @Override
-    public GameMode getGameMode() {
+    public GameMode getGameMode()
+    {
         checkState();
         return delegate.getGameMode();
     }
 
     @Override
-    public void setGameMode(GameMode arg0) {
+    public void setGameMode(GameMode arg0)
+    {
         checkState();
         delegate.setGameMode(arg0);
     }
 
     @Override
-    public boolean isWhitelisted() {
+    public boolean isWhitelisted()
+    {
         checkState();
         return delegate.isWhitelisted();
     }
 
     @Override
-    public void setBanned(boolean arg0) {
+    public void setBanned(boolean arg0)
+    {
         checkState();
         delegate.setBanned(arg0);
     }
 
     @Override
-    public Location getBedSpawnLocation() {
+    public Location getBedSpawnLocation()
+    {
         checkState();
         return delegate.getBedSpawnLocation();
     }
 
     @Override
-    public boolean isSprinting() {
+    public boolean isSprinting()
+    {
         checkState();
         return delegate.isSprinting();
     }
 
     @Override
-    public void setSprinting(boolean arg0) {
+    public void setSprinting(boolean arg0)
+    {
         checkState();
         delegate.setSprinting(arg0);
     }
 
     @Override
-    public String getPlayerListName() {
+    public String getPlayerListName()
+    {
         checkState();
         return delegate.getPlayerListName();
     }
 
     @Override
-    public void setPlayerListName(String arg0) {
+    public void setPlayerListName(String arg0)
+    {
         checkState();
         delegate.setPlayerListName(arg0);
     }
 
     @Override
-    public void setTicksLived(int arg0) {
+    public void setTicksLived(int arg0)
+    {
         checkState();
         delegate.setTicksLived(arg0);
     }
 
     @Override
-    public int getTicksLived() {
+    public int getTicksLived()
+    {
         checkState();
         return delegate.getTicksLived();
     }
 
     @Override
-    public Map<String, Object> serialize() {
+    public Map<String, Object> serialize()
+    {
         checkState();
         return delegate.serialize();
     }
 
     @Override
-    public Player getPlayer() {
+    public Player getPlayer()
+    {
         checkState();
         return this.getServer().getPlayer(this.getName());
     }
@@ -831,494 +962,581 @@ public abstract class PlayerDelegate implements Player
     }
 
     @Override
-    public float getExp() {
+    public float getExp()
+    {
         checkState();
         return delegate.getExp();
     }
 
     @Override
-    public void giveExp(int arg0) {
+    public void giveExp(int arg0)
+    {
         checkState();
         delegate.giveExp(arg0);
     }
 
     @Override
-    public void setExp(float arg0) {
+    public void setExp(float arg0)
+    {
         checkState();
         delegate.setExp(arg0);
     }
 
     @Override
-    public Player getKiller() {
+    public Player getKiller()
+    {
         checkState();
-        return  delegate.getKiller();
+        return delegate.getKiller();
     }
 
     @Override
-    public boolean teleport(Location arg0, TeleportCause arg1) {
-        checkState();
-        return delegate.teleport(arg0, arg1);
-    }
-
-    @Override
-    public boolean teleport(Entity arg0, TeleportCause arg1) {
+    public boolean teleport(Location arg0, TeleportCause arg1)
+    {
         checkState();
         return delegate.teleport(arg0, arg1);
     }
 
     @Override
-    public long getFirstPlayed() {
+    public boolean teleport(Entity arg0, TeleportCause arg1)
+    {
+        checkState();
+        return delegate.teleport(arg0, arg1);
+    }
+
+    @Override
+    public long getFirstPlayed()
+    {
         checkState();
         return delegate.getFirstPlayed();
     }
 
     @Override
-    public long getLastPlayed() {
+    public long getLastPlayed()
+    {
         checkState();
         return delegate.getLastPlayed();
     }
 
     @Override
-    public boolean hasPlayedBefore() {
+    public boolean hasPlayedBefore()
+    {
         checkState();
         return delegate.hasPlayedBefore();
     }
 
     @Override
-    public Set<String> getListeningPluginChannels() {
+    public Set<String> getListeningPluginChannels()
+    {
         checkState();
         return delegate.getListeningPluginChannels();
     }
 
     @Override
-    public void sendPluginMessage(Plugin arg0, String arg1, byte[] arg2) {
+    public void sendPluginMessage(Plugin arg0, String arg1, byte[] arg2)
+    {
         checkState();
         delegate.sendPluginMessage(arg0, arg1, arg2);
     }
 
     @Override
-    public void playEffect(EntityEffect arg0) {
+    public void playEffect(EntityEffect arg0)
+    {
         checkState();
         delegate.playEffect(arg0);
     }
 
     @Override
-    public boolean getAllowFlight() {
+    public boolean getAllowFlight()
+    {
         checkState();
         return delegate.getAllowFlight();
     }
 
     @Override
-    public void setAllowFlight(boolean arg0) {
+    public void setAllowFlight(boolean arg0)
+    {
         checkState();
         delegate.setAllowFlight(arg0);
     }
 
     @Override
-    public void setBedSpawnLocation(Location arg0) {
+    public void setBedSpawnLocation(Location arg0)
+    {
         checkState();
         delegate.setBedSpawnLocation(arg0);
     }
 
     @Override
-    public boolean canSee(Player arg0) {
+    public boolean canSee(Player arg0)
+    {
         checkState();
         return delegate.canSee(arg0);
     }
 
     @Override
-    public void hidePlayer(Player arg0) {
+    public void hidePlayer(Player arg0)
+    {
         checkState();
         delegate.hidePlayer(arg0);
     }
 
     @Override
-    public void showPlayer(Player arg0) {
+    public void showPlayer(Player arg0)
+    {
         checkState();
         delegate.showPlayer(arg0);
     }
 
     @Override
-    public boolean addPotionEffect(PotionEffect arg0) {
+    public boolean addPotionEffect(PotionEffect arg0)
+    {
         checkState();
         return delegate.addPotionEffect(arg0);
     }
 
     @Override
-    public boolean addPotionEffect(PotionEffect arg0, boolean arg1) {
+    public boolean addPotionEffect(PotionEffect arg0, boolean arg1)
+    {
         checkState();
         return delegate.addPotionEffect(arg0, arg1);
     }
 
     @Override
-    public boolean addPotionEffects(Collection<PotionEffect> arg0) {
+    public boolean addPotionEffects(Collection<PotionEffect> arg0)
+    {
         checkState();
         return delegate.addPotionEffects(arg0);
     }
 
     @Override
-    public Collection<PotionEffect> getActivePotionEffects() {
+    public Collection<PotionEffect> getActivePotionEffects()
+    {
         checkState();
         return delegate.getActivePotionEffects();
     }
 
     @Override
-    public boolean hasPotionEffect(PotionEffectType arg0) {
+    public boolean hasPotionEffect(PotionEffectType arg0)
+    {
         checkState();
         return delegate.hasPotionEffect(arg0);
     }
 
     @Override
-    public void removePotionEffect(PotionEffectType arg0) {
+    public void removePotionEffect(PotionEffectType arg0)
+    {
         checkState();
         delegate.removePotionEffect(arg0);
     }
 
     @Override
-    public <T> void playEffect(Location arg0, Effect arg1, T arg2) {
+    public <T> void playEffect(Location arg0, Effect arg1, T arg2)
+    {
         checkState();
         delegate.playEffect(arg0, arg1, arg2);
     }
 
     @Override
-    public void closeInventory() {
+    public void closeInventory()
+    {
         checkState();
         delegate.closeInventory();
     }
 
     @Override
-    public ItemStack getItemOnCursor() {
+    public ItemStack getItemOnCursor()
+    {
         checkState();
         return delegate.getItemOnCursor();
     }
 
     @Override
-    public InventoryView getOpenInventory() {
+    public InventoryView getOpenInventory()
+    {
         checkState();
         return delegate.getOpenInventory();
     }
 
     @Override
-    public InventoryView openEnchanting(Location arg0, boolean arg1) {
+    public InventoryView openEnchanting(Location arg0, boolean arg1)
+    {
         checkState();
         return delegate.openEnchanting(arg0, arg1);
     }
 
     @Override
-    public InventoryView openInventory(Inventory arg0) {
+    public InventoryView openInventory(Inventory arg0)
+    {
         checkState();
         return delegate.openInventory(arg0);
     }
 
     @Override
-    public void openInventory(InventoryView arg0) {
+    public void openInventory(InventoryView arg0)
+    {
         checkState();
         delegate.openInventory(arg0);
     }
 
     @Override
-    public InventoryView openWorkbench(Location arg0, boolean arg1) {
+    public InventoryView openWorkbench(Location arg0, boolean arg1)
+    {
         checkState();
         return delegate.openWorkbench(arg0, arg1);
     }
 
     @Override
-    public void setItemOnCursor(ItemStack arg0) {
+    public void setItemOnCursor(ItemStack arg0)
+    {
         checkState();
         delegate.setItemOnCursor(arg0);
     }
 
     @Override
-    public boolean setWindowProperty(Property arg0, int arg1) {
+    public boolean setWindowProperty(Property arg0, int arg1)
+    {
         checkState();
         return delegate.setWindowProperty(arg0, arg1);
     }
 
     @Override
-    public <T extends Projectile> T launchProjectile(Class<? extends T> arg0) {
+    public <T extends Projectile> T launchProjectile(Class<? extends T> arg0)
+    {
         checkState();
         return delegate.launchProjectile(arg0);
     }
 
     @Override
-    public EntityType getType() {
+    public EntityType getType()
+    {
         checkState();
         return delegate.getType();
     }
 
     @Override
-    public List<MetadataValue> getMetadata(String arg0) {
+    public List<MetadataValue> getMetadata(String arg0)
+    {
         checkState();
         return delegate.getMetadata(arg0);
     }
 
     @Override
-    public boolean hasMetadata(String arg0) {
+    public boolean hasMetadata(String arg0)
+    {
         checkState();
         return delegate.hasMetadata(arg0);
     }
 
     @Override
-    public void removeMetadata(String arg0, Plugin arg1) {
+    public void removeMetadata(String arg0, Plugin arg1)
+    {
         checkState();
         delegate.removeMetadata(arg0, arg1);
     }
 
     @Override
-    public void setMetadata(String arg0, MetadataValue arg1) {
+    public void setMetadata(String arg0, MetadataValue arg1)
+    {
         checkState();
         delegate.setMetadata(arg0, arg1);
     }
 
     @Override
-    public void abandonConversation(Conversation arg0) {
+    public void abandonConversation(Conversation arg0)
+    {
         checkState();
         delegate.abandonConversation(arg0);
     }
 
     @Override
-    public void acceptConversationInput(String arg0) {
+    public void acceptConversationInput(String arg0)
+    {
         checkState();
         delegate.acceptConversationInput(arg0);
     }
 
     @Override
-    public boolean beginConversation(Conversation arg0) {
+    public boolean beginConversation(Conversation arg0)
+    {
         checkState();
         return delegate.beginConversation(arg0);
     }
 
     @Override
-    public boolean isConversing() {
+    public boolean isConversing()
+    {
         checkState();
         return delegate.isConversing();
     }
 
     @Override
-    public void sendMessage(String[] arg0) {
+    public void sendMessage(String[] arg0)
+    {
         checkState();
         delegate.sendMessage(arg0);
     }
 
+    @SuppressWarnings("deprecation")
     @Override
-    public Arrow shootArrow() {
+    public Arrow shootArrow()
+    {
         checkState();
         return delegate.shootArrow();
     }
 
+    @SuppressWarnings("deprecation")
     @Override
-    public Egg throwEgg() {
+    public Egg throwEgg()
+    {
         checkState();
         return delegate.throwEgg();
     }
 
+    @SuppressWarnings("deprecation")
     @Override
-    public Snowball throwSnowball() {
+    public Snowball throwSnowball()
+    {
         checkState();
         return delegate.throwSnowball();
     }
 
     @Override
-    public boolean isFlying() {
+    public boolean isFlying()
+    {
         checkState();
         return delegate.isFlying();
     }
 
     @Override
-    public void setFlying(boolean arg0) {
+    public void setFlying(boolean arg0)
+    {
         checkState();
         delegate.setFlying(arg0);
     }
 
     @Override
-    public boolean isBlocking() {
+    public boolean isBlocking()
+    {
         checkState();
         return delegate.isBlocking();
     }
 
     @Override
-    public void abandonConversation(Conversation arg0, ConversationAbandonedEvent arg1) {
+    public void abandonConversation(Conversation arg0,
+            ConversationAbandonedEvent arg1)
+    {
         checkState();
         delegate.abandonConversation(arg0, arg1);
     }
 
     @Override
-    public int getExpToLevel() {
+    public int getExpToLevel()
+    {
         checkState();
         return delegate.getExpToLevel();
     }
 
     @Override
-    public boolean hasLineOfSight(Entity arg0) {
+    public boolean hasLineOfSight(Entity arg0)
+    {
         checkState();
         return delegate.hasLineOfSight(arg0);
     }
 
     @Override
-    public boolean isValid() {
+    public boolean isValid()
+    {
         checkState();
         return delegate.isValid();
     }
 
     @Override
-    public float getFlySpeed() {
+    public float getFlySpeed()
+    {
         checkState();
         return delegate.getFlySpeed();
     }
 
     @Override
-    public float getWalkSpeed() {
+    public float getWalkSpeed()
+    {
         checkState();
         return delegate.getWalkSpeed();
     }
 
     @Override
-    public void setFlySpeed(float arg0) throws IllegalArgumentException {
+    public void setFlySpeed(float arg0) throws IllegalArgumentException
+    {
         checkState();
         delegate.setFlySpeed(arg0);
     }
 
     @Override
-    public void setWalkSpeed(float arg0) throws IllegalArgumentException {
+    public void setWalkSpeed(float arg0) throws IllegalArgumentException
+    {
         checkState();
         delegate.setWalkSpeed(arg0);
     }
 
     @Override
-    public void playSound(Location arg0, Sound arg1, float arg2, float arg3) {
+    public void playSound(Location arg0, Sound arg1, float arg2, float arg3)
+    {
         checkState();
         delegate.playSound(arg0, arg1, arg2, arg3);
     }
 
     @Override
-    public Inventory getEnderChest() {
+    public Inventory getEnderChest()
+    {
         checkState();
         return delegate.getEnderChest();
     }
 
     @Override
-    public void giveExpLevels(int arg0) {
+    public void giveExpLevels(int arg0)
+    {
         checkState();
         delegate.giveExpLevels(arg0);
     }
 
     @Override
-    public void setBedSpawnLocation(Location arg0, boolean arg1) {
+    public void setBedSpawnLocation(Location arg0, boolean arg1)
+    {
         checkState();
         delegate.setBedSpawnLocation(arg0, arg1);
     }
 
     @Override
-    public void setTexturePack(String arg0) {
+    public void setTexturePack(String arg0)
+    {
         checkState();
         delegate.setTexturePack(arg0);
     }
 
     @Override
-    public boolean getCanPickupItems() {
+    public boolean getCanPickupItems()
+    {
         checkState();
         return delegate.getCanPickupItems();
     }
 
     @Override
-    public EntityEquipment getEquipment() {
+    public EntityEquipment getEquipment()
+    {
         checkState();
         return delegate.getEquipment();
     }
 
     @Override
-    public boolean getRemoveWhenFarAway() {
+    public boolean getRemoveWhenFarAway()
+    {
         checkState();
         return delegate.getRemoveWhenFarAway();
     }
 
     @Override
-    public void setCanPickupItems(boolean arg0) {
+    public void setCanPickupItems(boolean arg0)
+    {
         checkState();
         delegate.setCanPickupItems(arg0);
     }
 
     @Override
-    public void setRemoveWhenFarAway(boolean arg0) {
+    public void setRemoveWhenFarAway(boolean arg0)
+    {
         checkState();
         delegate.setRemoveWhenFarAway(arg0);
     }
 
     @Override
-    public Location getLocation(Location arg0) {
+    public Location getLocation(Location arg0)
+    {
         checkState();
         return delegate.getLocation(arg0);
     }
 
     @Override
-    public void resetMaxHealth() {
+    public void resetMaxHealth()
+    {
         checkState();
         delegate.resetMaxHealth();
     }
 
     @Override
-    public void setMaxHealth(int arg0) {
+    public void setMaxHealth(int arg0)
+    {
         checkState();
         delegate.setMaxHealth(arg0);
     }
 
     @Override
-    public String getCustomName() {
+    public String getCustomName()
+    {
         checkState();
         return delegate.getCustomName();
     }
 
     @Override
-    public boolean isCustomNameVisible() {
+    public boolean isCustomNameVisible()
+    {
         checkState();
         return delegate.isCustomNameVisible();
     }
 
     @Override
-    public void setCustomName(String arg0) {
+    public void setCustomName(String arg0)
+    {
         checkState();
         delegate.setCustomName(arg0);
     }
 
     @Override
-    public void setCustomNameVisible(boolean arg0) {
+    public void setCustomNameVisible(boolean arg0)
+    {
         checkState();
         delegate.setCustomNameVisible(arg0);
     }
 
     @Override
-    public WeatherType getPlayerWeather() {
+    public WeatherType getPlayerWeather()
+    {
         checkState();
         return delegate.getPlayerWeather();
     }
 
     @SuppressWarnings("deprecation")
     @Override
-    public boolean isOnGround() {
+    public boolean isOnGround()
+    {
         checkState();
         return delegate.isOnGround();
     }
 
     @Override
-    public void resetPlayerWeather() {
+    public void resetPlayerWeather()
+    {
         checkState();
         delegate.resetPlayerWeather();
     }
 
     @Override
-    public void setPlayerWeather(WeatherType arg0) {
+    public void setPlayerWeather(WeatherType arg0)
+    {
         checkState();
         delegate.setPlayerWeather(arg0);
     }
 
     @Override
-    public Scoreboard getScoreboard() {
+    public Scoreboard getScoreboard()
+    {
         checkState();
         return delegate.getScoreboard();
     }
 
     @Override
-    public void setScoreboard(Scoreboard arg0) throws IllegalArgumentException,	IllegalStateException {
+    public void setScoreboard(Scoreboard arg0) throws IllegalArgumentException,
+            IllegalStateException
+    {
         checkState();
         delegate.setScoreboard(arg0);
     }

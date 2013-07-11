@@ -6,8 +6,6 @@ import java.sql.SQLException;
 
 import static org.bukkit.ChatColor.*;
 import org.bukkit.Server;
-import org.bukkit.entity.Player;
-
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
 import info.tregmine.api.PlayerReport;
@@ -55,8 +53,8 @@ public class KickCommand extends AbstractCommand
         }
 
         TregminePlayer victim = candidates.get(0);
-        server.broadcastMessage(player.getChatName() + AQUA + " kicked " +
-                                victim.getChatName() + AQUA + ": " + message);
+        server.broadcastMessage(player.getChatName() + AQUA + " kicked "
+                + victim.getChatName() + AQUA + ": " + message);
         LOGGER.info(victim.getName() + " kicked by " + player.getName());
         victim.kickPlayer("kicked by " + player.getName() + ": " + message);
 
@@ -72,13 +70,14 @@ public class KickCommand extends AbstractCommand
 
             DBPlayerReportDAO reportDAO = new DBPlayerReportDAO(conn);
             reportDAO.insertReport(report);
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             throw new RuntimeException(e);
-        }
-        finally {
+        } finally {
             if (conn != null) {
-                try { conn.close(); } catch (SQLException e) {}
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                }
             }
         }
 

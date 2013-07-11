@@ -8,7 +8,6 @@ import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.Location;
 import org.bukkit.Chunk;
-import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -17,7 +16,6 @@ import info.tregmine.Tregmine;
 import info.tregmine.database.ConnectionPool;
 import info.tregmine.database.DBWarpDAO;
 import info.tregmine.api.TregminePlayer;
-import info.tregmine.api.math.Distance;
 
 public class WarpCommand extends AbstractCommand
 {
@@ -39,7 +37,7 @@ public class WarpCommand extends AbstractCommand
             if (player.isAdmin()) {
                 player.teleport(loc);
                 PotionEffect ef =
-                    new PotionEffect(PotionEffectType.BLINDNESS, 60, 100);
+                        new PotionEffect(PotionEffectType.BLINDNESS, 60, 100);
                 player.addPotionEffect(ef);
                 return;
             }
@@ -51,7 +49,8 @@ public class WarpCommand extends AbstractCommand
 
             if (playerWorldName.equalsIgnoreCase(locWorldName)) {
                 player.teleport(loc);
-            } else {
+            }
+            else {
                 player.sendMessage(RED + "You can't teleport between worlds.");
             }
         }
@@ -82,46 +81,48 @@ public class WarpCommand extends AbstractCommand
 
             if (warpPoint == null) {
                 player.sendMessage("Warp not found!");
-                LOGGER.info("[warp failed] + <" + player.getName() + "> " + name +
-                         " -- not found");
+                LOGGER.info("[warp failed] + <" + player.getName() + "> "
+                        + name + " -- not found");
             }
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
             if (conn != null) {
-                try { conn.close(); } catch (SQLException e) {}
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                }
             }
         }
 
         World world = warpPoint.getWorld();
 
-        player.sendMessage(AQUA + "You started teleport to " +
-                           DARK_GREEN + name + AQUA + " in " + BLUE +
-                           world.getName() + "." );
-        LOGGER.info("[warp] + <" + player.getName() + "> " + name + ":" +
-                    world.getName());
+        player.sendMessage(AQUA + "You started teleport to " + DARK_GREEN
+                + name + AQUA + " in " + BLUE + world.getName() + ".");
+        LOGGER.info("[warp] + <" + player.getName() + "> " + name + ":"
+                + world.getName());
 
         player.setNoDamageTicks(200);
 
         Chunk chunk = world.getChunkAt(warpPoint);
         world.loadChunk(chunk);
 
-        if (world.isChunkLoaded(chunk)){
+        if (world.isChunkLoaded(chunk)) {
             long delay = 0;
 
-            player.sendMessage(AQUA + "You must now stand still and wait " +
-                               delay + " seconds for the stars to align, " +
-                               "allowing you to warp");
+            player.sendMessage(AQUA + "You must now stand still and wait "
+                    + delay + " seconds for the stars to align, "
+                    + "allowing you to warp");
 
             BukkitScheduler scheduler = server.getScheduler();
-            scheduler.scheduleSyncDelayedTask(tregmine,
-                                              new WarpTask(player, warpPoint),
-                                              20*delay);
+            scheduler.scheduleSyncDelayedTask(tregmine, new WarpTask(player,
+                    warpPoint), 20 * delay);
 
-
-        } else {
-            player.sendMessage(RED + "Chunk failed to load. Please try to warp again");
+        }
+        else {
+            player.sendMessage(RED
+                    + "Chunk failed to load. Please try to warp again");
         }
 
         return true;

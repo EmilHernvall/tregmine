@@ -5,4 +5,8 @@ tags
 build.sh
 make.log
 *.class
+.classpath
+.project
+.settings
 /misc
+/bin

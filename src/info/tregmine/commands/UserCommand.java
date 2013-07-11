@@ -5,18 +5,9 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 import static org.bukkit.ChatColor.*;
-import org.bukkit.Server;
 import org.bukkit.entity.Player;
-import org.bukkit.Location;
-import org.bukkit.entity.Animals;
-import org.bukkit.entity.Slime;
-import org.bukkit.entity.Monster;
-import org.bukkit.entity.EnderDragon;
-import org.bukkit.entity.Entity;
-
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
-import info.tregmine.api.math.Distance;
 import info.tregmine.database.ConnectionPool;
 import info.tregmine.database.DBPlayerDAO;
 
@@ -60,14 +51,12 @@ public class UserCommand extends AbstractCommand
 
         Player candidate = candidates.get(0);
         tregmine.reloadPlayer(player);
-        player.sendMessage("Player reloaded "+ candidate.getDisplayName());
+        player.sendMessage("Player reloaded " + candidate.getDisplayName());
         return true;
-   }
+    }
 
     private boolean make(TregminePlayer player, String[] args)
     {
-        Server server = tregmine.getServer();
-
         List<TregminePlayer> candidates = tregmine.matchPlayer(args[2]);
         if (candidates.size() != 1) {
             return true;
@@ -78,38 +67,50 @@ public class UserCommand extends AbstractCommand
         if ("settler".equalsIgnoreCase(args[1])) {
             victim.setNameColor("trial");
             victim.setTrusted(true);
-            victim.setTemporaryChatName(victim.getNameColor() + victim.getName());
+            victim.setTemporaryChatName(victim.getNameColor()
+                    + victim.getName());
 
-            player.sendMessage(AQUA + "You made " + victim.getChatName() + AQUA + " settler of this server." );
+            player.sendMessage(AQUA + "You made " + victim.getChatName() + AQUA
+                    + " settler of this server.");
             victim.sendMessage("Welcome! You are now made settler.");
-            LOGGER.info(victim.getName() + " was given settler rights by " + player.getName() + ".");
+            LOGGER.info(victim.getName() + " was given settler rights by "
+                    + player.getName() + ".");
         }
         else if ("resident".equalsIgnoreCase(args[1]) && player.isOp()) {
             victim.setNameColor("trusted");
             victim.setTrusted(true);
-            victim.setTemporaryChatName(victim.getNameColor() + victim.getName());
+            victim.setTemporaryChatName(victim.getNameColor()
+                    + victim.getName());
 
-            LOGGER.info(victim.getName() + " was given trusted rights by " + player.getChatName() + ".");
-            player.sendMessage(AQUA + "You made " + victim.getChatName() + AQUA + " a resident." );
+            LOGGER.info(victim.getName() + " was given trusted rights by "
+                    + player.getChatName() + ".");
+            player.sendMessage(AQUA + "You made " + victim.getChatName() + AQUA
+                    + " a resident.");
             victim.sendMessage("Welcome! You are now a resident");
         }
         else if ("donator".equalsIgnoreCase(args[1])) {
             victim.setDonator(true);
             victim.setAllowFlight(true);
             victim.setNameColor("donator");
-            victim.setTemporaryChatName(victim.getNameColor() + victim.getName());
+            victim.setTemporaryChatName(victim.getNameColor()
+                    + victim.getName());
 
-            player.sendMessage(AQUA + "You made  " + victim.getChatName() + " a donator." );
-            LOGGER.info(victim.getName() + " was made donator by" + player.getChatName() + ".");
+            player.sendMessage(AQUA + "You made  " + victim.getChatName()
+                    + " a donator.");
+            LOGGER.info(victim.getName() + " was made donator by"
+                    + player.getChatName() + ".");
             victim.sendMessage("Congratulations, you are now a donator!");
         }
         else if ("child".equalsIgnoreCase(args[1])) {
             victim.setChild(true);
             victim.setNameColor("child");
 
-            player.sendMessage(AQUA + "You made  " + victim.getChatName() + " a child." );
-            LOGGER.info(victim.getName() + " was made child by" + player.getChatName() + ".");
-            victim.setTemporaryChatName(victim.getNameColor() + victim.getName());
+            player.sendMessage(AQUA + "You made  " + victim.getChatName()
+                    + " a child.");
+            LOGGER.info(victim.getName() + " was made child by"
+                    + player.getChatName() + ".");
+            victim.setTemporaryChatName(victim.getNameColor()
+                    + victim.getName());
         }
         else {
             return false;
@@ -121,13 +122,14 @@ public class UserCommand extends AbstractCommand
 
             DBPlayerDAO playerDAO = new DBPlayerDAO(conn);
             playerDAO.updatePlayerPermissions(victim);
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             throw new RuntimeException(e);
-        }
-        finally {
+        } finally {
             if (conn != null) {
-                try { conn.close(); } catch (SQLException e) {}
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                }
             }
         }
 

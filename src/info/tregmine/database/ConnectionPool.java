@@ -6,12 +6,12 @@ import java.sql.*;
 
 import org.apache.commons.dbcp.BasicDataSource;
 
-public class ConnectionPool {
+public class ConnectionPool
+{
 
     private static BasicDataSource ds;
 
-    public static Connection getConnection()
-        throws SQLException
+    public static Connection getConnection() throws SQLException
     {
         if (ds == null) {
             String driver = "com.mysql.jdbc.Driver";
@@ -53,7 +53,10 @@ public class ConnectionPool {
             stmt.execute("SET NAMES latin1");
         } finally {
             if (stmt != null) {
-                try { stmt.close(); } catch (SQLException e) {}
+                try {
+                    stmt.close();
+                } catch (SQLException e) {
+                }
             }
         }
 

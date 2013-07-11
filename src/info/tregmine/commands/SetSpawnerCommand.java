@@ -1,14 +1,9 @@
 package info.tregmine.commands;
 
-import java.util.List;
-
 import static org.bukkit.ChatColor.*;
-import org.bukkit.Server;
-import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.CreatureSpawner;
 import org.bukkit.Material;
-import org.bukkit.entity.Player;
 import org.bukkit.entity.EntityType;
 
 import info.tregmine.Tregmine;
@@ -29,8 +24,8 @@ public class SetSpawnerCommand extends AbstractCommand
         }
 
         if (args.length != 1) {
-            player.sendMessage(RED + "Type /spawner <mobname> whilst pointing " +
-                               "at a spawner");
+            player.sendMessage(RED + "Type /spawner <mobname> whilst pointing "
+                    + "at a spawner");
             return false;
         }
 
@@ -40,12 +35,13 @@ public class SetSpawnerCommand extends AbstractCommand
             return false;
         }
 
-        CreatureSpawner spawner = (CreatureSpawner)target.getState();
+        CreatureSpawner spawner = (CreatureSpawner) target.getState();
         try {
             spawner.setSpawnedType(EntityType.valueOf(args[0].toUpperCase()));
         } catch (Exception error) {
-            player.sendMessage(RED + "An error occured. Did you specify a valid " +
-                    "mob type?");
+            player.sendMessage(RED
+                    + "An error occured. Did you specify a valid "
+                    + "mob type?");
         }
 
         return true;

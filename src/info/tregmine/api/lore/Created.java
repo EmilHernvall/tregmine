@@ -6,14 +6,10 @@ import org.bukkit.ChatColor;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-public enum Created
-{
-    MINED  (ChatColor.GREEN + "MINED"),
-    SPAWNED (ChatColor.RED + "SPAWNED"),
-    FILLED (ChatColor.RED + "FILLED"),
-    PURCHASED (ChatColor.AQUA + "PURCHASED"),
-    UNKOWN ("UNKNOWN"),
-    CREATIVE (ChatColor.YELLOW + "CREATIVE");
+public enum Created {
+    MINED(ChatColor.GREEN + "MINED"), SPAWNED(ChatColor.RED + "SPAWNED"), FILLED(
+            ChatColor.RED + "FILLED"), PURCHASED(ChatColor.AQUA + "PURCHASED"), UNKOWN(
+            "UNKNOWN"), CREATIVE(ChatColor.YELLOW + "CREATIVE");
 
     private String colorString = null;
 
@@ -58,6 +54,5 @@ public enum Created
 
         return Created.UNKOWN;
     }
-
 
 }

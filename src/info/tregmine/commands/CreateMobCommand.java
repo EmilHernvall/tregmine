@@ -1,12 +1,8 @@
 package info.tregmine.commands;
 
-import java.util.List;
-
 import static org.bukkit.ChatColor.*;
-import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.Location;
-import org.bukkit.entity.Player;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 
@@ -74,17 +70,17 @@ public class CreateMobCommand extends AbstractCommand
                 continue;
             }
 
-            LivingEntity ent = (LivingEntity)world.spawnEntity(loc, mobType);
+            LivingEntity ent = (LivingEntity) world.spawnEntity(loc, mobType);
             if (args.length == 3) {
                 ent.setCustomName(args[2]);
                 ent.setCustomNameVisible(true);
             }
         }
 
-        player.sendMessage(YELLOW + "You created " + amount + " " +
-                           mobType.getName() + ".");
-        LOGGER.info(player.getName() + " created " + amount + " " +
-                    mobType.getName());
+        player.sendMessage(YELLOW + "You created " + amount + " "
+                + mobType.getName() + ".");
+        LOGGER.info(player.getName() + " created " + amount + " "
+                + mobType.getName());
 
         return true;
     }

@@ -7,8 +7,6 @@ import java.sql.SQLException;
 
 import static org.bukkit.ChatColor.*;
 import org.bukkit.Server;
-import org.bukkit.entity.Player;
-
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
 import info.tregmine.api.PlayerReport;
@@ -41,7 +39,8 @@ public class WarnCommand extends AbstractCommand
         }
 
         if (args.length < 3) {
-            player.sendMessage(DARK_AQUA + "/warn <hard|soft> <player> <message>");
+            player.sendMessage(DARK_AQUA
+                    + "/warn <hard|soft> <player> <message>");
             return true;
         }
 
@@ -52,10 +51,13 @@ public class WarnCommand extends AbstractCommand
 
         boolean hard = false;
         if ("soft".equals(type)) {
-        } else if ("hard".equals(type)) {
+        }
+        else if ("hard".equals(type)) {
             hard = true;
-        } else {
-            player.sendMessage(DARK_AQUA + "/warn <hard|soft> <player> <message>");
+        }
+        else {
+            player.sendMessage(DARK_AQUA
+                    + "/warn <hard|soft> <player> <message>");
             return true;
         }
 
@@ -67,12 +69,14 @@ public class WarnCommand extends AbstractCommand
 
         TregminePlayer victim = candidates.get(0);
         if (hard) {
-            server.broadcastMessage(player.getChatName() + AQUA + " hardwarned " +
-                                    victim.getChatName() + AQUA + ": " + message);
+            server.broadcastMessage(player.getChatName() + AQUA
+                    + " hardwarned " + victim.getChatName() + AQUA + ": "
+                    + message);
             LOGGER.info(victim.getName() + " hardwarned by " + player.getName());
-        } else {
-            server.broadcastMessage(player.getChatName() + AQUA + " warned " +
-                                    victim.getChatName() + AQUA + ": " + message);
+        }
+        else {
+            server.broadcastMessage(player.getChatName() + AQUA + " warned "
+                    + victim.getChatName() + AQUA + ": " + message);
             LOGGER.info(victim.getName() + " warned by " + player.getName());
         }
 
@@ -90,21 +94,22 @@ public class WarnCommand extends AbstractCommand
             report.setSubjectId(victim.getId());
             report.setIssuerId(player.getId());
             report.setAction(hard ? PlayerReport.Action.HARDWARN
-                                  : PlayerReport.Action.SOFTWARN);
+                    : PlayerReport.Action.SOFTWARN);
             report.setMessage(message);
             // three days default
-            report.setValidUntil(
-                new Date(System.currentTimeMillis() + 3*86400*1000l));
+            report.setValidUntil(new Date(
+                    System.currentTimeMillis() + 3 * 86400 * 1000l));
 
             DBPlayerReportDAO reportDAO = new DBPlayerReportDAO(conn);
             reportDAO.insertReport(report);
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             throw new RuntimeException(e);
-        }
-        finally {
+        } finally {
             if (conn != null) {
-                try { conn.close(); } catch (SQLException e) {}
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                }
             }
         }
 

@@ -50,11 +50,12 @@ public class ChatListener implements Listener
 
             if (sender.getChatChannel().equals(to.getChatChannel())) {
                 if ("GLOBAL".equalsIgnoreCase(sender.getChatChannel())) {
-                    player.sendMessage("<" + sender.getChatName() +
-                                       ChatColor.WHITE + "> " + txtColor + text);
-                } else {
-                    player.sendMessage(channel + " <" + sender.getChatName() +
-                                       ChatColor.WHITE + "> " + txtColor + text);
+                    player.sendMessage("<" + sender.getChatName()
+                            + ChatColor.WHITE + "> " + txtColor + text);
+                }
+                else {
+                    player.sendMessage(channel + " <" + sender.getChatName()
+                            + ChatColor.WHITE + "> " + txtColor + text);
                 }
             }
         }
@@ -67,13 +68,14 @@ public class ChatListener implements Listener
 
             DBLogDAO logDAO = new DBLogDAO(conn);
             logDAO.insertChatMessage(sender, channel, text);
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             throw new RuntimeException(e);
-        }
-        finally {
+        } finally {
             if (conn != null) {
-                try { conn.close(); } catch (SQLException e) {}
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                }
             }
         }
 

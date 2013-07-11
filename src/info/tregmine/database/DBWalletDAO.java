@@ -1,8 +1,6 @@
 package info.tregmine.database;
 
 import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -29,8 +27,9 @@ public class DBWalletDAO
         try {
             conn = ConnectionPool.getConnection();
 
-            stmt = conn.prepareStatement("SELECT player_wallet FROM player " +
-                                         "WHERE player_id = ?");
+            stmt =
+                    conn.prepareStatement("SELECT player_wallet FROM player "
+                            + "WHERE player_id = ?");
             stmt.setInt(1, player.getId());
             stmt.execute();
 
@@ -42,13 +41,22 @@ public class DBWalletDAO
             throw new RuntimeException(e);
         } finally {
             if (rs != null) {
-                try { rs.close(); } catch (SQLException e) {}
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                }
             }
             if (stmt != null) {
-                try { stmt.close(); } catch (SQLException e) {}
+                try {
+                    stmt.close();
+                } catch (SQLException e) {
+                }
             }
             if (conn != null) {
-                try { conn.close(); } catch (SQLException e) {}
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                }
             }
         }
 
@@ -58,16 +66,17 @@ public class DBWalletDAO
     public String formattedBalance(TregminePlayer player)
     {
         NumberFormat nf = NumberFormat.getNumberInstance();
-        return ChatColor.GOLD + nf.format(balance(player)) +
-               ChatColor.WHITE + " Tregs";
+        return ChatColor.GOLD + nf.format(balance(player)) + ChatColor.WHITE
+                + " Tregs";
     }
 
     public boolean add(TregminePlayer player, long amount)
     {
         PreparedStatement stmt = null;
         try {
-            String sql = "UPDATE player SET player_wallet = player_wallet + ? " +
-                         "WHERE player_id = ?";
+            String sql =
+                    "UPDATE player SET player_wallet = player_wallet + ? "
+                            + "WHERE player_id = ?";
             stmt = conn.prepareStatement(sql);
             stmt.setLong(1, amount);
             stmt.setInt(2, player.getId());
@@ -76,7 +85,10 @@ public class DBWalletDAO
             throw new RuntimeException(e);
         } finally {
             if (stmt != null) {
-                try { stmt.close(); } catch (SQLException e) {}
+                try {
+                    stmt.close();
+                } catch (SQLException e) {
+                }
             }
         }
 
@@ -92,8 +104,9 @@ public class DBWalletDAO
 
         PreparedStatement stmt = null;
         try {
-            String sql = "UPDATE player SET player_wallet = player_wallet - ? " +
-                         "WHERE player_id = ?";
+            String sql =
+                    "UPDATE player SET player_wallet = player_wallet - ? "
+                            + "WHERE player_id = ?";
             stmt = conn.prepareStatement(sql);
             stmt.setLong(1, amount);
             stmt.setInt(2, player.getId());
@@ -102,7 +115,10 @@ public class DBWalletDAO
             throw new RuntimeException(e);
         } finally {
             if (stmt != null) {
-                try { stmt.close(); } catch (SQLException e) {}
+                try {
+                    stmt.close();
+                } catch (SQLException e) {
+                }
             }
         }
 
@@ -113,8 +129,9 @@ public class DBWalletDAO
     {
         PreparedStatement stmt = null;
         try {
-            String sql = "INSERT INTO player_transaction (sender_id, recipient_id, " +
-                         "transaction_timestamp, transaction_amount) ";
+            String sql =
+                    "INSERT INTO player_transaction (sender_id, recipient_id, "
+                            + "transaction_timestamp, transaction_amount) ";
             sql += "VALUES (?, ?, unix_timestamp(), ?)";
             stmt = conn.prepareStatement(sql);
             stmt.setInt(1, srcId);
@@ -125,7 +142,10 @@ public class DBWalletDAO
             throw new RuntimeException(e);
         } finally {
             if (stmt != null) {
-                try { stmt.close(); } catch (SQLException e) {}
+                try {
+                    stmt.close();
+                } catch (SQLException e) {
+                }
             }
         }
     }

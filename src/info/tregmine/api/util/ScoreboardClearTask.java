@@ -4,7 +4,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitScheduler;
-import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
 
 import info.tregmine.api.TregminePlayer;
@@ -39,8 +38,6 @@ public class ScoreboardClearTask implements Runnable
 
         Server server = Bukkit.getServer();
         BukkitScheduler scheduler = server.getScheduler();
-        scheduler.scheduleSyncDelayedTask(plugin,
-                                          runnable,
-                                          400);
+        scheduler.scheduleSyncDelayedTask(plugin, runnable, 400);
     }
 }

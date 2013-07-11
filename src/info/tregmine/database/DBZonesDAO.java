@@ -23,14 +23,14 @@ public class DBZonesDAO
         this.conn = conn;
     }
 
-    public int getUserId(String player)
-        throws SQLException
+    public int getUserId(String player) throws SQLException
     {
         PreparedStatement stmt = null;
         ResultSet rs = null;
         try {
-            stmt = conn.prepareStatement("SELECT player_id FROM player " +
-                                         "WHERE player_name = ?");
+            stmt =
+                    conn.prepareStatement("SELECT player_id FROM player "
+                            + "WHERE player_name = ?");
             stmt.setString(1, player);
             stmt.execute();
 
@@ -38,27 +38,32 @@ public class DBZonesDAO
             if (rs.next()) {
                 return rs.getInt(1);
             }
-        }
-        finally {
+        } finally {
             if (rs != null) {
-                try { rs.close(); } catch (SQLException e) {}
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                }
             }
             if (stmt != null) {
-                try { stmt.close(); } catch (SQLException e) {}
+                try {
+                    stmt.close();
+                } catch (SQLException e) {
+                }
             }
         }
 
         return -1;
     }
 
-    private List<Rectangle> getZoneRectangles(int zoneId)
-        throws SQLException
+    private List<Rectangle> getZoneRectangles(int zoneId) throws SQLException
     {
         PreparedStatement stmt = null;
         ResultSet rs = null;
         List<Rectangle> rects = new ArrayList<Rectangle>();
         try {
-            stmt = conn.prepareStatement("SELECT * FROM zone_rect WHERE zone_id = ?");
+            stmt =
+                    conn.prepareStatement("SELECT * FROM zone_rect WHERE zone_id = ?");
             stmt.setInt(1, zoneId);
             stmt.execute();
 
@@ -71,13 +76,18 @@ public class DBZonesDAO
 
                 rects.add(new Rectangle(x1, y1, x2, y2));
             }
-        }
-        finally {
+        } finally {
             if (rs != null) {
-                try { rs.close(); } catch (SQLException e) {}
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                }
             }
             if (stmt != null) {
-                try { stmt.close(); } catch (SQLException e) {}
+                try {
+                    stmt.close();
+                } catch (SQLException e) {
+                }
             }
         }
 
@@ -85,15 +95,17 @@ public class DBZonesDAO
     }
 
     private Map<String, Zone.Permission> getZonePermissions(int zoneId)
-        throws SQLException
+            throws SQLException
     {
         PreparedStatement stmt = null;
         ResultSet rs = null;
-        Map<String, Zone.Permission> permissions = new HashMap<String, Zone.Permission>();
+        Map<String, Zone.Permission> permissions =
+                new HashMap<String, Zone.Permission>();
         try {
-            stmt = conn.prepareStatement("SELECT * FROM zone_user " +
-                                         "INNER JOIN player ON user_id = player_id " +
-                                         "WHERE zone_id = ?");
+            stmt =
+                    conn.prepareStatement("SELECT * FROM zone_user "
+                            + "INNER JOIN player ON user_id = player_id "
+                            + "WHERE zone_id = ?");
             stmt.setInt(1, zoneId);
             stmt.execute();
 
@@ -101,31 +113,36 @@ public class DBZonesDAO
             while (rs.next()) {
                 String player = rs.getString("player_name");
                 Zone.Permission permission =
-                    Zone.Permission.fromString(rs.getString("user_perm"));
+                        Zone.Permission.fromString(rs.getString("user_perm"));
 
                 permissions.put(player, permission);
             }
-        }
-        finally {
+        } finally {
             if (rs != null) {
-                try { rs.close(); } catch (SQLException e) {}
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                }
             }
             if (stmt != null) {
-                try { stmt.close(); } catch (SQLException e) {}
+                try {
+                    stmt.close();
+                } catch (SQLException e) {
+                }
             }
         }
 
         return permissions;
     }
 
-    public List<Zone> getZones(String world)
-        throws SQLException
+    public List<Zone> getZones(String world) throws SQLException
     {
         PreparedStatement stmt = null;
         ResultSet rs = null;
         List<Zone> zones = new ArrayList<Zone>();
         try {
-            stmt = conn.prepareStatement("SELECT * FROM zone WHERE zone_world = ?");
+            stmt =
+                    conn.prepareStatement("SELECT * FROM zone WHERE zone_world = ?");
             stmt.setString(1, world);
             stmt.execute();
 
@@ -135,9 +152,12 @@ public class DBZonesDAO
                 zone.setId(rs.getInt("zone_id"));
                 zone.setWorld(rs.getString("zone_world"));
                 zone.setName(rs.getString("zone_name"));
-                zone.setEnterDefault("1".equals(rs.getString("zone_enterdefault")));
-                zone.setPlaceDefault("1".equals(rs.getString("zone_placedefault")));
-                zone.setDestroyDefault("1".equals(rs.getString("zone_destroydefault")));
+                zone.setEnterDefault("1".equals(rs
+                        .getString("zone_enterdefault")));
+                zone.setPlaceDefault("1".equals(rs
+                        .getString("zone_placedefault")));
+                zone.setDestroyDefault("1".equals(rs
+                        .getString("zone_destroydefault")));
                 zone.setPvp("1".equals(rs.getString("zone_pvp")));
                 zone.setHostiles("1".equals(rs.getString("zone_hostiles")));
                 zone.setTextEnter(rs.getString("zone_entermessage"));
@@ -146,13 +166,18 @@ public class DBZonesDAO
                 zone.setMainOwner(rs.getString("zone_owner"));
                 zones.add(zone);
             }
-        }
-        finally {
+        } finally {
             if (rs != null) {
-                try { rs.close(); } catch (SQLException e) {}
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                }
             }
             if (stmt != null) {
-                try { stmt.close(); } catch (SQLException e) {}
+                try {
+                    stmt.close();
+                } catch (SQLException e) {
+                }
             }
         }
 
@@ -164,17 +189,17 @@ public class DBZonesDAO
         return zones;
     }
 
-    public int createZone(Zone zone)
-        throws SQLException
+    public int createZone(Zone zone) throws SQLException
     {
         PreparedStatement stmt = null;
         ResultSet rs = null;
         int id = 0;
         try {
-            String sql = "INSERT INTO zone (zone_world, zone_name, " +
-                "zone_enterdefault, zone_placedefault, zone_destroydefault, " +
-                "zone_pvp, zone_hostiles, zone_entermessage, zone_exitmessage, " +
-                "zone_owner) VALUES (?,?,?,?,?,?,?,?,?,?)";
+            String sql =
+                    "INSERT INTO zone (zone_world, zone_name, "
+                            + "zone_enterdefault, zone_placedefault, zone_destroydefault, "
+                            + "zone_pvp, zone_hostiles, zone_entermessage, zone_exitmessage, "
+                            + "zone_owner) VALUES (?,?,?,?,?,?,?,?,?,?)";
 
             stmt = conn.prepareStatement(sql);
             stmt.setString(1, zone.getWorld());
@@ -195,13 +220,18 @@ public class DBZonesDAO
             if (rs.next()) {
                 id = rs.getInt(1);
             }
-        }
-        finally {
+        } finally {
             if (rs != null) {
-                try { rs.close(); } catch (SQLException e) {}
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                }
             }
             if (stmt != null) {
-                try { stmt.close(); } catch (SQLException e) {}
+                try {
+                    stmt.close();
+                } catch (SQLException e) {
+                }
             }
         }
 
@@ -210,14 +240,14 @@ public class DBZonesDAO
         return id;
     }
 
-    public void updateZone(Zone zone)
-        throws SQLException
+    public void updateZone(Zone zone) throws SQLException
     {
         PreparedStatement stmt = null;
         try {
-            String sql = "UPDATE zone SET zone_world = ?, zone_name = ?, zone_enterdefault = ?, " +
-                "zone_placedefault = ?, zone_destroydefault = ?, zone_pvp = ?, zone_hostiles = ?, " +
-                "zone_entermessage = ?, zone_exitmessage = ? WHERE zone_id = ?";
+            String sql =
+                    "UPDATE zone SET zone_world = ?, zone_name = ?, zone_enterdefault = ?, "
+                            + "zone_placedefault = ?, zone_destroydefault = ?, zone_pvp = ?, zone_hostiles = ?, "
+                            + "zone_entermessage = ?, zone_exitmessage = ? WHERE zone_id = ?";
 
             stmt = conn.prepareStatement(sql);
             stmt.setString(1, zone.getWorld());
@@ -231,16 +261,17 @@ public class DBZonesDAO
             stmt.setString(9, zone.getTextExit());
             stmt.setInt(10, zone.getId());
             stmt.execute();
-        }
-        finally {
+        } finally {
             if (stmt != null) {
-                try { stmt.close(); } catch (SQLException e) {}
+                try {
+                    stmt.close();
+                } catch (SQLException e) {
+                }
             }
         }
     }
 
-    public void deleteZone(int id)
-        throws SQLException
+    public void deleteZone(int id) throws SQLException
     {
         PreparedStatement stmt = null;
         try {
@@ -249,10 +280,12 @@ public class DBZonesDAO
             stmt = conn.prepareStatement(sql);
             stmt.setInt(1, id);
             stmt.execute();
-        }
-        finally {
+        } finally {
             if (stmt != null) {
-                try { stmt.close(); } catch (SQLException e) {}
+                try {
+                    stmt.close();
+                } catch (SQLException e) {
+                }
             }
         }
 
@@ -262,10 +295,12 @@ public class DBZonesDAO
             stmt = conn.prepareStatement(sql);
             stmt.setInt(1, id);
             stmt.execute();
-        }
-        finally {
+        } finally {
             if (stmt != null) {
-                try { stmt.close(); } catch (SQLException e) {}
+                try {
+                    stmt.close();
+                } catch (SQLException e) {
+                }
             }
         }
 
@@ -275,20 +310,22 @@ public class DBZonesDAO
             stmt = conn.prepareStatement(sql);
             stmt.setInt(1, id);
             stmt.execute();
-        }
-        finally {
+        } finally {
             if (stmt != null) {
-                try { stmt.close(); } catch (SQLException e) {}
+                try {
+                    stmt.close();
+                } catch (SQLException e) {
+                }
             }
         }
     }
 
-    public void addRectangle(int zoneId, Rectangle rect)
-        throws SQLException
+    public void addRectangle(int zoneId, Rectangle rect) throws SQLException
     {
         PreparedStatement stmt = null;
         try {
-            String sql = "INSERT INTO zone_rect (zone_id, rect_x1, rect_y1, rect_x2, rect_y2) ";
+            String sql =
+                    "INSERT INTO zone_rect (zone_id, rect_x1, rect_y1, rect_x2, rect_y2) ";
             sql += "VALUES (?, ?, ?, ?, ?)";
 
             stmt = conn.prepareStatement(sql);
@@ -298,16 +335,18 @@ public class DBZonesDAO
             stmt.setInt(4, rect.getRight());
             stmt.setInt(5, rect.getBottom());
             stmt.execute();
-        }
-        finally {
+        } finally {
             if (stmt != null) {
-                try { stmt.close(); } catch (SQLException e) {}
+                try {
+                    stmt.close();
+                } catch (SQLException e) {
+                }
             }
         }
     }
 
     public void addUser(int zoneId, int userId, Zone.Permission perm)
-        throws SQLException
+            throws SQLException
     {
         PreparedStatement stmt = null;
         try {
@@ -319,43 +358,47 @@ public class DBZonesDAO
             stmt.setInt(2, userId);
             stmt.setString(3, perm.toString());
             stmt.execute();
-        }
-        finally {
+        } finally {
             if (stmt != null) {
-                try { stmt.close(); } catch (SQLException e) {}
+                try {
+                    stmt.close();
+                } catch (SQLException e) {
+                }
             }
         }
     }
 
-    public void deleteUser(int zoneId, int userId)
-        throws SQLException
+    public void deleteUser(int zoneId, int userId) throws SQLException
     {
         PreparedStatement stmt = null;
         try {
-            String sql = "DELETE FROM zone_user WHERE zone_id = ? AND user_id = ? ";
+            String sql =
+                    "DELETE FROM zone_user WHERE zone_id = ? AND user_id = ? ";
 
             stmt = conn.prepareStatement(sql);
             stmt.setInt(1, zoneId);
             stmt.setInt(2, userId);
             stmt.execute();
-        }
-        finally {
+        } finally {
             if (stmt != null) {
-                try { stmt.close(); } catch (SQLException e) {}
+                try {
+                    stmt.close();
+                } catch (SQLException e) {
+                }
             }
         }
     }
 
-    public List<Lot> getLots(String world)
-        throws SQLException
+    public List<Lot> getLots(String world) throws SQLException
     {
         PreparedStatement stmt = null;
         ResultSet rs = null;
         List<Lot> lots = new ArrayList<Lot>();
         try {
-            stmt = conn.prepareStatement("SELECT zone_lot.* FROM zone_lot " +
-                    "INNER JOIN zone USING (zone_id) " +
-                    "WHERE zone_world = ?");
+            stmt =
+                    conn.prepareStatement("SELECT zone_lot.* FROM zone_lot "
+                            + "INNER JOIN zone USING (zone_id) "
+                            + "WHERE zone_world = ?");
 
             stmt.setString(1, world);
             stmt.execute();
@@ -376,13 +419,18 @@ public class DBZonesDAO
 
                 lots.add(lot);
             }
-        }
-        finally {
+        } finally {
             if (rs != null) {
-                try { rs.close(); } catch (SQLException e) {}
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                }
             }
             if (stmt != null) {
-                try { stmt.close(); } catch (SQLException e) {}
+                try {
+                    stmt.close();
+                } catch (SQLException e) {
+                }
             }
         }
 
@@ -393,16 +441,16 @@ public class DBZonesDAO
         return lots;
     }
 
-    public List<String> getLotOwners(int lotId)
-        throws SQLException
+    public List<String> getLotOwners(int lotId) throws SQLException
     {
         PreparedStatement stmt = null;
         ResultSet rs = null;
         List<String> owners = new ArrayList<String>();
         try {
-            stmt = conn.prepareStatement("SELECT * FROM zone_lotuser " +
-                    "INNER JOIN player ON player_id = user_id " +
-                    "WHERE lot_id = ?");
+            stmt =
+                    conn.prepareStatement("SELECT * FROM zone_lotuser "
+                            + "INNER JOIN player ON player_id = user_id "
+                            + "WHERE lot_id = ?");
 
             stmt.setInt(1, lotId);
             stmt.execute();
@@ -411,26 +459,31 @@ public class DBZonesDAO
             while (rs.next()) {
                 owners.add(rs.getString("player"));
             }
-        }
-        finally {
+        } finally {
             if (rs != null) {
-                try { rs.close(); } catch (SQLException e) {}
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                }
             }
             if (stmt != null) {
-                try { stmt.close(); } catch (SQLException e) {}
+                try {
+                    stmt.close();
+                } catch (SQLException e) {
+                }
             }
         }
 
         return owners;
     }
 
-    public void addLot(Lot lot)
-        throws SQLException
+    public void addLot(Lot lot) throws SQLException
     {
         PreparedStatement stmt = null;
         ResultSet rs = null;
         try {
-            String sql = "INSERT INTO zone_lot (zone_id, lot_name, lot_x1, lot_y1, lot_x2, lot_y2) ";
+            String sql =
+                    "INSERT INTO zone_lot (zone_id, lot_name, lot_x1, lot_y1, lot_x2, lot_y2) ";
             sql += "VALUES (?,?,?,?,?,?)";
 
             stmt = conn.prepareStatement(sql);
@@ -451,19 +504,23 @@ public class DBZonesDAO
             if (rs.next()) {
                 lot.setId(rs.getInt(1));
             }
-        }
-        finally {
+        } finally {
             if (rs != null) {
-                try { rs.close(); } catch (SQLException e) {}
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                }
             }
             if (stmt != null) {
-                try { stmt.close(); } catch (SQLException e) {}
+                try {
+                    stmt.close();
+                } catch (SQLException e) {
+                }
             }
         }
     }
 
-    public void deleteLot(int lotId)
-        throws SQLException
+    public void deleteLot(int lotId) throws SQLException
     {
         PreparedStatement stmt = null;
         try {
@@ -472,16 +529,17 @@ public class DBZonesDAO
             stmt = conn.prepareStatement(sql);
             stmt.setInt(1, lotId);
             stmt.execute();
-        }
-        finally {
+        } finally {
             if (stmt != null) {
-                try { stmt.close(); } catch (SQLException e) {}
+                try {
+                    stmt.close();
+                } catch (SQLException e) {
+                }
             }
         }
     }
 
-    public void addLotUser(int lotId, int userId)
-        throws SQLException
+    public void addLotUser(int lotId, int userId) throws SQLException
     {
         PreparedStatement stmt = null;
         try {
@@ -492,16 +550,17 @@ public class DBZonesDAO
             stmt.setInt(1, lotId);
             stmt.setInt(2, userId);
             stmt.execute();
-        }
-        finally {
+        } finally {
             if (stmt != null) {
-                try { stmt.close(); } catch (SQLException e) {}
+                try {
+                    stmt.close();
+                } catch (SQLException e) {
+                }
             }
         }
     }
 
-    public void deleteLotUsers(int lotId)
-        throws SQLException
+    public void deleteLotUsers(int lotId) throws SQLException
     {
         PreparedStatement stmt = null;
         try {
@@ -510,29 +569,33 @@ public class DBZonesDAO
             stmt = conn.prepareStatement(sql);
             stmt.setInt(1, lotId);
             stmt.execute();
-        }
-        finally {
+        } finally {
             if (stmt != null) {
-                try { stmt.close(); } catch (SQLException e) {}
+                try {
+                    stmt.close();
+                } catch (SQLException e) {
+                }
             }
         }
     }
 
-    public void deleteLotUser(int lotId, int userId)
-        throws SQLException
+    public void deleteLotUser(int lotId, int userId) throws SQLException
     {
         PreparedStatement stmt = null;
         try {
-            String sql = "DELETE FROM zone_lotuser WHERE lot_id = ? AND user_id = ?";
+            String sql =
+                    "DELETE FROM zone_lotuser WHERE lot_id = ? AND user_id = ?";
 
             stmt = conn.prepareStatement(sql);
             stmt.setInt(1, lotId);
             stmt.setInt(2, userId);
             stmt.execute();
-        }
-        finally {
+        } finally {
             if (stmt != null) {
-                try { stmt.close(); } catch (SQLException e) {}
+                try {
+                    stmt.close();
+                } catch (SQLException e) {
+                }
             }
         }
     }

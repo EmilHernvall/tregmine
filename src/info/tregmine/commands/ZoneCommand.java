@@ -1,12 +1,9 @@
 package info.tregmine.commands;
 
-import java.util.List;
 import java.sql.Connection;
 import java.sql.SQLException;
 
 import static org.bukkit.ChatColor.*;
-import org.bukkit.Server;
-import org.bukkit.entity.Player;
 import org.bukkit.block.Block;
 
 import info.tregmine.quadtree.Rectangle;
@@ -19,7 +16,6 @@ import info.tregmine.api.TregminePlayer;
 import info.tregmine.zones.Zone;
 import static info.tregmine.zones.Zone.Permission;
 import info.tregmine.zones.ZoneWorld;
-import info.tregmine.zones.Lot;
 
 public class ZoneCommand extends AbstractCommand
 {
@@ -31,22 +27,15 @@ public class ZoneCommand extends AbstractCommand
     @Override
     public boolean handlePlayer(TregminePlayer player, String[] args)
     {
-        /*if ("town".equals(commandName)) {
-            Zone zone = player.getCurrentZone();
-            if (zone == null) {
-                player.sendMessage(RED + "You are not currently in a zone.");
-                return true;
-            }
-
-            commandName = "zone";
-            String[] args2 = new String[args.length + 1];
-            args2[0] = args[0];
-            args2[1] = zone.getName();
-            for (int i = 1; i < args.length; i++) {
-                args2[i+1] = args[i];
-            }
-            args = args2;
-        }*/
+        /*
+         * if ("town".equals(commandName)) { Zone zone =
+         * player.getCurrentZone(); if (zone == null) { player.sendMessage(RED +
+         * "You are not currently in a zone."); return true; }
+         * 
+         * commandName = "zone"; String[] args2 = new String[args.length + 1];
+         * args2[0] = args[0]; args2[1] = zone.getName(); for (int i = 1; i <
+         * args.length; i++) { args2[i+1] = args[i]; } args = args2; }
+         */
 
         if (args.length == 0) {
             return true;
@@ -118,14 +107,16 @@ public class ZoneCommand extends AbstractCommand
 
         String name = args[1];
         if (world.zoneExists(name)) {
-            player.sendMessage(RED + "A zone named " + name + " does already exist.");
+            player.sendMessage(RED + "A zone named " + name
+                    + " does already exist.");
             return;
         }
 
         Block b1 = player.getZoneBlock1();
         Block b2 = player.getZoneBlock2();
 
-        Rectangle rect = new Rectangle(b1.getX(), b1.getZ(), b2.getX(), b2.getZ());
+        Rectangle rect =
+                new Rectangle(b1.getX(), b1.getZ(), b2.getX(), b2.getZ());
 
         Zone zone = new Zone();
         zone.setWorld(world.getName());
@@ -142,9 +133,11 @@ public class ZoneCommand extends AbstractCommand
 
         try {
             world.addZone(zone);
-            player.sendMessage(RED + "[" + zone.getName() + "] " + "Zone created successfully.");
+            player.sendMessage(RED + "[" + zone.getName() + "] "
+                    + "Zone created successfully.");
         } catch (IntersectionException e) {
-            player.sendMessage(RED + "The zone you tried to create overlaps an existing zone.");
+            player.sendMessage(RED
+                    + "The zone you tried to create overlaps an existing zone.");
             return;
         }
 
@@ -154,7 +147,8 @@ public class ZoneCommand extends AbstractCommand
             DBZonesDAO dao = new DBZonesDAO(conn);
             int userId = dao.getUserId(player.getName());
             if (userId == -1) {
-                player.sendMessage("Player " + player.getName() + " was not found.");
+                player.sendMessage("Player " + player.getName()
+                        + " was not found.");
                 return;
             }
 
@@ -166,7 +160,10 @@ public class ZoneCommand extends AbstractCommand
             throw new RuntimeException(e);
         } finally {
             if (conn != null) {
-                try { conn.close(); } catch (SQLException e) {}
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                }
             }
         }
     }
@@ -187,7 +184,8 @@ public class ZoneCommand extends AbstractCommand
 
         Zone zone = world.getZone(name);
         if (zone == null) {
-            player.sendMessage(RED + "A zone named " + name + " does not exist.");
+            player.sendMessage(RED + "A zone named " + name
+                    + " does not exist.");
             return;
         }
 
@@ -203,7 +201,10 @@ public class ZoneCommand extends AbstractCommand
             throw new RuntimeException(e);
         } finally {
             if (conn != null) {
-                try { conn.close(); } catch (SQLException e) {}
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                }
             }
         }
     }
@@ -216,7 +217,8 @@ public class ZoneCommand extends AbstractCommand
         }
 
         if (args.length < 4) {
-            player.sendMessage(RED + "syntax: /zone adduser [zone] [player] [perm]");
+            player.sendMessage(RED
+                    + "syntax: /zone adduser [zone] [player] [perm]");
             return;
         }
 
@@ -231,22 +233,27 @@ public class ZoneCommand extends AbstractCommand
         }
 
         if (zone.getMainOwner() != null) {
-            if (!zone.getMainOwner().equalsIgnoreCase(player.getName()) && !player.isAdmin()) {
+            if (!zone.getMainOwner().equalsIgnoreCase(player.getName())
+                    && !player.isAdmin()) {
 
                 if (Permission.Owner.equals(perm)) {
-                    player.sendMessage(RED + "Only the main owner may add new owners");
+                    player.sendMessage(RED
+                            + "Only the main owner may add new owners");
                     return;
                 }
             }
         }
 
-        if (zone.getUser(player.getName()) != Permission.Owner && !player.isAdmin()) {
-            player.sendMessage(RED + "[" + zone.getName() + "] " + "You do not have permission to add users to this zone.");
+        if (zone.getUser(player.getName()) != Permission.Owner
+                && !player.isAdmin()) {
+            player.sendMessage(RED + "[" + zone.getName() + "] "
+                    + "You do not have permission to add users to this zone.");
             return;
         }
 
         if (perm == null) {
-            player.sendMessage(RED + "[" + zone.getName() + "] " + "Unknown permission " + args[3] + ".");
+            player.sendMessage(RED + "[" + zone.getName() + "] "
+                    + "Unknown permission " + args[3] + ".");
             return;
         }
 
@@ -257,7 +264,8 @@ public class ZoneCommand extends AbstractCommand
             DBZonesDAO dao = new DBZonesDAO(conn);
             int userId = dao.getUserId(userName);
             if (userId == -1) {
-                player.sendMessage(RED + "[" + zone.getName() + "] " + "Player " + userName + " was not found.");
+                player.sendMessage(RED + "[" + zone.getName() + "] "
+                        + "Player " + userName + " was not found.");
                 return;
             }
 
@@ -267,18 +275,23 @@ public class ZoneCommand extends AbstractCommand
             throw new RuntimeException(e);
         } finally {
             if (conn != null) {
-                try { conn.close(); } catch (SQLException e) {}
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                }
             }
         }
 
         zone.addUser(userName, perm);
         String addedConfirmation = perm.getAddedConfirmation();
-        player.sendMessage(RED + "[" + zone.getName() + "] " + String.format(addedConfirmation, userName, zoneName));
+        player.sendMessage(RED + "[" + zone.getName() + "] "
+                + String.format(addedConfirmation, userName, zoneName));
 
         TregminePlayer player2 = tregmine.getPlayer(userName);
         if (player2 != null) {
             String addedNotification = perm.getAddedNotification();
-            player2.sendMessage(RED + "[" + zone.getName() + "] " + String.format(addedNotification, zoneName));
+            player2.sendMessage(RED + "[" + zone.getName() + "] "
+                    + String.format(addedNotification, zoneName));
         }
     }
 
@@ -304,14 +317,15 @@ public class ZoneCommand extends AbstractCommand
         }
 
         if (zone.getUser(player.getName()) != Permission.Owner) {
-            player.sendMessage(RED + "[" + zone.getName() + "] " + "You do not have permission to add users to this zone.");
+            player.sendMessage(RED + "[" + zone.getName() + "] "
+                    + "You do not have permission to add users to this zone.");
             return;
         }
 
         Zone.Permission oldPerm = zone.getUser(userName);
         if (oldPerm == null) {
-            player.sendMessage(RED + "[" + zone.getName() + "]" +
-                    userName + " doesn't have any permissions.");
+            player.sendMessage(RED + "[" + zone.getName() + "]" + userName
+                    + " doesn't have any permissions.");
             return;
         }
 
@@ -322,7 +336,8 @@ public class ZoneCommand extends AbstractCommand
             DBZonesDAO dao = new DBZonesDAO(conn);
             int userId = dao.getUserId(userName);
             if (userId == -1) {
-                player.sendMessage(RED + "[" + zone.getName() + "] " + "Player " + userName + " was not found.");
+                player.sendMessage(RED + "[" + zone.getName() + "] "
+                        + "Player " + userName + " was not found.");
                 return;
             }
 
@@ -331,18 +346,23 @@ public class ZoneCommand extends AbstractCommand
             throw new RuntimeException(e);
         } finally {
             if (conn != null) {
-                try { conn.close(); } catch (SQLException e) {}
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                }
             }
         }
 
         zone.deleteUser(userName);
         String delConfirmation = oldPerm.getDeletedConfirmation();
-        player.sendMessage(RED + "[" + zone.getName() + "] " + String.format(delConfirmation, userName, zoneName));
+        player.sendMessage(RED + "[" + zone.getName() + "] "
+                + String.format(delConfirmation, userName, zoneName));
 
         TregminePlayer player2 = tregmine.getPlayer(userName);
         if (player2 != null) {
             String delNotification = oldPerm.getDeletedNotification();
-            player2.sendMessage(RED + "[" + zone.getName() + "] " + String.format(delNotification, zoneName));
+            player2.sendMessage(RED + "[" + zone.getName() + "] "
+                    + String.format(delNotification, zoneName));
         }
     }
 
@@ -368,7 +388,11 @@ public class ZoneCommand extends AbstractCommand
         }
 
         if (zone.getUser(player.getName()) != Permission.Owner) {
-            player.sendMessage(RED + "[" + zone.getName() + "] " + "You do not have permission to change settings for this zone.");
+            player.sendMessage(RED
+                    + "["
+                    + zone.getName()
+                    + "] "
+                    + "You do not have permission to change settings for this zone.");
             return;
         }
 
@@ -382,36 +406,49 @@ public class ZoneCommand extends AbstractCommand
             String message = buf.toString().trim();
             if ("entermsg".equals(args[0])) {
                 zone.setTextEnter(message);
-                player.sendMessage(RED + "[" + zone.getName() + "] " + "Welcome message changed to \"" + message + "\".");
-            } else if ("exitmsg".equals(args[0])) {
+                player.sendMessage(RED + "[" + zone.getName() + "] "
+                        + "Welcome message changed to \"" + message + "\".");
+            }
+            else if ("exitmsg".equals(args[0])) {
                 zone.setTextExit(message);
-                player.sendMessage(RED + "[" + zone.getName() + "] " + "Exit message changed to \"" + message + "\".");
+                player.sendMessage(RED + "[" + zone.getName() + "] "
+                        + "Exit message changed to \"" + message + "\".");
             }
         }
         else if ("pvp".equals(args[0])) {
             boolean status = Boolean.parseBoolean(args[2]);
             zone.setPvp(status);
-            player.sendMessage(RED + "[" + zone.getName() + "] " + "PVP changed to \"" + (status ? "allowed" : "disallowed") + "\".");
+            player.sendMessage(RED + "[" + zone.getName() + "] "
+                    + "PVP changed to \"" + (status ? "allowed" : "disallowed")
+                    + "\".");
         }
         else if ("enter".equals(args[0])) {
             boolean status = Boolean.parseBoolean(args[2]);
             zone.setEnterDefault(status);
-            player.sendMessage(RED + "[" + zone.getName() + "] " + "Enter default changed to \"" + (status ? "everyone" : "whitelisted") + "\".");
+            player.sendMessage(RED + "[" + zone.getName() + "] "
+                    + "Enter default changed to \""
+                    + (status ? "everyone" : "whitelisted") + "\".");
         }
         else if ("place".equals(args[0])) {
             boolean status = Boolean.parseBoolean(args[2]);
             zone.setPlaceDefault(status);
-            player.sendMessage(RED + "[" + zone.getName() + "] " + "Place default changed to \"" + (status ? "everyone" : "whitelisted") + "\".");
+            player.sendMessage(RED + "[" + zone.getName() + "] "
+                    + "Place default changed to \""
+                    + (status ? "everyone" : "whitelisted") + "\".");
         }
         else if ("destroy".equals(args[0])) {
             boolean status = Boolean.parseBoolean(args[2]);
             zone.setDestroyDefault(status);
-            player.sendMessage(RED + "[" + zone.getName() + "] " + "Destroy default changed to \"" + (status ? "everyone" : "whitelisted") + "\".");
+            player.sendMessage(RED + "[" + zone.getName() + "] "
+                    + "Destroy default changed to \""
+                    + (status ? "everyone" : "whitelisted") + "\".");
         }
         else if ("hostiles".equals(args[0])) {
             boolean status = Boolean.parseBoolean(args[2]);
             zone.setHostiles(status);
-            player.sendMessage(RED + "[" + zone.getName() + "] " + "Hostiles changed to \"" + (status ? "allowed" : "disallowed") + "\".");
+            player.sendMessage(RED + "[" + zone.getName() + "] "
+                    + "Hostiles changed to \""
+                    + (status ? "allowed" : "disallowed") + "\".");
         }
 
         Connection conn = null;
@@ -423,7 +460,10 @@ public class ZoneCommand extends AbstractCommand
             throw new RuntimeException(e);
         } finally {
             if (conn != null) {
-                try { conn.close(); } catch (SQLException e) {}
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                }
             }
         }
     }
@@ -444,7 +484,8 @@ public class ZoneCommand extends AbstractCommand
         int show;
         if (args.length > 2 && args[2].equals("perm")) {
             show = 2;
-        } else {
+        }
+        else {
             show = 1;
         }
 
@@ -462,14 +503,24 @@ public class ZoneCommand extends AbstractCommand
             for (Rectangle rect : zone.getRects()) {
                 player.sendMessage(YELLOW + "Rect: " + rect);
             }
-            player.sendMessage(YELLOW + "Enter: " + (zone.getEnterDefault() ? "Everyone (true)" : "Only allowed (false)"));
-            player.sendMessage(YELLOW + "Place: " + (zone.getPlaceDefault() ? "Everyone (true)" : "Only makers (false)"));
-            player.sendMessage(YELLOW + "Destroy: " + (zone.getDestroyDefault() ? "Everyone (true)" : "Only makers (false)"));
+            player.sendMessage(YELLOW
+                    + "Enter: "
+                    + (zone.getEnterDefault() ? "Everyone (true)"
+                            : "Only allowed (false)"));
+            player.sendMessage(YELLOW
+                    + "Place: "
+                    + (zone.getPlaceDefault() ? "Everyone (true)"
+                            : "Only makers (false)"));
+            player.sendMessage(YELLOW
+                    + "Destroy: "
+                    + (zone.getDestroyDefault() ? "Everyone (true)"
+                            : "Only makers (false)"));
             player.sendMessage(YELLOW + "PVP: " + zone.isPvp());
             player.sendMessage(YELLOW + "Hostiles: " + zone.hasHostiles());
             player.sendMessage(YELLOW + "Enter message: " + zone.getTextEnter());
             player.sendMessage(YELLOW + "Exit message: " + zone.getTextExit());
-        } else if (show == 2) {
+        }
+        else if (show == 2) {
             for (String user : zone.getUsers()) {
                 Zone.Permission perm = zone.getUser(user);
                 player.sendMessage(YELLOW + user + " - " + perm);

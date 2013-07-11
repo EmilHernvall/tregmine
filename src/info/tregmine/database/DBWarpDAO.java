@@ -33,7 +33,8 @@ public class DBWarpDAO
     {
         PreparedStatement stmt = null;
         try {
-            stmt = conn.prepareStatement("insert into warps (name, x, y, z, yaw, pitch, world) values (?, ?, ?, ?, ?, ?, ?)");
+            stmt =
+                    conn.prepareStatement("insert into warps (name, x, y, z, yaw, pitch, world) values (?, ?, ?, ?, ?, ?, ?)");
 
             stmt.setString(1, name);
             stmt.setDouble(2, loc.getX());
@@ -47,7 +48,10 @@ public class DBWarpDAO
             throw new RuntimeException(e);
         } finally {
             if (stmt != null) {
-                try { stmt.close(); } catch (SQLException e) {}
+                try {
+                    stmt.close();
+                } catch (SQLException e) {
+                }
             }
         }
     }
@@ -78,15 +82,21 @@ public class DBWarpDAO
                 return null;
             }
 
-            return new Location(world, x,y,z, yaw, pitch);
+            return new Location(world, x, y, z, yaw, pitch);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
             if (rs != null) {
-                try { rs.close(); } catch (SQLException e) {}
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                }
             }
             if (stmt != null) {
-                try { stmt.close(); } catch (SQLException e) {}
+                try {
+                    stmt.close();
+                } catch (SQLException e) {
+                }
             }
         }
     }

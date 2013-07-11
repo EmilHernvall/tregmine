@@ -32,17 +32,17 @@ public class SayCommand extends AbstractCommand
         Server server = player.getServer();
         String msg = argsToMessage(args);
 
-        server.broadcastMessage("<" + RED + "GOD" + WHITE + "> " +
-                                LIGHT_PURPLE +  msg);
+        server.broadcastMessage("<" + RED + "GOD" + WHITE + "> " + LIGHT_PURPLE
+                + msg);
 
         LOGGER.info(player.getName() + ": <GOD> " + msg);
 
-        Player[] players =  server.getOnlinePlayers();
+        Player[] players = server.getOnlinePlayers();
         for (Player p : players) {
             TregminePlayer current = tregmine.getPlayer((p.getName()));
             if (current.isAdmin()) {
-                current.sendMessage(DARK_AQUA + "/say used by: " +
-                                    player.getChatName());
+                current.sendMessage(DARK_AQUA + "/say used by: "
+                        + player.getChatName());
             }
         }
 
@@ -54,8 +54,8 @@ public class SayCommand extends AbstractCommand
     {
         String msg = argsToMessage(args);
 
-        server.broadcastMessage("<" + BLUE + "GOD" + WHITE + "> " +
-                                LIGHT_PURPLE + msg);
+        server.broadcastMessage("<" + BLUE + "GOD" + WHITE + "> "
+                + LIGHT_PURPLE + msg);
         LOGGER.info("CONSOLE: <GOD> " + msg);
 
         return true;

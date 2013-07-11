@@ -1,19 +1,12 @@
 package info.tregmine.commands;
 
 import java.util.List;
-import java.util.ArrayList;
-
 import static org.bukkit.ChatColor.*;
-import org.bukkit.Server;
 import org.bukkit.Material;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
-import org.bukkit.inventory.meta.ItemMeta;
-
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
-import info.tregmine.api.lore.Created;
 
 public class GiveCommand extends AbstractCommand
 {
@@ -46,13 +39,13 @@ public class GiveCommand extends AbstractCommand
         int materialId;
         try {
             materialId = Integer.parseInt(param);
-        }
-        catch (NumberFormatException e) {
+        } catch (NumberFormatException e) {
             try {
                 Material material = Material.getMaterial(param);
                 materialId = material.getId();
             } catch (NullPointerException ne) {
-                player.sendMessage(DARK_AQUA + "/item <id|name> <amount> <data>.");
+                player.sendMessage(DARK_AQUA
+                        + "/item <id|name> <amount> <data>.");
                 return true;
             }
         }
@@ -86,15 +79,13 @@ public class GiveCommand extends AbstractCommand
         Material material = Material.getMaterial(materialId);
         String materialName = material.toString();
 
-        player.sendMessage("You gave " + amount + " of " + DARK_AQUA +
-                           materialName.toLowerCase() + " to " + target.getName() +
-                           ".");
-        target.sendMessage(YELLOW + "You were gifted by the gods. Look in your " +
-                           "inventory!");
-        LOGGER.info(player.getName() +" SPAWNED " + amount + ":" +
-                    materialName + "=>" + target.getName());
+        player.sendMessage("You gave " + amount + " of " + DARK_AQUA
+                + materialName.toLowerCase() + " to " + target.getName() + ".");
+        target.sendMessage(YELLOW
+                + "You were gifted by the gods. Look in your " + "inventory!");
+        LOGGER.info(player.getName() + " SPAWNED " + amount + ":"
+                + materialName + "=>" + target.getName());
 
         return true;
     }
 }
-

@@ -1,8 +1,6 @@
 package info.tregmine.commands;
 
 import static org.bukkit.ChatColor.*;
-import org.bukkit.Server;
-import org.bukkit.entity.Player;
 import org.bukkit.GameMode;
 
 import info.tregmine.Tregmine;
@@ -27,8 +25,8 @@ public class GameModeCommand extends AbstractCommand
         }
 
         player.setGameMode(mode);
-        player.sendMessage(YELLOW + "You are now in " +
-                mode.toString().toLowerCase() + " mode.");
+        player.sendMessage(YELLOW + "You are now in "
+                + mode.toString().toLowerCase() + " mode.");
 
         return true;
     }

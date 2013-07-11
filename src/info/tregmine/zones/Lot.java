@@ -19,55 +19,68 @@ public class Lot
         this.owners = new HashSet<String>();
     }
 
-    public int getId() {
+    public int getId()
+    {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(int id)
+    {
         this.id = id;
     }
 
-    public int getZoneId() {
+    public int getZoneId()
+    {
         return zoneId;
     }
 
-    public void setZoneId(int zoneId) {
+    public void setZoneId(int zoneId)
+    {
         this.zoneId = zoneId;
     }
 
-    public Set<String> getOwners() {
+    public Set<String> getOwners()
+    {
         return owners;
     }
 
-    public void setOwner(List<String> owners) {
+    public void setOwner(List<String> owners)
+    {
         this.owners.addAll(owners);
     }
 
-    public boolean isOwner(String player) {
+    public boolean isOwner(String player)
+    {
         return owners.contains(player);
     }
 
-    public void addOwner(String player) {
+    public void addOwner(String player)
+    {
         owners.add(player);
     }
 
-    public void deleteOwner(String player) {
+    public void deleteOwner(String player)
+    {
         owners.remove(player);
     }
 
-    public String getName() {
+    public String getName()
+    {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(String name)
+    {
         this.name = name;
     }
 
-    public Rectangle getRect() {
+    public Rectangle getRect()
+    {
         return rect;
     }
 
-    public void setRect(Rectangle rect) {
+    public void setRect(Rectangle rect)
+    {
         this.rect = rect;
     }
 }

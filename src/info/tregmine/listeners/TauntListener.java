@@ -10,9 +10,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.ItemStack;
 //import org.bukkit.inventory.meta.ItemMeta;
@@ -23,15 +21,15 @@ import info.tregmine.api.Insult;
 
 public class TauntListener implements Listener
 {
-    private Tregmine plugin;
+    //private Tregmine plugin;
 
     public TauntListener(Tregmine instance)
     {
-        this.plugin = instance;
+        //this.plugin = instance;
     }
 
     @EventHandler
-    public void onEntityDeath (EntityDeathEvent event)
+    public void onEntityDeath(EntityDeathEvent event)
     {
         if (!(event instanceof PlayerDeathEvent)) {
             return;
@@ -40,8 +38,9 @@ public class TauntListener implements Listener
         Player player = (Player) event.getEntity();
         PlayerDeathEvent e = (PlayerDeathEvent) event;
 
-        String death = ChatColor.DARK_GRAY + "DIED - " +
-            player.getName() + " " + Insult.random();
+        String death =
+                ChatColor.DARK_GRAY + "DIED - " + player.getName() + " "
+                        + Insult.random();
 
         ItemStack item = new ItemStack(Material.SKULL_ITEM, 1, (byte) 3);
         SkullMeta meta = (SkullMeta) item.getItemMeta();

@@ -24,7 +24,10 @@ public abstract class AbstractCommand implements CommandExecutor
         this.command = command;
     }
 
-    public String getName() { return command; }
+    public String getName()
+    {
+        return command;
+    }
 
     public boolean handlePlayer(TregminePlayer player, String[] args)
     {
@@ -37,13 +40,11 @@ public abstract class AbstractCommand implements CommandExecutor
     }
 
     @Override
-    public boolean onCommand(CommandSender sender,
-                             Command command,
-                             String label,
-                             String[] args)
+    public boolean onCommand(CommandSender sender, Command command,
+            String label, String[] args)
     {
         if (sender instanceof Player) {
-            TregminePlayer player = tregmine.getPlayer((Player)sender);
+            TregminePlayer player = tregmine.getPlayer((Player) sender);
             return handlePlayer(player, args);
         }
 

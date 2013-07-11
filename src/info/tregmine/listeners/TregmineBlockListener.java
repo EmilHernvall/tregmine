@@ -20,7 +20,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockBurnEvent;
-import org.bukkit.event.block.BlockCanBuildEvent;
 //import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
@@ -85,7 +84,11 @@ public class TregmineBlockListener implements Listener
     public void onLeavesDecay(LeavesDecayEvent event)
     {
         Location l = event.getBlock().getLocation();
-        Block  fence = event.getBlock().getWorld().getBlockAt(l.getBlockX(),l.getBlockY()-1, l.getBlockZ());
+        Block fence =
+                event.getBlock()
+                        .getWorld()
+                        .getBlockAt(l.getBlockX(), l.getBlockY() - 1,
+                                l.getBlockZ());
 
         if (fence.getType() == Material.FENCE) {
             event.setCancelled(true);
@@ -98,7 +101,11 @@ public class TregmineBlockListener implements Listener
         event.setCancelled(true);
 
         Location loc = event.getBlock().getLocation();
-        Block block = event.getBlock().getWorld().getBlockAt(loc.getBlockX(), loc.getBlockY()-1, loc.getBlockZ());
+        Block block =
+                event.getBlock()
+                        .getWorld()
+                        .getBlockAt(loc.getBlockX(), loc.getBlockY() - 1,
+                                loc.getBlockZ());
 
         if (block.getType() == Material.OBSIDIAN) {
             event.setCancelled(false);

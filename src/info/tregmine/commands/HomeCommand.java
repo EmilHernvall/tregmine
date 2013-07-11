@@ -8,8 +8,6 @@ import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.Location;
 import org.bukkit.Chunk;
-import org.bukkit.entity.Player;
-
 import info.tregmine.Tregmine;
 import info.tregmine.database.ConnectionPool;
 import info.tregmine.database.DBHomeDAO;
@@ -28,22 +26,24 @@ public class HomeCommand extends AbstractCommand
         Connection conn = null;
         Location loc = null;
         try {
-            conn = ConnectionPool.getConnection();;
+            conn = ConnectionPool.getConnection();
+            ;
             DBHomeDAO homeDAO = new DBHomeDAO(conn);
             loc = homeDAO.getHome(player);
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             throw new RuntimeException(e);
-        }
-        finally {
+        } finally {
             if (conn != null) {
-                try { conn.close(); } catch (SQLException e) {}
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                }
             }
         }
 
         if (loc == null) {
-            player.sendMessage(RED + "Telogric lift malfunctioned. " +
-                               "Teleportation failed.");
+            player.sendMessage(RED + "Telogric lift malfunctioned. "
+                    + "Teleportation failed.");
             return true;
         }
 
@@ -53,16 +53,18 @@ public class HomeCommand extends AbstractCommand
 
         if (world.isChunkLoaded(chunk)) {
             if (!world.getName().equalsIgnoreCase(player.getWorld().getName())) {
-                player.sendMessage(RED + "You can't use a home thats in another world!");
+                player.sendMessage(RED
+                        + "You can't use a home thats in another world!");
                 return true;
             }
 
             player.teleport(loc);
-            player.sendMessage(AQUA + "Hoci poci, little gnome. Magic worked, " +
-                               "you're in your home!");
-        } else {
-            player.sendMessage(RED + "Loading your home chunk failed, try /home " +
-                               "again.");
+            player.sendMessage(AQUA + "Hoci poci, little gnome. Magic worked, "
+                    + "you're in your home!");
+        }
+        else {
+            player.sendMessage(RED
+                    + "Loading your home chunk failed, try /home " + "again.");
         }
 
         return true;
@@ -83,11 +85,11 @@ public class HomeCommand extends AbstractCommand
 
         Server server = tregmine.getServer();
         World mainWorld = server.getWorld("world");
-        if (Distance.calc2d(mainWorld.getSpawnLocation(),
-                            player.getLocation()) < 700) {
+        if (Distance.calc2d(mainWorld.getSpawnLocation(), player.getLocation()) < 700) {
 
-            player.sendMessage(RED + "Telogric lift malfunctioned. Teleportation " +
-                               "failed, to close to spawn.");
+            player.sendMessage(RED
+                    + "Telogric lift malfunctioned. Teleportation "
+                    + "failed, to close to spawn.");
             return true;
         }
 
@@ -96,13 +98,14 @@ public class HomeCommand extends AbstractCommand
             conn = ConnectionPool.getConnection();
             DBHomeDAO homeDAO = new DBHomeDAO(conn);
             homeDAO.insertHome(player, playerLoc);
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             throw new RuntimeException(e);
-        }
-        finally {
+        } finally {
             if (conn != null) {
-                try { conn.close(); } catch (SQLException e) {}
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                }
             }
         }
 
@@ -128,19 +131,21 @@ public class HomeCommand extends AbstractCommand
         try {
             conn = ConnectionPool.getConnection();
             DBHomeDAO homeDAO = new DBHomeDAO(conn);
-            homeDAO.getHome(target.getId(), tregmine.getServer());
-        }
-        catch (SQLException e) {
+            loc = homeDAO.getHome(target.getId(), tregmine.getServer());
+        } catch (SQLException e) {
             throw new RuntimeException(e);
-        }
-        finally {
+        } finally {
             if (conn != null) {
-                try { conn.close(); } catch (SQLException e) {}
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                }
             }
         }
 
         if (loc == null) {
-            player.sendMessage(RED + "Telogric lift malfunctioned. Teleportation failed.");
+            player.sendMessage(RED
+                    + "Telogric lift malfunctioned. Teleportation failed.");
             return true;
         }
 
@@ -150,9 +155,11 @@ public class HomeCommand extends AbstractCommand
 
         if (world.isChunkLoaded(chunk)) {
             player.teleport(loc);
-            player.sendMessage(AQUA + "Like a drunken gnome, you fly across the world to " + playerName
-                    + "'s home. Try not to hit any birds.");
-            player.sendMessage(RED + "Loading of home chunk failed, try /home again");
+            player.sendMessage(AQUA
+                    + "Like a drunken gnome, you fly across the world to "
+                    + playerName + "'s home. Try not to hit any birds.");
+            player.sendMessage(RED
+                    + "Loading of home chunk failed, try /home again");
         }
 
         return true;

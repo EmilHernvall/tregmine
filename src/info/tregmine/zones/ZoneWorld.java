@@ -23,16 +23,19 @@ public class ZoneWorld
     {
         this.world = world;
         this.zonesLookup = new QuadTree<Zone>();
-        this.zoneNameLookup = new TreeMap<String, Zone>(new Comparator<String>() {
-            @Override
-            public int compare(String a, String b) {
-                return a.compareToIgnoreCase(b);
-            }
-        });
+        this.zoneNameLookup =
+                new TreeMap<String, Zone>(new Comparator<String>() {
+                    @Override
+                    public int compare(String a, String b)
+                    {
+                        return a.compareToIgnoreCase(b);
+                    }
+                });
         this.lotLookup = new QuadTree<Lot>();
         this.lotNameLookup = new TreeMap<String, Lot>(new Comparator<String>() {
             @Override
-            public int compare(String a, String b) {
+            public int compare(String a, String b)
+            {
                 return a.compareToIgnoreCase(b);
             }
         });
@@ -43,17 +46,15 @@ public class ZoneWorld
         return world.getName();
     }
 
-    public void addZone(Zone zone)
-        throws IntersectionException
+    public void addZone(Zone zone) throws IntersectionException
     {
         for (Rectangle rect : zone.getRects()) {
             zonesLookup.insert(rect, zone);
-        }	
+        }
         zoneNameLookup.put(zone.getName(), zone);
     }
 
-    public void addLot(Lot lot)
-        throws IntersectionException
+    public void addLot(Lot lot) throws IntersectionException
     {
         lotLookup.insert(lot.getRect(), lot);
         lotNameLookup.put(lot.getName(), lot);
@@ -100,7 +101,7 @@ public class ZoneWorld
         this.zonesLookup = new QuadTree<Zone>(0);
         for (Zone zone : zoneNameLookup.values()) {
             try {
-                for (Rectangle rect: zone.getRects()) {
+                for (Rectangle rect : zone.getRects()) {
                     zonesLookup.insert(rect, zone);
                 }
             } catch (IntersectionException e) {

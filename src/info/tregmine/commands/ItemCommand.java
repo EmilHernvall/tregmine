@@ -4,9 +4,7 @@ import java.util.List;
 import java.util.ArrayList;
 
 import static org.bukkit.ChatColor.*;
-import org.bukkit.Server;
 import org.bukkit.Material;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -37,13 +35,13 @@ public class ItemCommand extends AbstractCommand
         int materialId;
         try {
             materialId = Integer.parseInt(param);
-        }
-        catch (NumberFormatException e) {
+        } catch (NumberFormatException e) {
             try {
                 Material material = Material.getMaterial(param);
                 materialId = material.getId();
             } catch (NullPointerException ne) {
-                player.sendMessage(DARK_AQUA + "/item <id|name> <amount> <data>.");
+                player.sendMessage(DARK_AQUA
+                        + "/item <id|name> <amount> <data>.");
                 return true;
             }
         }
@@ -74,8 +72,8 @@ public class ItemCommand extends AbstractCommand
         ItemMeta meta = item.getItemMeta();
         List<String> lore = new ArrayList<String>();
         lore.add(Created.SPAWNED.toColorString());
-        lore.add(WHITE + "by: " + player.getName() );
-        lore.add(WHITE + "Value: " + MAGIC + "0000" + RESET + WHITE + " Treg" );
+        lore.add(WHITE + "by: " + player.getName());
+        lore.add(WHITE + "Value: " + MAGIC + "0000" + RESET + WHITE + " Treg");
         meta.setLore(lore);
         item.setItemMeta(meta);
 
@@ -84,11 +82,11 @@ public class ItemCommand extends AbstractCommand
 
         Material material = Material.getMaterial(materialId);
         String materialName = material.toString();
-        player.sendMessage("You received " + amount + " of " + DARK_AQUA +
-                           materialName.toLowerCase() + ".");
-        LOGGER.info(player.getName() + " SPAWNED " + amount + ":" + materialName);
+        player.sendMessage("You received " + amount + " of " + DARK_AQUA
+                + materialName.toLowerCase() + ".");
+        LOGGER.info(player.getName() + " SPAWNED " + amount + ":"
+                + materialName);
 
         return true;
     }
 }
-

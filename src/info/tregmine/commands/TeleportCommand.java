@@ -5,16 +5,11 @@ import java.util.List;
 import static org.bukkit.ChatColor.*;
 import org.bukkit.Server;
 import org.bukkit.World;
-import org.bukkit.Location;
-import org.bukkit.Chunk;
-import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import info.tregmine.Tregmine;
-import info.tregmine.database.ConnectionPool;
-import info.tregmine.database.DBWarpDAO;
 import info.tregmine.api.TregminePlayer;
 import info.tregmine.api.math.Distance;
 
@@ -37,7 +32,8 @@ public class TeleportCommand extends AbstractCommand
             to.sendMessage(AQUA + from.getName() + " teleported to you!");
             from.teleport(to.getLocation());
             from.setNoDamageTicks(200);
-            PotionEffect ef = new PotionEffect(PotionEffectType.BLINDNESS, 60, 100);
+            PotionEffect ef =
+                    new PotionEffect(PotionEffectType.BLINDNESS, 60, 100);
             from.addPotionEffect(ef);
         }
     }
@@ -74,33 +70,34 @@ public class TeleportCommand extends AbstractCommand
         }
 
         if (target.hasTeleportShield() && !player.isAdmin()) {
-            player.sendMessage(RED + target.getName() + AQUA +
-                               "'s teloptical deflector absorbed all motion. " +
-                               "Teleportation failed.");
-            target.sendMessage(player.getName() + AQUA + "'s teleportation spell " +
-                               "cannot bypass your sophisticated defenses.");
+            player.sendMessage(RED + target.getName() + AQUA
+                    + "'s teloptical deflector absorbed all motion. "
+                    + "Teleportation failed.");
+            target.sendMessage(player.getName() + AQUA
+                    + "'s teleportation spell "
+                    + "cannot bypass your sophisticated defenses.");
             return true;
         }
 
         World sourceWorld = player.getWorld();
         World targetWorld = target.getWorld();
         if (player.isAdmin()) {
-            player.sendMessage(AQUA + "You started teleport to " + target.getName() +
-                               AQUA + " in " + BLUE + targetWorld.getName() + ".");
+            player.sendMessage(AQUA + "You started teleport to "
+                    + target.getName() + AQUA + " in " + BLUE
+                    + targetWorld.getName() + ".");
 
-            scheduler.scheduleSyncDelayedTask(tregmine,
-                                              new TeleportTask(target, player),
-                                              20*0);
+            scheduler.scheduleSyncDelayedTask(tregmine, new TeleportTask(
+                    target, player), 20 * 0);
             return true;
         }
 
         if (player.isGuardian()) {
-            player.sendMessage(AQUA + "You started teleport to " + target.getName() +
-                               AQUA + " in " + BLUE + targetWorld.getName() + ".");
+            player.sendMessage(AQUA + "You started teleport to "
+                    + target.getName() + AQUA + " in " + BLUE
+                    + targetWorld.getName() + ".");
 
-            scheduler.scheduleSyncDelayedTask(tregmine,
-                                              new TeleportTask(target, player),
-                                              20*1);
+            scheduler.scheduleSyncDelayedTask(tregmine, new TeleportTask(
+                    target, player), 20 * 1);
             return true;
         }
 
@@ -108,33 +105,34 @@ public class TeleportCommand extends AbstractCommand
         String sourceWorldName = sourceWorld.getName();
         if (sourceWorldName.equalsIgnoreCase(targetWorldName)) {
 
-            double distance = Distance.calc2d(player.getLocation(), target.getLocation());
+            double distance =
+                    Distance.calc2d(player.getLocation(), target.getLocation());
             if (player.isDonator() && distance < 10000) {
-                player.sendMessage(AQUA + "You started teleport to " +
-                                   target.getName() + AQUA + " in " + BLUE +
-                                   targetWorld.getName() + ".");
+                player.sendMessage(AQUA + "You started teleport to "
+                        + target.getName() + AQUA + " in " + BLUE
+                        + targetWorld.getName() + ".");
 
-                scheduler.scheduleSyncDelayedTask(tregmine,
-                                                  new TeleportTask(target, player),
-                                                  20*30);
+                scheduler.scheduleSyncDelayedTask(tregmine, new TeleportTask(
+                        target, player), 20 * 30);
             }
             else if (player.isTrusted() && distance < 100) {
-                player.sendMessage(AQUA + "You started teleport to " +
-                                   target.getName() + AQUA + " in " + BLUE +
-                                   targetWorld.getName() + ".");
+                player.sendMessage(AQUA + "You started teleport to "
+                        + target.getName() + AQUA + " in " + BLUE
+                        + targetWorld.getName() + ".");
 
-                scheduler.scheduleSyncDelayedTask(tregmine,
-                                                  new TeleportTask(target, player),
-                                                  20*30);
+                scheduler.scheduleSyncDelayedTask(tregmine, new TeleportTask(
+                        target, player), 20 * 30);
             }
             else {
-                player.sendMessage(RED + "Your teleportation spell is not strong " +
-                                   "enough for the longer distances.");
+                player.sendMessage(RED
+                        + "Your teleportation spell is not strong "
+                        + "enough for the longer distances.");
             }
 
-        } else {
-            player.sendMessage(RED + "The user is in another world called " + BLUE +
-                               targetWorld.getName() + ".");
+        }
+        else {
+            player.sendMessage(RED + "The user is in another world called "
+                    + BLUE + targetWorld.getName() + ".");
         }
 
         return true;

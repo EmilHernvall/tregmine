@@ -1,33 +1,16 @@
 package info.tregmine.listeners;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-//import java.util.ArrayList;
-//import java.util.List;
-//import java.util.Random;
-
 import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.enchantments.Enchantment;
 //import org.bukkit.entity.HumanEntity;
 //import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.inventory.ItemStack;
-//import org.bukkit.inventory.PlayerInventory;
-import org.bukkit.inventory.meta.ItemMeta;
-
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
-//import info.tregmine.api.lore.Created;
-import info.tregmine.database.ConnectionPool;
 import info.tregmine.quadtree.Point;
 import info.tregmine.zones.Lot;
 import info.tregmine.zones.ZoneWorld;
@@ -67,9 +50,12 @@ public class ZoneBlockListener implements Listener
 
             Lot lot = world.findLot(pos);
             if (lot != null) {
-                if (perm != Zone.Permission.Owner && !lot.isOwner(player.getName())) {
-                    player.sendMessage(ChatColor.RED + "[" + currentZone.getName() + "] " +
-                            "You are not allowed to break blocks in lot " + lot.getName() + ".");
+                if (perm != Zone.Permission.Owner
+                        && !lot.isOwner(player.getName())) {
+                    player.sendMessage(ChatColor.RED + "["
+                            + currentZone.getName() + "] "
+                            + "You are not allowed to break blocks in lot "
+                            + lot.getName() + ".");
                     event.setCancelled(true);
                     return;
                 }
@@ -81,19 +67,24 @@ public class ZoneBlockListener implements Listener
                 // ...the only people that can't build are those that are banned
                 if (perm != null && perm == Zone.Permission.Banned) {
                     event.setCancelled(true);
-                    player.sendMessage(ChatColor.RED + "[" + currentZone.getName() + "] " +
-                            "You are banned from " + currentZone.getName() + ".");	    			
+                    player.sendMessage(ChatColor.RED + "["
+                            + currentZone.getName() + "] "
+                            + "You are banned from " + currentZone.getName()
+                            + ".");
                 }
             }
 
             // if this zone has limited building privileges...
             else {
                 // ...we only allow builders and owners to make changes.
-                if (perm == null || (perm != Zone.Permission.Maker && perm != Zone.Permission.Owner)) {
+                if (perm == null
+                        || (perm != Zone.Permission.Maker && perm != Zone.Permission.Owner)) {
                     player.setFireTicks(50);
                     event.setCancelled(true);
-                    player.sendMessage(ChatColor.RED + "[" + currentZone.getName() + "] " +
-                            "You are not allowed to break blocks in " + currentZone.getName() + ".");
+                    player.sendMessage(ChatColor.RED + "["
+                            + currentZone.getName() + "] "
+                            + "You are not allowed to break blocks in "
+                            + currentZone.getName() + ".");
                 }
             }
         }
@@ -124,14 +115,18 @@ public class ZoneBlockListener implements Listener
 
             Lot lot = world.findLot(pos);
             if (lot != null) {
-                if (perm != Zone.Permission.Owner && !lot.isOwner(player.getName())) {
-                    player.sendMessage(ChatColor.RED + "[" + currentZone.getName() + "] " +
-                            "You are not allowed to break blocks in lot " + lot.getName() + ".");
+                if (perm != Zone.Permission.Owner
+                        && !lot.isOwner(player.getName())) {
+                    player.sendMessage(ChatColor.RED + "["
+                            + currentZone.getName() + "] "
+                            + "You are not allowed to break blocks in lot "
+                            + lot.getName() + ".");
                     event.setCancelled(true);
                     return;
                 }
 
-                // we should only get here if the event is allowed, in which case we don't need
+                // we should only get here if the event is allowed, in which
+                // case we don't need
                 // any more checks.
                 return;
             }
@@ -141,18 +136,23 @@ public class ZoneBlockListener implements Listener
                 // ...the only people that can't build are those that are banned
                 if (perm != null && perm == Zone.Permission.Banned) {
                     event.setCancelled(true);
-                    player.sendMessage(ChatColor.RED + "[" + currentZone.getName() + "] " +
-                            "You are banned from " + currentZone.getName() + ".");	    			
+                    player.sendMessage(ChatColor.RED + "["
+                            + currentZone.getName() + "] "
+                            + "You are banned from " + currentZone.getName()
+                            + ".");
                 }
             }
             // if this zone has limited building privileges...
             else {
                 // ...we only allow builders and owners to make changes.
-                if (perm == null || (perm != Zone.Permission.Maker && perm != Zone.Permission.Owner)) {
+                if (perm == null
+                        || (perm != Zone.Permission.Maker && perm != Zone.Permission.Owner)) {
                     player.setFireTicks(50);
                     event.setCancelled(true);
-                    player.sendMessage(ChatColor.RED + "[" + currentZone.getName() + "] " +
-                            "You are not allowed to place blocks in " + currentZone.getName() + ".");
+                    player.sendMessage(ChatColor.RED + "["
+                            + currentZone.getName() + "] "
+                            + "You are not allowed to place blocks in "
+                            + currentZone.getName() + ".");
                 }
             }
         }

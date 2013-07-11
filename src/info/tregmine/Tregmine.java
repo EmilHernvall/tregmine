@@ -1,42 +1,25 @@
 package info.tregmine;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.logging.Logger;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
-import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.World.Environment;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
-import org.bukkit.inventory.meta.BookMeta;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
-import org.bukkit.scheduler.BukkitScheduler;
-
 import info.tregmine.quadtree.IntersectionException;
 
 import info.tregmine.api.TregminePlayer;
@@ -81,14 +64,13 @@ public class Tregmine extends JavaPlugin
         players = new HashMap<String, TregminePlayer>();
         playersById = new HashMap<Integer, TregminePlayer>();
 
-        worlds =
-            new TreeMap<String, ZoneWorld>(
-                new Comparator<String>() {
-                    @Override
-                    public int compare(String a, String b) {
-                        return a.compareToIgnoreCase(b);
-                    }
-                });
+        worlds = new TreeMap<String, ZoneWorld>(new Comparator<String>() {
+            @Override
+            public int compare(String a, String b)
+            {
+                return a.compareToIgnoreCase(b);
+            }
+        });
 
         zones = new HashMap<Integer, Zone>();
 
@@ -108,13 +90,14 @@ public class Tregmine extends JavaPlugin
 
             DBInventoryDAO inventoryDAO = new DBInventoryDAO(conn);
             this.blessedBlocks = inventoryDAO.loadBlessedBlocks(getServer());
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             throw new RuntimeException(e);
-        }
-        finally {
+        } finally {
             if (conn != null) {
-                try { conn.close(); } catch (SQLException e) {}
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                }
             }
         }
 
@@ -135,21 +118,22 @@ public class Tregmine extends JavaPlugin
         pluginMgm.registerEvents(new ZonePlayerListener(this), this);
 
         // Declaration of all commands
-        getCommand("admins").setExecutor(
-            new NotifyCommand(this, "admins") {
-                @Override
-                public boolean isTarget(TregminePlayer player) {
-                    return player.isAdmin();
-                }
-            });
+        getCommand("admins").setExecutor(new NotifyCommand(this, "admins") {
+            @Override
+            public boolean isTarget(TregminePlayer player)
+            {
+                return player.isAdmin();
+            }
+        });
 
         getCommand("guardians").setExecutor(
-            new NotifyCommand(this, "guardians") {
-                @Override
-                public boolean isTarget(TregminePlayer player) {
-                    return player.isGuardian();
-                }
-            });
+                new NotifyCommand(this, "guardians") {
+                    @Override
+                    public boolean isTarget(TregminePlayer player)
+                    {
+                        return player.isGuardian();
+                    }
+                });
 
         getCommand("action").setExecutor(new ActionCommand(this));
         getCommand("ban").setExecutor(new BanCommand(this));
@@ -160,7 +144,8 @@ public class Tregmine extends JavaPlugin
         getCommand("cname").setExecutor(new ChangeNameCommand(this));
         getCommand("createmob").setExecutor(new CreateMobCommand(this));
         getCommand("createwarp").setExecutor(new CreateWarpCommand(this));
-        getCommand("creative").setExecutor( new GameModeCommand(this, "creative", GameMode.CREATIVE));
+        getCommand("creative").setExecutor(
+                new GameModeCommand(this, "creative", GameMode.CREATIVE));
         getCommand("fill").setExecutor(new FillCommand(this, "fill"));
         getCommand("force").setExecutor(new ForceCommand(this));
         getCommand("give").setExecutor(new GiveCommand(this));
@@ -176,14 +161,16 @@ public class Tregmine extends JavaPlugin
         getCommand("nuke").setExecutor(new NukeCommand(this));
         getCommand("password").setExecutor(new PasswordCommand(this));
         getCommand("pos").setExecutor(new PositionCommand(this));
-        getCommand("regeneratechunk").setExecutor(new RegenerateChunkCommand(this));
+        getCommand("regeneratechunk").setExecutor(
+                new RegenerateChunkCommand(this));
         getCommand("report").setExecutor(new ReportCommand(this));
         getCommand("say").setExecutor(new SayCommand(this));
         getCommand("sendto").setExecutor(new SendToCommand(this));
         getCommand("setspawner").setExecutor(new SetSpawnerCommand(this));
         getCommand("spawn").setExecutor(new SpawnCommand(this));
         getCommand("summon").setExecutor(new SummonCommand(this));
-        getCommand("survival").setExecutor( new GameModeCommand(this, "survival", GameMode.SURVIVAL));
+        getCommand("survival").setExecutor(
+                new GameModeCommand(this, "survival", GameMode.SURVIVAL));
         getCommand("testfill").setExecutor(new FillCommand(this, "testfill"));
         getCommand("time").setExecutor(new TimeCommand(this));
         getCommand("tp").setExecutor(new TeleportCommand(this));
@@ -198,7 +185,7 @@ public class Tregmine extends JavaPlugin
         getCommand("zone").setExecutor(new ZoneCommand(this));
     }
 
-    //run when plugin is disabled
+    // run when plugin is disabled
     @Override
     public void onDisable()
     {
@@ -211,20 +198,22 @@ public class Tregmine extends JavaPlugin
             // Add a record of logout to db for all players
             DBLogDAO logDAO = new DBLogDAO(conn);
             for (TregminePlayer player : getOnlinePlayers()) {
-                player.sendMessage(ChatColor.AQUA + "Tregmine successfully unloaded " +
-                        "build: " + getDescription().getVersion());
+                player.sendMessage(ChatColor.AQUA
+                        + "Tregmine successfully unloaded " + "build: "
+                        + getDescription().getVersion());
 
                 logDAO.insertLogin(player, true);
 
                 removePlayer(player);
             }
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             throw new RuntimeException(e);
-        }
-        finally {
+        } finally {
             if (conn != null) {
-                try { conn.close(); } catch (SQLException e) {}
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                }
             }
         }
 
@@ -245,18 +234,20 @@ public class Tregmine extends JavaPlugin
                 TregminePlayer tregPlayer = playerDAO.getPlayer(player);
                 addPlayer(tregPlayer);
 
-                player.sendMessage(ChatColor.GRAY + "Tregmine successfully loaded " +
-                        "to build: " + this.getDescription().getVersion());
+                player.sendMessage(ChatColor.GRAY
+                        + "Tregmine successfully loaded " + "to build: "
+                        + this.getDescription().getVersion());
 
                 logDAO.insertLogin(tregPlayer, false);
             }
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             throw new RuntimeException(e);
-        }
-        finally {
+        } finally {
             if (conn != null) {
-                try { conn.close(); } catch (SQLException e) {}
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                }
             }
         }
     }
@@ -267,15 +258,17 @@ public class Tregmine extends JavaPlugin
         try {
             DBPlayerDAO playerDAO = new DBPlayerDAO(conn);
 
-            TregminePlayer tregPlayer = playerDAO.getPlayer(player.getDelegate());
+            TregminePlayer tregPlayer =
+                    playerDAO.getPlayer(player.getDelegate());
             addPlayer(tregPlayer);
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             throw new RuntimeException(e);
-        }
-        finally {
+        } finally {
             if (conn != null) {
-                try { conn.close(); } catch (SQLException e) {}
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                }
             }
         }
     }
@@ -298,8 +291,8 @@ public class Tregmine extends JavaPlugin
                         zoneWorld.addZone(zone);
                         this.zones.put(zone.getId(), zone);
                     } catch (IntersectionException e) {
-                        LOGGER.warning("Failed to load zone " + zone.getName() +
-                                       " with id " + zone.getId() + ".");
+                        LOGGER.warning("Failed to load zone " + zone.getName()
+                                + " with id " + zone.getId() + ".");
                     }
                 }
 
@@ -308,8 +301,8 @@ public class Tregmine extends JavaPlugin
                     try {
                         zoneWorld.addLot(lot);
                     } catch (IntersectionException e) {
-                        LOGGER.warning("Failed to load lot " + lot.getName() +
-                                       " with id " + lot.getId() + ".");
+                        LOGGER.warning("Failed to load lot " + lot.getName()
+                                + " with id " + lot.getId() + ".");
                     }
                 }
 
@@ -318,7 +311,10 @@ public class Tregmine extends JavaPlugin
                 throw new RuntimeException(e);
             } finally {
                 if (conn != null) {
-                    try { conn.close(); } catch (SQLException e) {}
+                    try {
+                        conn.close();
+                    } catch (SQLException e) {
+                    }
                 }
             }
         }
@@ -375,19 +371,19 @@ public class Tregmine extends JavaPlugin
         }
 
         Connection conn = null;
-        TregminePlayer target = null;
         try {
             conn = ConnectionPool.getConnection();
 
             DBPlayerDAO playerDAO = new DBPlayerDAO(conn);
             return playerDAO.getPlayer(name);
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             throw new RuntimeException(e);
-        }
-        finally {
+        } finally {
             if (conn != null) {
-                try { conn.close(); } catch (SQLException e) {}
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                }
             }
         }
     }
@@ -399,19 +395,19 @@ public class Tregmine extends JavaPlugin
         }
 
         Connection conn = null;
-        TregminePlayer target = null;
         try {
             conn = ConnectionPool.getConnection();
 
             DBPlayerDAO playerDAO = new DBPlayerDAO(conn);
             return playerDAO.getPlayer(id);
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             throw new RuntimeException(e);
-        }
-        finally {
+        } finally {
             if (conn != null) {
-                try { conn.close(); } catch (SQLException e) {}
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                }
             }
         }
     }

@@ -5,11 +5,7 @@ import java.util.Date;
 public class PlayerReport
 {
     public enum Action {
-        KICK,
-        SOFTWARN,
-        HARDWARN,
-        BAN,
-        COMMENT;
+        KICK, SOFTWARN, HARDWARN, BAN, COMMENT;
 
         public static Action fromString(String str)
         {
@@ -35,24 +31,73 @@ public class PlayerReport
     {
     }
 
-    public int getId() { return id; }
-    public void setId(int v) { this.id = v; }
+    public int getId()
+    {
+        return id;
+    }
 
-    public int getSubjectId() { return subjectId; }
-    public void setSubjectId(int v) { this.subjectId = v; }
+    public void setId(int v)
+    {
+        this.id = v;
+    }
 
-    public int getIssuerId() { return issuerId; }
-    public void setIssuerId(int v) { this.issuerId = v; }
+    public int getSubjectId()
+    {
+        return subjectId;
+    }
 
-    public Action getAction() { return action; }
-    public void setAction(Action v) { this.action = v; }
+    public void setSubjectId(int v)
+    {
+        this.subjectId = v;
+    }
 
-    public String getMessage() { return message; }
-    public void setMessage(String v) { this.message = v; }
+    public int getIssuerId()
+    {
+        return issuerId;
+    }
 
-    public Date getTimestamp() { return timestamp; }
-    public void setTimestamp(Date v) { this.timestamp = v; }
+    public void setIssuerId(int v)
+    {
+        this.issuerId = v;
+    }
 
-    public Date getValidUntil() { return validUntil; }
-    public void setValidUntil(Date v) { this.validUntil = v; }
+    public Action getAction()
+    {
+        return action;
+    }
+
+    public void setAction(Action v)
+    {
+        this.action = v;
+    }
+
+    public String getMessage()
+    {
+        return message;
+    }
+
+    public void setMessage(String v)
+    {
+        this.message = v;
+    }
+
+    public Date getTimestamp()
+    {
+        return timestamp;
+    }
+
+    public void setTimestamp(Date v)
+    {
+        this.timestamp = v;
+    }
+
+    public Date getValidUntil()
+    {
+        return validUntil;
+    }
+
+    public void setValidUntil(Date v)
+    {
+        this.validUntil = v;
+    }
 }

@@ -1,12 +1,8 @@
 package info.tregmine.commands;
 
-import static org.bukkit.ChatColor.*;
-import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.Chunk;
-import org.bukkit.entity.Player;
-
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
 

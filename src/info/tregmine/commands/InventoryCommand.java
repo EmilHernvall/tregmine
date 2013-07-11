@@ -2,10 +2,6 @@ package info.tregmine.commands;
 
 import java.util.List;
 
-import static org.bukkit.ChatColor.*;
-import org.bukkit.Server;
-import org.bukkit.entity.Player;
-
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
 

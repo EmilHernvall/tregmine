@@ -3,9 +3,6 @@ package info.tregmine.commands;
 import java.util.List;
 
 import static org.bukkit.ChatColor.*;
-import org.bukkit.Server;
-import org.bukkit.entity.Player;
-
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
 
@@ -37,15 +34,18 @@ public class ForceCommand extends AbstractCommand
         player.setChatChannel(channel);
         toPlayer.setChatChannel(channel);
 
-        toPlayer.sendMessage(YELLOW + player.getChatName() + " forced you into " +
-                             "channel " + channel.toUpperCase() + ".");
-        toPlayer.sendMessage(YELLOW + "Write /channel global to switch back to " +
-                             "the global chat." );
-        player.sendMessage(YELLOW + "You are now in a forced chat " +
-                           channel.toUpperCase() + " with " +
-                           toPlayer.getDisplayName() + ".");
-        LOGGER.info(player.getName() + " FORCED CHAT WITH " +
-                    toPlayer.getDisplayName() + " IN CHANNEL " + channel.toUpperCase());
+        toPlayer.sendMessage(YELLOW + player.getChatName()
+                + " forced you into " + "channel " + channel.toUpperCase()
+                + ".");
+        toPlayer.sendMessage(YELLOW
+                + "Write /channel global to switch back to "
+                + "the global chat.");
+        player.sendMessage(YELLOW + "You are now in a forced chat "
+                + channel.toUpperCase() + " with " + toPlayer.getDisplayName()
+                + ".");
+        LOGGER.info(player.getName() + " FORCED CHAT WITH "
+                + toPlayer.getDisplayName() + " IN CHANNEL "
+                + channel.toUpperCase());
 
         return true;
     }

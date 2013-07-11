@@ -3,9 +3,6 @@ package info.tregmine.commands;
 import java.util.List;
 
 import static org.bukkit.ChatColor.*;
-import org.bukkit.Server;
-import org.bukkit.entity.Player;
-
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
 
@@ -33,8 +30,8 @@ public class BlessCommand extends AbstractCommand
         }
 
         TregminePlayer candidate = candidates.get(0);
-        player.sendMessage(AQUA + "You will bless following " +
-                "blocks to " + candidate.getChatName() + ".");
+        player.sendMessage(AQUA + "You will bless following " + "blocks to "
+                + candidate.getChatName() + ".");
         player.setBlessTarget(candidate.getId());
 
         return true;

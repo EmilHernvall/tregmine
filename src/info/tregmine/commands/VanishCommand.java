@@ -3,9 +3,6 @@ package info.tregmine.commands;
 import java.util.List;
 
 import static org.bukkit.ChatColor.*;
-import org.bukkit.Server;
-import org.bukkit.entity.Player;
-
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
 
@@ -31,9 +28,11 @@ public class VanishCommand extends AbstractCommand
         boolean vanish = false;
         if ("on".equalsIgnoreCase(state)) {
             vanish = true;
-        } else if ("off".equalsIgnoreCase(state)) {
+        }
+        else if ("off".equalsIgnoreCase(state)) {
             vanish = false;
-        } else {
+        }
+        else {
             player.sendMessage(DARK_AQUA + "/vanish <on|off>");
             return false;
         }
@@ -44,14 +43,16 @@ public class VanishCommand extends AbstractCommand
         for (TregminePlayer current : players) {
             if (vanish && !current.isOp()) {
                 current.hidePlayer(player);
-            } else {
+            }
+            else {
                 current.showPlayer(player);
             }
         }
 
         if (vanish) {
             player.sendMessage(YELLOW + "You are now invisible!");
-        } else {
+        }
+        else {
             player.sendMessage(YELLOW + "You no longer hidden!");
         }
 

@@ -1,10 +1,6 @@
 package info.tregmine.commands;
 
 import static org.bukkit.ChatColor.*;
-import org.bukkit.Server;
-import org.bukkit.entity.Player;
-import org.bukkit.Location;
-
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
 
@@ -31,9 +27,11 @@ public class TimeCommand extends AbstractCommand
 
         if ("day".equalsIgnoreCase(time)) {
             player.setPlayerTime(6000, false);
-        } else if ("night".equalsIgnoreCase(time)) {
+        }
+        else if ("night".equalsIgnoreCase(time)) {
             player.setPlayerTime(18000, false);
-        } else if ("normal".equalsIgnoreCase(time)) {
+        }
+        else if ("normal".equalsIgnoreCase(time)) {
             player.resetPlayerTime();
         }
 

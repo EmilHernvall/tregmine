@@ -7,8 +7,6 @@ import java.sql.SQLException;
 
 import static org.bukkit.ChatColor.*;
 import org.bukkit.Server;
-import org.bukkit.entity.Player;
-
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
 import info.tregmine.api.PlayerReport;
@@ -68,24 +66,25 @@ public class BanCommand extends AbstractCommand
             report.setAction(PlayerReport.Action.BAN);
             report.setMessage(message);
             // three days default
-            report.setValidUntil(
-                new Date(System.currentTimeMillis() + 3*86400*1000l));
+            report.setValidUntil(new Date(
+                    System.currentTimeMillis() + 3 * 86400 * 1000l));
 
             DBPlayerReportDAO reportDAO = new DBPlayerReportDAO(conn);
             reportDAO.insertReport(report);
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             throw new RuntimeException(e);
-        }
-        finally {
+        } finally {
             if (conn != null) {
-                try { conn.close(); } catch (SQLException e) {}
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                }
             }
         }
 
         Server server = tregmine.getServer();
-        server.broadcastMessage(victim.getChatName() + RED + " was banned by " +
-                                player.getChatName() + ".");
+        server.broadcastMessage(victim.getChatName() + RED + " was banned by "
+                + player.getChatName() + ".");
 
         LOGGER.info(victim.getName() + " Banned by " + player.getName());
 

@@ -40,7 +40,7 @@ public class BoxFillBlockListener implements Listener
 
         try {
             count = player.getFillBlockCounter();
-        } catch (Exception  e) {
+        } catch (Exception e) {
             count = 0;
         }
 

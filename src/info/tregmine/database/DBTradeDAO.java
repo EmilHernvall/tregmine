@@ -1,6 +1,5 @@
 package info.tregmine.database;
 
-import org.bukkit.ChatColor;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -8,10 +7,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.NumberFormat;
-
-import info.tregmine.api.TregminePlayer;
-import info.tregmine.database.ConnectionPool;
 
 public class DBTradeDAO
 {
@@ -27,8 +22,9 @@ public class DBTradeDAO
         PreparedStatement stmt = null;
         ResultSet rs = null;
         try {
-            String sql = "INSERT INTO trade (sender_id, recipient_id, " +
-                         "trade_timestamp, trade_amount) ";
+            String sql =
+                    "INSERT INTO trade (sender_id, recipient_id, "
+                            + "trade_timestamp, trade_amount) ";
             sql += "VALUES (?, ?, unix_timestamp(), ?)";
             stmt = conn.prepareStatement(sql);
             stmt.setInt(1, srcId);
@@ -48,22 +44,28 @@ public class DBTradeDAO
             throw new RuntimeException(e);
         } finally {
             if (rs != null) {
-                try { rs.close(); } catch (SQLException e) {}
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                }
             }
             if (stmt != null) {
-                try { stmt.close(); } catch (SQLException e) {}
+                try {
+                    stmt.close();
+                } catch (SQLException e) {
+                }
             }
         }
     }
 
-    public void insertStacks(int tradeId,
-                             ItemStack[] contents)
-    throws SQLException
+    public void insertStacks(int tradeId, ItemStack[] contents)
+            throws SQLException
     {
         PreparedStatement stmt = null;
         try {
-            String sql = "INSERT INTO trade_item (trade_id, " +
-                         "item_material, item_data, item_meta, item_count) ";
+            String sql =
+                    "INSERT INTO trade_item (trade_id, "
+                            + "item_material, item_data, item_meta, item_count) ";
             sql += "VALUES (?, ?, ?, ?, ?)";
             stmt = conn.prepareStatement(sql);
 
@@ -79,7 +81,8 @@ public class DBTradeDAO
                     YamlConfiguration config = new YamlConfiguration();
                     config.set("meta", stack.getItemMeta());
                     stmt.setString(4, config.saveToString());
-                } else {
+                }
+                else {
                     stmt.setString(4, "");
                 }
                 stmt.setInt(5, stack.getAmount());
@@ -87,7 +90,10 @@ public class DBTradeDAO
             }
         } finally {
             if (stmt != null) {
-                try { stmt.close(); } catch (SQLException e) {}
+                try {
+                    stmt.close();
+                } catch (SQLException e) {
+                }
             }
         }
     }

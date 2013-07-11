@@ -4,10 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Map;
-import java.util.HashMap;
-//import java.util.List;
-
 import org.bukkit.entity.Player;
 
 import info.tregmine.api.TregminePlayer;
@@ -21,16 +17,16 @@ public class DBPlayerDAO
         this.conn = conn;
     }
 
-    public TregminePlayer getPlayer(int id)
-    throws SQLException
+    public TregminePlayer getPlayer(int id) throws SQLException
     {
         TregminePlayer player;
 
         PreparedStatement stmt = null;
         ResultSet rs = null;
         try {
-            stmt = conn.prepareStatement("SELECT * FROM player " +
-                                         "WHERE player_id = ?");
+            stmt =
+                    conn.prepareStatement("SELECT * FROM player "
+                            + "WHERE player_id = ?");
             stmt.setInt(1, id);
             stmt.execute();
 
@@ -44,10 +40,16 @@ public class DBPlayerDAO
             player.setPassword(rs.getString("player_password"));
         } finally {
             if (rs != null) {
-                try { rs.close(); } catch (SQLException e) {}
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                }
             }
             if (stmt != null) {
-                try { stmt.close(); } catch (SQLException e) {}
+                try {
+                    stmt.close();
+                } catch (SQLException e) {
+                }
             }
         }
 
@@ -56,28 +58,27 @@ public class DBPlayerDAO
         return player;
     }
 
-    public TregminePlayer getPlayer(Player player)
-    throws SQLException
+    public TregminePlayer getPlayer(Player player) throws SQLException
     {
         return getPlayer(player.getName(), player);
     }
 
-    public TregminePlayer getPlayer(String name)
-    throws SQLException
+    public TregminePlayer getPlayer(String name) throws SQLException
     {
         return getPlayer(name, null);
     }
 
     public TregminePlayer getPlayer(String name, Player wrap)
-    throws SQLException
+            throws SQLException
     {
         TregminePlayer player = new TregminePlayer(wrap);
 
         PreparedStatement stmt = null;
         ResultSet rs = null;
         try {
-            stmt = conn.prepareStatement("SELECT * FROM player " +
-                                         "WHERE player_name = ?");
+            stmt =
+                    conn.prepareStatement("SELECT * FROM player "
+                            + "WHERE player_name = ?");
             stmt.setString(1, player.getName());
             stmt.execute();
 
@@ -90,10 +91,16 @@ public class DBPlayerDAO
             player.setPassword(rs.getString("player_password"));
         } finally {
             if (rs != null) {
-                try { rs.close(); } catch (SQLException e) {}
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                }
             }
             if (stmt != null) {
-                try { stmt.close(); } catch (SQLException e) {}
+                try {
+                    stmt.close();
+                } catch (SQLException e) {
+                }
             }
         }
 
@@ -102,14 +109,14 @@ public class DBPlayerDAO
         return player;
     }
 
-    private void loadSettings(TregminePlayer player)
-    throws SQLException
+    private void loadSettings(TregminePlayer player) throws SQLException
     {
         PreparedStatement stmt = null;
         ResultSet rs = null;
         try {
-            stmt = conn.prepareStatement("SELECT * FROM player_property " +
-                                         "WHERE player_id = ?");
+            stmt =
+                    conn.prepareStatement("SELECT * FROM player_property "
+                            + "WHERE player_id = ?");
             stmt.setInt(1, player.getId());
             stmt.execute();
 
@@ -119,59 +126,83 @@ public class DBPlayerDAO
                 String value = rs.getString("property_value");
                 if ("admin".equals(key)) {
                     player.setAdmin(Boolean.valueOf(value));
-                } else if ("builder".equals(key)) {
+                }
+                else if ("builder".equals(key)) {
                     player.setBuilder(Boolean.valueOf(value));
-                } else if ("child".equals(key)) {
+                }
+                else if ("child".equals(key)) {
                     player.setChild(Boolean.valueOf(value));
-                } else if ("invisible".equals(key)) {
+                }
+                else if ("invisible".equals(key)) {
                     player.setInvisible(Boolean.valueOf(value));
-                } else if ("donator".equals(key)) {
+                }
+                else if ("donator".equals(key)) {
                     player.setDonator(Boolean.valueOf(value));
-                } else if ("banned".equals(key)) {
+                }
+                else if ("banned".equals(key)) {
                     player.setBanned(Boolean.valueOf(value));
-                } else if ("trusted".equals(key)) {
+                }
+                else if ("trusted".equals(key)) {
                     player.setTrusted(Boolean.valueOf(value));
-                } else if ("tpblock".equals(key)) {
+                }
+                else if ("tpblock".equals(key)) {
                     player.setTeleportShield(Boolean.valueOf(value));
-                } else if ("hiddenloc".equals(key)) {
+                }
+                else if ("hiddenloc".equals(key)) {
                     player.setHiddenLocation(Boolean.valueOf(value));
-                } else if ("guardian".equals(key)) {
+                }
+                else if ("guardian".equals(key)) {
                     player.setGuardian(true);
                     player.setGuardianRank(Integer.parseInt(value));
-                } else if ("password".equals(key)) {
+                }
+                else if ("password".equals(key)) {
                     player.setPassword(value);
-                } else if ("keyword".equals(key)) {
+                }
+                else if ("keyword".equals(key)) {
                     player.setKeyword(value);
-                } else if ("countryName".equals(key)) {
+                }
+                else if ("countryName".equals(key)) {
                     player.setCountryName(value);
-                } else if ("city".equals(key)) {
+                }
+                else if ("city".equals(key)) {
                     player.setCity(value);
-                } else if ("ip".equals(key)) {
+                }
+                else if ("ip".equals(key)) {
                     player.setIp(value);
-                } else if ("postalCode".equals(key)) {
+                }
+                else if ("postalCode".equals(key)) {
                     player.setPostalCode(value);
-                } else if ("region".equals(key)) {
+                }
+                else if ("region".equals(key)) {
                     player.setRegion(value);
-                } else if ("hostName".equals(key)) {
+                }
+                else if ("hostName".equals(key)) {
                     player.setHostName(value);
-                } else if ("color".equals(key)) {
+                }
+                else if ("color".equals(key)) {
                     player.setNameColor(value);
-                } else if ("timezone".equals(key)) {
+                }
+                else if ("timezone".equals(key)) {
                     player.setTimezone(value);
                 }
             }
         } finally {
             if (rs != null) {
-                try { rs.close(); } catch (SQLException e) {}
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                }
             }
             if (stmt != null) {
-                try { stmt.close(); } catch (SQLException e) {}
+                try {
+                    stmt.close();
+                } catch (SQLException e) {
+                }
             }
         }
     }
 
-    public TregminePlayer createPlayer(Player wrap)
-    throws SQLException
+    public TregminePlayer createPlayer(Player wrap) throws SQLException
     {
         TregminePlayer player = new TregminePlayer(wrap);
 
@@ -193,10 +224,16 @@ public class DBPlayerDAO
             player.setId(rs.getInt(1));
         } finally {
             if (rs != null) {
-                try { rs.close(); } catch (SQLException e) {}
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                }
             }
             if (stmt != null) {
-                try { stmt.close(); } catch (SQLException e) {}
+                try {
+                    stmt.close();
+                } catch (SQLException e) {
+                }
             }
         }
 
@@ -204,7 +241,7 @@ public class DBPlayerDAO
     }
 
     public void updatePlayerPermissions(TregminePlayer player)
-    throws SQLException
+            throws SQLException
     {
         updateProperty(player, "admin", player.isAdmin());
         updateProperty(player, "builder", player.isBuilder());
@@ -213,24 +250,21 @@ public class DBPlayerDAO
         updateProperty(player, "banned", player.isBanned());
         updateProperty(player, "trusted", player.isTrusted());
         if (player.isGuardian()) {
-            updateProperty(player,
-                           "guardian",
-                           String.valueOf(player.getGuardianRank()));
+            updateProperty(player, "guardian",
+                    String.valueOf(player.getGuardianRank()));
         }
     }
 
-    public void updatePlayerKeyword(TregminePlayer player)
-    throws SQLException
+    public void updatePlayerKeyword(TregminePlayer player) throws SQLException
     {
         updateProperty(player, "keyword", player.getKeyword());
     }
 
-    public void updatePlayerInfo(TregminePlayer player)
-    throws SQLException
+    public void updatePlayerInfo(TregminePlayer player) throws SQLException
     {
-        //updateProperty(player, "invisible", player.isInvisible());
-        //updateProperty(player, "tpblock", player.hasTeleportShield());
-        //updateProperty(player, "hiddenloc", player.hasHiddenLocation());
+        // updateProperty(player, "invisible", player.isInvisible());
+        // updateProperty(player, "tpblock", player.hasTeleportShield());
+        // updateProperty(player, "hiddenloc", player.hasHiddenLocation());
         updateProperty(player, "countryName", player.getCountryName());
         updateProperty(player, "city", player.getCity());
         updateProperty(player, "ip", player.getIp());
@@ -242,13 +276,13 @@ public class DBPlayerDAO
     }
 
     private void updateProperty(TregminePlayer player, String key, boolean value)
-    throws SQLException
+            throws SQLException
     {
         updateProperty(player, key, String.valueOf(value));
     }
 
     private void updateProperty(TregminePlayer player, String key, String value)
-    throws SQLException
+            throws SQLException
     {
         if (value == null) {
             return;
@@ -256,8 +290,9 @@ public class DBPlayerDAO
 
         PreparedStatement stmt = null;
         try {
-            String sqlInsert = "REPLACE INTO player_property (player_id, " +
-                "property_key, property_value) VALUE (?, ?, ?)";
+            String sqlInsert =
+                    "REPLACE INTO player_property (player_id, "
+                            + "property_key, property_value) VALUE (?, ?, ?)";
             stmt = conn.prepareStatement(sqlInsert);
             stmt.setInt(1, player.getId());
             stmt.setString(2, key);
@@ -266,24 +301,30 @@ public class DBPlayerDAO
 
         } finally {
             if (stmt != null) {
-                try { stmt.close(); } catch (SQLException e) {}
+                try {
+                    stmt.close();
+                } catch (SQLException e) {
+                }
             }
         }
     }
 
-    public void updatePassword(TregminePlayer player)
-    throws SQLException
+    public void updatePassword(TregminePlayer player) throws SQLException
     {
         PreparedStatement stmt = null;
         try {
-            String sql = "UPDATE player SET player_password = ? WHERE player_id = ?";
+            String sql =
+                    "UPDATE player SET player_password = ? WHERE player_id = ?";
             stmt = conn.prepareStatement(sql);
             stmt.setString(1, player.getPasswordHash());
             stmt.setInt(2, player.getId());
             stmt.execute();
         } finally {
             if (stmt != null) {
-                try { stmt.close(); } catch (SQLException e) {}
+                try {
+                    stmt.close();
+                } catch (SQLException e) {
+                }
             }
         }
     }

@@ -1,12 +1,8 @@
 package info.tregmine.commands;
 
-import static org.bukkit.ChatColor.*;
-import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.Location;
 import org.bukkit.Chunk;
-import org.bukkit.entity.Player;
-
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
 
@@ -37,7 +33,7 @@ public class TeleportToCommand extends AbstractCommand
         Chunk chunk = world.getChunkAt(loc);
         world.loadChunk(chunk);
 
-        if (world.isChunkLoaded(chunk)){
+        if (world.isChunkLoaded(chunk)) {
             player.teleport(loc);
         }
 

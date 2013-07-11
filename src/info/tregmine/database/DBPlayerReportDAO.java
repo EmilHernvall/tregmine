@@ -41,14 +41,15 @@ public class DBPlayerReportDAO
                 report.setId(rs.getInt("report_id"));
                 report.setSubjectId(rs.getInt("subject_id"));
                 report.setIssuerId(rs.getInt("issuer_id"));
-                report.setAction(
-                    PlayerReport.Action.fromString(rs.getString("report_action")));
+                report.setAction(PlayerReport.Action.fromString(rs
+                        .getString("report_action")));
                 report.setMessage(rs.getString("report_message"));
-                report.setTimestamp(new Date(rs.getInt("report_timestamp")*1000l));
+                report.setTimestamp(new Date(
+                        rs.getInt("report_timestamp") * 1000l));
 
                 int validUntil = rs.getInt("report_validuntil");
                 if (validUntil != 0) {
-                    report.setValidUntil(new Date(validUntil*1000l));
+                    report.setValidUntil(new Date(validUntil * 1000l));
                 }
 
                 reports.add(report);
@@ -57,25 +58,31 @@ public class DBPlayerReportDAO
             throw new RuntimeException(e);
         } finally {
             if (rs != null) {
-                try { rs.close(); } catch (SQLException e) {}
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                }
             }
             if (stmt != null) {
-                try { stmt.close(); } catch (SQLException e) {}
+                try {
+                    stmt.close();
+                } catch (SQLException e) {
+                }
             }
         }
 
         return reports;
     }
 
-    public void insertReport(PlayerReport report)
-    throws SQLException
+    public void insertReport(PlayerReport report) throws SQLException
     {
         PreparedStatement stmt = null;
         ResultSet rs = null;
         try {
-            String sql = "INSERT INTO player_report (subject_id, issuer_id, " +
-                         "report_action, report_message, report_timestamp, " +
-                         "report_validuntil) ";
+            String sql =
+                    "INSERT INTO player_report (subject_id, issuer_id, "
+                            + "report_action, report_message, report_timestamp, "
+                            + "report_validuntil) ";
             sql += "VALUES (?, ?, ?, ?, ?, ?)";
             stmt = conn.prepareStatement(sql);
 
@@ -85,9 +92,10 @@ public class DBPlayerReportDAO
             stmt.setString(3, action.toString());
             stmt.setString(4, report.getMessage());
             Date timestamp = report.getTimestamp();
-            stmt.setLong(5, timestamp.getTime()/1000l);
+            stmt.setLong(5, timestamp.getTime() / 1000l);
             Date validUntil = report.getValidUntil();
-            stmt.setLong(6, validUntil != null ? validUntil.getTime()/1000l : 0);
+            stmt.setLong(6, validUntil != null ? validUntil.getTime() / 1000l
+                    : 0);
             stmt.execute();
 
             stmt.executeQuery("SELECT LAST_INSERT_ID()");
@@ -98,10 +106,16 @@ public class DBPlayerReportDAO
             }
         } finally {
             if (rs != null) {
-                try { rs.close(); } catch (SQLException e) {}
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                }
             }
             if (stmt != null) {
-                try { stmt.close(); } catch (SQLException e) {}
+                try {
+                    stmt.close();
+                } catch (SQLException e) {
+                }
             }
         }
     }

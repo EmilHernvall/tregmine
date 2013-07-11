@@ -24,14 +24,10 @@ import info.tregmine.database.ConnectionPool;
 import info.tregmine.database.DBWalletDAO;
 import info.tregmine.database.DBTradeDAO;
 
-public class TradeCommand
-    extends AbstractCommand
-    implements Listener
+public class TradeCommand extends AbstractCommand implements Listener
 {
     private enum TradeState {
-        ITEM_SELECT,
-        BID,
-        CONSIDER_BID;
+        ITEM_SELECT, BID, CONSIDER_BID;
     };
 
     private static class TradeContext
@@ -96,12 +92,12 @@ public class TradeCommand
         player.setIsTrading(true);
         target.setIsTrading(true);
 
-        player.sendMessage(YELLOW + "[Trade] You are now trading with " +
-                           target.getChatName() + YELLOW + ". What do you want " +
-                           "to offer?");
+        player.sendMessage(YELLOW + "[Trade] You are now trading with "
+                + target.getChatName() + YELLOW + ". What do you want "
+                + "to offer?");
 
-        target.sendMessage(YELLOW + "[Trade] You are now in a trade with " +
-                           player.getChatName() + YELLOW + ". To exit, type \"quit\".");
+        target.sendMessage(YELLOW + "[Trade] You are now in a trade with "
+                + player.getChatName() + YELLOW + ". To exit, type \"quit\".");
 
         return true;
     }
@@ -109,7 +105,7 @@ public class TradeCommand
     @EventHandler
     public void onInventoryClose(InventoryCloseEvent event)
     {
-        TregminePlayer player = tregmine.getPlayer((Player)event.getPlayer());
+        TregminePlayer player = tregmine.getPlayer((Player) event.getPlayer());
         TradeContext ctx = activeTrades.get(player);
         if (ctx == null) {
             return;
@@ -117,8 +113,8 @@ public class TradeCommand
 
         TregminePlayer target = ctx.secondPlayer;
 
-        target.sendMessage(YELLOW + "[Trade] " + player.getChatName() + " " +
-                           YELLOW + " is offering: ");
+        target.sendMessage(YELLOW + "[Trade] " + player.getChatName() + " "
+                + YELLOW + " is offering: ");
         player.sendMessage("[Trade] You are offering: ");
 
         ItemStack[] contents = ctx.inventory.getContents();
@@ -128,17 +124,18 @@ public class TradeCommand
             }
             Material material = stack.getType();
             int amount = stack.getAmount();
-            target.sendMessage(YELLOW + "[Trade] " + amount +
-                               " " + material.toString());
-            player.sendMessage(YELLOW + "[Trade] " + amount +
-                               " " + material.toString());
+            target.sendMessage(YELLOW + "[Trade] " + amount + " "
+                    + material.toString());
+            player.sendMessage(YELLOW + "[Trade] " + amount + " "
+                    + material.toString());
         }
 
-        target.sendMessage(YELLOW + "[Trade] To make a bid, type \"bid <tregs>\". " +
-                           "For example: bid 1000");
-        player.sendMessage(YELLOW + "[Trade] Waiting for " + target.getChatName() +
-                           YELLOW + " to make a bid. Type \"change\" to modify " +
-                           "your offer.");
+        target.sendMessage(YELLOW
+                + "[Trade] To make a bid, type \"bid <tregs>\". "
+                + "For example: bid 1000");
+        player.sendMessage(YELLOW + "[Trade] Waiting for "
+                + target.getChatName() + YELLOW
+                + " to make a bid. Type \"change\" to modify " + "your offer.");
 
         ctx.state = TradeState.BID;
     }
@@ -195,7 +192,8 @@ public class TradeCommand
                 return;
             }
             if (ctx.state != TradeState.BID) {
-                player.sendMessage(RED + "[Trade] You can't make a bid right now.");
+                player.sendMessage(RED
+                        + "[Trade] You can't make a bid right now.");
                 return;
             }
 
@@ -203,13 +201,14 @@ public class TradeCommand
             try {
                 amount = Integer.parseInt(args[1]);
                 if (amount < 0) {
-                    player.sendMessage(RED + "[Trade] You have to bid an integer " +
-                                       "number of tregs.");
+                    player.sendMessage(RED
+                            + "[Trade] You have to bid an integer "
+                            + "number of tregs.");
                     return;
                 }
             } catch (NumberFormatException e) {
-                player.sendMessage(RED + "[Trade] You have to bid an integer " +
-                                   "number of tregs.");
+                player.sendMessage(RED + "[Trade] You have to bid an integer "
+                        + "number of tregs.");
                 return;
             }
 
@@ -220,24 +219,25 @@ public class TradeCommand
 
                 long balance = walletDAO.balance(second);
                 if (amount > balance) {
-                    player.sendMessage(RED + "[Trade] You only have " + balance +
-                                       " tregs!");
+                    player.sendMessage(RED + "[Trade] You only have " + balance
+                            + " tregs!");
                     return;
                 }
-            }
-            catch (SQLException e) {
+            } catch (SQLException e) {
                 throw new RuntimeException(e);
-            }
-            finally {
+            } finally {
                 if (conn != null) {
-                    try { conn.close(); } catch (SQLException e) {}
+                    try {
+                        conn.close();
+                    } catch (SQLException e) {
+                    }
                 }
             }
 
-            first.sendMessage(YELLOW + "[Trade] " + second.getChatName() + " bid " +
-                              amount + " tregs. Type \"accept\" to " +
-                              "proceed with the trade. Type \"change\" to modify " +
-                              "your offer. Type \"quit\" to stop trading.");
+            first.sendMessage(YELLOW + "[Trade] " + second.getChatName()
+                    + " bid " + amount + " tregs. Type \"accept\" to "
+                    + "proceed with the trade. Type \"change\" to modify "
+                    + "your offer. Type \"quit\" to stop trading.");
             second.sendMessage(YELLOW + "[Trade] You bid " + amount + "tregs.");
 
             ctx.bid = amount;
@@ -270,31 +270,33 @@ public class TradeCommand
 
                 if (walletDAO.take(second, ctx.bid)) {
                     walletDAO.add(first, ctx.bid);
-                    walletDAO.insertTransaction(second.getId(),
-                                                first.getId(),
-                                                ctx.bid);
+                    walletDAO.insertTransaction(second.getId(), first.getId(),
+                            ctx.bid);
 
-                    int tradeId = tradeDAO.insertTrade(first.getId(),
-                                                       second.getId(),
-                                                       ctx.bid);
+                    int tradeId =
+                            tradeDAO.insertTrade(first.getId(), second.getId(),
+                                    ctx.bid);
                     tradeDAO.insertStacks(tradeId, contents);
 
-                    first.sendMessage(YELLOW + "[Trade] " + ctx.bid + " tregs was " +
-                                      "added to your wallet!");
-                    second.sendMessage(YELLOW + "[Trade] " + ctx.bid + " tregs was " +
-                                      "withdrawn to your wallet!");
-                } else {
-                    first.sendMessage(RED + "[Trade] Failed to withdraw " + ctx.bid +
-                                      " from the wallet of " + second.getChatName() + "!");
+                    first.sendMessage(YELLOW + "[Trade] " + ctx.bid
+                            + " tregs was " + "added to your wallet!");
+                    second.sendMessage(YELLOW + "[Trade] " + ctx.bid
+                            + " tregs was " + "withdrawn to your wallet!");
+                }
+                else {
+                    first.sendMessage(RED + "[Trade] Failed to withdraw "
+                            + ctx.bid + " from the wallet of "
+                            + second.getChatName() + "!");
                     return;
                 }
-            }
-            catch (SQLException e) {
+            } catch (SQLException e) {
                 throw new RuntimeException(e);
-            }
-            finally {
+            } finally {
                 if (conn != null) {
-                    try { conn.close(); } catch (SQLException e) {}
+                    try {
+                        conn.close();
+                    } catch (SQLException e) {
+                    }
                 }
             }
 
@@ -314,13 +316,11 @@ public class TradeCommand
             activeTrades.remove(second);
         }
         else {
-            first.sendMessage(YELLOW + "[Trade] " + WHITE + "<" +
-                              player.getChatName() + WHITE + "> " +
-                              text);
+            first.sendMessage(YELLOW + "[Trade] " + WHITE + "<"
+                    + player.getChatName() + WHITE + "> " + text);
 
-            second.sendMessage(YELLOW + "[Trade] " + WHITE + "<" +
-                               player.getChatName() + WHITE + "> " +
-                               text);
+            second.sendMessage(YELLOW + "[Trade] " + WHITE + "<"
+                    + player.getChatName() + WHITE + "> " + text);
         }
     }
 }

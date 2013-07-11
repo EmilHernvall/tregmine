@@ -24,9 +24,10 @@ public class DBHomeDAO
     {
         PreparedStatement stmt = null;
         try {
-            stmt = conn.prepareStatement("INSERT INTO player_home (player_id, " +
-                    "home_x, home_y, home_z, home_yaw, home_pitch, home_world, " +
-                    "home_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+            stmt =
+                    conn.prepareStatement("INSERT INTO player_home (player_id, "
+                            + "home_x, home_y, home_z, home_yaw, home_pitch, home_world, "
+                            + "home_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
             stmt.setInt(1, player.getId());
             stmt.setDouble(2, loc.getX());
             stmt.setDouble(3, loc.getY());
@@ -40,7 +41,10 @@ public class DBHomeDAO
             throw new RuntimeException(e);
         } finally {
             if (stmt != null) {
-                try { stmt.close(); } catch (SQLException e) {}
+                try {
+                    stmt.close();
+                } catch (SQLException e) {
+                }
             }
         }
     }
@@ -55,8 +59,9 @@ public class DBHomeDAO
         PreparedStatement stmt = null;
         ResultSet rs = null;
         try {
-            stmt = conn.prepareStatement("SELECT * FROM player_home " +
-                                         "WHERE player_id = ? ORDER BY time DESC");
+            stmt =
+                    conn.prepareStatement("SELECT * FROM player_home "
+                            + "WHERE player_id = ? ORDER BY time DESC");
             stmt.setInt(1, playerId);
             stmt.execute();
 
@@ -69,16 +74,22 @@ public class DBHomeDAO
                 float yaw = rs.getFloat("yaw");
                 String world = rs.getString("world");
 
-                return new Location(server.getWorld(world), x,y,z, yaw, pitch);
+                return new Location(server.getWorld(world), x, y, z, yaw, pitch);
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
             if (rs != null) {
-                try { rs.close(); } catch (SQLException e) {}
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                }
             }
             if (stmt != null) {
-                try { stmt.close(); } catch (SQLException e) {}
+                try {
+                    stmt.close();
+                } catch (SQLException e) {
+                }
             }
         }
 

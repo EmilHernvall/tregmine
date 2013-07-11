@@ -25,25 +25,27 @@ import java.text.SimpleDateFormat;
 import java.text.ParseException;
 
 /**
- * Encapsulates metadata about the GeoIP database. The database has a date, is a premium or
- * standard version, and is one of the following types:
- *
+ * Encapsulates metadata about the GeoIP database. The database has a date, is a
+ * premium or standard version, and is one of the following types:
+ * 
  * <ul>
- *      <li>Country edition -- this is the most common version of the database. It includes
- *          the name of the country and it's ISO country code given an IP address.
- *      <li>Region edition -- includes the country information as well as
- *          what U.S. state or Canadian province the IP address is from if the IP address
- *          is from the U.S. or Canada.
- *      <li>City edition --  includes country, region, city, postal code, latitude, and
- *          longitude information.
- *      <li>Org edition -- includes netblock owner.
- *      <li>ISP edition -- ISP information.
+ * <li>Country edition -- this is the most common version of the database. It
+ * includes the name of the country and it's ISO country code given an IP
+ * address.
+ * <li>Region edition -- includes the country information as well as what U.S.
+ * state or Canadian province the IP address is from if the IP address is from
+ * the U.S. or Canada.
+ * <li>City edition -- includes country, region, city, postal code, latitude,
+ * and longitude information.
+ * <li>Org edition -- includes netblock owner.
+ * <li>ISP edition -- ISP information.
  * </ul>
- *
+ * 
  * @see com.maxmind.geoip.LookupService#getDatabaseInfo()
  * @author Matt Tucker
  */
-public class DatabaseInfo {
+public class DatabaseInfo
+{
 
     public final static int COUNTRY_EDITION = 1;
     public final static int REGION_EDITION_REV0 = 7;
@@ -55,21 +57,25 @@ public class DatabaseInfo {
     public final static int PROXY_EDITION = 8;
     public final static int ASNUM_EDITION = 9;
     public final static int NETSPEED_EDITION = 10;
-   public final static int COUNTRY_EDITION_V6 = 12;
+    public final static int COUNTRY_EDITION_V6 = 12;
 
-private static SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
+    private static SimpleDateFormat formatter =
+            new SimpleDateFormat("yyyyMMdd");
 
     private String info;
 
     /**
      * Creates a new DatabaseInfo object given the database info String.
+     * 
      * @param info
      */
-    public DatabaseInfo(String info) {
+    public DatabaseInfo(String info)
+    {
         this.info = info;
     }
 
-    public int getType() {
+    public int getType()
+    {
         if (info == null || info.equals("")) {
             return COUNTRY_EDITION;
         }
@@ -83,28 +89,30 @@ private static SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
 
     /**
      * Returns true if the database is the premium version.
-     *
+     * 
      * @return true if the premium version of the database.
      */
-    public boolean isPremium() {
+    public boolean isPremium()
+    {
         return info.indexOf("FREE") < 0;
     }
 
     /**
      * Returns the date of the database.
-     *
+     * 
      * @return the date of the database.
      */
-    public Date getDate() {
-        for (int i=0; i<info.length()-9; i++) {
+    public Date getDate()
+    {
+        for (int i = 0; i < info.length() - 9; i++) {
             if (Character.isWhitespace(info.charAt(i))) {
-                String dateString = info.substring(i+1, i+9);
+                String dateString = info.substring(i + 1, i + 9);
                 try {
                     synchronized (formatter) {
                         return formatter.parse(dateString);
                     }
+                } catch (ParseException pe) {
                 }
-                catch (ParseException pe) {  }
                 break;
             }
         }
@@ -112,7 +120,8 @@ private static SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
     }
 
     @Override
-	public String toString() {
+    public String toString()
+    {
         return info;
     }
 }

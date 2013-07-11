@@ -15,12 +15,12 @@ public class SignColorListener implements Listener
     @EventHandler
     public void onSignChange(SignChangeEvent e)
     {
-        for (int i=0; i<4; i++) {
-            String[] splitLine = (e.getLine(i)+" ").split("#");
+        for (int i = 0; i < 4; i++) {
+            String[] splitLine = (e.getLine(i) + " ").split("#");
             String newLine = splitLine[0];
             for (int j = 1; j < splitLine.length; j++) {
-                if(splitLine[j].length()==0 ||
-                   CHARS.indexOf(splitLine[j].charAt(0)) == -1) {
+                if (splitLine[j].length() == 0
+                        || CHARS.indexOf(splitLine[j].charAt(0)) == -1) {
 
                     newLine += "#";
                 }
@@ -29,7 +29,7 @@ public class SignColorListener implements Listener
                 }
                 newLine += splitLine[j];
             }
-            e.setLine(i,newLine);
+            e.setLine(i, newLine);
         }
     }
 }

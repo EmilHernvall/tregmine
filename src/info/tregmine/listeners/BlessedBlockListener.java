@@ -1,7 +1,5 @@
 package info.tregmine.listeners;
 
-import java.util.List;
-import java.util.ArrayList;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.Map;
@@ -12,7 +10,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.block.Chest;
 import org.bukkit.util.Vector;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -21,13 +18,6 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.inventory.InventoryOpenEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryHolder;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.configuration.file.YamlConfiguration;
-
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
 import info.tregmine.database.ConnectionPool;
@@ -72,10 +62,10 @@ public class BlessedBlockListener implements Listener
         Block block = event.getClickedBlock();
         TregminePlayer player = plugin.getPlayer(event.getPlayer());
 
-        if (event.getAction() == Action.RIGHT_CLICK_BLOCK &&
-            player.getItemInHand().getType() == Material.BONE &&
-            (player.isAdmin() || player.isGuardian()) &&
-            allowedMaterials.contains(block.getType())) {
+        if (event.getAction() == Action.RIGHT_CLICK_BLOCK
+                && player.getItemInHand().getType() == Material.BONE
+                && (player.isAdmin() || player.isGuardian())
+                && allowedMaterials.contains(block.getType())) {
 
             int targetId = player.getBlessTarget();
             if (targetId == 0) {
@@ -92,16 +82,16 @@ public class BlessedBlockListener implements Listener
             if (!player.isAdmin()) {
                 int amount;
                 switch (block.getType()) {
-                    case CHEST:
-                        amount = 25000;
-                        break;
-                    case WOOD_DOOR:
-                    case WOODEN_DOOR:
-                        amount = 2000;
-                        break;
-                    default:
-                        amount = 4000;
-                        break;
+                case CHEST:
+                    amount = 25000;
+                    break;
+                case WOOD_DOOR:
+                case WOODEN_DOOR:
+                    amount = 2000;
+                    break;
+                default:
+                    amount = 4000;
+                    break;
                 }
 
                 Connection conn = null;
@@ -110,31 +100,35 @@ public class BlessedBlockListener implements Listener
                     DBWalletDAO walletDAO = new DBWalletDAO(conn);
 
                     if (walletDAO.take(player, amount)) {
-                        player.sendMessage(ChatColor.LIGHT_PURPLE + (amount +
-                                           " tregs was taken from you"));
-                    } else {
-                        player.sendMessage(ChatColor.RED + "You need " + amount +
-                                           " tregs");
+                        player.sendMessage(ChatColor.LIGHT_PURPLE
+                                + (amount + " tregs was taken from you"));
+                    }
+                    else {
+                        player.sendMessage(ChatColor.RED + "You need " + amount
+                                + " tregs");
                         return;
                     }
-                }
-                catch (SQLException e) {
+                } catch (SQLException e) {
                     throw new RuntimeException(e);
-                }
-                finally {
+                } finally {
                     if (conn != null) {
-                        try { conn.close(); } catch (SQLException e) {}
+                        try {
+                            conn.close();
+                        } catch (SQLException e) {
+                        }
                     }
                 }
             }
 
             Location loc = block.getLocation();
             if (target.isOnline()) {
-                target.sendMessage(ChatColor.AQUA + "Your god blessed it in your name!");
+                target.sendMessage(ChatColor.AQUA
+                        + "Your god blessed it in your name!");
             }
-            player.sendMessage(ChatColor.AQUA + "You blessed for " + target.getName() + ".");
-            Tregmine.LOGGER.info(player.getName() + " Blessed a block " + loc +
-                                 " to " + target.getName() + ".");
+            player.sendMessage(ChatColor.AQUA + "You blessed for "
+                    + target.getName() + ".");
+            Tregmine.LOGGER.info(player.getName() + " Blessed a block " + loc
+                    + " to " + target.getName() + ".");
 
             Map<Location, Integer> blessedBlocks = plugin.getBlessedBlocks();
             blessedBlocks.put(loc, targetId);
@@ -144,16 +138,16 @@ public class BlessedBlockListener implements Listener
                 conn = ConnectionPool.getConnection();
 
                 DBInventoryDAO invDAO = new DBInventoryDAO(conn);
-                invDAO.insertInventory(target,
-                                       loc,
-                                       DBInventoryDAO.InventoryType.BLOCK);
-            }
-            catch (SQLException e) {
+                invDAO.insertInventory(target, loc,
+                        DBInventoryDAO.InventoryType.BLOCK);
+            } catch (SQLException e) {
                 throw new RuntimeException(e);
-            }
-            finally {
+            } finally {
                 if (conn != null) {
-                    try { conn.close(); } catch (SQLException e) {}
+                    try {
+                        conn.close();
+                    } catch (SQLException e) {
+                    }
                 }
             }
 
@@ -161,10 +155,8 @@ public class BlessedBlockListener implements Listener
             return;
         }
 
-
-        if ((event.getAction() == Action.RIGHT_CLICK_BLOCK  ||
-             event.getAction() == Action.LEFT_CLICK_BLOCK) &&
-            allowedMaterials.contains(block.getType())) {
+        if ((event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.LEFT_CLICK_BLOCK)
+                && allowedMaterials.contains(block.getType())) {
 
             Location loc = block.getLocation();
 
@@ -174,14 +166,16 @@ public class BlessedBlockListener implements Listener
                 TregminePlayer target = plugin.getPlayerOffline(id);
                 if (id != player.getId()) {
                     if (player.isAdmin()) {
-                        player.sendMessage(ChatColor.YELLOW + "Blessed to: " +
-                                target.getName() + "." );
-                    } else {
-                        player.sendMessage(ChatColor.RED + "Blessed to: " +
-                                target.getName() + ".");
+                        player.sendMessage(ChatColor.YELLOW + "Blessed to: "
+                                + target.getName() + ".");
+                    }
+                    else {
+                        player.sendMessage(ChatColor.RED + "Blessed to: "
+                                + target.getName() + ".");
                         event.setCancelled(true);
                     }
-                } else {
+                }
+                else {
                     player.sendMessage(ChatColor.AQUA + "Blessed to you.");
                     event.setCancelled(false);
                 }
@@ -197,7 +191,8 @@ public class BlessedBlockListener implements Listener
 
         Map<Location, Integer> blessedBlocks = plugin.getBlessedBlocks();
         if (blessedBlocks.containsKey(loc)) {
-            player.sendMessage(ChatColor.RED + "You can't destroy a blessed item.");
+            player.sendMessage(ChatColor.RED
+                    + "You can't destroy a blessed item.");
             event.setCancelled(true);
             return;
         }
@@ -218,12 +213,13 @@ public class BlessedBlockListener implements Listener
             Location loc3 = loc.add(new Vector(0, 0, 1));
             Location loc4 = loc.subtract(new Vector(0, 0, 1));
 
-            if (blessedBlocks.containsKey(loc1) ||
-                blessedBlocks.containsKey(loc2) ||
-                blessedBlocks.containsKey(loc3) ||
-                blessedBlocks.containsKey(loc4)) {
+            if (blessedBlocks.containsKey(loc1)
+                    || blessedBlocks.containsKey(loc2)
+                    || blessedBlocks.containsKey(loc3)
+                    || blessedBlocks.containsKey(loc4)) {
 
-                player.sendMessage(ChatColor.RED + "You can't place a chest next to one that is already blessed.");
+                player.sendMessage(ChatColor.RED
+                        + "You can't place a chest next to one that is already blessed.");
                 event.setCancelled(true);
                 return;
             }
@@ -234,10 +230,11 @@ public class BlessedBlockListener implements Listener
             Location loc = block.getLocation();
             Location loc1 = loc.subtract(new Vector(0, 0, 1));
 
-            if (blessedBlocks.containsKey(loc) ||
-                blessedBlocks.containsKey(loc)) {
+            if (blessedBlocks.containsKey(loc)
+                    || blessedBlocks.containsKey(loc1)) {
 
-                player.sendMessage(ChatColor.RED + "You can't place a hopper under a blessed chest.");
+                player.sendMessage(ChatColor.RED
+                        + "You can't place a hopper under a blessed chest.");
                 event.setCancelled(true);
             }
         }

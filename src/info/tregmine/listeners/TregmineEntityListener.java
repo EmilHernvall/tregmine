@@ -9,13 +9,13 @@ import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.event.entity.EntityExplodeEvent;
 
-public class TregmineEntityListener  implements Listener
+public class TregmineEntityListener implements Listener
 {
-    private Tregmine plugin;
+    //private Tregmine plugin;
 
     public TregmineEntityListener(Tregmine instance)
     {
-        this.plugin = instance;
+        //this.plugin = instance;
     }
 
     @EventHandler

@@ -15,17 +15,12 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.configuration.InvalidConfigurationException;
 
-import info.tregmine.database.ConnectionPool;
 import info.tregmine.api.TregminePlayer;
-import info.tregmine.Tregmine;
 
 public class DBInventoryDAO
 {
-    public enum InventoryType
-    {
-        BLOCK,
-        PLAYER,
-        PLAYER_ARMOR;
+    public enum InventoryType {
+        BLOCK, PLAYER, PLAYER_ARMOR;
     };
 
     private Connection conn;
@@ -37,39 +32,32 @@ public class DBInventoryDAO
 
     public static int uglyLocationHash(Location loc)
     {
-        int checksum = (loc.getBlockX() + "," +
-                        loc.getBlockZ() + "," +
-                        loc.getBlockY() + "," +
-                        loc.getWorld().getName()).hashCode();
+        int checksum =
+                (loc.getBlockX() + "," + loc.getBlockZ() + ","
+                        + loc.getBlockY() + "," + loc.getWorld().getName())
+                        .hashCode();
         return checksum;
     }
 
-    /*public void deleteBless(int checksum, String player, String world)
-    {
-        PreparedStatement stmt = null;
-        try {
-            stmt = conn.prepareStatement("DELETE FROM chestbless WHERE checksum = ?");
-            stmt.setInt(1, checksum);
-            stmt.execute();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } finally {
-            if (stmt != null) {
-                try { stmt.close(); } catch (SQLException e) {}
-            }
-        }
-    }*/
-
+    /*
+     * public void deleteBless(int checksum, String player, String world) {
+     * PreparedStatement stmt = null; try { stmt =
+     * conn.prepareStatement("DELETE FROM chestbless WHERE checksum = ?");
+     * stmt.setInt(1, checksum); stmt.execute(); } catch (SQLException e) {
+     * throw new RuntimeException(e); } finally { if (stmt != null) { try {
+     * stmt.close(); } catch (SQLException e) {} } } }
+     */
 
     public int getInventoryId(int playerId, InventoryType type)
-    throws SQLException
+            throws SQLException
     {
         PreparedStatement stmt = null;
         ResultSet rs = null;
         try {
 
-            String sql = "SELECT * FROM inventory " +
-                         "WHERE inventory_type = ? AND player_id = ?";
+            String sql =
+                    "SELECT * FROM inventory "
+                            + "WHERE inventory_type = ? AND player_id = ?";
 
             stmt = conn.prepareStatement(sql);
             stmt.setString(1, type.toString());
@@ -84,25 +72,30 @@ public class DBInventoryDAO
             return rs.getInt("inventory_id");
         } finally {
             if (rs != null) {
-                try { rs.close(); } catch (SQLException e) {}
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                }
             }
             if (stmt != null) {
-                try { stmt.close(); } catch (SQLException e) {}
+                try {
+                    stmt.close();
+                } catch (SQLException e) {
+                }
             }
         }
     }
 
-    public int insertInventory(TregminePlayer player,
-                                Location loc,
-                                InventoryType type)
-    throws SQLException
+    public int insertInventory(TregminePlayer player, Location loc,
+            InventoryType type) throws SQLException
     {
         PreparedStatement stmt = null;
         ResultSet rs = null;
         try {
-            String sql = "INSERT INTO inventory (player_id, inventory_checksum, " +
-                         "inventory_x, inventory_y, inventory_z, inventory_world, " +
-                         "inventory_type) ";
+            String sql =
+                    "INSERT INTO inventory (player_id, inventory_checksum, "
+                            + "inventory_x, inventory_y, inventory_z, inventory_world, "
+                            + "inventory_type) ";
             sql += "VALUES (?, ?, ?, ?, ?, ?, ?)";
             stmt = conn.prepareStatement(sql);
             stmt.setInt(1, player.getId());
@@ -112,7 +105,8 @@ public class DBInventoryDAO
                 stmt.setInt(4, 0);
                 stmt.setInt(5, 0);
                 stmt.setString(6, "");
-            } else {
+            }
+            else {
                 stmt.setInt(2, uglyLocationHash(loc));
                 stmt.setInt(3, loc.getBlockX());
                 stmt.setInt(4, loc.getBlockY());
@@ -132,17 +126,22 @@ public class DBInventoryDAO
             return rs.getInt(1);
         } finally {
             if (rs != null) {
-                try { rs.close(); } catch (SQLException e) {}
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                }
             }
             if (stmt != null) {
-                try { stmt.close(); } catch (SQLException e) {}
+                try {
+                    stmt.close();
+                } catch (SQLException e) {
+                }
             }
         }
     }
 
-    public void insertStacks(int inventoryId,
-                             ItemStack[] contents)
-    throws SQLException
+    public void insertStacks(int inventoryId, ItemStack[] contents)
+            throws SQLException
     {
         PreparedStatement stmt = null;
         try {
@@ -152,14 +151,18 @@ public class DBInventoryDAO
             stmt.execute();
         } finally {
             if (stmt != null) {
-                try { stmt.close(); } catch (SQLException e) {}
+                try {
+                    stmt.close();
+                } catch (SQLException e) {
+                }
                 stmt = null;
             }
         }
 
         try {
-            String sql = "INSERT INTO inventory_item (inventory_id, item_slot, " +
-                         "item_material, item_data, item_meta, item_count) ";
+            String sql =
+                    "INSERT INTO inventory_item (inventory_id, item_slot, "
+                            + "item_material, item_data, item_meta, item_count) ";
             sql += "VALUES (?, ?, ?, ?, ?, ?)";
             stmt = conn.prepareStatement(sql);
 
@@ -178,7 +181,8 @@ public class DBInventoryDAO
                     YamlConfiguration config = new YamlConfiguration();
                     config.set("meta", stack.getItemMeta());
                     stmt.setString(5, config.saveToString());
-                } else {
+                }
+                else {
                     stmt.setString(5, "");
                 }
                 stmt.setInt(6, stack.getAmount());
@@ -188,20 +192,22 @@ public class DBInventoryDAO
             }
         } finally {
             if (stmt != null) {
-                try { stmt.close(); } catch (SQLException e) {}
+                try {
+                    stmt.close();
+                } catch (SQLException e) {
+                }
             }
         }
     }
 
-    public ItemStack[] getStacks(int inventoryId, int size)
-    throws SQLException
+    public ItemStack[] getStacks(int inventoryId, int size) throws SQLException
     {
         PreparedStatement stmt = null;
         ResultSet rs = null;
         try {
 
-            String sql = "SELECT * FROM inventory_item " +
-                         "WHERE inventory_id = ?";
+            String sql =
+                    "SELECT * FROM inventory_item " + "WHERE inventory_id = ?";
 
             stmt = conn.prepareStatement(sql);
             stmt.setInt(1, inventoryId);
@@ -221,10 +227,10 @@ public class DBInventoryDAO
                 if (!"".equals(meta)) {
                     YamlConfiguration config = new YamlConfiguration();
                     config.loadFromString(meta);
-                    metaObj = (ItemMeta)config.get("meta");
+                    metaObj = (ItemMeta) config.get("meta");
                 }
 
-                stacks[slot] = new ItemStack(materialId, count, (short)data);
+                stacks[slot] = new ItemStack(materialId, count, (short) data);
                 if (metaObj != null) {
                     stacks[slot].setItemMeta(metaObj);
                 }
@@ -235,10 +241,16 @@ public class DBInventoryDAO
             throw new RuntimeException(e);
         } finally {
             if (rs != null) {
-                try { rs.close(); } catch (SQLException e) {}
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                }
             }
             if (stmt != null) {
-                try { stmt.close(); } catch (SQLException e) {}
+                try {
+                    stmt.close();
+                } catch (SQLException e) {
+                }
             }
         }
     }
@@ -255,7 +267,7 @@ public class DBInventoryDAO
     }
 
     public Map<Location, Integer> loadBlessedBlocks(Server server)
-    throws SQLException
+            throws SQLException
     {
         Map<Location, Integer> chests = new HashMap<Location, Integer>();
 
@@ -263,8 +275,9 @@ public class DBInventoryDAO
         ResultSet rs = null;
         try {
 
-            String sql = "SELECT * FROM inventory " +
-                         "WHERE inventory_type = 'chest'";
+            String sql =
+                    "SELECT * FROM inventory "
+                            + "WHERE inventory_type = 'chest'";
 
             stmt = conn.prepareStatement(sql);
             stmt.execute();
@@ -284,10 +297,16 @@ public class DBInventoryDAO
             }
         } finally {
             if (rs != null) {
-                try { rs.close(); } catch (SQLException e) {}
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                }
             }
             if (stmt != null) {
-                try { stmt.close(); } catch (SQLException e) {}
+                try {
+                    stmt.close();
+                } catch (SQLException e) {
+                }
             }
         }
 

@@ -1,14 +1,10 @@
 package info.tregmine.commands;
 
 import java.util.List;
-import java.util.Date;
 import java.sql.Connection;
 import java.sql.SQLException;
 
 import static org.bukkit.ChatColor.*;
-import org.bukkit.Server;
-import org.bukkit.entity.Player;
-
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
 import info.tregmine.api.PlayerReport;
@@ -45,7 +41,6 @@ public class ReportCommand extends AbstractCommand
             return true;
         }
 
-        Server server = player.getServer();
         String pattern = args[0];
         String message = argsToMessage(args);
 
@@ -69,13 +64,14 @@ public class ReportCommand extends AbstractCommand
 
             DBPlayerReportDAO reportDAO = new DBPlayerReportDAO(conn);
             reportDAO.insertReport(report);
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             throw new RuntimeException(e);
-        }
-        finally {
+        } finally {
             if (conn != null) {
-                try { conn.close(); } catch (SQLException e) {}
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                }
             }
         }
 

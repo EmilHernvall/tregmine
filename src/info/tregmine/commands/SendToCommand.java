@@ -2,12 +2,9 @@ package info.tregmine.commands;
 
 import java.util.List;
 
-import static org.bukkit.ChatColor.*;
 import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.Location;
-import org.bukkit.entity.Player;
-
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
 
@@ -45,7 +42,7 @@ public class SendToCommand extends AbstractCommand
         }
 
         Location cpspawn = world.getSpawnLocation();
-        player.teleport(cpspawn);
+        victim.teleport(cpspawn);
 
         return true;
     }
