@@ -2,6 +2,8 @@ package info.tregmine.listeners;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Map;
+import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -10,6 +12,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -17,13 +20,11 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
-//import org.bukkit.entity.Item;
+import org.bukkit.entity.Item;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.player.PlayerBucketEmptyEvent;
-import org.bukkit.event.player.PlayerBucketFillEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -170,17 +171,13 @@ public class TregminePlayerListener implements Listener
 
     private Tregmine plugin;
 
+    private Map<Item, TregminePlayer> droppedItems;
+
     public TregminePlayerListener(Tregmine instance)
     {
         this.plugin = instance;
-    }
 
-    @EventHandler
-    public void onPlayerBucketFill(PlayerBucketFillEvent event)
-    {
-        if (event.getPlayer().getWorld().getName().matches("alpha")) {
-            event.setCancelled(true);
-        }
+        droppedItems = new HashMap<Item, TregminePlayer>();
     }
 
     @EventHandler
@@ -202,14 +199,6 @@ public class TregminePlayerListener implements Listener
                     item.setItemMeta(meta);
                 }
             }
-        }
-    }
-
-    @EventHandler
-    public void onPlayerBucketEmpty(PlayerBucketEmptyEvent event)
-    {
-        if (event.getBucket() == Material.LAVA_BUCKET) {
-            event.setCancelled(true);
         }
     }
 
@@ -574,12 +563,41 @@ public class TregminePlayerListener implements Listener
             return;
         }
 
-        if ("alpha".equalsIgnoreCase(player.getWorld().getName())) {
-            event.setCancelled(true);
-            return;
-        }
+        Connection conn = null;
+        try {
+            conn = ConnectionPool.getConnection();
 
-        //Item item = event.getItem();
+            Item item = event.getItem();
+            TregminePlayer droppedBy = droppedItems.get(item);
+
+            if (droppedBy != null) {
+                ItemStack stack = item.getItemStack();
+
+                DBLogDAO logDAO = new DBLogDAO(conn);
+                logDAO.insertGiveLog(droppedBy, player, stack);
+
+                player.sendMessage(ChatColor.YELLOW + "You got " +
+                        stack.getAmount() + " " + stack.getType() + " from " +
+                        droppedBy.getName() + ".");
+
+                if (droppedBy.isOnline()) {
+                    droppedBy.sendMessage(ChatColor.YELLOW + "You gave " +
+                            stack.getAmount() + " " + stack.getType() + " to " +
+                            player.getName() + ".");
+                }
+
+                droppedItems.remove(item);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                }
+            }
+        }
     }
 
     @EventHandler
@@ -596,12 +614,8 @@ public class TregminePlayerListener implements Listener
             return;
         }
 
-        if ("alpha".equalsIgnoreCase(player.getWorld().getName())) {
-            event.setCancelled(true);
-            return;
-        }
-
-        //Item item = event.getItemDrop();
+        Item item = event.getItemDrop();
+        droppedItems.put(item, player);
     }
 
     @EventHandler

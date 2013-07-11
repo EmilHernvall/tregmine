@@ -32,6 +32,16 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.block.BlockBurnEvent;
+import org.bukkit.event.block.BlockIgniteEvent;
+import org.bukkit.event.block.LeavesDecayEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.player.PlayerBucketEmptyEvent;
+import org.bukkit.event.player.PlayerBucketFillEvent;
+import org.bukkit.event.player.PlayerPickupItemEvent;
+import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 
 import info.tregmine.database.ConnectionPool;
 
@@ -147,5 +157,87 @@ public class GameMagic extends JavaPlugin implements Listener
         Location loc = getServer().getWorld(worldName).getSpawnLocation();
 
         gotoWorld(player, loc);
+    }
+
+    @EventHandler
+    public void onPlayerBucketFill(PlayerBucketFillEvent event)
+    {
+        if ("alpha".equals(event.getPlayer().getWorld().getName())) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onPlayerBucketEmpty(PlayerBucketEmptyEvent event)
+    {
+        if (event.getBucket() == Material.LAVA_BUCKET) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onPlayerPickupItem(PlayerPickupItemEvent event)
+    {
+        if ("alpha".equals(event.getPlayer().getWorld().getName())) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onPlayerDropItem(PlayerDropItemEvent event)
+    {
+        if ("alpha".equals(event.getPlayer().getWorld().getName())) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onCreatureSpawn(CreatureSpawnEvent event)
+    {
+        if (event.getSpawnReason() == SpawnReason.SPAWNER_EGG) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onEntityExplode(EntityExplodeEvent event)
+    {
+        event.setCancelled(true);
+    }
+
+    @EventHandler
+    public void onBlockBurn(BlockBurnEvent event)
+    {
+        event.setCancelled(true);
+    }
+
+    @EventHandler
+    public void onLeavesDecay(LeavesDecayEvent event)
+    {
+        Location l = event.getBlock().getLocation();
+        Block fence =
+                event.getBlock()
+                     .getWorld()
+                     .getBlockAt(l.getBlockX(), l.getBlockY() - 1, l.getBlockZ());
+
+        if (fence.getType() == Material.FENCE) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onBlockIgnite(BlockIgniteEvent event)
+    {
+        event.setCancelled(true);
+
+        Location l = event.getBlock().getLocation();
+        Block block =
+                event.getBlock()
+                     .getWorld()
+                     .getBlockAt(l.getBlockX(), l.getBlockY() - 1, l.getBlockZ());
+
+        if (block.getType() == Material.OBSIDIAN) {
+            event.setCancelled(false);
+        }
     }
 }

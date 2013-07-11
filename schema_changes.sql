@@ -90,6 +90,9 @@ CREATE TABLE inventory_item (
     INDEX inventory_idx (inventory_id)
 );
 
+ALTER TABLE inventory MODIFY COLUMN inventory_type ENUM ('chest', 'player', 'player_armor');
+ALTER TABLE inventory_item MODIFY COLUMN item_data INT;
+
 CREATE TABLE trade (
     trade_id INT UNSIGNED AUTO_INCREMENT,
     sender_id INT UNSIGNED,
@@ -108,9 +111,6 @@ CREATE TABLE trade_item (
     item_count INT UNSIGNED,
     PRIMARY KEY (item_id)
 );
-
-ALTER TABLE inventory MODIFY COLUMN inventory_type ENUM ('chest', 'player', 'player_armor');
-ALTER TABLE inventory_item MODIFY COLUMN item_data INT;
 
 CREATE TABLE player_orelog (
     orelog_id INT UNSIGNED AUTO_INCREMENT,
@@ -132,3 +132,8 @@ CREATE TABLE player_givelog (
     givelog_timestamp INT UNSIGNED,
     PRIMARY KEY (givelog_id)
 );
+
+ALTER TABLE player_orelog ADD COLUMN orelog_x INTEGER,
+                          ADD COLUMN orelog_y INTEGER,
+                          ADD COLUMN orelog_z INTEGER,
+                          ADD COLUMN orelog_world VARCHAR (255);

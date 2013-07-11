@@ -1,12 +1,14 @@
 package info.tregmine.database;
 
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.configuration.file.YamlConfiguration;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.configuration.file.YamlConfiguration;
+
+import info.tregmine.api.TregminePlayer;
 
 public class DBTradeDAO
 {
