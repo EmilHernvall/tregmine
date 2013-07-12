@@ -1,9 +1,4 @@
-<project name="tregmine" default="compile" basedir=".">
-
-    <taskdef
-        name="delegategen"
-        classname="info.tregmine.DelegateGenTask"
-        classpath="lib/delegate_gen.jar:lib/bukkit.jar" />
+<project name="delegate_gen" default="compile" basedir=".">
 
     <property name="src" value="src" />
     <property name="build" value="bin" />
@@ -13,14 +8,6 @@
     <target name="init">
         <tstamp />
         <mkdir dir="${build}" />
-        <copy file="${src}/plugin.yml" todir="${build}" />
-    </target>
-
-    <target name="codegen" depends="init">
-        <delegategen
-            outputdir="src"
-            sourceinterface="org.bukkit.entity.Player"
-            destinationclass="info.tregmine.api.PlayerDelegate" />
     </target>
 
     <target name="compile" depends="init">
@@ -52,13 +39,7 @@
     <target name="jar" depends="compile">
         <jar destfile="${ant.project.name}.jar" basedir="${build}">
             <manifest>
-                <attribute name="Class-Path"
-                    value="lib/quadtree.jar
-                           lib/commons-dbcp-1.4.jar
-                           lib/Votifier.jar
-                           lib/servlet-api.jar
-                           lib/jetty-all.jar
-                           lib/commons-pool-1.5.6.jar" />
+                <attribute name="Main-Class" value="info.tregmine.DelegateGen" />
             </manifest>
         </jar>
     </target>
