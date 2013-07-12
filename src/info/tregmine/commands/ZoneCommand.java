@@ -19,23 +19,29 @@ import info.tregmine.zones.ZoneWorld;
 
 public class ZoneCommand extends AbstractCommand
 {
-    public ZoneCommand(Tregmine tregmine)
+    public ZoneCommand(Tregmine tregmine, String commandName)
     {
-        super(tregmine, "zone");
+        super(tregmine, commandName);
     }
 
     @Override
     public boolean handlePlayer(TregminePlayer player, String[] args)
     {
-        /*
-         * if ("town".equals(commandName)) { Zone zone =
-         * player.getCurrentZone(); if (zone == null) { player.sendMessage(RED +
-         * "You are not currently in a zone."); return true; }
-         * 
-         * commandName = "zone"; String[] args2 = new String[args.length + 1];
-         * args2[0] = args[0]; args2[1] = zone.getName(); for (int i = 1; i <
-         * args.length; i++) { args2[i+1] = args[i]; } args = args2; }
-         */
+        if ("town".equals(command)) {
+            Zone zone = player.getCurrentZone();
+            if (zone == null) {
+                player.sendMessage(RED + "You are not currently in a zone.");
+                return true;
+            }
+
+            String[] args2 = new String[args.length + 1];
+            args2[0] = args[0];
+            args2[1] = zone.getName();
+            for (int i = 1; i < args.length; i++) {
+                args2[i+1] = args[i];
+            }
+            args = args2;
+        }
 
         if (args.length == 0) {
             return true;

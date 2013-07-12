@@ -111,12 +111,22 @@ commands:
   summon:
     description: Summon a player to your location
     usage: /summon player
-  trade:
-    description: Trade safely
-    usage: /trade player
   testfill:
     description: Like fill, but with fake blocks (admins and builders only)
     usage: /testfill
+  town:
+    description: Shorthand for /zone
+    usage: /town delete \
+           /town adduser <player> <perm> \
+           /town deluser <player> \
+           /town entermsg <message> \
+           /town exitmsg <message> \
+           /town pvp <true/false> \
+           /town hostiles <true/false> \
+           /town enter <true/false> \
+           /town place <true/false> \
+           /town destroy <true/false> \
+           /town info [perm]
   tp:
     description: Teleport to a player
     usage: /tp player
@@ -129,6 +139,9 @@ commands:
   time:
     description: Change the time of day (donators only)
     usage: /time day|night|normal
+  trade:
+    description: Trade safely
+    usage: /trade player
   user:
     description: Modify a users permissions (admins and guardians only)
     usage: /user
@@ -149,7 +162,18 @@ commands:
     usage: /who <player>
   zone:
     description: Modify a zone
-    usage: /zone
+    usage: /zone create <name> <owner> \
+           /zone delete <name> \
+           /zone adduser <name> <player> <perm> \
+           /zone deluser <name> <player> \
+           /zone entermsg <zone> <message> \
+           /zone exitmsg <zone> <message> \
+           /zone pvp <zone> <true/false> \
+           /zone hostiles <zone> <true/false> \
+           /zone enter <zone> <true/false> \
+           /zone place <zone> <true/false> \
+           /zone destroy <zone> <true/false> \
+           /zone info <name> [perm]
 
 aliases:
   me: action

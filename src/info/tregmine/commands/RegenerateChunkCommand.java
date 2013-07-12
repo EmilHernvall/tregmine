@@ -16,7 +16,7 @@ public class RegenerateChunkCommand extends AbstractCommand
     @Override
     public boolean handlePlayer(TregminePlayer player, String[] args)
     {
-        if (!player.isAdmin()) {
+        if (!player.isOp()) {
             return false;
         }
 
