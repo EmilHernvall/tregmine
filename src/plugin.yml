@@ -144,6 +144,9 @@ commands:
   warp:
     description: Warp to a specified city
     usage: /warp city
+  who:
+    description: Look up information about a player
+    usage: /who <player>
   zone:
     description: Modify a zone
     usage: /zone
