@@ -188,6 +188,7 @@ public class Tregmine extends JavaPlugin
         getCommand("wallet").setExecutor(new WalletCommand(this));
         getCommand("warn").setExecutor(new WarnCommand(this));
         getCommand("warp").setExecutor(new WarpCommand(this));
+        getCommand("who").setExecutor(new WhoCommand(this));
         getCommand("zone").setExecutor(new ZoneCommand(this));
 
         try {
