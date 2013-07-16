@@ -23,8 +23,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit;
     }
 
+    $stmt = $conn->prepare("SELECT * FROM player_property WHERE player_id = ?");
+    $stmt->execute(array($user["player_id"]));
+
+    $properties = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
     $_SESSION["online"] = true;
     $_SESSION["id"] = $user["player_id"];
+
+    foreach ($properties as $property) {
+        $_SESSION[$property["property_key"]] = $property["property_value"];
+    }
+
+    if (!array_key_exists("admin", $_SESSION) &&
+        !array_key_exists("mentor", $_SESSION)) {
+
+        session_destroy();
+    }
 
     header('Location: start.php');
     exit;
@@ -32,7 +47,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 ?>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-	<title>Tregmine Admin Tool</title>
+    <title>Tregmine Admin Tool</title>
     <style type="text/css">
     @import 'style.css';
     </style>

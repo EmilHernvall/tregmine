@@ -51,7 +51,9 @@ if (array_key_exists("id", $_GET)) {
 
             <ul>
                 <li><a href="player_report.php?id=<?php echo $player["player_id"]; ?>">Reports</a></li>
+                <?php if (array_key_exists("admin", $_SESSION)): ?>
                 <li><a href="player_perm.php?id=<?php echo $player["player_id"]; ?>">Permissions</a></li>
+                <?php endif; ?>
             </ul>
 
             <h3>Logins</h3>

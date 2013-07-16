@@ -401,8 +401,8 @@ public class TregminePlayerListener implements Listener
             player.setGameMode(GameMode.SURVIVAL);
         }
 
-        // Load inventory from DB
-        Connection conn = null;
+        // Load inventory from DB - disabled until we know it's reliable
+        /*Connection conn = null;
         try {
             conn = ConnectionPool.getConnection();
 
@@ -433,7 +433,7 @@ public class TregminePlayerListener implements Listener
                 } catch (SQLException e) {
                 }
             }
-        }
+        }*/
 
         // Show a score board
         if (player.isOnline()) {

@@ -41,9 +41,32 @@ if (array_key_exists("id", $_GET)) {
         <h2><?php echo $player["player_name"]; ?> (<?php echo $player["player_id"]; ?>)</h2>
 
         <div class="col75">
-            <h3>New Comment</h3>
+            <h3>New Report</h3>
 
-            <form method="post" action="player_comment_save.php?id=<?php echo $player["player_id"]; ?>">
+            <form method="post" action="player_report_save.php?id=<?php echo $player["player_id"]; ?>">
+
+                <div class="field">
+                    <label for="action">Action</label>
+                    <div class="element">
+                        <select name="action" id="action">
+                            <option value="comment">Comment</option>
+                            <?php if (array_key_exists("admin", $_SESSION)): ?>
+                            <option value="softwarn">Softwarn</option>
+                            <option value="hardwarn">Hardwarn</option>
+                            <option value="ban">Ban</option>
+                            <?php endif; ?>
+                        </select>
+                    </div>
+                </div>
+
+                <?php if (array_key_exists("admin", $_SESSION)): ?>
+                <div class="field">
+                    <label for="duration">Duration</label>
+                    <div class="element">
+                        <input type="text" id="duration" name="duration" />
+                    </div>
+                </div>
+                <?php endif; ?>
 
                 <div class="field">
                     <label for="text">Message</label>
@@ -63,7 +86,9 @@ if (array_key_exists("id", $_GET)) {
             <h3>Actions</h3>
 
             <ul>
+                <?php if (array_key_exists("admin", $_SESSION)): ?>
                 <li><a href="player_perm.php?id=<?php echo $player["player_id"]; ?>">Permissions</a></li>
+                <?php endif; ?>
                 <li><a href="player_stats.php?id=<?php echo $player["player_id"]; ?>">Stats</a></li>
             </ul>
         </div>
@@ -74,8 +99,9 @@ if (array_key_exists("id", $_GET)) {
 
         <table style="width: 100%;">
             <cols>
-                <col style="width: 150px;" />
+                <col />
                 <col style="width: 75px;" />
+                <col style="width: 125px;" />
                 <col style="width: 125px;" />
                 <col style="width: 125px;" />
             </cols>
@@ -84,6 +110,7 @@ if (array_key_exists("id", $_GET)) {
                 <th>Action</th>
                 <th>Timestamp</th>
                 <th>Valid Until</th>
+                <th>Action</th>
             </tr>
             <?php foreach ($reports as $report): ?>
                 <tr>
@@ -99,9 +126,22 @@ if (array_key_exists("id", $_GET)) {
                         }
                         ?>
                     </td>
+                    <td style="font-style: italic;">
+                        <?php
+                        $type = $report["report_action"] == "ban" ||
+                                $report["report_action"] == "softwarn" ||
+                                $report["report_action"] == "hardwarn";
+                        $admin = array_key_exists("admin", $_SESSION);
+                        $valid = $report["report_validuntil"] > time();
+                        if ($type && $admin && $valid): ?>
+                            <a href="player_report_save.php?do=cancel&reportid=<?php echo $report["report_id"]; ?>" onclick="return confirm('Are you sure?');">Cancel</a>
+                        <?php endif; ?>
+                    </td>
                 </tr>
                 <tr>
-                    <td style="padding: 10px; border-bottom: 1px dotted #fff;" colspan="4"><?php echo $report["report_message"]; ?></td>
+                    <td style="padding: 10px; border-bottom: 1px dotted #fff;" colspan="5">
+                        <?php echo nl2br($report["report_message"]); ?>
+                    </td>
                 </tr>
             <?php endforeach; ?>
         </table>

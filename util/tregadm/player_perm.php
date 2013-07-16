@@ -3,6 +3,11 @@ require_once '_init.php';
 require_once '_check.php';
 require_once '_perm.php';
 
+if (!array_key_exists("admin", $_SESSION)) {
+    header('Location: index.php');
+    exit;
+}
+
 $player = array();
 $settings = array();
 if (array_key_exists("id", $_GET)) {
