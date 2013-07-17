@@ -29,6 +29,7 @@ public class SayCommand extends AbstractCommand
     @Override
     public boolean handlePlayer(TregminePlayer player, String[] args)
     {
+        if(player.isAdmin()){
         Server server = player.getServer();
         String msg = argsToMessage(args);
 
@@ -45,7 +46,7 @@ public class SayCommand extends AbstractCommand
                         + player.getChatName());
             }
         }
-
+    }
         return true;
     }
 
