@@ -627,7 +627,10 @@ public class ZonePlayerListener implements Listener
             objective.setDisplayName(ChatColor.AQUA + zoneName);
 
             String mainOwner = currentZone.getMainOwner();
-            if (mainOwner.length() > maxLen) {
+            if (mainOwner == null) {
+                mainOwner = "N/A";
+            }
+            else if (mainOwner.length() > maxLen) {
                 mainOwner = mainOwner.substring(1, maxLen);
             }
 

@@ -26,8 +26,13 @@ public class WeatherCommand extends AbstractCommand
             return true;
         }
 
-        WeatherType type = WeatherType.valueOf(args[0]);
-        player.setPlayerWeather(type);
+        try {
+            WeatherType type = WeatherType.valueOf(args[0].toUpperCase());
+            player.setPlayerWeather(type);
+        }
+        catch (IllegalArgumentException e) {
+            return false;
+        }
 
         return true;
     }

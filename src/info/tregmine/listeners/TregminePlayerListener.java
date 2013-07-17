@@ -274,10 +274,10 @@ public class TregminePlayerListener implements Listener
                 }
 
                 if (report.getAction() == PlayerReport.Action.SOFTWARN) {
-                    player.setNameColor("warned");
+                    player.setTempColor("warned");
                 }
                 else if (report.getAction() == PlayerReport.Action.HARDWARN) {
-                    player.setNameColor("warned");
+                    player.setTempColor("warned");
                     player.setTrusted(false);
                 }
                 else if (report.getAction() == PlayerReport.Action.BAN) {

@@ -55,6 +55,7 @@ public class TregminePlayer extends PlayerDelegate
     private String region = null;
     private String hostName = null;
     private String color = "white";
+    private String tempColor = null;
     private String timezone = "Europe/Stockholm";
     private String quitMessage = null;
     private boolean hiddenLocation = false;
@@ -349,17 +350,25 @@ public class TregminePlayer extends PlayerDelegate
 
     public ChatColor getNameColor()
     {
+        if (tempColor != null) {
+            return COLORS.get(tempColor);
+        }
         return COLORS.get(color);
-    }
-
-    public String getColor()
-    {
-        return color;
     }
 
     public void setNameColor(String v)
     {
         this.color = v;
+    }
+
+    public void setTempColor(String v)
+    {
+        this.tempColor = v;
+    }
+
+    public String getColor()
+    {
+        return color;
     }
 
     public void setInvisible(boolean v)

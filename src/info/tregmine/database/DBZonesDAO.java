@@ -457,7 +457,7 @@ public class DBZonesDAO
 
             rs = stmt.getResultSet();
             while (rs.next()) {
-                owners.add(rs.getString("player"));
+                owners.add(rs.getString("player_name"));
             }
         } finally {
             if (rs != null) {

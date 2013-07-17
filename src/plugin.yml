@@ -165,7 +165,7 @@ commands:
     usage: /warp city
   weather:
     description: Change weather (donators only)
-    usage: /weather
+    usage: /weather <downfall or clear>
   who:
     description: Look up information about a player
     usage: /who <player>

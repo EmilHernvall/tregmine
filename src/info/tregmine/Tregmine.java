@@ -71,13 +71,14 @@ public class Tregmine extends JavaPlugin
         players = new HashMap<String, TregminePlayer>();
         playersById = new HashMap<Integer, TregminePlayer>();
 
-        worlds = new TreeMap<String, ZoneWorld>(new Comparator<String>() {
-            @Override
-            public int compare(String a, String b)
-            {
-                return a.compareToIgnoreCase(b);
-            }
-        });
+        worlds = new TreeMap<String, ZoneWorld>(
+            new Comparator<String>() {
+                @Override
+                public int compare(String a, String b)
+                {
+                    return a.compareToIgnoreCase(b);
+                }
+            });
 
         zones = new HashMap<Integer, Zone>();
 
@@ -97,6 +98,8 @@ public class Tregmine extends JavaPlugin
 
             DBInventoryDAO inventoryDAO = new DBInventoryDAO(conn);
             this.blessedBlocks = inventoryDAO.loadBlessedBlocks(getServer());
+
+            LOGGER.info("Loaded " + blessedBlocks.size() + " blessed blocks");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
@@ -199,14 +202,14 @@ public class Tregmine extends JavaPlugin
 
             webServer = new Server(9192);
             webServer.setHandler(webHandler);
-            webServer.start();
+            //webServer.start();
+
+            BukkitScheduler scheduler = server.getScheduler();
+            //scheduler.scheduleSyncRepeatingTask(this, webHandler, 0, 20);
         }
         catch (Exception e) {
             LOGGER.log(Level.WARNING, "Failed to start web server!", e);
         }
-
-        BukkitScheduler scheduler = server.getScheduler();
-        scheduler.scheduleSyncRepeatingTask(this, webHandler, 0, 20);
     }
 
     // run when plugin is disabled

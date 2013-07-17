@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.TimeZone;
 import java.util.zip.CRC32;
 
+import org.bukkit.WorldCreator;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Color;
 import org.bukkit.World;
@@ -59,6 +60,26 @@ public class GameMagic extends JavaPlugin implements Listener
     {
         PluginManager pluginMgm = getServer().getPluginManager();
         pluginMgm.registerEvents(this, this);
+
+        WorldCreator alpha = new WorldCreator("alpha");
+        alpha.environment(World.Environment.NORMAL);
+        alpha.createWorld();
+
+        WorldCreator elva = new WorldCreator("elva");
+        elva.environment(World.Environment.NORMAL);
+        elva.createWorld();
+
+        WorldCreator treton = new WorldCreator("treton");
+        treton.environment(World.Environment.NORMAL);
+        treton.createWorld();
+
+        WorldCreator einhome = new WorldCreator("einhome");
+        einhome.environment(World.Environment.NORMAL);
+        einhome.createWorld();
+
+        WorldCreator citadel = new WorldCreator("citadel");
+        citadel.environment(World.Environment.NORMAL);
+        citadel.createWorld();
 
         // Portal in tower of einhome
         portalLookup.put(-1488547832, "world");
