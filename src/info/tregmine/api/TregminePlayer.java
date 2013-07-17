@@ -515,6 +515,16 @@ public class TregminePlayer extends PlayerDelegate
         return targetZoneId;
     }
 
+    public void hidePlayer(TregminePlayer player)
+    {
+        hidePlayer(player.getDelegate());
+    }
+
+    public void showPlayer(TregminePlayer player)
+    {
+        showPlayer(player.getDelegate());
+    }
+
     @Override
     public boolean equals(Object obj)
     {
