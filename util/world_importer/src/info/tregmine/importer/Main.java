@@ -147,14 +147,13 @@ public class Main
             blessableCounter = 0,
             errorCounter = 0;
         for (File regionFile : list) {
+            /*if (!"r.-236.-2.mca".equals(regionFile.getName())) {
+                continue;
+            }*/
             System.out.printf("Processing %s (%d/%d)\n",
                               regionFile.getName(),
                               regionCounter,
                               list.length);
-            if (regionCounter < 14000) {
-                regionCounter++;
-                continue;
-            }
 
             RegionFile region = new RegionFile(regionFile);
             for (int x = 0; x < 32; x++) {
@@ -194,8 +193,10 @@ public class Main
                     regionChunkInputStream.close();
 
                     CompoundTag level = chunkData.getCompound("Level");
-                    int xIdx = level.getInt("xPos");
-                    int zIdx = level.getInt("zPos");
+                    int xIdx = level.getInt("xPos") * 16;
+                    int zIdx = level.getInt("zPos") * 16;
+
+                    //System.out.printf("Chunk: pos=(%d, %d) chunk=(%d, %d) file=%s\n", xIdx, zIdx, x, z, regionFile.getName());
 
                     ListTag<? extends Tag> sections = level.getList("Sections");
                     for (int i = 0; i < sections.size(); i++) {
@@ -259,7 +260,7 @@ public class Main
                         }
                     }
 
-                    ListTag<? extends Tag> entities = level.getList("TileEntities");
+                    /*ListTag<? extends Tag> entities = level.getList("TileEntities");
                     for (int i = 0; i < entities.size(); i++) {
                         CompoundTag entity = (CompoundTag)entities.get(i);
                         String id = entity.getString("id");
@@ -321,7 +322,7 @@ public class Main
                         //}
 
                         invCounter++;
-                    }
+                    }*/
                 }
             }
 
