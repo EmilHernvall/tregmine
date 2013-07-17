@@ -1,3 +1,19 @@
+DROP TABLE X_OLD_chat;
+DROP TABLE X_OLD_homes;
+DROP TABLE X_OLD_users;
+DROP TABLE motd;
+DROP TABLE log;
+DROP TABLE test;
+DROP TABLE rank;
+DROP TABLE rank_command;
+DROP TABLE stats_sign;
+DROP TABLE stats_user;
+
+ALTER TABLE items_destroyvalue RENAME item;
+ALTER TABLE item CHANGE COLUMN itemid item_id INT UNSIGNED;
+ALTER TABLE item CHANGE COLUMN name item_name VARCHAR (50);
+ALTER TABLE item CHANGE COLUMN value item_value INT UNSIGNED;
+
 ALTER TABLE user_settings DROP INDEX id;
 ALTER TABLE user_settings ADD PRIMARY KEY (id, `key`);
 ALTER TABLE zone CHANGE COLUMN texture zone_texture TEXT;

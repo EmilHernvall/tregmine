@@ -185,6 +185,9 @@ public class DBPlayerDAO
                 else if ("timezone".equals(key)) {
                     player.setTimezone(value);
                 }
+                else if ("quitmessage".equals(key)) {
+                    player.setQuitMessage(value);
+                }
             }
         } finally {
             if (rs != null) {
@@ -273,6 +276,7 @@ public class DBPlayerDAO
         updateProperty(player, "hostName", player.getHostName());
         updateProperty(player, "color", player.getColor());
         updateProperty(player, "timezone", player.getTimezone());
+        updateProperty(player, "quitmessage", player.getQuitMessage());
     }
 
     private void updateProperty(TregminePlayer player, String key, boolean value)

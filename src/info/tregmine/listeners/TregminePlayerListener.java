@@ -402,24 +402,22 @@ public class TregminePlayerListener implements Listener
         }
 
         // Load inventory from DB - disabled until we know it's reliable
-        /*Connection conn = null;
-        try {
+        Connection conn = null;
+        /*try {
             conn = ConnectionPool.getConnection();
 
             PlayerInventory inv = (PlayerInventory) player.getInventory();
 
             DBInventoryDAO invDAO = new DBInventoryDAO(conn);
 
-            int invId =
-                    invDAO.getInventoryId(player.getId(), InventoryType.PLAYER);
+            int invId = invDAO.getInventoryId(player.getId(), InventoryType.PLAYER);
             if (invId != -1) {
                 Tregmine.LOGGER.info("Loaded inventory from DB");
                 inv.setContents(invDAO.getStacks(invId, inv.getSize()));
             }
 
-            int armorId =
-                    invDAO.getInventoryId(player.getId(),
-                            InventoryType.PLAYER_ARMOR);
+            int armorId = invDAO.getInventoryId(player.getId(),
+                                                InventoryType.PLAYER_ARMOR);
             if (armorId != -1) {
                 Tregmine.LOGGER.info("Loaded armor from DB");
                 inv.setArmorContents(invDAO.getStacks(armorId, 4));
@@ -428,10 +426,7 @@ public class TregminePlayerListener implements Listener
             throw new RuntimeException(e);
         } finally {
             if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                }
+                try { conn.close(); } catch (SQLException e) { }
             }
         }*/
 
@@ -460,10 +455,7 @@ public class TregminePlayerListener implements Listener
                 throw new RuntimeException(e);
             } finally {
                 if (conn != null) {
-                    try {
-                        conn.close();
-                    } catch (SQLException e) {
-                    }
+                    try { conn.close(); } catch (SQLException e) { }
                 }
             }
 
@@ -494,12 +486,9 @@ public class TregminePlayerListener implements Listener
 
             // Insert regular inventory
             DBInventoryDAO invDAO = new DBInventoryDAO(conn);
-            int invId =
-                    invDAO.getInventoryId(player.getId(), InventoryType.PLAYER);
+            int invId = invDAO.getInventoryId(player.getId(), InventoryType.PLAYER);
             if (invId == -1) {
-                invId =
-                        invDAO.insertInventory(player, null,
-                                InventoryType.PLAYER);
+                invId = invDAO.insertInventory(player, null, InventoryType.PLAYER);
             }
 
             invDAO.insertStacks(invId, inv.getContents());
@@ -509,9 +498,8 @@ public class TregminePlayerListener implements Listener
                     invDAO.getInventoryId(player.getId(),
                             InventoryType.PLAYER_ARMOR);
             if (armorId == -1) {
-                armorId =
-                        invDAO.insertInventory(player, null,
-                                InventoryType.PLAYER_ARMOR);
+                armorId = invDAO.insertInventory(player, null,
+                                                 InventoryType.PLAYER_ARMOR);
             }
 
             invDAO.insertStacks(armorId, inv.getArmorContents());
@@ -528,10 +516,14 @@ public class TregminePlayerListener implements Listener
         }
 
         if (!player.isOp()) {
-            Random rand = new Random();
-            int msgIndex = rand.nextInt(quitMessages.length);
-            String message =
-                    String.format(quitMessages[msgIndex], player.getChatName());
+            String message = null;
+            if (player.getQuitMessage() != null) {
+                message = player.getQuitMessage();
+            } else {
+                Random rand = new Random();
+                int msgIndex = rand.nextInt(quitMessages.length);
+                message = String.format(quitMessages[msgIndex], player.getChatName());
+            }
             plugin.getServer().broadcastMessage(message);
         }
 

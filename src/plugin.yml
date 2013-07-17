@@ -90,6 +90,9 @@ commands:
   pos:
     description: Prints your position to the console
     usage: /pos
+  quitmessage:
+    description: Set a quit message (donators only)
+    usage: /quitmessage <message>
   regeneratechunk:
     description: Regenerate the current chunk (admin only)
     usage: /regeneratechunk
@@ -99,6 +102,9 @@ commands:
   say:
     description: Speak as god (admins only)
     usage: /say message
+  sell:
+    description: Sell stuff to the central bank
+    usage: /sell
   sendto:
     description: Send a player to another world (admins only)
     usage: /sendto player world
@@ -157,6 +163,9 @@ commands:
   warp:
     description: Warp to a specified city
     usage: /warp city
+  weather:
+    description: Change weather (donators only)
+    usage: /weather
   who:
     description: Look up information about a player
     usage: /who <player>

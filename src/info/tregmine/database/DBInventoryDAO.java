@@ -55,9 +55,8 @@ public class DBInventoryDAO
         ResultSet rs = null;
         try {
 
-            String sql =
-                    "SELECT * FROM inventory "
-                            + "WHERE inventory_type = ? AND player_id = ?";
+            String sql = "SELECT * FROM inventory " +
+                         "WHERE inventory_type = ? AND player_id = ?";
 
             stmt = conn.prepareStatement(sql);
             stmt.setString(1, type.toString());
@@ -93,9 +92,9 @@ public class DBInventoryDAO
         ResultSet rs = null;
         try {
             String sql =
-                    "INSERT INTO inventory (player_id, inventory_checksum, "
-                            + "inventory_x, inventory_y, inventory_z, inventory_world, "
-                            + "inventory_type) ";
+                    "INSERT INTO inventory (player_id, inventory_checksum, " +
+                    "inventory_x, inventory_y, inventory_z, inventory_world, " +
+                    "inventory_type) ";
             sql += "VALUES (?, ?, ?, ?, ?, ?, ?)";
             stmt = conn.prepareStatement(sql);
             stmt.setInt(1, player.getId());
@@ -160,9 +159,8 @@ public class DBInventoryDAO
         }
 
         try {
-            String sql =
-                    "INSERT INTO inventory_item (inventory_id, item_slot, "
-                            + "item_material, item_data, item_meta, item_count) ";
+            String sql = "INSERT INTO inventory_item (inventory_id, item_slot, " +
+                         "item_material, item_data, item_meta, item_count) ";
             sql += "VALUES (?, ?, ?, ?, ?, ?)";
             stmt = conn.prepareStatement(sql);
 
@@ -206,8 +204,8 @@ public class DBInventoryDAO
         ResultSet rs = null;
         try {
 
-            String sql =
-                    "SELECT * FROM inventory_item " + "WHERE inventory_id = ?";
+            String sql = "SELECT * FROM inventory_item " +
+                         "WHERE inventory_id = ?";
 
             stmt = conn.prepareStatement(sql);
             stmt.setInt(1, inventoryId);
@@ -275,9 +273,8 @@ public class DBInventoryDAO
         ResultSet rs = null;
         try {
 
-            String sql =
-                    "SELECT * FROM inventory "
-                            + "WHERE inventory_type = 'chest'";
+            String sql = "SELECT * FROM inventory " +
+                         "WHERE inventory_type = 'chest'";
 
             stmt = conn.prepareStatement(sql);
             stmt.execute();

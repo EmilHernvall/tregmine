@@ -27,7 +27,7 @@ public class ChatListener implements Listener
     public void onPlayerChat(AsyncPlayerChatEvent event)
     {
         TregminePlayer sender = plugin.getPlayer(event.getPlayer());
-        if (sender.isTrading()) {
+        if (sender.getChatState() != TregminePlayer.ChatState.CHAT) {
             return;
         }
 

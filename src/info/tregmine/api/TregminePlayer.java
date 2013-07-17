@@ -17,6 +17,10 @@ public class TregminePlayer extends PlayerDelegate
         ACTIVE, INACTIVE, QUEUED;
     };
 
+    public enum ChatState {
+        CHAT, TRADE, SELL;
+    };
+
     @SuppressWarnings("serial")
     private final static Map<String, ChatColor> COLORS =
             new HashMap<String, ChatColor>() {
@@ -52,6 +56,7 @@ public class TregminePlayer extends PlayerDelegate
     private String hostName = null;
     private String color = "white";
     private String timezone = "Europe/Stockholm";
+    private String quitMessage = null;
     private boolean hiddenLocation = false;
     private boolean invisible = false;
     private boolean admin = false;
@@ -70,7 +75,7 @@ public class TregminePlayer extends PlayerDelegate
     private Zone currentZone = null;
     private GuardianState guardianState = null;
     private int blessTarget = 0;
-    private boolean isTrading = false;
+    private ChatState chatState = ChatState.CHAT;
 
     // Player state for block fill
     private Block fillBlock1 = null;
@@ -332,6 +337,16 @@ public class TregminePlayer extends PlayerDelegate
         return timezone;
     }
 
+    public void setQuitMessage(String v)
+    {
+        this.quitMessage = v;
+    }
+
+    public String getQuitMessage()
+    {
+        return quitMessage;
+    }
+
     public ChatColor getNameColor()
     {
         return COLORS.get(color);
@@ -409,14 +424,14 @@ public class TregminePlayer extends PlayerDelegate
         return teleportShield;
     }
 
-    public void setIsTrading(boolean v)
+    public void setChatState(ChatState v)
     {
-        this.isTrading = v;
+        this.chatState = v;
     }
 
-    public boolean isTrading()
+    public ChatState getChatState()
     {
-        return isTrading;
+        return chatState;
     }
 
     // block fill state
