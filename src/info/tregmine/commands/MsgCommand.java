@@ -28,7 +28,7 @@ public class MsgCommand extends AbstractCommand
     @Override
     public boolean handlePlayer(TregminePlayer player, String[] args)
     {
-        if (args.length != 1) {
+        if (args.length < 2) {
             return false;
         }
 

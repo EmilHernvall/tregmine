@@ -137,7 +137,7 @@ public class PlayerLookupListener implements Listener
             }
         }
 
-        if (aliasList == null) {
+        if (aliasList != null) {
             Tregmine.LOGGER.info("Aliases: " + aliasList);
 
             Player[] players = plugin.getServer().getOnlinePlayers();
