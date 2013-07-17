@@ -30,9 +30,8 @@ public class PlayerLookupListener implements Listener
     {
         plugin = instance;
         try {
-            cl =
-                    new LookupService("GeoIPCity.dat",
-                            LookupService.GEOIP_MEMORY_CACHE);
+            cl = new LookupService("GeoIPCity.dat",
+                                   LookupService.GEOIP_MEMORY_CACHE);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

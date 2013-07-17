@@ -126,9 +126,9 @@ public class BlessedBlockListener implements Listener
                         + "Your god blessed it in your name!");
             }
             player.sendMessage(ChatColor.AQUA + "You blessed for "
-                    + target.getName() + ".");
+                    + target.getChatName() + ".");
             Tregmine.LOGGER.info(player.getName() + " Blessed a block " + loc
-                    + " to " + target.getName() + ".");
+                    + " to " + target.getChatName() + ".");
 
             Map<Location, Integer> blessedBlocks = plugin.getBlessedBlocks();
             blessedBlocks.put(loc, targetId);
@@ -167,11 +167,11 @@ public class BlessedBlockListener implements Listener
                 if (id != player.getId()) {
                     if (player.isAdmin()) {
                         player.sendMessage(ChatColor.YELLOW + "Blessed to: "
-                                + target.getName() + ".");
+                                + target.getChatName() + ".");
                     }
                     else {
                         player.sendMessage(ChatColor.RED + "Blessed to: "
-                                + target.getName() + ".");
+                                + target.getChatName() + ".");
                         event.setCancelled(true);
                     }
                 }
