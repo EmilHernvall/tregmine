@@ -518,7 +518,7 @@ public class TregminePlayerListener implements Listener
         if (!player.isOp()) {
             String message = null;
             if (player.getQuitMessage() != null) {
-                message = player.getQuitMessage();
+                message = player.getChatName() + " quit: " + ChatColor.YELLOW + player.getQuitMessage();
             } else {
                 Random rand = new Random();
                 int msgIndex = rand.nextInt(quitMessages.length);

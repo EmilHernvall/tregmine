@@ -61,18 +61,18 @@ public class DBHomeDAO
         try {
             stmt =
                     conn.prepareStatement("SELECT * FROM player_home "
-                            + "WHERE player_id = ? ORDER BY time DESC");
+                            + "WHERE player_id = ? ORDER BY home_time DESC");
             stmt.setInt(1, playerId);
             stmt.execute();
 
             rs = stmt.getResultSet();
             if (rs.next()) {
-                double x = rs.getDouble("x");
-                double y = rs.getDouble("y");
-                double z = rs.getDouble("z");
-                float pitch = rs.getFloat("pitch");
-                float yaw = rs.getFloat("yaw");
-                String world = rs.getString("world");
+                double x = rs.getDouble("home_x");
+                double y = rs.getDouble("home_y");
+                double z = rs.getDouble("home_z");
+                float pitch = rs.getFloat("home_pitch");
+                float yaw = rs.getFloat("home_yaw");
+                String world = rs.getString("home_world");
 
                 return new Location(server.getWorld(world), x, y, z, yaw, pitch);
             }

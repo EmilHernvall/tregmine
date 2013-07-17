@@ -9,9 +9,11 @@ commands:
   admins:
     description: Send a message to all active admins
     usage: /admins message
+    aliases: a
   guardians:
     description: Send a message to all active guardians
     usage: /guardians message
+    aliases: g
   creative:
     description: Switch to creative mode (admins and builders only)
     usage: /creative
@@ -21,6 +23,7 @@ commands:
   action:
     description: Indicates an action in chat
     usage: /action message
+    aliases: me
   ban:
     description: Ban the specified player
     usage: /ban player
@@ -75,6 +78,7 @@ commands:
   msg:
     description: Message another player
     usage: /msg player message
+    aliases: [m, tell]
   newspawn:
     description: Temporarily change the spawn on this map (admin only)
     usage: /newspawn
@@ -117,6 +121,7 @@ commands:
   summon:
     description: Summon a player to your location
     usage: /summon player
+    aliases: s
   testfill:
     description: Like fill, but with fake blocks (admins and builders only)
     usage: /testfill
@@ -139,6 +144,7 @@ commands:
   tpshield:
     description: Prevent players from teleporting to you (donators only)
     usage: /tpshield
+    aliases: tpblock
   tpto:
     description: Teleport to specified coordinates (admin only)
     usage: /tpto x y z
@@ -183,11 +189,3 @@ commands:
            /zone place <zone> <true/false> \
            /zone destroy <zone> <true/false> \
            /zone info <name> [perm]
-
-aliases:
-  me: action
-  m: msg
-  a: admins
-  g: guardians
-  s: summon
-  tpshield: tpblock
