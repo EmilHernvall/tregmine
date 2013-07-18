@@ -63,10 +63,8 @@ public class Tregmine extends JavaPlugin
     private Map<Integer, Zone> zones;
 
     @Override
-    public void onEnable()
+    public void onLoad()
     {
-        this.server = getServer();
-
         // Set up all data structures
         players = new HashMap<String, TregminePlayer>();
         playersById = new HashMap<Integer, TregminePlayer>();
@@ -90,6 +88,45 @@ public class Tregmine extends JavaPlugin
         WorldCreator nether = new WorldCreator("world_nether");
         nether.environment(Environment.NETHER);
         nether.createWorld();
+
+        Connection conn = null;
+        try {
+            conn = ConnectionPool.getConnection();
+
+            DBPlayerDAO playerDAO = new DBPlayerDAO(conn);
+            DBLogDAO logDAO = new DBLogDAO(conn);
+
+            Player[] players = getServer().getOnlinePlayers();
+            for (Player player : players) {
+                TregminePlayer tregPlayer = playerDAO.getPlayer(player);
+                addPlayer(tregPlayer);
+
+                player.sendMessage(ChatColor.GRAY
+                        + "Tregmine successfully loaded " + "to build: "
+                        + this.getDescription().getVersion());
+
+                logDAO.insertLogin(tregPlayer, false);
+
+                tregPlayer.setTemporaryChatName(tregPlayer.getNameColor()
+                        + tregPlayer.getName());
+
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onEnable()
+    {
+        this.server = getServer();
 
         // Load blessed blocks
         Connection conn = null;
@@ -244,39 +281,6 @@ public class Tregmine extends JavaPlugin
             }
         }
 
-    }
-
-    @Override
-    public void onLoad()
-    {
-        Connection conn = null;
-        try {
-            conn = ConnectionPool.getConnection();
-
-            DBPlayerDAO playerDAO = new DBPlayerDAO(conn);
-            DBLogDAO logDAO = new DBLogDAO(conn);
-
-            Player[] players = getServer().getOnlinePlayers();
-            for (Player player : players) {
-                TregminePlayer tregPlayer = playerDAO.getPlayer(player);
-                addPlayer(tregPlayer);
-
-                player.sendMessage(ChatColor.GRAY
-                        + "Tregmine successfully loaded " + "to build: "
-                        + this.getDescription().getVersion());
-
-                logDAO.insertLogin(tregPlayer, false);
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                }
-            }
-        }
     }
 
     public void reloadPlayer(TregminePlayer player)
