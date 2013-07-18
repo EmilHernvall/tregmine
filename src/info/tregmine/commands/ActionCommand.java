@@ -43,7 +43,7 @@ public class ActionCommand extends AbstractCommand
             if (!channel.equals(to.getChatChannel())) {
                 continue;
             }
-            to.sendMessage("* " + player.getChatName() + WHITE + msg);
+            to.sendMessage("* " + player.getChatName() + " " + WHITE + msg);
         }
 
         return true;
