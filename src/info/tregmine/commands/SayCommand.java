@@ -29,6 +29,10 @@ public class SayCommand extends AbstractCommand
     @Override
     public boolean handlePlayer(TregminePlayer player, String[] args)
     {
+        if (!player.isAdmin()) {
+            return true;
+        }
+
         Server server = player.getServer();
         String msg = argsToMessage(args);
 
