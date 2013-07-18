@@ -491,6 +491,10 @@ public class ZonePlayerListener implements Listener
     public void onPlayerTeleport(PlayerTeleportEvent event)
     {
         TregminePlayer player = plugin.getPlayer(event.getPlayer());
+        if (player == null) {
+            event.setCancelled(true);
+            return;
+        }
 
         Location src = event.getFrom();
         World srcWorld = src.getWorld();
@@ -614,16 +618,14 @@ public class ZonePlayerListener implements Listener
             ScoreboardManager manager = Bukkit.getScoreboardManager();
             Scoreboard board = manager.getNewScoreboard();
 
-            Objective objective =
-                    board.registerNewObjective(currentZone.getName(), "2");
-
-            objective.setDisplaySlot(DisplaySlot.SIDEBAR);
-
             String zoneName = currentZone.getName();
             int maxLen = 13;
             if (zoneName.length() > maxLen) {
                 zoneName = zoneName.substring(1, maxLen);
             }
+
+            Objective objective = board.registerNewObjective(zoneName, "2");
+            objective.setDisplaySlot(DisplaySlot.SIDEBAR);
             objective.setDisplayName(ChatColor.AQUA + zoneName);
 
             String mainOwner = currentZone.getMainOwner();
@@ -636,8 +638,7 @@ public class ZonePlayerListener implements Listener
 
             OfflinePlayer fakePlayer = null;
             if (currentZone.getMainOwner() != null) {
-                fakePlayer =
-                        Bukkit.getOfflinePlayer(ChatColor.GOLD + mainOwner);
+                fakePlayer = Bukkit.getOfflinePlayer(ChatColor.GOLD + mainOwner);
             }
             else {
                 fakePlayer = Bukkit.getOfflinePlayer("Unkown");

@@ -83,6 +83,7 @@ public class WarpCommand extends AbstractCommand
                 player.sendMessage("Warp not found!");
                 LOGGER.info("[warp failed] + <" + player.getName() + "> "
                         + name + " -- not found");
+                return true;
             }
 
         } catch (SQLException e) {
