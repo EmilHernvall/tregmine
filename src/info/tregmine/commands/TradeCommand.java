@@ -77,6 +77,11 @@ public class TradeCommand extends AbstractCommand implements Listener
             return true;
         }
 
+        if (target.getId() == player.getId()) {
+            player.sendMessage(RED + "You cannot trade with yourself!");
+            return true;
+        }
+
         Inventory inv = server.createInventory(null, InventoryType.CHEST);
         player.openInventory(inv);
 
@@ -161,8 +166,9 @@ public class TradeCommand extends AbstractCommand implements Listener
         String text = event.getMessage();
         String[] args = text.split(" ");
 
-        Tregmine.LOGGER.info("state: " + ctx.state);
-        Tregmine.LOGGER.info("message: " + text);
+        Tregmine.LOGGER.info("[TRADE " + first.getName() + ":" + second.getName() +
+                "] <" + player.getName() + "> " + text);
+        //Tregmine.LOGGER.info("state: " + ctx.state);
 
         if ("quit".equals(args[0]) && args.length == 1) {
             first.setChatState(TregminePlayer.ChatState.CHAT);
@@ -186,7 +192,7 @@ public class TradeCommand extends AbstractCommand implements Listener
             first.sendMessage(YELLOW + "[Trade] Trade ended.");
             second.sendMessage(YELLOW + "[Trade] Trade ended.");
         }
-        else if ("bid".equals(args[0]) && args.length == 2) {
+        else if ("bid".equalsIgnoreCase(args[0]) && args.length == 2) {
             if (second != player) {
                 player.sendMessage(RED + "[Trade] You can't make a bid!");
                 return;
@@ -234,16 +240,16 @@ public class TradeCommand extends AbstractCommand implements Listener
                 }
             }
 
-            first.sendMessage(YELLOW + "[Trade] " + second.getChatName()
+            first.sendMessage(YELLOW + "[Trade] " + second.getChatName() + YELLOW
                     + " bid " + amount + " tregs. Type \"accept\" to "
                     + "proceed with the trade. Type \"change\" to modify "
                     + "your offer. Type \"quit\" to stop trading.");
-            second.sendMessage(YELLOW + "[Trade] You bid " + amount + "tregs.");
+            second.sendMessage(YELLOW + "[Trade] You bid " + amount + " tregs.");
 
             ctx.bid = amount;
             ctx.state = TradeState.CONSIDER_BID;
         }
-        else if ("change".equals(args[0]) && args.length == 1) {
+        else if ("change".equalsIgnoreCase(args[0]) && args.length == 1) {
             if (first != player) {
                 player.sendMessage(RED + "[Trade] You can't change the offer!");
                 return;

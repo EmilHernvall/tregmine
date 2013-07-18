@@ -53,7 +53,7 @@ public class VanishCommand extends AbstractCommand
             player.sendMessage(YELLOW + "You are now invisible!");
         }
         else {
-            player.sendMessage(YELLOW + "You no longer hidden!");
+            player.sendMessage(YELLOW + "You are no longer hidden!");
         }
 
         return true;

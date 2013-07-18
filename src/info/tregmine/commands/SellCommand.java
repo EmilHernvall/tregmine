@@ -69,7 +69,6 @@ public class SellCommand extends AbstractCommand implements Listener
 
         Inventory inventory = inventories.get(player);
         if (inventory == null) {
-            player.setChatState(TregminePlayer.ChatState.CHAT);
             return;
         }
 
