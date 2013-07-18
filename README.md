@@ -1,8 +1,10 @@
- = Tregmine =
+Tregmine
+========
 
 This is the tregmine.info bukkit plugin. Pull requests are welcome.
 
- == Index ==
+Index
+-----
 
 The main plugin is in the src directory. In addition, there are a few utilities
 and tools in this repository:
@@ -14,7 +16,8 @@ and tools in this repository:
  * world_importer - Tool for transitioning from the old tregmine database
  format.
 
- == Authors ==
+Authors
+-------
 
  * Ein Andersson - Original author
  * Emil Hernvall <emil@tregmine.info> - Current maintainer
