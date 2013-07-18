@@ -76,7 +76,7 @@ if (array_key_exists("q", $_GET)) {
                         <td>
                             &raquo; <a href="player_report.php?id=<?php echo $hit["player_id"]; ?>">Reports</a><br />
                             &raquo; <a href="player_stats.php?id=<?php echo $hit["player_id"]; ?>">Stats</a><br />
-                            <?php if (array_key_exists("admin", $_SESSION)): ?>
+                            <?php if (array_key_exists("senioradmin", $_SESSION)): ?>
                             &raquo; <a href="player_perm.php?id=<?php echo $hit["player_id"]; ?>">Permissions</a><br />
                             <?php endif; ?>
                         </td>

@@ -5,7 +5,7 @@ require_once '_check.php';
 require_once '_perm.php';
 require_once '_password.php';
 
-if (!array_key_exists("admin", $_SESSION)) {
+if (!array_key_exists("senioradmin", $_SESSION)) {
     header('Location: index.php');
     exit;
 }

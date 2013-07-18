@@ -10,6 +10,7 @@ $permissionList = array(
         "invis" => "Invisible",
         "banned" => "Banned",
 	"archive" => "Archive",
+	"senioradmin" => "Senior Admin",
 	"hiddenlocation" => "hiddenlocation"
     );
     

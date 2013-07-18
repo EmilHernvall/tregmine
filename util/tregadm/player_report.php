@@ -86,7 +86,7 @@ if (array_key_exists("id", $_GET)) {
             <h3>Actions</h3>
 
             <ul>
-                <?php if (array_key_exists("admin", $_SESSION)): ?>
+                <?php if (array_key_exists("senioradmin", $_SESSION)): ?>
                 <li><a href="player_perm.php?id=<?php echo $player["player_id"]; ?>">Permissions</a></li>
                 <?php endif; ?>
                 <li><a href="player_stats.php?id=<?php echo $player["player_id"]; ?>">Stats</a></li>
