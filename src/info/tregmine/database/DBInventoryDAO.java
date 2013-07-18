@@ -272,9 +272,8 @@ public class DBInventoryDAO
         PreparedStatement stmt = null;
         ResultSet rs = null;
         try {
-
             String sql = "SELECT * FROM inventory " +
-                         "WHERE inventory_type = 'chest'";
+                         "WHERE inventory_type = 'block'";
 
             stmt = conn.prepareStatement(sql);
             stmt.execute();
