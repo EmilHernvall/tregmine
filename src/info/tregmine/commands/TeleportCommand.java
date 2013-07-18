@@ -29,12 +29,14 @@ public class TeleportCommand extends AbstractCommand
         @Override
         public void run()
         {
-            to.sendMessage(AQUA + from.getName() + " teleported to you!");
             from.teleport(to.getLocation());
             from.setNoDamageTicks(200);
-            PotionEffect ef =
-                    new PotionEffect(PotionEffectType.BLINDNESS, 60, 100);
-            from.addPotionEffect(ef);
+            if(!from.isAdmin()){
+                to.sendMessage(AQUA + from.getName() + " teleported to you!");
+                PotionEffect ef =
+                        new PotionEffect(PotionEffectType.BLINDNESS, 60, 100);
+                from.addPotionEffect(ef);
+            }
         }
     }
 
