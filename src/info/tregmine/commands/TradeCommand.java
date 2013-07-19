@@ -23,6 +23,7 @@ import info.tregmine.api.TregminePlayer;
 import info.tregmine.database.ConnectionPool;
 import info.tregmine.database.DBWalletDAO;
 import info.tregmine.database.DBTradeDAO;
+import info.tregmine.api.math.Distance;
 
 public class TradeCommand extends AbstractCommand implements Listener
 {
@@ -79,6 +80,13 @@ public class TradeCommand extends AbstractCommand implements Listener
 
         if (target.getId() == player.getId()) {
             player.sendMessage(RED + "You cannot trade with yourself!");
+            return true;
+        }
+
+        double distance = Distance.calc2d(player.getLocation(), target.getLocation());
+        if (distance > 100) {
+            player.sendMessage(RED + "You can only trade with people less than " +
+                              "100 blocks away.");
             return true;
         }
 

@@ -78,7 +78,6 @@ public class WarpCommand extends AbstractCommand
 
             DBWarpDAO warpDAO = new DBWarpDAO(conn);
             warpPoint = warpDAO.getWarp(name, server);
-
             if (warpPoint == null) {
                 player.sendMessage("Warp not found!");
                 LOGGER.info("[warp failed] + <" + player.getName() + "> "
