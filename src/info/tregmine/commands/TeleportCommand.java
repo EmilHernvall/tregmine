@@ -31,7 +31,7 @@ public class TeleportCommand extends AbstractCommand
         {
             from.teleport(to.getLocation());
             from.setNoDamageTicks(200);
-            if(!from.isAdmin()){
+            if (!from.isAdmin()){
                 to.sendMessage(AQUA + from.getName() + " teleported to you!");
                 PotionEffect ef =
                         new PotionEffect(PotionEffectType.BLINDNESS, 60, 100);
@@ -92,8 +92,7 @@ public class TeleportCommand extends AbstractCommand
                     target, player), 20 * 0);
             return true;
         }
-
-        if (player.isGuardian()) {
+        else if (player.isGuardian()) {
             player.sendMessage(AQUA + "You started teleport to "
                     + target.getName() + AQUA + " in " + BLUE
                     + targetWorld.getName() + ".");
@@ -115,7 +114,7 @@ public class TeleportCommand extends AbstractCommand
                         + targetWorld.getName() + ".");
 
                 scheduler.scheduleSyncDelayedTask(tregmine, new TeleportTask(
-                        target, player), 20 * 30);
+                        target, player), 20 * 1);
             }
             else if (player.isTrusted() && distance < 100) {
                 player.sendMessage(AQUA + "You started teleport to "
@@ -123,7 +122,7 @@ public class TeleportCommand extends AbstractCommand
                         + targetWorld.getName() + ".");
 
                 scheduler.scheduleSyncDelayedTask(tregmine, new TeleportTask(
-                        target, player), 20 * 30);
+                        target, player), 20 * 15);
             }
             else {
                 player.sendMessage(RED

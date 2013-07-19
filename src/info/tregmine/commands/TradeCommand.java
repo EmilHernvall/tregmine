@@ -320,6 +320,9 @@ public class TradeCommand extends AbstractCommand implements Listener
             second.setChatState(TregminePlayer.ChatState.CHAT);
             activeTrades.remove(first);
             activeTrades.remove(second);
+
+            first.giveExp(5);
+            second.giveExp(5);
         }
         else {
             first.sendMessage(YELLOW + "[Trade] " + WHITE + "<"
