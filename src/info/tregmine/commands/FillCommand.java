@@ -170,8 +170,7 @@ public class FillCommand extends AbstractCommand
             // replacers
             if (mat != null && toMat != null) {
 
-                if (toMat != null
-                        && Arrays.binarySearch(disallowedMaterials,
+                if (toMat != null && Arrays.binarySearch(disallowedMaterials,
                                 toMat.getItemType()) > 0) {
 
                     if (!player.isOp()) {
@@ -187,14 +186,12 @@ public class FillCommand extends AbstractCommand
                         + toMat.getItemTypeId() + ")");
 
                 if (command.equals("fill")) {
-                    filler =
-                            new Replacer(undoHistory, player, b1, b2, mat,
+                    filler = new Replacer(undoHistory, player, b1, b2, mat,
                                     toMat, 100000);
                 }
 
                 if (command.equals("testfill")) {
-                    filler =
-                            new TestReplacer(player, b1, b2, mat, toMat, 100000);
+                    filler = new TestReplacer(player, b1, b2, mat, toMat, 100000);
                 }
 
                 LOGGER.info("[FILL] " + player.getName() + " replaced with "
@@ -207,6 +204,11 @@ public class FillCommand extends AbstractCommand
                         + b2.getLocation().getBlockY() + "] with "
                         + mat.toString() + " " + mat.getItemTypeId());
             }
+        }
+
+        if (filler == null) {
+            player.sendMessage(RED + "Invalid command!");
+            return false;
         }
 
         if (filler.getTotalVolume() > MAX_FILL_SIZE) {

@@ -95,8 +95,7 @@ public class PlayerLookupListener implements Listener
         try {
             conn = ConnectionPool.getConnection();
 
-            stmt =
-                    conn.prepareStatement("SELECT player_name FROM player "
+            stmt = conn.prepareStatement("SELECT player_name FROM player "
                             + "INNER JOIN player_property USING (player_id) "
                             + "WHERE property_key = 'ip' AND property_value = ? "
                             + "ORDER BY player_created DESC LIMIT 5");

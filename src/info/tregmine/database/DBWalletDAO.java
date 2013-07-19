@@ -27,8 +27,7 @@ public class DBWalletDAO
         try {
             conn = ConnectionPool.getConnection();
 
-            stmt =
-                    conn.prepareStatement("SELECT player_wallet FROM player "
+            stmt = conn.prepareStatement("SELECT player_wallet FROM player "
                             + "WHERE player_id = ?");
             stmt.setInt(1, player.getId());
             stmt.execute();
@@ -74,8 +73,7 @@ public class DBWalletDAO
     {
         PreparedStatement stmt = null;
         try {
-            String sql =
-                    "UPDATE player SET player_wallet = player_wallet + ? "
+            String sql = "UPDATE player SET player_wallet = player_wallet + ? "
                             + "WHERE player_id = ?";
             stmt = conn.prepareStatement(sql);
             stmt.setLong(1, amount);
@@ -104,8 +102,7 @@ public class DBWalletDAO
 
         PreparedStatement stmt = null;
         try {
-            String sql =
-                    "UPDATE player SET player_wallet = player_wallet - ? "
+            String sql = "UPDATE player SET player_wallet = player_wallet - ? "
                             + "WHERE player_id = ?";
             stmt = conn.prepareStatement(sql);
             stmt.setLong(1, amount);
@@ -129,8 +126,7 @@ public class DBWalletDAO
     {
         PreparedStatement stmt = null;
         try {
-            String sql =
-                    "INSERT INTO player_transaction (sender_id, recipient_id, "
+            String sql = "INSERT INTO player_transaction (sender_id, recipient_id, "
                             + "transaction_timestamp, transaction_amount) ";
             sql += "VALUES (?, ?, unix_timestamp(), ?)";
             stmt = conn.prepareStatement(sql);
