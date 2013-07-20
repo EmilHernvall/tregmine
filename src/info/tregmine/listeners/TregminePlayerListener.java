@@ -542,10 +542,16 @@ public class TregminePlayerListener implements Listener
         }
     }
 
-    @EventHandler
+@EventHandler
     public void onPlayerPickupItem(PlayerPickupItemEvent event)
     {
         TregminePlayer player = this.plugin.getPlayer(event.getPlayer());
+
+        if (player.getGameMode() == GameMode.CREATIVE) {
+            event.setCancelled(true);
+            return;
+        }
+
         if (player.isAdmin()) {
             return;
         }
@@ -562,22 +568,23 @@ public class TregminePlayerListener implements Listener
             Item item = event.getItem();
             TregminePlayer droppedBy = droppedItems.get(item);
 
-            if (droppedBy != null) {
-                ItemStack stack = item.getItemStack();
+            if(!droppedBy.getName().equals(player.getName())){
+                if (droppedBy != null) {
+                    ItemStack stack = item.getItemStack();
 
-                DBLogDAO logDAO = new DBLogDAO(conn);
-                logDAO.insertGiveLog(droppedBy, player, stack);
+                    DBLogDAO logDAO = new DBLogDAO(conn);
+                    logDAO.insertGiveLog(droppedBy, player, stack);
 
-                player.sendMessage(ChatColor.YELLOW + "You got " +
-                        stack.getAmount() + " " + stack.getType() + " from " +
-                        droppedBy.getName() + ".");
+                    player.sendMessage(ChatColor.YELLOW + "You got " +
+                            stack.getAmount() + " " + stack.getType() + " from " +
+                            droppedBy.getName() + ".");
 
-                if (droppedBy.isOnline()) {
-                    droppedBy.sendMessage(ChatColor.YELLOW + "You gave " +
-                            stack.getAmount() + " " + stack.getType() + " to " +
-                            player.getName() + ".");
+                    if (droppedBy.isOnline()) {
+                        droppedBy.sendMessage(ChatColor.YELLOW + "You gave " +
+                                stack.getAmount() + " " + stack.getType() + " to " +
+                                player.getName() + ".");
+                    }
                 }
-
                 droppedItems.remove(item);
             }
         } catch (SQLException e) {
@@ -597,6 +604,11 @@ public class TregminePlayerListener implements Listener
     {
         TregminePlayer player = this.plugin.getPlayer(event.getPlayer());
 
+        if (player.getGameMode() == GameMode.CREATIVE) {
+            event.setCancelled(true);
+            return;
+        }
+
         if (player.isAdmin()) {
             return;
         }
@@ -609,7 +621,6 @@ public class TregminePlayerListener implements Listener
         Item item = event.getItemDrop();
         droppedItems.put(item, player);
     }
-
     @EventHandler
     public void onPlayerKick(PlayerKickEvent event)
     {
