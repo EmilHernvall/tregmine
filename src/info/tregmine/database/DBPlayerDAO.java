@@ -65,13 +65,18 @@ public class DBPlayerDAO
 
     public TregminePlayer getPlayer(String name) throws SQLException
     {
-        return getPlayer(name, new TregminePlayer(name));
+        return getPlayer(name, null);
     }
 
     public TregminePlayer getPlayer(String name, Player wrap)
             throws SQLException
     {
-        TregminePlayer player = new TregminePlayer(wrap);
+        TregminePlayer player;
+        if (wrap != null) {
+            player = new TregminePlayer(name);
+        } else {
+            player = new TregminePlayer(wrap);
+        }
 
         PreparedStatement stmt = null;
         ResultSet rs = null;
