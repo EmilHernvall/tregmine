@@ -73,9 +73,9 @@ public class DBPlayerDAO
     {
         TregminePlayer player;
         if (wrap != null) {
-            player = new TregminePlayer(name);
-        } else {
             player = new TregminePlayer(wrap);
+        } else {
+            player = new TregminePlayer(name);
         }
 
         PreparedStatement stmt = null;
@@ -84,7 +84,7 @@ public class DBPlayerDAO
             stmt =
                     conn.prepareStatement("SELECT * FROM player "
                             + "WHERE player_name = ?");
-            stmt.setString(1, player.getName());
+            stmt.setString(1, name);
             stmt.execute();
 
             rs = stmt.getResultSet();
