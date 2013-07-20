@@ -568,25 +568,23 @@ public class TregminePlayerListener implements Listener
             Item item = event.getItem();
             TregminePlayer droppedBy = droppedItems.get(item);
 
-            if(!droppedBy.getName().equals(player.getName())){
-                if (droppedBy != null) {
-                    ItemStack stack = item.getItemStack();
+            if (droppedBy != null && droppedBy.getId() != player.getId()) {
+                ItemStack stack = item.getItemStack();
 
-                    DBLogDAO logDAO = new DBLogDAO(conn);
-                    logDAO.insertGiveLog(droppedBy, player, stack);
+                DBLogDAO logDAO = new DBLogDAO(conn);
+                logDAO.insertGiveLog(droppedBy, player, stack);
 
-                    player.sendMessage(ChatColor.YELLOW + "You got " +
-                            stack.getAmount() + " " + stack.getType() + " from " +
-                            droppedBy.getName() + ".");
+                player.sendMessage(ChatColor.YELLOW + "You got " +
+                        stack.getAmount() + " " + stack.getType() + " from " +
+                        droppedBy.getName() + ".");
 
-                    if (droppedBy.isOnline()) {
-                        droppedBy.sendMessage(ChatColor.YELLOW + "You gave " +
-                                stack.getAmount() + " " + stack.getType() + " to " +
-                                player.getName() + ".");
-                    }
+                if (droppedBy.isOnline()) {
+                    droppedBy.sendMessage(ChatColor.YELLOW + "You gave " +
+                            stack.getAmount() + " " + stack.getType() + " to " +
+                            player.getName() + ".");
                 }
-                droppedItems.remove(item);
             }
+            droppedItems.remove(item);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
