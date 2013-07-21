@@ -56,6 +56,7 @@ public class MsgCommand extends AbstractCommand
         }
 
         // Send message to recipient
+        recvPlayer.playSound(recvPlayer.getLocation(), Sound.LEVEL_UP, 2F, 1F);
         recvPlayer.sendMessage(GREEN + "(msg) " + player.getChatName() + GREEN
                 + ": " + message);
 
