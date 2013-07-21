@@ -1,3 +1,4 @@
+
 package info.tregmine.listeners;
 
 import org.bukkit.Bukkit;
@@ -290,6 +291,7 @@ public class ZonePlayerListener implements Listener
             }
             if (lot != null) {
                 player.sendMessage("This lot is called " + lot.getName() + ".");
+                player.sendMessage("And is owned by " + lot.getOwners() + ".");
                 return;
             }
             type = "lot";
@@ -641,7 +643,7 @@ public class ZonePlayerListener implements Listener
                 fakePlayer = Bukkit.getOfflinePlayer(ChatColor.GOLD + mainOwner);
             }
             else {
-                fakePlayer = Bukkit.getOfflinePlayer("Unkown");
+                fakePlayer = Bukkit.getOfflinePlayer("Unknown");
             }
 
             Score score = objective.getScore(fakePlayer);
