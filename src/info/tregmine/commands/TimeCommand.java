@@ -27,12 +27,15 @@ public class TimeCommand extends AbstractCommand
 
         if ("day".equalsIgnoreCase(time)) {
             player.setPlayerTime(6000, false);
+            player.sendMessage(YELLOW + "Time set to day");
         }
         else if ("night".equalsIgnoreCase(time)) {
             player.setPlayerTime(18000, false);
+            player.sendMessage(YELLOW + "Time set to night");
         }
         else if ("normal".equalsIgnoreCase(time)) {
             player.resetPlayerTime();
+            player.sendMessage(YELLOW + "Time set to normal");
         }
 
         return true;

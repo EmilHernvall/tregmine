@@ -6,6 +6,8 @@ import org.bukkit.World;
 
 import com.maxmind.geoip.Location;
 
+import org.bukkit.ChatColor;
+
 import static org.bukkit.ChatColor.*;
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
@@ -86,6 +88,12 @@ public class QuitMessageCommand extends AbstractCommand
         String message = null;
 
         message = argsToMessage(args);
+        if (args.length != 0) {
+            message = argsToMessage(args);
+        } else {
+            player.sendMessage(YELLOW + "Your current message: " + player.getQuitMessage());
+            return true;
+        }
 
         player.setQuitMessage(message);
 

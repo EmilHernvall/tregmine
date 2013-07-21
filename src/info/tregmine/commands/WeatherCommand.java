@@ -29,6 +29,7 @@ public class WeatherCommand extends AbstractCommand
         try {
             WeatherType type = WeatherType.valueOf(args[0].toUpperCase());
             player.setPlayerWeather(type);
+            player.sendMessage(YELLOW + "Weather set to " + type);
         }
         catch (IllegalArgumentException e) {
             return false;
