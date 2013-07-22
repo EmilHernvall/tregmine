@@ -36,17 +36,19 @@ if (array_key_exists("id", $_GET)) {
 </head>
 <body>
     <div id="layout_wrapper">
-        <h1>Tregmine Admin Tool</h1>
+        <h1 id="banner"><span>Tregmine Admin Tool</span></h1>
 
         <?php require 'menu.php'; ?>
 
-        <h2><?php echo $player["player_name"]; ?> (<?php echo $player["player_id"]; ?>)</h2>
+        <h2 class="info"><?php echo $player["player_name"]; ?> (<?php echo $player["player_id"]; ?>)</h2>
 
-        <div class="col50">
+        <div class="col75">
 
-            <h3>Properties</h3>
+            <table class="info">
+                <tr>
+                    <th colspan="9" class="infoHeader">Properties</th>
+                </tr>
 
-            <table>
                 <?php foreach ($settings as $key => $value):
                     if (array_key_exists($key, $permissionList) && $key != "color") continue;
                     ?>
@@ -57,30 +59,13 @@ if (array_key_exists("id", $_GET)) {
                 <?php endforeach; ?>
             </table>
 
-            <h3>Actions</h3>
-
-            <ul>
-                <li><a href="player_report.php?id=<?php echo $player["player_id"]; ?>">Reports</a></li>
-                <li><a href="player_stats.php?id=<?php echo $player["player_id"]; ?>">Stats</a></li>
-            </ul>
-
-        </div>
-
-        <div class="col50">
-
             <form method="post" action="player_perm_save.php?id=<?php echo $player["player_id"]; ?>">
 
-            <h3>Color</h3>
+            <table class="info">
+                <tr>
+                    <th colspan="9" class="infoHeader">Permissions</th>
+                </tr>
 
-            <select name="color" id="color">
-                <?php foreach ($colors as $name => $color): ?>
-                    <option value="<?php echo $name; ?>" <?php if (array_key_exists("color", $settings) && $settings["color"] == $name) echo 'selected="selected"'; ?>><?php echo $name; ?> (<?php echo $color; ?>)</option>
-                <?php endforeach; ?>
-            </select>
-
-            <h3>Permissions</h3>
-
-            <table>
                 <?php foreach ($permissionList as $key => $name): ?>
                     <tr>
                         <td><input type="checkbox" name="perm[<?php echo $key; ?>]" id="perm_<?php echo $key; ?>" value="1" <?php if (array_key_exists($key, $settings) && $settings[$key] == "true") echo ' checked="checked"'; ?> /></td>
@@ -89,24 +74,47 @@ if (array_key_exists("id", $_GET)) {
                 <?php endforeach; ?>
             </table>
 
-            <h3>Password</h3>
+            <h3 class="infoHeader">Other</h3>
 
-            <p>
-                The password will only be changed if you enter something in this box.
-            </p>
-
-            <div class="fieldwrapper">
+            <div class="field">
                 <label for="password">Password</label>
-                <div class="field">
-                    <input type="text" name="password" id="password" />
+                <div class="element">
+                    <select name="color" id="color">
+                        <?php foreach ($colors as $name => $color): ?>
+                            <option value="<?php echo $name; ?>" <?php if (array_key_exists("color", $settings) && $settings["color"] == $name) echo 'selected="selected"'; ?>><?php echo $name; ?> (<?php echo $color; ?>)</option>
+                        <?php endforeach; ?>
+                    </select>
                 </div>
+                <div class="end">&nbsp;</div>
             </div>
 
-            <div class="buttonwrapper">
+            <div class="field">
+                <label for="password">Password</label>
+                <div class="element">
+                    <input type="text" name="password" id="password" />
+                    <p>
+                        The password will only be changed if you enter something in this box.
+                    </p>
+                </div>
+                <div class="end">&nbsp;</div>
+            </div>
+
+            <div class="button">
                 <button type="submit">Save changes</button>
             </div>
 
             </form>
+
+        </div>
+
+        <div class="col25">
+
+            <h3 class="actionsHeader">Actions</h3>
+
+            <ul class="actions">
+                <li><a href="player_report.php?id=<?php echo $player["player_id"]; ?>">Reports</a></li>
+                <li><a href="player_stats.php?id=<?php echo $player["player_id"]; ?>">Stats</a></li>
+            </ul>
 
         </div>
 

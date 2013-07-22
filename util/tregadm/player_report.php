@@ -34,16 +34,16 @@ if (array_key_exists("id", $_GET)) {
 </head>
 <body>
     <div id="layout_wrapper">
-        <h1>Tregmine Admin Tool</h1>
+        <h1 id="banner"><span>Tregmine Admin Tool</span></h1>
 
         <?php require 'menu.php'; ?>
 
-        <h2><?php echo $player["player_name"]; ?> (<?php echo $player["player_id"]; ?>)</h2>
+        <h2 class="info"><?php echo $player["player_name"]; ?> (<?php echo $player["player_id"]; ?>)</h2>
 
         <div class="col75">
-            <h3>New Report</h3>
-
             <form method="post" action="player_report_save.php?id=<?php echo $player["player_id"]; ?>">
+
+                <h3 class="formHeader">New Report</h3>
 
                 <div class="field">
                     <label for="action">Action</label>
@@ -57,6 +57,7 @@ if (array_key_exists("id", $_GET)) {
                             <?php endif; ?>
                         </select>
                     </div>
+                    <div class="end">&nbsp;</div>
                 </div>
 
                 <?php if (array_key_exists("admin", $_SESSION)): ?>
@@ -65,14 +66,16 @@ if (array_key_exists("id", $_GET)) {
                     <div class="element">
                         <input type="text" id="duration" name="duration" />
                     </div>
+                    <div class="end">&nbsp;</div>
                 </div>
                 <?php endif; ?>
 
                 <div class="field">
                     <label for="text">Message</label>
                     <div class="element">
-                        <textarea id="text" name="text" style="width: 90%; height: 100px;"></textarea>
+                        <textarea id="text" name="text"></textarea>
                     </div>
+                    <div class="end">&nbsp;</div>
                 </div>
 
                 <div class="button">
@@ -83,9 +86,9 @@ if (array_key_exists("id", $_GET)) {
         </div>
 
         <div class="col25">
-            <h3>Actions</h3>
+            <h3 class="actionsHeader">Actions</h3>
 
-            <ul>
+            <ul class="actions">
                 <?php if (array_key_exists("senioradmin", $_SESSION)): ?>
                 <li><a href="player_perm.php?id=<?php echo $player["player_id"]; ?>">Permissions</a></li>
                 <?php endif; ?>
@@ -95,9 +98,8 @@ if (array_key_exists("id", $_GET)) {
 
         <div class="col_clear">&nbsp;</div>
 
-        <h3>History</h3>
-
-        <table style="width: 100%;">
+        <h3 class="infoHeader">History</h3>
+        <table style="width: 100%;" class="info">
             <cols>
                 <col />
                 <col style="width: 75px;" />
@@ -105,6 +107,7 @@ if (array_key_exists("id", $_GET)) {
                 <col style="width: 125px;" />
                 <col style="width: 125px;" />
             </cols>
+
             <tr>
                 <th>Issuer</th>
                 <th>Action</th>

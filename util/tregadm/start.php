@@ -18,28 +18,47 @@ require_once '_check.php';
 </head>
 <body>
     <div id="layout_wrapper">
-        <h1>Tregmine Admin Tool</h1>
+        <h1 id="banner"><span>Tregmine Admin Tool</span></h1>
 
         <?php require 'menu.php'; ?>
 
-        <p>
-            Welcome!
-        </p>
+        <h2 class="info">Welcome to Tregmine!</h2>
 
-        <h2>User quicksearch</h2>
+        <div class="col75">
+            <h3 class="infoHeader">User quicksearch</h3>
 
-        <form method="get" action="search.php">
-            <div class="fieldwrapper">
-                <label for="q">User</label>
+            <form method="get" action="search.php">
                 <div class="field">
-                    <input type="text" name="q" id="q" />
+                    <label for="q">User</label>
+                    <div class="element">
+                        <input type="text" name="q" id="q" />
+                    </div>
+                    <div class="end">&nbsp;</div>
                 </div>
-            </div>
 
-            <div class="buttonwrapper">
-                <button type="submit">Search</button>
-            </div>
-        </form>
+                <div class="button">
+                    <button type="submit">Search</button>
+                </div>
+            </form>
+
+            <h3 class="infoHeader">Zone quicksearch</h3>
+
+            <form method="get" action="zones.php">
+                <div class="field">
+                    <label for="q">Zone</label>
+                    <div class="element">
+                        <input type="text" name="q" id="q" />
+                    </div>
+                    <div class="end">&nbsp;</div>
+                </div>
+
+                <div class="button">
+                    <button type="submit">Search</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="col_clear">&nbsp;</div>
     </div>
 </body>
 </html>
