@@ -1,5 +1,7 @@
 package info.tregmine.boxfill;
 
+import info.tregmine.Tregmine;
+
 import java.util.logging.Logger;
 
 import org.bukkit.World;
@@ -89,7 +91,9 @@ public abstract class AbstractFiller implements Runnable
                 for (; z <= zMax; z++) {
                     Block block = world.getBlockAt(x, y, z);
 
-                    changeBlock(block);
+                    if(!Tregmine.getRunningInstance().getBlessedBlocks().containsKey(block.getLocation())){
+                    	changeBlock(block);//in theory, should prevent blessed chests ect. from being filled away accidentally
+                    }
 
                     if (++c % workSize == 0) {
                         partialWork = true;
