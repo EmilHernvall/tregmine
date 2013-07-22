@@ -61,7 +61,7 @@ public class Tregmine extends JavaPlugin
 
     private Map<String, ZoneWorld> worlds;
     private Map<Integer, Zone> zones;
-    
+
     @Override
     public void onLoad()
     {
@@ -457,5 +457,5 @@ public class Tregmine extends JavaPlugin
     {
         return blessedBlocks;
     }
-    
+
 }

@@ -83,7 +83,7 @@ public class TeleportCommand extends AbstractCommand
 
         World sourceWorld = player.getWorld();
         World targetWorld = target.getWorld();
-        if (player.isAdmin()) {
+        if (player.isAdmin() || player.isBuilder()) {
             player.sendMessage(AQUA + "You started teleport to "
                     + target.getName() + AQUA + " in " + BLUE
                     + targetWorld.getName() + ".");

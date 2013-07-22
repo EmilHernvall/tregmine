@@ -36,22 +36,22 @@ public class WarpCommand extends AbstractCommand
         @Override
         public void run()
         {
-        	Horse horse = null;
-        	if((player.getVehicle() != null) && (player.getVehicle() instanceof Horse)){
-        		horse = (Horse)player.getVehicle();
-        	}
+            Horse horse = null;
+            if((player.getVehicle() != null) && (player.getVehicle() instanceof Horse)){
+                horse = (Horse)player.getVehicle();
+            }
             if (player.isAdmin()) {
-            	if(horse != null){
-            		horse.eject();
-            		horse.teleport(loc);
-            		player.teleport(loc);
-            		horse.setPassenger(player.getDelegate());
-            	}else{
-            		player.teleport(loc);
-            	}
-                
+                if(horse != null){
+                    horse.eject();
+                    horse.teleport(loc);
+                    player.teleport(loc);
+                    horse.setPassenger(player.getDelegate());
+                }else{
+                    player.teleport(loc);
+                }
+
                 PotionEffect ef =
-                        new PotionEffect(PotionEffectType.BLINDNESS, 60, 100);
+                    new PotionEffect(PotionEffectType.BLINDNESS, 60, 100);
                 player.addPotionEffect(ef);
                 return;
             }
@@ -62,15 +62,15 @@ public class WarpCommand extends AbstractCommand
             String locWorldName = locWorld.getName();
 
             if (playerWorldName.equalsIgnoreCase(locWorldName)) {
-            	if(horse != null){
-            		horse.eject();
-            		horse.teleport(loc);
-            		player.teleport(loc);
-            		horse.setPassenger(player.getDelegate());
-            	}else{
-            		player.teleport(loc);
-            	}
-                
+                if(horse != null){
+                    horse.eject();
+                    horse.teleport(loc);
+                    player.teleport(loc);
+                    horse.setPassenger(player.getDelegate());
+                }else{
+                    player.teleport(loc);
+                }
+
             }
             else {
                 player.sendMessage(RED + "You can't teleport between worlds.");
