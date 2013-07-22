@@ -44,9 +44,12 @@ public class WarpCommand extends AbstractCommand
             	if(horse != null){
             		horse.eject();
             		horse.teleport(loc);
+            		player.teleport(loc);
+            		horse.setPassenger(player.getDelegate());
+            	}else{
+            		player.teleport(loc);
             	}
-                player.teleport(loc);
-                horse.setPassenger(player.getDelegate());
+                
                 PotionEffect ef =
                         new PotionEffect(PotionEffectType.BLINDNESS, 60, 100);
                 player.addPotionEffect(ef);
@@ -62,9 +65,12 @@ public class WarpCommand extends AbstractCommand
             	if(horse != null){
             		horse.eject();
             		horse.teleport(loc);
+            		player.teleport(loc);
+            		horse.setPassenger(player.getDelegate());
+            	}else{
+            		player.teleport(loc);
             	}
-                player.teleport(loc);
-                horse.setPassenger(player.getDelegate());
+                
             }
             else {
                 player.sendMessage(RED + "You can't teleport between worlds.");
