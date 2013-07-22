@@ -71,7 +71,12 @@ public class DBPlayerDAO
     public TregminePlayer getPlayer(String name, Player wrap)
             throws SQLException
     {
-        TregminePlayer player = new TregminePlayer(wrap);
+        TregminePlayer player;
+        if (wrap != null) {
+            player = new TregminePlayer(wrap);
+        } else {
+            player = new TregminePlayer(name);
+        }
 
         PreparedStatement stmt = null;
         ResultSet rs = null;
@@ -79,7 +84,7 @@ public class DBPlayerDAO
             stmt =
                     conn.prepareStatement("SELECT * FROM player "
                             + "WHERE player_name = ?");
-            stmt.setString(1, player.getName());
+            stmt.setString(1, name);
             stmt.execute();
 
             rs = stmt.getResultSet();

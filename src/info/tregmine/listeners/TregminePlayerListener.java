@@ -542,10 +542,16 @@ public class TregminePlayerListener implements Listener
         }
     }
 
-    @EventHandler
+@EventHandler
     public void onPlayerPickupItem(PlayerPickupItemEvent event)
     {
         TregminePlayer player = this.plugin.getPlayer(event.getPlayer());
+
+        if (player.getGameMode() == GameMode.CREATIVE) {
+            event.setCancelled(true);
+            return;
+        }
+
         if (player.isAdmin()) {
             return;
         }
@@ -562,7 +568,7 @@ public class TregminePlayerListener implements Listener
             Item item = event.getItem();
             TregminePlayer droppedBy = droppedItems.get(item);
 
-            if (droppedBy != null) {
+            if (droppedBy != null && droppedBy.getId() != player.getId()) {
                 ItemStack stack = item.getItemStack();
 
                 DBLogDAO logDAO = new DBLogDAO(conn);
@@ -577,9 +583,8 @@ public class TregminePlayerListener implements Listener
                             stack.getAmount() + " " + stack.getType() + " to " +
                             player.getName() + ".");
                 }
-
-                droppedItems.remove(item);
             }
+            droppedItems.remove(item);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
@@ -597,6 +602,11 @@ public class TregminePlayerListener implements Listener
     {
         TregminePlayer player = this.plugin.getPlayer(event.getPlayer());
 
+        if (player.getGameMode() == GameMode.CREATIVE) {
+            event.setCancelled(true);
+            return;
+        }
+
         if (player.isAdmin()) {
             return;
         }
@@ -609,7 +619,6 @@ public class TregminePlayerListener implements Listener
         Item item = event.getItemDrop();
         droppedItems.put(item, player);
     }
-
     @EventHandler
     public void onPlayerKick(PlayerKickEvent event)
     {
