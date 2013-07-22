@@ -37,7 +37,7 @@ public class CreateMobCommand extends AbstractCommand
             amount = Integer.parseInt(args[1]);
         } catch (NumberFormatException e) {
             amount = 1;
-        } catch (NullPointerException e) {
+        } catch (ArrayIndexOutOfBoundsException e) {
             amount = 1;
         }
 
