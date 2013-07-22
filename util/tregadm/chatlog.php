@@ -3,6 +3,11 @@ require_once '_init.php';
 require_once '_check.php';
 require_once '_perm.php';
 
+if (!array_key_exists("admin", $_SESSION)) {
+    header('Location: index.php');
+    exit;
+}
+
 $players = array_key_exists("players", $_GET) ? $_GET["players"] : "";
 $start = array_key_exists("start", $_GET) ? $_GET["start"] : "";
 $text = array_key_exists("text", $_GET) ? $_GET["text"] : "";
@@ -57,18 +62,21 @@ $chatlogs = $stmt->fetchAll();
 </head>
 <body>
     <div id="layout_wrapper">
-        <h1>Tregmine Admin Tool</h1>
+        <h1 id="banner"><span>Tregmine Admin Tool</span></h1>
 
         <?php require 'menu.php'; ?>
 
-        <h2>Chatlogs</h2>
+        <h2 class="info">Chatlogs</h2>
 
         <form method="get" action="chatlog.php">
+            <h3 class="formHeader">Filter</h3>
+
             <div class="field">
                 <label for="players">Players (comma separated)</label>
                 <div class="element">
                 <input type="text" name="players" id="players" value="<?php echo implode(",", $players); ?>"/>
                 </div>
+                <div class="end">&nbsp;</div>
             </div>
 
             <div class="field">
@@ -76,6 +84,7 @@ $chatlogs = $stmt->fetchAll();
                 <div class="element">
                 <input type="text" name="start" id="start" value="<?php echo $start; ?>"/>
                 </div>
+                <div class="end">&nbsp;</div>
             </div>
 
             <div class="field">
@@ -83,6 +92,7 @@ $chatlogs = $stmt->fetchAll();
                 <div class="element">
                     <input type="text" name="text" id="text" value="<?php echo $text; ?>" />
                 </div>
+                <div class="end">&nbsp;</div>
             </div>
 
             <div class="field">
@@ -90,6 +100,7 @@ $chatlogs = $stmt->fetchAll();
                 <div class="element">
                     <input type="text" name="channel" id="channel" value="<?php echo $channel; ?>" />
                 </div>
+                <div class="end">&nbsp;</div>
             </div>
 
             <div class="button">
@@ -97,7 +108,8 @@ $chatlogs = $stmt->fetchAll();
             </div>
         </form>
 
-        <table>
+        <h3 class="infoHeader">Logs</h3>
+        <table class="info">
             <?php foreach ($chatlogs as $log): ?>
                 <tr>
                     <td><?php echo $log["chatlog_channel"]; ?></td>

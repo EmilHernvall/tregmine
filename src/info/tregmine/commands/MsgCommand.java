@@ -2,6 +2,7 @@ package info.tregmine.commands;
 
 import static org.bukkit.ChatColor.*;
 import org.bukkit.Server;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
 import info.tregmine.Tregmine;
@@ -56,6 +57,7 @@ public class MsgCommand extends AbstractCommand
         }
 
         // Send message to recipient
+        recvPlayer.playSound(recvPlayer.getLocation(), Sound.LEVEL_UP, 2F, 1F);
         recvPlayer.sendMessage(GREEN + "(msg) " + player.getChatName() + GREEN
                 + ": " + message);
 

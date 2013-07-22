@@ -54,7 +54,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </head>
 <body>
     <div id="layout_wrapper">
-        <h1>Tregmine Admin Tool</h1>
+        <h1 id="banner"><span>Tregmine Admin Tool</span></h1>
 
         <?php if (array_key_exists("error", $_GET)): ?>
             <p>
@@ -65,21 +65,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <?php endif; ?>
 
         <form method="post" action="index.php">
-            <div class="fieldwrapper">
+            <h3 class="formHeader">Login</h3>
+
+            <div class="field">
                 <label for="username">Username</label>
-                <div class="field">
+                <div class="element">
                     <input type="text" name="username" id="username" />
                 </div>
+                <div class="end">&nbsp;</div>
             </div>
 
-            <div class="fieldwrapper">
+            <div class="field">
                 <label for="password">Password</label>
-                <div class="field">
+                <div class="element">
                     <input type="password" name="pass" id="pass" />
                 </div>
+                <div class="end">&nbsp;</div>
             </div>
 
-            <div class="buttonwrapper">
+            <div class="button">
                 <button type="submit">Login</button>
             </div>
         </form>
