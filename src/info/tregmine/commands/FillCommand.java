@@ -124,7 +124,7 @@ public class FillCommand extends AbstractCommand
         // execute a copy
         AbstractFiller filler = null;
         if (args.length > 0 && "copy".equals(args[0])) {
-            filler = new Copy(copyHistory, player, b1, b2, 100000);
+            filler = new Copy(tregmine, copyHistory, player, b1, b2, 100000);
             player.sendMessage(DARK_AQUA + "Copied selected area.");
         }
 
@@ -151,7 +151,7 @@ public class FillCommand extends AbstractCommand
 
                 if (command.equals("fill")) {
                     filler =
-                            new Filler(undoHistory, player, b1, b2, mat, 100000);
+                            new Filler(tregmine, undoHistory, player, b1, b2, mat, 100000);
                     LOGGER.info("[FILL] " + player.getName() + " filled ["
                             + b1.getLocation().getBlockX() + ","
                             + b1.getLocation().getBlockZ() + ","
@@ -163,7 +163,7 @@ public class FillCommand extends AbstractCommand
                 }
 
                 if (command.equals("testfill")) {
-                    filler = new TestFiller(player, b1, b2, mat, 100000);
+                    filler = new TestFiller(tregmine, player, b1, b2, mat, 100000);
                 }
             }
 
@@ -186,12 +186,12 @@ public class FillCommand extends AbstractCommand
                         + toMat.getItemTypeId() + ")");
 
                 if (command.equals("fill")) {
-                    filler = new Replacer(undoHistory, player, b1, b2, mat,
+                    filler = new Replacer(tregmine, undoHistory, player, b1, b2, mat,
                                     toMat, 100000);
                 }
 
                 if (command.equals("testfill")) {
-                    filler = new TestReplacer(player, b1, b2, mat, toMat, 100000);
+                    filler = new TestReplacer(tregmine, player, b1, b2, mat, toMat, 100000);
                 }
 
                 LOGGER.info("[FILL] " + player.getName() + " replaced with "
