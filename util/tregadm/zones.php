@@ -31,29 +31,30 @@ $hits = $stmt->fetchAll();
 </head>
 <body>
     <div id="layout_wrapper">
-        <h1>Tregmine Admin Tool</h1>
+        <h1 id="banner"><span>Tregmine Admin Tool</span></h1>
 
         <?php require 'menu.php'; ?>
 
-        <h2>Zones</h2>
+        <h2 class="info">Zones</h2>
 
         <form method="get" action="zones.php">
-            <div class="fieldwrapper">
+            <div class="field">
                 <label for="q">Zone</label>
-                <div class="field">
+                <div class="element">
                     <input type="text" name="q" id="q" value="<?php echo htmlspecialchars($q); ?>"/>
                 </div>
+                <div class="end">&nbsp;</div>
             </div>
 
-            <div class="buttonwrapper">
+            <div class="button">
                 <button type="submit">Search</button>
             </div>
         </form>
 
-        <h2><?php echo count($hits); ?> results for "<?php echo htmlspecialchars($q); ?>"</h2>
+        <h3 class="infoHeader"><?php echo count($hits); ?> results for "<?php echo htmlspecialchars($q); ?>"</h3>
 
         <?php if ($hits): ?>
-            <table style="width: 100%;">
+            <table style="width: 100%;" class="info">
                 <cols>
                     <col style="width: 50px;" />
                     <col />

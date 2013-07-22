@@ -25,13 +25,13 @@ $reports = $stmt->fetchAll();
 </head>
 <body>
     <div id="layout_wrapper">
-        <h1>Tregmine Admin Tool</h1>
+        <h1 id="banner"><span>Tregmine Admin Tool</span></h1>
 
         <?php require 'menu.php'; ?>
 
-        <h2>Reports</h2>
+        <h2 class="info">Reports</h2>
 
-        <table style="width: 100%;">
+        <table class="info">
             <cols>
                 <col style="width: 150px;" />
                 <col style="width: 150px;" />
