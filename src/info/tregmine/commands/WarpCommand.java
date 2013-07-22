@@ -9,6 +9,8 @@ import org.bukkit.World;
 import org.bukkit.Location;
 import org.bukkit.Chunk;
 import org.bukkit.scheduler.BukkitScheduler;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Horse;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -48,6 +50,11 @@ public class WarpCommand extends AbstractCommand
             String locWorldName = locWorld.getName();
 
             if (playerWorldName.equalsIgnoreCase(locWorldName)) {
+            	for(Horse horse: player.getWorld().getEntitiesByClass(Horse.class)){
+            		if((horse.isTamed()) && (horse.getOwner() == player.getDelegate())){
+            			horse.teleport(loc);
+            		}
+            	}
                 player.teleport(loc);
             }
             else {
