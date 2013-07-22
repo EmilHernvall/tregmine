@@ -1,5 +1,7 @@
 package info.tregmine.boxfill;
 
+import info.tregmine.Tregmine;
+
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
@@ -9,10 +11,10 @@ public class Copy extends AbstractFiller
     private Player player;
     private SavedBlocks currentJob;
 
-    public Copy(History history, Player player, Block block1, Block block2,
+    public Copy(Tregmine plugin, History history, Player player, Block block1, Block block2,
             int workSize)
     {
-        super(block1, block2, workSize);
+        super(plugin, block1, block2, workSize);
 
         this.history = history;
         this.player = player;
