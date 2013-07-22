@@ -36,8 +36,17 @@ public class WarpCommand extends AbstractCommand
         @Override
         public void run()
         {
+        	Horse horse = null;
+        	if((player.getVehicle() != null) && (player.getVehicle() instanceof Horse)){
+        		horse = (Horse)player.getVehicle();
+        	}
             if (player.isAdmin()) {
+            	if(horse != null){
+            		horse.eject();
+            		horse.teleport(loc);
+            	}
                 player.teleport(loc);
+                horse.setPassenger(player.getDelegate());
                 PotionEffect ef =
                         new PotionEffect(PotionEffectType.BLINDNESS, 60, 100);
                 player.addPotionEffect(ef);
@@ -50,17 +59,12 @@ public class WarpCommand extends AbstractCommand
             String locWorldName = locWorld.getName();
 
             if (playerWorldName.equalsIgnoreCase(locWorldName)) {
-            	Horse horse = null;
-            	if((player.getVehicle() != null) && (player.getVehicle() instanceof Horse)){
-            		horse = (Horse)player.getVehicle();
+            	if(horse != null){
             		horse.eject();
             		horse.teleport(loc);
-            		
             	}
                 player.teleport(loc);
-                if(horse != null){
-                	horse.setPassenger(player);
-                }
+                horse.setPassenger(player.getDelegate());
             }
             else {
                 player.sendMessage(RED + "You can't teleport between worlds.");
