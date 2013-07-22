@@ -50,12 +50,17 @@ public class WarpCommand extends AbstractCommand
             String locWorldName = locWorld.getName();
 
             if (playerWorldName.equalsIgnoreCase(locWorldName)) {
-            	for(Horse horse: player.getWorld().getEntitiesByClass(Horse.class)){
-            		if((horse.isTamed()) && (horse.getOwner() == player.getDelegate())){
-            			horse.teleport(loc);
-            		}
+            	Horse horse = null;
+            	if((player.getVehicle() != null) && (player.getVehicle() instanceof Horse)){
+            		horse = (Horse)player.getVehicle();
+            		horse.eject();
+            		horse.teleport(loc);
+            		
             	}
                 player.teleport(loc);
+                if(horse != null){
+                	horse.setPassenger(player);
+                }
             }
             else {
                 player.sendMessage(RED + "You can't teleport between worlds.");
