@@ -61,7 +61,7 @@ public class Tregmine extends JavaPlugin
 
     private Map<String, ZoneWorld> worlds;
     private Map<Integer, Zone> zones;
-    
+
     @Override
     public void onLoad()
     {
@@ -79,15 +79,6 @@ public class Tregmine extends JavaPlugin
             });
 
         zones = new HashMap<Integer, Zone>();
-
-        // Set up all worlds
-        WorldCreator world = new WorldCreator("world");
-        world.environment(Environment.NORMAL);
-        world.createWorld();
-
-        WorldCreator nether = new WorldCreator("world_nether");
-        nether.environment(Environment.NETHER);
-        nether.createWorld();
 
         Connection conn = null;
         try {
@@ -466,5 +457,5 @@ public class Tregmine extends JavaPlugin
     {
         return blessedBlocks;
     }
-    
+
 }

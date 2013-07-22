@@ -80,7 +80,7 @@ public class HomeCommand extends AbstractCommand
         }
         else {
             player.sendMessage(RED
-                    + "Loading your home chunk failed, try /home " + "again.");
+                    + "Loading your home chunk failed, try /home again.");
         }
 
         return true;
@@ -189,6 +189,7 @@ public class HomeCommand extends AbstractCommand
             player.sendMessage(AQUA
                     + "Like a drunken gnome, you fly across the world to "
                     + playerName + "'s home. Try not to hit any birds.");
+        } else {
             player.sendMessage(RED
                     + "Loading of home chunk failed, try /home again");
         }
