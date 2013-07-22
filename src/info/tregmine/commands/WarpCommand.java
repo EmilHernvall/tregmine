@@ -9,6 +9,8 @@ import org.bukkit.World;
 import org.bukkit.Location;
 import org.bukkit.Chunk;
 import org.bukkit.scheduler.BukkitScheduler;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Horse;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -34,8 +36,20 @@ public class WarpCommand extends AbstractCommand
         @Override
         public void run()
         {
+        	Horse horse = null;
+        	if((player.getVehicle() != null) && (player.getVehicle() instanceof Horse)){
+        		horse = (Horse)player.getVehicle();
+        	}
             if (player.isAdmin()) {
-                player.teleport(loc);
+            	if(horse != null){
+            		horse.eject();
+            		horse.teleport(loc);
+            		player.teleport(loc);
+            		horse.setPassenger(player.getDelegate());
+            	}else{
+            		player.teleport(loc);
+            	}
+                
                 PotionEffect ef =
                         new PotionEffect(PotionEffectType.BLINDNESS, 60, 100);
                 player.addPotionEffect(ef);
@@ -48,7 +62,15 @@ public class WarpCommand extends AbstractCommand
             String locWorldName = locWorld.getName();
 
             if (playerWorldName.equalsIgnoreCase(locWorldName)) {
-                player.teleport(loc);
+            	if(horse != null){
+            		horse.eject();
+            		horse.teleport(loc);
+            		player.teleport(loc);
+            		horse.setPassenger(player.getDelegate());
+            	}else{
+            		player.teleport(loc);
+            	}
+                
             }
             else {
                 player.sendMessage(RED + "You can't teleport between worlds.");
