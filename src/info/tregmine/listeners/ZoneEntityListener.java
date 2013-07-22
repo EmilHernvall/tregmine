@@ -31,7 +31,8 @@ public class ZoneEntityListener implements Listener
             EntityType.CHICKEN, EntityType.COW, EntityType.PIG,
             EntityType.SHEEP, EntityType.SQUID, EntityType.WOLF,
             EntityType.IRON_GOLEM, EntityType.SNOWMAN, EntityType.BAT,
-            EntityType.VILLAGER, EntityType.MUSHROOM_COW, EntityType.OCELOT);
+            EntityType.VILLAGER, EntityType.MUSHROOM_COW, EntityType.OCELOT,
+            EntityType.HORSE);
 
     private Tregmine plugin;
 
