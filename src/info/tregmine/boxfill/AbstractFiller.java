@@ -11,6 +11,8 @@ import org.bukkit.scheduler.BukkitScheduler;
 public abstract class AbstractFiller implements Runnable
 {
     private final Logger log = Logger.getLogger("Minecraft");
+    
+    protected Tregmine plugin;
 
     private int workSize;
 
@@ -25,8 +27,9 @@ public abstract class AbstractFiller implements Runnable
     protected int z, zMin, zMax;
     protected int totalVolume;
 
-    public AbstractFiller(Block block1, Block block2, int workSize)
+    public AbstractFiller(Tregmine instance, Block block1, Block block2, int workSize)
     {
+    	this.plugin = instance;
         this.b1 = block1;
         this.b2 = block2;
         this.workSize = workSize;
@@ -91,7 +94,7 @@ public abstract class AbstractFiller implements Runnable
                 for (; z <= zMax; z++) {
                     Block block = world.getBlockAt(x, y, z);
 
-                    if(!Tregmine.getRunningInstance().getBlessedBlocks().containsKey(block.getLocation())){
+                    if(!plugin.getBlessedBlocks().containsKey(block.getLocation())){
                     	changeBlock(block);//in theory, should prevent blessed chests ect. from being filled away accidentally
                     }
 
