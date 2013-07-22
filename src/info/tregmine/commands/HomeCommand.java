@@ -8,6 +8,8 @@ import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.Location;
 import org.bukkit.Chunk;
+import org.bukkit.entity.Horse;
+
 import info.tregmine.Tregmine;
 import info.tregmine.database.ConnectionPool;
 import info.tregmine.database.DBHomeDAO;
@@ -58,7 +60,21 @@ public class HomeCommand extends AbstractCommand
                 return true;
             }
 
-            player.teleport(loc);
+            Horse horse = null;
+            
+            if((player.getVehicle() != null) && (player.getVehicle() instanceof Horse)){
+            	horse = (Horse)player.getVehicle();
+            }
+            
+            if(horse != null){
+            	horse.eject();
+            	horse.teleport(loc);
+            	player.teleport(loc);
+            	horse.setPassenger(player.getDelegate());
+            }else{
+            	player.teleport(loc);
+            }
+            
             player.sendMessage(AQUA + "Hoci poci, little gnome. Magic worked, "
                     + "you're in your home!");
         }
@@ -154,7 +170,22 @@ public class HomeCommand extends AbstractCommand
         world.loadChunk(chunk);
 
         if (world.isChunkLoaded(chunk)) {
-            player.teleport(loc);
+        	
+        	Horse horse = null;
+            
+            if((player.getVehicle() != null) && (player.getVehicle() instanceof Horse)){
+            	horse = (Horse)player.getVehicle();
+            }
+            
+            if(horse != null){
+            	horse.eject();
+            	horse.teleport(loc);
+            	player.teleport(loc);
+            	horse.setPassenger(player.getDelegate());
+            }else{
+            	player.teleport(loc);
+            }
+
             player.sendMessage(AQUA
                     + "Like a drunken gnome, you fly across the world to "
                     + playerName + "'s home. Try not to hit any birds.");
