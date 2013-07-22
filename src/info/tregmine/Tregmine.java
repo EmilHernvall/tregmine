@@ -62,8 +62,6 @@ public class Tregmine extends JavaPlugin
     private Map<String, ZoneWorld> worlds;
     private Map<Integer, Zone> zones;
     
-    private static Tregmine runningInstance;
-
     @Override
     public void onLoad()
     {
@@ -129,7 +127,6 @@ public class Tregmine extends JavaPlugin
     public void onEnable()
     {
         this.server = getServer();
-        runningInstance = this;
 
         // Load blessed blocks
         Connection conn = null;
@@ -470,7 +467,4 @@ public class Tregmine extends JavaPlugin
         return blessedBlocks;
     }
     
-    public static Tregmine getRunningInstance(){
-    	return runningInstance;
-    }
 }
