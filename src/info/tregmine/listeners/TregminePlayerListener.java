@@ -52,6 +52,7 @@ import info.tregmine.api.lore.Created;
 import info.tregmine.api.util.ScoreboardClearTask;
 import info.tregmine.database.ConnectionPool;
 import info.tregmine.database.DBInventoryDAO;
+import info.tregmine.database.DBMotdDAO;
 import info.tregmine.database.DBLogDAO;
 import info.tregmine.database.DBPlayerDAO;
 import info.tregmine.database.DBPlayerReportDAO;
@@ -361,12 +362,12 @@ public class TregminePlayerListener implements Listener
             player.setGameMode(GameMode.SURVIVAL);
         }
 
-        // Load inventory from DB - disabled until we know it's reliable
         Connection conn = null;
-        /*try {
+        try {
             conn = ConnectionPool.getConnection();
 
-            PlayerInventory inv = (PlayerInventory) player.getInventory();
+            // Load inventory from DB - disabled until we know it's reliable
+            /*PlayerInventory inv = (PlayerInventory) player.getInventory();
 
             DBInventoryDAO invDAO = new DBInventoryDAO(conn);
 
@@ -381,6 +382,16 @@ public class TregminePlayerListener implements Listener
             if (armorId != -1) {
                 Tregmine.LOGGER.info("Loaded armor from DB");
                 inv.setArmorContents(invDAO.getStacks(armorId, 4));
+            }*/
+
+            // Load motd
+            DBMotdDAO motdDAO = new DBMotdDAO(conn);
+            String message = motdDAO.getMotd();
+            if (message != null) {
+                String[] lines = message.split("\n");
+                for (String line : lines) {
+                    player.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + line);
+                }
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -388,7 +399,7 @@ public class TregminePlayerListener implements Listener
             if (conn != null) {
                 try { conn.close(); } catch (SQLException e) { }
             }
-        }*/
+        }
 
         // Show a score board
         if (player.isOnline()) {
