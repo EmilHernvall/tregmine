@@ -93,7 +93,7 @@ public class WalletCommand extends AbstractCommand
             int amount)
     {
         if (Distance.calc2d(player.getLocation(), target.getLocation()) > 5) {
-            if (player.canSee(target)) {
+            if (player.canSee(target.getDelegate())) {
                 player.sendMessage(RED
                         + target.getName()
                         + " is to far away for a wallet transaction, please move closer");
@@ -143,7 +143,7 @@ public class WalletCommand extends AbstractCommand
             int amount)
     {
         if (Distance.calc2d(player.getLocation(), target.getLocation()) > 5) {
-            if (player.canSee(target)) {
+            if (player.canSee(target.getDelegate())) {
                 player.sendMessage(RED
                         + target.getName()
                         + " is to far away for a wallet transaction, please move closer");

@@ -4,12 +4,13 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.logging.Logger;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.bukkit.Location;
 import org.bukkit.ChatColor;
@@ -26,11 +27,14 @@ import info.tregmine.quadtree.IntersectionException;
 import org.eclipse.jetty.server.Server;
 
 import info.tregmine.api.TregminePlayer;
+import info.tregmine.api.PlayerReport;
+import info.tregmine.api.PlayerBannedException;
 import info.tregmine.database.ConnectionPool;
 import info.tregmine.database.DBInventoryDAO;
 import info.tregmine.database.DBZonesDAO;
 import info.tregmine.database.DBPlayerDAO;
 import info.tregmine.database.DBLogDAO;
+import info.tregmine.database.DBPlayerReportDAO;
 import info.tregmine.zones.Lot;
 import info.tregmine.zones.Zone;
 import info.tregmine.zones.ZoneWorld;
@@ -89,18 +93,11 @@ public class Tregmine extends JavaPlugin
 
             Player[] players = getServer().getOnlinePlayers();
             for (Player player : players) {
-                TregminePlayer tregPlayer = playerDAO.getPlayer(player);
-                addPlayer(tregPlayer);
-
-                player.sendMessage(ChatColor.GRAY
-                        + "Tregmine successfully loaded " + "to build: "
-                        + this.getDescription().getVersion());
-
-                logDAO.insertLogin(tregPlayer, false);
-
-                tregPlayer.setTemporaryChatName(tregPlayer.getNameColor()
-                        + tregPlayer.getName());
-
+                try {
+                    addPlayer(player);
+                } catch (PlayerBannedException e) {
+                    player.kickPlayer(e.getMessage());
+                }
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -276,22 +273,10 @@ public class Tregmine extends JavaPlugin
 
     public void reloadPlayer(TregminePlayer player)
     {
-        Connection conn = null;
         try {
-            DBPlayerDAO playerDAO = new DBPlayerDAO(conn);
-
-            TregminePlayer tregPlayer =
-                    playerDAO.getPlayer(player.getDelegate());
-            addPlayer(tregPlayer);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                }
-            }
+            addPlayer(player.getDelegate());
+        } catch (PlayerBannedException e) {
+            player.kickPlayer(e.getMessage());
         }
     }
 
@@ -359,21 +344,75 @@ public class Tregmine extends JavaPlugin
         return players;
     }
 
-    public void addPlayer(TregminePlayer player)
+    public TregminePlayer addPlayer(Player srcPlayer)
+    throws PlayerBannedException
     {
-        players.put(player.getName(), player);
-        playersById.put(player.getId(), player);
-    }
-
-    public void removePlayer(Player p)
-    {
-        TregminePlayer player = players.get(p.getName());
-        if (player == null) {
-            return;
+        if (players.containsKey(srcPlayer.getName())) {
+            return players.get(srcPlayer.getName());
         }
 
-        players.remove(player.getName());
-        playersById.remove(player.getId());
+        Connection conn = null;
+        try {
+            conn = ConnectionPool.getConnection();
+
+            DBPlayerDAO playerDAO = new DBPlayerDAO(conn);
+            TregminePlayer player = playerDAO.getPlayer(srcPlayer.getPlayer());
+
+            if (player == null) {
+                player = playerDAO.createPlayer(srcPlayer);
+            }
+
+            DBPlayerReportDAO reportDAO = new DBPlayerReportDAO(conn);
+            List<PlayerReport> reports = reportDAO.getReportsBySubject(player);
+            for (PlayerReport report : reports) {
+                Date validUntil = report.getValidUntil();
+                if (validUntil == null) {
+                    continue;
+                }
+                if (validUntil.getTime() < System.currentTimeMillis()) {
+                    continue;
+                }
+
+                if (report.getAction() == PlayerReport.Action.SOFTWARN) {
+                    player.setTempColor("warned");
+                }
+                else if (report.getAction() == PlayerReport.Action.HARDWARN) {
+                    player.setTempColor("warned");
+                    player.setTrusted(false);
+                }
+                else if (report.getAction() == PlayerReport.Action.BAN) {
+                    //event.disallow(Result.KICK_BANNED, report.getMessage());
+                    throw new PlayerBannedException(report.getMessage());
+                }
+            }
+
+            DBLogDAO logDAO = new DBLogDAO(conn);
+            logDAO.insertLogin(player, false);
+
+            player.setTemporaryChatName(player.getNameColor()
+                    + player.getName());
+
+            players.put(player.getName(), player);
+            playersById.put(player.getId(), player);
+
+            return player;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                }
+            }
+        }
+
+    }
+
+    public void removePlayer(TregminePlayer p)
+    {
+        players.remove(p.getName());
+        playersById.remove(p.getId());
     }
 
     public TregminePlayer getPlayer(String name)

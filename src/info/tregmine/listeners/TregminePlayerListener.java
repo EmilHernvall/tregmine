@@ -47,6 +47,7 @@ import org.bukkit.scoreboard.ScoreboardManager;
 import info.tregmine.Tregmine;
 import info.tregmine.api.PlayerReport;
 import info.tregmine.api.TregminePlayer;
+import info.tregmine.api.PlayerBannedException;
 import info.tregmine.api.lore.Created;
 import info.tregmine.api.util.ScoreboardClearTask;
 import info.tregmine.database.ConnectionPool;
@@ -250,58 +251,17 @@ public class TregminePlayerListener implements Listener
     @EventHandler
     public void onPlayerLogin(PlayerLoginEvent event)
     {
-        TregminePlayer player = null;
-        Connection conn = null;
+        TregminePlayer player;
         try {
-            conn = ConnectionPool.getConnection();
-
-            DBPlayerDAO playerDAO = new DBPlayerDAO(conn);
-            player = playerDAO.getPlayer(event.getPlayer());
-
+            player = plugin.addPlayer(event.getPlayer());
             if (player == null) {
-                player = playerDAO.createPlayer(event.getPlayer());
+                event.disallow(Result.KICK_OTHER, "Something went wrong");
+                return;
             }
-
-            DBPlayerReportDAO reportDAO = new DBPlayerReportDAO(conn);
-            List<PlayerReport> reports = reportDAO.getReportsBySubject(player);
-            for (PlayerReport report : reports) {
-                Date validUntil = report.getValidUntil();
-                if (validUntil == null) {
-                    continue;
-                }
-                if (validUntil.getTime() < System.currentTimeMillis()) {
-                    continue;
-                }
-
-                if (report.getAction() == PlayerReport.Action.SOFTWARN) {
-                    player.setTempColor("warned");
-                }
-                else if (report.getAction() == PlayerReport.Action.HARDWARN) {
-                    player.setTempColor("warned");
-                    player.setTrusted(false);
-                }
-                else if (report.getAction() == PlayerReport.Action.BAN) {
-                    event.disallow(Result.KICK_BANNED, report.getMessage());
-                    return;
-                }
-            }
-
-            DBLogDAO logDAO = new DBLogDAO(conn);
-            logDAO.insertLogin(player, false);
-
-            player.setTemporaryChatName(player.getNameColor()
-                    + player.getName());
-
-            this.plugin.addPlayer(player);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                }
-            }
+        }
+        catch (PlayerBannedException e) {
+            event.disallow(Result.KICK_BANNED, "Something went wrong");
+            return;
         }
 
         if (player.getLocation().getWorld().getName().matches("world_the_end")) {
@@ -361,7 +321,7 @@ public class TregminePlayerListener implements Listener
             }
         }
         else {
-            for (Player current : players) {
+            for (TregminePlayer current : players) {
                 current.showPlayer(player);
             }
         }
@@ -542,7 +502,7 @@ public class TregminePlayerListener implements Listener
         }
     }
 
-@EventHandler
+    @EventHandler
     public void onPlayerPickupItem(PlayerPickupItemEvent event)
     {
         TregminePlayer player = this.plugin.getPlayer(event.getPlayer());

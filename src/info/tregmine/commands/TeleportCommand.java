@@ -31,20 +31,20 @@ public class TeleportCommand extends AbstractCommand
         public void run()
         {
             Horse horse = null;
-            
+
             if((from.getVehicle() != null) && (from.getVehicle() instanceof Horse)){
-            	horse = (Horse)from.getVehicle();
+                horse = (Horse)from.getVehicle();
             }
-            
+
             if(horse != null){
-            	horse.eject();
-            	horse.teleport(to.getLocation());
-            	from.teleport(to.getLocation());
-            	horse.setPassenger(from);
+                horse.eject();
+                horse.teleport(to.getLocation());
+                from.teleport(to.getLocation());
+                horse.setPassenger(from.getDelegate());
             }else{
-            	from.teleport(to.getLocation());
+                from.teleport(to.getLocation());
             }
-            
+
             from.setNoDamageTicks(200);
             if (!from.isAdmin()){
                 to.sendMessage(AQUA + from.getName() + " teleported to you!");

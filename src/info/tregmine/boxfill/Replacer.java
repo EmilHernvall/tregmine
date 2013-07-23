@@ -6,16 +6,19 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.material.MaterialData;
 
+import info.tregmine.api.TregminePlayer;
+
 public class Replacer extends AbstractFiller
 {
     private History history;
-    private Player player;
+    private TregminePlayer player;
     private MaterialData match;
     private MaterialData item;
     private SavedBlocks currentJob;
 
-    public Replacer(Tregmine plugin, History history, Player player, Block block1, Block block2,
-            MaterialData match, MaterialData item, int workSize)
+    public Replacer(Tregmine plugin, History history, TregminePlayer player,
+            Block block1, Block block2, MaterialData match, MaterialData item,
+            int workSize)
     {
         super(plugin, block1, block2, workSize);
 
