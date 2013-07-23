@@ -153,3 +153,10 @@ ALTER TABLE player_orelog ADD COLUMN orelog_x INTEGER,
                           ADD COLUMN orelog_y INTEGER,
                           ADD COLUMN orelog_z INTEGER,
                           ADD COLUMN orelog_world VARCHAR (255);
+
+CREATE TABLE motd (
+    motd_id INT UNSIGNED AUTO_INCREMENT,
+    motd_timestamp INT UNSIGNED NOT NULL,
+    motd_message TEXT,
+    PRIMARY KEY (motd_id)
+);
