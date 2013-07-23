@@ -65,8 +65,8 @@ public class ItemCommand extends AbstractCommand
         }
 
         ItemStack item = new ItemStack(materialId, amount, (byte) data);
-        if (item.getType() == Material.MONSTER_EGG) {
-            return true;
+        if (item.getType() == Material.MONSTER_EGG || item.getType() == Material.NAME_TAG) {
+            return false;
         }
 
         ItemMeta meta = item.getItemMeta();
