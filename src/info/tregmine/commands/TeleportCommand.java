@@ -6,6 +6,7 @@ import static org.bukkit.ChatColor.*;
 import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.scheduler.BukkitScheduler;
+import org.bukkit.entity.Horse;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -29,7 +30,21 @@ public class TeleportCommand extends AbstractCommand
         @Override
         public void run()
         {
-            from.teleport(to.getLocation());
+            Horse horse = null;
+            
+            if((from.getVehicle() != null) && (from.getVehicle() instanceof Horse)){
+            	horse = (Horse)from.getVehicle();
+            }
+            
+            if(horse != null){
+            	horse.eject();
+            	horse.teleport(to.getLocation());
+            	from.teleport(to.getLocation());
+            	horse.setPassenger(from);
+            }else{
+            	from.teleport(to.getLocation());
+            }
+            
             from.setNoDamageTicks(200);
             if (!from.isAdmin()){
                 to.sendMessage(AQUA + from.getName() + " teleported to you!");
