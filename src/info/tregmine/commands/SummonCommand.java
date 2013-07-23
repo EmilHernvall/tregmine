@@ -18,9 +18,9 @@ public class SummonCommand extends AbstractCommand
     @Override
     public boolean handlePlayer(TregminePlayer player, String[] args)
     {
-	if (!player.isAdmin()) {
-		return true;
-	}
+        if (!player.isAdmin()) {
+            return true;
+        }
         if (args.length == 0) {
             return false;
         }
@@ -35,22 +35,22 @@ public class SummonCommand extends AbstractCommand
         TregminePlayer victim = candidates.get(0);
 
         victim.setNoDamageTicks(200);
-        
+
         Horse horse = null;
-        
+
         if((victim.getVehicle() != null) && (victim.getVehicle() instanceof Horse)){
-        	horse = (Horse)victim.getVehicle();
+            horse = (Horse)victim.getVehicle();
         }
-        
+
         if(horse != null){
-        	horse.eject();
-        	horse.teleport(victim.getLocation());
-        	victim.teleport(victim.getLocation());
-        	horse.setPassenger(victim);
+            horse.eject();
+            horse.teleport(victim.getLocation());
+            victim.teleport(victim.getLocation());
+            horse.setPassenger(victim.getDelegate());
         }else{
-        	victim.teleport(player.getLocation());
+            victim.teleport(player.getLocation());
         }
-        
+
         victim.sendMessage(player.getChatName() + AQUA + " summoned you.");
         player.sendMessage(AQUA + "You summoned " + victim.getChatName() + AQUA
                 + " to yourself.");

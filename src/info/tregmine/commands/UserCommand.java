@@ -49,7 +49,7 @@ public class UserCommand extends AbstractCommand
             return true;
         }
 
-        Player candidate = candidates.get(0);
+        TregminePlayer candidate = candidates.get(0);
         tregmine.reloadPlayer(player);
         player.sendMessage("Player reloaded " + candidate.getDisplayName());
         return true;

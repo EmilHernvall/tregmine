@@ -3,23 +3,23 @@ package info.tregmine.boxfill;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.bukkit.entity.Player;
+import info.tregmine.api.TregminePlayer;
 
 public class History
 {
-    private Map<Player, SavedBlocks> currentState;
+    private Map<TregminePlayer, SavedBlocks> currentState;
 
     public History()
     {
-        currentState = new HashMap<Player, SavedBlocks>();
+        currentState = new HashMap<TregminePlayer, SavedBlocks>();
     }
 
-    public void set(Player player, SavedBlocks blocks)
+    public void set(TregminePlayer player, SavedBlocks blocks)
     {
         currentState.put(player, blocks);
     }
 
-    public SavedBlocks get(Player player)
+    public SavedBlocks get(TregminePlayer player)
     {
         return currentState.get(player);
     }

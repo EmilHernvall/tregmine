@@ -13,10 +13,12 @@ import org.bukkit.block.BlockState;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitScheduler;
 
+import info.tregmine.api.TregminePlayer;
+
 public class Paster implements Runnable
 {
     private History undoHistory;
-    private Player player;
+    private TregminePlayer player;
     private World world;
     private Block base;
     private SavedBlocks blocks;
@@ -30,7 +32,7 @@ public class Paster implements Runnable
 
     private int i;
 
-    public Paster(History undoHistory, Player player, World world, Block base,
+    public Paster(History undoHistory, TregminePlayer player, World world, Block base,
             SavedBlocks blocks, double theta, int workSize)
     {
         this.undoHistory = undoHistory;
