@@ -9,6 +9,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -66,12 +68,18 @@ public class Tregmine extends JavaPlugin
     private Map<String, ZoneWorld> worlds;
     private Map<Integer, Zone> zones;
 
+    private Queue<TregminePlayer> mentors;
+    private Queue<TregminePlayer> students;
+
     @Override
     public void onLoad()
     {
         // Set up all data structures
         players = new HashMap<String, TregminePlayer>();
         playersById = new HashMap<Integer, TregminePlayer>();
+
+        mentors = new LinkedList<TregminePlayer>();
+        students = new LinkedList<TregminePlayer>();
 
         worlds = new TreeMap<String, ZoneWorld>(
             new Comparator<String>() {
@@ -272,6 +280,29 @@ public class Tregmine extends JavaPlugin
 
     }
 
+    // ============================================================================
+    // Data structure accessors
+    // ============================================================================
+
+    public Map<Location, Integer> getBlessedBlocks()
+    {
+        return blessedBlocks;
+    }
+
+    public Queue<TregminePlayer> getMentorQueue()
+    {
+        return mentors;
+    }
+
+    public Queue<TregminePlayer> getStudentQueue()
+    {
+        return students;
+    }
+
+    // ============================================================================
+    // Player methods
+    // ============================================================================
+
     public void reloadPlayer(TregminePlayer player)
     {
         try {
@@ -279,60 +310,6 @@ public class Tregmine extends JavaPlugin
         } catch (PlayerBannedException e) {
             player.kickPlayer(e.getMessage());
         }
-    }
-
-    public ZoneWorld getWorld(World world)
-    {
-        ZoneWorld zoneWorld = worlds.get(world.getName());
-
-        // lazy load zone worlds as required
-        if (zoneWorld == null) {
-            Connection conn = null;
-            try {
-                conn = ConnectionPool.getConnection();
-                DBZonesDAO dao = new DBZonesDAO(conn);
-
-                zoneWorld = new ZoneWorld(world);
-                List<Zone> zones = dao.getZones(world.getName());
-                for (Zone zone : zones) {
-                    try {
-                        zoneWorld.addZone(zone);
-                        this.zones.put(zone.getId(), zone);
-                    } catch (IntersectionException e) {
-                        LOGGER.warning("Failed to load zone " + zone.getName()
-                                + " with id " + zone.getId() + ".");
-                    }
-                }
-
-                List<Lot> lots = dao.getLots(world.getName());
-                for (Lot lot : lots) {
-                    try {
-                        zoneWorld.addLot(lot);
-                    } catch (IntersectionException e) {
-                        LOGGER.warning("Failed to load lot " + lot.getName()
-                                + " with id " + lot.getId() + ".");
-                    }
-                }
-
-                worlds.put(world.getName(), zoneWorld);
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            } finally {
-                if (conn != null) {
-                    try {
-                        conn.close();
-                    } catch (SQLException e) {
-                    }
-                }
-            }
-        }
-
-        return zoneWorld;
-    }
-
-    public Zone getZone(int zoneId)
-    {
-        return zones.get(zoneId);
     }
 
     public List<TregminePlayer> getOnlinePlayers()
@@ -497,9 +474,62 @@ public class Tregmine extends JavaPlugin
         return decoratedMatches;
     }
 
-    public Map<Location, Integer> getBlessedBlocks()
+    // ============================================================================
+    // Zone methods
+    // ============================================================================
+
+    public ZoneWorld getWorld(World world)
     {
-        return blessedBlocks;
+        ZoneWorld zoneWorld = worlds.get(world.getName());
+
+        // lazy load zone worlds as required
+        if (zoneWorld == null) {
+            Connection conn = null;
+            try {
+                conn = ConnectionPool.getConnection();
+                DBZonesDAO dao = new DBZonesDAO(conn);
+
+                zoneWorld = new ZoneWorld(world);
+                List<Zone> zones = dao.getZones(world.getName());
+                for (Zone zone : zones) {
+                    try {
+                        zoneWorld.addZone(zone);
+                        this.zones.put(zone.getId(), zone);
+                    } catch (IntersectionException e) {
+                        LOGGER.warning("Failed to load zone " + zone.getName()
+                                + " with id " + zone.getId() + ".");
+                    }
+                }
+
+                List<Lot> lots = dao.getLots(world.getName());
+                for (Lot lot : lots) {
+                    try {
+                        zoneWorld.addLot(lot);
+                    } catch (IntersectionException e) {
+                        LOGGER.warning("Failed to load lot " + lot.getName()
+                                + " with id " + lot.getId() + ".");
+                    }
+                }
+
+                worlds.put(world.getName(), zoneWorld);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            } finally {
+                if (conn != null) {
+                    try {
+                        conn.close();
+                    } catch (SQLException e) {
+                    }
+                }
+            }
+        }
+
+        return zoneWorld;
+    }
+
+    public Zone getZone(int zoneId)
+    {
+        return zones.get(zoneId);
     }
 
 }

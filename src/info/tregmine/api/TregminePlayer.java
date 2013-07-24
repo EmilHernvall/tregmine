@@ -2,6 +2,7 @@ package info.tregmine.api;
 
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Date;
 //import java.util.List;
 
 import org.bukkit.ChatColor;
@@ -70,6 +71,7 @@ public class TregminePlayer extends PlayerDelegate
     private boolean teleportShield = false;
     private boolean setup = false;
     private int guardianRank = 0;
+    private int mentorId = 0;
 
     // One-time state
     private String chatChannel = "GLOBAL";
@@ -78,6 +80,7 @@ public class TregminePlayer extends PlayerDelegate
     private GuardianState guardianState = null;
     private int blessTarget = 0;
     private ChatState chatState = ChatState.CHAT;
+    private Date loginTime = null;
 
     // Player state for block fill
     private Block fillBlock1 = null;
@@ -95,6 +98,7 @@ public class TregminePlayer extends PlayerDelegate
         super(player);
 
         this.name = player.getName();
+        this.loginTime = new Date();
     }
 
     public TregminePlayer(String name)
@@ -104,15 +108,8 @@ public class TregminePlayer extends PlayerDelegate
         this.name = name;
     }
 
-    public void setId(int v)
-    {
-        this.id = v;
-    }
-
-    public int getId()
-    {
-        return id;
-    }
+    public void setId(int v) { this.id = v; }
+    public int getId() { return id; }
 
     public String getChatName()
     {
@@ -146,166 +143,61 @@ public class TregminePlayer extends PlayerDelegate
         return BCrypt.checkpw(attempt, password);
     }
 
-    public String getKeyword()
-    {
-        return keyword;
-    }
+    public String getKeyword() { return keyword; }
+    public void setKeyword(String v) { this.keyword = v; }
 
-    public void setKeyword(String v)
-    {
-        this.keyword = v;
-    }
+    public String getCountryName() { return countryName; }
+    public void setCountryName(String v) { this.countryName = v; }
 
-    public String getCountryName()
-    {
-        return countryName;
-    }
+    public String getCity() { return city; }
+    public void setCity(String v) { this.city = v; }
 
-    public void setCountryName(String v)
-    {
-        this.countryName = v;
-    }
+    public String getIp() { return ip; }
+    public void setIp(String v) { this.ip = v; }
 
-    public String getCity()
-    {
-        return city;
-    }
+    public String getPostalCode() { return postalCode; }
+    public void setPostalCode(String v) { this.postalCode = v; }
 
-    public void setCity(String v)
-    {
-        this.city = v;
-    }
+    public String getRegion() { return region; }
+    public void setRegion(String v) { this.region = v; }
 
-    public String getIp()
-    {
-        return ip;
-    }
+    public String getHostName() { return hostName; }
+    public void setHostName(String v) { this.hostName = v; }
 
-    public void setIp(String v)
-    {
-        this.ip = v;
-    }
+    public boolean hasHiddenLocation() { return hiddenLocation; }
+    public void setHiddenLocation(boolean v) { this.hiddenLocation = v; }
 
-    public String getPostalCode()
-    {
-        return postalCode;
-    }
+    public void setAdmin(boolean v) { this.admin = v; }
+    public boolean isAdmin() { return admin; }
 
-    public void setPostalCode(String v)
-    {
-        this.postalCode = v;
-    }
+    public void setDonator(boolean v) { this.donator = v; }
+    public boolean isDonator() { return donator; }
 
-    public String getRegion()
-    {
-        return region;
-    }
+    public void setBanned(boolean v) { this.banned = v; }
+    @Override public boolean isBanned() { return banned; }
 
-    public void setRegion(String v)
-    {
-        this.region = v;
-    }
+    public void setTrusted(boolean v) { this.trusted = v; }
+    public boolean isTrusted() { return trusted; }
 
-    public String getHostName()
-    {
-        return hostName;
-    }
+    public void setChild(boolean v) { this.child = v; }
+    public boolean isChild() { return child; }
 
-    public void setHostName(String v)
-    {
-        this.hostName = v;
-    }
+    public void setGuardian(boolean v) { this.guardian = v; }
+    public boolean isGuardian() { return guardian; }
 
-    public boolean hasHiddenLocation()
-    {
-        return hiddenLocation;
-    }
+    public void setBuilder(boolean v) { this.builder = v; }
+    public boolean isBuilder() { return builder; }
 
-    public void setHiddenLocation(boolean v)
-    {
-        this.hiddenLocation = v;
-    }
+    public void setSetup(boolean v) { this.setup = v; }
+    public boolean isSetup() { return setup; }
 
-    public void setAdmin(boolean v)
-    {
-        this.admin = v;
-    }
+    public void setGuardianRank(int v) { this.guardianRank = v; }
+    public int getGuardianRank() { return guardianRank; }
 
-    public boolean isAdmin()
-    {
-        return admin;
-    }
+    public void setMentor(int id) { this.mentorId = id; }
+    public int getMentor() { return mentorId; }
 
-    public void setDonator(boolean v)
-    {
-        this.donator = v;
-    }
-
-    public boolean isDonator()
-    {
-        return donator;
-    }
-
-    public void setBanned(boolean v)
-    {
-        this.banned = v;
-    }
-
-    @Override
-    public boolean isBanned()
-    {
-        return banned;
-    }
-
-    public void setTrusted(boolean v)
-    {
-        this.trusted = v;
-    }
-
-    public boolean isTrusted()
-    {
-        return trusted;
-    }
-
-    public void setChild(boolean v)
-    {
-        this.child = v;
-    }
-
-    public boolean isChild()
-    {
-        return child;
-    }
-
-    public void setGuardian(boolean v)
-    {
-        this.guardian = v;
-    }
-
-    public boolean isGuardian()
-    {
-        return guardian;
-    }
-
-    public void setBuilder(boolean v)
-    {
-        this.builder = v;
-    }
-
-    public boolean isBuilder()
-    {
-        return builder;
-    }
-
-    public void setGuardianRank(int v)
-    {
-        this.guardianRank = v;
-    }
-
-    public int getGuardianRank()
-    {
-        return guardianRank;
-    }
+    // non-persistent state methods
 
     public GuardianState getGuardianState()
     {
@@ -329,25 +221,11 @@ public class TregminePlayer extends PlayerDelegate
         setTemporaryChatName(getNameColor() + getName());
     }
 
-    public void setTimezone(String v)
-    {
-        this.timezone = v;
-    }
+    public void setTimezone(String v) { this.timezone = v; }
+    public String getTimezone() { return timezone; }
 
-    public String getTimezone()
-    {
-        return timezone;
-    }
-
-    public void setQuitMessage(String v)
-    {
-        this.quitMessage = v;
-    }
-
-    public String getQuitMessage()
-    {
-        return quitMessage;
-    }
+    public void setQuitMessage(String v) { this.quitMessage = v; }
+    public String getQuitMessage() { return quitMessage; }
 
     public ChatColor getNameColor()
     {
@@ -372,35 +250,11 @@ public class TregminePlayer extends PlayerDelegate
         return color;
     }
 
-    public void setInvisible(boolean v)
-    {
-        this.invisible = v;
-    }
+    public void setInvisible(boolean v) { this.invisible = v; }
+    public Boolean isInvisible() { return invisible; }
 
-    public Boolean isInvisible()
-    {
-        return invisible;
-    }
-
-    public void setSetup(boolean v)
-    {
-        this.setup = v;
-    }
-
-    public boolean isSetup()
-    {
-        return setup;
-    }
-
-    public void setCurrentZone(Zone zone)
-    {
-        this.currentZone = zone;
-    }
-
-    public Zone getCurrentZone()
-    {
-        return currentZone;
-    }
+    public void setCurrentZone(Zone zone) { this.currentZone = zone; }
+    public Zone getCurrentZone() { return currentZone; }
 
     public void setCurrentTexture(String url)
     {
@@ -414,118 +268,47 @@ public class TregminePlayer extends PlayerDelegate
         }
     }
 
-    public void setChatChannel(String v)
-    {
-        this.chatChannel = v;
-    }
+    public void setChatChannel(String v) { this.chatChannel = v; }
+    public String getChatChannel() { return chatChannel; }
 
-    public String getChatChannel()
-    {
-        return chatChannel;
-    }
+    public void setBlessTarget(int v) { this.blessTarget = v; }
+    public int getBlessTarget() { return blessTarget; }
 
-    public void setBlessTarget(int v)
-    {
-        this.blessTarget = v;
-    }
+    public void setTeleportShield(boolean v) { this.teleportShield = v; }
+    public boolean hasTeleportShield() { return teleportShield; }
 
-    public int getBlessTarget()
-    {
-        return blessTarget;
-    }
+    public void setChatState(ChatState v) { this.chatState = v; }
+    public ChatState getChatState() { return chatState; }
 
-    public void setTeleportShield(boolean v)
+    public int getTimeOnline()
     {
-        this.teleportShield = v;
-    }
-
-    public boolean hasTeleportShield()
-    {
-        return teleportShield;
-    }
-
-    public void setChatState(ChatState v)
-    {
-        this.chatState = v;
-    }
-
-    public ChatState getChatState()
-    {
-        return chatState;
+        return (int)((new Date().getTime() - loginTime.getTime())/1000L);
     }
 
     // block fill state
-    public void setFillBlock1(Block v)
-    {
-        this.fillBlock1 = v;
-    }
+    public void setFillBlock1(Block v) { this.fillBlock1 = v; }
+    public Block getFillBlock1() { return fillBlock1; }
 
-    public Block getFillBlock1()
-    {
-        return fillBlock1;
-    }
+    public void setFillBlock2(Block v) { this.fillBlock2 = v; }
+    public Block getFillBlock2() { return fillBlock2; }
 
-    public void setFillBlock2(Block v)
-    {
-        this.fillBlock2 = v;
-    }
-
-    public Block getFillBlock2()
-    {
-        return fillBlock2;
-    }
-
-    public void setFillBlockCounter(int v)
-    {
-        this.fillBlockCounter = v;
-    }
-
-    public int getFillBlockCounter()
-    {
-        return fillBlockCounter;
-    }
+    public void setFillBlockCounter(int v) { this.fillBlockCounter = v; }
+    public int getFillBlockCounter() { return fillBlockCounter; }
 
     // zones state
-    public void setZoneBlock1(Block v)
-    {
-        this.zoneBlock1 = v;
-    }
+    public void setZoneBlock1(Block v) { this.zoneBlock1 = v; }
+    public Block getZoneBlock1() { return zoneBlock1; }
 
-    public Block getZoneBlock1()
-    {
-        return zoneBlock1;
-    }
+    public void setZoneBlock2(Block v) { this.zoneBlock2 = v; }
+    public Block getZoneBlock2() { return zoneBlock2; }
 
-    public void setZoneBlock2(Block v)
-    {
-        this.zoneBlock2 = v;
-    }
+    public void setZoneBlockCounter(int v) { this.zoneBlockCounter = v; }
+    public int getZoneBlockCounter() { return zoneBlockCounter; }
 
-    public Block getZoneBlock2()
-    {
-        return zoneBlock2;
-    }
+    public void setTargetZoneId(int v) { this.targetZoneId = v; }
+    public int getTargetZoneId() { return targetZoneId; }
 
-    public void setZoneBlockCounter(int v)
-    {
-        this.zoneBlockCounter = v;
-    }
-
-    public int getZoneBlockCounter()
-    {
-        return zoneBlockCounter;
-    }
-
-    public void setTargetZoneId(int v)
-    {
-        this.targetZoneId = v;
-    }
-
-    public int getTargetZoneId()
-    {
-        return targetZoneId;
-    }
-
+    // convenience methods
     public void hidePlayer(TregminePlayer player)
     {
         hidePlayer(player.getDelegate());
@@ -536,6 +319,7 @@ public class TregminePlayer extends PlayerDelegate
         showPlayer(player.getDelegate());
     }
 
+    // java.lang.Object overrides
     @Override
     public boolean equals(Object obj)
     {
