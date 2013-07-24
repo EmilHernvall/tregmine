@@ -264,6 +264,10 @@ public class TregminePlayerListener implements Listener
             return;
         }
 
+        if (!player.isSetup()) {
+            player.setChatState(TregminePlayer.ChatState.SETUP);
+        }
+
         if (player.getLocation().getWorld().getName().matches("world_the_end")) {
             player.teleport(this.plugin.getServer().getWorld("world")
                     .getSpawnLocation());
@@ -338,6 +342,11 @@ public class TregminePlayerListener implements Listener
             if (player.isOp()) {
                 player.showPlayer(current);
             }
+        }
+
+        // Bail out before sending any messages
+        if (!player.isSetup()) {
+            return;
         }
 
         // Check if the player is allowed to fly
