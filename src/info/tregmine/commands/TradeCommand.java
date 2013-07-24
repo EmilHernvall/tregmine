@@ -28,7 +28,7 @@ import info.tregmine.api.math.Distance;
 public class TradeCommand extends AbstractCommand implements Listener
 {
     String tradePre = YELLOW + "[Trade] ";
-    
+
     private enum TradeState {
         ITEM_SELECT, BID, CONSIDER_BID;
     };
@@ -67,7 +67,7 @@ public class TradeCommand extends AbstractCommand implements Listener
 
         Server server = tregmine.getServer();
         String pattern = args[0];
-        
+
         List<TregminePlayer> candidates = tregmine.matchPlayer(pattern);
         if (candidates.size() != 1) {
             // TODO: error message
@@ -273,109 +273,100 @@ public class TradeCommand extends AbstractCommand implements Listener
                 player.sendMessage(RED + "[Trade] You can't accept an offer!");
                 return;
             }
+
             ItemStack[] contents = ctx.inventory.getContents();
-            
-            Inventory trade = ctx.inventory;
 
             int t = 0;
-            for (ItemStack tis : trade.getContents()) {
-                if (tis == null)
+            for (ItemStack tis : contents) {
+                if (tis == null) {
                     continue;
+                }
                 t++;
             }
-            String strT = Integer.toString(t);
-            
+
             int p = 0;
-            for (ItemStack pis : second.getInventory().getContents()) {
-                if (pis != null)
+            Inventory secondInv = second.getInventory();
+            for (ItemStack pis : secondInv.getContents()) {
+                if (pis != null) {
                     continue;
+                }
                 p++;
             }
-            String strP = Integer.toString(p);
-            
-            int diff = t-p;
 
-            if (p < t){
-                first.sendMessage(tradePre + second.getChatName() + YELLOW + " doesn't have enough inventory space, please wait a minute and try again :)");
-                second.sendMessage(tradePre + "You need to remove " + diff + " item stack(s) from your inventory to be able to recieve the items!"); 
+            if (p < t) {
+                int diff = t - p;
+                first.sendMessage(tradePre + second.getChatName() + YELLOW +
+                        " doesn't have enough inventory space, please wait a " +
+                        "minute and try again :)");
+                second.sendMessage(tradePre + "You need to remove " + diff +
+                        " item stack(s) from your inventory to be able to recieve " +
+                        "the items!");
                 return;
             }
-            
-            
-            first.sendMessage(strT);
-            second.sendMessage(strT);
-            
-            first.sendMessage("----------");
-            second.sendMessage("----------");
-            
-            first.sendMessage(strP);
-            second.sendMessage(strP); 
-         
-        // Withdraw ctx.bid tregs from second players wallet
-        // Add ctx.bid tregs from first players wallet
-        Connection conn = null;
-        try {
-            conn = ConnectionPool.getConnection();
-            DBWalletDAO walletDAO = new DBWalletDAO(conn);
-            DBTradeDAO tradeDAO = new DBTradeDAO(conn);
 
-            if (walletDAO.take(second, ctx.bid)) {
-                walletDAO.add(first, ctx.bid);
-                walletDAO.insertTransaction(second.getId(), first.getId(),
-                        ctx.bid);
+            // Withdraw ctx.bid tregs from second players wallet
+            // Add ctx.bid tregs from first players wallet
+            Connection conn = null;
+            try {
+                conn = ConnectionPool.getConnection();
+                DBWalletDAO walletDAO = new DBWalletDAO(conn);
+                DBTradeDAO tradeDAO = new DBTradeDAO(conn);
 
-                int tradeId =
-                        tradeDAO.insertTrade(first.getId(), second.getId(),
-                                ctx.bid);
-                tradeDAO.insertStacks(tradeId, contents);
+                if (walletDAO.take(second, ctx.bid)) {
+                    walletDAO.add(first, ctx.bid);
+                    walletDAO.insertTransaction(second.getId(), first.getId(),
+                            ctx.bid);
 
-                first.sendMessage(tradePre + ctx.bid
-                        + " tregs was " + "added to your wallet!");
-                second.sendMessage(tradePre + ctx.bid
-                        + " tregs was " + "withdrawn to your wallet!");
-            }
-            else {
-                first.sendMessage(RED + "[Trade] Failed to withdraw "
-                        + ctx.bid + " from the wallet of "
-                        + second.getChatName() + "!");
-                return;
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
+                    int tradeId =
+                            tradeDAO.insertTrade(first.getId(), second.getId(),
+                                    ctx.bid);
+                    tradeDAO.insertStacks(tradeId, contents);
+
+                    first.sendMessage(tradePre + ctx.bid
+                            + " tregs was " + "added to your wallet!");
+                    second.sendMessage(tradePre + ctx.bid
+                            + " tregs was " + "withdrawn to your wallet!");
+                }
+                else {
+                    first.sendMessage(RED + "[Trade] Failed to withdraw "
+                            + ctx.bid + " from the wallet of "
+                            + second.getChatName() + "!");
+                    return;
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            } finally {
+                if (conn != null) {
+                    try {
+                        conn.close();
+                    } catch (SQLException e) {
+                    }
                 }
             }
-        }
 
-        // Move items to second players inventory
-        Inventory secondInv = second.getInventory();
-
-        for (ItemStack stack : contents) {
-            if (stack == null) {
-                continue;
+            // Move items to second players inventory
+            for (ItemStack stack : contents) {
+                if (stack == null) {
+                    continue;
+                }
+                secondInv.addItem(stack);
             }
-            secondInv.addItem(stack);
+
+            // Finalize
+            first.setChatState(TregminePlayer.ChatState.CHAT);
+            second.setChatState(TregminePlayer.ChatState.CHAT);
+            activeTrades.remove(first);
+            activeTrades.remove(second);
+
+            first.giveExp(5);
+            second.giveExp(5);
         }
+        else {
+            first.sendMessage(tradePre + WHITE + "<"
+                    + player.getChatName() + WHITE + "> " + text);
 
-        // Finalize
-        first.setChatState(TregminePlayer.ChatState.CHAT);
-        second.setChatState(TregminePlayer.ChatState.CHAT);
-        activeTrades.remove(first);
-        activeTrades.remove(second);
-
-        first.giveExp(5);
-        second.giveExp(5);
+            second.sendMessage(tradePre + WHITE + "<"
+                    + player.getChatName() + WHITE + "> " + text);
+        }
     }
-    else {
-        first.sendMessage(tradePre + WHITE + "<"
-                + player.getChatName() + WHITE + "> " + text);
-
-        second.sendMessage(tradePre + WHITE + "<"
-                + player.getChatName() + WHITE + "> " + text);
-    }
-}
 }
