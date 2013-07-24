@@ -595,6 +595,10 @@ public class ZonePlayerListener implements Listener
     private void welcomeMessage(Zone currentZone, TregminePlayer player,
             Zone.Permission perm)
     {
+        if (!player.isSetup()) {
+            return;
+        }
+
         if (currentZone.getTexture() == "") {
             if (currentZone.isPvp()) {
                 player.setCurrentTexture("https://dl.dropbox.com/u/5405236/mc/pvp.zip");

@@ -18,7 +18,7 @@ public class TregminePlayer extends PlayerDelegate
     };
 
     public enum ChatState {
-        CHAT, TRADE, SELL;
+        SETUP, CHAT, TRADE, SELL;
     };
 
     @SuppressWarnings("serial")
@@ -68,6 +68,7 @@ public class TregminePlayer extends PlayerDelegate
     private boolean guardian = false;
     private boolean builder = false;
     private boolean teleportShield = false;
+    private boolean setup = false;
     private int guardianRank = 0;
 
     // One-time state
@@ -379,6 +380,16 @@ public class TregminePlayer extends PlayerDelegate
     public Boolean isInvisible()
     {
         return invisible;
+    }
+
+    public void setSetup(boolean v)
+    {
+        this.setup = v;
+    }
+
+    public boolean isSetup()
+    {
+        return setup;
     }
 
     public void setCurrentZone(Zone zone)

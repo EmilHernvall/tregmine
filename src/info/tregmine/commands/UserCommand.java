@@ -122,6 +122,7 @@ public class UserCommand extends AbstractCommand
 
             DBPlayerDAO playerDAO = new DBPlayerDAO(conn);
             playerDAO.updatePlayerPermissions(victim);
+            playerDAO.updatePlayerInfo(victim);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
