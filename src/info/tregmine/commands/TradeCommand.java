@@ -27,6 +27,8 @@ import info.tregmine.api.math.Distance;
 
 public class TradeCommand extends AbstractCommand implements Listener
 {
+    String tradePre = YELLOW + "[Trade] ";
+
     private enum TradeState {
         ITEM_SELECT, BID, CONSIDER_BID;
     };
@@ -86,7 +88,7 @@ public class TradeCommand extends AbstractCommand implements Listener
         double distance = Distance.calc2d(player.getLocation(), target.getLocation());
         if (distance > 100) {
             player.sendMessage(RED + "You can only trade with people less than " +
-                              "100 blocks away.");
+                    "100 blocks away.");
             return true;
         }
 
@@ -126,7 +128,7 @@ public class TradeCommand extends AbstractCommand implements Listener
 
         TregminePlayer target = ctx.secondPlayer;
 
-        target.sendMessage(YELLOW + "[Trade] " + player.getChatName() + " "
+        target.sendMessage(tradePre + player.getChatName() + " "
                 + YELLOW + " is offering: ");
         player.sendMessage("[Trade] You are offering: ");
 
@@ -137,9 +139,9 @@ public class TradeCommand extends AbstractCommand implements Listener
             }
             Material material = stack.getType();
             int amount = stack.getAmount();
-            target.sendMessage(YELLOW + "[Trade] " + amount + " "
+            target.sendMessage(tradePre + amount + " "
                     + material.toString());
-            player.sendMessage(YELLOW + "[Trade] " + amount + " "
+            player.sendMessage(tradePre + amount + " "
                     + material.toString());
         }
 
@@ -248,7 +250,7 @@ public class TradeCommand extends AbstractCommand implements Listener
                 }
             }
 
-            first.sendMessage(YELLOW + "[Trade] " + second.getChatName() + YELLOW
+            first.sendMessage(tradePre + second.getChatName() + YELLOW
                     + " bid " + amount + " tregs. Type \"accept\" to "
                     + "proceed with the trade. Type \"change\" to modify "
                     + "your offer. Type \"quit\" to stop trading.");
@@ -274,6 +276,34 @@ public class TradeCommand extends AbstractCommand implements Listener
 
             ItemStack[] contents = ctx.inventory.getContents();
 
+            int t = 0;
+            for (ItemStack tis : contents) {
+                if (tis == null) {
+                    continue;
+                }
+                t++;
+            }
+
+            int p = 0;
+            Inventory secondInv = second.getInventory();
+            for (ItemStack pis : secondInv.getContents()) {
+                if (pis != null) {
+                    continue;
+                }
+                p++;
+            }
+
+            if (p < t) {
+                int diff = t - p;
+                first.sendMessage(tradePre + second.getChatName() + YELLOW +
+                        " doesn't have enough inventory space, please wait a " +
+                        "minute and try again :)");
+                second.sendMessage(tradePre + "You need to remove " + diff +
+                        " item stack(s) from your inventory to be able to recieve " +
+                        "the items!");
+                return;
+            }
+
             // Withdraw ctx.bid tregs from second players wallet
             // Add ctx.bid tregs from first players wallet
             Connection conn = null;
@@ -292,9 +322,9 @@ public class TradeCommand extends AbstractCommand implements Listener
                                     ctx.bid);
                     tradeDAO.insertStacks(tradeId, contents);
 
-                    first.sendMessage(YELLOW + "[Trade] " + ctx.bid
+                    first.sendMessage(tradePre + ctx.bid
                             + " tregs was " + "added to your wallet!");
-                    second.sendMessage(YELLOW + "[Trade] " + ctx.bid
+                    second.sendMessage(tradePre + ctx.bid
                             + " tregs was " + "withdrawn to your wallet!");
                 }
                 else {
@@ -315,7 +345,6 @@ public class TradeCommand extends AbstractCommand implements Listener
             }
 
             // Move items to second players inventory
-            Inventory secondInv = second.getInventory();
             for (ItemStack stack : contents) {
                 if (stack == null) {
                     continue;
@@ -333,10 +362,10 @@ public class TradeCommand extends AbstractCommand implements Listener
             second.giveExp(5);
         }
         else {
-            first.sendMessage(YELLOW + "[Trade] " + WHITE + "<"
+            first.sendMessage(tradePre + WHITE + "<"
                     + player.getChatName() + WHITE + "> " + text);
 
-            second.sendMessage(YELLOW + "[Trade] " + WHITE + "<"
+            second.sendMessage(tradePre + WHITE + "<"
                     + player.getChatName() + WHITE + "> " + text);
         }
     }

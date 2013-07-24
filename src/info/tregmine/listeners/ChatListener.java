@@ -39,9 +39,10 @@ public class ChatListener implements Listener
             text = event.getMessage();
         }
 
-        Player[] players = plugin.getServer().getOnlinePlayers();
-        for (Player player : players) {
-            TregminePlayer to = plugin.getPlayer(player);
+        for (TregminePlayer to : plugin.getOnlinePlayers()) {
+            if (to.getChatState() == TregminePlayer.ChatState.SETUP) {
+                continue;
+            }
 
             ChatColor txtColor = ChatColor.WHITE;
             if (sender.equals(to)) {
@@ -50,11 +51,11 @@ public class ChatListener implements Listener
 
             if (sender.getChatChannel().equals(to.getChatChannel())) {
                 if ("GLOBAL".equalsIgnoreCase(sender.getChatChannel())) {
-                    player.sendMessage("<" + sender.getChatName()
+                    to.sendMessage("<" + sender.getChatName()
                             + ChatColor.WHITE + "> " + txtColor + text);
                 }
                 else {
-                    player.sendMessage(channel + " <" + sender.getChatName()
+                    to.sendMessage(channel + " <" + sender.getChatName()
                             + ChatColor.WHITE + "> " + txtColor + text);
                 }
             }

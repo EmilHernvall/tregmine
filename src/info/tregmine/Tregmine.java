@@ -145,6 +145,7 @@ public class Tregmine extends JavaPlugin
         pluginMgm.registerEvents(new ChatListener(this), this);
         pluginMgm.registerEvents(new CompassListener(this), this);
         pluginMgm.registerEvents(new PlayerLookupListener(this), this);
+        pluginMgm.registerEvents(new SetupListener(this), this);
         pluginMgm.registerEvents(new SignColorListener(), this);
         pluginMgm.registerEvents(new TauntListener(this), this);
         pluginMgm.registerEvents(new TregmineBlockListener(this), this);
@@ -365,6 +366,10 @@ public class Tregmine extends JavaPlugin
 
             if (player == null) {
                 player = playerDAO.createPlayer(srcPlayer);
+            }
+
+            if (player.isTrusted()) {
+                player.setSetup(true);
             }
 
             DBPlayerReportDAO reportDAO = new DBPlayerReportDAO(conn);

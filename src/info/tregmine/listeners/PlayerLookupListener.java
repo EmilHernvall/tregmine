@@ -59,7 +59,7 @@ public class PlayerLookupListener implements Listener
                 player.setPostalCode(l1.postalCode);
                 player.setRegion(l1.region);
 
-                if (!event.getPlayer().isOp() || !player.hasHiddenLocation()) {
+                if (!player.isOp() && !player.hasHiddenLocation()) {
                     plugin.getServer().broadcastMessage(
                             ChatColor.DARK_AQUA + "Welcome! "
                                     + player.getChatName()
@@ -139,17 +139,15 @@ public class PlayerLookupListener implements Listener
         if (aliasList != null) {
             Tregmine.LOGGER.info("Aliases: " + aliasList);
 
-            Player[] players = plugin.getServer().getOnlinePlayers();
-            for (Player p : players) {
-                TregminePlayer current = plugin.getPlayer(p);
-
-                if (current.isAdmin() || current.isGuardian()) {
-                    if (!current.hasHiddenLocation()) {
-                        current.sendMessage(ChatColor.YELLOW
-                                + "This player have also used names: "
-                                + aliasList);
-                    }
+            for (TregminePlayer current : plugin.getOnlinePlayers()) {
+                if (!current.isAdmin() && !current.isGuardian()) {
+                    continue;
                 }
+                if (current.hasHiddenLocation()) {
+                    continue;
+                }
+                current.sendMessage(ChatColor.YELLOW
+                        + "This player have also used names: " + aliasList);
             }
         }
     }
