@@ -4,8 +4,12 @@ import static org.bukkit.ChatColor.*;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Server;
@@ -23,16 +27,8 @@ public class WhoCommand extends AbstractCommand
         super(tregmine, "who");
     }
 
-    @Override
-    public boolean handlePlayer(TregminePlayer player, String[] args)
+    private boolean whoplayer(TregminePlayer player, String[] args)
     {
-        if (!player.isAdmin()) {
-            return true;
-        }
-        if (args.length != 1) {
-            return false;
-        }
-
         String pattern = args[0];
 
         List<TregminePlayer> candidates = tregmine.matchPlayer(pattern);
@@ -62,7 +58,7 @@ public class WhoCommand extends AbstractCommand
             long balance = walletDAO.balance(whoPlayer);
 
             player.sendMessage(DARK_GRAY + "******************** " + DARK_PURPLE +
-                               "PLAYER INFO" + DARK_GRAY + " ********************");
+                    "PLAYER INFO" + DARK_GRAY + " ********************");
             player.sendMessage(GOLD + "Player: " + GRAY + whoPlayer.getChatName());
             player.sendMessage(GOLD + "World: " + GRAY + whoPlayer.getWorld().getName());
             player.sendMessage(GOLD + "Coords: " + GRAY + X2 + ", " + Y2 + ", " + Z2);
@@ -85,6 +81,37 @@ public class WhoCommand extends AbstractCommand
                 }
             }
         }
+        return true;
+    }
+    
+    private boolean who(TregminePlayer player)
+    {
+        StringBuilder sb = new StringBuilder();
+        for(Player online : Bukkit.getServer().getOnlinePlayers()) {
+            sb.append(online.getName() + ", ");
+        }
+        String playerList = sb.toString();
+        Pattern pat = Pattern.compile(", $");
+        Matcher matcher = pat.matcher(playerList);
+        playerList = matcher.replaceAll("");
+
+        player.sendMessage(DARK_GRAY + "******************** " + DARK_PURPLE +
+                "PLAYER LIST" + DARK_GRAY + " ********************");
+        player.sendMessage(playerList);
+        player.sendMessage(DARK_GRAY + "*****************************************************");
+        return true;
+    }
+
+    @Override
+    public boolean handlePlayer(TregminePlayer player, String[] args)
+    {
+        if (args.length == 0) {
+            return who(player);
+        }
+        else if (args.length > 0) {
+            return whoplayer(player, args);
+        }
+
         return true;
     }
 }
