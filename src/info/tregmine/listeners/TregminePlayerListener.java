@@ -261,7 +261,7 @@ public class TregminePlayerListener implements Listener
             }
         }
         catch (PlayerBannedException e) {
-            event.disallow(Result.KICK_BANNED, "Something went wrong");
+            event.disallow(Result.KICK_BANNED, e.getMessage());
             return;
         }
 
@@ -345,6 +345,14 @@ public class TregminePlayerListener implements Listener
             }
         }
 
+        // Set applicable game mode
+        if (player.isBuilder()) {
+            player.setGameMode(GameMode.CREATIVE);
+        }
+        else if (!player.isOp()) {
+            player.setGameMode(GameMode.SURVIVAL);
+        }
+
         // Bail out before sending any messages
         if (!player.isSetup()) {
             return;
@@ -361,14 +369,6 @@ public class TregminePlayerListener implements Listener
             player.sendMessage("no-z-cheat");
             player.sendMessage("You are NOT allowed to fly");
             player.setAllowFlight(false);
-        }
-
-        // Set applicable game mode
-        if (player.isBuilder()) {
-            player.setGameMode(GameMode.CREATIVE);
-        }
-        else if (!player.isOp()) {
-            player.setGameMode(GameMode.SURVIVAL);
         }
 
         Connection conn = null;

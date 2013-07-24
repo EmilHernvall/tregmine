@@ -39,6 +39,10 @@ public class SetupListener implements Listener
         @Override
         public void run()
         {
+            if (!player.isOnline()) {
+                return;
+            }
+
             player.kickPlayer("Younger than 13. Welcome back on " +
                     welcomeDateStr + "!");
         }
@@ -55,17 +59,6 @@ public class SetupListener implements Listener
     }
 
     @EventHandler
-    public void onPlayerMove(PlayerMoveEvent event)
-    {
-        TregminePlayer player = plugin.getPlayer(event.getPlayer());
-        if (player.getChatState() != TregminePlayer.ChatState.SETUP) {
-            return;
-        }
-
-        event.setCancelled(true);
-    }
-
-    @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event)
     {
         TregminePlayer player = plugin.getPlayer(event.getPlayer());
@@ -73,9 +66,11 @@ public class SetupListener implements Listener
             return;
         }
 
+        Tregmine.LOGGER.info("[SETUP] " + player.getChatName() + " is a new player!");
+
         player.sendMessage(ChatColor.BLUE + "Welcome to Tregmine!");
         player.sendMessage(ChatColor.BLUE + "Use the chat to enter your date of " +
-                "birth to continue. For example: 1986-11-10");
+                "birth to continue. For example: 2001-12-24");
     }
 
     @EventHandler
@@ -89,10 +84,18 @@ public class SetupListener implements Listener
         event.setCancelled(true);
 
         String text = event.getMessage();
+        player.sendMessage(text);
+
+        if (player.isChild()) {
+            return;
+        }
+
+        Tregmine.LOGGER.info("[SETUP] <" + player.getChatName() + "> " + text);
+
         String[] dateSplit = text.split("-");
         if (dateSplit.length != 3) {
             player.sendMessage(ChatColor.RED + "Use the following format: " +
-                               "YYYY-MM-DD. For example: 1986-11-10");
+                               "YYYY-MM-DD. For example: 2001-12-24");
             return;
         }
 
@@ -101,29 +104,39 @@ public class SetupListener implements Listener
             enteredDate = FORMAT.parse(text);
         } catch (ParseException e) {
             player.sendMessage(ChatColor.RED + "Use the following format: " +
-                               "YYYY-MM-DD. For example: 1986-11-10");
+                               "YYYY-MM-DD. For example: 2001-12-24");
             return;
         }
 
         Date currentDate = new Date();
 
         long age = currentDate.getTime() - enteredDate.getTime();
-        //age /= 60L * 60L * 24L * 365L;
 
         Connection conn = null;
         try {
             conn = ConnectionPool.getConnection();
 
             long diff = AGE_LIMIT - age;
+            Server server = plugin.getServer();
             if (diff < 0) {
-                player.sendMessage(ChatColor.BLUE + "Welcome to Tregmine!");
+                player.sendMessage(ChatColor.BLUE + "You have now joined Tregmine " +
+                        "and can talk with other players! Say Hi! :)");
                 player.setChatState(TregminePlayer.ChatState.CHAT);
                 player.setSetup(true);
 
                 DBPlayerDAO playerDAO = new DBPlayerDAO(conn);
                 playerDAO.updatePlayerPermissions(player);
+
+                Tregmine.LOGGER.info("[SETUP] " + player.getChatName() +
+                        " joined the server. Born on: " + text);
+
+                server.broadcastMessage(ChatColor.GREEN + "Welcome to Tregmine, " +
+                        player.getChatName() + ChatColor.GREEN + "!");
             }
             else {
+                player.setChild(true);
+                player.setNameColor("child");
+
                 Date welcomeDate = new Date(currentDate.getTime() + diff);
                 String welcomeDateStr = FORMAT.format(welcomeDate);
 
@@ -133,11 +146,6 @@ public class SetupListener implements Listener
                 player.sendMessage(ChatColor.BLUE + "In one minute you will be " +
                         "automatically kicked.");
                 player.sendMessage(ChatColor.BLUE + "Welcome back on " + welcomeDateStr + "!");
-
-                Server server = plugin.getServer();
-                BukkitScheduler scheduler = server.getScheduler();
-                scheduler.scheduleSyncRepeatingTask(plugin,
-                        new KickTask(player, welcomeDateStr), 0, 20);
 
                 String message = "Banned until " + welcomeDateStr + " due to age limit.";
 
@@ -150,6 +158,13 @@ public class SetupListener implements Listener
 
                 DBPlayerReportDAO reportDAO = new DBPlayerReportDAO(conn);
                 reportDAO.insertReport(report);
+
+                BukkitScheduler scheduler = server.getScheduler();
+                scheduler.scheduleSyncDelayedTask(plugin,
+                        new KickTask(player, welcomeDateStr), 20 * 60);
+
+                Tregmine.LOGGER.info("[SETUP] " + player.getChatName() +
+                        " is being banned from server. Born on: " + text);
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
