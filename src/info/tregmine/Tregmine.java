@@ -1,6 +1,8 @@
 package info.tregmine;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -73,14 +75,14 @@ public class Tregmine extends JavaPlugin
         players = new HashMap<String, TregminePlayer>();
         playersById = new HashMap<Integer, TregminePlayer>();
 
-        worlds = new TreeMap<String, ZoneWorld>(
-            new Comparator<String>() {
+        worlds = new TreeMap<String, ZoneWorld>
+          (new Comparator<String>() {
                 @Override
                 public int compare(String a, String b)
                 {
                     return a.compareToIgnoreCase(b);
                 }
-            });
+        });
 
         zones = new HashMap<Integer, Zone>();
 
@@ -178,7 +180,8 @@ public class Tregmine extends JavaPlugin
         getCommand("cname").setExecutor(new ChangeNameCommand(this));
         getCommand("createmob").setExecutor(new CreateMobCommand(this));
         getCommand("createwarp").setExecutor(new CreateWarpCommand(this));
-        getCommand("creative").setExecutor(new GameModeCommand(this, "creative", GameMode.CREATIVE));
+        getCommand("creative").setExecutor(
+                new GameModeCommand(this, "creative", GameMode.CREATIVE));
         getCommand("fill").setExecutor(new FillCommand(this, "fill"));
         getCommand("force").setExecutor(new ForceCommand(this));
         getCommand("give").setExecutor(new GiveCommand(this));
@@ -195,15 +198,18 @@ public class Tregmine extends JavaPlugin
         getCommand("password").setExecutor(new PasswordCommand(this));
         getCommand("pos").setExecutor(new PositionCommand(this));
         getCommand("quitmessage").setExecutor(new QuitMessageCommand(this));
-        getCommand("regeneratechunk").setExecutor(new RegenerateChunkCommand(this));
+        getCommand("regeneratechunk").setExecutor(
+                new RegenerateChunkCommand(this));
         getCommand("report").setExecutor(new ReportCommand(this));
         getCommand("say").setExecutor(new SayCommand(this));
+        getCommand("seen").setExecutor(new SeenCommand(this));
         getCommand("sell").setExecutor(new SellCommand(this));
         getCommand("sendto").setExecutor(new SendToCommand(this));
         getCommand("setspawner").setExecutor(new SetSpawnerCommand(this));
         getCommand("spawn").setExecutor(new SpawnCommand(this));
         getCommand("summon").setExecutor(new SummonCommand(this));
-        getCommand("survival").setExecutor(new GameModeCommand(this, "survival", GameMode.SURVIVAL));
+        getCommand("survival").setExecutor(
+                new GameModeCommand(this, "survival", GameMode.SURVIVAL));
         getCommand("testfill").setExecutor(new FillCommand(this, "testfill"));
         getCommand("time").setExecutor(new TimeCommand(this));
         getCommand("town").setExecutor(new ZoneCommand(this, "town"));
@@ -227,12 +233,11 @@ public class Tregmine extends JavaPlugin
 
             webServer = new Server(9192);
             webServer.setHandler(webHandler);
-            //webServer.start();
+            // webServer.start();
 
             BukkitScheduler scheduler = server.getScheduler();
-            //scheduler.scheduleSyncRepeatingTask(this, webHandler, 0, 20);
-        }
-        catch (Exception e) {
+            // scheduler.scheduleSyncRepeatingTask(this, webHandler, 0, 20);
+        } catch (Exception e) {
             LOGGER.log(Level.WARNING, "Failed to start web server!", e);
         }
     }
@@ -345,7 +350,7 @@ public class Tregmine extends JavaPlugin
     }
 
     public TregminePlayer addPlayer(Player srcPlayer)
-    throws PlayerBannedException
+            throws PlayerBannedException
     {
         if (players.containsKey(srcPlayer.getName())) {
             return players.get(srcPlayer.getName());
@@ -381,7 +386,7 @@ public class Tregmine extends JavaPlugin
                     player.setTrusted(false);
                 }
                 else if (report.getAction() == PlayerReport.Action.BAN) {
-                    //event.disallow(Result.KICK_BANNED, report.getMessage());
+                    // event.disallow(Result.KICK_BANNED, report.getMessage());
                     throw new PlayerBannedException(report.getMessage());
                 }
             }
@@ -495,6 +500,41 @@ public class Tregmine extends JavaPlugin
     public Map<Location, Integer> getBlessedBlocks()
     {
         return blessedBlocks;
+    }
+
+    public Date getLastSeen(TregminePlayer player)
+    {
+        Date date = null;
+        PreparedStatement stm = null;
+        Connection conn = null;
+        try {
+            conn = ConnectionPool.getConnection();
+            stm =
+                    conn.prepareStatement("SELECT * FROM `player_login` WHERE `player_id`= ? ORDER BY `login_timestamp` DESC LIMIT 1");
+
+            stm.setInt(1, player.getId());
+
+            stm.execute();
+
+            ResultSet rs = stm.getResultSet();
+
+            if (rs.next()) {
+                date = new Date(rs.getInt("login_timestamp") * 1000L);
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            try {
+                if (conn != null)
+                    conn.close();
+                if (stm != null)
+                    stm.close();
+            } catch (SQLException e) {
+            }
+
+        }
+        return date;
     }
 
 }
