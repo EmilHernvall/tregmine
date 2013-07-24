@@ -129,7 +129,10 @@ public class DBPlayerDAO
             while (rs.next()) {
                 String key = rs.getString("property_key");
                 String value = rs.getString("property_value");
-                if ("admin".equals(key)) {
+                if ("setup".equals(key)) {
+                    player.setSetup(Boolean.valueOf(value));
+                }
+                else if ("admin".equals(key)) {
                     player.setAdmin(Boolean.valueOf(value));
                 }
                 else if ("builder".equals(key)) {
@@ -251,6 +254,7 @@ public class DBPlayerDAO
     public void updatePlayerPermissions(TregminePlayer player)
             throws SQLException
     {
+        updateProperty(player, "setup", player.isSetup());
         updateProperty(player, "admin", player.isAdmin());
         updateProperty(player, "builder", player.isBuilder());
         updateProperty(player, "child", player.isChild());

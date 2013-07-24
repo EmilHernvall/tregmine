@@ -7,6 +7,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.Command;
 import org.bukkit.entity.Player;
 import org.bukkit.Server;
+import org.bukkit.ChatColor;
 
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
@@ -45,6 +46,12 @@ public abstract class AbstractCommand implements CommandExecutor
     {
         if (sender instanceof Player) {
             TregminePlayer player = tregmine.getPlayer((Player) sender);
+            if (!player.isSetup()) {
+                player.sendMessage(ChatColor.RED + "Please complete setup before " +
+                        "continuing.");
+                return true;
+            }
+
             return handlePlayer(player, args);
         }
 
