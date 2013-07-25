@@ -183,6 +183,23 @@ public class TregminePlayerListener implements Listener
 
         droppedItems = new HashMap<Item, TregminePlayer>();
     }
+    
+        @EventHandler
+        public void onPlayerClick(PlayerInteractEvent event){
+                if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+                        Player player = event.getPlayer();
+                        BlockState block = event.getClickedBlock().getState();
+                        if (block instanceof Skull) {
+                                Skull skull = (Skull) block;
+                                if (skull.getSkullType().equals(SkullType.PLAYER)) {
+                                                String owner = skull.getOwner();
+                                                player.sendMessage(ChatColor.DARK_PURPLE + "This is " + owner + "'s head!");
+ 
+                                        }
+                                }
+                        }
+        }
+
 
     @EventHandler
     public void onPlayerItemHeld(InventoryCloseEvent event)
