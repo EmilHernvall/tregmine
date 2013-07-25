@@ -4,8 +4,6 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 import static org.bukkit.ChatColor.*;
-
-import org.bukkit.ChatColor;
 import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.Location;
@@ -39,23 +37,21 @@ public class WarpCommand extends AbstractCommand
         public void run()
         {
             Horse horse = null;
-            if ((player.getVehicle() != null)
-                    && (player.getVehicle() instanceof Horse)) {
-                horse = (Horse) player.getVehicle();
+            if((player.getVehicle() != null) && (player.getVehicle() instanceof Horse)){
+                horse = (Horse)player.getVehicle();
             }
             if (player.isAdmin()) {
-                if (horse != null) {
+                if(horse != null){
                     horse.eject();
                     horse.teleport(loc);
                     player.teleport(loc);
                     horse.setPassenger(player.getDelegate());
-                }
-                else {
+                }else{
                     player.teleport(loc);
                 }
 
                 PotionEffect ef =
-                        new PotionEffect(PotionEffectType.BLINDNESS, 60, 100);
+                    new PotionEffect(PotionEffectType.BLINDNESS, 60, 100);
                 player.addPotionEffect(ef);
                 return;
             }
@@ -66,13 +62,12 @@ public class WarpCommand extends AbstractCommand
             String locWorldName = locWorld.getName();
 
             if (playerWorldName.equalsIgnoreCase(locWorldName)) {
-                if (horse != null) {
+                if(horse != null){
                     horse.eject();
                     horse.teleport(loc);
                     player.teleport(loc);
                     horse.setPassenger(player.getDelegate());
-                }
-                else {
+                }else{
                     player.teleport(loc);
                 }
 
@@ -92,28 +87,7 @@ public class WarpCommand extends AbstractCommand
     public boolean handlePlayer(TregminePlayer player, String[] args)
     {
         if (args.length == 0) {
-            StringBuilder buffer = new StringBuilder();
-            String delim = "";
-            for (Location loc : tregmine.getWarps().keySet()) {
-                if (player.getLocation().distance(loc) < 500) {
-                    buffer.append(delim);
-                    buffer.append(ChatColor.AQUA + tregmine.getWarps().get(loc));
-                    delim = ChatColor.GOLD + ", " + ChatColor.AQUA;
-                }
-            }
-
-            if (buffer.toString() == null
-                    || buffer.toString().equalsIgnoreCase("")) {
-                player.sendMessage(ChatColor.RED
-                        + "You are not currently nearby any warps");
-            }
-            else {
-                player.sendMessage(ChatColor.YELLOW
-                        + "You are currently nearby: " + ChatColor.AQUA
-                        + buffer.toString());
-            }
-
-            return true;
+            return false;
         }
 
         Server server = tregmine.getServer();

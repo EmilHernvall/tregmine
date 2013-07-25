@@ -14,7 +14,6 @@ import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -69,8 +68,6 @@ public class Tregmine extends JavaPlugin
     private Map<String, ZoneWorld> worlds;
     private Map<Integer, Zone> zones;
 
-    private Map<Location, String> warps;
-
     @Override
     public void onLoad()
     {
@@ -78,12 +75,13 @@ public class Tregmine extends JavaPlugin
         players = new HashMap<String, TregminePlayer>();
         playersById = new HashMap<Integer, TregminePlayer>();
 
-        worlds = new TreeMap<String, ZoneWorld>(new Comparator<String>() {
-            @Override
-            public int compare(String a, String b)
-            {
-                return a.compareToIgnoreCase(b);
-            }
+        worlds = new TreeMap<String, ZoneWorld>
+          (new Comparator<String>() {
+                @Override
+                public int compare(String a, String b)
+                {
+                    return a.compareToIgnoreCase(b);
+                }
         });
 
         zones = new HashMap<Integer, Zone>();
@@ -120,34 +118,10 @@ public class Tregmine extends JavaPlugin
     {
         this.server = getServer();
 
-        warps = new HashMap<Location, String>();
-
         // Load blessed blocks
         Connection conn = null;
-        PreparedStatement stm = null;
         try {
             conn = ConnectionPool.getConnection();
-
-            stm = conn.prepareStatement("SELECT * FROM warps");
-
-            stm.execute();
-
-            ResultSet rs = stm.getResultSet();
-
-            Location loc = null;
-            String name = null;
-            World world = null;
-            while (rs.next()) {
-                name = rs.getString("name");
-                double x = rs.getDouble("x");
-                double y = rs.getDouble("y");
-                double z = rs.getDouble("z");
-                float yaw = rs.getFloat("yaw");
-                float pitch = rs.getFloat("pitch");
-                world = Bukkit.getWorld(rs.getString("world"));
-                loc = new Location(world, x, y, z, yaw, pitch);
-                warps.put(loc, name);
-            }
 
             DBInventoryDAO inventoryDAO = new DBInventoryDAO(conn);
             this.blessedBlocks = inventoryDAO.loadBlessedBlocks(getServer());
@@ -156,12 +130,11 @@ public class Tregmine extends JavaPlugin
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
-            try {
-                if (conn != null)
+            if (conn != null) {
+                try {
                     conn.close();
-                if (stm != null)
-                    stm.close();
-            } catch (SQLException e) {
+                } catch (SQLException e) {
+                }
             }
         }
 
@@ -567,11 +540,6 @@ public class Tregmine extends JavaPlugin
 
         }
         return date;
-    }
-
-    public Map<Location, String> getWarps()
-    {
-        return this.warps;
     }
 
 }
