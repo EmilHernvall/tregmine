@@ -106,6 +106,9 @@ commands:
   say:
     description: Speak as god (admins only)
     usage: /say message
+  seen:
+    description: Check a players last login
+    usage: /seen player
   sell:
     description: Sell stuff to the central bank
     usage: /sell
