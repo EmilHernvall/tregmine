@@ -83,20 +83,20 @@ public class WhoCommand extends AbstractCommand
         }
         return true;
     }
-    
+
     private boolean who(TregminePlayer player)
     {
         StringBuilder sb = new StringBuilder();
-        for(Player online : Bukkit.getServer().getOnlinePlayers()) {
-            sb.append(online.getName() + ", ");
+        String delim = "";
+        for (TregminePlayer online : tregmine.getOnlinePlayers()) {
+            sb.append(delim);
+            sb.append(online.getChatName());
+            delim = ChatColor.WHITE + ", ";
         }
         String playerList = sb.toString();
-        Pattern pat = Pattern.compile(", $");
-        Matcher matcher = pat.matcher(playerList);
-        playerList = matcher.replaceAll("");
 
         player.sendMessage(DARK_GRAY + "******************** " + DARK_PURPLE +
-                "PLAYER LIST" + DARK_GRAY + " ********************");
+                           "PLAYER LIST" + DARK_GRAY + " ********************");
         player.sendMessage(playerList);
         player.sendMessage(DARK_GRAY + "*****************************************************");
         return true;
