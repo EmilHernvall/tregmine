@@ -15,7 +15,7 @@ public class TimeCommand extends AbstractCommand
     public boolean handlePlayer(TregminePlayer player, String[] args)
     {
         if (!player.isDonator()) {
-            return false;
+            return true;
         }
 
         if (args.length != 1) {

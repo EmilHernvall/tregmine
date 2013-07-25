@@ -11,36 +11,44 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+<<<<<<< HEAD
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+=======
+>>>>>>> mentoring
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.World.Environment;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
-import info.tregmine.quadtree.IntersectionException;
 
 import org.eclipse.jetty.server.Server;
 
-import info.tregmine.api.TregminePlayer;
-import info.tregmine.api.PlayerReport;
 import info.tregmine.api.PlayerBannedException;
+import info.tregmine.api.PlayerReport;
+import info.tregmine.api.TregminePlayer;
 import info.tregmine.database.ConnectionPool;
 import info.tregmine.database.DBInventoryDAO;
-import info.tregmine.database.DBZonesDAO;
-import info.tregmine.database.DBPlayerDAO;
 import info.tregmine.database.DBLogDAO;
+import info.tregmine.database.DBPlayerDAO;
 import info.tregmine.database.DBPlayerReportDAO;
+import info.tregmine.database.DBZonesDAO;
+import info.tregmine.quadtree.IntersectionException;
 import info.tregmine.zones.Lot;
 import info.tregmine.zones.Zone;
 import info.tregmine.zones.ZoneWorld;
+import static info.tregmine.database.DBInventoryDAO.InventoryType;
 
 import info.tregmine.listeners.*;
 import info.tregmine.commands.*;
@@ -69,7 +77,8 @@ public class Tregmine extends JavaPlugin
     private Map<String, ZoneWorld> worlds;
     private Map<Integer, Zone> zones;
 
-    private Map<Location, String> warps;
+    private Queue<TregminePlayer> mentors;
+    private Queue<TregminePlayer> students;
 
     @Override
     public void onLoad()
@@ -77,6 +86,9 @@ public class Tregmine extends JavaPlugin
         // Set up all data structures
         players = new HashMap<String, TregminePlayer>();
         playersById = new HashMap<Integer, TregminePlayer>();
+
+        mentors = new LinkedList<TregminePlayer>();
+        students = new LinkedList<TregminePlayer>();
 
         worlds = new TreeMap<String, ZoneWorld>(
             new Comparator<String>() {
@@ -103,8 +115,6 @@ public class Tregmine extends JavaPlugin
     public void onEnable()
     {
         this.server = getServer();
-
-        warps = new HashMap<Location, String>();
 
         // Load blessed blocks
         Connection conn = null;
@@ -182,6 +192,7 @@ public class Tregmine extends JavaPlugin
         getCommand("keyword").setExecutor(new KeywordCommand(this));
         getCommand("kick").setExecutor(new KickCommand(this));
         getCommand("lot").setExecutor(new LotCommand(this));
+        getCommand("mentor").setExecutor(new MentorCommand(this));
         getCommand("msg").setExecutor(new MsgCommand(this));
         getCommand("newspawn").setExecutor(new NewSpawnCommand(this));
         getCommand("normal").setExecutor(new NormalCommand(this));
@@ -239,33 +250,38 @@ public class Tregmine extends JavaPlugin
     {
         server.getScheduler().cancelTasks(this);
 
-        Connection conn = null;
-        try {
-            conn = ConnectionPool.getConnection();
+        // Add a record of logout to db for all players
+        for (TregminePlayer player : getOnlinePlayers()) {
+            player.sendMessage(ChatColor.AQUA
+                    + "Tregmine successfully unloaded. Build "
+                    + getDescription().getVersion());
 
-            // Add a record of logout to db for all players
-            DBLogDAO logDAO = new DBLogDAO(conn);
-            for (TregminePlayer player : getOnlinePlayers()) {
-                player.sendMessage(ChatColor.AQUA
-                        + "Tregmine successfully unloaded " + "build: "
-                        + getDescription().getVersion());
-
-                logDAO.insertLogin(player, true);
-
-                removePlayer(player);
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                }
-            }
+            removePlayer(player);
         }
-
     }
+
+    // ============================================================================
+    // Data structure accessors
+    // ============================================================================
+
+    public Map<Location, Integer> getBlessedBlocks()
+    {
+        return blessedBlocks;
+    }
+
+    public Queue<TregminePlayer> getMentorQueue()
+    {
+        return mentors;
+    }
+
+    public Queue<TregminePlayer> getStudentQueue()
+    {
+        return students;
+    }
+
+    // ============================================================================
+    // Player methods
+    // ============================================================================
 
     public void reloadPlayer(TregminePlayer player)
     {
@@ -274,60 +290,6 @@ public class Tregmine extends JavaPlugin
         } catch (PlayerBannedException e) {
             player.kickPlayer(e.getMessage());
         }
-    }
-
-    public ZoneWorld getWorld(World world)
-    {
-        ZoneWorld zoneWorld = worlds.get(world.getName());
-
-        // lazy load zone worlds as required
-        if (zoneWorld == null) {
-            Connection conn = null;
-            try {
-                conn = ConnectionPool.getConnection();
-                DBZonesDAO dao = new DBZonesDAO(conn);
-
-                zoneWorld = new ZoneWorld(world);
-                List<Zone> zones = dao.getZones(world.getName());
-                for (Zone zone : zones) {
-                    try {
-                        zoneWorld.addZone(zone);
-                        this.zones.put(zone.getId(), zone);
-                    } catch (IntersectionException e) {
-                        LOGGER.warning("Failed to load zone " + zone.getName()
-                                + " with id " + zone.getId() + ".");
-                    }
-                }
-
-                List<Lot> lots = dao.getLots(world.getName());
-                for (Lot lot : lots) {
-                    try {
-                        zoneWorld.addLot(lot);
-                    } catch (IntersectionException e) {
-                        LOGGER.warning("Failed to load lot " + lot.getName()
-                                + " with id " + lot.getId() + ".");
-                    }
-                }
-
-                worlds.put(world.getName(), zoneWorld);
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            } finally {
-                if (conn != null) {
-                    try {
-                        conn.close();
-                    } catch (SQLException e) {
-                    }
-                }
-            }
-        }
-
-        return zoneWorld;
-    }
-
-    public Zone getZone(int zoneId)
-    {
-        return zones.get(zoneId);
     }
 
     public List<TregminePlayer> getOnlinePlayers()
@@ -409,10 +371,55 @@ public class Tregmine extends JavaPlugin
 
     }
 
-    public void removePlayer(TregminePlayer p)
+    public void removePlayer(TregminePlayer player)
     {
-        players.remove(p.getName());
-        playersById.remove(p.getId());
+        Connection conn = null;
+        try {
+            conn = ConnectionPool.getConnection();
+
+            DBLogDAO logDAO = new DBLogDAO(conn);
+            logDAO.insertLogin(player, true);
+
+            PlayerInventory inv = (PlayerInventory) player.getInventory();
+
+            // Insert regular inventory
+            DBInventoryDAO invDAO = new DBInventoryDAO(conn);
+            int invId = invDAO.getInventoryId(player.getId(), InventoryType.PLAYER);
+            if (invId == -1) {
+                invId = invDAO.insertInventory(player, null, InventoryType.PLAYER);
+            }
+
+            invDAO.insertStacks(invId, inv.getContents());
+
+            // Insert armor inventory
+            int armorId = invDAO.getInventoryId(player.getId(),
+                                                InventoryType.PLAYER_ARMOR);
+            if (armorId == -1) {
+                armorId = invDAO.insertInventory(player, null,
+                                                 InventoryType.PLAYER_ARMOR);
+            }
+
+            invDAO.insertStacks(armorId, inv.getArmorContents());
+
+            DBPlayerDAO playerDAO = new DBPlayerDAO(conn);
+            playerDAO.updatePlayTime(player);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                }
+            }
+        }
+
+        player.setValid(false);
+
+        players.remove(player.getName());
+        playersById.remove(player.getId());
+        mentors.remove(player);
+        students.remove(player);
     }
 
     public TregminePlayer getPlayer(String name)
@@ -423,6 +430,11 @@ public class Tregmine extends JavaPlugin
     public TregminePlayer getPlayer(Player player)
     {
         return players.get(player.getName());
+    }
+
+    public TregminePlayer getPlayer(int id)
+    {
+        return playersById.get(id);
     }
 
     public TregminePlayer getPlayerOffline(String name)
@@ -492,14 +504,61 @@ public class Tregmine extends JavaPlugin
         return decoratedMatches;
     }
 
-    public Map<Location, Integer> getBlessedBlocks()
+    // ============================================================================
+    // Zone methods
+    // ============================================================================
+
+    public ZoneWorld getWorld(World world)
     {
-        return blessedBlocks;
+        ZoneWorld zoneWorld = worlds.get(world.getName());
+
+        // lazy load zone worlds as required
+        if (zoneWorld == null) {
+            Connection conn = null;
+            try {
+                conn = ConnectionPool.getConnection();
+                DBZonesDAO dao = new DBZonesDAO(conn);
+
+                zoneWorld = new ZoneWorld(world);
+                List<Zone> zones = dao.getZones(world.getName());
+                for (Zone zone : zones) {
+                    try {
+                        zoneWorld.addZone(zone);
+                        this.zones.put(zone.getId(), zone);
+                    } catch (IntersectionException e) {
+                        LOGGER.warning("Failed to load zone " + zone.getName()
+                                + " with id " + zone.getId() + ".");
+                    }
+                }
+
+                List<Lot> lots = dao.getLots(world.getName());
+                for (Lot lot : lots) {
+                    try {
+                        zoneWorld.addLot(lot);
+                    } catch (IntersectionException e) {
+                        LOGGER.warning("Failed to load lot " + lot.getName()
+                                + " with id " + lot.getId() + ".");
+                    }
+                }
+
+                worlds.put(world.getName(), zoneWorld);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            } finally {
+                if (conn != null) {
+                    try {
+                        conn.close();
+                    } catch (SQLException e) {
+                    }
+                }
+            }
+        }
+
+        return zoneWorld;
     }
 
-    public Map<Location, String> getWarps()
+    public Zone getZone(int zoneId)
     {
-        return this.warps;
+        return zones.get(zoneId);
     }
-
 }

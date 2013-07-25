@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.text.ParseException;
 import java.util.Date;
+import java.util.Queue;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Server;
@@ -17,6 +18,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 
 import info.tregmine.Tregmine;
+import info.tregmine.commands.MentorCommand;
 import info.tregmine.api.TregminePlayer;
 import info.tregmine.api.PlayerReport;
 import info.tregmine.database.ConnectionPool;
@@ -132,6 +134,28 @@ public class SetupListener implements Listener
 
                 server.broadcastMessage(ChatColor.GREEN + "Welcome to Tregmine, " +
                         player.getChatName() + ChatColor.GREEN + "!");
+
+                Queue<TregminePlayer> mentors = plugin.getMentorQueue();
+                if (mentors.size() > 0) {
+                    TregminePlayer mentor = mentors.poll();
+                    MentorCommand.startMentoring(plugin, player, mentor);
+                } else {
+                    player.sendMessage(ChatColor.BLUE + "You will now be assigned " +
+                        "a mentor to show you around, as soon as one becomes available.");
+
+                    Queue<TregminePlayer> students = plugin.getStudentQueue();
+                    students.offer(player);
+
+                    for (TregminePlayer p : plugin.getOnlinePlayers()) {
+                        if (!p.isResident()) {
+                            continue;
+                        }
+
+                        p.sendMessage(player.getChatName() +
+                            ChatColor.BLUE + " needs a mentor! Type /mentor to " +
+                            "offer your services!");
+                    }
+                }
             }
             else {
                 player.setChild(true);
