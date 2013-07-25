@@ -12,6 +12,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
+import java.util.Queue;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -57,6 +58,7 @@ import info.tregmine.database.DBLogDAO;
 import info.tregmine.database.DBPlayerDAO;
 import info.tregmine.database.DBPlayerReportDAO;
 import info.tregmine.database.DBWalletDAO;
+import info.tregmine.commands.MentorCommand;
 import static info.tregmine.database.DBInventoryDAO.InventoryType;
 
 public class TregminePlayerListener implements Listener
@@ -375,6 +377,18 @@ public class TregminePlayerListener implements Listener
         try {
             conn = ConnectionPool.getConnection();
 
+            if (player.getPlayTime() > 10 * 3600 && !player.isResident()) {
+                player.setResident(true);
+                player.setNameColor("trusted");
+
+                DBPlayerDAO playerDAO = new DBPlayerDAO(conn);
+                playerDAO.updatePlayerPermissions(player);
+                playerDAO.updatePlayerInfo(player);
+
+                player.sendMessage(ChatColor.DARK_GREEN + "Congratulations! " +
+                                   "You are now a resident on Tregmine!");
+            }
+
             // Load inventory from DB - disabled until we know it's reliable
             /*PlayerInventory inv = (PlayerInventory) player.getInventory();
 
@@ -446,6 +460,36 @@ public class TregminePlayerListener implements Listener
 
         // Recalculate guardians
         activateGuardians();
+
+        // If this is a new player, figure out who should mentor...
+        if (!player.isTrusted()) {
+            // Is there an existing mentor online?
+            TregminePlayer mentor = plugin.getPlayer(player.getMentorId());
+            if (mentor != null) {
+                MentorCommand.startMentoring(plugin, player, mentor);
+            } else {
+                // Try to find a new available mentor
+                Queue<TregminePlayer> mentors = plugin.getMentorQueue();
+                mentor = mentors.poll();
+                if (mentor != null) {
+                    MentorCommand.startMentoring(plugin, player, mentor);
+                } else {
+                    // Ask people to volonteer
+                    Queue<TregminePlayer> students = plugin.getStudentQueue();
+                    students.offer(player);
+
+                    for (TregminePlayer p : plugin.getOnlinePlayers()) {
+                        if (!p.isResident()) {
+                            continue;
+                        }
+
+                        p.sendMessage(player.getChatName() +
+                            ChatColor.BLUE + " needs a mentor! Type /mentor to " +
+                            "offer your services!");
+                    }
+                }
+            }
+        }
     }
 
     @EventHandler
@@ -454,46 +498,6 @@ public class TregminePlayerListener implements Listener
         TregminePlayer player = plugin.getPlayer(event.getPlayer());
 
         event.setQuitMessage(null);
-
-        Connection conn = null;
-        try {
-            conn = ConnectionPool.getConnection();
-
-            DBLogDAO logDAO = new DBLogDAO(conn);
-            logDAO.insertLogin(player, true);
-
-            PlayerInventory inv = (PlayerInventory) player.getInventory();
-
-            // Insert regular inventory
-            DBInventoryDAO invDAO = new DBInventoryDAO(conn);
-            int invId = invDAO.getInventoryId(player.getId(), InventoryType.PLAYER);
-            if (invId == -1) {
-                invId = invDAO.insertInventory(player, null, InventoryType.PLAYER);
-            }
-
-            invDAO.insertStacks(invId, inv.getContents());
-
-            // Insert armor inventory
-            int armorId =
-                    invDAO.getInventoryId(player.getId(),
-                            InventoryType.PLAYER_ARMOR);
-            if (armorId == -1) {
-                armorId = invDAO.insertInventory(player, null,
-                                                 InventoryType.PLAYER_ARMOR);
-            }
-
-            invDAO.insertStacks(armorId, inv.getArmorContents());
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                }
-            }
-        }
 
         if (!player.isOp()) {
             String message = null;
@@ -511,6 +515,30 @@ public class TregminePlayerListener implements Listener
         Tregmine.LOGGER.info("Unloaded settings for " + player.getName() + ".");
 
         activateGuardians();
+
+        // Look if there are any students being mentored by the exiting player
+        for (TregminePlayer student : plugin.getOnlinePlayers()) {
+            if (!student.isTrusted() && student.getMentorId() == player.getId()) {
+                Queue<TregminePlayer> mentors = plugin.getMentorQueue();
+                TregminePlayer mentor = mentors.poll();
+                if (mentor != null) {
+                    MentorCommand.startMentoring(plugin, player, mentor);
+                } else {
+                    Queue<TregminePlayer> students = plugin.getStudentQueue();
+                    students.offer(player);
+
+                    for (TregminePlayer p : plugin.getOnlinePlayers()) {
+                        if (!p.isResident()) {
+                            continue;
+                        }
+
+                        p.sendMessage(player.getChatName() +
+                            ChatColor.BLUE + " needs a mentor! Type /mentor to " +
+                            "offer your services!");
+                    }
+                }
+            }
+        }
     }
 
     @EventHandler

@@ -63,8 +63,8 @@ public class TregminePlayer extends PlayerDelegate
     private boolean invisible = false;
     private boolean admin = false;
     private boolean donator = false;
-    private boolean banned = false;
     private boolean trusted = false;
+    private boolean resident = false;
     private boolean child = false;
     private boolean guardian = false;
     private boolean builder = false;
@@ -72,6 +72,7 @@ public class TregminePlayer extends PlayerDelegate
     private boolean setup = false;
     private int guardianRank = 0;
     private int mentorId = 0;
+    private int playTime = 0;
 
     // One-time state
     private String chatChannel = "GLOBAL";
@@ -81,6 +82,7 @@ public class TregminePlayer extends PlayerDelegate
     private int blessTarget = 0;
     private ChatState chatState = ChatState.CHAT;
     private Date loginTime = null;
+    private boolean valid = true;
 
     // Player state for block fill
     private Block fillBlock1 = null;
@@ -173,11 +175,11 @@ public class TregminePlayer extends PlayerDelegate
     public void setDonator(boolean v) { this.donator = v; }
     public boolean isDonator() { return donator; }
 
-    public void setBanned(boolean v) { this.banned = v; }
-    @Override public boolean isBanned() { return banned; }
-
     public void setTrusted(boolean v) { this.trusted = v; }
     public boolean isTrusted() { return trusted; }
+
+    public void setResident(boolean v) { this.resident = v; }
+    public boolean isResident() { return resident; }
 
     public void setChild(boolean v) { this.child = v; }
     public boolean isChild() { return child; }
@@ -194,8 +196,11 @@ public class TregminePlayer extends PlayerDelegate
     public void setGuardianRank(int v) { this.guardianRank = v; }
     public int getGuardianRank() { return guardianRank; }
 
-    public void setMentor(int id) { this.mentorId = id; }
-    public int getMentor() { return mentorId; }
+    public void setMentorId(int id) { this.mentorId = id; }
+    public int getMentorId() { return mentorId; }
+
+    public void setPlayTime(int v) { this.playTime = v; }
+    public int getPlayTime() { return playTime; }
 
     // non-persistent state methods
 
@@ -280,10 +285,18 @@ public class TregminePlayer extends PlayerDelegate
     public void setChatState(ChatState v) { this.chatState = v; }
     public ChatState getChatState() { return chatState; }
 
+    public void resetTimeOnline()
+    {
+        loginTime = new Date();
+    }
+
     public int getTimeOnline()
     {
         return (int)((new Date().getTime() - loginTime.getTime())/1000L);
     }
+
+    public boolean isValid() { return valid; }
+    public void setValid(boolean v) { this.valid = v; }
 
     // block fill state
     public void setFillBlock1(Block v) { this.fillBlock1 = v; }

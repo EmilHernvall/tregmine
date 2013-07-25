@@ -14,32 +14,34 @@ import java.util.Queue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.bukkit.Location;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.World.Environment;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
-import info.tregmine.quadtree.IntersectionException;
 
 import org.eclipse.jetty.server.Server;
 
-import info.tregmine.api.TregminePlayer;
-import info.tregmine.api.PlayerReport;
 import info.tregmine.api.PlayerBannedException;
+import info.tregmine.api.PlayerReport;
+import info.tregmine.api.TregminePlayer;
 import info.tregmine.database.ConnectionPool;
 import info.tregmine.database.DBInventoryDAO;
-import info.tregmine.database.DBZonesDAO;
-import info.tregmine.database.DBPlayerDAO;
 import info.tregmine.database.DBLogDAO;
+import info.tregmine.database.DBPlayerDAO;
 import info.tregmine.database.DBPlayerReportDAO;
+import info.tregmine.database.DBZonesDAO;
+import info.tregmine.quadtree.IntersectionException;
 import info.tregmine.zones.Lot;
 import info.tregmine.zones.Zone;
 import info.tregmine.zones.ZoneWorld;
+import static info.tregmine.database.DBInventoryDAO.InventoryType;
 
 import info.tregmine.listeners.*;
 import info.tregmine.commands.*;
@@ -197,6 +199,7 @@ public class Tregmine extends JavaPlugin
         getCommand("keyword").setExecutor(new KeywordCommand(this));
         getCommand("kick").setExecutor(new KickCommand(this));
         getCommand("lot").setExecutor(new LotCommand(this));
+        getCommand("mentor").setExecutor(new MentorCommand(this));
         getCommand("msg").setExecutor(new MsgCommand(this));
         getCommand("newspawn").setExecutor(new NewSpawnCommand(this));
         getCommand("normal").setExecutor(new NormalCommand(this));
@@ -252,32 +255,14 @@ public class Tregmine extends JavaPlugin
     {
         server.getScheduler().cancelTasks(this);
 
-        Connection conn = null;
-        try {
-            conn = ConnectionPool.getConnection();
+        // Add a record of logout to db for all players
+        for (TregminePlayer player : getOnlinePlayers()) {
+            player.sendMessage(ChatColor.AQUA
+                    + "Tregmine successfully unloaded. Build "
+                    + getDescription().getVersion());
 
-            // Add a record of logout to db for all players
-            DBLogDAO logDAO = new DBLogDAO(conn);
-            for (TregminePlayer player : getOnlinePlayers()) {
-                player.sendMessage(ChatColor.AQUA
-                        + "Tregmine successfully unloaded " + "build: "
-                        + getDescription().getVersion());
-
-                logDAO.insertLogin(player, true);
-
-                removePlayer(player);
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                }
-            }
+            removePlayer(player);
         }
-
     }
 
     // ============================================================================
@@ -391,10 +376,55 @@ public class Tregmine extends JavaPlugin
 
     }
 
-    public void removePlayer(TregminePlayer p)
+    public void removePlayer(TregminePlayer player)
     {
-        players.remove(p.getName());
-        playersById.remove(p.getId());
+        Connection conn = null;
+        try {
+            conn = ConnectionPool.getConnection();
+
+            DBLogDAO logDAO = new DBLogDAO(conn);
+            logDAO.insertLogin(player, true);
+
+            PlayerInventory inv = (PlayerInventory) player.getInventory();
+
+            // Insert regular inventory
+            DBInventoryDAO invDAO = new DBInventoryDAO(conn);
+            int invId = invDAO.getInventoryId(player.getId(), InventoryType.PLAYER);
+            if (invId == -1) {
+                invId = invDAO.insertInventory(player, null, InventoryType.PLAYER);
+            }
+
+            invDAO.insertStacks(invId, inv.getContents());
+
+            // Insert armor inventory
+            int armorId = invDAO.getInventoryId(player.getId(),
+                                                InventoryType.PLAYER_ARMOR);
+            if (armorId == -1) {
+                armorId = invDAO.insertInventory(player, null,
+                                                 InventoryType.PLAYER_ARMOR);
+            }
+
+            invDAO.insertStacks(armorId, inv.getArmorContents());
+
+            DBPlayerDAO playerDAO = new DBPlayerDAO(conn);
+            playerDAO.updatePlayTime(player);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                }
+            }
+        }
+
+        player.setValid(false);
+
+        players.remove(player.getName());
+        playersById.remove(player.getId());
+        mentors.remove(player);
+        students.remove(player);
     }
 
     public TregminePlayer getPlayer(String name)
@@ -405,6 +435,11 @@ public class Tregmine extends JavaPlugin
     public TregminePlayer getPlayer(Player player)
     {
         return players.get(player.getName());
+    }
+
+    public TregminePlayer getPlayer(int id)
+    {
+        return playersById.get(id);
     }
 
     public TregminePlayer getPlayerOffline(String name)

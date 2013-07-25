@@ -42,10 +42,6 @@ public class TregmineBlockListener implements Listener
     {
         TregminePlayer tregminePlayer = plugin.getPlayer(event.getPlayer());
 
-        if (!tregminePlayer.isTrusted()) {
-            event.setCancelled(true);
-        }
-
         if (tregminePlayer.isAdmin()) {
             event.setCancelled(false);
         }
@@ -62,10 +58,6 @@ public class TregmineBlockListener implements Listener
     public void onBlockBreak(BlockBreakEvent event)
     {
         TregminePlayer player = plugin.getPlayer(event.getPlayer());
-
-        if (!player.isTrusted()) {
-            event.setCancelled(true);
-        }
 
         if (player.isAdmin()) {
             event.setCancelled(false);

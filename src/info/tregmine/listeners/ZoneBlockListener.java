@@ -88,6 +88,9 @@ public class ZoneBlockListener implements Listener
                 }
             }
         }
+        else if (!player.isTrusted()) {
+            event.setCancelled(true);
+        }
     }
 
     @EventHandler
@@ -155,6 +158,9 @@ public class ZoneBlockListener implements Listener
                             + currentZone.getName() + ".");
                 }
             }
+        }
+        else if (!player.isTrusted()) {
+            event.setCancelled(true);
         }
     }
 }

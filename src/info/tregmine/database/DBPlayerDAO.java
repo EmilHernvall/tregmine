@@ -24,9 +24,8 @@ public class DBPlayerDAO
         PreparedStatement stmt = null;
         ResultSet rs = null;
         try {
-            stmt =
-                    conn.prepareStatement("SELECT * FROM player "
-                            + "WHERE player_id = ?");
+            stmt = conn.prepareStatement("SELECT * FROM player " +
+                                         "WHERE player_id = ?");
             stmt.setInt(1, id);
             stmt.execute();
 
@@ -81,9 +80,8 @@ public class DBPlayerDAO
         PreparedStatement stmt = null;
         ResultSet rs = null;
         try {
-            stmt =
-                    conn.prepareStatement("SELECT * FROM player "
-                            + "WHERE player_name = ?");
+            stmt = conn.prepareStatement("SELECT * FROM player " +
+                                         "WHERE player_name = ?");
             stmt.setString(1, name);
             stmt.execute();
 
@@ -119,9 +117,8 @@ public class DBPlayerDAO
         PreparedStatement stmt = null;
         ResultSet rs = null;
         try {
-            stmt =
-                    conn.prepareStatement("SELECT * FROM player_property "
-                            + "WHERE player_id = ?");
+            stmt = conn.prepareStatement("SELECT * FROM player_property " +
+                                         "WHERE player_id = ?");
             stmt.setInt(1, player.getId());
             stmt.execute();
 
@@ -147,11 +144,11 @@ public class DBPlayerDAO
                 else if ("donator".equals(key)) {
                     player.setDonator(Boolean.valueOf(value));
                 }
-                else if ("banned".equals(key)) {
-                    player.setBanned(Boolean.valueOf(value));
-                }
                 else if ("trusted".equals(key)) {
                     player.setTrusted(Boolean.valueOf(value));
+                }
+                else if ("resident".equals(key)) {
+                    player.setResident(Boolean.valueOf(value));
                 }
                 else if ("tpblock".equals(key)) {
                     player.setTeleportShield(Boolean.valueOf(value));
@@ -195,6 +192,12 @@ public class DBPlayerDAO
                 }
                 else if ("quitmessage".equals(key)) {
                     player.setQuitMessage(value);
+                }
+                else if ("mentorId".equals(key)) {
+                    player.setMentorId(Integer.parseInt(value));
+                }
+                else if ("playtime".equals(key)) {
+                    player.setPlayTime(Integer.parseInt(value));
                 }
             }
         } finally {
@@ -259,11 +262,11 @@ public class DBPlayerDAO
         updateProperty(player, "builder", player.isBuilder());
         updateProperty(player, "child", player.isChild());
         updateProperty(player, "donator", player.isDonator());
-        updateProperty(player, "banned", player.isBanned());
         updateProperty(player, "trusted", player.isTrusted());
+        updateProperty(player, "resident", player.isResident());
         if (player.isGuardian()) {
             updateProperty(player, "guardian",
-                    String.valueOf(player.getGuardianRank()));
+                           String.valueOf(player.getGuardianRank()));
         }
     }
 
@@ -272,11 +275,18 @@ public class DBPlayerDAO
         updateProperty(player, "keyword", player.getKeyword());
     }
 
+    public void updatePlayTime(TregminePlayer player) throws SQLException
+    {
+        int playTime = player.getPlayTime() + player.getTimeOnline();
+        updateProperty(player, "playtime", String.valueOf(playTime));
+    }
+
     public void updatePlayerInfo(TregminePlayer player) throws SQLException
     {
         // updateProperty(player, "invisible", player.isInvisible());
         // updateProperty(player, "tpblock", player.hasTeleportShield());
         // updateProperty(player, "hiddenloc", player.hasHiddenLocation());
+        updateProperty(player, "mentorId", player.getMentorId());
         updateProperty(player, "countryName", player.getCountryName());
         updateProperty(player, "city", player.getCity());
         updateProperty(player, "ip", player.getIp());
@@ -294,6 +304,12 @@ public class DBPlayerDAO
         updateProperty(player, key, String.valueOf(value));
     }
 
+    private void updateProperty(TregminePlayer player, String key, int value)
+            throws SQLException
+    {
+        updateProperty(player, key, String.valueOf(value));
+    }
+
     private void updateProperty(TregminePlayer player, String key, String value)
             throws SQLException
     {
@@ -303,9 +319,8 @@ public class DBPlayerDAO
 
         PreparedStatement stmt = null;
         try {
-            String sqlInsert =
-                    "REPLACE INTO player_property (player_id, "
-                            + "property_key, property_value) VALUE (?, ?, ?)";
+            String sqlInsert = "REPLACE INTO player_property (player_id, " +
+                               "property_key, property_value) VALUE (?, ?, ?)";
             stmt = conn.prepareStatement(sqlInsert);
             stmt.setInt(1, player.getId());
             stmt.setString(2, key);
@@ -326,8 +341,7 @@ public class DBPlayerDAO
     {
         PreparedStatement stmt = null;
         try {
-            String sql =
-                    "UPDATE player SET player_password = ? WHERE player_id = ?";
+            String sql = "UPDATE player SET player_password = ? WHERE player_id = ?";
             stmt = conn.prepareStatement(sql);
             stmt.setString(1, player.getPasswordHash());
             stmt.setInt(2, player.getId());

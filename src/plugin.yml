@@ -75,6 +75,9 @@ commands:
   lot:
     description: Manage your lot
     usage: /lot
+  mentor:
+    description: Make yourself available for mentoring (residents and above)
+    usage: /mentor
   msg:
     description: Message another player
     usage: /msg player message
