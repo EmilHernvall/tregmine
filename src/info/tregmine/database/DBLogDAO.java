@@ -2,7 +2,9 @@ package info.tregmine.database;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
 
 import org.bukkit.Location;
 import org.bukkit.inventory.ItemStack;
@@ -133,5 +135,38 @@ public class DBLogDAO
                 }
             }
         }
+    }
+
+    public Date getLastSeen(TregminePlayer player)
+    throws SQLException
+    {
+        Date date = null;
+        PreparedStatement stm = null;
+        ResultSet rs = null;
+        try {
+            String sql = "SELECT * FROM player_login WHERE player_id= ? ";
+            sql += "ORDER BY login_timestamp DESC LIMIT 1";
+
+            stm = conn.prepareStatement(sql);
+            stm.setInt(1, player.getId());
+            stm.execute();
+
+            rs = stm.getResultSet();
+
+            if (rs.next()) {
+                date = new Date(rs.getInt("login_timestamp") * 1000L);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            if (rs != null) {
+                try { rs.close(); } catch (SQLException e) {}
+            }
+            if (stm != null) {
+                try { stm.close(); } catch (SQLException e) {}
+            }
+        }
+
+        return date;
     }
 }

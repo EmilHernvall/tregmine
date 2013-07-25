@@ -33,8 +33,9 @@ public class DBWarpDAO
     {
         PreparedStatement stmt = null;
         try {
-            stmt =
-                    conn.prepareStatement("insert into warps (name, x, y, z, yaw, pitch, world) values (?, ?, ?, ?, ?, ?, ?)");
+            String sql = "INSERT INTO warps (name, x, y, z, yaw, pitch, world) ";
+            sql += "VALUES (?, ?, ?, ?, ?, ?, ?)";
+            stmt = conn.prepareStatement(sql);
 
             stmt.setString(1, name);
             stmt.setDouble(2, loc.getX());
@@ -61,7 +62,7 @@ public class DBWarpDAO
         PreparedStatement stmt = null;
         ResultSet rs = null;
         try {
-            stmt = conn.prepareStatement("SELECT * FROM warps WHERE name=?");
+            stmt = conn.prepareStatement("SELECT * FROM warps WHERE name = ?");
             stmt.setString(1, name);
             stmt.execute();
 

@@ -78,39 +78,23 @@ public class Tregmine extends JavaPlugin
         players = new HashMap<String, TregminePlayer>();
         playersById = new HashMap<Integer, TregminePlayer>();
 
-        worlds = new TreeMap<String, ZoneWorld>(new Comparator<String>() {
-            @Override
-            public int compare(String a, String b)
-            {
-                return a.compareToIgnoreCase(b);
-            }
-        });
+        worlds = new TreeMap<String, ZoneWorld>(
+            new Comparator<String>() {
+                @Override
+                public int compare(String a, String b)
+                {
+                    return a.compareToIgnoreCase(b);
+                }
+            });
 
         zones = new HashMap<Integer, Zone>();
 
-        Connection conn = null;
-        try {
-            conn = ConnectionPool.getConnection();
-
-            DBPlayerDAO playerDAO = new DBPlayerDAO(conn);
-            DBLogDAO logDAO = new DBLogDAO(conn);
-
-            Player[] players = getServer().getOnlinePlayers();
-            for (Player player : players) {
-                try {
-                    addPlayer(player);
-                } catch (PlayerBannedException e) {
-                    player.kickPlayer(e.getMessage());
-                }
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                }
+        Player[] players = getServer().getOnlinePlayers();
+        for (Player player : players) {
+            try {
+                addPlayer(player);
+            } catch (PlayerBannedException e) {
+                player.kickPlayer(e.getMessage());
             }
         }
     }
@@ -127,27 +111,6 @@ public class Tregmine extends JavaPlugin
         PreparedStatement stm = null;
         try {
             conn = ConnectionPool.getConnection();
-
-            stm = conn.prepareStatement("SELECT * FROM warps");
-
-            stm.execute();
-
-            ResultSet rs = stm.getResultSet();
-
-            Location loc = null;
-            String name = null;
-            World world = null;
-            while (rs.next()) {
-                name = rs.getString("name");
-                double x = rs.getDouble("x");
-                double y = rs.getDouble("y");
-                double z = rs.getDouble("z");
-                float yaw = rs.getFloat("yaw");
-                float pitch = rs.getFloat("pitch");
-                world = Bukkit.getWorld(rs.getString("world"));
-                loc = new Location(world, x, y, z, yaw, pitch);
-                warps.put(loc, name);
-            }
 
             DBInventoryDAO inventoryDAO = new DBInventoryDAO(conn);
             this.blessedBlocks = inventoryDAO.loadBlessedBlocks(getServer());
@@ -532,41 +495,6 @@ public class Tregmine extends JavaPlugin
     public Map<Location, Integer> getBlessedBlocks()
     {
         return blessedBlocks;
-    }
-
-    public Date getLastSeen(TregminePlayer player)
-    {
-        Date date = null;
-        PreparedStatement stm = null;
-        Connection conn = null;
-        try {
-            conn = ConnectionPool.getConnection();
-            stm =
-                    conn.prepareStatement("SELECT * FROM `player_login` WHERE `player_id`= ? ORDER BY `login_timestamp` DESC LIMIT 1");
-
-            stm.setInt(1, player.getId());
-
-            stm.execute();
-
-            ResultSet rs = stm.getResultSet();
-
-            if (rs.next()) {
-                date = new Date(rs.getInt("login_timestamp") * 1000L);
-            }
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } finally {
-            try {
-                if (conn != null)
-                    conn.close();
-                if (stm != null)
-                    stm.close();
-            } catch (SQLException e) {
-            }
-
-        }
-        return date;
     }
 
     public Map<Location, String> getWarps()
