@@ -92,28 +92,7 @@ public class WarpCommand extends AbstractCommand
     public boolean handlePlayer(TregminePlayer player, String[] args)
     {
         if (args.length == 0) {
-            StringBuilder buffer = new StringBuilder();
-            String delim = "";
-            for (Location loc : tregmine.getWarps().keySet()) {
-                if (player.getLocation().distance(loc) < 500) {
-                    buffer.append(delim);
-                    buffer.append(ChatColor.AQUA + tregmine.getWarps().get(loc));
-                    delim = ChatColor.GOLD + ", " + ChatColor.AQUA;
-                }
-            }
-
-            if (buffer.toString() == null
-                    || buffer.toString().equalsIgnoreCase("")) {
-                player.sendMessage(ChatColor.RED
-                        + "You are not currently nearby any warps");
-            }
-            else {
-                player.sendMessage(ChatColor.YELLOW
-                        + "You are currently nearby: " + ChatColor.AQUA
-                        + buffer.toString());
-            }
-
-            return true;
+            return false;
         }
 
         Server server = tregmine.getServer();
