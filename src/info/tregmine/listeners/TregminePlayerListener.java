@@ -531,34 +531,34 @@ public class TregminePlayerListener implements Listener
             plugin.getServer().broadcastMessage(message);
         }
 
-        plugin.removePlayer(player);
-        Tregmine.LOGGER.info("Unloaded settings for " + player.getName() + ".");
-
-        activateGuardians();
-
         // Look if there are any students being mentored by the exiting player
         for (TregminePlayer student : plugin.getOnlinePlayers()) {
             if (!student.isTrusted() && student.getMentorId() == player.getId()) {
                 Queue<TregminePlayer> mentors = plugin.getMentorQueue();
                 TregminePlayer mentor = mentors.poll();
                 if (mentor != null) {
-                    MentorCommand.startMentoring(plugin, player, mentor);
+                    MentorCommand.startMentoring(plugin, student, mentor);
                 } else {
                     Queue<TregminePlayer> students = plugin.getStudentQueue();
-                    students.offer(player);
+                    students.offer(student);
 
                     for (TregminePlayer p : plugin.getOnlinePlayers()) {
                         if (!p.isResident()) {
                             continue;
                         }
 
-                        p.sendMessage(player.getChatName() +
+                        p.sendMessage(student.getChatName() +
                             ChatColor.BLUE + " needs a mentor! Type /mentor to " +
                             "offer your services!");
                     }
                 }
             }
         }
+
+        plugin.removePlayer(player);
+        Tregmine.LOGGER.info("Unloaded settings for " + player.getName() + ".");
+
+        activateGuardians();
     }
 
     @EventHandler
@@ -647,6 +647,7 @@ public class TregminePlayerListener implements Listener
         Item item = event.getItemDrop();
         droppedItems.put(item, player);
     }
+
     @EventHandler
     public void onPlayerKick(PlayerKickEvent event)
     {
