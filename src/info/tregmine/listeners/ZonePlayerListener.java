@@ -333,7 +333,7 @@ public class ZonePlayerListener implements Listener
 
             player.setZoneBlock2(block);
             player.sendMessage("Second block set of new " + type + ".");
-            player.setZoneBlockCounter(1);
+            player.setZoneBlockCounter(0);
         }
     }
 
