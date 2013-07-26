@@ -2,6 +2,11 @@ package info.tregmine.commands;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.List;
+
+import org.bukkit.World;
+
+import com.maxmind.geoip.Location;
 
 import static org.bukkit.ChatColor.*;
 import info.tregmine.Tregmine;
@@ -31,17 +36,66 @@ public class QuitMessageCommand extends AbstractCommand
     @Override
     public boolean handlePlayer(TregminePlayer player, String[] args)
     {
-        if (!player.isDonator()) {
-            return true;
+        if (args.length == 0) {
+            return getownmsg(player);
         }
 
-        String message = null;
-        if (args.length != 0) {
-            message = argsToMessage(args);
+        if (args[0].matches("player") && args[1].matches("get")) {
+            return getelsemsg(player, args);
         }
+
+        else if (args[0].matches("player") && args[1].matches("set")) {
+            return setelsemsg(player, args);
+        }
+
+        else if (args[0].matches("help")) {
+            return help(player, args);
+        }
+
+        else {
+            return setownmsg(player, args);
+        }
+    }
+
+    private boolean help(TregminePlayer player, String[] args)
+    {
+        if (player.isAdmin()){
+            player.sendMessage(DARK_GRAY + "-----------------------------------------");
+            player.sendMessage(GRAY + "Get your Quit Message: " + GREEN + "/quitmessage");
+            player.sendMessage(GRAY + "Set your Quit Message: " + GREEN + "/quitmessage <message>");
+            player.sendMessage(GRAY + "Get another player's Quit Message: ");
+            player.sendMessage(GREEN + "/quitmessage player get <player>");
+            player.sendMessage(GRAY + "Set another player's Quit Message: ");
+            player.sendMessage(GREEN + "/quitmessage player set <player> <message>");
+            player.sendMessage(DARK_GRAY + "-----------------------------------------");
+        }
+        else if (player.isGuardian()){
+            player.sendMessage(DARK_GRAY + "-----------------------------------------");
+            player.sendMessage(GRAY + "Get your Quit Message: " + GREEN + "/quitmessage");
+            player.sendMessage(GRAY + "Set your Quit Message: " + GREEN + "/quitmessage <message>");
+            player.sendMessage(GRAY + "Get another player's Quit Message: ");
+            player.sendMessage(GREEN + "/quitmessage player get <player>");
+            player.sendMessage(DARK_GRAY + "-----------------------------------------");
+        }
+        else{
+            player.sendMessage(DARK_GRAY + "-----------------------------------------");
+            player.sendMessage(GRAY + "Get your Quit Message: " + GREEN + "/quitmessage");
+            player.sendMessage(GRAY + "Set your Quit Message: " + GREEN + "/quitmessage <message>");
+            player.sendMessage(DARK_GRAY + "-----------------------------------------");
+        }
+        return true;
+    }
+
+    private boolean setownmsg(TregminePlayer player, String[] args)
+    {
+        String message = null;
+
+        message = argsToMessage(args);
 
         player.setQuitMessage(message);
-        player.sendMessage(YELLOW + "Your quit message has been set.");
+
+        player.sendMessage(YELLOW + "Your quit message has been set to:");
+        player.sendMessage(YELLOW + message);
 
         Connection conn = null;
         try {
@@ -59,7 +113,109 @@ public class QuitMessageCommand extends AbstractCommand
                 }
             }
         }
+        return true;
+    }
 
+    private boolean setelsemsg(TregminePlayer player, String[] args)
+    {
+        if (!player.isAdmin()) {
+            return true;
+        }
+
+        if (args.length == 3 ) {
+            player.sendMessage(RED + "Correct Usage: /quitmessage player set <player> <message>");
+            return true;
+        }
+
+        String pattern = args[2];
+
+        List<TregminePlayer> candidates = tregmine.matchPlayer(pattern);
+        if (candidates.size() != 1) {
+            return true;
+        }
+
+        TregminePlayer victim = candidates.get(0);
+
+        if (victim == null) {
+            return true;
+        }
+
+        if (victim.isOp()) {
+            player.sendMessage(RED + "Thou shall not mess with the Gods!");
+            
+            World world = player.getWorld();
+            org.bukkit.Location location = player.getLocation();
+            world.strikeLightning(location);
+            return true;
+        }
+        
+        StringBuilder newQuitMessage = new StringBuilder();
+        for (int i = 3; i < args.length; i++) {
+            newQuitMessage.append(args[i] + " ");
+        }
+        String quitmsgString = newQuitMessage.toString();
+        quitmsgString.trim();
+
+        victim.setQuitMessage(quitmsgString);
+
+        player.sendMessage(victim.getChatName() + "'s" + YELLOW
+                + " quit message has been set to:");
+        player.sendMessage(YELLOW + quitmsgString);
+
+        Connection conn = null;
+        try {
+            conn = ConnectionPool.getConnection();
+
+            DBPlayerDAO playerDAO = new DBPlayerDAO(conn);
+            playerDAO.updatePlayerInfo(player);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                }
+            }
+        }
+        return true;
+    }
+
+    private boolean getelsemsg(TregminePlayer player, String[] args)
+    {
+        if (!player.isAdmin() && !player.isGuardian()) {
+            return true;
+        }
+
+        if (args.length > 3 ) {
+            player.sendMessage(RED + "Correct Usage: /quitmessage player get <player>");
+            return true;
+        }
+
+        String pattern = args[2];
+
+        List<TregminePlayer> candidates = tregmine.matchPlayer(pattern);
+        if (candidates.size() != 1) {
+            return true;
+        }
+
+        TregminePlayer victim = candidates.get(0);
+
+        if (victim == null) {
+            return true;
+        }
+        String victimName = victim.getChatName();
+
+        player.sendMessage(victimName + "'s " + YELLOW
+                + "current Quit Message is:");
+        player.sendMessage(YELLOW + victim.getQuitMessage());
+        return true;
+    }
+
+    private boolean getownmsg(TregminePlayer player)
+    {
+        player.sendMessage(YELLOW + "Your current Quit Message is:");
+        player.sendMessage(YELLOW + player.getQuitMessage());
         return true;
     }
 }
