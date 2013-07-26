@@ -41,6 +41,12 @@ public class PlayerLookupListener implements Listener
     public void onPlayerJoin(PlayerJoinEvent event)
     {
         TregminePlayer player = plugin.getPlayer(event.getPlayer());
+        if (player == null) {
+            event.getPlayer().kickPlayer("Something went wrong");
+            Tregmine.LOGGER.info(event.getPlayer().getName() + " was not found " +
+                    "in players map.");
+            return;
+        }
 
         InetSocketAddress sock = player.getAddress();
         String ip = sock.getAddress().getHostAddress();

@@ -64,6 +64,13 @@ public class SetupListener implements Listener
     public void onPlayerJoin(PlayerJoinEvent event)
     {
         TregminePlayer player = plugin.getPlayer(event.getPlayer());
+        if (player == null) {
+            event.getPlayer().kickPlayer("Something went wrong");
+            Tregmine.LOGGER.info(event.getPlayer().getName() + " was not found " +
+                    "in players map.");
+            return;
+        }
+
         if (player.getChatState() != TregminePlayer.ChatState.SETUP) {
             return;
         }
