@@ -109,6 +109,9 @@ public class WhoCommand extends AbstractCommand
             return who(player);
         }
         else if (args.length > 0) {
+            if (!player.isAdmin()) {
+                return true;
+            }
             return whoplayer(player, args);
         }
 

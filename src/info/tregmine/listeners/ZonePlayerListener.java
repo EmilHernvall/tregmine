@@ -360,6 +360,13 @@ public class ZonePlayerListener implements Listener
     public void onPlayerMove(PlayerMoveEvent event)
     {
         TregminePlayer player = plugin.getPlayer(event.getPlayer());
+        if (player == null) {
+            event.getPlayer().kickPlayer("Something went wrong");
+            Tregmine.LOGGER.info(event.getPlayer().getName() + " was not found " +
+                    "in players map.");
+            return;
+        }
+
         ZoneWorld world = plugin.getWorld(player.getWorld());
 
         Location movingFrom = event.getFrom();

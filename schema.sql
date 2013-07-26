@@ -31,10 +31,10 @@ CREATE TABLE `inventory` (
   `inventory_z` int(11) DEFAULT NULL,
   `inventory_world` varchar(32) COLLATE utf8_swedish_ci DEFAULT NULL,
   `inventory_player` varchar(32) COLLATE utf8_swedish_ci DEFAULT NULL,
-  `inventory_type` enum('chest','player','player_armor') COLLATE utf8_swedish_ci DEFAULT NULL,
+  `inventory_type` enum('block','player','player_armor') COLLATE utf8_swedish_ci DEFAULT NULL,
   PRIMARY KEY (`inventory_id`),
   KEY `idx_player` (`inventory_player`)
-) ENGINE=InnoDB AUTO_INCREMENT=32993 DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=33681 DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -50,11 +50,11 @@ CREATE TABLE `inventory_item` (
   `item_slot` int(10) unsigned DEFAULT NULL,
   `item_material` int(10) unsigned DEFAULT NULL,
   `item_data` int(11) DEFAULT NULL,
-  `item_meta` text,
+  `item_meta` text CHARACTER SET latin1,
   `item_count` int(10) unsigned DEFAULT NULL,
   PRIMARY KEY (`item_id`),
   KEY `inventory_idx` (`inventory_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=7248 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=85653 DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -73,17 +73,18 @@ CREATE TABLE `item` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `items_spawnvalue`
+-- Table structure for table `motd`
 --
 
-DROP TABLE IF EXISTS `items_spawnvalue`;
+DROP TABLE IF EXISTS `motd`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `items_spawnvalue` (
-  `itemid` int(11) NOT NULL,
-  `value` int(11) NOT NULL,
-  UNIQUE KEY `itemid` (`itemid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE TABLE `motd` (
+  `motd_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `motd_timestamp` int(10) unsigned NOT NULL,
+  `motd_message` text CHARACTER SET latin1,
+  PRIMARY KEY (`motd_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -100,11 +101,11 @@ CREATE TABLE `player` (
   `player_email` varchar(255) COLLATE utf8_swedish_ci DEFAULT NULL,
   `player_confirmed` enum('0','1') COLLATE utf8_swedish_ci DEFAULT '0',
   `player_created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `player_wallet` int(10) unsigned DEFAULT NULL,
+  `player_wallet` bigint(20) DEFAULT '50000',
   UNIQUE KEY `uid` (`player_id`),
   KEY `player` (`player_name`),
   KEY `password` (`player_password`)
-) ENGINE=MyISAM AUTO_INCREMENT=44236 DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=44284 DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -118,10 +119,10 @@ CREATE TABLE `player_chatlog` (
   `chatlog_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `player_id` int(10) unsigned DEFAULT NULL,
   `chatlog_timestamp` int(10) unsigned DEFAULT NULL,
-  `chatlog_channel` varchar(64) DEFAULT NULL,
-  `chatlog_message` varchar(255) DEFAULT NULL,
+  `chatlog_channel` varchar(64) CHARACTER SET latin1 DEFAULT NULL,
+  `chatlog_message` varchar(255) CHARACTER SET latin1 DEFAULT NULL,
   PRIMARY KEY (`chatlog_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=7121 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=61331 DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -136,12 +137,12 @@ CREATE TABLE `player_givelog` (
   `sender_id` int(10) unsigned DEFAULT NULL,
   `recipient_id` int(10) unsigned DEFAULT NULL,
   `givelog_material` int(10) unsigned DEFAULT NULL,
-  `givelog_data` int(10) unsigned DEFAULT NULL,
-  `givelog_meta` text,
+  `givelog_data` int(11) DEFAULT NULL,
+  `givelog_meta` text CHARACTER SET latin1,
   `givelog_count` int(10) unsigned DEFAULT NULL,
   `givelog_timestamp` int(10) unsigned DEFAULT NULL,
   PRIMARY KEY (`givelog_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=345 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3392 DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -165,7 +166,7 @@ CREATE TABLE `player_home` (
   PRIMARY KEY (`home_id`),
   KEY `player_idx` (`player_id`,`home_time`),
   KEY `idx_player` (`home_name`)
-) ENGINE=InnoDB AUTO_INCREMENT=32773 DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=33004 DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -179,9 +180,9 @@ CREATE TABLE `player_login` (
   `login_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `player_id` int(10) unsigned DEFAULT NULL,
   `login_timestamp` int(10) unsigned DEFAULT NULL,
-  `login_action` enum('login','logout') DEFAULT NULL,
+  `login_action` enum('login','logout') CHARACTER SET latin1 DEFAULT NULL,
   PRIMARY KEY (`login_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=1187 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=10475 DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -199,10 +200,10 @@ CREATE TABLE `player_orelog` (
   `orelog_x` int(11) DEFAULT NULL,
   `orelog_y` int(11) DEFAULT NULL,
   `orelog_z` int(11) DEFAULT NULL,
-  `orelog_world` varchar(255) DEFAULT NULL,
+  `orelog_world` varchar(255) CHARACTER SET latin1 DEFAULT NULL,
   PRIMARY KEY (`orelog_id`),
   KEY `player_idx` (`player_id`,`orelog_timestamp`)
-) ENGINE=MyISAM AUTO_INCREMENT=139 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=9465 DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -218,7 +219,7 @@ CREATE TABLE `player_property` (
   `property_value` varchar(255) COLLATE utf8_swedish_ci DEFAULT NULL,
   `property_created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`player_id`,`property_key`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -232,14 +233,14 @@ CREATE TABLE `player_report` (
   `report_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `subject_id` int(10) unsigned NOT NULL,
   `issuer_id` int(10) unsigned NOT NULL,
-  `report_action` enum('kick','softwarn','hardwarn','ban','comment') NOT NULL,
-  `report_message` text CHARACTER SET utf8 COLLATE utf8_swedish_ci NOT NULL,
+  `report_action` enum('kick','softwarn','hardwarn','ban','comment') CHARACTER SET latin1 NOT NULL,
+  `report_message` text COLLATE utf8_swedish_ci NOT NULL,
   `report_timestamp` int(10) unsigned NOT NULL,
   `report_validuntil` int(10) unsigned DEFAULT NULL,
   PRIMARY KEY (`report_id`),
   KEY `idx_subject` (`subject_id`,`report_timestamp`),
   KEY `idx_issuer` (`issuer_id`,`report_timestamp`)
-) ENGINE=MyISAM AUTO_INCREMENT=3539 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3585 DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -256,7 +257,7 @@ CREATE TABLE `player_transaction` (
   `transaction_timestamp` int(10) unsigned DEFAULT NULL,
   `transaction_amount` int(10) unsigned DEFAULT NULL,
   PRIMARY KEY (`transaction_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=373 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=1994 DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -268,10 +269,10 @@ DROP TABLE IF EXISTS `shorturl`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `shorturl` (
   `urlID` int(11) NOT NULL AUTO_INCREMENT,
-  `link` varchar(256) NOT NULL,
+  `link` varchar(256) CHARACTER SET latin1 NOT NULL,
   PRIMARY KEY (`urlID`),
   UNIQUE KEY `urlID` (`urlID`)
-) ENGINE=MyISAM AUTO_INCREMENT=2610 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2610 DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -314,7 +315,7 @@ CREATE TABLE `trade` (
   `trade_timestamp` int(10) unsigned DEFAULT NULL,
   `trade_amount` int(10) unsigned DEFAULT NULL,
   PRIMARY KEY (`trade_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=64 DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -329,24 +330,10 @@ CREATE TABLE `trade_item` (
   `trade_id` int(10) unsigned DEFAULT NULL,
   `item_material` int(10) unsigned DEFAULT NULL,
   `item_data` int(10) unsigned DEFAULT NULL,
-  `item_meta` text,
+  `item_meta` text CHARACTER SET latin1,
   `item_count` int(10) unsigned DEFAULT NULL,
   PRIMARY KEY (`item_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `wallet`
---
-
-DROP TABLE IF EXISTS `wallet`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `wallet` (
-  `player` varchar(48) COLLATE utf8_swedish_ci DEFAULT NULL,
-  `value` bigint(20) NOT NULL DEFAULT '100',
-  UNIQUE KEY `player` (`player`,`value`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=278 DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -366,22 +353,7 @@ CREATE TABLE `warps` (
   `world` varchar(16) CHARACTER SET latin1 NOT NULL COMMENT 'added for multi world support',
   UNIQUE KEY `name.uniqe` (`name`),
   KEY `name-index` (`name`,`x`,`y`,`z`,`pitch`,`yaw`,`world`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `web_vote_topic`
---
-
-DROP TABLE IF EXISTS `web_vote_topic`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `web_vote_topic` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `topic` varchar(160) NOT NULL,
-  `creator` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -406,7 +378,7 @@ CREATE TABLE `zone` (
   `zone_owner` varchar(24) COLLATE utf8_swedish_ci DEFAULT NULL,
   PRIMARY KEY (`zone_id`),
   UNIQUE KEY `name` (`zone_name`)
-) ENGINE=MyISAM AUTO_INCREMENT=908 DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=912 DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -426,7 +398,7 @@ CREATE TABLE `zone_lot` (
   `lot_y2` int(10) NOT NULL,
   `special` int(11) DEFAULT NULL,
   PRIMARY KEY (`lot_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11337 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=11363 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -459,7 +431,7 @@ CREATE TABLE `zone_rect` (
   `rect_y2` int(10) DEFAULT NULL,
   PRIMARY KEY (`rect_id`),
   KEY `zone_id` (`zone_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=907 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=911 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -486,4 +458,4 @@ CREATE TABLE `zone_user` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2013-07-18 13:50:30
+-- Dump completed on 2013-07-26 14:22:39

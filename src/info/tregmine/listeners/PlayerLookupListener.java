@@ -33,7 +33,8 @@ public class PlayerLookupListener implements Listener
             cl = new LookupService("GeoIPCity.dat",
                                    LookupService.GEOIP_MEMORY_CACHE);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            Tregmine.LOGGER.warning("GeoIPCity.dat was not found! " +
+                    "Geo location will not function as expected.");
         }
     }
 
@@ -41,6 +42,12 @@ public class PlayerLookupListener implements Listener
     public void onPlayerJoin(PlayerJoinEvent event)
     {
         TregminePlayer player = plugin.getPlayer(event.getPlayer());
+        if (player == null) {
+            event.getPlayer().kickPlayer("Something went wrong");
+            Tregmine.LOGGER.info(event.getPlayer().getName() + " was not found " +
+                    "in players map.");
+            return;
+        }
 
         InetSocketAddress sock = player.getAddress();
         String ip = sock.getAddress().getHostAddress();

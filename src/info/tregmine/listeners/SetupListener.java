@@ -64,14 +64,21 @@ public class SetupListener implements Listener
     public void onPlayerJoin(PlayerJoinEvent event)
     {
         TregminePlayer player = plugin.getPlayer(event.getPlayer());
+        if (player == null) {
+            event.getPlayer().kickPlayer("Something went wrong");
+            Tregmine.LOGGER.info(event.getPlayer().getName() + " was not found " +
+                    "in players map.");
+            return;
+        }
+
         if (player.getChatState() != TregminePlayer.ChatState.SETUP) {
             return;
         }
 
         Tregmine.LOGGER.info("[SETUP] " + player.getChatName() + " is a new player!");
 
-        player.sendMessage(ChatColor.BLUE + "Welcome to Tregmine!");
-        player.sendMessage(ChatColor.BLUE + "Use the chat to enter your date of " +
+        player.sendMessage(ChatColor.YELLOW + "Welcome to Tregmine!");
+        player.sendMessage(ChatColor.YELLOW + "Use the chat to enter your date of " +
                 "birth to continue. For example: 2001-12-24");
     }
 
@@ -121,7 +128,7 @@ public class SetupListener implements Listener
             long diff = AGE_LIMIT - age;
             Server server = plugin.getServer();
             if (diff < 0) {
-                player.sendMessage(ChatColor.BLUE + "You have now joined Tregmine " +
+                player.sendMessage(ChatColor.GREEN + "You have now joined Tregmine " +
                         "and can talk with other players! Say Hi! :)");
                 player.setChatState(TregminePlayer.ChatState.CHAT);
                 player.setSetup(true);
@@ -140,7 +147,7 @@ public class SetupListener implements Listener
                     TregminePlayer mentor = mentors.poll();
                     MentorCommand.startMentoring(plugin, player, mentor);
                 } else {
-                    player.sendMessage(ChatColor.BLUE + "You will now be assigned " +
+                    player.sendMessage(ChatColor.YELLOW + "You will now be assigned " +
                         "a mentor to show you around, as soon as one becomes available.");
 
                     Queue<TregminePlayer> students = plugin.getStudentQueue();
@@ -152,7 +159,7 @@ public class SetupListener implements Listener
                         }
 
                         p.sendMessage(player.getChatName() +
-                            ChatColor.BLUE + " needs a mentor! Type /mentor to " +
+                            ChatColor.YELLOW + " needs a mentor! Type /mentor to " +
                             "offer your services!");
                     }
                 }
@@ -164,12 +171,12 @@ public class SetupListener implements Listener
                 Date welcomeDate = new Date(currentDate.getTime() + diff);
                 String welcomeDateStr = FORMAT.format(welcomeDate);
 
-                player.sendMessage(ChatColor.BLUE + "Unfortunately Tregmine has an " +
+                player.sendMessage(ChatColor.YELLOW + "Unfortunately Tregmine has an " +
                         "age limit of 13 years and older. Because of that you have " +
                         "been automatically banned until you are old enough to play here.");
-                player.sendMessage(ChatColor.BLUE + "In one minute you will be " +
+                player.sendMessage(ChatColor.YELLOW + "In one minute you will be " +
                         "automatically kicked.");
-                player.sendMessage(ChatColor.BLUE + "Welcome back on " + welcomeDateStr + "!");
+                player.sendMessage(ChatColor.YELLOW + "Welcome back on " + welcomeDateStr + "!");
 
                 String message = "Banned until " + welcomeDateStr + " due to age limit.";
 
