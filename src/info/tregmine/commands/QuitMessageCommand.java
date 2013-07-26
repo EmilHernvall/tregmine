@@ -142,13 +142,13 @@ public class QuitMessageCommand extends AbstractCommand
 
         if (victim.isOp()) {
             player.sendMessage(RED + "Thou shall not mess with the Gods!");
-            
+
             World world = player.getWorld();
             org.bukkit.Location location = player.getLocation();
             world.strikeLightning(location);
             return true;
         }
-        
+
         StringBuilder newQuitMessage = new StringBuilder();
         for (int i = 3; i < args.length; i++) {
             newQuitMessage.append(args[i] + " ");
