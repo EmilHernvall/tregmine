@@ -44,12 +44,17 @@ public class MentorCommand extends AbstractCommand
             student.sendMessage(BLUE + "Congratulations! You have now achieved " +
                     "settler status. We hope you'll enjoy your stay on Tregmine!");
 
+            Tregmine.LOGGER.info("[MENTOR] " + student.getChatName() + " completed " +
+                                 "mentoring.");
+
             Connection conn = null;
             try {
                 conn = ConnectionPool.getConnection();
 
                 student.setTrusted(true);
                 student.setNameColor("trial");
+                student.setTemporaryChatName(student.getNameColor()
+                        + student.getName());
 
                 DBPlayerDAO playerDAO = new DBPlayerDAO(conn);
                 playerDAO.updatePlayerInfo(student);
@@ -177,7 +182,9 @@ public class MentorCommand extends AbstractCommand
             mentor.sendMessage(BLUE + "Mentoring resuming.");
         }
 
-        int timeRemaining = Math.max(60*15 - student.getTimeOnline(), 0);
+        int timeRemaining = Math.max(60*15 - student.getPlayTime(), 0);
+        Tregmine.LOGGER.info("[MENTOR] " + student.getChatName() + " has " +
+                            timeRemaining + " seconds of mentoring left.");
 
         UpgradeTask task = new UpgradeTask(mentor, student);
         if (timeRemaining > 0) {

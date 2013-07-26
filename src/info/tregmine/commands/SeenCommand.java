@@ -40,8 +40,13 @@ public class SeenCommand extends AbstractCommand
             DBLogDAO logDAO = new DBLogDAO(conn);
             Date seen = logDAO.getLastSeen(target);
 
-            player.sendMessage(ChatColor.GREEN + target.getChatName() + ChatColor.YELLOW
-                    + " was last seen on: " + ChatColor.AQUA + seen);
+            if (seen != null) {
+                player.sendMessage(ChatColor.GREEN + target.getChatName() + ChatColor.YELLOW
+                        + " was last seen on: " + ChatColor.AQUA + seen);
+            } else {
+                player.sendMessage(ChatColor.GREEN + target.getChatName() + ChatColor.YELLOW
+                        + " hasn't been seen for a while.");
+            }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
