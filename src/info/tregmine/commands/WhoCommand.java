@@ -89,6 +89,9 @@ public class WhoCommand extends AbstractCommand
         StringBuilder sb = new StringBuilder();
         String delim = "";
         for (TregminePlayer online : tregmine.getOnlinePlayers()) {
+        	if(online.isInvisible()){
+        		continue;
+        	}
             sb.append(delim);
             sb.append(online.getChatName());
             delim = ChatColor.WHITE + ", ";
