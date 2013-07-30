@@ -228,15 +228,16 @@ public class Tregmine extends JavaPlugin
         try {
             webHandler = new WebHandler(this);
             webHandler.addAction(new VersionAction.Factory());
-            webHandler.addAction(new OperatorListAction.Factory());
+            webHandler.addAction(new PlayerListAction.Factory());
 
             webServer = new Server(9192);
             webServer.setHandler(webHandler);
-            // webServer.start();
+            webServer.start();
 
             BukkitScheduler scheduler = server.getScheduler();
-            // scheduler.scheduleSyncRepeatingTask(this, webHandler, 0, 20);
-        } catch (Exception e) {
+            scheduler.scheduleSyncRepeatingTask(this, webHandler, 0, 20);
+        }
+        catch (Exception e) {
             LOGGER.log(Level.WARNING, "Failed to start web server!", e);
         }
     }
@@ -254,6 +255,14 @@ public class Tregmine extends JavaPlugin
                     + getDescription().getVersion());
 
             removePlayer(player);
+        }
+
+        try {
+            webServer.stop();
+            webServer.join();
+        }
+        catch (Exception e) {
+            LOGGER.log(Level.WARNING, "Failed to start web server!", e);
         }
     }
 

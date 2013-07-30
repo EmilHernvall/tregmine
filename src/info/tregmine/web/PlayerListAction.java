@@ -1,18 +1,21 @@
 package info.tregmine.web;
 
+import java.util.List;
 import java.io.PrintWriter;
 
 import org.eclipse.jetty.server.Request;
 
 import org.bukkit.Server;
+import org.bukkit.OfflinePlayer;
 
 import org.json.JSONWriter;
 import org.json.JSONException;
 
 import info.tregmine.Tregmine;
 import info.tregmine.WebHandler;
+import info.tregmine.api.TregminePlayer;
 
-public class VersionAction implements WebHandler.Action
+public class PlayerListAction implements WebHandler.Action
 {
     public static class Factory implements WebHandler.ActionFactory
     {
@@ -23,27 +26,26 @@ public class VersionAction implements WebHandler.Action
         @Override
         public String getName()
         {
-            return "/version";
+            return "/playerlist";
         }
 
         @Override
         public WebHandler.Action createAction(Request request)
         {
-            return new VersionAction();
+            return new PlayerListAction();
         }
     }
 
-    private String version;
+    private List<TregminePlayer> players;
 
-    public VersionAction()
+    public PlayerListAction()
     {
     }
 
     @Override
     public void queryGameState(Tregmine tregmine)
     {
-        Server server = tregmine.getServer();
-        version = server.getName() + " " + server.getVersion();
+        players = tregmine.getOnlinePlayers();
     }
 
     @Override
@@ -52,9 +54,14 @@ public class VersionAction implements WebHandler.Action
     {
         try {
             JSONWriter json = new JSONWriter(writer);
-            json.object()
-                .key("version").value(version)
-                .endObject();
+            json.array();
+            for (TregminePlayer player : players) {
+                json.object()
+                    .key("id").value(player.getId())
+                    .key("name").value(player.getName())
+                    .endObject();
+            }
+            json.endArray();
 
             writer.close();
         }
@@ -63,3 +70,4 @@ public class VersionAction implements WebHandler.Action
         }
     }
 }
+
