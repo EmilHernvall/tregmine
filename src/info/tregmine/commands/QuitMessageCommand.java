@@ -77,7 +77,7 @@ public class QuitMessageCommand extends AbstractCommand
             player.sendMessage(GREEN + "/quitmessage player get <player>");
             player.sendMessage(DARK_GRAY + "-----------------------------------------");
         }
-        else if (player.isDonator()){
+        else if (player.isDonator()|| player.isBuilder()){
             
             player.sendMessage(DARK_GRAY + "-----------------------------------------");
             player.sendMessage(GRAY + "Get your Quit Message: " + GREEN + "/quitmessage");
