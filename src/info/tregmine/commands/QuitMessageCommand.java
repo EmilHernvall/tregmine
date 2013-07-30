@@ -77,10 +77,17 @@ public class QuitMessageCommand extends AbstractCommand
             player.sendMessage(GREEN + "/quitmessage player get <player>");
             player.sendMessage(DARK_GRAY + "-----------------------------------------");
         }
-        else{
+        else if (player.isDonator()){
+            
             player.sendMessage(DARK_GRAY + "-----------------------------------------");
             player.sendMessage(GRAY + "Get your Quit Message: " + GREEN + "/quitmessage");
             player.sendMessage(GRAY + "Set your Quit Message: " + GREEN + "/quitmessage <message>");
+            player.sendMessage(DARK_GRAY + "-----------------------------------------");
+        }
+        else{
+            player.sendMessage(DARK_GRAY + "-----------------------------------------");
+            player.sendMessage(RED + "Sorry, Quit Messages are only for players who");
+            player.sendMessage(RED + "donate to keep the server running.");
             player.sendMessage(DARK_GRAY + "-----------------------------------------");
         }
         return true;
@@ -88,6 +95,10 @@ public class QuitMessageCommand extends AbstractCommand
 
     private boolean setownmsg(TregminePlayer player, String[] args)
     {
+        if(!player.isDonator()&&!player.isAdmin()&&!player.isBuilder()&&!player.isGuardian()){
+            return true;
+        }
+        
         String message = null;
 
         message = argsToMessage(args);
@@ -214,6 +225,10 @@ public class QuitMessageCommand extends AbstractCommand
 
     private boolean getownmsg(TregminePlayer player)
     {
+        if(!player.isDonator()&&!player.isAdmin()&&!player.isBuilder()&&!player.isGuardian()){
+            return true;
+        }
+        
         player.sendMessage(YELLOW + "Your current Quit Message is:");
         player.sendMessage(YELLOW + player.getQuitMessage());
         return true;
