@@ -2,7 +2,10 @@ package info.tregmine.commands;
 
 import static org.bukkit.ChatColor.*;
 
+import java.net.InetSocketAddress;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
@@ -36,10 +39,62 @@ public class WhoCommand extends AbstractCommand
             return true;
         }
 
+        
+        
         TregminePlayer whoPlayer = candidates.get(0);
+        
+        InetSocketAddress sock = whoPlayer.getAddress();
+        String ip = sock.getAddress().getHostAddress();
+        String host = sock.getAddress().getCanonicalHostName();
+        whoPlayer.setHostName(host);
+        whoPlayer.setIp(ip);
+        
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        String aliasList = null;
+        try {
+            conn = ConnectionPool.getConnection();
 
-        if (whoPlayer == null) {
-            return true;
+            stmt = conn.prepareStatement("SELECT player_name FROM player "
+                            + "INNER JOIN player_property USING (player_id) "
+                            + "WHERE property_key = 'ip' AND property_value = ? "
+                            + "ORDER BY player_created DESC LIMIT 5");
+            stmt.setString(1, ip);
+            stmt.execute();
+
+            rs = stmt.getResultSet();
+
+            StringBuilder buffer = new StringBuilder();
+            String delim = "";
+            while (rs.next()) {
+                buffer.append(delim);
+                buffer.append(rs.getString("player_name"));
+                delim = ", ";
+            }
+
+            aliasList = buffer.toString();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                }
+            }
+            if (stmt != null) {
+                try {
+                    stmt.close();
+                } catch (SQLException e) {
+                }
+            }
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                }
+            }
         }
 
         double X = whoPlayer.getLocation().getX();
@@ -50,7 +105,6 @@ public class WhoCommand extends AbstractCommand
         float Y2 = (float)Math.round(Y);
         float Z2 = (float)Math.round(Z);
 
-        Connection conn = null;
         try {
             conn = ConnectionPool.getConnection();
             DBWalletDAO walletDAO = new DBWalletDAO(conn);
@@ -60,8 +114,8 @@ public class WhoCommand extends AbstractCommand
             player.sendMessage(DARK_GRAY + "******************** " + DARK_PURPLE +
                     "PLAYER INFO" + DARK_GRAY + " ********************");
             player.sendMessage(GOLD + "Player: " + GRAY + whoPlayer.getChatName());
-            player.sendMessage(GOLD + "World: " + GRAY + whoPlayer.getWorld().getName());
-            player.sendMessage(GOLD + "Coords: " + GRAY + X2 + ", " + Y2 + ", " + Z2);
+            player.sendMessage(GOLD + "Aliases: " + GRAY + aliasList);
+            player.sendMessage(GOLD + "Location: " + GRAY + whoPlayer.getWorld().getName() + " at " + X2 + ", " + Y2 + ", " + Z2);
             player.sendMessage(GOLD + "Channel: " + GRAY + whoPlayer.getChatChannel());
             player.sendMessage(GOLD + "Wallet: " + GRAY + balance + " Tregs.");
             player.sendMessage(GOLD + "Health: " + GRAY + whoPlayer.getHealth());
