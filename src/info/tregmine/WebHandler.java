@@ -16,7 +16,7 @@ import org.eclipse.jetty.server.handler.AbstractHandler;
 
 public class WebHandler extends AbstractHandler implements Runnable
 {
-    public class WebException extends Exception
+    public static class WebException extends Exception
     {
         private int responseCode;
 
@@ -26,6 +26,14 @@ public class WebHandler extends AbstractHandler implements Runnable
 
             this.responseCode = responseCode;
         }
+
+        public WebException(Throwable t)
+        {
+            super(t);
+
+            this.responseCode = 500;
+        }
+
 
         public int getResponseCode() { return responseCode; }
     }
@@ -72,7 +80,7 @@ public class WebHandler extends AbstractHandler implements Runnable
         //System.out.println("Path info: " + baseRequest.getPathInfo());
 
         baseRequest.setHandled(true);
-        response.setContentType("text/html;charset=utf-8");
+        response.setContentType("application/json;charset=utf-8");
 
         // Look up appropriate action factory for this request
         ActionFactory factory = actions.get(baseRequest.getPathInfo());
