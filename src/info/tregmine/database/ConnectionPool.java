@@ -8,7 +8,6 @@ import org.apache.commons.dbcp.BasicDataSource;
 
 public class ConnectionPool
 {
-
     private static BasicDataSource ds;
 
     public static Connection getConnection() throws SQLException

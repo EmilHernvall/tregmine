@@ -6,13 +6,19 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.security.NoSuchAlgorithmException;
+import java.security.InvalidKeyException;
 
+import javax.crypto.spec.SecretKeySpec;
+import javax.crypto.Mac;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
+
+import info.tregmine.api.util.Base64;
 
 public class WebHandler extends AbstractHandler implements Runnable
 {
@@ -41,7 +47,7 @@ public class WebHandler extends AbstractHandler implements Runnable
     public interface ActionFactory
     {
         public String getName();
-        public Action createAction(Request request);
+        public Action createAction(Request request) throws WebException;
     }
 
     public interface Action
@@ -56,17 +62,33 @@ public class WebHandler extends AbstractHandler implements Runnable
 
     private Queue<Action> queue;
 
-    public WebHandler(Tregmine tregmine)
+    private String key;
+
+    public WebHandler(Tregmine tregmine, String key)
     {
         this.tregmine = tregmine;
 
         this.actions = new HashMap<String, ActionFactory>();
         this.queue = new ConcurrentLinkedQueue<Action>();
+
+        this.key = key;
     }
 
     public void addAction(ActionFactory factory)
     {
         actions.put(factory.getName(), factory);
+    }
+
+    private static String hmac(String key, String msg)
+    throws NoSuchAlgorithmException, InvalidKeyException
+    {
+        SecretKeySpec keySpec = new SecretKeySpec(key.getBytes(), "HmacSHA1");
+
+        Mac mac = Mac.getInstance("HmacSHA1");
+        mac.init(keySpec);
+        byte[] result = mac.doFinal(msg.getBytes());
+
+        return Base64.encode(result);
     }
 
     @Override
@@ -82,14 +104,39 @@ public class WebHandler extends AbstractHandler implements Runnable
         baseRequest.setHandled(true);
         response.setContentType("application/json;charset=utf-8");
 
-        // Look up appropriate action factory for this request
-        ActionFactory factory = actions.get(baseRequest.getPathInfo());
-        if (factory == null) {
-            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-            return;
+        String signingStr = request.getPathInfo();
+        if (request.getQueryString() != null) {
+            signingStr += "?" + request.getQueryString();
         }
 
         try {
+            System.out.println(signingStr);
+            String auth = hmac(key, signingStr);
+            String authCmp = request.getHeader("Authorization");
+            // TODO: Possible timing sidechannel?
+            if (!auth.equals(authCmp)) {
+                Tregmine.LOGGER.info("Web: " + signingStr + " FAILED");
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                return;
+            } else {
+                Tregmine.LOGGER.info("Web: " + signingStr + " OK");
+            }
+        }
+        catch (NoSuchAlgorithmException e) {
+            throw new ServletException(e);
+        }
+        catch (InvalidKeyException e) {
+            throw new ServletException(e);
+        }
+
+        // Look up appropriate action factory for this request
+        try {
+            ActionFactory factory = actions.get(baseRequest.getPathInfo());
+            if (factory == null) {
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                return;
+            }
+
             // Create an action, and add it to work queue
             Action action = factory.createAction(baseRequest);
             queue.offer(action);
@@ -111,6 +158,9 @@ public class WebHandler extends AbstractHandler implements Runnable
         }
         catch (WebException e) {
             response.setStatus(e.getResponseCode());
+        }
+        catch (Throwable e) {
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
     }
 

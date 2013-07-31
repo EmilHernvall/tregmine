@@ -29,6 +29,8 @@ import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
 
 import org.eclipse.jetty.server.Server;
 
@@ -111,6 +113,15 @@ public class Tregmine extends JavaPlugin
     @Override
     public void onEnable()
     {
+        reloadConfig();
+
+        Tregmine.LOGGER.info("Data folder is: " + getDataFolder());
+
+        FileConfiguration config = getConfig();
+        String apiKey = config.getString("api.signing-key");
+
+        Tregmine.LOGGER.info("API Key: " + apiKey);
+
         this.server = getServer();
 
         // Load blessed blocks
@@ -226,9 +237,10 @@ public class Tregmine extends JavaPlugin
         getCommand("zone").setExecutor(new ZoneCommand(this, "zone"));
 
         try {
-            webHandler = new WebHandler(this);
+            webHandler = new WebHandler(this, apiKey);
             webHandler.addAction(new VersionAction.Factory());
             webHandler.addAction(new PlayerListAction.Factory());
+            webHandler.addAction(new PlayerKickAction.Factory());
 
             webServer = new Server(9192);
             webServer.setHandler(webHandler);
