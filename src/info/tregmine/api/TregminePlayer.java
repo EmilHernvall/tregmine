@@ -347,7 +347,7 @@ public class TregminePlayer extends PlayerDelegate
      */
     public void sendNotification(Notification notif, String message)
     {
-    	if(notif != null || notif != Notification.NONE){
+    	if(notif != null && notif != Notification.NONE){
     		if(!message.equalsIgnoreCase("") && message != null){
     			playSound(getLocation(), notif.getSound(), 2F, 1F);
     			sendMessage(message);
