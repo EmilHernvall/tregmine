@@ -13,6 +13,7 @@ import org.bukkit.Sound;
  *
  */
 public enum Notification {
+	NONE(null),//Place holder for just a message
 	BLESS(Sound.ENDERDRAGON_WINGS),
 	COMMAND_FAIL(Sound.ZOMBIE_DEATH),
 	MESSAGE(Sound.LEVEL_UP),
