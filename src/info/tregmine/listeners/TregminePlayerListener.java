@@ -188,7 +188,8 @@ public class TregminePlayerListener implements Listener
     }
 
     @EventHandler
-    public void onPlayerClick(PlayerInteractEvent event){
+    public void onPlayerClick(PlayerInteractEvent event)
+    {
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
             Player player = event.getPlayer();
             BlockState block = event.getClickedBlock().getState();
