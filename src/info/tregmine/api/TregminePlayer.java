@@ -343,7 +343,7 @@ public class TregminePlayer extends PlayerDelegate
      */
     public void sendNotification(Notification notif, String message)
     {
-    	playSound(getLocation(), notif.getSound(), 1, 1);
+    	playSound(getLocation(), notif.getSound(), 2F, 1F);
     	if(!message.equalsIgnoreCase("") || message != null){
     		sendMessage(message);
     	}
