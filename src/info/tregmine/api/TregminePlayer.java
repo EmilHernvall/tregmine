@@ -331,6 +331,23 @@ public class TregminePlayer extends PlayerDelegate
     {
         showPlayer(player.getDelegate());
     }
+    
+    /**
+     * Sends the player a notification along with an associated message.
+     * <p>
+     * 
+     *  If the message is <b>null</b> or equal to "", the message won't send,
+     *  however the notification will still play.
+     * @param notif - The notification to send to the player
+     * @param message - The message to send the player with the notification
+     */
+    public void sendNotification(Notification notif, String message)
+    {
+    	playSound(getLocation(), notif.getSound(), 1, 1);
+    	if(!message.equalsIgnoreCase("") || message != null){
+    		sendMessage(message);
+    	}
+    }
 
     // java.lang.Object overrides
     @Override
