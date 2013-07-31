@@ -1,11 +1,14 @@
 package info.tregmine.commands;
 
 import static org.bukkit.ChatColor.*;
+
+import org.bukkit.ChatColor;
 import org.bukkit.Server;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
 import info.tregmine.Tregmine;
+import info.tregmine.api.Notification;
 import info.tregmine.api.TregminePlayer;
 
 public class MsgCommand extends AbstractCommand
@@ -45,7 +48,7 @@ public class MsgCommand extends AbstractCommand
 
         TregminePlayer recvPlayer = tregmine.getPlayer(recv);
         if (recvPlayer == null) {
-            // TODO: Error message...
+            player.sendNotification(Notification.COMMAND_FAIL, ChatColor.RED + "No player found by the name of " + args[0]);
             return true;
         }
 
@@ -57,8 +60,7 @@ public class MsgCommand extends AbstractCommand
         }
 
         // Send message to recipient
-        recvPlayer.playSound(recvPlayer.getLocation(), Sound.LEVEL_UP, 2F, 1F);
-        recvPlayer.sendMessage(GREEN + "(msg) " + player.getChatName() + GREEN
+        recvPlayer.sendNotification(Notification.MESSAGE, GREEN + "(msg) " + player.getChatName() + GREEN
                 + ": " + message);
 
         return true;

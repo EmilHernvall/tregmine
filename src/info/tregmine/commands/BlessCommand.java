@@ -2,8 +2,11 @@ package info.tregmine.commands;
 
 import java.util.List;
 
+import org.bukkit.ChatColor;
+
 import static org.bukkit.ChatColor.*;
 import info.tregmine.Tregmine;
+import info.tregmine.api.Notification;
 import info.tregmine.api.TregminePlayer;
 
 public class BlessCommand extends AbstractCommand
@@ -25,7 +28,7 @@ public class BlessCommand extends AbstractCommand
 
         List<TregminePlayer> candidates = tregmine.matchPlayer(args[0]);
         if (candidates.size() != 1) {
-            // TODO: error message
+            player.sendNotification(Notification.COMMAND_FAIL, ChatColor.RED + "No player found");
             return false;
         }
 
