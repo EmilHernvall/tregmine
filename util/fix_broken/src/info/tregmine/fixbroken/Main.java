@@ -75,14 +75,19 @@ public class Main
             return;
         }
 
-        int regionCounter = 0,
-            chunkCounter = 0,
-            errorCounter = 0;
+        int regionCounter = 0;
         for (File regionFile : list) {
+            /*if (System.currentTimeMillis() - regionFile.lastModified() > 3*86400*1000l) {
+                regionCounter++;
+                continue;
+            }*/
             System.out.printf("Processing %s (%d/%d)\n",
                               regionFile.getName(),
                               regionCounter,
                               list.length);
+
+            int chunkCounter = 0,
+                errorCounter = 0;
 
             RegionFile region = new RegionFile(regionFile);
             RegionFile newRegion = new RegionFile(new File(outputFolder, regionFile.getName()));
@@ -105,23 +110,24 @@ public class Main
                     }
                     catch (ZipException e) {
                         errorCounter++;
-                        System.out.printf("Zip Error in file %s, chunk %d, %d\n",
-                                          regionFile.getName(),
-                                          x, z);
+                        //System.out.printf("Zip Error in file %s, chunk %d, %d\n",
+                        //                  regionFile.getName(),
+                        //                  x, z);
                         continue;
                     }
                     catch (IOException e) {
                         errorCounter++;
-                        System.out.printf("IO Error in file %s, chunk %d, %d\n",
-                                          regionFile.getName(),
-                                          x, z);
+                        //System.out.printf("IO Error in file %s, chunk %d, %d\n",
+                        //                  regionFile.getName(),
+                        //                  x, z);
                         continue;
+                    }
+                    finally {
+                        regionChunkInputStream.close();
                     }
 
                     DataOutputStream output = newRegion.getChunkDataOutputStream(x, z);
-                    NbtIo.writeCompressed(chunkData, output);
-
-                    regionChunkInputStream.close();
+                    NbtIo.write(chunkData, output);
                     output.close();
 
                     chunkCounter++;
@@ -129,12 +135,13 @@ public class Main
             }
 
             region.close();
+            newRegion.close();
+
+            System.out.printf("Found %d chunks\n", chunkCounter);
+            System.out.printf("Got %d errors\n", errorCounter);
 
             regionCounter++;
         }
-
-        System.out.printf("Found %d chunks\n", chunkCounter);
-        System.out.printf("Got %d errors\n", errorCounter);
     }
 
     private static void printUsageAndExit()
