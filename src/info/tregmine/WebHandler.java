@@ -8,6 +8,7 @@ import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.security.NoSuchAlgorithmException;
 import java.security.InvalidKeyException;
+import java.util.logging.Level;
 
 import javax.crypto.spec.SecretKeySpec;
 import javax.crypto.Mac;
@@ -155,12 +156,15 @@ public class WebHandler extends AbstractHandler implements Runnable
         }
         catch (InterruptedException e) {
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            Tregmine.LOGGER.log(Level.WARNING, "Error in processing request", e);
         }
         catch (WebException e) {
             response.setStatus(e.getResponseCode());
+            Tregmine.LOGGER.log(Level.WARNING, "Error in processing request", e);
         }
         catch (Throwable e) {
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            Tregmine.LOGGER.log(Level.WARNING, "Error in processing request", e);
         }
     }
 
@@ -169,8 +173,12 @@ public class WebHandler extends AbstractHandler implements Runnable
     {
         Action action = null;
         while ((action = queue.poll()) != null) {
-            synchronized (action) {
+            try {
                 action.queryGameState(tregmine);
+            } catch (Throwable e) {
+                Tregmine.LOGGER.log(Level.WARNING, "Querying game state failed", e);
+            }
+            synchronized (action) {
                 action.notify();
             }
         }
