@@ -19,8 +19,8 @@ public class TeleportToCommand extends AbstractCommand
         if (args.length != 3) {
             return false;
         }
-        if (!player.isAdmin()) {
-            return false;
+        if (!player.getRank().canTeleportToPlayers()) {
+            return true;
         }
 
         int x = Integer.parseInt(args[0]);

@@ -21,17 +21,22 @@ public class DBLogDAO
         this.conn = conn;
     }
 
-    public void insertLogin(TregminePlayer player, boolean logout)
+    public void insertLogin(TregminePlayer player, boolean logout, int onlinePlayers)
     {
         PreparedStatement stmt = null;
         try {
-            String sql =
-                    "INSERT INTO player_login (player_id, login_timestamp, "
-                            + "login_action) ";
-            sql += "VALUES (?, unix_timestamp(), ?)";
+            String sql = "INSERT INTO player_login (player_id, login_timestamp, " +
+                         "login_action, login_country, login_city, login_ip, " +
+                         "login_hostname, login_onlineplayers) ";
+            sql += "VALUES (?, unix_timestamp(), ?, ?, ?, ?, ?, ?)";
             stmt = conn.prepareStatement(sql);
             stmt.setInt(1, player.getId());
             stmt.setString(2, logout ? "logout" : "login");
+            stmt.setString(3, player.getCountry());
+            stmt.setString(4, player.getCity());
+            stmt.setString(5, player.getIp());
+            stmt.setString(6, player.getHost());
+            stmt.setInt(7, onlinePlayers);
             stmt.execute();
         } catch (SQLException e) {
             throw new RuntimeException(e);

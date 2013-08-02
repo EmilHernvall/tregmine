@@ -49,7 +49,7 @@ public class ZonePlayerListener implements Listener
     public void onPlayerBucketEmpty(PlayerBucketEmptyEvent event)
     {
         TregminePlayer player = plugin.getPlayer(event.getPlayer());
-        if (player.isAdmin()) {
+        if (player.getRank().canModifyZones()) {
             return;
         }
 
@@ -115,7 +115,7 @@ public class ZonePlayerListener implements Listener
     public void onHangingPlace(HangingPlaceEvent event)
     {
         TregminePlayer player = plugin.getPlayer(event.getPlayer());
-        if (player.isAdmin()) {
+        if (player.getRank().canModifyZones()) {
             return;
         }
 
@@ -186,7 +186,7 @@ public class ZonePlayerListener implements Listener
         }
 
         TregminePlayer player = plugin.getPlayer((Player) event.getRemover());
-        if (player.isAdmin()) {
+        if (player.getRank().canModifyZones()) {
             return;
         }
 
@@ -285,7 +285,7 @@ public class ZonePlayerListener implements Listener
         String type = null;
         if (zone != null) {
             Zone.Permission perm = zone.getUser(player.getName());
-            if (perm != Zone.Permission.Owner && !player.isAdmin()) {
+            if (perm != Zone.Permission.Owner && !player.getRank().canModifyZones()) {
                 return;
             }
             if (lot != null) {
@@ -298,7 +298,7 @@ public class ZonePlayerListener implements Listener
         else {
             // outside of any existing zone, this can only be used by people
             // with zones permission.
-            if (!player.isAdmin()) {
+            if (!player.getRank().canModifyZones()) {
                 return;
             }
             type = "zone";
@@ -393,7 +393,7 @@ public class ZonePlayerListener implements Listener
                 // if anyone is allowed to enter by default...
                 if (currentZone.getEnterDefault()) {
                     // ...we only need to reject banned players
-                    if (player.isAdmin()) {
+                    if (player.getRank().canModifyZones()) {
                         // never applies to admins
                     }
                     else if (perm != null && perm == Zone.Permission.Banned) {
@@ -407,7 +407,7 @@ public class ZonePlayerListener implements Listener
                 else {
                     // ...reject people not in the user list, as well as banned
                     // people
-                    if (player.isAdmin()) {
+                    if (player.getRank().canModifyZones()) {
                         // never applies to admins
                     }
                     else if (perm == null) {
@@ -447,7 +447,7 @@ public class ZonePlayerListener implements Listener
                 Zone.Permission perm = currentZone.getUser(player.getName());
 
                 if (currentZone.getEnterDefault()) {
-                    if (player.isAdmin()) {
+                    if (player.getRank().canModifyZones()) {
                         // never applies to admins
                     }
                     else if (perm != null && perm == Zone.Permission.Banned) {
@@ -460,7 +460,7 @@ public class ZonePlayerListener implements Listener
                     }
                 }
                 else {
-                    if (player.isAdmin()) {
+                    if (player.getRank().canModifyZones()) {
                         // never applies to admins
                     }
                     else if (perm == null) {
@@ -481,7 +481,7 @@ public class ZonePlayerListener implements Listener
                     }
                 }
 
-                if (currentZone.isPvp() && !player.isAdmin()) {
+                if (currentZone.isPvp() && !player.getRank().canModifyZones()) {
                     player.teleport(this.plugin.getServer().getWorld("world")
                             .getSpawnLocation());
                     player.sendMessage(ChatColor.RED
@@ -550,7 +550,7 @@ public class ZonePlayerListener implements Listener
                             currentZone.getUser(player.getName());
 
                     if (currentZone.getEnterDefault()) {
-                        if (player.isAdmin()) {
+                        if (player.getRank().canModifyZones()) {
                             // never applies to admins
                         }
                         else if (perm != null && perm == Zone.Permission.Banned) {
@@ -560,7 +560,7 @@ public class ZonePlayerListener implements Listener
                         }
                     }
                     else {
-                        if (player.isAdmin()) {
+                        if (player.getRank().canModifyZones()) {
                             // never applies to admins
                         }
                         else if (perm == null) {
@@ -575,7 +575,7 @@ public class ZonePlayerListener implements Listener
                         }
                     }
 
-                    if (currentZone.isPvp() && !player.isAdmin()) {
+                    if (currentZone.isPvp() && !player.getRank().canModifyZones()) {
                         event.setCancelled(true);
                         return;
                     }
@@ -602,7 +602,7 @@ public class ZonePlayerListener implements Listener
     private void welcomeMessage(Zone currentZone, TregminePlayer player,
             Zone.Permission perm)
     {
-        if (!player.isSetup()) {
+        if (player.getChatState() == TregminePlayer.ChatState.SETUP) {
             return;
         }
 

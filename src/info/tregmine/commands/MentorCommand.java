@@ -11,6 +11,7 @@ import org.bukkit.scheduler.BukkitScheduler;
 
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
+import info.tregmine.api.Rank;
 import info.tregmine.database.ConnectionPool;
 import info.tregmine.database.DBPlayerDAO;
 
@@ -51,8 +52,7 @@ public class MentorCommand extends AbstractCommand
             try {
                 conn = ConnectionPool.getConnection();
 
-                student.setTrusted(true);
-                student.setNameColor("trial");
+                student.setRank(Rank.SETTLER);
                 student.setTemporaryChatName(student.getNameColor()
                         + student.getName());
 
@@ -81,7 +81,7 @@ public class MentorCommand extends AbstractCommand
     public boolean handlePlayer(TregminePlayer player, String[] args)
     {
         // residents, donator, not warned players
-        if (!player.isResident()) {
+        if (!player.getRank().canMentor()) {
             player.sendMessage(RED + "Only residents and above can mentor " +
                     "new players.");
             return true;

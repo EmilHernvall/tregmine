@@ -22,8 +22,8 @@ public class NukeCommand extends AbstractCommand
     @Override
     public boolean handlePlayer(TregminePlayer player, String[] args)
     {
-        if (!player.isGuardian() && !player.isAdmin()) {
-            return false;
+        if (!player.getRank().canNuke()) {
+            return true;
         }
 
         int distance;

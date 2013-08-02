@@ -160,3 +160,45 @@ CREATE TABLE motd (
     motd_message TEXT,
     PRIMARY KEY (motd_id)
 );
+
+ALTER TABLE player_login ADD COLUMN login_country VARCHAR (100),
+                         ADD COLUMN login_city VARCHAR (100),
+                         ADD COLUMN login_ip VARCHAR (15),
+                         ADD COLUMN login_hostname VARCHAR (100),
+                         ADD COLUMN login_onlineplayers INT UNSIGNED;
+
+ALTER TABLE player ADD COLUMN player_rank ENUM ('unverified',
+                                                'tourist',
+                                                'settler',
+                                                'resident',
+                                                'donator',
+                                                'guardian',
+                                                'builder',
+                                                'junior_admin',
+                                                'senior_admin')
+                                                DEFAULT 'unverified',
+                   ADD COLUMN player_flags INT UNSIGNED;
+
+UPDATE player, player_property SET player_rank = "settler"
+                               WHERE player.player_id = player_property.player_id
+                               AND property_key = "color" AND property_value = "trial";
+
+UPDATE player, player_property SET player_rank = "resident"
+                               WHERE player.player_id = player_property.player_id
+                               AND property_key = "color" AND property_value = "trusted";
+
+UPDATE player, player_property SET player_rank = "donator"
+                               WHERE player.player_id = player_property.player_id
+                               AND property_key = "color" AND property_value = "gold";
+
+UPDATE player, player_property SET player_rank = "guardian"
+                               WHERE player.player_id = player_property.player_id
+                               AND property_key = "guardian";
+
+UPDATE player, player_property SET player_rank = "builder"
+                               WHERE player.player_id = player_property.player_id
+                               AND property_key = "builder" AND property_value = "true";
+
+UPDATE player, player_property SET player_rank = "junior_admin"
+                               WHERE player.player_id = player_property.player_id
+                               AND property_key = "senioradmin" AND property_value = "true";

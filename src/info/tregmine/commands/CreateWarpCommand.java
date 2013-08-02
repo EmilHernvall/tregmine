@@ -22,8 +22,8 @@ public class CreateWarpCommand extends AbstractCommand
         if (args.length != 1) {
             return false;
         }
-        if (!player.isAdmin()) {
-            return false;
+        if (!player.getRank().canCreateWarps()) {
+            return true;
         }
 
         String name = args[0];

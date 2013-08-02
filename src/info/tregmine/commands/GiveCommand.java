@@ -21,8 +21,8 @@ public class GiveCommand extends AbstractCommand
         if (args.length == 0) {
             return false;
         }
-        if (!player.isAdmin()) {
-            return false;
+        if (!player.getRank().canSpawnItems()) {
+            return true;
         }
 
         String pattern = args[0];

@@ -20,6 +20,7 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import info.tregmine.Tregmine;
 import info.tregmine.commands.MentorCommand;
 import info.tregmine.api.TregminePlayer;
+import info.tregmine.api.Rank;
 import info.tregmine.api.PlayerReport;
 import info.tregmine.database.ConnectionPool;
 import info.tregmine.database.DBPlayerDAO;
@@ -95,7 +96,7 @@ public class SetupListener implements Listener
         String text = event.getMessage();
         player.sendMessage(text);
 
-        if (player.isChild()) {
+        if (player.hasFlag(TregminePlayer.Flags.CHILD)) {
             return;
         }
 
@@ -131,10 +132,10 @@ public class SetupListener implements Listener
                 player.sendMessage(ChatColor.GREEN + "You have now joined Tregmine " +
                         "and can talk with other players! Say Hi! :)");
                 player.setChatState(TregminePlayer.ChatState.CHAT);
-                player.setSetup(true);
+                player.setRank(Rank.TOURIST);
 
                 DBPlayerDAO playerDAO = new DBPlayerDAO(conn);
-                playerDAO.updatePlayerPermissions(player);
+                playerDAO.updatePlayer(player);
 
                 Tregmine.LOGGER.info("[SETUP] " + player.getChatName() +
                         " joined the server. Born on: " + text);
@@ -154,7 +155,7 @@ public class SetupListener implements Listener
                     students.offer(player);
 
                     for (TregminePlayer p : plugin.getOnlinePlayers()) {
-                        if (!p.isResident()) {
+                        if (!p.getRank().canMentor()) {
                             continue;
                         }
 
@@ -165,8 +166,7 @@ public class SetupListener implements Listener
                 }
             }
             else {
-                player.setChild(true);
-                player.setNameColor("child");
+                player.setFlag(TregminePlayer.Flags.CHILD);
 
                 Date welcomeDate = new Date(currentDate.getTime() + diff);
                 String welcomeDateStr = FORMAT.format(welcomeDate);

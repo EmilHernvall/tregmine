@@ -37,29 +37,23 @@ public class QuitMessageCommand extends AbstractCommand
     public boolean handlePlayer(TregminePlayer player, String[] args)
     {
         if (args.length == 0) {
-            return getownmsg(player);
+            return getOwnMsg(player);
         }
 
         if (args[0].matches("player") && args[1].matches("get")) {
-            return getelsemsg(player, args);
-        }
-
-        else if (args[0].matches("player") && args[1].matches("set")) {
-            return setelsemsg(player, args);
-        }
-
-        else if (args[0].matches("help")) {
+            return getElseMsg(player, args);
+        } else if (args[0].matches("player") && args[1].matches("set")) {
+            return setElseMsg(player, args);
+        } else if (args[0].matches("help")) {
             return help(player, args);
-        }
-
-        else {
-            return setownmsg(player, args);
+        } else {
+            return setOwnMsg(player, args);
         }
     }
 
     private boolean help(TregminePlayer player, String[] args)
     {
-        if (player.isAdmin()){
+        if (player.getRank().canSetOthersQuitMessage()) {
             player.sendMessage(DARK_GRAY + "-----------------------------------------");
             player.sendMessage(GRAY + "Get your Quit Message: " + GREEN + "/quitmessage");
             player.sendMessage(GRAY + "Set your Quit Message: " + GREEN + "/quitmessage <message>");
@@ -69,22 +63,13 @@ public class QuitMessageCommand extends AbstractCommand
             player.sendMessage(GREEN + "/quitmessage player set <player> <message>");
             player.sendMessage(DARK_GRAY + "-----------------------------------------");
         }
-        else if (player.isGuardian()){
-            player.sendMessage(DARK_GRAY + "-----------------------------------------");
-            player.sendMessage(GRAY + "Get your Quit Message: " + GREEN + "/quitmessage");
-            player.sendMessage(GRAY + "Set your Quit Message: " + GREEN + "/quitmessage <message>");
-            player.sendMessage(GRAY + "Get another player's Quit Message: ");
-            player.sendMessage(GREEN + "/quitmessage player get <player>");
-            player.sendMessage(DARK_GRAY + "-----------------------------------------");
-        }
-        else if (player.isDonator()|| player.isBuilder()){
-            
+        else if (player.getRank().canSetQuitMessage()) {
             player.sendMessage(DARK_GRAY + "-----------------------------------------");
             player.sendMessage(GRAY + "Get your Quit Message: " + GREEN + "/quitmessage");
             player.sendMessage(GRAY + "Set your Quit Message: " + GREEN + "/quitmessage <message>");
             player.sendMessage(DARK_GRAY + "-----------------------------------------");
         }
-        else{
+        else {
             player.sendMessage(DARK_GRAY + "-----------------------------------------");
             player.sendMessage(RED + "Sorry, Quit Messages are only for players who");
             player.sendMessage(RED + "donate to keep the server running.");
@@ -93,12 +78,12 @@ public class QuitMessageCommand extends AbstractCommand
         return true;
     }
 
-    private boolean setownmsg(TregminePlayer player, String[] args)
+    private boolean setOwnMsg(TregminePlayer player, String[] args)
     {
-        if(!player.isDonator()&&!player.isAdmin()&&!player.isBuilder()&&!player.isGuardian()){
+        if (!player.getRank().canSetQuitMessage()) {
             return true;
         }
-        
+
         String message = null;
 
         message = argsToMessage(args);
@@ -127,9 +112,9 @@ public class QuitMessageCommand extends AbstractCommand
         return true;
     }
 
-    private boolean setelsemsg(TregminePlayer player, String[] args)
+    private boolean setElseMsg(TregminePlayer player, String[] args)
     {
-        if (!player.isAdmin()) {
+        if (!player.getRank().canSetOthersQuitMessage()) {
             return true;
         }
 
@@ -192,12 +177,8 @@ public class QuitMessageCommand extends AbstractCommand
         return true;
     }
 
-    private boolean getelsemsg(TregminePlayer player, String[] args)
+    private boolean getElseMsg(TregminePlayer player, String[] args)
     {
-        if (!player.isAdmin() && !player.isGuardian()) {
-            return true;
-        }
-
         if (args.length > 3 ) {
             player.sendMessage(RED + "Correct Usage: /quitmessage player get <player>");
             return true;
@@ -223,12 +204,12 @@ public class QuitMessageCommand extends AbstractCommand
         return true;
     }
 
-    private boolean getownmsg(TregminePlayer player)
+    private boolean getOwnMsg(TregminePlayer player)
     {
-        if(!player.isDonator()&&!player.isAdmin()&&!player.isBuilder()&&!player.isGuardian()){
+        if (!player.getRank().canSetQuitMessage()) {
             return true;
         }
-        
+
         player.sendMessage(YELLOW + "Your current Quit Message is:");
         player.sendMessage(YELLOW + player.getQuitMessage());
         return true;

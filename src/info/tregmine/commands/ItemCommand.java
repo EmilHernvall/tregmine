@@ -26,7 +26,7 @@ public class ItemCommand extends AbstractCommand
         if (args.length == 0) {
             return false;
         }
-        if (!player.isAdmin()) {
+        if (!player.getRank().canSpawnItems()) {
             return false;
         }
 

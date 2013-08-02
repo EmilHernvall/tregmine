@@ -29,7 +29,7 @@ public class ZoneBlockListener implements Listener
     public void onBlockBreak(BlockBreakEvent event)
     {
         TregminePlayer player = plugin.getPlayer(event.getPlayer());
-        if (player.isAdmin()) {
+        if (player.getRank().canModifyZones()) {
             return;
         }
 
@@ -88,7 +88,10 @@ public class ZoneBlockListener implements Listener
                 }
             }
         }
-        else if (!player.isTrusted()) {
+        else if (player.hasFlag(TregminePlayer.Flags.HARDWARNED)) {
+            event.setCancelled(true);
+        }
+        else if (!player.getRank().canBuild()) {
             event.setCancelled(true);
         }
     }
@@ -97,7 +100,7 @@ public class ZoneBlockListener implements Listener
     public void onBlockPlace(BlockPlaceEvent event)
     {
         TregminePlayer player = plugin.getPlayer(event.getPlayer());
-        if (player.isAdmin()) {
+        if (player.getRank().canModifyZones()) {
             return;
         }
 
@@ -159,7 +162,10 @@ public class ZoneBlockListener implements Listener
                 }
             }
         }
-        else if (!player.isTrusted()) {
+        else if (player.hasFlag(TregminePlayer.Flags.HARDWARNED)) {
+            event.setCancelled(true);
+        }
+        else if (!player.getRank().canBuild()) {
             event.setCancelled(true);
         }
     }

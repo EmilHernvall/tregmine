@@ -49,31 +49,21 @@ public class PlayerLookupListener implements Listener
             return;
         }
 
-        InetSocketAddress sock = player.getAddress();
-        String ip = sock.getAddress().getHostAddress();
-        String host = sock.getAddress().getCanonicalHostName();
-        player.setHostName(host);
-        player.setIp(ip);
-
         if (cl != null) {
-            Location l1 = cl.getLocation(ip);
+            Location l1 = cl.getLocation(player.getIp());
             if (l1 != null) {
-                Tregmine.LOGGER.info(player.getName() + ": " + l1.countryName
-                        + ", " + l1.city + ", " + ip + ", " + l1.postalCode
-                        + ", " + l1.region + ", " + host);
-                player.setCountryName(l1.countryName);
+                Tregmine.LOGGER.info(player.getName() + ": " + l1.countryName +
+                        ", " + l1.city + ", " + player.getIp() + ", " +
+                        player.getHost());
+                player.setCountry(l1.countryName);
                 player.setCity(l1.city);
-                player.setPostalCode(l1.postalCode);
-                player.setRegion(l1.region);
 
-                if (!player.isOp() && !player.hasHiddenLocation()) {
+                if (!player.hasFlag(TregminePlayer.Flags.HIDDEN_LOCATION)) {
                     plugin.getServer().broadcastMessage(
                             ChatColor.DARK_AQUA + "Welcome! "
                                     + player.getChatName()
                                     + ChatColor.DARK_AQUA + " from "
                                     + l1.countryName);
-                    player.sendMessage(ChatColor.DARK_AQUA + l1.city + " - "
-                            + l1.postalCode);
                 }
             }
         }
@@ -106,7 +96,7 @@ public class PlayerLookupListener implements Listener
                             + "INNER JOIN player_property USING (player_id) "
                             + "WHERE property_key = 'ip' AND property_value = ? "
                             + "ORDER BY player_created DESC LIMIT 5");
-            stmt.setString(1, ip);
+            stmt.setString(1, player.getIp());
             stmt.execute();
 
             rs = stmt.getResultSet();
@@ -147,10 +137,10 @@ public class PlayerLookupListener implements Listener
             Tregmine.LOGGER.info("Aliases: " + aliasList);
 
             for (TregminePlayer current : plugin.getOnlinePlayers()) {
-                if (!current.isAdmin() && !current.isGuardian()) {
+                if (player.getRank().canSeeAliases()) {
                     continue;
                 }
-                if (current.hasHiddenLocation()) {
+                if (current.hasFlag(TregminePlayer.Flags.HIDDEN_LOCATION)) {
                     continue;
                 }
                 current.sendMessage(ChatColor.YELLOW
