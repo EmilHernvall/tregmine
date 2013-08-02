@@ -57,8 +57,8 @@ public class MentorCommand extends AbstractCommand
                         + student.getName());
 
                 DBPlayerDAO playerDAO = new DBPlayerDAO(conn);
+                playerDAO.updatePlayer(student);
                 playerDAO.updatePlayerInfo(student);
-                playerDAO.updatePlayerPermissions(student);
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             } finally {

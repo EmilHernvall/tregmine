@@ -127,7 +127,6 @@ public class TregminePlayerListener implements Listener
                     ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " maybe I won't be back tomorrow." };
 
     private Tregmine plugin;
-
     private Map<Item, TregminePlayer> droppedItems;
 
     public TregminePlayerListener(Tregmine instance)
@@ -226,7 +225,7 @@ public class TregminePlayerListener implements Listener
     {
         TregminePlayer player;
         try {
-            player = plugin.addPlayer(event.getPlayer());
+            player = plugin.addPlayer(event.getPlayer(), event.getAddress());
             if (player == null) {
                 event.disallow(Result.KICK_OTHER, "Something went wrong");
                 return;

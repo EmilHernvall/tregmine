@@ -15,6 +15,8 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.net.InetAddress;
+import java.io.IOException;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -31,6 +33,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+
+import com.maxmind.geoip.LookupService;
 
 import org.eclipse.jetty.server.Server;
 
@@ -80,6 +84,8 @@ public class Tregmine extends JavaPlugin
     private Queue<TregminePlayer> mentors;
     private Queue<TregminePlayer> students;
 
+    private LookupService cl = null;
+
     @Override
     public void onLoad()
     {
@@ -104,10 +110,18 @@ public class Tregmine extends JavaPlugin
         Player[] players = getServer().getOnlinePlayers();
         for (Player player : players) {
             try {
-                addPlayer(player);
+                addPlayer(player, player.getAddress().getAddress());
             } catch (PlayerBannedException e) {
                 player.kickPlayer(e.getMessage());
             }
+        }
+
+        try {
+            cl = new LookupService("GeoIPCity.dat",
+                                   LookupService.GEOIP_MEMORY_CACHE);
+        } catch (IOException e) {
+            Tregmine.LOGGER.warning("GeoIPCity.dat was not found! " +
+                    "Geo location will not function as expected.");
         }
     }
 
@@ -306,7 +320,7 @@ public class Tregmine extends JavaPlugin
     public void reloadPlayer(TregminePlayer player)
     {
         try {
-            addPlayer(player.getDelegate());
+            addPlayer(player.getDelegate(), player.getAddress().getAddress());
         } catch (PlayerBannedException e) {
             player.kickPlayer(e.getMessage());
         }
@@ -322,7 +336,7 @@ public class Tregmine extends JavaPlugin
         return players;
     }
 
-    public TregminePlayer addPlayer(Player srcPlayer)
+    public TregminePlayer addPlayer(Player srcPlayer, InetAddress addr)
             throws PlayerBannedException
     {
         if (players.containsKey(srcPlayer.getName())) {
@@ -364,6 +378,26 @@ public class Tregmine extends JavaPlugin
                     // event.disallow(Result.KICK_BANNED, report.getMessage());
                     throw new PlayerBannedException(report.getMessage());
                 }
+            }
+
+            player.setIp(addr.getHostAddress());
+            player.setHost(addr.getCanonicalHostName());
+
+            if (cl != null) {
+                com.maxmind.geoip.Location l1 = cl.getLocation(player.getIp());
+                if (l1 != null) {
+                    Tregmine.LOGGER.info(player.getName() + ": " + l1.countryName +
+                            ", " + l1.city + ", " + player.getIp() + ", " +
+                            player.getHost());
+                    player.setCountry(l1.countryName);
+                    player.setCity(l1.city);
+                } else {
+                    Tregmine.LOGGER.info(player.getName() + ": " +
+                            player.getIp() + ", " + player.getHost());
+                }
+            } else {
+                Tregmine.LOGGER.info(player.getName() + ": " +
+                        player.getIp() + ", " + player.getHost());
             }
 
             DBLogDAO logDAO = new DBLogDAO(conn);

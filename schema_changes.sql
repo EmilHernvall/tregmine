@@ -189,7 +189,7 @@ UPDATE player, player_property SET player_rank = "resident"
 
 UPDATE player, player_property SET player_rank = "donator"
                                WHERE player.player_id = player_property.player_id
-                               AND property_key = "color" AND property_value = "gold";
+                               AND property_key = "color" AND property_value = "donator";
 
 UPDATE player, player_property SET player_rank = "guardian"
                                WHERE player.player_id = player_property.player_id
@@ -201,4 +201,10 @@ UPDATE player, player_property SET player_rank = "builder"
 
 UPDATE player, player_property SET player_rank = "junior_admin"
                                WHERE player.player_id = player_property.player_id
+                               AND property_key = "admin" AND property_value = "true";
+
+UPDATE player, player_property SET player_rank = "senior_admin"
+                               WHERE player.player_id = player_property.player_id
                                AND property_key = "senioradmin" AND property_value = "true";
+
+ALTER TABLE player_login ADD INDEX ip_idx (login_ip);

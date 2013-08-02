@@ -11,7 +11,7 @@ public enum Rank
     RESIDENT(ChatColor.DARK_GREEN),
     DONATOR(ChatColor.GOLD),
     GUARDIAN(ChatColor.BLUE),
-    CODER(ChatColor.PURPLE),
+    CODER(ChatColor.DARK_PURPLE),
     BUILDER(ChatColor.YELLOW),
     JUNIOR_ADMIN(ChatColor.RED),
     SENIOR_ADMIN(ChatColor.DARK_RED);

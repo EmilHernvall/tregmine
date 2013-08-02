@@ -220,17 +220,11 @@ public class TregminePlayer extends PlayerDelegate
     public boolean isValid() { return valid; }
     public void setValid(boolean v) { this.valid = v; }
 
-    public String getIp()
-    {
-        InetSocketAddress sock = getAddress();
-        return sock.getAddress().getHostAddress();
-    }
+    public void setIp(String v) { this.ip = v; }
+    public String getIp() { return ip; }
 
-    public String getHost()
-    {
-        InetSocketAddress sock = getAddress();
-        return sock.getAddress().getCanonicalHostName();
-    }
+    public void setHost(String v) { this.host = v; }
+    public String getHost() { return host; }
 
     public void setCity(String v) { this.city = v; }
     public String getCity() { return city; }

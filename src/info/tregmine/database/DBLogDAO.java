@@ -5,6 +5,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
+import java.util.Set;
+import java.util.HashSet;
 
 import org.bukkit.Location;
 import org.bukkit.inventory.ItemStack;
@@ -173,5 +175,37 @@ public class DBLogDAO
         }
 
         return date;
+    }
+
+    public Set<String> getAliases(TregminePlayer player)
+    throws SQLException
+    {
+        Set<String> aliases = new HashSet<String>();
+
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        try {
+            conn = ConnectionPool.getConnection();
+
+            stmt = conn.prepareStatement("SELECT DISTINCT player_name FROM player "
+                            + "INNER JOIN player_login USING (player_id) "
+                            + "WHERE login_ip = ? ");
+            stmt.setString(1, player.getIp());
+            stmt.execute();
+
+            rs = stmt.getResultSet();
+            while (rs.next()) {
+                aliases.add(rs.getString("player_name"));
+            }
+        } finally {
+            if (rs != null) {
+                try { rs.close(); } catch (SQLException e) { }
+            }
+            if (stmt != null) {
+                try { stmt.close(); } catch (SQLException e) { }
+            }
+        }
+
+        return aliases;
     }
 }
