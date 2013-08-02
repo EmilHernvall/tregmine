@@ -11,6 +11,7 @@ public enum Rank
     RESIDENT(ChatColor.DARK_GREEN),
     DONATOR(ChatColor.GOLD),
     GUARDIAN(ChatColor.BLUE),
+    CODER(ChatColor.PURPLE),
     BUILDER(ChatColor.YELLOW),
     JUNIOR_ADMIN(ChatColor.RED),
     SENIOR_ADMIN(ChatColor.DARK_RED);
@@ -34,6 +35,7 @@ public enum Rank
                this == DONATOR ||
                this == GUARDIAN ||
                this == BUILDER ||
+               this == CODER ||
                this == JUNIOR_ADMIN ||
                this == SENIOR_ADMIN;
     }
@@ -44,6 +46,7 @@ public enum Rank
                this == RESIDENT ||
                this == DONATOR ||
                this == GUARDIAN ||
+               this == CODER ||
                this == BUILDER ||
                this == JUNIOR_ADMIN ||
                this == SENIOR_ADMIN;
@@ -55,6 +58,7 @@ public enum Rank
                this == RESIDENT ||
                this == DONATOR ||
                this == GUARDIAN ||
+               this == CODER ||
                this == BUILDER ||
                this == JUNIOR_ADMIN ||
                this == SENIOR_ADMIN;
@@ -65,6 +69,7 @@ public enum Rank
         return this == RESIDENT ||
                this == DONATOR ||
                this == GUARDIAN ||
+               this == CODER ||
                this == BUILDER ||
                this == JUNIOR_ADMIN ||
                this == SENIOR_ADMIN;
@@ -74,6 +79,7 @@ public enum Rank
     {
         return this == DONATOR ||
                this == GUARDIAN ||
+               this == CODER ||
                this == BUILDER ||
                this == JUNIOR_ADMIN ||
                this == SENIOR_ADMIN;
@@ -83,6 +89,7 @@ public enum Rank
     {
         return this == DONATOR ||
                this == GUARDIAN ||
+               this == CODER ||
                this == BUILDER ||
                this == JUNIOR_ADMIN ||
                this == SENIOR_ADMIN;
@@ -92,6 +99,7 @@ public enum Rank
     {
         return this == DONATOR ||
                this == GUARDIAN ||
+               this == CODER ||
                this == BUILDER ||
                this == JUNIOR_ADMIN ||
                this == SENIOR_ADMIN;
@@ -101,15 +109,7 @@ public enum Rank
     {
         return this == DONATOR ||
                this == GUARDIAN ||
-               this == BUILDER ||
-               this == JUNIOR_ADMIN ||
-               this == SENIOR_ADMIN;
-    }
-
-    public boolean canSetOthersQuitMessage()
-    {
-        return this == DONATOR ||
-               this == GUARDIAN ||
+               this == CODER ||
                this == BUILDER ||
                this == JUNIOR_ADMIN ||
                this == SENIOR_ADMIN;
@@ -119,6 +119,7 @@ public enum Rank
     {
         return this == DONATOR ||
                this == GUARDIAN ||
+               this == CODER ||
                this == BUILDER ||
                this == JUNIOR_ADMIN ||
                this == SENIOR_ADMIN;
@@ -128,6 +129,7 @@ public enum Rank
     {
         return this == DONATOR ||
                this == GUARDIAN ||
+               this == CODER ||
                this == BUILDER ||
                this == JUNIOR_ADMIN ||
                this == SENIOR_ADMIN;
@@ -137,6 +139,7 @@ public enum Rank
     {
         return this == DONATOR ||
                this == GUARDIAN ||
+               this == CODER ||
                this == BUILDER ||
                this == JUNIOR_ADMIN ||
                this == SENIOR_ADMIN;
@@ -145,6 +148,7 @@ public enum Rank
     public boolean canVisitHomes()
     {
         return this == GUARDIAN ||
+               this == CODER ||
                this == JUNIOR_ADMIN ||
                this == SENIOR_ADMIN;
     }
@@ -152,6 +156,7 @@ public enum Rank
     public boolean canReport()
     {
         return this == GUARDIAN ||
+               this == CODER ||
                this == JUNIOR_ADMIN ||
                this == SENIOR_ADMIN;
     }
@@ -159,6 +164,7 @@ public enum Rank
     public boolean canSeeAliases()
     {
         return this == GUARDIAN ||
+               this == CODER ||
                this == JUNIOR_ADMIN ||
                this == SENIOR_ADMIN;
     }
@@ -175,15 +181,9 @@ public enum Rank
         return this == SETTLER ||
                this == RESIDENT ||
                this == DONATOR ||
+               this == CODER ||
                this == GUARDIAN ||
                this == BUILDER;
-    }
-
-    public boolean canInspectInventories()
-    {
-        return this == GUARDIAN ||
-               this == JUNIOR_ADMIN ||
-               this == SENIOR_ADMIN;
     }
 
     public boolean canKick()
@@ -224,7 +224,20 @@ public enum Rank
     public boolean canTeleportBetweenWorlds()
     {
         return this == BUILDER ||
+               this == CODER ||
                this == JUNIOR_ADMIN ||
+               this == SENIOR_ADMIN;
+    }
+
+    public boolean canInspectInventories()
+    {
+        return this == JUNIOR_ADMIN ||
+               this == SENIOR_ADMIN;
+    }
+
+    public boolean canSetOthersQuitMessage()
+    {
+        return this == JUNIOR_ADMIN ||
                this == SENIOR_ADMIN;
     }
 
@@ -266,7 +279,8 @@ public enum Rank
 
     public boolean canSendPeopleToOtherWorlds()
     {
-        return this == JUNIOR_ADMIN ||
+        return this == CODER ||
+               this == JUNIOR_ADMIN ||
                this == SENIOR_ADMIN;
     }
 
@@ -278,7 +292,8 @@ public enum Rank
 
     public boolean canSummon()
     {
-        return this == JUNIOR_ADMIN ||
+        return this == CODER ||
+               this == JUNIOR_ADMIN ||
                this == SENIOR_ADMIN;
     }
 
@@ -308,7 +323,8 @@ public enum Rank
 
     public boolean canSeeHiddenInfo()
     {
-        return this == JUNIOR_ADMIN ||
+        return this == CODER ||
+               this == JUNIOR_ADMIN ||
                this == SENIOR_ADMIN;
     }
 
@@ -326,7 +342,8 @@ public enum Rank
 
     public int getTeleportTimeout()
     {
-        if (this == BUILDER ||
+        if (this == CODER ||
+            this == BUILDER ||
             this == JUNIOR_ADMIN ||
             this == SENIOR_ADMIN) {
 
@@ -342,7 +359,8 @@ public enum Rank
 
     public int getTeleportDistanceLimit()
     {
-        if (this == BUILDER ||
+        if (this == CODER ||
+            this == BUILDER ||
             this == JUNIOR_ADMIN ||
             this == SENIOR_ADMIN) {
 
