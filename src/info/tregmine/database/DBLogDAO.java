@@ -185,8 +185,6 @@ public class DBLogDAO
         PreparedStatement stmt = null;
         ResultSet rs = null;
         try {
-            conn = ConnectionPool.getConnection();
-
             stmt = conn.prepareStatement("SELECT DISTINCT player_name FROM player "
                             + "INNER JOIN player_login USING (player_id) "
                             + "WHERE login_ip = ? ");
