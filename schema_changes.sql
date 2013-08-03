@@ -208,3 +208,27 @@ UPDATE player, player_property SET player_rank = "senior_admin"
                                AND property_key = "senioradmin" AND property_value = "true";
 
 ALTER TABLE player_login ADD INDEX ip_idx (login_ip);
+
+CREATE TABLE tmp
+    SELECT player_id FROM player_property
+        WHERE (property_key = "color" and property_value = "warned")
+        OR (property_key = "donator" and property_value = "true")
+        GROUP BY player_id HAVING count(player_id) = 2;
+UPDATE player SET player_rank = "donator"
+    WHERE player_id IN (SELECT player_id FROM tmp);
+DROP TABLE tmp;
+
+DELETE FROM player_property WHERE property_key = "donator";
+
+CREATE TABLE tmp
+    SELECT player_id FROM player_property
+        WHERE (property_key = "color" and property_value = "warned")
+        OR (property_key = "trusted" and property_value = "true")
+        GROUP BY player_id HAVING count(player_id) = 2;
+UPDATE player SET player_rank = "settler"
+    WHERE player_id IN (SELECT player_id FROM tmp);
+DROP TABLE tmp;
+
+DELETE FROM player_property WHERE property_key = "trusted";
+
+ALTER TABLE zone ADD COLUMN zone_communist ENUM ('0', '1') DEFAULT '0' AFTER zone_hostiles;

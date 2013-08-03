@@ -70,12 +70,17 @@ public class ZonePlayerListener implements Listener
 
             Lot lot = world.findLot(pos);
             if (lot != null) {
-                if (perm != Zone.Permission.Owner
-                        && !lot.isOwner(player.getName())) {
-                    player.sendMessage(ChatColor.RED + "["
-                            + currentZone.getName() + "] "
-                            + "You are not allowed to break blocks in lot "
-                            + lot.getName() + ".");
+                if (perm == Zone.Permission.Owner && currentZone.isCommunist()) {
+                    // Zone owners can modify lots in communist zones
+                }
+                else if (lot.isOwner(player.getName())) {
+                    // Lot owners can always modify lots
+                }
+                else {
+                    player.sendMessage(ChatColor.RED +
+                            "[" + currentZone.getName() + "] " +
+                            "You are not allowed to break blocks in lot " +
+                            lot.getName() + ".");
                     event.setCancelled(true);
                     return;
                 }
@@ -135,8 +140,13 @@ public class ZonePlayerListener implements Listener
 
             Lot lot = world.findLot(pos);
             if (lot != null) {
-                if (perm != Zone.Permission.Owner
-                        && !lot.isOwner(player.getName())) {
+                if (perm == Zone.Permission.Owner && currentZone.isCommunist()) {
+                    // Zone owners can modify lots in communist zones
+                }
+                else if (lot.isOwner(player.getName())) {
+                    // Lot owners can always modify lots
+                }
+                else {
                     player.sendMessage(ChatColor.RED + "["
                             + currentZone.getName() + "] "
                             + "You are not allowed to place paintings in lot "
@@ -214,14 +224,17 @@ public class ZonePlayerListener implements Listener
 
             Lot lot = world.findLot(pos);
             if (lot != null) {
-                if (perm != Zone.Permission.Owner
-                        && !lot.isOwner(player.getName())) {
-                    player.sendMessage(ChatColor.RED
-                            + "["
-                            + currentZone.getName()
-                            + "] "
-                            + "You are not allowed to destroy paintings in lot "
-                            + lot.getName() + ".");
+                if (perm == Zone.Permission.Owner && currentZone.isCommunist()) {
+                    // Zone owners can modify lots in communist zones
+                }
+                else if (lot.isOwner(player.getName())) {
+                    // Lot owners can always modify lots
+                }
+                else {
+                    player.sendMessage(ChatColor.RED +
+                            "[" + currentZone.getName() + "] " +
+                            "You are not allowed to destroy paintings in lot " +
+                            lot.getName() + ".");
                     event.setCancelled(true);
                     return;
                 }
@@ -652,7 +665,7 @@ public class ZonePlayerListener implements Listener
                 fakePlayer = Bukkit.getOfflinePlayer(ChatColor.GOLD + mainOwner);
             }
             else {
-                fakePlayer = Bukkit.getOfflinePlayer("Unkown");
+                fakePlayer = Bukkit.getOfflinePlayer("Unknown");
             }
 
             Score score = objective.getScore(fakePlayer);
@@ -667,9 +680,7 @@ public class ZonePlayerListener implements Listener
 
         if (currentZone.isPvp()) {
             player.sendMessage(ChatColor.RED
-                    + "["
-                    + currentZone.getName()
-                    + "] "
+                    + "[" + currentZone.getName() + "] "
                     + "Warning! This is a PVP zone! Other players can damage or kill you here.");
         }
 

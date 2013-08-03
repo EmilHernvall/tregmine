@@ -50,8 +50,13 @@ public class ZoneBlockListener implements Listener
 
             Lot lot = world.findLot(pos);
             if (lot != null) {
-                if (perm != Zone.Permission.Owner
-                        && !lot.isOwner(player.getName())) {
+                if (perm == Zone.Permission.Owner && currentZone.isCommunist()) {
+                    // Zone owners can modify lots in communist zones
+                }
+                else if (lot.isOwner(player.getName())) {
+                    // Lot owners can always modify lots
+                }
+                else {
                     player.sendMessage(ChatColor.RED + "["
                             + currentZone.getName() + "] "
                             + "You are not allowed to break blocks in lot "
@@ -121,8 +126,13 @@ public class ZoneBlockListener implements Listener
 
             Lot lot = world.findLot(pos);
             if (lot != null) {
-                if (perm != Zone.Permission.Owner
-                        && !lot.isOwner(player.getName())) {
+                if (perm == Zone.Permission.Owner && currentZone.isCommunist()) {
+                    // Zone owners can modify lots in communist zones
+                }
+                else if (lot.isOwner(player.getName())) {
+                    // Lot owners can always modify lots
+                }
+                else {
                     player.sendMessage(ChatColor.RED + "["
                             + currentZone.getName() + "] "
                             + "You are not allowed to break blocks in lot "
