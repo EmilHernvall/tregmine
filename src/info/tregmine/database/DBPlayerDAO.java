@@ -37,7 +37,7 @@ public class DBPlayerDAO
 
             player = new TregminePlayer(rs.getString("player_name"));
             player.setId(rs.getInt("player_id"));
-            player.setPassword(rs.getString("player_password"));
+            player.setPasswordHash(rs.getString("player_password"));
             player.setRank(Rank.fromString(rs.getString("player_rank")));
 
             int flags = rs.getInt("player_flags");
@@ -101,7 +101,7 @@ public class DBPlayerDAO
             }
 
             player.setId(rs.getInt("player_id"));
-            player.setPassword(rs.getString("player_password"));
+            player.setPasswordHash(rs.getString("player_password"));
             player.setRank(Rank.fromString(rs.getString("player_rank")));
 
             int flags = rs.getInt("player_flags");

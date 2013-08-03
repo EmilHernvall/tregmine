@@ -35,7 +35,11 @@ public abstract class NotifyCommand extends AbstractCommand
 
         String msg = argsToMessage(args);
 
-        player.sendMessage(" + " + player.getChatName() + " " + WHITE + msg);
+        // Don't send it twice
+        if (!isTarget(player)) {
+            player.sendMessage(" + " + player.getChatName() + " " + WHITE + msg);
+        }
+
         for (TregminePlayer to : tregmine.getOnlinePlayers()) {
             if (!isTarget(to)) {
                 continue;

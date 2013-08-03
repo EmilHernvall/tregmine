@@ -30,7 +30,7 @@ public class VanishCommand extends AbstractCommand
             } else {
                 player.sendMessage(DARK_AQUA + "You are currently visible.");
             }
-            return false;
+            return true;
         }
 
         String state = args[0];

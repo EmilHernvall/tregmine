@@ -118,10 +118,8 @@ public class TregminePlayer extends PlayerDelegate
         password = BCrypt.hashpw(newPassword, BCrypt.gensalt());
     }
 
-    public String getPasswordHash()
-    {
-        return password;
-    }
+    public void setPasswordHash(String v) { password = v; }
+    public String getPasswordHash() { return password; }
 
     public boolean verifyPassword(String attempt)
     {
