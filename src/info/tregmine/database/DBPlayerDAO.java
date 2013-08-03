@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import org.bukkit.entity.Player;
 
 import info.tregmine.api.TregminePlayer;
+import info.tregmine.api.Rank;
 
 public class DBPlayerDAO
 {
@@ -37,6 +38,15 @@ public class DBPlayerDAO
             player = new TregminePlayer(rs.getString("player_name"));
             player.setId(rs.getInt("player_id"));
             player.setPassword(rs.getString("player_password"));
+            player.setRank(Rank.fromString(rs.getString("player_rank")));
+
+            int flags = rs.getInt("player_flags");
+            for (TregminePlayer.Flags flag : TregminePlayer.Flags.values()) {
+                if ((flags & (1 << flag.ordinal())) != 0) {
+                    player.setFlag(flag);
+                }
+            }
+
         } finally {
             if (rs != null) {
                 try {
@@ -92,6 +102,14 @@ public class DBPlayerDAO
 
             player.setId(rs.getInt("player_id"));
             player.setPassword(rs.getString("player_password"));
+            player.setRank(Rank.fromString(rs.getString("player_rank")));
+
+            int flags = rs.getInt("player_flags");
+            for (TregminePlayer.Flags flag : TregminePlayer.Flags.values()) {
+                if ((flags & (1 << flag.ordinal())) != 0) {
+                    player.setFlag(flag);
+                }
+            }
         } finally {
             if (rs != null) {
                 try {
@@ -126,69 +144,11 @@ public class DBPlayerDAO
             while (rs.next()) {
                 String key = rs.getString("property_key");
                 String value = rs.getString("property_value");
-                if ("setup".equals(key)) {
-                    player.setSetup(Boolean.valueOf(value));
-                }
-                else if ("admin".equals(key)) {
-                    player.setAdmin(Boolean.valueOf(value));
-                }
-                else if ("builder".equals(key)) {
-                    player.setBuilder(Boolean.valueOf(value));
-                }
-                else if ("child".equals(key)) {
-                    player.setChild(Boolean.valueOf(value));
-                }
-                else if ("invisible".equals(key)) {
-                    player.setInvisible(Boolean.valueOf(value));
-                }
-                else if ("donator".equals(key)) {
-                    player.setDonator(Boolean.valueOf(value));
-                }
-                else if ("trusted".equals(key)) {
-                    player.setTrusted(Boolean.valueOf(value));
-                }
-                else if ("resident".equals(key)) {
-                    player.setResident(Boolean.valueOf(value));
-                }
-                else if ("tpblock".equals(key)) {
-                    player.setTeleportShield(Boolean.valueOf(value));
-                }
-                else if ("hiddenloc".equals(key)) {
-                    player.setHiddenLocation(Boolean.valueOf(value));
-                }
-                else if ("guardian".equals(key)) {
-                    player.setGuardian(true);
-                    player.setGuardianRank(Integer.parseInt(value));
-                }
-                else if ("password".equals(key)) {
-                    player.setPassword(value);
-                }
-                else if ("keyword".equals(key)) {
+                if ("keyword".equals(key)) {
                     player.setKeyword(value);
                 }
-                else if ("countryName".equals(key)) {
-                    player.setCountryName(value);
-                }
-                else if ("city".equals(key)) {
-                    player.setCity(value);
-                }
-                else if ("ip".equals(key)) {
-                    player.setIp(value);
-                }
-                else if ("postalCode".equals(key)) {
-                    player.setPostalCode(value);
-                }
-                else if ("region".equals(key)) {
-                    player.setRegion(value);
-                }
-                else if ("hostName".equals(key)) {
-                    player.setHostName(value);
-                }
-                else if ("color".equals(key)) {
-                    player.setNameColor(value);
-                }
-                else if ("timezone".equals(key)) {
-                    player.setTimezone(value);
+                else if ("guardian".equals(key)) {
+                    player.setGuardianRank(Integer.parseInt(value));
                 }
                 else if ("quitmessage".equals(key)) {
                     player.setQuitMessage(value);
@@ -202,16 +162,10 @@ public class DBPlayerDAO
             }
         } finally {
             if (rs != null) {
-                try {
-                    rs.close();
-                } catch (SQLException e) {
-                }
+                try { rs.close(); } catch (SQLException e) { }
             }
             if (stmt != null) {
-                try {
-                    stmt.close();
-                } catch (SQLException e) {
-                }
+                try { stmt.close(); } catch (SQLException e) { }
             }
         }
     }
@@ -223,9 +177,10 @@ public class DBPlayerDAO
         PreparedStatement stmt = null;
         ResultSet rs = null;
         try {
-            String sql = "INSERT INTO player (player_name) VALUE (?)";
+            String sql = "INSERT INTO player (player_name, player_rank) VALUE (?, ?)";
             stmt = conn.prepareStatement(sql);
             stmt.setString(1, player.getName());
+            stmt.setString(2, player.getRank().toString());
             stmt.execute();
 
             stmt.executeQuery("SELECT LAST_INSERT_ID()");
@@ -254,22 +209,6 @@ public class DBPlayerDAO
         return player;
     }
 
-    public void updatePlayerPermissions(TregminePlayer player)
-            throws SQLException
-    {
-        updateProperty(player, "setup", player.isSetup());
-        updateProperty(player, "admin", player.isAdmin());
-        updateProperty(player, "builder", player.isBuilder());
-        updateProperty(player, "child", player.isChild());
-        updateProperty(player, "donator", player.isDonator());
-        updateProperty(player, "trusted", player.isTrusted());
-        updateProperty(player, "resident", player.isResident());
-        if (player.isGuardian()) {
-            updateProperty(player, "guardian",
-                           String.valueOf(player.getGuardianRank()));
-        }
-    }
-
     public void updatePlayerKeyword(TregminePlayer player) throws SQLException
     {
         updateProperty(player, "keyword", player.getKeyword());
@@ -283,18 +222,7 @@ public class DBPlayerDAO
 
     public void updatePlayerInfo(TregminePlayer player) throws SQLException
     {
-        // updateProperty(player, "invisible", player.isInvisible());
-        // updateProperty(player, "tpblock", player.hasTeleportShield());
-        // updateProperty(player, "hiddenloc", player.hasHiddenLocation());
         updateProperty(player, "mentorId", player.getMentorId());
-        updateProperty(player, "countryName", player.getCountryName());
-        updateProperty(player, "city", player.getCity());
-        updateProperty(player, "ip", player.getIp());
-        updateProperty(player, "postalCode", player.getPostalCode());
-        updateProperty(player, "region", player.getRegion());
-        updateProperty(player, "hostName", player.getHostName());
-        updateProperty(player, "color", player.getColor());
-        updateProperty(player, "timezone", player.getTimezone());
         updateProperty(player, "quitmessage", player.getQuitMessage());
     }
 
@@ -337,14 +265,23 @@ public class DBPlayerDAO
         }
     }
 
-    public void updatePassword(TregminePlayer player) throws SQLException
+    public void updatePlayer(TregminePlayer player) throws SQLException
     {
+        int flags = 0;
+        for (TregminePlayer.Flags flag : TregminePlayer.Flags.values()) {
+            flags |= player.hasFlag(flag) ? 1 << flag.ordinal() : 0;
+        }
+
         PreparedStatement stmt = null;
         try {
-            String sql = "UPDATE player SET player_password = ? WHERE player_id = ?";
+            String sql = "UPDATE player SET player_password = ?, player_rank = ?, " +
+                "player_flags = ? ";
+            sql += "WHERE player_id = ?";
             stmt = conn.prepareStatement(sql);
             stmt.setString(1, player.getPasswordHash());
-            stmt.setInt(2, player.getId());
+            stmt.setString(2, player.getRank().toString());
+            stmt.setInt(2, flags);
+            stmt.setInt(3, player.getId());
             stmt.execute();
         } finally {
             if (stmt != null) {

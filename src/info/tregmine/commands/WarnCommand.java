@@ -34,8 +34,8 @@ public class WarnCommand extends AbstractCommand
     @Override
     public boolean handlePlayer(TregminePlayer player, String[] args)
     {
-        if (!player.isAdmin() && !player.isGuardian()) {
-            return false;
+        if (!player.getRank().canWarn()) {
+            return true;
         }
 
         if (args.length < 3) {
@@ -80,10 +80,11 @@ public class WarnCommand extends AbstractCommand
             LOGGER.info(victim.getName() + " warned by " + player.getName());
         }
 
-        victim.setNameColor("warned");
         victim.setTemporaryChatName(victim.getNameColor() + victim.getName());
         if (hard) {
-            victim.setTrusted(false);
+            victim.setFlag(TregminePlayer.Flags.HARDWARNED);
+        } else {
+            victim.setFlag(TregminePlayer.Flags.SOFTWARNED);
         }
 
         Connection conn = null;

@@ -23,7 +23,6 @@ import info.tregmine.api.TregminePlayer;
 
 public class WarpCommand extends AbstractCommand
 {
-
     private static class WarpTask implements Runnable
     {
         private TregminePlayer player;
@@ -38,26 +37,8 @@ public class WarpCommand extends AbstractCommand
         @Override
         public void run()
         {
-            Horse horse = null;
-            if ((player.getVehicle() != null)
-                    && (player.getVehicle() instanceof Horse)) {
-                horse = (Horse) player.getVehicle();
-            }
-            
-            if (!player.isAdmin()) {
-                if (horse != null) {
-                    horse.eject();
-                    horse.teleport(loc);
-                    player.teleport(loc);
-                    horse.setPassenger(player.getDelegate());
-                }
-                else {
-                    player.teleport(loc);
-                }
-
-                PotionEffect ef =
-                        new PotionEffect(PotionEffectType.BLINDNESS, 60, 100);
-                player.addPotionEffect(ef);
+            if (player.getRank().canTeleportBetweenWorlds()) {
+                player.teleportWithHorse(loc);
                 return;
             }
 
@@ -67,18 +48,12 @@ public class WarpCommand extends AbstractCommand
             String locWorldName = locWorld.getName();
 
             if (playerWorldName.equalsIgnoreCase(locWorldName)) {
-                if (horse != null) {
-                    horse.eject();
-                    horse.teleport(loc);
-                    player.teleport(loc);
-                    horse.setPassenger(player.getDelegate());
-                }
-                else {
-                    player.teleport(loc);
-                }
+                player.teleportWithHorse(loc);
 
-            }
-            else {
+                PotionEffect ef =
+                        new PotionEffect(PotionEffectType.BLINDNESS, 60, 100);
+                player.addPotionEffect(ef);
+            } else {
                 player.sendMessage(RED + "You can't teleport between worlds.");
             }
         }
@@ -137,15 +112,15 @@ public class WarpCommand extends AbstractCommand
         world.loadChunk(chunk);
 
         if (world.isChunkLoaded(chunk)) {
-            long delay = 0;
+            long delay = player.getRank().getTeleportTimeout();
 
             player.sendMessage(AQUA + "You must now stand still and wait "
-                    + delay + " seconds for the stars to align, "
+                    + (delay/20) + " seconds for the stars to align, "
                     + "allowing you to warp");
 
             BukkitScheduler scheduler = server.getScheduler();
             scheduler.scheduleSyncDelayedTask(tregmine, new WarpTask(player,
-                    warpPoint), 20 * delay);
+                    warpPoint), delay);
 
         }
         else {

@@ -46,7 +46,7 @@ public abstract class AbstractCommand implements CommandExecutor
     {
         if (sender instanceof Player) {
             TregminePlayer player = tregmine.getPlayer((Player) sender);
-            if (!player.isSetup()) {
+            if (!player.getRank().canUseCommands()) {
                 player.sendMessage(ChatColor.RED + "Please complete setup before " +
                         "continuing.");
                 return true;

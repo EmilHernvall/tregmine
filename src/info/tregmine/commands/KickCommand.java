@@ -33,7 +33,7 @@ public class KickCommand extends AbstractCommand
     @Override
     public boolean handlePlayer(TregminePlayer player, String[] args)
     {
-        if (!player.isAdmin() && !player.isGuardian()) {
+        if (!player.getRank().canKick()) {
             return false;
         }
 

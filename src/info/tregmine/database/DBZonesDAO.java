@@ -28,9 +28,8 @@ public class DBZonesDAO
         PreparedStatement stmt = null;
         ResultSet rs = null;
         try {
-            stmt =
-                    conn.prepareStatement("SELECT player_id FROM player "
-                            + "WHERE player_name = ?");
+            stmt = conn.prepareStatement("SELECT player_id FROM player " +
+                                         "WHERE player_name = ?");
             stmt.setString(1, player);
             stmt.execute();
 
@@ -62,8 +61,7 @@ public class DBZonesDAO
         ResultSet rs = null;
         List<Rectangle> rects = new ArrayList<Rectangle>();
         try {
-            stmt =
-                    conn.prepareStatement("SELECT * FROM zone_rect WHERE zone_id = ?");
+            stmt = conn.prepareStatement("SELECT * FROM zone_rect WHERE zone_id = ?");
             stmt.setInt(1, zoneId);
             stmt.execute();
 
@@ -102,10 +100,9 @@ public class DBZonesDAO
         Map<String, Zone.Permission> permissions =
                 new HashMap<String, Zone.Permission>();
         try {
-            stmt =
-                    conn.prepareStatement("SELECT * FROM zone_user "
-                            + "INNER JOIN player ON user_id = player_id "
-                            + "WHERE zone_id = ?");
+            stmt = conn.prepareStatement("SELECT * FROM zone_user " +
+                    "INNER JOIN player ON user_id = player_id " +
+                    "WHERE zone_id = ?");
             stmt.setInt(1, zoneId);
             stmt.execute();
 
@@ -141,8 +138,7 @@ public class DBZonesDAO
         ResultSet rs = null;
         List<Zone> zones = new ArrayList<Zone>();
         try {
-            stmt =
-                    conn.prepareStatement("SELECT * FROM zone WHERE zone_world = ?");
+            stmt = conn.prepareStatement("SELECT * FROM zone WHERE zone_world = ?");
             stmt.setString(1, world);
             stmt.execute();
 
@@ -152,14 +148,12 @@ public class DBZonesDAO
                 zone.setId(rs.getInt("zone_id"));
                 zone.setWorld(rs.getString("zone_world"));
                 zone.setName(rs.getString("zone_name"));
-                zone.setEnterDefault("1".equals(rs
-                        .getString("zone_enterdefault")));
-                zone.setPlaceDefault("1".equals(rs
-                        .getString("zone_placedefault")));
-                zone.setDestroyDefault("1".equals(rs
-                        .getString("zone_destroydefault")));
+                zone.setEnterDefault("1".equals(rs.getString("zone_enterdefault")));
+                zone.setPlaceDefault("1".equals(rs.getString("zone_placedefault")));
+                zone.setDestroyDefault("1".equals(rs.getString("zone_destroydefault")));
                 zone.setPvp("1".equals(rs.getString("zone_pvp")));
                 zone.setHostiles("1".equals(rs.getString("zone_hostiles")));
+                zone.setCommunist("1".equals(rs.getString("zone_communist")));
                 zone.setTextEnter(rs.getString("zone_entermessage"));
                 zone.setTextExit(rs.getString("zone_exitmessage"));
                 zone.setTexture(rs.getString("zone_texture"));
@@ -195,11 +189,10 @@ public class DBZonesDAO
         ResultSet rs = null;
         int id = 0;
         try {
-            String sql =
-                    "INSERT INTO zone (zone_world, zone_name, "
-                            + "zone_enterdefault, zone_placedefault, zone_destroydefault, "
-                            + "zone_pvp, zone_hostiles, zone_entermessage, zone_exitmessage, "
-                            + "zone_owner) VALUES (?,?,?,?,?,?,?,?,?,?)";
+            String sql = "INSERT INTO zone (zone_world, zone_name, " +
+                "zone_enterdefault, zone_placedefault, zone_destroydefault, " +
+                "zone_pvp, zone_hostiles, zone_communist, zone_entermessage, " +
+                "zone_exitmessage, zone_owner) VALUES (?,?,?,?,?,?,?,?,?,?)";
 
             stmt = conn.prepareStatement(sql);
             stmt.setString(1, zone.getWorld());
@@ -209,9 +202,10 @@ public class DBZonesDAO
             stmt.setString(5, zone.getDestroyDefault() ? "1" : "0");
             stmt.setString(6, zone.isPvp() ? "1" : "0");
             stmt.setString(7, zone.hasHostiles() ? "1" : "0");
-            stmt.setString(8, zone.getTextEnter());
-            stmt.setString(9, zone.getTextExit());
-            stmt.setString(10, zone.getMainOwner());
+            stmt.setString(8, zone.isCommunist() ? "1" : "0");
+            stmt.setString(9, zone.getTextEnter());
+            stmt.setString(10, zone.getTextExit());
+            stmt.setString(11, zone.getMainOwner());
             stmt.execute();
 
             stmt.execute("SELECT LAST_INSERT_ID()");
@@ -244,10 +238,11 @@ public class DBZonesDAO
     {
         PreparedStatement stmt = null;
         try {
-            String sql =
-                    "UPDATE zone SET zone_world = ?, zone_name = ?, zone_enterdefault = ?, "
-                            + "zone_placedefault = ?, zone_destroydefault = ?, zone_pvp = ?, zone_hostiles = ?, "
-                            + "zone_entermessage = ?, zone_exitmessage = ? WHERE zone_id = ?";
+            String sql = "UPDATE zone SET zone_world = ?, zone_name = ?, " +
+                "zone_enterdefault = ?, zone_placedefault = ?, " +
+                "zone_destroydefault = ?, zone_pvp = ?, zone_hostiles = ?, " +
+                "zone_communist = ?, zone_entermessage = ?, zone_exitmessage = ? " +
+                "WHERE zone_id = ?";
 
             stmt = conn.prepareStatement(sql);
             stmt.setString(1, zone.getWorld());
@@ -257,9 +252,10 @@ public class DBZonesDAO
             stmt.setString(5, zone.getDestroyDefault() ? "1" : "0");
             stmt.setString(6, zone.isPvp() ? "1" : "0");
             stmt.setString(7, zone.hasHostiles() ? "1" : "0");
-            stmt.setString(8, zone.getTextEnter());
-            stmt.setString(9, zone.getTextExit());
-            stmt.setInt(10, zone.getId());
+            stmt.setString(8, zone.isCommunist() ? "1" : "0");
+            stmt.setString(9, zone.getTextEnter());
+            stmt.setString(10, zone.getTextExit());
+            stmt.setInt(11, zone.getId());
             stmt.execute();
         } finally {
             if (stmt != null) {

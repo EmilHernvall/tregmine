@@ -15,8 +15,8 @@ public class BlockHereCommand extends AbstractCommand
     @Override
     public boolean handlePlayer(TregminePlayer player, String[] args)
     {
-        if (!player.isAdmin() && !player.isBuilder()) {
-            return false;
+        if (!player.getRank().canFill()) {
+            return true;
         }
 
         Block block = player.getWorld().getBlockAt(player.getLocation());

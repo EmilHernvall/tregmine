@@ -17,8 +17,8 @@ public class ChangeNameCommand extends AbstractCommand
         if (args.length != 2) {
             return false;
         }
-        if (!player.isAdmin()) {
-            return false;
+        if (!player.getRank().canChangeName()) {
+            return true;
         }
 
         ChatColor color = ChatColor.getByChar(args[0]);

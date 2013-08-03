@@ -39,7 +39,7 @@ public class PasswordCommand extends AbstractCommand
             conn = ConnectionPool.getConnection();
 
             DBPlayerDAO playerDAO = new DBPlayerDAO(conn);
-            playerDAO.updatePassword(player);
+            playerDAO.updatePlayer(player);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {

@@ -110,6 +110,7 @@ public class Zone
     private boolean destroyDefault = true;
     private boolean pvp = false;
     private boolean hostiles = false;
+    private boolean communism = false;
 
     private String textEnter;
     private String textExit;
@@ -219,9 +220,9 @@ public class Zone
         this.pvp = pvp;
     }
 
-    public void setTexture(String _texture)
+    public void setTexture(String texture)
     {
-        this.texture = _texture;
+        this.texture = texture;
     }
 
     public String getTexture()
@@ -233,14 +234,24 @@ public class Zone
         return this.texture;
     }
 
+    public void setHostiles(boolean hostiles)
+    {
+        this.hostiles = hostiles;
+    }
+
     public boolean hasHostiles()
     {
         return hostiles;
     }
 
-    public void setHostiles(boolean hostiles)
+    public void setCommunist(boolean v)
     {
-        this.hostiles = hostiles;
+        this.communism = v;
+    }
+
+    public boolean isCommunist()
+    {
+        return communism;
     }
 
     public String getTextEnter()

@@ -59,8 +59,8 @@ public class FillCommand extends AbstractCommand
     @Override
     public boolean handlePlayer(TregminePlayer player, String[] args)
     {
-        if (!player.isAdmin() && !player.isBuilder()) {
-            return false;
+        if (!player.getRank().canFill()) {
+            return true;
         }
 
         Server server = tregmine.getServer();

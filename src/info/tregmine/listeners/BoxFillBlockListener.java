@@ -27,7 +27,7 @@ public class BoxFillBlockListener implements Listener
         }
 
         TregminePlayer player = plugin.getPlayer(event.getPlayer());
-        if (!player.isAdmin() && !player.isBuilder()) {
+        if (!player.getRank().canFill()) {
             return;
         }
 

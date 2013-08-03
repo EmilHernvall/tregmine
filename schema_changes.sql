@@ -160,3 +160,75 @@ CREATE TABLE motd (
     motd_message TEXT,
     PRIMARY KEY (motd_id)
 );
+
+ALTER TABLE player_login ADD COLUMN login_country VARCHAR (100),
+                         ADD COLUMN login_city VARCHAR (100),
+                         ADD COLUMN login_ip VARCHAR (15),
+                         ADD COLUMN login_hostname VARCHAR (100),
+                         ADD COLUMN login_onlineplayers INT UNSIGNED;
+
+ALTER TABLE player ADD COLUMN player_rank ENUM ('unverified',
+                                                'tourist',
+                                                'settler',
+                                                'resident',
+                                                'donator',
+                                                'guardian',
+                                                'builder',
+                                                'junior_admin',
+                                                'senior_admin')
+                                                DEFAULT 'unverified',
+                   ADD COLUMN player_flags INT UNSIGNED;
+
+UPDATE player, player_property SET player_rank = "settler"
+                               WHERE player.player_id = player_property.player_id
+                               AND property_key = "color" AND property_value = "trial";
+
+UPDATE player, player_property SET player_rank = "resident"
+                               WHERE player.player_id = player_property.player_id
+                               AND property_key = "color" AND property_value = "trusted";
+
+UPDATE player, player_property SET player_rank = "donator"
+                               WHERE player.player_id = player_property.player_id
+                               AND property_key = "color" AND property_value = "donator";
+
+UPDATE player, player_property SET player_rank = "guardian"
+                               WHERE player.player_id = player_property.player_id
+                               AND property_key = "guardian";
+
+UPDATE player, player_property SET player_rank = "builder"
+                               WHERE player.player_id = player_property.player_id
+                               AND property_key = "builder" AND property_value = "true";
+
+UPDATE player, player_property SET player_rank = "junior_admin"
+                               WHERE player.player_id = player_property.player_id
+                               AND property_key = "admin" AND property_value = "true";
+
+UPDATE player, player_property SET player_rank = "senior_admin"
+                               WHERE player.player_id = player_property.player_id
+                               AND property_key = "senioradmin" AND property_value = "true";
+
+ALTER TABLE player_login ADD INDEX ip_idx (login_ip);
+
+CREATE TABLE tmp
+    SELECT player_id FROM player_property
+        WHERE (property_key = "color" and property_value = "warned")
+        OR (property_key = "donator" and property_value = "true")
+        GROUP BY player_id HAVING count(player_id) = 2;
+UPDATE player SET player_rank = "donator"
+    WHERE player_id IN (SELECT player_id FROM tmp);
+DROP TABLE tmp;
+
+DELETE FROM player_property WHERE property_key = "donator";
+
+CREATE TABLE tmp
+    SELECT player_id FROM player_property
+        WHERE (property_key = "color" and property_value = "warned")
+        OR (property_key = "trusted" and property_value = "true")
+        GROUP BY player_id HAVING count(player_id) = 2;
+UPDATE player SET player_rank = "settler"
+    WHERE player_id IN (SELECT player_id FROM tmp);
+DROP TABLE tmp;
+
+DELETE FROM player_property WHERE property_key = "trusted";
+
+ALTER TABLE zone ADD COLUMN zone_communist ENUM ('0', '1') DEFAULT '0' AFTER zone_hostiles;

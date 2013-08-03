@@ -61,16 +61,9 @@ public class WalletCommand extends AbstractCommand
             long balance = walletDAO.balance(player);
             if (balance >= 0) {
                 Server server = tregmine.getServer();
-                if (!player.isAdmin()) {
-                    server.broadcastMessage(player.getChatName() + AQUA
-                            + " has " + GOLD + FORMAT.format(balance) + AQUA
-                            + " Tregs.");
-                }
-                else {
-                    server.broadcastMessage(player.getChatName() + AQUA
-                            + " has " + GOLD + FORMAT.format(balance) + AQUA
-                            + " Tregs.");
-                }
+                server.broadcastMessage(player.getChatName() + AQUA
+                        + " has " + GOLD + FORMAT.format(balance) + AQUA
+                        + " Tregs.");
             }
             else {
                 player.sendMessage(RED + "An error occured.");

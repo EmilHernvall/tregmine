@@ -19,8 +19,8 @@ public class BlessCommand extends AbstractCommand
         if (args.length == 0) {
             return false;
         }
-        if (!player.isGuardian() && !player.isAdmin()) {
-            return false;
+        if (!player.getRank().canBless()) {
+            return true;
         }
 
         List<TregminePlayer> candidates = tregmine.matchPlayer(args[0]);

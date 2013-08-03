@@ -18,7 +18,7 @@ public class WeatherCommand extends AbstractCommand
     @Override
     public boolean handlePlayer(TregminePlayer player, String[] args)
     {
-        if (!player.isDonator()) {
+        if (!player.getRank().canSetWeather()) {
             return true;
         }
         if (args.length != 1) {

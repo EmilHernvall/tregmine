@@ -18,7 +18,7 @@ public class SummonCommand extends AbstractCommand
     @Override
     public boolean handlePlayer(TregminePlayer player, String[] args)
     {
-        if (!player.isAdmin()) {
+        if (!player.getRank().canSummon()) {
             return true;
         }
         if (args.length == 0) {

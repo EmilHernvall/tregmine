@@ -34,8 +34,8 @@ public class BanCommand extends AbstractCommand
     @Override
     public boolean handlePlayer(TregminePlayer player, String[] args)
     {
-        if (!player.isGuardian() && !player.isAdmin()) {
-            return false;
+        if (!player.getRank().canBan()) {
+            return true;
         }
 
         if (args.length < 2) {

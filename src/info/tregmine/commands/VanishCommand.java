@@ -16,7 +16,7 @@ public class VanishCommand extends AbstractCommand
     @Override
     public boolean handlePlayer(TregminePlayer player, String[] args)
     {
-        if (!player.isAdmin()) {
+        if (!player.getRank().canVanish()) {
             return false;
         }
         if (args.length == 0) {
@@ -37,7 +37,7 @@ public class VanishCommand extends AbstractCommand
             return false;
         }
 
-        player.setInvisible(vanish);
+        player.setFlag(TregminePlayer.Flags.INVISIBLE);
 
         List<TregminePlayer> players = tregmine.getOnlinePlayers();
         for (TregminePlayer current : players) {

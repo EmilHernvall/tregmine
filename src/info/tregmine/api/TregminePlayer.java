@@ -2,12 +2,18 @@ package info.tregmine.api;
 
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Set;
+import java.util.EnumSet;
 import java.util.Date;
 //import java.util.List;
+import java.net.InetSocketAddress;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Horse;
+import org.bukkit.entity.Entity;
 
 import info.tregmine.api.encryption.BCrypt;
 import info.tregmine.zones.Zone;
@@ -22,57 +28,28 @@ public class TregminePlayer extends PlayerDelegate
         SETUP, CHAT, TRADE, SELL;
     };
 
-    @SuppressWarnings("serial")
-    private final static Map<String, ChatColor> COLORS =
-            new HashMap<String, ChatColor>() {
-                {
-                    put("admin", ChatColor.RED);
-                    put("broker", ChatColor.DARK_RED);
-                    put("child", ChatColor.AQUA);
-                    put("donator", ChatColor.GOLD);
-                    put("helper", ChatColor.YELLOW);
-                    put("hunter", ChatColor.BLUE);
-                    put("mentor", ChatColor.DARK_AQUA);
-                    put("pink", ChatColor.LIGHT_PURPLE);
-                    put("police", ChatColor.BLUE);
-                    put("purle", ChatColor.DARK_PURPLE);
-                    put("trial", ChatColor.GREEN);
-                    put("trusted", ChatColor.DARK_GREEN);
-                    put("vampire", ChatColor.DARK_RED);
-                    put("warned", ChatColor.GRAY);
-                    put("white", ChatColor.WHITE);
-                }
-            };
+    // Flags are stored as integers - order must _NOT_ be changed
+    public enum Flags {
+        CHILD,
+        TPSHIELD,
+        SOFTWARNED,
+        HARDWARNED,
+        INVISIBLE,
+        HIDDEN_LOCATION;
+    };
 
     // Persistent values
     private int id = 0;
     private String name = null;
     private String password = null;
     private String keyword = null;
-    private String countryName = null;
-    private String city = null;
-    private String ip = null;
-    private String postalCode = null;
-    private String region = null;
-    private String hostName = null;
-    private String color = "white";
-    private String tempColor = null;
-    private String timezone = "Europe/Stockholm";
+    private Rank rank = Rank.UNVERIFIED;
+    private ChatColor color = ChatColor.WHITE;
     private String quitMessage = null;
-    private boolean hiddenLocation = false;
-    private boolean invisible = false;
-    private boolean admin = false;
-    private boolean donator = false;
-    private boolean trusted = false;
-    private boolean resident = false;
-    private boolean child = false;
-    private boolean guardian = false;
-    private boolean builder = false;
-    private boolean teleportShield = false;
-    private boolean setup = false;
     private int guardianRank = 0;
     private int mentorId = 0;
     private int playTime = 0;
+    private Set<Flags> flags;
 
     // One-time state
     private String chatChannel = "GLOBAL";
@@ -83,6 +60,10 @@ public class TregminePlayer extends PlayerDelegate
     private ChatState chatState = ChatState.CHAT;
     private Date loginTime = null;
     private boolean valid = true;
+    private String ip;
+    private String host;
+    private String city;
+    private String country;
 
     // Player state for block fill
     private Block fillBlock1 = null;
@@ -101,6 +82,8 @@ public class TregminePlayer extends PlayerDelegate
 
         this.name = player.getName();
         this.loginTime = new Date();
+
+        this.flags = EnumSet.noneOf(Flags.class);
     }
 
     public TregminePlayer(String name)
@@ -145,53 +128,15 @@ public class TregminePlayer extends PlayerDelegate
         return BCrypt.checkpw(attempt, password);
     }
 
+    public void setFlag(Flags flag) { flags.add(flag); }
+    public void removeFlag(Flags flag) { flags.remove(flag); }
+    public boolean hasFlag(Flags flag) { return flags.contains(flag); }
+
     public String getKeyword() { return keyword; }
     public void setKeyword(String v) { this.keyword = v; }
 
-    public String getCountryName() { return countryName; }
-    public void setCountryName(String v) { this.countryName = v; }
-
-    public String getCity() { return city; }
-    public void setCity(String v) { this.city = v; }
-
-    public String getIp() { return ip; }
-    public void setIp(String v) { this.ip = v; }
-
-    public String getPostalCode() { return postalCode; }
-    public void setPostalCode(String v) { this.postalCode = v; }
-
-    public String getRegion() { return region; }
-    public void setRegion(String v) { this.region = v; }
-
-    public String getHostName() { return hostName; }
-    public void setHostName(String v) { this.hostName = v; }
-
-    public boolean hasHiddenLocation() { return hiddenLocation; }
-    public void setHiddenLocation(boolean v) { this.hiddenLocation = v; }
-
-    public void setAdmin(boolean v) { this.admin = v; }
-    public boolean isAdmin() { return admin; }
-
-    public void setDonator(boolean v) { this.donator = v; }
-    public boolean isDonator() { return donator; }
-
-    public void setTrusted(boolean v) { this.trusted = v; }
-    public boolean isTrusted() { return trusted; }
-
-    public void setResident(boolean v) { this.resident = v; }
-    public boolean isResident() { return resident; }
-
-    public void setChild(boolean v) { this.child = v; }
-    public boolean isChild() { return child; }
-
-    public void setGuardian(boolean v) { this.guardian = v; }
-    public boolean isGuardian() { return guardian; }
-
-    public void setBuilder(boolean v) { this.builder = v; }
-    public boolean isBuilder() { return builder; }
-
-    public void setSetup(boolean v) { this.setup = v; }
-    public boolean isSetup() { return setup; }
+    public Rank getRank() { return rank; }
+    public void setRank(Rank v) { this.rank = v; }
 
     public void setGuardianRank(int v) { this.guardianRank = v; }
     public int getGuardianRank() { return guardianRank; }
@@ -213,50 +158,30 @@ public class TregminePlayer extends PlayerDelegate
     {
         this.guardianState = v;
 
-        switch (v) {
-        case ACTIVE:
-            this.color = "police";
-            break;
-        case INACTIVE:
-        case QUEUED:
-            this.color = "donator";
-            break;
-        }
-
         setTemporaryChatName(getNameColor() + getName());
     }
-
-    public void setTimezone(String v) { this.timezone = v; }
-    public String getTimezone() { return timezone; }
 
     public void setQuitMessage(String v) { this.quitMessage = v; }
     public String getQuitMessage() { return quitMessage; }
 
     public ChatColor getNameColor()
     {
-        if (tempColor != null) {
-            return COLORS.get(tempColor);
+        if (rank == null) {
+            return ChatColor.WHITE;
         }
-        return COLORS.get(color);
-    }
+        else if (rank == Rank.GUARDIAN) {
+            switch (guardianState) {
+            case ACTIVE:
+                return ChatColor.DARK_BLUE;
+            case INACTIVE:
+            case QUEUED:
+                return ChatColor.GOLD;
+            default:
+            }
+        }
 
-    public void setNameColor(String v)
-    {
-        this.color = v;
+        return rank.getColor();
     }
-
-    public void setTempColor(String v)
-    {
-        this.tempColor = v;
-    }
-
-    public String getColor()
-    {
-        return color;
-    }
-
-    public void setInvisible(boolean v) { this.invisible = v; }
-    public Boolean isInvisible() { return invisible; }
 
     public void setCurrentZone(Zone zone) { this.currentZone = zone; }
     public Zone getCurrentZone() { return currentZone; }
@@ -279,9 +204,6 @@ public class TregminePlayer extends PlayerDelegate
     public void setBlessTarget(int v) { this.blessTarget = v; }
     public int getBlessTarget() { return blessTarget; }
 
-    public void setTeleportShield(boolean v) { this.teleportShield = v; }
-    public boolean hasTeleportShield() { return teleportShield; }
-
     public void setChatState(ChatState v) { this.chatState = v; }
     public ChatState getChatState() { return chatState; }
 
@@ -297,6 +219,18 @@ public class TregminePlayer extends PlayerDelegate
 
     public boolean isValid() { return valid; }
     public void setValid(boolean v) { this.valid = v; }
+
+    public void setIp(String v) { this.ip = v; }
+    public String getIp() { return ip; }
+
+    public void setHost(String v) { this.host = v; }
+    public String getHost() { return host; }
+
+    public void setCity(String v) { this.city = v; }
+    public String getCity() { return city; }
+
+    public void setCountry(String v) { this.country = v; }
+    public String getCountry() { return country; }
 
     // block fill state
     public void setFillBlock1(Block v) { this.fillBlock1 = v; }
@@ -330,6 +264,21 @@ public class TregminePlayer extends PlayerDelegate
     public void showPlayer(TregminePlayer player)
     {
         showPlayer(player.getDelegate());
+    }
+
+    public void teleportWithHorse(Location loc)
+    {
+        Entity v = getVehicle();
+        if (v != null && v instanceof Horse) {
+            Horse horse = (Horse)v;
+            horse.eject();
+            horse.teleport(loc);
+            teleport(loc);
+            horse.setPassenger(getDelegate());
+        }
+        else {
+            teleport(loc);
+        }
     }
 
     // java.lang.Object overrides

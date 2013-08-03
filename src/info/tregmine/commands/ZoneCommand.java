@@ -28,6 +28,10 @@ public class ZoneCommand extends AbstractCommand
     public boolean handlePlayer(TregminePlayer player, String[] args)
     {
         if ("town".equals(command)) {
+            if (args.length == 0) {
+                return false;
+            }
+
             Zone zone = player.getCurrentZone();
             if (zone == null) {
                 player.sendMessage(RED + "You are not currently in a zone.");
@@ -47,11 +51,11 @@ public class ZoneCommand extends AbstractCommand
             return true;
         }
 
-        if ("create".equals(args[0]) && player.isAdmin()) {
+        if ("create".equals(args[0]) && player.getRank().canModifyZones()) {
             createZone(player, args);
             return true;
         }
-        else if ("delete".equals(args[0]) && player.isAdmin()) {
+        else if ("delete".equals(args[0]) && player.getRank().canModifyZones()) {
             deleteZone(player, args);
             return true;
         }
@@ -71,11 +75,15 @@ public class ZoneCommand extends AbstractCommand
             changeValue(player, args);
             return true;
         }
-        else if ("pvp".equals(args[0]) && player.isAdmin()) {
+        else if ("pvp".equals(args[0]) && player.getRank().canModifyZones()) {
             changeValue(player, args);
             return true;
         }
-        else if ("hostiles".equals(args[0]) && player.isAdmin()) {
+        else if ("hostiles".equals(args[0]) && player.getRank().canModifyZones()) {
+            changeValue(player, args);
+            return true;
+        }
+        else if ("communism".equals(args[0]) && player.getRank().canModifyZones()) {
             changeValue(player, args);
             return true;
         }
@@ -239,8 +247,8 @@ public class ZoneCommand extends AbstractCommand
         }
 
         if (zone.getMainOwner() != null) {
-            if (!zone.getMainOwner().equalsIgnoreCase(player.getName())
-                    && !player.isAdmin()) {
+            if (!zone.getMainOwner().equalsIgnoreCase(player.getName()) &&
+                !player.getRank().canModifyZones()) {
 
                 if (Permission.Owner.equals(perm)) {
                     player.sendMessage(RED
@@ -250,8 +258,9 @@ public class ZoneCommand extends AbstractCommand
             }
         }
 
-        if (zone.getUser(player.getName()) != Permission.Owner
-                && !player.isAdmin()) {
+        if (zone.getUser(player.getName()) != Permission.Owner &&
+            !player.getRank().canModifyZones()) {
+
             player.sendMessage(RED + "[" + zone.getName() + "] "
                     + "You do not have permission to add users to this zone.");
             return;
@@ -394,10 +403,7 @@ public class ZoneCommand extends AbstractCommand
         }
 
         if (zone.getUser(player.getName()) != Permission.Owner) {
-            player.sendMessage(RED
-                    + "["
-                    + zone.getName()
-                    + "] "
+            player.sendMessage(RED + "[" + zone.getName() + "] "
                     + "You do not have permission to change settings for this zone.");
             return;
         }
@@ -427,6 +433,12 @@ public class ZoneCommand extends AbstractCommand
             player.sendMessage(RED + "[" + zone.getName() + "] "
                     + "PVP changed to \"" + (status ? "allowed" : "disallowed")
                     + "\".");
+        }
+        else if ("communism".equals(args[0])) {
+            boolean status = Boolean.parseBoolean(args[2]);
+            zone.setCommunist(status);
+            player.sendMessage(RED + "[" + zone.getName() + "] "
+                    + "Communism changed to \"" + (status ? "yes" : "no") + "\".");
         }
         else if ("enter".equals(args[0])) {
             boolean status = Boolean.parseBoolean(args[2]);
@@ -509,19 +521,17 @@ public class ZoneCommand extends AbstractCommand
             for (Rectangle rect : zone.getRects()) {
                 player.sendMessage(YELLOW + "Rect: " + rect);
             }
-            player.sendMessage(YELLOW
-                    + "Enter: "
+            player.sendMessage(YELLOW + "Enter: "
                     + (zone.getEnterDefault() ? "Everyone (true)"
                             : "Only allowed (false)"));
-            player.sendMessage(YELLOW
-                    + "Place: "
+            player.sendMessage(YELLOW + "Place: "
                     + (zone.getPlaceDefault() ? "Everyone (true)"
                             : "Only makers (false)"));
-            player.sendMessage(YELLOW
-                    + "Destroy: "
+            player.sendMessage(YELLOW + "Destroy: "
                     + (zone.getDestroyDefault() ? "Everyone (true)"
                             : "Only makers (false)"));
             player.sendMessage(YELLOW + "PVP: " + zone.isPvp());
+            player.sendMessage(YELLOW + "Communism: " + zone.isCommunist());
             player.sendMessage(YELLOW + "Hostiles: " + zone.hasHostiles());
             player.sendMessage(YELLOW + "Enter message: " + zone.getTextEnter());
             player.sendMessage(YELLOW + "Exit message: " + zone.getTextExit());

@@ -27,7 +27,7 @@ public class WhoCommand extends AbstractCommand
         super(tregmine, "who");
     }
 
-    private boolean whoplayer(TregminePlayer player, String[] args)
+    private boolean whoPlayer(TregminePlayer player, String[] args)
     {
         String pattern = args[0];
 
@@ -65,11 +65,14 @@ public class WhoCommand extends AbstractCommand
             player.sendMessage(GOLD + "Channel: " + GRAY + whoPlayer.getChatChannel());
             player.sendMessage(GOLD + "Wallet: " + GRAY + balance + " Tregs.");
             player.sendMessage(GOLD + "Health: " + GRAY + whoPlayer.getHealth());
-            player.sendMessage(GOLD + "Country: " + GRAY + whoPlayer.getCountryName());
+            player.sendMessage(GOLD + "Country: " + GRAY + whoPlayer.getCountry());
+            player.sendMessage(GOLD + "City: " + GRAY + whoPlayer.getCity());
             player.sendMessage(GOLD + "IP Address: " + GRAY + whoPlayer.getIp());
-            player.sendMessage(DARK_GRAY + "******************************************************");
+            player.sendMessage(DARK_GRAY + "*************************************" +
+                               "*****************");
 
-            LOGGER.info(player.getName() + " used /who on player " + whoPlayer.getName());
+            LOGGER.info(player.getName() + " used /who on player " +
+                        whoPlayer.getName());
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -96,9 +99,10 @@ public class WhoCommand extends AbstractCommand
         String playerList = sb.toString();
 
         player.sendMessage(DARK_GRAY + "******************** " + DARK_PURPLE +
-                           "PLAYER LIST" + DARK_GRAY + " ********************");
+                           "Player List" + DARK_GRAY + " ********************");
         player.sendMessage(playerList);
-        player.sendMessage(DARK_GRAY + "*****************************************************");
+        player.sendMessage(DARK_GRAY + "***********************************" +
+                           "******************");
         return true;
     }
 
@@ -109,10 +113,10 @@ public class WhoCommand extends AbstractCommand
             return who(player);
         }
         else if (args.length > 0) {
-            if (!player.isAdmin()) {
+            if (!player.getRank().canSeeHiddenInfo()) {
                 return true;
             }
-            return whoplayer(player, args);
+            return whoPlayer(player, args);
         }
 
         return true;
