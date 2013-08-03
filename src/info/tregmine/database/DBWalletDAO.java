@@ -20,13 +20,11 @@ public class DBWalletDAO
     }
 
     public long balance(TregminePlayer player)
+    throws SQLException
     {
-        Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
         try {
-            conn = ConnectionPool.getConnection();
-
             stmt = conn.prepareStatement("SELECT player_wallet FROM player "
                             + "WHERE player_id = ?");
             stmt.setInt(1, player.getId());
@@ -36,8 +34,6 @@ public class DBWalletDAO
             if (rs.next()) {
                 return rs.getLong("player_wallet");
             }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
         } finally {
             if (rs != null) {
                 try {
@@ -51,18 +47,13 @@ public class DBWalletDAO
                 } catch (SQLException e) {
                 }
             }
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                }
-            }
         }
 
         return -1;
     }
 
     public String formattedBalance(TregminePlayer player)
+    throws SQLException
     {
         NumberFormat nf = NumberFormat.getNumberInstance();
         return ChatColor.GOLD + nf.format(balance(player)) + ChatColor.WHITE
@@ -70,6 +61,7 @@ public class DBWalletDAO
     }
 
     public boolean add(TregminePlayer player, long amount)
+    throws SQLException
     {
         PreparedStatement stmt = null;
         try {
@@ -79,8 +71,6 @@ public class DBWalletDAO
             stmt.setLong(1, amount);
             stmt.setInt(2, player.getId());
             stmt.execute();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
         } finally {
             if (stmt != null) {
                 try {
@@ -94,6 +84,7 @@ public class DBWalletDAO
     }
 
     public boolean take(TregminePlayer player, long amount)
+    throws SQLException
     {
         long newBalance = balance(player) - amount;
         if (newBalance < 0) {
@@ -108,8 +99,6 @@ public class DBWalletDAO
             stmt.setLong(1, amount);
             stmt.setInt(2, player.getId());
             stmt.execute();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
         } finally {
             if (stmt != null) {
                 try {
@@ -123,6 +112,7 @@ public class DBWalletDAO
     }
 
     public void insertTransaction(int srcId, int recvId, int amount)
+    throws SQLException
     {
         PreparedStatement stmt = null;
         try {
@@ -134,8 +124,6 @@ public class DBWalletDAO
             stmt.setInt(2, recvId);
             stmt.setInt(3, amount);
             stmt.execute();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
         } finally {
             if (stmt != null) {
                 try {

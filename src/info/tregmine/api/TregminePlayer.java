@@ -55,7 +55,7 @@ public class TregminePlayer extends PlayerDelegate
     private String chatChannel = "GLOBAL";
     private String texture = "https://dl.dropbox.com/u/5405236/mc/df.zip";
     private Zone currentZone = null;
-    private GuardianState guardianState = null;
+    private GuardianState guardianState = GuardianState.QUEUED;
     private int blessTarget = 0;
     private ChatState chatState = ChatState.CHAT;
     private Date loginTime = null;
@@ -136,7 +136,15 @@ public class TregminePlayer extends PlayerDelegate
     public void setKeyword(String v) { this.keyword = v; }
 
     public Rank getRank() { return rank; }
-    public void setRank(Rank v) { this.rank = v; }
+    public void setRank(Rank v)
+    {
+        this.rank = v;
+
+        if (getDelegate() != null) {
+            setTemporaryChatName(getNameColor() + getName());
+        }
+
+    }
 
     public void setGuardianRank(int v) { this.guardianRank = v; }
     public int getGuardianRank() { return guardianRank; }

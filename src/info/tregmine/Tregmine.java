@@ -400,8 +400,14 @@ public class Tregmine extends JavaPlugin
                         player.getIp() + ", " + player.getHost());
             }
 
+            int onlinePlayerCount = 0;
+            Player[] onlinePlayers = getServer().getOnlinePlayers();
+            if (onlinePlayers != null) {
+                onlinePlayerCount = onlinePlayers.length;
+            }
+
             DBLogDAO logDAO = new DBLogDAO(conn);
-            logDAO.insertLogin(player, false, server.getOnlinePlayers().length);
+            logDAO.insertLogin(player, false, onlinePlayerCount);
 
             player.setTemporaryChatName(player.getNameColor()
                     + player.getName());
@@ -429,8 +435,14 @@ public class Tregmine extends JavaPlugin
         try {
             conn = ConnectionPool.getConnection();
 
+            int onlinePlayerCount = 0;
+            Player[] onlinePlayers = getServer().getOnlinePlayers();
+            if (onlinePlayers != null) {
+                onlinePlayerCount = onlinePlayers.length;
+            }
+
             DBLogDAO logDAO = new DBLogDAO(conn);
-            logDAO.insertLogin(player, true, server.getOnlinePlayers().length);
+            logDAO.insertLogin(player, true, onlinePlayerCount);
 
             PlayerInventory inv = (PlayerInventory) player.getInventory();
 

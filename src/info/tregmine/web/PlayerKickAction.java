@@ -93,12 +93,7 @@ public class PlayerKickAction implements WebHandler.Action
         Server server = tregmine.getServer();
         server.broadcastMessage(issuer.getChatName() + AQUA + " kicked "
                 + subject.getChatName() + AQUA + ": " + message);
-    }
 
-    @Override
-    public void generateResponse(PrintWriter writer)
-    throws WebHandler.WebException
-    {
         if (status) {
             Connection conn = null;
             try {
@@ -123,7 +118,12 @@ public class PlayerKickAction implements WebHandler.Action
                 }
             }
         }
+    }
 
+    @Override
+    public void generateResponse(PrintWriter writer)
+    throws WebHandler.WebException
+    {
         try {
             JSONWriter json = new JSONWriter(writer);
             json.object()

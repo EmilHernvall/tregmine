@@ -279,6 +279,7 @@ public class TregminePlayerListener implements Listener
         TregminePlayer player = plugin.getPlayer(event.getPlayer());
         if (player == null) {
             event.getPlayer().kickPlayer("error loading profile!");
+            return;
         }
 
         Rank rank = player.getRank();
@@ -465,6 +466,11 @@ public class TregminePlayerListener implements Listener
     public void onPlayerQuit(PlayerQuitEvent event)
     {
         TregminePlayer player = plugin.getPlayer(event.getPlayer());
+        if (player == null) {
+            Tregmine.LOGGER.info(event.getPlayer().getName() + " was not found " +
+                    "in players map when quitting.");
+            return;
+        }
 
         event.setQuitMessage(null);
 

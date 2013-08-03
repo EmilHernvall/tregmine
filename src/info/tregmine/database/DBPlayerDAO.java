@@ -280,8 +280,8 @@ public class DBPlayerDAO
             stmt = conn.prepareStatement(sql);
             stmt.setString(1, player.getPasswordHash());
             stmt.setString(2, player.getRank().toString());
-            stmt.setInt(2, flags);
-            stmt.setInt(3, player.getId());
+            stmt.setInt(3, flags);
+            stmt.setInt(4, player.getId());
             stmt.execute();
         } finally {
             if (stmt != null) {
