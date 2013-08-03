@@ -43,7 +43,8 @@ public class WarpCommand extends AbstractCommand
                     && (player.getVehicle() instanceof Horse)) {
                 horse = (Horse) player.getVehicle();
             }
-            if (player.isAdmin()) {
+            
+            if (!player.isAdmin()) {
                 if (horse != null) {
                     horse.eject();
                     horse.teleport(loc);
