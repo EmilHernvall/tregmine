@@ -291,10 +291,9 @@ public class TregminePlayerListener implements Listener
 
             // Hide the new player from all existing players
             for (TregminePlayer current : players) {
-                if (!current.isOp()) {
+                if (!current.getRank().canVanish()) {
                     current.hidePlayer(player);
-                }
-                else {
+                } else {
                     current.showPlayer(player);
                 }
             }
@@ -309,12 +308,11 @@ public class TregminePlayerListener implements Listener
         for (TregminePlayer current : players) {
             if (current.hasFlag(TregminePlayer.Flags.INVISIBLE)) {
                 player.hidePlayer(current);
-            }
-            else {
+            } else {
                 player.showPlayer(current);
             }
 
-            if (player.isOp()) {
+            if (player.getRank().canVanish()) {
                 player.showPlayer(current);
             }
         }
