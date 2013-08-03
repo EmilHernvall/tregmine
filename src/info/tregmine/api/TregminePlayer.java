@@ -174,13 +174,20 @@ public class TregminePlayer extends PlayerDelegate
 
     public ChatColor getNameColor()
     {
+        if (hasFlag(Flags.SOFTWARNED)) {
+            return ChatColor.GRAY;
+        }
+        else if (hasFlag(Flags.HARDWARNED)) {
+            return ChatColor.GRAY;
+        }
+
         if (rank == null) {
             return ChatColor.WHITE;
         }
         else if (rank == Rank.GUARDIAN) {
             switch (guardianState) {
             case ACTIVE:
-                return ChatColor.DARK_BLUE;
+                return ChatColor.BLUE;
             case INACTIVE:
             case QUEUED:
                 return ChatColor.GOLD;
