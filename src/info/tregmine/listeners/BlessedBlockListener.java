@@ -19,6 +19,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.block.Action;
 import info.tregmine.Tregmine;
+import info.tregmine.api.Notification;
 import info.tregmine.api.TregminePlayer;
 import info.tregmine.database.ConnectionPool;
 import info.tregmine.database.DBInventoryDAO;
@@ -109,7 +110,7 @@ public class BlessedBlockListener implements Listener
 
             Location loc = block.getLocation();
             if (target.isOnline()) {
-                target.sendMessage(ChatColor.AQUA
+                target.sendNotification(Notification.BLESS, ChatColor.AQUA
                         + "Your god blessed it in your name!");
             }
             player.sendMessage(ChatColor.AQUA + "You blessed for "
