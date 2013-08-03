@@ -278,6 +278,35 @@ public class TregminePlayer extends PlayerDelegate
     {
         showPlayer(player.getDelegate());
     }
+    
+    /**
+     * Sends the player a notification along with an associated message.
+     * <p>
+     * 
+     *  If the message is <b>null</b> or equal to "", the message won't send,
+     *  however the notification will still play.
+     *  
+     *  If the notification is <b>null</b>, and the message is not if will send
+     *  the player the message.
+     * @param notif - The notification to send to the player
+     * @param message - The message to send the player with the notification
+     * @throws IllegalArgumentException if both notif and message are null
+     */
+    public void sendNotification(Notification notif, String message)
+    {
+    	if(notif != null && notif != Notification.NONE){
+    		if(!message.equalsIgnoreCase("") && message != null){
+    			playSound(getLocation(), notif.getSound(), 2F, 1F);
+    			sendMessage(message);
+    		}
+    	}else{
+    		if(!message.equalsIgnoreCase("") && message != null){
+    			sendMessage(message);
+    		}else{
+    			throw new IllegalArgumentException("Parameters can not both be null");
+    		}
+    	}
+    }
 
     public void teleportWithHorse(Location loc)
     {
