@@ -40,14 +40,9 @@ public class TregmineBlockListener implements Listener
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent event)
     {
-        TregminePlayer tregminePlayer = plugin.getPlayer(event.getPlayer());
-
-        if (tregminePlayer.isAdmin()) {
-            event.setCancelled(false);
-        }
-
+        TregminePlayer player = plugin.getPlayer(event.getPlayer());
         if (event.getBlock().getType().equals(Material.SPONGE)) {
-            if (!event.getPlayer().isOp()) {
+            if (!player.getRank().canPlaceBannedBlocks()) {
                 event.setCancelled(true);
                 return;
             }
@@ -58,10 +53,6 @@ public class TregmineBlockListener implements Listener
     public void onBlockBreak(BlockBreakEvent event)
     {
         TregminePlayer player = plugin.getPlayer(event.getPlayer());
-
-        if (player.isAdmin()) {
-            event.setCancelled(false);
-        }
 
         Block block = event.getBlock();
         Material material = block.getType();

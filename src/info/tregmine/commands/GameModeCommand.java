@@ -20,8 +20,8 @@ public class GameModeCommand extends AbstractCommand
     @Override
     public boolean handlePlayer(TregminePlayer player, String[] args)
     {
-        if (!player.isAdmin() && !player.isBuilder()) {
-            return false;
+        if (!player.getRank().canUseCreative()) {
+            return true;
         }
 
         player.setGameMode(mode);

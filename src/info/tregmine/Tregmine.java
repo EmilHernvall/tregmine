@@ -15,6 +15,8 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.net.InetAddress;
+import java.io.IOException;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -29,12 +31,17 @@ import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
+
+import com.maxmind.geoip.LookupService;
 
 import org.eclipse.jetty.server.Server;
 
 import info.tregmine.api.PlayerBannedException;
 import info.tregmine.api.PlayerReport;
 import info.tregmine.api.TregminePlayer;
+import info.tregmine.api.Rank;
 import info.tregmine.database.ConnectionPool;
 import info.tregmine.database.DBInventoryDAO;
 import info.tregmine.database.DBLogDAO;
@@ -77,6 +84,8 @@ public class Tregmine extends JavaPlugin
     private Queue<TregminePlayer> mentors;
     private Queue<TregminePlayer> students;
 
+    private LookupService cl = null;
+
     @Override
     public void onLoad()
     {
@@ -101,16 +110,33 @@ public class Tregmine extends JavaPlugin
         Player[] players = getServer().getOnlinePlayers();
         for (Player player : players) {
             try {
-                addPlayer(player);
+                addPlayer(player, player.getAddress().getAddress());
             } catch (PlayerBannedException e) {
                 player.kickPlayer(e.getMessage());
             }
+        }
+
+        try {
+            cl = new LookupService("GeoIPCity.dat",
+                                   LookupService.GEOIP_MEMORY_CACHE);
+        } catch (IOException e) {
+            Tregmine.LOGGER.warning("GeoIPCity.dat was not found! " +
+                    "Geo location will not function as expected.");
         }
     }
 
     @Override
     public void onEnable()
     {
+        reloadConfig();
+
+        Tregmine.LOGGER.info("Data folder is: " + getDataFolder());
+
+        FileConfiguration config = getConfig();
+        String apiKey = config.getString("api.signing-key");
+
+        Tregmine.LOGGER.info("API Key: " + apiKey);
+
         this.server = getServer();
 
         // Load blessed blocks
@@ -152,22 +178,24 @@ public class Tregmine extends JavaPlugin
         pluginMgm.registerEvents(new ZonePlayerListener(this), this);
 
         // Declaration of all commands
-        getCommand("admins").setExecutor(new NotifyCommand(this, "admins") {
-            @Override
-            public boolean isTarget(TregminePlayer player)
-            {
-                return player.isAdmin();
-            }
-        });
+        getCommand("admins").setExecutor(
+            new NotifyCommand(this, "admins") {
+                @Override
+                public boolean isTarget(TregminePlayer player)
+                {
+                    return player.getRank() == Rank.JUNIOR_ADMIN ||
+                           player.getRank() == Rank.SENIOR_ADMIN;
+                }
+            });
 
         getCommand("guardians").setExecutor(
-                new NotifyCommand(this, "guardians") {
-                    @Override
-                    public boolean isTarget(TregminePlayer player)
-                    {
-                        return player.isGuardian();
-                    }
-                });
+            new NotifyCommand(this, "guardians") {
+                @Override
+                public boolean isTarget(TregminePlayer player)
+                {
+                    return player.getRank() == Rank.GUARDIAN;
+                }
+            });
 
         getCommand("action").setExecutor(new ActionCommand(this));
         getCommand("ban").setExecutor(new BanCommand(this));
@@ -216,7 +244,6 @@ public class Tregmine extends JavaPlugin
         getCommand("tpshield").setExecutor(new TeleportShieldCommand(this));
         getCommand("tpto").setExecutor(new TeleportToCommand(this));
         getCommand("trade").setExecutor(new TradeCommand(this));
-        getCommand("user").setExecutor(new UserCommand(this));
         getCommand("vanish").setExecutor(new VanishCommand(this));
         getCommand("wallet").setExecutor(new WalletCommand(this));
         getCommand("warn").setExecutor(new WarnCommand(this));
@@ -226,9 +253,10 @@ public class Tregmine extends JavaPlugin
         getCommand("zone").setExecutor(new ZoneCommand(this, "zone"));
 
         try {
-            webHandler = new WebHandler(this);
+            webHandler = new WebHandler(this, apiKey);
             webHandler.addAction(new VersionAction.Factory());
             webHandler.addAction(new PlayerListAction.Factory());
+            webHandler.addAction(new PlayerKickAction.Factory());
 
             webServer = new Server(9192);
             webServer.setHandler(webHandler);
@@ -292,7 +320,7 @@ public class Tregmine extends JavaPlugin
     public void reloadPlayer(TregminePlayer player)
     {
         try {
-            addPlayer(player.getDelegate());
+            addPlayer(player.getDelegate(), player.getAddress().getAddress());
         } catch (PlayerBannedException e) {
             player.kickPlayer(e.getMessage());
         }
@@ -308,7 +336,7 @@ public class Tregmine extends JavaPlugin
         return players;
     }
 
-    public TregminePlayer addPlayer(Player srcPlayer)
+    public TregminePlayer addPlayer(Player srcPlayer, InetAddress addr)
             throws PlayerBannedException
     {
         if (players.containsKey(srcPlayer.getName())) {
@@ -326,9 +354,8 @@ public class Tregmine extends JavaPlugin
                 player = playerDAO.createPlayer(srcPlayer);
             }
 
-            if (player.isTrusted()) {
-                player.setSetup(true);
-            }
+            player.removeFlag(TregminePlayer.Flags.SOFTWARNED);
+            player.removeFlag(TregminePlayer.Flags.HARDWARNED);
 
             DBPlayerReportDAO reportDAO = new DBPlayerReportDAO(conn);
             List<PlayerReport> reports = reportDAO.getReportsBySubject(player);
@@ -342,11 +369,10 @@ public class Tregmine extends JavaPlugin
                 }
 
                 if (report.getAction() == PlayerReport.Action.SOFTWARN) {
-                    player.setTempColor("warned");
+                    player.setFlag(TregminePlayer.Flags.HARDWARNED);
                 }
                 else if (report.getAction() == PlayerReport.Action.HARDWARN) {
-                    player.setTempColor("warned");
-                    player.setTrusted(false);
+                    player.setFlag(TregminePlayer.Flags.SOFTWARNED);
                 }
                 else if (report.getAction() == PlayerReport.Action.BAN) {
                     // event.disallow(Result.KICK_BANNED, report.getMessage());
@@ -354,8 +380,34 @@ public class Tregmine extends JavaPlugin
                 }
             }
 
+            player.setIp(addr.getHostAddress());
+            player.setHost(addr.getCanonicalHostName());
+
+            if (cl != null) {
+                com.maxmind.geoip.Location l1 = cl.getLocation(player.getIp());
+                if (l1 != null) {
+                    Tregmine.LOGGER.info(player.getName() + ": " + l1.countryName +
+                            ", " + l1.city + ", " + player.getIp() + ", " +
+                            player.getHost());
+                    player.setCountry(l1.countryName);
+                    player.setCity(l1.city);
+                } else {
+                    Tregmine.LOGGER.info(player.getName() + ": " +
+                            player.getIp() + ", " + player.getHost());
+                }
+            } else {
+                Tregmine.LOGGER.info(player.getName() + ": " +
+                        player.getIp() + ", " + player.getHost());
+            }
+
+            int onlinePlayerCount = 0;
+            Player[] onlinePlayers = getServer().getOnlinePlayers();
+            if (onlinePlayers != null) {
+                onlinePlayerCount = onlinePlayers.length;
+            }
+
             DBLogDAO logDAO = new DBLogDAO(conn);
-            logDAO.insertLogin(player, false);
+            logDAO.insertLogin(player, false, onlinePlayerCount);
 
             player.setTemporaryChatName(player.getNameColor()
                     + player.getName());
@@ -383,8 +435,14 @@ public class Tregmine extends JavaPlugin
         try {
             conn = ConnectionPool.getConnection();
 
+            int onlinePlayerCount = 0;
+            Player[] onlinePlayers = getServer().getOnlinePlayers();
+            if (onlinePlayers != null) {
+                onlinePlayerCount = onlinePlayers.length;
+            }
+
             DBLogDAO logDAO = new DBLogDAO(conn);
-            logDAO.insertLogin(player, true);
+            logDAO.insertLogin(player, true, onlinePlayerCount);
 
             PlayerInventory inv = (PlayerInventory) player.getInventory();
 

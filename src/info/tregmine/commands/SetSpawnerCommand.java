@@ -19,8 +19,8 @@ public class SetSpawnerCommand extends AbstractCommand
     @Override
     public boolean handlePlayer(TregminePlayer player, String[] args)
     {
-        if (!player.isAdmin()) {
-            return false;
+        if (!player.getRank().canSetSpawners()) {
+            return true;
         }
 
         if (args.length != 1) {

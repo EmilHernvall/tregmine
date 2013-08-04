@@ -12,6 +12,7 @@ import org.bukkit.potion.PotionEffectType;
 
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
+import info.tregmine.api.Rank;
 import info.tregmine.api.math.Distance;
 
 public class TeleportCommand extends AbstractCommand
@@ -32,21 +33,21 @@ public class TeleportCommand extends AbstractCommand
         {
             Horse horse = null;
 
-            if((from.getVehicle() != null) && (from.getVehicle() instanceof Horse)){
+            if ((from.getVehicle() != null) && (from.getVehicle() instanceof Horse)){
                 horse = (Horse)from.getVehicle();
             }
 
-            if(horse != null){
+            if (horse != null){
                 horse.eject();
                 horse.teleport(to.getLocation());
                 from.teleport(to.getLocation());
                 horse.setPassenger(from.getDelegate());
-            }else{
+            } else {
                 from.teleport(to.getLocation());
             }
 
             from.setNoDamageTicks(200);
-            if (!from.isAdmin()){
+            if (!from.getRank().canDoHiddenTeleport()) {
                 to.sendMessage(AQUA + from.getName() + " teleported to you!");
                 PotionEffect ef =
                         new PotionEffect(PotionEffectType.BLINDNESS, 60, 100);
@@ -63,11 +64,12 @@ public class TeleportCommand extends AbstractCommand
     @Override
     public boolean handlePlayer(TregminePlayer player, String[] args)
     {
+        Rank rank = player.getRank();
         if (args.length != 1) {
             return false;
         }
-        if (!player.isTrusted()) {
-            return false;
+        if (!rank.canTeleport()) {
+            return true;
         }
 
         Server server = tregmine.getServer();
@@ -82,73 +84,47 @@ public class TeleportCommand extends AbstractCommand
 
         TregminePlayer target = candidates.get(0);
 
-        if (target.isInvisible()) {
+        if (target.hasFlag(TregminePlayer.Flags.INVISIBLE)) {
             return true;
         }
 
-        if (target.hasTeleportShield() && !player.isAdmin()) {
-            player.sendMessage(RED + target.getName() + AQUA
-                    + "'s teloptical deflector absorbed all motion. "
-                    + "Teleportation failed.");
-            target.sendMessage(player.getName() + AQUA
-                    + "'s teleportation spell "
-                    + "cannot bypass your sophisticated defenses.");
+        if (target.hasFlag(TregminePlayer.Flags.TPSHIELD) &&
+            !player.getRank().canOverrideTeleportShield()) {
+            player.sendMessage(RED + target.getName() + AQUA +
+                    "'s teloptical deflector absorbed all motion. " +
+                    "Teleportation failed.");
+            target.sendMessage(player.getName() + AQUA +
+                    "'s teleportation spell " +
+                    "cannot bypass your sophisticated defenses.");
             return true;
         }
 
         World sourceWorld = player.getWorld();
         World targetWorld = target.getWorld();
-        if (player.isAdmin() || player.isBuilder()) {
-            player.sendMessage(AQUA + "You started teleport to "
-                    + target.getName() + AQUA + " in " + BLUE
-                    + targetWorld.getName() + ".");
-
-            scheduler.scheduleSyncDelayedTask(tregmine, new TeleportTask(
-                    target, player), 20 * 0);
-            return true;
-        }
-        else if (player.isGuardian()) {
-            player.sendMessage(AQUA + "You started teleport to "
-                    + target.getName() + AQUA + " in " + BLUE
-                    + targetWorld.getName() + ".");
-
-            scheduler.scheduleSyncDelayedTask(tregmine, new TeleportTask(
-                    target, player), 20 * 1);
-            return true;
-        }
-
         String targetWorldName = targetWorld.getName();
         String sourceWorldName = sourceWorld.getName();
-        if (sourceWorldName.equalsIgnoreCase(targetWorldName)) {
-
-            double distance =
-                    Distance.calc2d(player.getLocation(), target.getLocation());
-            if (player.isDonator() && distance < 10000) {
-                player.sendMessage(AQUA + "You started teleport to "
-                        + target.getName() + AQUA + " in " + BLUE
-                        + targetWorld.getName() + ".");
-
-                scheduler.scheduleSyncDelayedTask(tregmine, new TeleportTask(
-                        target, player), 20 * 1);
-            }
-            else if (player.isTrusted() && distance < 100) {
-                player.sendMessage(AQUA + "You started teleport to "
-                        + target.getName() + AQUA + " in " + BLUE
-                        + targetWorld.getName() + ".");
-
-                scheduler.scheduleSyncDelayedTask(tregmine, new TeleportTask(
-                        target, player), 20 * 15);
-            }
-            else {
-                player.sendMessage(RED
-                        + "Your teleportation spell is not strong "
-                        + "enough for the longer distances.");
-            }
-
-        }
-        else {
+        if (!sourceWorldName.equalsIgnoreCase(targetWorldName) &&
+            !rank.canTeleportBetweenWorlds()) {
             player.sendMessage(RED + "The user is in another world called "
                     + BLUE + targetWorld.getName() + ".");
+        }
+
+        double distance = Distance.calc2d(player.getLocation(),
+                                          target.getLocation());
+        if (distance < rank.getTeleportDistanceLimit()) {
+            player.sendMessage(AQUA + "You started teleport to " +
+                    target.getName() + AQUA + " in " + BLUE +
+                    targetWorld.getName() + ".");
+
+            scheduler.scheduleSyncDelayedTask(
+                    tregmine,
+                    new TeleportTask(target, player),
+                    rank.getTeleportTimeout());
+        }
+        else {
+            player.sendMessage(RED
+                    + "Your teleportation spell is not strong "
+                    + "enough for the longer distances.");
         }
 
         return true;

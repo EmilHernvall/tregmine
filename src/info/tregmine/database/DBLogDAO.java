@@ -5,6 +5,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
+import java.util.Set;
+import java.util.HashSet;
 
 import org.bukkit.Location;
 import org.bukkit.inventory.ItemStack;
@@ -21,17 +23,22 @@ public class DBLogDAO
         this.conn = conn;
     }
 
-    public void insertLogin(TregminePlayer player, boolean logout)
+    public void insertLogin(TregminePlayer player, boolean logout, int onlinePlayers)
     {
         PreparedStatement stmt = null;
         try {
-            String sql =
-                    "INSERT INTO player_login (player_id, login_timestamp, "
-                            + "login_action) ";
-            sql += "VALUES (?, unix_timestamp(), ?)";
+            String sql = "INSERT INTO player_login (player_id, login_timestamp, " +
+                         "login_action, login_country, login_city, login_ip, " +
+                         "login_hostname, login_onlineplayers) ";
+            sql += "VALUES (?, unix_timestamp(), ?, ?, ?, ?, ?, ?)";
             stmt = conn.prepareStatement(sql);
             stmt.setInt(1, player.getId());
             stmt.setString(2, logout ? "logout" : "login");
+            stmt.setString(3, player.getCountry());
+            stmt.setString(4, player.getCity());
+            stmt.setString(5, player.getIp());
+            stmt.setString(6, player.getHost());
+            stmt.setInt(7, onlinePlayers);
             stmt.execute();
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -168,5 +175,35 @@ public class DBLogDAO
         }
 
         return date;
+    }
+
+    public Set<String> getAliases(TregminePlayer player)
+    throws SQLException
+    {
+        Set<String> aliases = new HashSet<String>();
+
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        try {
+            stmt = conn.prepareStatement("SELECT DISTINCT player_name FROM player "
+                            + "INNER JOIN player_login USING (player_id) "
+                            + "WHERE login_ip = ? ");
+            stmt.setString(1, player.getIp());
+            stmt.execute();
+
+            rs = stmt.getResultSet();
+            while (rs.next()) {
+                aliases.add(rs.getString("player_name"));
+            }
+        } finally {
+            if (rs != null) {
+                try { rs.close(); } catch (SQLException e) { }
+            }
+            if (stmt != null) {
+                try { stmt.close(); } catch (SQLException e) { }
+            }
+        }
+
+        return aliases;
     }
 }

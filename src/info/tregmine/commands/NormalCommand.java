@@ -4,6 +4,7 @@ import static org.bukkit.ChatColor.*;
 import org.bukkit.entity.Player;
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
+import info.tregmine.api.Rank;
 
 public class NormalCommand extends AbstractCommand
 {
@@ -15,24 +16,25 @@ public class NormalCommand extends AbstractCommand
     @Override
     public boolean handlePlayer(TregminePlayer player, String[] args)
     {
-        if (player.isAdmin()) {
-            player.setAdmin(false);
+        if (player.getRank() == Rank.JUNIOR_ADMIN ||
+            player.getRank() == Rank.SENIOR_ADMIN) {
+            player.setRank(Rank.DONATOR);
             player.setTemporaryChatName(GOLD + player.getName());
             player.sendMessage(YELLOW + "You are no longer admin, until you "
                     + "reconnect!");
         }
-        else if (player.isBuilder()) {
-            player.setBuilder(false);
+        else if (player.getRank() == Rank.BUILDER) {
+            player.setRank(Rank.DONATOR);
             player.setTemporaryChatName(GOLD + player.getName());
             player.sendMessage(YELLOW + "You are no longer builder, until you "
                     + "reconnect!");
         }
-        else if (player.isGuardian()) {
+        else if (player.getRank() == Rank.GUARDIAN) {
             Player[] players = tregmine.getServer().getOnlinePlayers();
             TregminePlayer maxRank = null;
             for (Player srvPlayer : players) {
                 TregminePlayer guardian = tregmine.getPlayer(srvPlayer);
-                if (!guardian.isGuardian()) {
+                if (guardian.getRank() != Rank.GUARDIAN) {
                     continue;
                 }
 

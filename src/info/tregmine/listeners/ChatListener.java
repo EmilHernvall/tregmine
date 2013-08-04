@@ -49,7 +49,7 @@ public class ChatListener implements Listener
                 txtColor = ChatColor.GRAY;
             }
 
-            if (sender.getChatChannel().equals(to.getChatChannel())) {
+            if (sender.getChatChannel().equalsIgnoreCase(to.getChatChannel())) {
                 if ("GLOBAL".equalsIgnoreCase(sender.getChatChannel())) {
                     to.sendMessage("<" + sender.getChatName()
                             + ChatColor.WHITE + "> " + txtColor + text);

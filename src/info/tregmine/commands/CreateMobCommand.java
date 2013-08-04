@@ -19,8 +19,8 @@ public class CreateMobCommand extends AbstractCommand
     @Override
     public boolean handlePlayer(TregminePlayer player, String[] args)
     {
-        if (!player.isAdmin()) {
-            return false;
+        if (!player.getRank().canSpawnMobs()) {
+            return true;
         }
 
         EntityType mobType;

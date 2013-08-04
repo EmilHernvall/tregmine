@@ -14,7 +14,7 @@ public class TimeCommand extends AbstractCommand
     @Override
     public boolean handlePlayer(TregminePlayer player, String[] args)
     {
-        if (!player.isDonator()) {
+        if (!player.getRank().canSetTime()) {
             return true;
         }
 

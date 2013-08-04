@@ -63,10 +63,10 @@ public class BlessedBlockListener implements Listener
         Block block = event.getClickedBlock();
         TregminePlayer player = plugin.getPlayer(event.getPlayer());
 
-        if (event.getAction() == Action.RIGHT_CLICK_BLOCK
-                && player.getItemInHand().getType() == Material.BONE
-                && (player.isAdmin() || player.isGuardian())
-                && allowedMaterials.contains(block.getType())) {
+        if (event.getAction() == Action.RIGHT_CLICK_BLOCK &&
+            player.getItemInHand().getType() == Material.BONE &&
+            player.getRank().canBless() &&
+            allowedMaterials.contains(block.getType())) {
 
             int targetId = player.getBlessTarget();
             if (targetId == 0) {
@@ -80,21 +80,8 @@ public class BlessedBlockListener implements Listener
                 return;
             }
 
-            if (!player.isAdmin()) {
-                int amount;
-                switch (block.getType()) {
-                case CHEST:
-                    amount = 25000;
-                    break;
-                case WOOD_DOOR:
-                case WOODEN_DOOR:
-                    amount = 2000;
-                    break;
-                default:
-                    amount = 4000;
-                    break;
-                }
-
+            int amount = player.getRank().getBlessCost(block);
+            if (amount > 0) {
                 Connection conn = null;
                 try {
                     conn = ConnectionPool.getConnection();
@@ -156,8 +143,9 @@ public class BlessedBlockListener implements Listener
             return;
         }
 
-        if ((event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.LEFT_CLICK_BLOCK)
-                && allowedMaterials.contains(block.getType())) {
+        if ((event.getAction() == Action.RIGHT_CLICK_BLOCK ||
+             event.getAction() == Action.LEFT_CLICK_BLOCK) &&
+            allowedMaterials.contains(block.getType())) {
 
             Location loc = block.getLocation();
 
@@ -166,17 +154,12 @@ public class BlessedBlockListener implements Listener
                 int id = blessedBlocks.get(loc);
                 TregminePlayer target = plugin.getPlayerOffline(id);
                 if (id != player.getId()) {
-                    if (player.isAdmin()) {
-                        player.sendMessage(ChatColor.YELLOW + "Blessed to: "
-                                + target.getChatName() + ".");
-                    }
-                    else {
-                        player.sendMessage(ChatColor.RED + "Blessed to: "
-                                + target.getChatName() + ".");
+                    player.sendMessage(ChatColor.YELLOW + "Blessed to: "
+                            + target.getChatName() + ".");
+                    if (!player.getRank().canInspectInventories()) {
                         event.setCancelled(true);
                     }
-                }
-                else {
+                } else {
                     player.sendMessage(ChatColor.AQUA + "Blessed to you.");
                     event.setCancelled(false);
                 }

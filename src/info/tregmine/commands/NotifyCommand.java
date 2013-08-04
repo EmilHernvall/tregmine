@@ -1,8 +1,6 @@
 package info.tregmine.commands;
 
 import static org.bukkit.ChatColor.*;
-import org.bukkit.Server;
-import org.bukkit.entity.Player;
 
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
@@ -35,16 +33,18 @@ public abstract class NotifyCommand extends AbstractCommand
             return false;
         }
 
-        Server server = player.getServer();
         String msg = argsToMessage(args);
 
-        Player[] players = server.getOnlinePlayers();
-        for (Player tp : players) {
-            TregminePlayer to = tregmine.getPlayer(tp);
+        // Don't send it twice
+        if (!isTarget(player)) {
+            player.sendMessage(" + " + player.getChatName() + " " + WHITE + msg);
+        }
+
+        for (TregminePlayer to : tregmine.getOnlinePlayers()) {
             if (!isTarget(to)) {
                 continue;
             }
-            to.sendMessage("* " + player.getChatName() + WHITE + msg);
+            to.sendMessage(" + " + player.getChatName() + " " + WHITE + msg);
         }
 
         return true;

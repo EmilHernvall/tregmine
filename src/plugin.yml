@@ -1,4 +1,4 @@
-name: Tregmine
+name: tregmine
 main: info.tregmine.Tregmine
 version: 1.0.0
 website: http://tregmine.info
@@ -160,9 +160,6 @@ commands:
   trade:
     description: Trade safely
     usage: /trade player
-  user:
-    description: Modify a users permissions (admins and guardians only)
-    usage: /user
   vanish:
     description: Become invisible (admin only)
     usage: /vanish <on|off>

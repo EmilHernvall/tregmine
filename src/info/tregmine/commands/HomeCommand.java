@@ -61,20 +61,20 @@ public class HomeCommand extends AbstractCommand
             }
 
             Horse horse = null;
-            
+
             if((player.getVehicle() != null) && (player.getVehicle() instanceof Horse)){
-            	horse = (Horse)player.getVehicle();
+                horse = (Horse)player.getVehicle();
             }
-            
+
             if(horse != null){
-            	horse.eject();
-            	horse.teleport(loc);
-            	player.teleport(loc);
-            	horse.setPassenger(player.getDelegate());
+                horse.eject();
+                horse.teleport(loc);
+                player.teleport(loc);
+                horse.setPassenger(player.getDelegate());
             }else{
-            	player.teleport(loc);
+                player.teleport(loc);
             }
-            
+
             player.sendMessage(AQUA + "Hoci poci, little gnome. Magic worked, "
                     + "you're in your home!");
         }
@@ -88,8 +88,8 @@ public class HomeCommand extends AbstractCommand
 
     private boolean save(TregminePlayer player)
     {
-        if (!player.isDonator()) {
-            return false;
+        if (!player.getRank().canSaveHome()) {
+            return true;
         }
 
         Location playerLoc = player.getLocation();
@@ -132,8 +132,8 @@ public class HomeCommand extends AbstractCommand
 
     private boolean teleportTo(TregminePlayer player, String playerName)
     {
-        if (!player.isGuardian() && !player.isAdmin()) {
-            return false;
+        if (!player.getRank().canVisitHomes()) {
+            return true;
         }
 
         TregminePlayer target = tregmine.getPlayerOffline(playerName);

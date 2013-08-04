@@ -32,8 +32,8 @@ public class ReportCommand extends AbstractCommand
     @Override
     public boolean handlePlayer(TregminePlayer player, String[] args)
     {
-        if (!player.isAdmin() && !player.isGuardian()) {
-            return false;
+        if (!player.getRank().canReport()) {
+            return true;
         }
 
         if (args.length < 2) {

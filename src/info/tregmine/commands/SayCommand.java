@@ -29,7 +29,7 @@ public class SayCommand extends AbstractCommand
     @Override
     public boolean handlePlayer(TregminePlayer player, String[] args)
     {
-        if (!player.isAdmin()) {
+        if (!player.getRank().canBeGod()) {
             return true;
         }
 
@@ -44,7 +44,7 @@ public class SayCommand extends AbstractCommand
         Player[] players = server.getOnlinePlayers();
         for (Player p : players) {
             TregminePlayer current = tregmine.getPlayer((p.getName()));
-            if (current.isAdmin()) {
+            if (current.getRank().canBeGod()) {
                 current.sendMessage(DARK_AQUA + "/say used by: "
                         + player.getChatName());
             }
