@@ -32,6 +32,10 @@ public class ZoneBlockListener implements Listener
         if (player.getRank().canModifyZones()) {
             return;
         }
+        else if (player.hasFlag(TregminePlayer.Flags.HARDWARNED)) {
+            event.setCancelled(true);
+            return;
+        }
 
         ZoneWorld world = plugin.getWorld(player.getWorld());
 
@@ -93,11 +97,9 @@ public class ZoneBlockListener implements Listener
                 }
             }
         }
-        else if (player.hasFlag(TregminePlayer.Flags.HARDWARNED)) {
-            event.setCancelled(true);
-        }
         else if (!player.getRank().canBuild()) {
             event.setCancelled(true);
+            return;
         }
     }
 
@@ -106,6 +108,10 @@ public class ZoneBlockListener implements Listener
     {
         TregminePlayer player = plugin.getPlayer(event.getPlayer());
         if (player.getRank().canModifyZones()) {
+            return;
+        }
+        else if (player.hasFlag(TregminePlayer.Flags.HARDWARNED)) {
+            event.setCancelled(true);
             return;
         }
 
@@ -172,11 +178,9 @@ public class ZoneBlockListener implements Listener
                 }
             }
         }
-        else if (player.hasFlag(TregminePlayer.Flags.HARDWARNED)) {
-            event.setCancelled(true);
-        }
         else if (!player.getRank().canBuild()) {
             event.setCancelled(true);
+            return;
         }
     }
 }
