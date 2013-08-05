@@ -65,7 +65,6 @@ public class SayCommand extends AbstractCommand
                                                             "GLOBAL",
                                                             msg));
 
-
         server.broadcastMessage("<" + BLUE + "GOD" + WHITE + "> "
                 + LIGHT_PURPLE + msg);
         LOGGER.info("CONSOLE: <GOD> " + msg);

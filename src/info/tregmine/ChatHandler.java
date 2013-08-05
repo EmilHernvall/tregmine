@@ -8,6 +8,8 @@ import java.util.Queue;
 import java.security.NoSuchAlgorithmException;
 import java.security.InvalidKeyException;
 import java.util.logging.Level;
+import java.util.concurrent.Future;
+import java.util.concurrent.ExecutionException;
 
 import javax.crypto.spec.SecretKeySpec;
 import javax.crypto.Mac;
@@ -52,8 +54,6 @@ public class ChatHandler extends WebSocketHandler
 
         public WebChatEvent(String sender, String channel, String text)
         {
-            super(true);
-
             this.sender = sender;
             this.channel = channel;
             this.text = text;
@@ -110,6 +110,7 @@ public class ChatHandler extends WebSocketHandler
     {
         private ChatHandler handler;
         private PluginManager pluginMgr;
+        private Session session;
 
         public ChatSocket(ChatHandler handler, PluginManager pluginMgr)
         {
@@ -118,11 +119,23 @@ public class ChatHandler extends WebSocketHandler
         }
 
         @Override
+        public Session getSession()
+        {
+            return session;
+        }
+
+        @Override
+        public RemoteEndpoint getRemote()
+        {
+            return session.getRemote();
+        }
+
+        @Override
         public void onWebSocketConnect(Session sess)
         {
-            super.onWebSocketConnect(sess);
+            this.session = sess;
 
-            sess.setIdleTimeout(Long.MAX_VALUE);
+            //sess.setIdleTimeout(Long.MAX_VALUE);
             handler.addSession(this);
         }
 
@@ -157,8 +170,6 @@ public class ChatHandler extends WebSocketHandler
         @Override
         public void onWebSocketClose(int statusCode, String reason)
         {
-            super.onWebSocketClose(statusCode, reason);
-
             handler.removeSession(this);
         }
     }
@@ -213,11 +224,19 @@ public class ChatHandler extends WebSocketHandler
                 Session session = socket.getSession();
                 if (!session.isOpen()) {
                     disconnect(socket);
+                    continue;
                 }
 
                 try {
-                    session.getRemote().sendString(message);
-                } catch (IOException e) {
+                    Future<Void> result =
+                        session.getRemote().sendStringByFuture(message);
+                    result.get();
+                }
+                catch (ExecutionException e) {
+                    e.printStackTrace();
+                    disconnect(socket);
+                }
+                catch (InterruptedException e) {
                     e.printStackTrace();
                     disconnect(socket);
                 }
