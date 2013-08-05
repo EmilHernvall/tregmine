@@ -10,6 +10,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import info.tregmine.Tregmine;
+import info.tregmine.ChatHandler;
 import info.tregmine.api.TregminePlayer;
 import info.tregmine.database.ConnectionPool;
 import info.tregmine.database.DBLogDAO;
@@ -35,10 +36,6 @@ public class ChatListener implements Listener
 
         String text = event.getMessage();
 
-        if (text == null) {
-            text = event.getMessage();
-        }
-
         for (TregminePlayer to : plugin.getOnlinePlayers()) {
             if (to.getChatState() == TregminePlayer.ChatState.SETUP) {
                 continue;
@@ -60,6 +57,12 @@ public class ChatListener implements Listener
                 }
             }
         }
+
+        plugin.getServer()
+              .getPluginManager()
+              .callEvent(new ChatHandler.MinecraftChatEvent(sender.getName(),
+                                                            channel,
+                                                            text));
 
         Tregmine.LOGGER.info(channel + " <" + sender.getName() + "> " + text);
 

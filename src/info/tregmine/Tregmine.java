@@ -72,7 +72,9 @@ public class Tregmine extends JavaPlugin
     private org.bukkit.Server server;
 
     private Server webServer;
+    private Server chatServer;
     private WebHandler webHandler;
+    private ChatHandler chatHandler;
 
     private Map<String, TregminePlayer> players;
     private Map<Integer, TregminePlayer> playersById;
@@ -175,6 +177,13 @@ public class Tregmine extends JavaPlugin
             webServer = new Server(9192);
             webServer.setHandler(webHandler);
             webServer.start();
+
+            chatHandler = new ChatHandler(this, pluginMgm);
+            pluginMgm.registerEvents(chatHandler, this);
+
+            chatServer = new Server(9193);
+            chatServer.setHandler(chatHandler);
+            chatServer.start();
 
             //BukkitScheduler scheduler = server.getScheduler();
             //scheduler.scheduleSyncRepeatingTask(this, webHandler, 0, 20);
@@ -292,6 +301,9 @@ public class Tregmine extends JavaPlugin
         try {
             webServer.stop();
             webServer.join();
+
+            chatServer.stop();
+            chatServer.join();
         }
         catch (Exception e) {
             LOGGER.log(Level.WARNING, "Failed to start web server!", e);
