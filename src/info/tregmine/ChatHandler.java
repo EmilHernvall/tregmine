@@ -227,19 +227,7 @@ public class ChatHandler extends WebSocketHandler
                     continue;
                 }
 
-                try {
-                    Future<Void> result =
-                        session.getRemote().sendStringByFuture(message);
-                    result.get();
-                }
-                catch (ExecutionException e) {
-                    e.printStackTrace();
-                    disconnect(socket);
-                }
-                catch (InterruptedException e) {
-                    e.printStackTrace();
-                    disconnect(socket);
-                }
+                session.getRemote().sendStringByFuture(message);
             }
         }
         catch (JSONException e) {
