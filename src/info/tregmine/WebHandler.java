@@ -5,7 +5,6 @@ import java.io.PrintWriter;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import java.security.NoSuchAlgorithmException;
 import java.security.InvalidKeyException;
 import java.util.logging.Level;
@@ -21,8 +20,42 @@ import org.eclipse.jetty.server.handler.AbstractHandler;
 
 import info.tregmine.api.util.Base64;
 
-public class WebHandler extends AbstractHandler implements Runnable
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Event;
+import org.bukkit.event.Listener;
+import org.bukkit.event.HandlerList;
+import org.bukkit.plugin.PluginManager;
+
+public class WebHandler extends AbstractHandler implements Listener
 {
+    public static class WebEvent extends Event
+    {
+        private static final HandlerList handlers = new HandlerList();
+
+        private Action action;
+
+        public WebEvent(Action action)
+        {
+            this.action = action;
+        }
+
+        public Action getAction()
+        {
+            return action;
+        }
+
+        @Override
+        public HandlerList getHandlers()
+        {
+            return handlers;
+        }
+
+        public static HandlerList getHandlerList()
+        {
+            return handlers;
+        }
+    }
+
     public static class WebException extends Exception
     {
         private int responseCode;
@@ -58,19 +91,18 @@ public class WebHandler extends AbstractHandler implements Runnable
     }
 
     private Tregmine tregmine;
+    private PluginManager pluginMgr;
 
     private Map<String, ActionFactory> actions;
 
-    private Queue<Action> queue;
-
     private String key;
 
-    public WebHandler(Tregmine tregmine, String key)
+    public WebHandler(Tregmine tregmine, PluginManager pluginMgr, String key)
     {
         this.tregmine = tregmine;
+        this.pluginMgr = pluginMgr;
 
         this.actions = new HashMap<String, ActionFactory>();
-        this.queue = new ConcurrentLinkedQueue<Action>();
 
         this.key = key;
     }
@@ -111,10 +143,10 @@ public class WebHandler extends AbstractHandler implements Runnable
         }
 
         try {
-            System.out.println(signingStr);
             String auth = hmac(key, signingStr);
             String authCmp = request.getHeader("Authorization");
             // TODO: Possible timing sidechannel?
+            Tregmine.LOGGER.info(auth + " " + authCmp);
             if (!auth.equals(authCmp)) {
                 Tregmine.LOGGER.info("Web: " + signingStr + " FAILED");
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
@@ -138,14 +170,11 @@ public class WebHandler extends AbstractHandler implements Runnable
                 return;
             }
 
-            // Create an action, and add it to work queue
+            // Create an action
             Action action = factory.createAction(baseRequest);
-            queue.offer(action);
 
             // Wait for bukkit to process it
-            synchronized (action) {
-                action.wait();
-            }
+            pluginMgr.callEvent(new WebEvent(action));
 
             // Prepare response
             response.setStatus(HttpServletResponse.SC_OK);
@@ -153,10 +182,6 @@ public class WebHandler extends AbstractHandler implements Runnable
             // Generate response
             PrintWriter writer = response.getWriter();
             action.generateResponse(writer);
-        }
-        catch (InterruptedException e) {
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            Tregmine.LOGGER.log(Level.WARNING, "Error in processing request", e);
         }
         catch (WebException e) {
             response.setStatus(e.getResponseCode());
@@ -168,19 +193,16 @@ public class WebHandler extends AbstractHandler implements Runnable
         }
     }
 
-    @Override
-    public void run()
+    @EventHandler
+    public void onWebEvent(WebEvent event)
     {
-        Action action = null;
-        while ((action = queue.poll()) != null) {
-            try {
-                action.queryGameState(tregmine);
-            } catch (Throwable e) {
-                Tregmine.LOGGER.log(Level.WARNING, "Querying game state failed", e);
-            }
-            synchronized (action) {
-                action.notify();
-            }
+        Action action = event.getAction();
+
+        // Execute action, safely
+        try {
+            action.queryGameState(tregmine);
+        } catch (Throwable e) {
+            Tregmine.LOGGER.log(Level.WARNING, "Querying game state failed", e);
         }
     }
 }

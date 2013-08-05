@@ -1,5 +1,7 @@
 package info.tregmine.api.util;
 
+import java.io.ByteArrayOutputStream;
+
 public class Base64
 {
     public static String encode(byte[] data)
@@ -25,11 +27,8 @@ public class Base64
             } else {
                 pad++;
             }
-            // why the fuck does this have to be here?
-            if (i % 57 == 0 && i > 0) {
-                buffer.append("\n");
-            }
-            while ((b & 0xFFFFFF) != 0) {
+
+            for (int j = 0; j < 4 - pad; j++) {
                 int c = (b & 0xFC0000) >> 18;
                 buffer.append(tbl[c]);
                 b <<= 6;
@@ -61,7 +60,7 @@ public class Base64
             -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
             -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
         byte[] bytes = data.getBytes();
-        StringBuilder buffer = new StringBuilder();
+        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
         for (int i = 0; i < bytes.length; ) {
             int b = 0;
             if (tbl[bytes[i]] != -1) {
@@ -83,11 +82,11 @@ public class Base64
             }
             while ((b & 0xFFFFFF) != 0) {
                 int c = (b & 0xFF0000) >> 16;
-                buffer.append((char)c);
+                buffer.write((char)c);
                 b <<= 8;
             }
             i += 4;
         }
-        return buffer.toString().getBytes();
+        return buffer.toByteArray();
     }
 }
