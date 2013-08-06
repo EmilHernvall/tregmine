@@ -269,11 +269,11 @@ public class ChatHandler extends WebSocketHandler
             }
 
             if ("global".equalsIgnoreCase(channel)) {
-                to.sendMessage(" <" + ChatColor.YELLOW + sender
-                        + ChatColor.WHITE + "> " + ChatColor.GRAY + text);
+                to.sendMessage("<" + ChatColor.YELLOW + sender
+                        + ChatColor.WHITE + "> " + ChatColor.WHITE + text);
             } else {
                 to.sendMessage(channel + " <" + ChatColor.YELLOW + sender
-                        + ChatColor.WHITE + "> " + ChatColor.GRAY + text);
+                        + ChatColor.WHITE + "> " + ChatColor.WHITE + text);
             }
         }
 
