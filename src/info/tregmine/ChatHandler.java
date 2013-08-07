@@ -268,8 +268,13 @@ public class ChatHandler extends WebSocketHandler
                 continue;
             }
 
-            to.sendMessage(channel + " <" + ChatColor.YELLOW + sender
-                    + ChatColor.WHITE + "> " + ChatColor.GRAY + text);
+            if ("global".equalsIgnoreCase(channel)) {
+                to.sendMessage(" <" + ChatColor.YELLOW + sender
+                        + ChatColor.WHITE + "> " + ChatColor.GRAY + text);
+            } else {
+                to.sendMessage(channel + " <" + ChatColor.YELLOW + sender
+                        + ChatColor.WHITE + "> " + ChatColor.GRAY + text);
+            }
         }
 
         broadcastToWeb(sender, channel, text);

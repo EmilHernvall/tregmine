@@ -146,7 +146,6 @@ public class WebHandler extends AbstractHandler implements Listener
             String auth = hmac(key, signingStr);
             String authCmp = request.getHeader("Authorization");
             // TODO: Possible timing sidechannel?
-            Tregmine.LOGGER.info(auth + " " + authCmp);
             if (!auth.equals(authCmp)) {
                 Tregmine.LOGGER.info("Web: " + signingStr + " FAILED");
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
