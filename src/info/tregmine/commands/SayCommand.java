@@ -5,6 +5,7 @@ import org.bukkit.Server;
 import org.bukkit.entity.Player;
 
 import info.tregmine.Tregmine;
+import info.tregmine.ChatHandler;
 import info.tregmine.api.TregminePlayer;
 
 public class SayCommand extends AbstractCommand
@@ -57,6 +58,12 @@ public class SayCommand extends AbstractCommand
     public boolean handleOther(Server server, String[] args)
     {
         String msg = argsToMessage(args);
+
+        tregmine.getServer()
+              .getPluginManager()
+              .callEvent(new ChatHandler.MinecraftChatEvent("GOD",
+                                                            "GLOBAL",
+                                                            msg));
 
         server.broadcastMessage("<" + BLUE + "GOD" + WHITE + "> "
                 + LIGHT_PURPLE + msg);
