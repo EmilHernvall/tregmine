@@ -8,13 +8,18 @@
     <target name="init">
         <tstamp />
         <mkdir dir="${build}" />
+        <mkdir dir="${lib}" />
+        <ant dir="../mojang_nbt" target="jar" inheritAll="false" />
+        <copy file="../mojang_nbt/mojang_nbt.jar" tofile="lib/mojang_nbt.jar" />
+        <copy file="../../lib/bukkit.jar" tofile="lib/bukkit.jar" />
+        <copy file="../../lib/mysql-connector-java-bin.jar" tofile="lib/mysql-connector-java-bin.jar" />
     </target>
 
     <target name="compile" depends="init">
 
-        <javac 
+        <javac
             includeantruntime="false"
-            srcdir="${src}" 
+            srcdir="${src}"
             destdir="${build}"
             debug="on"
             debuglevel="lines,vars,source">
@@ -35,14 +40,18 @@
     <target name="jar" depends="compile">
         <jar destfile="${ant.project.name}.jar" basedir="${build}">
             <manifest>
-                <attribute name="Main-Class" value="info.tregmine.importer.Main" />
-                <attribute name="Class-Path" value="lib/bukkit.jar lib/mysql-connector-java-bin.jar" />
+                <attribute name="Main-Class" value="info.tregmine.fixbroken.Main" />
+                <attribute name="Class-Path"
+                           value="lib/mojang_nbt.jar
+                                  lib/bukkit.jar
+                                  lib/mysql-connector-java-bin.jar" />
             </manifest>
         </jar>
     </target>
 
     <target name="clean" depends="init">
         <delete dir="${build}"/>
+        <delete dir="${lib}"/>
     </target>
 
 </project>

@@ -31,7 +31,11 @@ public class DelegateGenTask extends Task
 
         File outDir = new File(outDirs[0]);
 
-        String subPath = dstClass.replaceAll("\\.", File.separator) + ".java";
+        String rep = File.separator;
+        if ("\\".equals(rep)) {
+            rep = "\\\\";
+        }
+        String subPath = dstClass.replaceAll("\\.", rep) + ".java";
         File targetFile = new File(outDir, subPath);
 
         try {
