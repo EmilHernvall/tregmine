@@ -138,13 +138,13 @@ public class Main
         System.out.printf("Using %d, %d, %d as spawn\n", spawn.x, spawn.y, spawn.z);
 
         // Copy level.dat
-        copyLevel(srcDir, dstDir, spawn);
+        copyLevel(zoneName, srcDir, dstDir, spawn);
 
         // Copy region files
         copyRegions(zoneName, rect, srcDir, dstDir);
     }
 
-    private static void copyLevel(File srcDir, File dstDir, Point newSpawn)
+    private static void copyLevel(String zoneName, File srcDir, File dstDir, Point newSpawn)
     throws Exception
     {
         File srcLevel = new File(srcDir, "level.dat");
@@ -159,12 +159,14 @@ public class Main
         }
 
         CompoundTag data = levelData.getCompound("Data");
+        data.putString("LevelName", zoneName);
         data.putInt("SpawnX", newSpawn.x);
         data.putInt("SpawnY", newSpawn.y);
         data.putInt("SpawnZ", newSpawn.z);
+        data.putInt("GameType", 1);
 
         DataOutputStream levelOutput = new DataOutputStream(new FileOutputStream(dstLevel));
-        NbtIo.writeCompressed(data, levelOutput);
+        NbtIo.writeCompressed(levelData, levelOutput);
         levelOutput.close();
     }
 
