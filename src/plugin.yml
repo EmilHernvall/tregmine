@@ -192,3 +192,6 @@ commands:
            /zone place <zone> <true/false> \
            /zone destroy <zone> <true/false> \
            /zone info <name> [perm]
+  lottery:
+    description: Type /lottery for additional info.
+    usage: /lottery
