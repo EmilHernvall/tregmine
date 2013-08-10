@@ -56,34 +56,35 @@ public class LotteryCommand extends AbstractCommand{
 			try {
 				connection = ConnectionPool.getConnection();
 				DBWalletDAO wallet = new DBWalletDAO(connection);
-					
-					if(args[0].equalsIgnoreCase("join")){
-						if(!tregmine.lottery.contains(player.getName())){
-							if(wallet.take(player, 2000)){
-								tregmine.lottery.add(player.getName());
-								player.sendMessage(ChatColor.DARK_GREEN + "You've been added to the lottery!");
-								player.sendMessage(ChatColor.DARK_GREEN + "2,000 Tregs have been taken from you.");
-								player.sendMessage(ChatColor.RED + "Amount currently in lottery: " + format.format(amount) + " Tregs");
-								tregmine.getServer().broadcastMessage(player.getChatName() + ChatColor.DARK_GREEN + " joined the lottery!" + ChatColor.RED + " - " + ChatColor.GOLD + "Amount in lottery: " + format.format(amount) + " Tregs!");
-							}else{
-								player.sendMessage(ChatColor.RED + "You need at least 2,000 Tregs to join!");
-							}
+
+				if(args[0].equalsIgnoreCase("join")){
+					if(!tregmine.lottery.contains(player.getName())){
+						if(wallet.take(player, 2000)){
+							tregmine.lottery.add(player.getName());
+							player.sendMessage(ChatColor.DARK_GREEN + "You've been added to the lottery!");
+							player.sendMessage(ChatColor.DARK_GREEN + "2,000 Tregs have been taken from you.");
+							player.sendMessage(ChatColor.RED + "Amount currently in lottery: " + format.format(amount) + " Tregs");
+							tregmine.getServer().broadcastMessage(player.getChatName() + ChatColor.DARK_GREEN + " joined the lottery!" + ChatColor.RED + " - " + ChatColor.GOLD + "Amount in lottery: " + format.format(amount) + " Tregs!");
 						}else{
-							player.sendMessage(ChatColor.RED + "You've already joined the lottery!");
+							player.sendMessage(ChatColor.RED + "You need at least 2,000 Tregs to join!");
 						}
+					}else{
+						player.sendMessage(ChatColor.RED + "You've already joined the lottery!");
 					}
-					
-					if(args[0].equalsIgnoreCase("quit")){
-						if(tregmine.lottery.contains(player.getName())){
-							wallet.add(player, 2000);
-							player.sendMessage(ChatColor.RED + "You are nolonger in the lottery.");
-							player.sendMessage(ChatColor.RED + "You received your 2,000 Tregs back");
-							tregmine.getServer().broadcastMessage(player.getChatName() + ChatColor.RED + " withdrew themself from the lottery" + ChatColor.RED + " - " + ChatColor.GOLD + "Amount in lottery: " + format.format(amount) + " Tregs!");
-						}
+				}
+
+				if(args[0].equalsIgnoreCase("quit")){
+					if(tregmine.lottery.contains(player.getName())){
+						wallet.add(player, 2000);
+						player.sendMessage(ChatColor.RED + "You are nolonger in the lottery.");
+						player.sendMessage(ChatColor.RED + "You received your 2,000 Tregs back");
+						tregmine.getServer().broadcastMessage(player.getChatName() + ChatColor.RED + " withdrew themself from the lottery" + ChatColor.RED + " - " + ChatColor.GOLD + "Amount in lottery: " + format.format(amount) + " Tregs!");
 					}
-					
-					if(args[0].equalsIgnoreCase("choose")){
-						if(player.getRank().canChooseLottery()){
+				}
+
+				if(args[0].equalsIgnoreCase("choose")){
+					if(player.getRank().canChooseLottery()){
+						if(size >= 2){
 							wallet.add(winner, amount);
 							winner.sendMessage(ChatColor.DARK_AQUA + "You won the lottery!" + ChatColor.GOLD + "You've received " + format.format(amount) + " Tregs!");
 							player.sendMessage(winner.getChatName() + ChatColor.DARK_AQUA + " won the lottery.");
@@ -91,9 +92,12 @@ public class LotteryCommand extends AbstractCommand{
 							tregmine.lottery.clear();
 							player.sendMessage(ChatColor.GREEN + "Lottery has been succesfully cleared.");
 						}else{
-							player.sendMessage(ChatColor.RED + "Only Guardians/Admins/Coders can use this command!");
+							player.sendMessage(ChatColor.RED + "At least two players must be in the lottery!");
 						}
+					}else{
+						player.sendMessage(ChatColor.RED + "Only Guardians/Admins/Coders can use this command!");
 					}
+				}
 			} catch (SQLException error) {
 				throw new RuntimeException(error);
 			} finally {
