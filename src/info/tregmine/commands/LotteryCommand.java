@@ -22,8 +22,7 @@ public class LotteryCommand extends AbstractCommand{
 	Random random = new Random();
 	int amount = tregmine.lottery.size() * 2000;
 	int size = tregmine.lottery.size();
-	String winner = tregmine.lottery.get(random.nextInt(size));
-	TregminePlayer lotteryWinner = (TregminePlayer) tregmine.getServer().getPlayer(winner);
+	TregminePlayer winner = (TregminePlayer) tregmine.getServer().getPlayer(tregmine.lottery.get(random.nextInt(size)));
 	NumberFormat format = NumberFormat.getNumberInstance();
 	String enough = "True";
 	String joined = "True";
@@ -49,7 +48,7 @@ public class LotteryCommand extends AbstractCommand{
 			player.sendMessage(ChatColor.DARK_AQUA + "----------------" + ChatColor.DARK_PURPLE + "Lottery Command" + ChatColor.DARK_AQUA + "----------------");
 			player.sendMessage(ChatColor.RED + "/lottery join - " + ChatColor.YELLOW + "Join the lottery (Takes 2,000 Tregs)");
 			player.sendMessage(ChatColor.RED + "/lottery quit - " + ChatColor.YELLOW + "Quit the lottery before a winner is picked.");
-			player.sendMessage(ChatColor.RED + "/lottery choose - " + ChatColor.YELLOW + "Randomly picks a winner (Admins/Guardians only)");
+			player.sendMessage(ChatColor.RED + "/lottery choose - " + ChatColor.YELLOW + "Randomly picks a winner (Admins/Guardians/Coders only)");
 		}
 
 		if(args.length == 1){
@@ -85,10 +84,10 @@ public class LotteryCommand extends AbstractCommand{
 					
 					if(args[0].equalsIgnoreCase("choose")){
 						if(player.getRank().canChooseLottery()){
-							wallet.add(lotteryWinner, amount);
-							lotteryWinner.sendMessage(ChatColor.DARK_AQUA + "You won the lottery!" + ChatColor.GOLD + "You've received " + format.format(amount) + " Tregs!");
-							player.sendMessage(lotteryWinner.getChatName() + ChatColor.DARK_AQUA + " won the lottery.");
-							tregmine.getServer().broadcastMessage(lotteryWinner.getChatName() + ChatColor.DARK_AQUA + " won the lottery! " + ChatColor.RED + " - " + ChatColor.GOLD + format.format(amount) + " Tregs!");
+							wallet.add(winner, amount);
+							winner.sendMessage(ChatColor.DARK_AQUA + "You won the lottery!" + ChatColor.GOLD + "You've received " + format.format(amount) + " Tregs!");
+							player.sendMessage(winner.getChatName() + ChatColor.DARK_AQUA + " won the lottery.");
+							tregmine.getServer().broadcastMessage(winner.getChatName() + ChatColor.DARK_AQUA + " won the lottery! " + ChatColor.RED + " - " + ChatColor.GOLD + format.format(amount) + " Tregs!");
 							tregmine.lottery.clear();
 							player.sendMessage(ChatColor.GREEN + "Lottery has been succesfully cleared.");
 						}else{
