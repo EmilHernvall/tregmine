@@ -33,15 +33,22 @@ public class TabListener implements Listener//, TabCompleter
             return;
         }
 
-        e.getTabCompletions().clear()
+        e.getTabCompletions().clear();
+        String[] args = e.getChatMessage().split(" ");
         List<String> nonOps = new ArrayList<String>();
+        List<String> result = new ArrayList<String>();
 
         for (Player player : Bukkit.getOnlinePlayers ()) {
             if (!player.isOp())
                 nonOps.add(player.getName());
         }
 
-        e.getTabCompletions().addAll(nonOps);
+        for (String name : nonOps) {
+            if (name.toLowerCase().startsWith(args[args.length - 1].toLowerCase()))
+                result.add(name);
+        }
+
+        e.getTabCompletions().addAll(result);
     }
 }
 
