@@ -45,10 +45,10 @@ public class LotteryCommand extends AbstractCommand{
 			player.sendMessage(ChatColor.RED + "Amount currently in lottery: " + ChatColor.YELLOW + format.format(amount) + " Tregs");
 			player.sendMessage(ChatColor.RED + "Enough players for lottery: " + ChatColor.YELLOW + enough);
 			player.sendMessage(ChatColor.RED + "You are in lottery: " + ChatColor.YELLOW + joined);
-			player.sendMessage(ChatColor.DARK_AQUA + "----------------" + ChatColor.DARK_PURPLE + "Lottery Command" + ChatColor.DARK_AQUA + "----------------");
+			player.sendMessage(ChatColor.DARK_AQUA + "----------------" + ChatColor.DARK_PURPLE + "Lottery Command" + ChatColor.DARK_AQUA + "-------------");
 			player.sendMessage(ChatColor.RED + "/lottery join - " + ChatColor.YELLOW + "Join the lottery (Takes 2,000 Tregs)");
-			player.sendMessage(ChatColor.RED + "/lottery quit - " + ChatColor.YELLOW + "Quit the lottery before a winner is picked.");
-			player.sendMessage(ChatColor.RED + "/lottery choose - " + ChatColor.YELLOW + "Randomly picks a winner (Admins/Guardians/Coders only)");
+			player.sendMessage(ChatColor.RED + "/lottery quit - " + ChatColor.YELLOW + "Quit the lottery before a winner is picked");
+			player.sendMessage(ChatColor.RED + "/lottery choose - " + ChatColor.YELLOW + "Randomly picks a winner");
 		}
 
 		if(args.length == 1){
