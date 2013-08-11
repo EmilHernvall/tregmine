@@ -290,6 +290,12 @@ public enum Rank
                this == SENIOR_ADMIN;
     }
 
+    public boolean canGetTrueTab()
+    {
+        return this == JUNIOR_ADMIN ||
+               this == SENIOR_ADMIN;
+    }
+
     public boolean canSummon()
     {
         return this == CODER ||
