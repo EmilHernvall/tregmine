@@ -1,4 +1,4 @@
-package info.tregmine.listeners;
+package info.tregmine.gamemagic;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -26,12 +26,11 @@ import org.bukkit.event.player.PlayerInteractEvent;
 public class ButtonListener implements Listener{
 
 	private final Tregmine plugin;
+	
 	public ButtonListener(Tregmine instance){
 		plugin = instance;
 		plugin.getServer();
 	}
-
-	NumberFormat format = NumberFormat.getNumberInstance();
 
 	@EventHandler
 	public void Buttons(PlayerInteractEvent event){
@@ -39,6 +38,7 @@ public class ButtonListener implements Listener{
 		if(event.getAction() == Action.LEFT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_BLOCK){
 			Block block = event.getClickedBlock();
 			TregminePlayer player = this.plugin.getPlayer(event.getPlayer());
+			NumberFormat format = NumberFormat.getNumberInstance();
 			int x = block.getX();
 			int y = block.getY();
 			int z = block.getZ();
@@ -81,7 +81,14 @@ public class ButtonListener implements Listener{
 							if(Material.DIRT.equals(player.getWorld().getBlockAt(600, 18, -108).getType())){
 
 								player.getWorld().getBlockAt(600, 18, -108).setType(Material.LAPIS_BLOCK);
-
+								
+								for(int y1 = 20; y1 < 34; y1++){
+									for(int z1 = -102; z1 < -106; z1++){
+										player.getWorld().getBlockAt(614, y1, z1).setType(Material.AIR);
+										player.getWorld().getBlockAt(614, y1, z1).setType(Material.WATER);
+									}
+								}
+/*
 								player.getWorld().getBlockAt(614, 33, -105).setType(Material.AIR);
 								player.getWorld().getBlockAt(614, 32, -105).setType(Material.AIR);
 								player.getWorld().getBlockAt(614, 31, -105).setType(Material.AIR);
@@ -146,11 +153,19 @@ public class ButtonListener implements Listener{
 								player.getWorld().getBlockAt(614, 33, -104).setType(Material.WATER);
 								player.getWorld().getBlockAt(614, 33, -103).setType(Material.WATER);
 								player.getWorld().getBlockAt(614, 33, -102).setType(Material.WATER);
-
+*/
 							} else if(Material.LAPIS_BLOCK.equals(player.getWorld().getBlockAt(600, 18, -108).getType())){
 
 								player.getWorld().getBlockAt(600, 18, -108).setType(Material.DIRT);
-
+								
+								for(int y1 = 20; y1 < 34; y1++){
+									for(int z1 = -102; z1 < -106; z1++){
+										player.getWorld().getBlockAt(614, y1, z1).setType(Material.AIR);
+										player.getWorld().getBlockAt(614, y1, z1).setType(Material.LAVA);
+									}
+								}
+								
+/*
 								player.getWorld().getBlockAt(614, 33, -105).setType(Material.AIR);
 								player.getWorld().getBlockAt(614, 32, -105).setType(Material.AIR);
 								player.getWorld().getBlockAt(614, 31, -105).setType(Material.AIR);
@@ -215,7 +230,7 @@ public class ButtonListener implements Listener{
 								player.getWorld().getBlockAt(614, 33, -104).setType(Material.LAVA);
 								player.getWorld().getBlockAt(614, 33, -103).setType(Material.LAVA);
 								player.getWorld().getBlockAt(614, 33, -102).setType(Material.LAVA);
-
+*/
 							}
 						}
 					}
