@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.text.NumberFormat;
 
-import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
 import info.tregmine.database.ConnectionPool;
 import info.tregmine.database.DBWalletDAO;
@@ -25,19 +24,19 @@ import org.bukkit.event.player.PlayerInteractEvent;
 
 public class ButtonListener implements Listener{
 
-	private final Tregmine plugin;
+	private final GameMagic plugin;
 	
-	public ButtonListener(Tregmine instance){
+	public ButtonListener(GameMagic instance){
 		plugin = instance;
 		plugin.getServer();
 	}
 
 	@EventHandler
-	public void Buttons(PlayerInteractEvent event){
+	public void buttons(PlayerInteractEvent event){
 		if(event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_AIR) return;
 		if(event.getAction() == Action.LEFT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_BLOCK){
 			Block block = event.getClickedBlock();
-			TregminePlayer player = this.plugin.getPlayer(event.getPlayer());
+			TregminePlayer player = (TregminePlayer) event.getPlayer();
 			NumberFormat format = NumberFormat.getNumberInstance();
 			int x = block.getX();
 			int y = block.getY();
