@@ -19,23 +19,23 @@ public class LotteryCommand extends AbstractCommand{
 		super(tregmine, "lottery");
 	}
 
-	Random random = new Random();
-	int amount = tregmine.lottery.size() * 2000;
-	int size = tregmine.lottery.size();
-	TregminePlayer winner = (TregminePlayer) tregmine.getServer().getPlayer(tregmine.lottery.get(random.nextInt(size)));
-	NumberFormat format = NumberFormat.getNumberInstance();
-	String enough = "True";
-	String joined = "True";
-
 	@Override
 	public boolean handlePlayer(TregminePlayer player, String args[]){
+		
+		Random random = new Random();
+		int amount = tregmine.lottery.size() * 2000;
+		int size = tregmine.lottery.size();
+		TregminePlayer winner = (TregminePlayer) tregmine.getServer().getPlayer(tregmine.lottery.get(random.nextInt(size)));
+		NumberFormat format = NumberFormat.getNumberInstance();
+		boolean enough = true;
+		boolean joined = true;
 
 		if(size < 2){
-			enough = "False (At least 2)";
+			enough = false;
 		}
 
 		if(!tregmine.lottery.contains(player.getName())){
-			joined = "False";
+			joined = false;
 		}
 
 		if(args.length < 1 || args.length > 1){
@@ -43,7 +43,7 @@ public class LotteryCommand extends AbstractCommand{
 			player.sendMessage(ChatColor.RED + "Amount needed to join: " + ChatColor.YELLOW + "2,000 Tregs");
 			player.sendMessage(ChatColor.RED + "Players in lottery: " + ChatColor.YELLOW + size);
 			player.sendMessage(ChatColor.RED + "Amount currently in lottery: " + ChatColor.YELLOW + format.format(amount) + " Tregs");
-			player.sendMessage(ChatColor.RED + "Enough players for lottery: " + ChatColor.YELLOW + enough);
+			player.sendMessage(ChatColor.RED + "Enough players for lottery (min 2): " + ChatColor.YELLOW + enough);
 			player.sendMessage(ChatColor.RED + "You are in lottery: " + ChatColor.YELLOW + joined);
 			player.sendMessage(ChatColor.DARK_AQUA + "----------------" + ChatColor.DARK_PURPLE + "Lottery Command" + ChatColor.DARK_AQUA + "-------------");
 			player.sendMessage(ChatColor.RED + "/lottery join - " + ChatColor.YELLOW + "Join the lottery (Takes 2,000 Tregs)");
