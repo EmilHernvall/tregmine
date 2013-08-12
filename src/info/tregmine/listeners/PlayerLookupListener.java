@@ -73,10 +73,10 @@ public class PlayerLookupListener implements Listener
                 Tregmine.LOGGER.info("Aliases: " + aliasList);
 
                 for (TregminePlayer current : plugin.getOnlinePlayers()) {
-                    if (!player.getRank().canSeeAliases()) {
+                    if (!current.getRank().canSeeAliases()) {
                         continue;
                     }
-                    if (current.hasFlag(TregminePlayer.Flags.HIDDEN_LOCATION)) {
+                    if (player.hasFlag(TregminePlayer.Flags.HIDDEN_LOCATION)) {
                         continue;
                     }
                     current.sendMessage(ChatColor.YELLOW
