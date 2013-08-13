@@ -392,9 +392,14 @@ public class Tregmine extends JavaPlugin
                     player.setFlag(TregminePlayer.Flags.SOFTWARNED);
                 }
                 else if (report.getAction() == PlayerReport.Action.BAN) {
-                    // event.disallow(Result.KICK_BANNED, report.getMessage());
                     throw new PlayerBannedException(report.getMessage());
                 }
+            }
+
+            if (player.hasFlag(TregminePlayer.Flags.SOFTWARNED) ||
+                player.hasFlag(TregminePlayer.Flags.HARDWARNED)) {
+
+                player.removeFlag(TregminePlayer.Flags.MENTOR);
             }
 
             player.setIp(addr.getHostAddress());

@@ -429,33 +429,15 @@ public class TregminePlayerListener implements Listener
         // Recalculate guardians
         activateGuardians();
 
-        // Try to find a mentor
         if (rank == Rank.TOURIST) {
-            // Is there an existing mentor online?
-            TregminePlayer mentor = plugin.getPlayer(player.getMentorId());
-            if (mentor != null) {
-                MentorCommand.startMentoring(plugin, player, mentor);
-            } else {
-                // Try to find a new available mentor
-                Queue<TregminePlayer> mentors = plugin.getMentorQueue();
-                mentor = mentors.poll();
-                if (mentor != null) {
-                    MentorCommand.startMentoring(plugin, player, mentor);
-                } else {
-                    // Ask people to volonteer
-                    Queue<TregminePlayer> students = plugin.getStudentQueue();
-                    students.offer(player);
-
-                    for (TregminePlayer p : plugin.getOnlinePlayers()) {
-                        if (!p.getRank().canMentor()) {
-                            continue;
-                        }
-
-                        p.sendMessage(player.getChatName() +
-                            ChatColor.BLUE + " needs a mentor! Type /mentor to " +
-                            "offer your services!");
-                    }
-                }
+            // Try to find a mentor for tourists that rejoin
+            MentorCommand.findMentor(plugin, player);
+        }
+        else if (player.hasFlag(TregminePlayer.Flags.MENTOR)) {
+            Queue<TregminePlayer> students = plugin.getStudentQueue();
+            if (students.size() > 0) {
+                player.sendMessage(ChatColor.YELLOW + "Mentors are needed! " +
+                    "Type /mentor to offer your services!");
             }
         }
     }
@@ -485,29 +467,23 @@ public class TregminePlayerListener implements Listener
         }
 
         // Look if there are any students being mentored by the exiting player
-        for (TregminePlayer student : plugin.getOnlinePlayers()) {
-            if (student.getRank() == Rank.TOURIST &&
-                student.getMentorId() == player.getId()) {
+        if (player.getStudent() != null) {
+            TregminePlayer student = player.getStudent();
 
-                Queue<TregminePlayer> mentors = plugin.getMentorQueue();
-                TregminePlayer mentor = mentors.poll();
-                if (mentor != null) {
-                    MentorCommand.startMentoring(plugin, student, mentor);
-                } else {
-                    Queue<TregminePlayer> students = plugin.getStudentQueue();
-                    students.offer(student);
+            student.setMentor(null);
+            player.setStudent(null);
 
-                    for (TregminePlayer p : plugin.getOnlinePlayers()) {
-                        if (!p.getRank().canMentor()) {
-                            continue;
-                        }
+            student.sendMessage(ChatColor.RED + "Your mentor left. We'll try " +
+                    "to find a new one for you as quickly as possible.");
 
-                        p.sendMessage(student.getChatName() +
-                            ChatColor.BLUE + " needs a mentor! Type /mentor to " +
-                            "offer your services!");
-                    }
-                }
-            }
+            MentorCommand.findMentor(plugin, student);
+        }
+        else if (player.getMentor() != null) {
+            TregminePlayer mentor = player.getMentor();
+            mentor.setStudent(null);
+            player.setMentor(null);
+
+            mentor.sendMessage(ChatColor.RED + "Your student left. :(");
         }
 
         plugin.removePlayer(player);

@@ -11,6 +11,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
+import info.tregmine.api.math.Distance;
 import info.tregmine.quadtree.Point;
 import info.tregmine.zones.Lot;
 import info.tregmine.zones.ZoneWorld;
@@ -98,8 +99,23 @@ public class ZoneBlockListener implements Listener
             }
         }
         else if (!player.getRank().canBuild()) {
-            event.setCancelled(true);
-            return;
+
+            if (player.getMentor() != null) {
+                TregminePlayer mentor = player.getMentor();
+                Location a = player.getLocation();
+                Location b = mentor.getLocation();
+                if (Distance.calc2d(a, b) > 50) {
+                    player.sendMessage(ChatColor.YELLOW + "You have to stay within " +
+                            "a 50 block radius of your mentor in order to build.");
+                    mentor.sendMessage(ChatColor.YELLOW + "Your student has to stay " +
+                            "within a 50 block radius of you in order to build.");
+                    event.setCancelled(true);
+                    return;
+                }
+            } else {
+                event.setCancelled(true);
+                return;
+            }
         }
     }
 
@@ -179,8 +195,23 @@ public class ZoneBlockListener implements Listener
             }
         }
         else if (!player.getRank().canBuild()) {
-            event.setCancelled(true);
-            return;
+
+            if (player.getMentor() != null) {
+                TregminePlayer mentor = player.getMentor();
+                Location a = player.getLocation();
+                Location b = mentor.getLocation();
+                if (Distance.calc2d(a, b) > 50) {
+                    player.sendMessage(ChatColor.YELLOW + "You have to stay within " +
+                            "a 50 block radius of your mentor in order to build.");
+                    mentor.sendMessage(ChatColor.YELLOW + "Your student has to stay " +
+                            "within a 50 block radius of you in order to build.");
+                    event.setCancelled(true);
+                    return;
+                }
+            } else {
+                event.setCancelled(true);
+                return;
+            }
         }
     }
 }

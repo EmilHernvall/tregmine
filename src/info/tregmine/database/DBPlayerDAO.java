@@ -153,9 +153,6 @@ public class DBPlayerDAO
                 else if ("quitmessage".equals(key)) {
                     player.setQuitMessage(value);
                 }
-                else if ("mentorId".equals(key)) {
-                    player.setMentorId(Integer.parseInt(value));
-                }
                 else if ("playtime".equals(key)) {
                     player.setPlayTime(Integer.parseInt(value));
                 }
@@ -222,7 +219,6 @@ public class DBPlayerDAO
 
     public void updatePlayerInfo(TregminePlayer player) throws SQLException
     {
-        updateProperty(player, "mentorId", player.getMentorId());
         updateProperty(player, "quitmessage", player.getQuitMessage());
     }
 
