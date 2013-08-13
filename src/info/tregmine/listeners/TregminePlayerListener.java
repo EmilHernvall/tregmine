@@ -433,7 +433,7 @@ public class TregminePlayerListener implements Listener
             // Try to find a mentor for tourists that rejoin
             MentorCommand.findMentor(plugin, player);
         }
-        else if (player.hasFlag(TregminePlayer.Flags.MENTOR)) {
+        else if (player.canMentor()) {
             Queue<TregminePlayer> students = plugin.getStudentQueue();
             if (students.size() > 0) {
                 player.sendMessage(ChatColor.YELLOW + "Mentors are needed! " +

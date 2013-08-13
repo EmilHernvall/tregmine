@@ -35,8 +35,7 @@ public class TregminePlayer extends PlayerDelegate
         SOFTWARNED,
         HARDWARNED,
         INVISIBLE,
-        HIDDEN_LOCATION,
-        MENTOR;
+        HIDDEN_LOCATION;
     };
 
     // Persistent values
@@ -153,6 +152,17 @@ public class TregminePlayer extends PlayerDelegate
     public int getPlayTime() { return playTime; }
 
     // non-persistent state methods
+
+    public boolean canMentor()
+    {
+        if (hasFlag(TregminePlayer.Flags.SOFTWARNED) ||
+            hasFlag(TregminePlayer.Flags.HARDWARNED)) {
+
+            return false;
+        }
+
+        return getRank().canMentor();
+    }
 
     public GuardianState getGuardianState()
     {

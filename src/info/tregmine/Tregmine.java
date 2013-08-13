@@ -396,12 +396,6 @@ public class Tregmine extends JavaPlugin
                 }
             }
 
-            if (player.hasFlag(TregminePlayer.Flags.SOFTWARNED) ||
-                player.hasFlag(TregminePlayer.Flags.HARDWARNED)) {
-
-                player.removeFlag(TregminePlayer.Flags.MENTOR);
-            }
-
             player.setIp(addr.getHostAddress());
             player.setHost(addr.getCanonicalHostName());
 

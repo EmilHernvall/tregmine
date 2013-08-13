@@ -31,7 +31,7 @@ public class MentorCommand extends AbstractCommand
         }
 
         if ("queue".equalsIgnoreCase(action)) {
-            if (!player.hasFlag(TregminePlayer.Flags.MENTOR)) {
+            if (!player.canMentor()) {
                 player.sendMessage(RED + "You have not been granted mentoring abilities.");
                 return true;
             }
@@ -81,7 +81,7 @@ public class MentorCommand extends AbstractCommand
             }
         }
         else if ("complete".equalsIgnoreCase(action)) {
-            if (!player.hasFlag(TregminePlayer.Flags.MENTOR)) {
+            if (!player.canMentor()) {
                 player.sendMessage(RED + "You have not been granted mentoring abilities.");
                 return true;
             }
@@ -154,7 +154,7 @@ public class MentorCommand extends AbstractCommand
             students.offer(student);
 
             for (TregminePlayer p : plugin.getOnlinePlayers()) {
-                if (!p.hasFlag(TregminePlayer.Flags.MENTOR)) {
+                if (!p.canMentor()) {
                     continue;
                 }
 
