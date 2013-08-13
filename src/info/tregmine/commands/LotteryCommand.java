@@ -12,6 +12,12 @@ import info.tregmine.api.TregminePlayer;
 import info.tregmine.database.ConnectionPool;
 import info.tregmine.database.DBWalletDAO;
 
+/**
+ * 
+ * @author Joe Notaro (notaro1997)
+ *
+ */
+
 public class LotteryCommand extends AbstractCommand{
 
 	public LotteryCommand(Tregmine tregmine) {
@@ -25,7 +31,7 @@ public class LotteryCommand extends AbstractCommand{
 		Random random = new Random();
 		int amount = tregmine.lottery.size() * 2000;
 		int size = tregmine.lottery.size();
-		TregminePlayer winner = (TregminePlayer) tregmine.getServer().getPlayer(tregmine.lottery.get(random.nextInt(size)));
+		TregminePlayer winner = tregmine.getPlayer(tregmine.lottery.get(random.nextInt(size)));
 		NumberFormat format = NumberFormat.getNumberInstance();
 		boolean enough = true;
 		boolean joined = true;
