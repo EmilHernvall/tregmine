@@ -355,7 +355,8 @@ public class ZonePlayerListener implements Listener
         }
         // Check if this is a lot - if so, limit items that can be blessed to
         // lot owner
-        else if (BlessedBlockListener.ALLOWED_MATERIALS.contains(block.getType())) {
+        else if (BlessedBlockListener.ALLOWED_MATERIALS.contains(block.getType()) &&
+                 !player.getRank().canModifyZones()) {
             if (lot == null) {
                 return;
             }
