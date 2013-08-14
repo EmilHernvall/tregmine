@@ -95,12 +95,6 @@ public class Main
             return;
         }
 
-        // Find target directory
-        File dstDir = new File(args[2], zoneName);
-        if (!dstDir.exists()) {
-            dstDir.mkdir();
-        }
-
         // Find a warp to use as spawn
         String warpName = null;
         if (args.length == 4) {
@@ -136,6 +130,12 @@ public class Main
         }
 
         System.out.printf("Using %d, %d, %d as spawn\n", spawn.x, spawn.y, spawn.z);
+
+        // Find target directory
+        File dstDir = new File(args[2], zoneName);
+        if (!dstDir.exists()) {
+            dstDir.mkdir();
+        }
 
         // Copy level.dat
         copyLevel(zoneName, srcDir, dstDir, spawn);
@@ -178,15 +178,15 @@ public class Main
         int minY = Math.min(rect.y1, rect.y2);
         int maxY = Math.max(rect.y1, rect.y2);
 
-        int minRegX = minX / 32 / 16;
-        int maxRegX = maxX / 32 / 16;
-        int minRegY = minY / 32 / 16;
-        int maxRegY = maxY / 32 / 16;
+        int minRegX = minX / 32 / 16 - 1;
+        int maxRegX = maxX / 32 / 16 + 1;
+        int minRegY = minY / 32 / 16 - 1;
+        int maxRegY = maxY / 32 / 16 + 1;
 
         int regionFiles = Math.abs((maxRegX - minRegX) * (minRegY - maxRegY));
 
         System.out.printf("Exporting zone %s at (%d, %d) - (%d, %d), covering %d regions\n",
-                          zoneName, rect.x1, rect.y1, rect.x2, rect.y1, regionFiles);
+                          zoneName, rect.x1, rect.y1, rect.x2, rect.y2, regionFiles);
 
         File srcRegionDir = new File(srcDir, "region");
         File dstRegionDir = new File(dstDir, "region");
@@ -322,9 +322,9 @@ public class Main
         PreparedStatement stmt = null;
         ResultSet rs = null;
         try {
-            String sql = "SELECT * FROM warps ";
-            sql += "WHERE (x BETWEEN ? AND ?) ";
-            sql += "AND (z BETWEEN ? AND ?) ";
+            String sql = "SELECT * FROM warp ";
+            sql += "WHERE (warp_x BETWEEN ? AND ?) ";
+            sql += "AND (warp_z BETWEEN ? AND ?) ";
 
             stmt = conn.prepareStatement(sql);
             stmt.setInt(1, Math.min(rect.x1, rect.x2));
@@ -337,10 +337,10 @@ public class Main
 
             Map<String, Point> points = new HashMap<String, Point>();
             while (rs.next()) {
-                String name = rs.getString("name");
-                int x = rs.getInt("x");
-                int y = rs.getInt("y");
-                int z = rs.getInt("z");
+                String name = rs.getString("warp_name");
+                int x = rs.getInt("warp_x");
+                int y = rs.getInt("warp_y");
+                int z = rs.getInt("warp_z");
 
                 points.put(name, new Point(x, y, z));
             }
