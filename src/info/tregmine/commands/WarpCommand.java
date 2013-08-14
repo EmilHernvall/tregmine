@@ -19,7 +19,9 @@ import org.bukkit.potion.PotionEffectType;
 import info.tregmine.Tregmine;
 import info.tregmine.database.ConnectionPool;
 import info.tregmine.database.DBWarpDAO;
+import info.tregmine.database.DBLogDAO;
 import info.tregmine.api.TregminePlayer;
+import info.tregmine.api.Warp;
 
 public class WarpCommand extends AbstractCommand
 {
@@ -74,20 +76,22 @@ public class WarpCommand extends AbstractCommand
         Server server = tregmine.getServer();
         String name = args[0];
 
-        Location warpPoint = null;
+        Warp warp = null;
         Connection conn = null;
         try {
             conn = ConnectionPool.getConnection();
 
             DBWarpDAO warpDAO = new DBWarpDAO(conn);
-            warpPoint = warpDAO.getWarp(name, server);
-            if (warpPoint == null) {
+            warp = warpDAO.getWarp(name, server);
+            if (warp == null) {
                 player.sendMessage("Warp not found!");
                 LOGGER.info("[warp failed] + <" + player.getName() + "> "
                         + name + " -- not found");
                 return true;
             }
 
+            DBLogDAO logDAO = new DBLogDAO(conn);
+            logDAO.insertWarpLog(player, warp.getId());
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
@@ -98,6 +102,8 @@ public class WarpCommand extends AbstractCommand
                 }
             }
         }
+
+        Location warpPoint = warp.getLocation();
 
         World world = warpPoint.getWorld();
 

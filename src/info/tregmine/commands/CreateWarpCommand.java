@@ -4,10 +4,12 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 import org.bukkit.Location;
+import org.bukkit.ChatColor;
 import info.tregmine.Tregmine;
 import info.tregmine.database.ConnectionPool;
 import info.tregmine.database.DBWarpDAO;
 import info.tregmine.api.TregminePlayer;
+import info.tregmine.api.Warp;
 
 public class CreateWarpCommand extends AbstractCommand
 {
@@ -34,10 +36,16 @@ public class CreateWarpCommand extends AbstractCommand
 
             DBWarpDAO warpDAO = new DBWarpDAO(conn);
 
+            Warp foundWarp = warpDAO.getWarp(args[0], tregmine.getServer());
+            if (foundWarp != null) {
+                player.sendMessage(ChatColor.RED + "Warp already exists!");
+                return true;
+            }
+
             Location loc = player.getLocation();
             warpDAO.insertWarp(name, loc);
 
-            player.sendMessage("Warp " + args[0] + " created");
+            player.sendMessage(ChatColor.GREEN + "Warp " + args[0] + " created");
             LOGGER.info("WARPCREATE: " + args[0] + " by " + player.getName());
         } catch (SQLException e) {
             throw new RuntimeException(e);

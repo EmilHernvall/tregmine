@@ -144,6 +144,30 @@ public class DBLogDAO
         }
     }
 
+    public void insertWarpLog(TregminePlayer player,
+                              int warpId)
+    {
+        PreparedStatement stmt = null;
+        try {
+            String sql = "INSERT INTO warp_log (player_id, warp_id, " +
+                         "log_timestamp) ";
+            sql += "VALUES (?, ?, unix_timestamp())";
+            stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, player.getId());
+            stmt.setInt(2, warpId);
+            stmt.execute();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            if (stmt != null) {
+                try {
+                    stmt.close();
+                } catch (SQLException e) {
+                }
+            }
+        }
+    }
+
     public Date getLastSeen(TregminePlayer player)
     throws SQLException
     {
