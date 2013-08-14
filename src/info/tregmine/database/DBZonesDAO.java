@@ -192,7 +192,7 @@ public class DBZonesDAO
             String sql = "INSERT INTO zone (zone_world, zone_name, " +
                 "zone_enterdefault, zone_placedefault, zone_destroydefault, " +
                 "zone_pvp, zone_hostiles, zone_communist, zone_entermessage, " +
-                "zone_exitmessage, zone_owner) VALUES (?,?,?,?,?,?,?,?,?,?)";
+                "zone_exitmessage, zone_owner) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
 
             stmt = conn.prepareStatement(sql);
             stmt.setString(1, zone.getWorld());
