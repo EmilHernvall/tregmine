@@ -54,7 +54,7 @@ CREATE TABLE `inventory_item` (
   `item_count` int(10) unsigned DEFAULT NULL,
   PRIMARY KEY (`item_id`),
   KEY `inventory_idx` (`inventory_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=287528 DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=287631 DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -123,7 +123,7 @@ CREATE TABLE `player_chatlog` (
   `chatlog_channel` varchar(64) CHARACTER SET latin1 DEFAULT NULL,
   `chatlog_message` varchar(255) CHARACTER SET latin1 DEFAULT NULL,
   PRIMARY KEY (`chatlog_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=176303 DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=176350 DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -167,7 +167,7 @@ CREATE TABLE `player_home` (
   PRIMARY KEY (`home_id`),
   KEY `player_idx` (`player_id`,`home_time`),
   KEY `idx_player` (`home_name`)
-) ENGINE=InnoDB AUTO_INCREMENT=33163 DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=33164 DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -189,7 +189,7 @@ CREATE TABLE `player_login` (
   `login_onlineplayers` int(10) unsigned DEFAULT NULL,
   PRIMARY KEY (`login_id`),
   KEY `ip_idx` (`login_ip`)
-) ENGINE=InnoDB AUTO_INCREMENT=31385 DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=31398 DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -210,7 +210,7 @@ CREATE TABLE `player_orelog` (
   `orelog_world` varchar(255) CHARACTER SET latin1 DEFAULT NULL,
   PRIMARY KEY (`orelog_id`),
   KEY `player_idx` (`player_id`,`orelog_timestamp`)
-) ENGINE=InnoDB AUTO_INCREMENT=21631 DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=21641 DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -352,7 +352,7 @@ DROP TABLE IF EXISTS `warp`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `warp` (
-  `warp_id` int(10) unsigned DEFAULT NULL,
+  `warp_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `warp_name` varchar(45) COLLATE utf8_swedish_ci DEFAULT NULL,
   `warp_x` double DEFAULT NULL,
   `warp_y` double DEFAULT NULL,
@@ -360,9 +360,9 @@ CREATE TABLE `warp` (
   `warp_pitch` double DEFAULT NULL,
   `warp_yaw` double DEFAULT NULL,
   `warp_world` varchar(45) COLLATE utf8_swedish_ci DEFAULT NULL,
-  UNIQUE KEY `name.uniqe` (`warp_name`),
-  KEY `name-index` (`warp_name`,`warp_x`,`warp_y`,`warp_z`,`warp_pitch`,`warp_yaw`,`warp_world`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
+  PRIMARY KEY (`warp_id`),
+  UNIQUE KEY `name.uniqe` (`warp_name`)
+) ENGINE=InnoDB AUTO_INCREMENT=1130 DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -379,7 +379,7 @@ CREATE TABLE `warp_log` (
   `log_timestamp` int(10) unsigned DEFAULT NULL,
   PRIMARY KEY (`log_id`),
   KEY `idx_warp` (`warp_id`,`log_timestamp`)
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -485,4 +485,4 @@ CREATE TABLE `zone_user` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2013-08-14 22:03:45
+-- Dump completed on 2013-08-14 22:13:37
