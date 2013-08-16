@@ -72,7 +72,9 @@ public class Tregmine extends JavaPlugin
     private org.bukkit.Server server;
 
     private Server webServer;
+    private Server chatServer;
     private WebHandler webHandler;
+    private ChatHandler chatHandler;
 
     private Map<String, TregminePlayer> players;
     private Map<Integer, TregminePlayer> playersById;
@@ -163,8 +165,36 @@ public class Tregmine extends JavaPlugin
             }
         }
 
-        // Register all listeners
+        // Set up web server
         PluginManager pluginMgm = server.getPluginManager();
+
+        try {
+            webHandler = new WebHandler(this, pluginMgm, apiKey);
+            pluginMgm.registerEvents(webHandler, this);
+
+            webHandler.addAction(new VersionAction.Factory());
+            webHandler.addAction(new PlayerListAction.Factory());
+            webHandler.addAction(new PlayerKickAction.Factory());
+
+            webServer = new Server(9192);
+            webServer.setHandler(webHandler);
+            webServer.start();
+
+            chatHandler = new ChatHandler(this, pluginMgm);
+            pluginMgm.registerEvents(chatHandler, this);
+
+            chatServer = new Server(9193);
+            chatServer.setHandler(chatHandler);
+            chatServer.start();
+
+            //BukkitScheduler scheduler = server.getScheduler();
+            //scheduler.scheduleSyncRepeatingTask(this, webHandler, 0, 20);
+        }
+        catch (Exception e) {
+            LOGGER.log(Level.WARNING, "Failed to start web server!", e);
+        }
+
+        // Register all listeners
         pluginMgm.registerEvents(new BlessedBlockListener(this), this);
         pluginMgm.registerEvents(new BoxFillBlockListener(this), this);
         pluginMgm.registerEvents(new ChatListener(this), this);
@@ -172,6 +202,7 @@ public class Tregmine extends JavaPlugin
         pluginMgm.registerEvents(new PlayerLookupListener(this), this);
         pluginMgm.registerEvents(new SetupListener(this), this);
         pluginMgm.registerEvents(new SignColorListener(), this);
+        pluginMgm.registerEvents(new TabListener(this), this);
         pluginMgm.registerEvents(new TauntListener(this), this);
         pluginMgm.registerEvents(new TregmineBlockListener(this), this);
         pluginMgm.registerEvents(new TregminePlayerListener(this), this);
@@ -254,23 +285,6 @@ public class Tregmine extends JavaPlugin
         getCommand("weather").setExecutor(new WeatherCommand(this));
         getCommand("who").setExecutor(new WhoCommand(this));
         getCommand("zone").setExecutor(new ZoneCommand(this, "zone"));
-
-        try {
-            webHandler = new WebHandler(this, apiKey);
-            webHandler.addAction(new VersionAction.Factory());
-            webHandler.addAction(new PlayerListAction.Factory());
-            webHandler.addAction(new PlayerKickAction.Factory());
-
-            webServer = new Server(9192);
-            webServer.setHandler(webHandler);
-            webServer.start();
-
-            BukkitScheduler scheduler = server.getScheduler();
-            scheduler.scheduleSyncRepeatingTask(this, webHandler, 0, 20);
-        }
-        catch (Exception e) {
-            LOGGER.log(Level.WARNING, "Failed to start web server!", e);
-        }
     }
 
     // run when plugin is disabled
@@ -291,6 +305,9 @@ public class Tregmine extends JavaPlugin
         try {
             webServer.stop();
             webServer.join();
+
+            chatServer.stop();
+            chatServer.join();
         }
         catch (Exception e) {
             LOGGER.log(Level.WARNING, "Failed to start web server!", e);
@@ -378,7 +395,6 @@ public class Tregmine extends JavaPlugin
                     player.setFlag(TregminePlayer.Flags.SOFTWARNED);
                 }
                 else if (report.getAction() == PlayerReport.Action.BAN) {
-                    // event.disallow(Result.KICK_BANNED, report.getMessage());
                     throw new PlayerBannedException(report.getMessage());
                 }
             }

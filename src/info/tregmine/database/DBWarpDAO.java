@@ -9,6 +9,8 @@ import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.Location;
 
+import info.tregmine.api.Warp;
+
 public class DBWarpDAO
 {
     private Connection conn;
@@ -33,7 +35,8 @@ public class DBWarpDAO
     {
         PreparedStatement stmt = null;
         try {
-            String sql = "INSERT INTO warps (name, x, y, z, yaw, pitch, world) ";
+            String sql = "INSERT INTO warp (warp_name, warp_x, warp_y, warp_z, " +
+                "warp_yaw, warp_pitch, warp_world) ";
             sql += "VALUES (?, ?, ?, ?, ?, ?, ?)";
             stmt = conn.prepareStatement(sql);
 
@@ -57,12 +60,12 @@ public class DBWarpDAO
         }
     }
 
-    public Location getWarp(String name, Server server)
+    public Warp getWarp(String name, Server server)
     {
         PreparedStatement stmt = null;
         ResultSet rs = null;
         try {
-            stmt = conn.prepareStatement("SELECT * FROM warps WHERE name = ?");
+            stmt = conn.prepareStatement("SELECT * FROM warp WHERE warp_name = ?");
             stmt.setString(1, name);
             stmt.execute();
 
@@ -71,19 +74,28 @@ public class DBWarpDAO
                 return null;
             }
 
-            double x = rs.getDouble("x");
-            double y = rs.getDouble("y");
-            double z = rs.getDouble("z");
-            float pitch = rs.getFloat("pitch");
-            float yaw = rs.getFloat("yaw");
+            int id = rs.getInt("warp_id");
+            String warpName = rs.getString("warp_name");
+            double x = rs.getDouble("warp_x");
+            double y = rs.getDouble("warp_y");
+            double z = rs.getDouble("warp_z");
+            float pitch = rs.getFloat("warp_pitch");
+            float yaw = rs.getFloat("warp_yaw");
 
-            World world = getWorld(server, rs.getString("world"));
+            World world = getWorld(server, rs.getString("warp_world"));
 
             if (world == null) {
                 return null;
             }
 
-            return new Location(world, x, y, z, yaw, pitch);
+            Location location = new Location(world, x, y, z, yaw, pitch);
+
+            Warp warp = new Warp();
+            warp.setId(id);
+            warp.setName(warpName);
+            warp.setLocation(location);
+
+            return warp;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {

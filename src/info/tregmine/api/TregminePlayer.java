@@ -47,7 +47,6 @@ public class TregminePlayer extends PlayerDelegate
     private ChatColor color = ChatColor.WHITE;
     private String quitMessage = null;
     private int guardianRank = 0;
-    private int mentorId = 0;
     private int playTime = 0;
     private Set<Flags> flags;
 
@@ -64,6 +63,8 @@ public class TregminePlayer extends PlayerDelegate
     private String host;
     private String city;
     private String country;
+    private TregminePlayer mentor;
+    private TregminePlayer student;
 
     // Player state for block fill
     private Block fillBlock1 = null;
@@ -147,13 +148,21 @@ public class TregminePlayer extends PlayerDelegate
     public void setGuardianRank(int v) { this.guardianRank = v; }
     public int getGuardianRank() { return guardianRank; }
 
-    public void setMentorId(int id) { this.mentorId = id; }
-    public int getMentorId() { return mentorId; }
-
     public void setPlayTime(int v) { this.playTime = v; }
     public int getPlayTime() { return playTime; }
 
     // non-persistent state methods
+
+    public boolean canMentor()
+    {
+        if (hasFlag(TregminePlayer.Flags.SOFTWARNED) ||
+            hasFlag(TregminePlayer.Flags.HARDWARNED)) {
+
+            return false;
+        }
+
+        return getRank().canMentor();
+    }
 
     public GuardianState getGuardianState()
     {
@@ -177,6 +186,9 @@ public class TregminePlayer extends PlayerDelegate
         }
         else if (hasFlag(Flags.HARDWARNED)) {
             return ChatColor.GRAY;
+        }
+        else if (hasFlag(Flags.CHILD)) {
+            return ChatColor.AQUA;
         }
 
         if (rank == null) {
@@ -245,6 +257,12 @@ public class TregminePlayer extends PlayerDelegate
     public void setCountry(String v) { this.country = v; }
     public String getCountry() { return country; }
 
+    public void setMentor(TregminePlayer v) { this.mentor = v; }
+    public TregminePlayer getMentor() { return mentor; }
+
+    public void setStudent(TregminePlayer v) { this.student = v; }
+    public TregminePlayer getStudent() { return student; }
+
     // block fill state
     public void setFillBlock1(Block v) { this.fillBlock1 = v; }
     public Block getFillBlock1() { return fillBlock1; }
@@ -278,14 +296,14 @@ public class TregminePlayer extends PlayerDelegate
     {
         showPlayer(player.getDelegate());
     }
-    
+
     /**
      * Sends the player a notification along with an associated message.
      * <p>
-     * 
+     *
      *  If the message is <b>null</b> or equal to "", the message won't send,
      *  however the notification will still play.
-     *  
+     *
      *  If the notification is <b>null</b>, and the message is not if will send
      *  the player the message.
      * @param notif - The notification to send to the player
@@ -294,18 +312,18 @@ public class TregminePlayer extends PlayerDelegate
      */
     public void sendNotification(Notification notif, String message)
     {
-    	if(notif != null && notif != Notification.NONE){
-    		if(!message.equalsIgnoreCase("") && message != null){
-    			playSound(getLocation(), notif.getSound(), 2F, 1F);
-    			sendMessage(message);
-    		}
-    	}else{
-    		if(!message.equalsIgnoreCase("") && message != null){
-    			sendMessage(message);
-    		}else{
-    			throw new IllegalArgumentException("Parameters can not both be null");
-    		}
-    	}
+        if (notif != null && notif != Notification.NONE) {
+            if (!message.equalsIgnoreCase("") && message != null) {
+                playSound(getLocation(), notif.getSound(), 2F, 1F);
+                sendMessage(message);
+            }
+        } else {
+            if (!message.equalsIgnoreCase("") && message != null) {
+                sendMessage(message);
+            } else {
+                throw new IllegalArgumentException("Parameters can not both be null");
+            }
+        }
     }
 
     public void teleportWithHorse(Location loc)

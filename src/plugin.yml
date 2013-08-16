@@ -77,7 +77,7 @@ commands:
     usage: /lot
   mentor:
     description: Make yourself available for mentoring (residents and above)
-    usage: /mentor
+    usage: /mentor queue|complete|cancel
   msg:
     description: Message another player
     usage: /msg player message

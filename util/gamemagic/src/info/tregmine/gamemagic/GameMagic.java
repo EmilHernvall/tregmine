@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.TimeZone;
+import java.util.logging.Logger;
 import java.util.zip.CRC32;
 
 import org.bukkit.WorldCreator;
@@ -29,6 +30,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.event.Listener;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -44,17 +46,25 @@ import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 
+import info.tregmine.Tregmine;
+import info.tregmine.api.TregminePlayer;
+import info.tregmine.commands.ActionCommand;
 import info.tregmine.database.ConnectionPool;
+import info.tregmine.database.DBWalletDAO;
+import info.tregmine.api.*;
 
 public class GameMagic extends JavaPlugin implements Listener
 {
     private Map<Integer, String> portalLookup;
-
+    
+    public final Logger log = Logger.getLogger("Minecraft");
+    
+    public Tregmine tregmine = null;
+    
     public GameMagic()
     {
         portalLookup = new HashMap<Integer, String>();
     }
-
     @Override
     public void onEnable()
     {
@@ -111,26 +121,39 @@ public class GameMagic extends JavaPlugin implements Listener
         // Shoot fireworks at spawn
         BukkitScheduler scheduler = getServer().getScheduler();
         scheduler.scheduleSyncRepeatingTask(this,
-            new Runnable() {
-                public void run() {
-                    World world = GameMagic.this.getServer().getWorld("world");
-                    Location loc = world.getSpawnLocation();
+                new Runnable() {
+            public void run() {
+                World world = GameMagic.this.getServer().getWorld("world");
+                Location loc = world.getSpawnLocation();
 
-                    FireworksFactory factory = new FireworksFactory();
-                    factory.addColor(Color.BLUE);
-                    factory.addColor(Color.YELLOW);
-                    factory.addType(FireworkEffect.Type.STAR);
-                    factory.shot(loc);
-                }
-            }, 100L, 200L);
+                FireworksFactory factory = new FireworksFactory();
+                factory.addColor(Color.BLUE);
+                factory.addColor(Color.YELLOW);
+                factory.addType(FireworkEffect.Type.STAR);
+                factory.shot(loc);
+            }
+        }, 100L, 200L);
+        
+      //Check for tregmine plugin
+        Plugin test = this.getServer().getPluginManager().getPlugin("tregmine");
+
+        if(this.tregmine == null) {
+            if(test != null) {
+                this.tregmine = ((Tregmine)test);
+            } else {
+                log.info(this.getDescription().getName() + " " + this.getDescription().getVersion() + " - could not find Tregmine");
+                this.getServer().getPluginManager().disablePlugin(this);
+            }
+        }
+        getServer().getPluginManager().registerEvents(new Gates(this), this);
     }
 
     public static int locationChecksum(Location loc)
     {
         int checksum = (loc.getBlockX() + "," +
-                        loc.getBlockZ() + "," +
-                        loc.getBlockY() + "," +
-                        loc.getWorld().getName()).hashCode();
+                loc.getBlockZ() + "," +
+                loc.getBlockY() + "," +
+                loc.getWorld().getName()).hashCode();
         return checksum;
     }
 
@@ -140,7 +163,7 @@ public class GameMagic extends JavaPlugin implements Listener
         for (int i = 0; i < inventory.getSize(); i++) {
             if (inventory.getItem(i) != null) {
                 player.sendMessage(ChatColor.RED + "You are carrying too much " +
-                                   "for the portal's magic to work.");
+                        "for the portal's magic to work.");
                 return;
             }
         }
@@ -151,10 +174,10 @@ public class GameMagic extends JavaPlugin implements Listener
         if (world.isChunkLoaded(chunk)) {
             player.teleport(loc);
             player.sendMessage(ChatColor.YELLOW + "Thanks for traveling with " +
-                               "TregPort!");
+                    "TregPort!");
         } else {
             player.sendMessage(ChatColor.RED + "The portal needs some " +
-                               "preparation. Please try again!");
+                    "preparation. Please try again!");
         }
     }
 
@@ -162,7 +185,7 @@ public class GameMagic extends JavaPlugin implements Listener
     public void buttons(PlayerInteractEvent event)
     {
         if (event.getAction() == Action.LEFT_CLICK_AIR ||
-            event.getAction() == Action.RIGHT_CLICK_AIR) {
+                event.getAction() == Action.RIGHT_CLICK_AIR) {
 
             return;
         }
@@ -240,8 +263,8 @@ public class GameMagic extends JavaPlugin implements Listener
         Location l = event.getBlock().getLocation();
         Block fence =
                 event.getBlock()
-                     .getWorld()
-                     .getBlockAt(l.getBlockX(), l.getBlockY() - 1, l.getBlockZ());
+                .getWorld()
+                .getBlockAt(l.getBlockX(), l.getBlockY() - 1, l.getBlockZ());
 
         if (fence.getType() == Material.FENCE) {
             event.setCancelled(true);
@@ -256,8 +279,8 @@ public class GameMagic extends JavaPlugin implements Listener
         Location l = event.getBlock().getLocation();
         Block block =
                 event.getBlock()
-                     .getWorld()
-                     .getBlockAt(l.getBlockX(), l.getBlockY() - 1, l.getBlockZ());
+                .getWorld()
+                .getBlockAt(l.getBlockX(), l.getBlockY() - 1, l.getBlockZ());
 
         if (block.getType() == Material.OBSIDIAN) {
             event.setCancelled(false);

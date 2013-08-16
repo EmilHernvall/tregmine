@@ -14,8 +14,8 @@ import org.bukkit.Sound;
  */
 public enum Notification {
 	NONE(null),//Place holder for just a message
-	BLESS(Sound.ENDERDRAGON_WINGS),
-	COMMAND_FAIL(Sound.ZOMBIE_DEATH),
+	BLESS(Sound.CHEST_CLOSE), //to keep it related to chests ect..
+	COMMAND_FAIL(Sound.CLICK),
 	MESSAGE(Sound.LEVEL_UP),
 	RANK_UP(Sound.FUSE),
 	SUMMON(Sound.PORTAL_TRAVEL),
