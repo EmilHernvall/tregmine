@@ -153,30 +153,13 @@ public class ZoneCommand extends AbstractCommand
             return;
         }
 
-        Connection conn = null;
-        try {
-            conn = ConnectionPool.getConnection();
-            DBZonesDAO dao = new DBZonesDAO(conn);
-            int userId = dao.getUserId(player.getName());
-            if (userId == -1) {
-                player.sendMessage("Player " + player.getName()
-                        + " was not found.");
-                return;
-            }
-
+        try (IContext ctx = tregmine.createContext()) {
+            IZonesDAO dao = ctx.getZonesDAO();
             dao.createZone(zone);
             dao.addRectangle(zone.getId(), rect);
-            dao.addUser(zone.getId(), userId, Zone.Permission.Owner);
-
-        } catch (SQLException e) {
+            dao.addUser(zone.getId(), player.getId(), Zone.Permission.Owner);
+        } catch (DAOException e) {
             throw new RuntimeException(e);
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                }
-            }
         }
     }
 
@@ -204,20 +187,11 @@ public class ZoneCommand extends AbstractCommand
         world.deleteZone(name);
         player.sendMessage(RED + "[" + name + "] " + "Zone deleted.");
 
-        Connection conn = null;
-        try {
-            conn = ConnectionPool.getConnection();
-            DBZonesDAO dao = new DBZonesDAO(conn);
+        try (IContext ctx = tregmine.createContext()) {
+            IZonesDAO dao = ctx.getZonesDAO();
             dao.deleteZone(zone.getId());
-        } catch (SQLException e) {
+        } catch (DAOException e) {
             throw new RuntimeException(e);
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                }
-            }
         }
     }
 
@@ -270,29 +244,21 @@ public class ZoneCommand extends AbstractCommand
             return;
         }
 
-        // store permission change in db
-        Connection conn = null;
-        try {
-            conn = ConnectionPool.getConnection();
-            DBZonesDAO dao = new DBZonesDAO(conn);
-            int userId = dao.getUserId(userName);
-            if (userId == -1) {
-                player.sendMessage(RED + "[" + zone.getName() + "] "
-                        + "Player " + userName + " was not found.");
-                return;
-            }
+        TregminePlayer victim = tregmine.getPlayerOffline(userName);
+        if (victim == null) {
+            player.sendMessage(RED + "[" + zone.getName() + "] "
+                    + "Player " + userName + " was not found.");
+            return;
+        }
 
-            dao.deleteUser(zone.getId(), userId);
-            dao.addUser(zone.getId(), userId, perm);
-        } catch (SQLException e) {
+        // store permission change in db
+        try (IContext ctx = tregmine.createContext()) {
+            IZonesDAO dao = ctx.getZonesDAO();
+
+            dao.deleteUser(zone.getId(), victim.getId());
+            dao.addUser(zone.getId(), victim.getId(), perm);
+        } catch (DAOException e) {
             throw new RuntimeException(e);
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                }
-            }
         }
 
         zone.addUser(userName, perm);
@@ -342,28 +308,19 @@ public class ZoneCommand extends AbstractCommand
             return;
         }
 
-        // store permission change in db
-        Connection conn = null;
-        try {
-            conn = ConnectionPool.getConnection();
-            DBZonesDAO dao = new DBZonesDAO(conn);
-            int userId = dao.getUserId(userName);
-            if (userId == -1) {
-                player.sendMessage(RED + "[" + zone.getName() + "] "
-                        + "Player " + userName + " was not found.");
-                return;
-            }
+        TregminePlayer victim = tregmine.getPlayerOffline(userName);
+        if (victim == null) {
+            player.sendMessage(RED + "[" + zone.getName() + "] "
+                    + "Player " + userName + " was not found.");
+            return;
+        }
 
-            dao.deleteUser(zone.getId(), userId);
-        } catch (SQLException e) {
+        // store permission change in db
+        try (IContext ctx = tregmine.createContext()) {
+            IZonesDAO dao = ctx.getZonesDAO();
+            dao.deleteUser(zone.getId(), victim.getId());
+        } catch (DAOException e) {
             throw new RuntimeException(e);
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                }
-            }
         }
 
         zone.deleteUser(userName);
@@ -467,20 +424,11 @@ public class ZoneCommand extends AbstractCommand
                     + (status ? "allowed" : "disallowed") + "\".");
         }
 
-        Connection conn = null;
-        try {
-            conn = ConnectionPool.getConnection();
-            DBZonesDAO dao = new DBZonesDAO(conn);
+        try (IContext ctx = tregmine.createContext()) {
+            IZonesDAO dao = ctx.getZonesDAO();
             dao.updateZone(zone);
-        } catch (SQLException e) {
+        } catch (DAOException e) {
             throw new RuntimeException(e);
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                }
-            }
         }
     }
 

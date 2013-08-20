@@ -1,8 +1,5 @@
 package info.tregmine.listeners;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -61,21 +58,11 @@ public class ChatListener implements Listener
 
         Tregmine.LOGGER.info(channel + " <" + sender.getName() + "> " + text);
 
-        Connection conn = null;
-        try {
-            conn = ConnectionPool.getConnection();
-
-            DBLogDAO logDAO = new DBLogDAO(conn);
+        try (IContext ctx = plugin.createContext()) {
+            ILogDAO logDAO = ctx.getLogDAO();
             logDAO.insertChatMessage(sender, channel, text);
-        } catch (SQLException e) {
+        } catch (DAOException e) {
             throw new RuntimeException(e);
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                }
-            }
         }
 
         event.setCancelled(true);

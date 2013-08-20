@@ -3,8 +3,6 @@ package info.tregmine.listeners;
 import java.util.Set;
 import java.util.EnumSet;
 import java.util.Map;
-import java.sql.Connection;
-import java.sql.SQLException;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -82,10 +80,8 @@ public class BlessedBlockListener implements Listener
 
             int amount = player.getRank().getBlessCost(block);
             if (amount > 0) {
-                Connection conn = null;
-                try {
-                    conn = ConnectionPool.getConnection();
-                    DBWalletDAO walletDAO = new DBWalletDAO(conn);
+                try (IContext ctx = plugin.createContext()) {
+                    IWalletDAO walletDAO = ctx.getWalletDAO();
 
                     if (walletDAO.take(player, amount)) {
                         player.sendMessage(ChatColor.LIGHT_PURPLE
@@ -96,15 +92,8 @@ public class BlessedBlockListener implements Listener
                                 + " tregs");
                         return;
                     }
-                } catch (SQLException e) {
+                } catch (DAOException e) {
                     throw new RuntimeException(e);
-                } finally {
-                    if (conn != null) {
-                        try {
-                            conn.close();
-                        } catch (SQLException e) {
-                        }
-                    }
                 }
             }
 
@@ -121,22 +110,12 @@ public class BlessedBlockListener implements Listener
             Map<Location, Integer> blessedBlocks = plugin.getBlessedBlocks();
             blessedBlocks.put(loc, targetId);
 
-            Connection conn = null;
-            try {
-                conn = ConnectionPool.getConnection();
-
-                DBInventoryDAO invDAO = new DBInventoryDAO(conn);
+            try (IContext ctx = plugin.createContext()) {
+                IInventoryDAO invDAO = ctx.getInventoryDAO();
                 invDAO.insertInventory(target, loc,
-                        DBInventoryDAO.InventoryType.BLOCK);
-            } catch (SQLException e) {
+                        IInventoryDAO.InventoryType.BLOCK);
+            } catch (DAOException e) {
                 throw new RuntimeException(e);
-            } finally {
-                if (conn != null) {
-                    try {
-                        conn.close();
-                    } catch (SQLException e) {
-                    }
-                }
             }
 
             event.setCancelled(true);

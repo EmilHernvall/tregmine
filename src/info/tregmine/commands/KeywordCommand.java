@@ -1,8 +1,5 @@
 package info.tregmine.commands;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-
 import static org.bukkit.ChatColor.*;
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
@@ -37,21 +34,11 @@ public class KeywordCommand extends AbstractCommand
                 + "From now on you can only log in by using ip "
                 + keyword.toLowerCase() + ".mc.tregmine.info");
 
-        Connection conn = null;
-        try {
-            conn = ConnectionPool.getConnection();
-
-            DBPlayerDAO playerDAO = new DBPlayerDAO(conn);
+        try (IContext ctx = tregmine.createContext()) {
+            IPlayerDAO playerDAO = ctx.getPlayerDAO();
             playerDAO.updatePlayerKeyword(player);
-        } catch (SQLException e) {
+        } catch (DAOException e) {
             throw new RuntimeException(e);
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                }
-            }
         }
 
         return true;

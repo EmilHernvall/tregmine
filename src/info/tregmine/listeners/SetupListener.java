@@ -1,7 +1,5 @@
 package info.tregmine.listeners;
 
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.text.ParseException;
 import java.util.Date;
@@ -78,10 +76,7 @@ public class SetupListener implements Listener
 
         Tregmine.LOGGER.info("[SETUP] <" + player.getChatName() + "> " + text);
 
-        Connection conn = null;
-        try {
-            conn = ConnectionPool.getConnection();
-
+        try (IContext ctx = plugin.createContext()) {
             Server server = plugin.getServer();
             if ("yes".equalsIgnoreCase(text)) {
                 player.sendMessage(ChatColor.GREEN + "You have now joined Tregmine " +
@@ -89,7 +84,7 @@ public class SetupListener implements Listener
                 player.setChatState(TregminePlayer.ChatState.CHAT);
                 player.setRank(Rank.TOURIST);
 
-                DBPlayerDAO playerDAO = new DBPlayerDAO(conn);
+                IPlayerDAO playerDAO = ctx.getPlayerDAO();
                 playerDAO.updatePlayer(player);
 
                 Tregmine.LOGGER.info("[SETUP] " + player.getChatName() +
@@ -109,7 +104,7 @@ public class SetupListener implements Listener
                 player.setFlag(TregminePlayer.Flags.CHILD);
                 player.setRank(Rank.TOURIST);
 
-                DBPlayerDAO playerDAO = new DBPlayerDAO(conn);
+                IPlayerDAO playerDAO = ctx.getPlayerDAO();
                 playerDAO.updatePlayer(player);
 
                 Tregmine.LOGGER.info("[SETUP] " + player.getChatName() +
@@ -119,15 +114,8 @@ public class SetupListener implements Listener
                 player.sendMessage(ChatColor.RED + "Please say \"yes\" or \"no\". " +
                         "You will not be able to talk to other players until you do.");
             }
-        } catch (SQLException e) {
+        } catch (DAOException e) {
             throw new RuntimeException(e);
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                }
-            }
         }
     }
 }

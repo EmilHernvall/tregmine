@@ -1,8 +1,5 @@
 package info.tregmine.commands;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-
 import static org.bukkit.ChatColor.*;
 import org.bukkit.Server;
 import org.bukkit.World;
@@ -26,22 +23,12 @@ public class HomeCommand extends AbstractCommand
 
     private boolean teleport(TregminePlayer player)
     {
-        Connection conn = null;
         Location loc = null;
-        try {
-            conn = ConnectionPool.getConnection();
-            ;
-            DBHomeDAO homeDAO = new DBHomeDAO(conn);
+        try (IContext ctx = tregmine.createContext()) {
+            IHomeDAO homeDAO = ctx.getHomeDAO();
             loc = homeDAO.getHome(player);
-        } catch (SQLException e) {
+        } catch (DAOException e) {
             throw new RuntimeException(e);
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                }
-            }
         }
 
         if (loc == null) {
@@ -61,20 +48,7 @@ public class HomeCommand extends AbstractCommand
                 return true;
             }
 
-            Horse horse = null;
-
-            if((player.getVehicle() != null) && (player.getVehicle() instanceof Horse)){
-                horse = (Horse)player.getVehicle();
-            }
-
-            if(horse != null){
-                horse.eject();
-                horse.teleport(loc);
-                player.teleport(loc);
-                horse.setPassenger(player.getDelegate());
-            }else{
-                player.teleport(loc);
-            }
+            player.teleportWithHorse(loc);
 
             player.sendMessage(AQUA + "Hoci poci, little gnome. Magic worked, "
                     + "you're in your home!");
@@ -110,20 +84,11 @@ public class HomeCommand extends AbstractCommand
             return true;
         }
 
-        Connection conn = null;
-        try {
-            conn = ConnectionPool.getConnection();
-            DBHomeDAO homeDAO = new DBHomeDAO(conn);
+        try (IContext ctx = tregmine.createContext()) {
+            IHomeDAO homeDAO = ctx.getHomeDAO();
             homeDAO.insertHome(player, playerLoc);
-        } catch (SQLException e) {
+        } catch (DAOException e) {
             throw new RuntimeException(e);
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                }
-            }
         }
 
         player.sendMessage(AQUA + "Home saved!");
@@ -143,21 +108,12 @@ public class HomeCommand extends AbstractCommand
             return true;
         }
 
-        Connection conn = null;
         Location loc = null;
-        try {
-            conn = ConnectionPool.getConnection();
-            DBHomeDAO homeDAO = new DBHomeDAO(conn);
+        try (IContext ctx = tregmine.createContext()) {
+            IHomeDAO homeDAO = ctx.getHomeDAO();
             loc = homeDAO.getHome(target.getId(), tregmine.getServer());
-        } catch (SQLException e) {
+        } catch (DAOException e) {
             throw new RuntimeException(e);
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                }
-            }
         }
 
         if (loc == null) {
@@ -171,21 +127,7 @@ public class HomeCommand extends AbstractCommand
         world.loadChunk(chunk);
 
         if (world.isChunkLoaded(chunk)) {
-        	
-        	Horse horse = null;
-            
-            if((player.getVehicle() != null) && (player.getVehicle() instanceof Horse)){
-            	horse = (Horse)player.getVehicle();
-            }
-            
-            if(horse != null){
-            	horse.eject();
-            	horse.teleport(loc);
-            	player.teleport(loc);
-            	horse.setPassenger(player.getDelegate());
-            }else{
-            	player.teleport(loc);
-            }
+            player.teleportWithHorse(loc);
 
             player.sendMessage(AQUA
                     + "Like a drunken gnome, you fly across the world to "

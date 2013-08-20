@@ -2,8 +2,6 @@ package info.tregmine.web;
 
 import java.util.List;
 import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.SQLException;
 
 import org.eclipse.jetty.server.Request;
 
@@ -96,27 +94,17 @@ public class PlayerKickAction implements WebHandler.Action
                 + subject.getChatName() + AQUA + ": " + message);
 
         if (status) {
-            Connection conn = null;
-            try {
-                conn = ConnectionPool.getConnection();
-
+            try (IContext ctx = tregmine.createContext()) {
                 PlayerReport report = new PlayerReport();
                 report.setSubjectId(subjectId);
                 report.setIssuerId(issuerId);
                 report.setAction(PlayerReport.Action.KICK);
                 report.setMessage(message);
 
-                DBPlayerReportDAO reportDAO = new DBPlayerReportDAO(conn);
+                IPlayerReportDAO reportDAO = ctx.getPlayerReportDAO();
                 reportDAO.insertReport(report);
-            } catch (SQLException e) {
+            } catch (DAOException e) {
                 throw new RuntimeException(e);
-            } finally {
-                if (conn != null) {
-                    try {
-                        conn.close();
-                    } catch (SQLException e) {
-                    }
-                }
             }
         }
     }

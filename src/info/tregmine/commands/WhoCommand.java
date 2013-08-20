@@ -2,8 +2,6 @@ package info.tregmine.commands;
 
 import static org.bukkit.ChatColor.*;
 
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -51,10 +49,8 @@ public class WhoCommand extends AbstractCommand
         float Y2 = (float)Math.round(Y);
         float Z2 = (float)Math.round(Z);
 
-        Connection conn = null;
-        try {
-            conn = ConnectionPool.getConnection();
-            DBWalletDAO walletDAO = new DBWalletDAO(conn);
+        try (IContext ctx = tregmine.createContext()) {
+            IWalletDAO walletDAO = ctx.getWalletDAO();
 
             long balance = walletDAO.balance(whoPlayer);
 
@@ -74,17 +70,10 @@ public class WhoCommand extends AbstractCommand
 
             LOGGER.info(player.getName() + " used /who on player " +
                         whoPlayer.getName());
-
-        } catch (SQLException e) {
+        } catch (DAOException e) {
             throw new RuntimeException(e);
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                }
-            }
         }
+
         return true;
     }
 

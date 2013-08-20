@@ -1,8 +1,5 @@
 package info.tregmine.commands;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-
 import static org.bukkit.ChatColor.*;
 
 import org.bukkit.ChatColor;
@@ -78,11 +75,8 @@ public class WarpCommand extends AbstractCommand
         String name = args[0];
 
         Warp warp = null;
-        Connection conn = null;
-        try {
-            conn = ConnectionPool.getConnection();
-
-            DBWarpDAO warpDAO = new DBWarpDAO(conn);
+        try (IContext ctx = tregmine.createContext()) {
+            IWarpDAO warpDAO = ctx.getWarpDAO();
             warp = warpDAO.getWarp(name, server);
             if (warp == null) {
                 player.sendMessage("Warp not found!");
@@ -91,17 +85,10 @@ public class WarpCommand extends AbstractCommand
                 return true;
             }
 
-            DBLogDAO logDAO = new DBLogDAO(conn);
+            ILogDAO logDAO = ctx.getLogDAO();
             logDAO.insertWarpLog(player, warp.getId());
-        } catch (SQLException e) {
+        } catch (DAOException e) {
             throw new RuntimeException(e);
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                }
-            }
         }
 
         Location warpPoint = warp.getLocation();

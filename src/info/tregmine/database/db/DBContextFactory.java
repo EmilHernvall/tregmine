@@ -50,17 +50,20 @@ public class DBContextFactory implements IContextFactory
 
     @Override
     public IContext createContext()
+    throws DAOException
     {
-        Connection conn = ds.getConnection();
+        try (Connection conn = ds.getConnection()) {
+            Statement stmt = null;
+            try {
+                stmt = conn.createStatement();
+                stmt.execute("SET NAMES utf8");
+            } finally {
+                SQLUtils.close(stmt);
+            }
 
-        Statement stmt = null;
-        try {
-            stmt = conn.createStatement();
-            stmt.execute("SET NAMES utf8");
-        } finally {
-            SQLUtils.close(stmt);
+            return new DBContext(conn);
+        } catch (SQLException e) {
+            throw new DAOException(e);
         }
-
-        return new DBContext(conn);
     }
 }

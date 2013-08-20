@@ -2,10 +2,6 @@ package info.tregmine.listeners;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Set;
 
 import org.bukkit.ChatColor;
@@ -52,12 +48,9 @@ public class PlayerLookupListener implements Listener
             }
         }
 
-        Connection conn = null;
         String aliasList = null;
-        try {
-            conn = ConnectionPool.getConnection();
-
-            DBLogDAO logDAO = new DBLogDAO(conn);
+        try (IContext ctx = plugin.createContext()) {
+            ILogDAO logDAO = ctx.getLogDAO();
             Set<String> aliases = logDAO.getAliases(player);
 
             StringBuilder buffer = new StringBuilder();
@@ -84,12 +77,8 @@ public class PlayerLookupListener implements Listener
                             + "This player have also used names: " + aliasList);
                 }
             }
-        } catch (SQLException e) {
+        } catch (DAOException e) {
             throw new RuntimeException(e);
-        } finally {
-            if (conn != null) {
-                try { conn.close(); } catch (SQLException e) { }
-            }
         }
     }
 }

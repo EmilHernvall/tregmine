@@ -164,7 +164,7 @@ public class DBLogDAO implements ILogDAO
         sql += "ORDER BY login_timestamp DESC LIMIT 1";
 
         Date date = null;
-        PreparedStatement stm = null;
+        PreparedStatement stmt = null;
         ResultSet rs = null;
         try {
             stmt = conn.prepareStatement(sql);

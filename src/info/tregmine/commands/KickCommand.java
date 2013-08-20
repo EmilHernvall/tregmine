@@ -1,8 +1,6 @@
 package info.tregmine.commands;
 
 import java.util.List;
-import java.sql.Connection;
-import java.sql.SQLException;
 
 import static org.bukkit.ChatColor.*;
 import org.bukkit.Server;
@@ -59,27 +57,17 @@ public class KickCommand extends AbstractCommand
         LOGGER.info(victim.getName() + " kicked by " + player.getName());
         victim.kickPlayer("kicked by " + player.getName() + ": " + message);
 
-        Connection conn = null;
-        try {
-            conn = ConnectionPool.getConnection();
-
+        try (IContext ctx = tregmine.createContext()) {
             PlayerReport report = new PlayerReport();
             report.setSubjectId(victim.getId());
             report.setIssuerId(player.getId());
             report.setAction(PlayerReport.Action.KICK);
             report.setMessage(message);
 
-            DBPlayerReportDAO reportDAO = new DBPlayerReportDAO(conn);
+            IPlayerReportDAO reportDAO = ctx.getPlayerReportDAO();
             reportDAO.insertReport(report);
-        } catch (SQLException e) {
+        } catch (DAOException e) {
             throw new RuntimeException(e);
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                }
-            }
         }
 
         return true;

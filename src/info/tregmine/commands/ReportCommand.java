@@ -1,8 +1,6 @@
 package info.tregmine.commands;
 
 import java.util.List;
-import java.sql.Connection;
-import java.sql.SQLException;
 
 import static org.bukkit.ChatColor.*;
 import info.tregmine.Tregmine;

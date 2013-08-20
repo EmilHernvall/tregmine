@@ -1,7 +1,5 @@
 package info.tregmine.commands;
 
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.List;
 
 import static org.bukkit.ChatColor.*;
@@ -57,21 +55,11 @@ public class VanishCommand extends AbstractCommand
             }
         }
 
-        Connection conn = null;
-        try {
-            conn = ConnectionPool.getConnection();
-
-            DBPlayerDAO playerDAO = new DBPlayerDAO(conn);
+        try (IContext ctx = tregmine.createContext()) {
+            IPlayerDAO playerDAO = ctx.getPlayerDAO();
             playerDAO.updatePlayer(player);
-        } catch (SQLException e) {
+        } catch (DAOException e) {
             throw new RuntimeException(e);
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                }
-            }
         }
 
         if (vanish) {
