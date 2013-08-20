@@ -1,7 +1,6 @@
 package info.tregmine;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -143,7 +142,6 @@ public class Tregmine extends JavaPlugin
 
         // Load blessed blocks
         Connection conn = null;
-        PreparedStatement stm = null;
         try {
             conn = ConnectionPool.getConnection();
 
@@ -154,12 +152,8 @@ public class Tregmine extends JavaPlugin
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
-            try {
-                if (conn != null)
-                    conn.close();
-                if (stm != null)
-                    stm.close();
-            } catch (SQLException e) {
+            if (conn != null) {
+                try { conn.close(); } catch (SQLException e) { }
             }
         }
 
