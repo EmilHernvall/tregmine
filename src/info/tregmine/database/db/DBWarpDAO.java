@@ -41,9 +41,7 @@ public class DBWarpDAO implements IWarpDAO
             "warp_yaw, warp_pitch, warp_world) ";
         sql += "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
-        PreparedStatement stmt = null;
-        try {
-            stmt = conn.prepareStatement(sql);
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, name);
             stmt.setDouble(2, loc.getX());
@@ -55,8 +53,6 @@ public class DBWarpDAO implements IWarpDAO
             stmt.execute();
         } catch (SQLException e) {
             throw new DAOException(sql, e);
-        } finally {
-            SQLUtils.close(stmt);
         }
     }
 
@@ -66,45 +62,40 @@ public class DBWarpDAO implements IWarpDAO
     {
         String sql = "SELECT * FROM warp WHERE warp_name = ?";
 
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-        try {
-            stmt = conn.prepareStatement(sql);
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, name);
             stmt.execute();
 
-            rs = stmt.getResultSet();
-            if (!rs.next()) {
-                return null;
+            try (ResultSet rs = stmt.getResultSet()) {
+                if (!rs.next()) {
+                    return null;
+                }
+
+                int id = rs.getInt("warp_id");
+                String warpName = rs.getString("warp_name");
+                double x = rs.getDouble("warp_x");
+                double y = rs.getDouble("warp_y");
+                double z = rs.getDouble("warp_z");
+                float pitch = rs.getFloat("warp_pitch");
+                float yaw = rs.getFloat("warp_yaw");
+
+                World world = getWorld(server, rs.getString("warp_world"));
+
+                if (world == null) {
+                    return null;
+                }
+
+                Location location = new Location(world, x, y, z, yaw, pitch);
+
+                Warp warp = new Warp();
+                warp.setId(id);
+                warp.setName(warpName);
+                warp.setLocation(location);
+
+                return warp;
             }
-
-            int id = rs.getInt("warp_id");
-            String warpName = rs.getString("warp_name");
-            double x = rs.getDouble("warp_x");
-            double y = rs.getDouble("warp_y");
-            double z = rs.getDouble("warp_z");
-            float pitch = rs.getFloat("warp_pitch");
-            float yaw = rs.getFloat("warp_yaw");
-
-            World world = getWorld(server, rs.getString("warp_world"));
-
-            if (world == null) {
-                return null;
-            }
-
-            Location location = new Location(world, x, y, z, yaw, pitch);
-
-            Warp warp = new Warp();
-            warp.setId(id);
-            warp.setName(warpName);
-            warp.setLocation(location);
-
-            return warp;
         } catch (SQLException e) {
             throw new DAOException(sql, e);
-        } finally {
-            SQLUtils.close(rs);
-            SQLUtils.close(stmt);
         }
     }
 }

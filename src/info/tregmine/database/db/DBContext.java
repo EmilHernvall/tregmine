@@ -21,7 +21,9 @@ public class DBContext implements IContext
     @Override
     public void close()
     {
-        SQLUtils.close(conn);
+        if (conn != null) {
+            try { conn.close(); } catch (SQLException e) { }
+        }
     }
 
     @Override

@@ -27,36 +27,30 @@ public class DBPlayerDAO implements IPlayerDAO
 
         TregminePlayer player = null;
 
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-        try {
-            stmt = conn.prepareStatement(sql);
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, id);
             stmt.execute();
 
-            rs = stmt.getResultSet();
-            if (!rs.next()) {
-                return null;
-            }
+            try (ResultSet rs = stmt.getResultSet()) {
+                if (!rs.next()) {
+                    return null;
+                }
 
-            player = new TregminePlayer(rs.getString("player_name"));
-            player.setId(rs.getInt("player_id"));
-            player.setPasswordHash(rs.getString("player_password"));
-            player.setRank(Rank.fromString(rs.getString("player_rank")));
+                player = new TregminePlayer(rs.getString("player_name"));
+                player.setId(rs.getInt("player_id"));
+                player.setPasswordHash(rs.getString("player_password"));
+                player.setRank(Rank.fromString(rs.getString("player_rank")));
 
-            int flags = rs.getInt("player_flags");
-            for (TregminePlayer.Flags flag : TregminePlayer.Flags.values()) {
-                if ((flags & (1 << flag.ordinal())) != 0) {
-                    player.setFlag(flag);
+                int flags = rs.getInt("player_flags");
+                for (TregminePlayer.Flags flag : TregminePlayer.Flags.values()) {
+                    if ((flags & (1 << flag.ordinal())) != 0) {
+                        player.setFlag(flag);
+                    }
                 }
             }
         }
         catch (SQLException e) {
             throw new DAOException(sql, e);
-        }
-        finally {
-            SQLUtils.close(rs);
-            SQLUtils.close(stmt);
         }
 
         loadSettings(player);
@@ -89,35 +83,28 @@ public class DBPlayerDAO implements IPlayerDAO
             player = new TregminePlayer(name);
         }
 
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-        try {
-            stmt = conn.prepareStatement(sql);
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, name);
             stmt.execute();
 
-            rs = stmt.getResultSet();
-            if (!rs.next()) {
-                return null;
-            }
+            try (ResultSet rs = stmt.getResultSet()) {
+                if (!rs.next()) {
+                    return null;
+                }
 
-            player.setId(rs.getInt("player_id"));
-            player.setPasswordHash(rs.getString("player_password"));
-            player.setRank(Rank.fromString(rs.getString("player_rank")));
+                player.setId(rs.getInt("player_id"));
+                player.setPasswordHash(rs.getString("player_password"));
+                player.setRank(Rank.fromString(rs.getString("player_rank")));
 
-            int flags = rs.getInt("player_flags");
-            for (TregminePlayer.Flags flag : TregminePlayer.Flags.values()) {
-                if ((flags & (1 << flag.ordinal())) != 0) {
-                    player.setFlag(flag);
+                int flags = rs.getInt("player_flags");
+                for (TregminePlayer.Flags flag : TregminePlayer.Flags.values()) {
+                    if ((flags & (1 << flag.ordinal())) != 0) {
+                        player.setFlag(flag);
+                    }
                 }
             }
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             throw new DAOException(sql, e);
-        }
-        finally {
-            SQLUtils.close(rs);
-            SQLUtils.close(stmt);
         }
 
         loadSettings(player);
@@ -129,37 +116,30 @@ public class DBPlayerDAO implements IPlayerDAO
     {
         String sql = "SELECT * FROM player_property WHERE player_id = ?";
 
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-        try {
-            stmt = conn.prepareStatement(sql);
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, player.getId());
             stmt.execute();
 
-            rs = stmt.getResultSet();
-            while (rs.next()) {
-                String key = rs.getString("property_key");
-                String value = rs.getString("property_value");
-                if ("keyword".equals(key)) {
-                    player.setKeyword(value);
-                }
-                else if ("guardian".equals(key)) {
-                    player.setGuardianRank(Integer.parseInt(value));
-                }
-                else if ("quitmessage".equals(key)) {
-                    player.setQuitMessage(value);
-                }
-                else if ("playtime".equals(key)) {
-                    player.setPlayTime(Integer.parseInt(value));
+            try (ResultSet rs = stmt.getResultSet()) {
+                while (rs.next()) {
+                    String key = rs.getString("property_key");
+                    String value = rs.getString("property_value");
+                    if ("keyword".equals(key)) {
+                        player.setKeyword(value);
+                    }
+                    else if ("guardian".equals(key)) {
+                        player.setGuardianRank(Integer.parseInt(value));
+                    }
+                    else if ("quitmessage".equals(key)) {
+                        player.setQuitMessage(value);
+                    }
+                    else if ("playtime".equals(key)) {
+                        player.setPlayTime(Integer.parseInt(value));
+                    }
                 }
             }
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             throw new DAOException(sql, e);
-        }
-        finally {
-            SQLUtils.close(rs);
-            SQLUtils.close(stmt);
         }
     }
 
@@ -170,29 +150,23 @@ public class DBPlayerDAO implements IPlayerDAO
 
         TregminePlayer player = new TregminePlayer(wrap);
 
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-        try {
-            stmt = conn.prepareStatement(sql);
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, player.getName());
             stmt.setString(2, player.getRank().toString());
             stmt.execute();
 
             stmt.executeQuery("SELECT LAST_INSERT_ID()");
 
-            rs = stmt.getResultSet();
-            if (!rs.next()) {
-                throw new DAOException("Failed to get player id", sql);
-            }
+            try (ResultSet rs = stmt.getResultSet()) {
+                if (!rs.next()) {
+                    throw new DAOException("Failed to get player id", sql);
+                }
 
-            player.setId(rs.getInt(1));
+                player.setId(rs.getInt(1));
+            }
         }
         catch (SQLException e) {
             throw new DAOException(sql, e);
-        }
-        finally {
-            SQLUtils.close(rs);
-            SQLUtils.close(stmt);
         }
 
         return player;
@@ -239,20 +213,13 @@ public class DBPlayerDAO implements IPlayerDAO
             return;
         }
 
-        PreparedStatement stmt = null;
-        try {
-            stmt = conn.prepareStatement(sqlInsert);
+        try (PreparedStatement stmt = conn.prepareStatement(sqlInsert)) {
             stmt.setInt(1, player.getId());
             stmt.setString(2, key);
             stmt.setString(3, value);
             stmt.execute();
-
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             throw new DAOException(sqlInsert, e);
-        }
-        finally {
-            SQLUtils.close(stmt);
         }
     }
 
@@ -268,20 +235,14 @@ public class DBPlayerDAO implements IPlayerDAO
             flags |= player.hasFlag(flag) ? 1 << flag.ordinal() : 0;
         }
 
-        PreparedStatement stmt = null;
-        try {
-            stmt = conn.prepareStatement(sql);
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, player.getPasswordHash());
             stmt.setString(2, player.getRank().toString());
             stmt.setInt(3, flags);
             stmt.setInt(4, player.getId());
             stmt.execute();
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             throw new DAOException(sql, e);
-        }
-        finally {
-            SQLUtils.close(stmt);
         }
     }
 }

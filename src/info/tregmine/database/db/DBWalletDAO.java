@@ -26,27 +26,20 @@ public class DBWalletDAO implements IWalletDAO
     {
         String sql = "SELECT player_wallet FROM player WHERE player_id = ?";
 
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-        try {
-            stmt = conn.prepareStatement(sql);
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, player.getId());
             stmt.execute();
 
-            rs = stmt.getResultSet();
-            if (rs.next()) {
+            try (ResultSet rs = stmt.getResultSet()) {
+                if (!rs.next()) {
+                    return -1;
+                }
+
                 return rs.getLong("player_wallet");
             }
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             throw new DAOException(sql, e);
         }
-        finally {
-            SQLUtils.close(rs);
-            SQLUtils.close(stmt);
-        }
-
-        return -1;
     }
 
     @Override
@@ -65,18 +58,12 @@ public class DBWalletDAO implements IWalletDAO
         String sql = "UPDATE player SET player_wallet = player_wallet + ? " +
             "WHERE player_id = ?";
 
-        PreparedStatement stmt = null;
-        try {
-            stmt = conn.prepareStatement(sql);
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setLong(1, amount);
             stmt.setInt(2, player.getId());
             stmt.execute();
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             throw new DAOException(sql, e);
-        }
-        finally {
-            SQLUtils.close(stmt);
         }
 
         return true;
@@ -94,18 +81,12 @@ public class DBWalletDAO implements IWalletDAO
             return false;
         }
 
-        PreparedStatement stmt = null;
-        try {
-            stmt = conn.prepareStatement(sql);
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setLong(1, amount);
             stmt.setInt(2, player.getId());
             stmt.execute();
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             throw new DAOException(sql, e);
-        }
-        finally {
-            SQLUtils.close(stmt);
         }
 
         return true;
@@ -119,19 +100,13 @@ public class DBWalletDAO implements IWalletDAO
             "transaction_timestamp, transaction_amount) ";
         sql += "VALUES (?, ?, unix_timestamp(), ?)";
 
-        PreparedStatement stmt = null;
-        try {
-            stmt = conn.prepareStatement(sql);
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, srcId);
             stmt.setInt(2, recvId);
             stmt.setInt(3, amount);
             stmt.execute();
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             throw new DAOException(sql, e);
-        }
-        finally {
-            SQLUtils.close(stmt);
         }
     }
 }

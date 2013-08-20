@@ -29,10 +29,7 @@ public class DBTradeDAO implements ITradeDAO
             "trade_timestamp, trade_amount) ";
         sql += "VALUES (?, ?, unix_timestamp(), ?)";
 
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-        try {
-            stmt = conn.prepareStatement(sql);
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, srcId);
             stmt.setInt(2, recvId);
             stmt.setInt(3, amount);
@@ -40,17 +37,15 @@ public class DBTradeDAO implements ITradeDAO
 
             stmt.executeQuery("SELECT LAST_INSERT_ID()");
 
-            rs = stmt.getResultSet();
-            if (!rs.next()) {
-                throw new DAOException("Failed to get insert_id!", sql);
-            }
+            try (ResultSet rs = stmt.getResultSet()) {
+                if (!rs.next()) {
+                    throw new DAOException("Failed to get insert_id!", sql);
+                }
 
-            return rs.getInt(1);
+                return rs.getInt(1);
+            }
         } catch (SQLException e) {
             throw new DAOException(sql, e);
-        } finally {
-            SQLUtils.close(rs);
-            SQLUtils.close(stmt);
         }
     }
 
@@ -62,9 +57,7 @@ public class DBTradeDAO implements ITradeDAO
             "item_data, item_meta, item_count) ";
         sql += "VALUES (?, ?, ?, ?, ?)";
 
-        PreparedStatement stmt = null;
-        try {
-            stmt = conn.prepareStatement(sql);
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             for (ItemStack stack : contents) {
                 if (stack == null) {
@@ -85,12 +78,8 @@ public class DBTradeDAO implements ITradeDAO
                 stmt.setInt(5, stack.getAmount());
                 stmt.execute();
             }
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             throw new DAOException(sql, e);
-        }
-        finally {
-            SQLUtils.close(stmt);
         }
     }
 

@@ -32,37 +32,32 @@ public class DBPlayerReportDAO implements IPlayerReportDAO
 
         List<PlayerReport> reports = new ArrayList<PlayerReport>();
 
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-        try {
-            stmt = conn.prepareStatement(sql);
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, player.getId());
             stmt.execute();
 
-            rs = stmt.getResultSet();
-            while (rs.next()) {
-                PlayerReport report = new PlayerReport();
-                report.setId(rs.getInt("report_id"));
-                report.setSubjectId(rs.getInt("subject_id"));
-                report.setIssuerId(rs.getInt("issuer_id"));
-                report.setAction(PlayerReport.Action.fromString(rs
-                        .getString("report_action")));
-                report.setMessage(rs.getString("report_message"));
-                report.setTimestamp(new Date(
-                        rs.getInt("report_timestamp") * 1000l));
+            try (ResultSet rs = stmt.getResultSet()) {
+                while (rs.next()) {
+                    PlayerReport report = new PlayerReport();
+                    report.setId(rs.getInt("report_id"));
+                    report.setSubjectId(rs.getInt("subject_id"));
+                    report.setIssuerId(rs.getInt("issuer_id"));
+                    report.setAction(PlayerReport.Action.fromString(rs
+                            .getString("report_action")));
+                    report.setMessage(rs.getString("report_message"));
+                    report.setTimestamp(new Date(
+                            rs.getInt("report_timestamp") * 1000l));
 
-                int validUntil = rs.getInt("report_validuntil");
-                if (validUntil != 0) {
-                    report.setValidUntil(new Date(validUntil * 1000l));
+                    int validUntil = rs.getInt("report_validuntil");
+                    if (validUntil != 0) {
+                        report.setValidUntil(new Date(validUntil * 1000l));
+                    }
+
+                    reports.add(report);
                 }
-
-                reports.add(report);
             }
         } catch (SQLException e) {
             throw new DAOException(sql, e);
-        } finally {
-            SQLUtils.close(rs);
-            SQLUtils.close(stmt);
         }
 
         return reports;
@@ -75,10 +70,7 @@ public class DBPlayerReportDAO implements IPlayerReportDAO
             "report_action, report_message, report_timestamp, report_validuntil) ";
         sql += "VALUES (?, ?, ?, ?, ?, ?)";
 
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-        try {
-            stmt = conn.prepareStatement(sql);
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setInt(1, report.getSubjectId());
             stmt.setInt(2, report.getIssuerId());
@@ -94,17 +86,13 @@ public class DBPlayerReportDAO implements IPlayerReportDAO
 
             stmt.executeQuery("SELECT LAST_INSERT_ID()");
 
-            rs = stmt.getResultSet();
-            if (rs.next()) {
-                report.setId(rs.getInt(1));
+            try (ResultSet rs = stmt.getResultSet()) {
+                if (rs.next()) {
+                    report.setId(rs.getInt(1));
+                }
             }
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             throw new DAOException(sql, e);
-        }
-        finally {
-            SQLUtils.close(rs);
-            SQLUtils.close(stmt);
         }
     }
 

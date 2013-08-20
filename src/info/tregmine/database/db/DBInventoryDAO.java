@@ -43,25 +43,20 @@ public class DBInventoryDAO implements IInventoryDAO
         String sql = "SELECT * FROM inventory " +
                      "WHERE inventory_type = ? AND player_id = ?";
 
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-        try {
-            stmt = conn.prepareStatement(sql);
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, type.toString());
             stmt.setInt(2, playerId);
             stmt.execute();
 
-            rs = stmt.getResultSet();
-            if (!rs.next()) {
-                return -1;
-            }
+            try (ResultSet rs = stmt.getResultSet()) {
+                if (!rs.next()) {
+                    return -1;
+                }
 
-            return rs.getInt("inventory_id");
+                return rs.getInt("inventory_id");
+            }
         } catch (SQLException e) {
             throw new DAOException(sql, e);
-        } finally {
-            SQLUtils.close(rs);
-            SQLUtils.close(stmt);
         }
     }
 
@@ -72,12 +67,9 @@ public class DBInventoryDAO implements IInventoryDAO
         String sql = "INSERT INTO inventory (player_id, inventory_checksum, " +
             "inventory_x, inventory_y, inventory_z, inventory_world, " +
             "inventory_type) ";
+        sql += "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-        try {
-            sql += "VALUES (?, ?, ?, ?, ?, ?, ?)";
-            stmt = conn.prepareStatement(sql);
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, player.getId());
             if (loc == null) {
                 stmt.setInt(2, 0);
@@ -98,17 +90,15 @@ public class DBInventoryDAO implements IInventoryDAO
 
             stmt.executeQuery("SELECT LAST_INSERT_ID()");
 
-            rs = stmt.getResultSet();
-            if (!rs.next()) {
-                throw new SQLException("Failed to get insert_id!");
-            }
+            try (ResultSet rs = stmt.getResultSet()) {
+                if (!rs.next()) {
+                    throw new DAOException("Failed to get insert_id!", sql);
+                }
 
-            return rs.getInt(1);
+                return rs.getInt(1);
+            }
         } catch (SQLException e) {
             throw new DAOException(sql, e);
-        } finally {
-            SQLUtils.close(rs);
-            SQLUtils.close(stmt);
         }
     }
 
@@ -118,29 +108,18 @@ public class DBInventoryDAO implements IInventoryDAO
     {
         String sqlDelete = "DELETE FROM inventory_item WHERE inventory_id = ?";
 
-        PreparedStatement stmt = null;
-        try {
-            stmt = conn.prepareStatement(sqlDelete);
+        try (PreparedStatement stmt = conn.prepareStatement(sqlDelete)) {
             stmt.setInt(1, inventoryId);
             stmt.execute();
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             throw new DAOException(sqlDelete, e);
-        }
-        finally {
-            if (stmt != null) {
-                try { stmt.close(); } catch (SQLException e) { }
-                stmt = null;
-            }
         }
 
         String sqlInsert = "INSERT INTO inventory_item (inventory_id, item_slot, " +
             "item_material, item_data, item_meta, item_count) ";
         sqlInsert += "VALUES (?, ?, ?, ?, ?, ?)";
 
-        try {
-            stmt = conn.prepareStatement(sqlInsert);
-
+        try (PreparedStatement stmt = conn.prepareStatement(sqlInsert)) {
             int counter = 0;
             for (ItemStack stack : contents) {
                 if (stack == null) {
@@ -167,8 +146,6 @@ public class DBInventoryDAO implements IInventoryDAO
             }
         } catch (SQLException e) {
             throw new DAOException(sqlInsert, e);
-        } finally {
-            SQLUtils.close(stmt);
         }
     }
 
@@ -178,45 +155,39 @@ public class DBInventoryDAO implements IInventoryDAO
         String sql = "SELECT * FROM inventory_item " +
                      "WHERE inventory_id = ?";
 
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-        try {
-
-            stmt = conn.prepareStatement(sql);
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, inventoryId);
             stmt.execute();
 
-            rs = stmt.getResultSet();
-            ItemStack[] stacks = new ItemStack[size];
-            while (rs.next()) {
+            try (ResultSet rs = stmt.getResultSet()) {
+                ItemStack[] stacks = new ItemStack[size];
+                while (rs.next()) {
 
-                int slot = rs.getInt("item_slot");
-                int materialId = rs.getInt("item_material");
-                int data = rs.getInt("item_data");
-                int count = rs.getInt("item_count");
-                String meta = rs.getString("item_meta");
+                    int slot = rs.getInt("item_slot");
+                    int materialId = rs.getInt("item_material");
+                    int data = rs.getInt("item_data");
+                    int count = rs.getInt("item_count");
+                    String meta = rs.getString("item_meta");
 
-                ItemMeta metaObj = null;
-                if (!"".equals(meta)) {
-                    YamlConfiguration config = new YamlConfiguration();
-                    config.loadFromString(meta);
-                    metaObj = (ItemMeta) config.get("meta");
+                    ItemMeta metaObj = null;
+                    if (!"".equals(meta)) {
+                        YamlConfiguration config = new YamlConfiguration();
+                        config.loadFromString(meta);
+                        metaObj = (ItemMeta) config.get("meta");
+                    }
+
+                    stacks[slot] = new ItemStack(materialId, count, (short) data);
+                    if (metaObj != null) {
+                        stacks[slot].setItemMeta(metaObj);
+                    }
                 }
 
-                stacks[slot] = new ItemStack(materialId, count, (short) data);
-                if (metaObj != null) {
-                    stacks[slot].setItemMeta(metaObj);
-                }
+                return stacks;
             }
-
-            return stacks;
         } catch (SQLException e) {
             throw new DAOException(sql, e);
         } catch (InvalidConfigurationException e) {
             throw new RuntimeException(e);
-        } finally {
-            SQLUtils.close(rs);
-            SQLUtils.close(stmt);
         }
     }
 
@@ -240,30 +211,25 @@ public class DBInventoryDAO implements IInventoryDAO
 
         Map<Location, Integer> chests = new HashMap<Location, Integer>();
 
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-        try {
-            stmt = conn.prepareStatement(sql);
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.execute();
 
-            rs = stmt.getResultSet();
-            while (rs.next()) {
-                String worldName = rs.getString("inventory_world");
-                int x = rs.getInt("inventory_x");
-                int y = rs.getInt("inventory_y");
-                int z = rs.getInt("inventory_z");
-                int playerId = rs.getInt("player_id");
+            try (ResultSet rs = stmt.getResultSet()) {
+                while (rs.next()) {
+                    String worldName = rs.getString("inventory_world");
+                    int x = rs.getInt("inventory_x");
+                    int y = rs.getInt("inventory_y");
+                    int z = rs.getInt("inventory_z");
+                    int playerId = rs.getInt("player_id");
 
-                World world = getWorld(server, worldName);
-                Location loc = new Location(world, x, y, z);
+                    World world = getWorld(server, worldName);
+                    Location loc = new Location(world, x, y, z);
 
-                chests.put(loc, playerId);
+                    chests.put(loc, playerId);
+                }
             }
         } catch (SQLException e) {
             throw new DAOException(sql, e);
-        } finally {
-            SQLUtils.close(rs);
-            SQLUtils.close(stmt);
         }
 
         return chests;

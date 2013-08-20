@@ -29,23 +29,18 @@ public class DBMotdDAO implements IMotdDAO
         String sql = "SELECT * FROM motd ";
         sql += "ORDER BY motd_timestamp DESC LIMIT 1";
 
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-        try {
-            stmt = conn.prepareStatement(sql);
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.execute();
 
-            rs = stmt.getResultSet();
-            if (rs.next()) {
+            try (ResultSet rs = stmt.getResultSet()) {
+                if (!rs.next()) {
+                    return null;
+                }
+
                 return rs.getString("motd_message");
             }
-
-            return null;
         } catch (SQLException e) {
             throw new DAOException(sql, e);
-        } finally {
-            SQLUtils.close(rs);
-            SQLUtils.close(stmt);
         }
     }
 }

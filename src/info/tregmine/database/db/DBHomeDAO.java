@@ -30,9 +30,7 @@ public class DBHomeDAO implements IHomeDAO
             "home_x, home_y, home_z, home_yaw, home_pitch, home_world, " +
             "home_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
-        PreparedStatement stmt = null;
-        try {
-            stmt = conn.prepareStatement(sql);
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, player.getId());
             stmt.setDouble(2, loc.getX());
             stmt.setDouble(3, loc.getY());
@@ -44,8 +42,6 @@ public class DBHomeDAO implements IHomeDAO
             stmt.execute();
         } catch (SQLException e) {
             throw new DAOException(sql, e);
-        } finally {
-            SQLUtils.close(stmt);
         }
     }
 
@@ -63,15 +59,15 @@ public class DBHomeDAO implements IHomeDAO
         String sql = "SELECT * FROM player_home " +
             "WHERE player_id = ? ORDER BY home_time DESC";
 
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-        try {
-            stmt = conn.prepareStatement(sql);
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, playerId);
             stmt.execute();
 
-            rs = stmt.getResultSet();
-            if (rs.next()) {
+            try (ResultSet rs = stmt.getResultSet()) {
+                if (!rs.next()) {
+                    return null;
+                }
+
                 double x = rs.getDouble("home_x");
                 double y = rs.getDouble("home_y");
                 double z = rs.getDouble("home_z");
@@ -83,11 +79,6 @@ public class DBHomeDAO implements IHomeDAO
             }
         } catch (SQLException e) {
             throw new DAOException(sql, e);
-        } finally {
-            SQLUtils.close(rs);
-            SQLUtils.close(stmt);
         }
-
-        return null;
     }
 }

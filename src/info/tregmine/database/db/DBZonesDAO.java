@@ -29,28 +29,23 @@ public class DBZonesDAO implements IZonesDAO
     {
         String sql = "SELECT * FROM zone_rect WHERE zone_id = ?";
 
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
         List<Rectangle> rects = new ArrayList<Rectangle>();
-        try {
-            stmt = conn.prepareStatement(sql);
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, zoneId);
             stmt.execute();
 
-            rs = stmt.getResultSet();
-            while (rs.next()) {
-                int x1 = rs.getInt("rect_x1");
-                int y1 = rs.getInt("rect_y1");
-                int x2 = rs.getInt("rect_x2");
-                int y2 = rs.getInt("rect_y2");
+            try (ResultSet rs = stmt.getResultSet()) {
+                while (rs.next()) {
+                    int x1 = rs.getInt("rect_x1");
+                    int y1 = rs.getInt("rect_y1");
+                    int x2 = rs.getInt("rect_x2");
+                    int y2 = rs.getInt("rect_y2");
 
-                rects.add(new Rectangle(x1, y1, x2, y2));
+                    rects.add(new Rectangle(x1, y1, x2, y2));
+                }
             }
         } catch (SQLException e) {
             throw new DAOException(sql, e);
-        } finally {
-            SQLUtils.close(rs);
-            SQLUtils.close(stmt);
         }
 
         return rects;
@@ -63,28 +58,23 @@ public class DBZonesDAO implements IZonesDAO
             "INNER JOIN player ON user_id = player_id " +
             "WHERE zone_id = ?";
 
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
         Map<String, Zone.Permission> permissions =
                 new HashMap<String, Zone.Permission>();
-        try {
-            stmt = conn.prepareStatement(sql);
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, zoneId);
             stmt.execute();
 
-            rs = stmt.getResultSet();
-            while (rs.next()) {
-                String player = rs.getString("player_name");
-                Zone.Permission permission =
-                        Zone.Permission.fromString(rs.getString("user_perm"));
+            try (ResultSet rs = stmt.getResultSet()) {
+                while (rs.next()) {
+                    String player = rs.getString("player_name");
+                    Zone.Permission permission =
+                            Zone.Permission.fromString(rs.getString("user_perm"));
 
-                permissions.put(player, permission);
+                    permissions.put(player, permission);
+                }
             }
         } catch (SQLException e) {
             throw new DAOException(sql, e);
-        } finally {
-            SQLUtils.close(rs);
-            SQLUtils.close(stmt);
         }
 
         return permissions;
@@ -95,37 +85,32 @@ public class DBZonesDAO implements IZonesDAO
     {
         String sql = "SELECT * FROM zone WHERE zone_world = ?";
 
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
         List<Zone> zones = new ArrayList<Zone>();
-        try {
-            stmt = conn.prepareStatement(sql);
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, world);
             stmt.execute();
 
-            rs = stmt.getResultSet();
-            while (rs.next()) {
-                Zone zone = new Zone();
-                zone.setId(rs.getInt("zone_id"));
-                zone.setWorld(rs.getString("zone_world"));
-                zone.setName(rs.getString("zone_name"));
-                zone.setEnterDefault("1".equals(rs.getString("zone_enterdefault")));
-                zone.setPlaceDefault("1".equals(rs.getString("zone_placedefault")));
-                zone.setDestroyDefault("1".equals(rs.getString("zone_destroydefault")));
-                zone.setPvp("1".equals(rs.getString("zone_pvp")));
-                zone.setHostiles("1".equals(rs.getString("zone_hostiles")));
-                zone.setCommunist("1".equals(rs.getString("zone_communist")));
-                zone.setTextEnter(rs.getString("zone_entermessage"));
-                zone.setTextExit(rs.getString("zone_exitmessage"));
-                zone.setTexture(rs.getString("zone_texture"));
-                zone.setMainOwner(rs.getString("zone_owner"));
-                zones.add(zone);
+            try (ResultSet rs = stmt.getResultSet()) {
+                while (rs.next()) {
+                    Zone zone = new Zone();
+                    zone.setId(rs.getInt("zone_id"));
+                    zone.setWorld(rs.getString("zone_world"));
+                    zone.setName(rs.getString("zone_name"));
+                    zone.setEnterDefault("1".equals(rs.getString("zone_enterdefault")));
+                    zone.setPlaceDefault("1".equals(rs.getString("zone_placedefault")));
+                    zone.setDestroyDefault("1".equals(rs.getString("zone_destroydefault")));
+                    zone.setPvp("1".equals(rs.getString("zone_pvp")));
+                    zone.setHostiles("1".equals(rs.getString("zone_hostiles")));
+                    zone.setCommunist("1".equals(rs.getString("zone_communist")));
+                    zone.setTextEnter(rs.getString("zone_entermessage"));
+                    zone.setTextExit(rs.getString("zone_exitmessage"));
+                    zone.setTexture(rs.getString("zone_texture"));
+                    zone.setMainOwner(rs.getString("zone_owner"));
+                    zones.add(zone);
+                }
             }
         } catch (SQLException e) {
             throw new DAOException(sql, e);
-        } finally {
-            SQLUtils.close(rs);
-            SQLUtils.close(stmt);
         }
 
         for (Zone zone : zones) {
@@ -144,11 +129,7 @@ public class DBZonesDAO implements IZonesDAO
             "zone_pvp, zone_hostiles, zone_communist, zone_entermessage, " +
             "zone_exitmessage, zone_owner) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
 
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-        int id = 0;
-        try {
-            stmt = conn.prepareStatement(sql);
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, zone.getWorld());
             stmt.setString(2, zone.getName());
             stmt.setString(3, zone.getEnterDefault() ? "1" : "0");
@@ -164,20 +145,17 @@ public class DBZonesDAO implements IZonesDAO
 
             stmt.execute("SELECT LAST_INSERT_ID()");
 
-            rs = stmt.getResultSet();
-            if (rs.next()) {
-                id = rs.getInt(1);
+            try (ResultSet rs = stmt.getResultSet()) {
+                if (!rs.next()) {
+                    return 0;
+                }
+
+                zone.setId(rs.getInt(1));
+                return zone.getId();
             }
         } catch (SQLException e) {
             throw new DAOException(sql, e);
-        } finally {
-            SQLUtils.close(rs);
-            SQLUtils.close(stmt);
         }
-
-        zone.setId(id);
-
-        return id;
     }
 
     @Override
@@ -189,9 +167,7 @@ public class DBZonesDAO implements IZonesDAO
             "zone_communist = ?, zone_entermessage = ?, zone_exitmessage = ? " +
             "WHERE zone_id = ?";
 
-        PreparedStatement stmt = null;
-        try {
-            stmt = conn.prepareStatement(sql);
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, zone.getWorld());
             stmt.setString(2, zone.getName());
             stmt.setString(3, zone.getEnterDefault() ? "1" : "0");
@@ -206,8 +182,6 @@ public class DBZonesDAO implements IZonesDAO
             stmt.execute();
         } catch (SQLException e) {
             throw new DAOException(sql, e);
-        } finally {
-            SQLUtils.close(stmt);
         }
     }
 
@@ -215,40 +189,27 @@ public class DBZonesDAO implements IZonesDAO
     public void deleteZone(int id) throws DAOException
     {
         String sqlDeleteZone = "DELETE FROM zone WHERE zone_id = ?";
-
-        PreparedStatement stmt = null;
-        try {
-            stmt = conn.prepareStatement(sqlDeleteZone);
+        try (PreparedStatement stmt = conn.prepareStatement(sqlDeleteZone)) {
             stmt.setInt(1, id);
             stmt.execute();
         } catch (SQLException e) {
             throw new DAOException(sqlDeleteZone, e);
-        } finally {
-            SQLUtils.close(stmt);
         }
 
         String sqlDeleteRect = "DELETE FROM zone_rect WHERE zone_id = ?";
-
-        try {
-            stmt = conn.prepareStatement(sqlDeleteRect);
+        try (PreparedStatement stmt = conn.prepareStatement(sqlDeleteRect)) {
             stmt.setInt(1, id);
             stmt.execute();
         } catch (SQLException e) {
             throw new DAOException(sqlDeleteRect, e);
-        } finally {
-            SQLUtils.close(stmt);
         }
 
         String sqlDeleteUser = "DELETE FROM zone_user WHERE zone_id = ?";
-
-        try {
-            stmt = conn.prepareStatement(sqlDeleteUser);
+        try (PreparedStatement stmt = conn.prepareStatement(sqlDeleteUser)) {
             stmt.setInt(1, id);
             stmt.execute();
         } catch (SQLException e) {
             throw new DAOException(sqlDeleteUser, e);
-        } finally {
-            SQLUtils.close(stmt);
         }
     }
 
@@ -258,9 +219,7 @@ public class DBZonesDAO implements IZonesDAO
         String sql = "INSERT INTO zone_rect (zone_id, rect_x1, rect_y1, " +
             "rect_x2, rect_y2) VALUES (?, ?, ?, ?, ?)";
 
-        PreparedStatement stmt = null;
-        try {
-            stmt = conn.prepareStatement(sql);
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, zoneId);
             stmt.setInt(2, rect.getLeft());
             stmt.setInt(3, rect.getTop());
@@ -269,8 +228,6 @@ public class DBZonesDAO implements IZonesDAO
             stmt.execute();
         } catch (SQLException e) {
             throw new DAOException(sql, e);
-        } finally {
-            SQLUtils.close(stmt);
         }
     }
 
@@ -281,17 +238,13 @@ public class DBZonesDAO implements IZonesDAO
         String sql = "INSERT INTO zone_user (zone_id, user_id, user_perm) ";
         sql += "VALUES (?,?,?)";
 
-        PreparedStatement stmt = null;
-        try {
-            stmt = conn.prepareStatement(sql);
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, zoneId);
             stmt.setInt(2, userId);
             stmt.setString(3, perm.toString());
             stmt.execute();
         } catch (SQLException e) {
             throw new DAOException(sql, e);
-        } finally {
-            SQLUtils.close(stmt);
         }
     }
 
@@ -300,16 +253,12 @@ public class DBZonesDAO implements IZonesDAO
     {
         String sql = "DELETE FROM zone_user WHERE zone_id = ? AND user_id = ? ";
 
-        PreparedStatement stmt = null;
-        try {
-            stmt = conn.prepareStatement(sql);
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, zoneId);
             stmt.setInt(2, userId);
             stmt.execute();
         } catch (SQLException e) {
             throw new DAOException(sql, e);
-        } finally {
-            SQLUtils.close(stmt);
         }
     }
 
@@ -319,35 +268,31 @@ public class DBZonesDAO implements IZonesDAO
         String sql = "SELECT zone_lot.* FROM zone_lot " +
             "INNER JOIN zone USING (zone_id) WHERE zone_world = ?";
 
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
         List<Lot> lots = new ArrayList<Lot>();
-        try {
-            stmt = conn.prepareStatement(sql);
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, world);
             stmt.execute();
 
-            rs = stmt.getResultSet();
-            while (rs.next()) {
-                Lot lot = new Lot();
-                lot.setId(rs.getInt("lot_id"));
-                lot.setName(rs.getString("lot_name"));
-                lot.setZoneId(rs.getInt("zone_id"));
+            try (ResultSet rs = stmt.getResultSet()) {
+                while (rs.next()) {
+                    Lot lot = new Lot();
+                    lot.setId(rs.getInt("lot_id"));
+                    lot.setName(rs.getString("lot_name"));
+                    lot.setZoneId(rs.getInt("zone_id"));
 
-                int x1 = rs.getInt("lot_x1");
-                int y1 = rs.getInt("lot_y1");
-                int x2 = rs.getInt("lot_x2");
-                int y2 = rs.getInt("lot_y2");
+                    int x1 = rs.getInt("lot_x1");
+                    int y1 = rs.getInt("lot_y1");
+                    int x2 = rs.getInt("lot_x2");
+                    int y2 = rs.getInt("lot_y2");
 
-                lot.setRect(new Rectangle(x1, y1, x2, y2));
+                    lot.setRect(new Rectangle(x1, y1, x2, y2));
 
-                lots.add(lot);
+                    lots.add(lot);
+                }
             }
         } catch (SQLException e) {
             throw new DAOException(sql, e);
-        } finally {
-            SQLUtils.close(stmt);
         }
 
         for (Lot lot : lots) {
@@ -364,24 +309,19 @@ public class DBZonesDAO implements IZonesDAO
             "INNER JOIN player ON player_id = user_id " +
             "WHERE lot_id = ?";
 
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
         List<String> owners = new ArrayList<String>();
-        try {
-            stmt = conn.prepareStatement(sql);
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setInt(1, lotId);
             stmt.execute();
 
-            rs = stmt.getResultSet();
-            while (rs.next()) {
-                owners.add(rs.getString("player_name"));
+            try (ResultSet rs = stmt.getResultSet()) {
+                while (rs.next()) {
+                    owners.add(rs.getString("player_name"));
+                }
             }
         } catch (SQLException e) {
             throw new DAOException(sql, e);
-        } finally {
-            SQLUtils.close(rs);
-            SQLUtils.close(stmt);
         }
 
         return owners;
@@ -393,10 +333,7 @@ public class DBZonesDAO implements IZonesDAO
         String sql = "INSERT INTO zone_lot (zone_id, lot_name, lot_x1, " +
             "lot_y1, lot_x2, lot_y2) VALUES (?,?,?,?,?,?)";
 
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-        try {
-            stmt = conn.prepareStatement(sql);
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, lot.getZoneId());
             stmt.setString(2, lot.getName());
 
@@ -410,15 +347,13 @@ public class DBZonesDAO implements IZonesDAO
 
             stmt.execute("SELECT LAST_INSERT_ID()");
 
-            rs = stmt.getResultSet();
-            if (rs.next()) {
-                lot.setId(rs.getInt(1));
+            try (ResultSet rs = stmt.getResultSet()) {
+                if (rs.next()) {
+                    lot.setId(rs.getInt(1));
+                }
             }
         } catch (SQLException e) {
             throw new DAOException(sql, e);
-        } finally {
-            SQLUtils.close(rs);
-            SQLUtils.close(stmt);
         }
     }
 
@@ -427,15 +362,11 @@ public class DBZonesDAO implements IZonesDAO
     {
         String sql = "DELETE FROM zone_lot WHERE lot_id = ?";
 
-        PreparedStatement stmt = null;
-        try {
-            stmt = conn.prepareStatement(sql);
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, lotId);
             stmt.execute();
         } catch (SQLException e) {
             throw new DAOException(sql, e);
-        } finally {
-            SQLUtils.close(stmt);
         }
     }
 
@@ -445,16 +376,12 @@ public class DBZonesDAO implements IZonesDAO
         String sql = "INSERT INTO zone_lotuser (lot_id, user_id) ";
         sql += "VALUES (?,?)";
 
-        PreparedStatement stmt = null;
-        try {
-            stmt = conn.prepareStatement(sql);
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, lotId);
             stmt.setInt(2, userId);
             stmt.execute();
         } catch (SQLException e) {
             throw new DAOException(sql, e);
-        } finally {
-            SQLUtils.close(stmt);
         }
     }
 
@@ -463,15 +390,11 @@ public class DBZonesDAO implements IZonesDAO
     {
         String sql = "DELETE FROM zone_lotuser WHERE lot_id = ?";
 
-        PreparedStatement stmt = null;
-        try {
-            stmt = conn.prepareStatement(sql);
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, lotId);
             stmt.execute();
         } catch (SQLException e) {
             throw new DAOException(sql, e);
-        } finally {
-            SQLUtils.close(stmt);
         }
     }
 
@@ -480,16 +403,12 @@ public class DBZonesDAO implements IZonesDAO
     {
         String sql = "DELETE FROM zone_lotuser WHERE lot_id = ? AND user_id = ?";
 
-        PreparedStatement stmt = null;
-        try {
-            stmt = conn.prepareStatement(sql);
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, lotId);
             stmt.setInt(2, userId);
             stmt.execute();
         } catch (SQLException e) {
             throw new DAOException(sql, e);
-        } finally {
-            SQLUtils.close(stmt);
         }
     }
 }

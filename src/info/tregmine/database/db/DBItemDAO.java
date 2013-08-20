@@ -22,24 +22,19 @@ public class DBItemDAO implements IItemDAO
     {
         String sql = "SELECT * FROM item WHERE item_id = ?";
 
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-        try {
-            stmt = conn.prepareStatement(sql);
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, itemId);
             stmt.execute();
 
-            rs = stmt.getResultSet();
-            if (!rs.next()) {
-                return 0;
-            }
+            try (ResultSet rs = stmt.getResultSet()) {
+                if (!rs.next()) {
+                    return 0;
+                }
 
-            return rs.getInt("item_value");
+                return rs.getInt("item_value");
+            }
         } catch (SQLException e) {
             throw new DAOException(sql, e);
-        } finally {
-            SQLUtils.close(rs);
-            SQLUtils.close(stmt);
         }
     }
 }

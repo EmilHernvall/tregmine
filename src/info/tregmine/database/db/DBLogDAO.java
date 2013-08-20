@@ -34,9 +34,7 @@ public class DBLogDAO implements ILogDAO
                      "login_hostname, login_onlineplayers) ";
         sql += "VALUES (?, unix_timestamp(), ?, ?, ?, ?, ?, ?)";
 
-        PreparedStatement stmt = null;
-        try {
-            stmt = conn.prepareStatement(sql);
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, player.getId());
             stmt.setString(2, logout ? "logout" : "login");
             stmt.setString(3, player.getCountry());
@@ -47,8 +45,6 @@ public class DBLogDAO implements ILogDAO
             stmt.execute();
         } catch (SQLException e) {
             throw new DAOException(sql, e);
-        } finally {
-            SQLUtils.close(stmt);
         }
     }
 
@@ -61,17 +57,13 @@ public class DBLogDAO implements ILogDAO
             "chatlog_channel, chatlog_message) ";
         sql += "VALUES (?, unix_timestamp(), ?, ?)";
 
-        PreparedStatement stmt = null;
-        try {
-            stmt = conn.prepareStatement(sql);
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, player.getId());
             stmt.setString(2, channel);
             stmt.setString(3, message);
             stmt.execute();
         } catch (SQLException e) {
             throw new DAOException(sql, e);
-        } finally {
-            SQLUtils.close(stmt);
         }
     }
 
@@ -83,9 +75,7 @@ public class DBLogDAO implements ILogDAO
             "orelog_timestamp, orelog_x, orelog_y, orelog_z, orelog_world) ";
         sql += "VALUES (?, ?, unix_timestamp(), ?, ?, ?, ?)";
 
-        PreparedStatement stmt = null;
-        try {
-            stmt = conn.prepareStatement(sql);
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, player.getId());
             stmt.setInt(2, material);
             stmt.setInt(3, loc.getBlockX());
@@ -95,8 +85,6 @@ public class DBLogDAO implements ILogDAO
             stmt.execute();
         } catch (SQLException e) {
             throw new DAOException(sql, e);
-        } finally {
-            SQLUtils.close(stmt);
         }
     }
 
@@ -111,9 +99,7 @@ public class DBLogDAO implements ILogDAO
                      "givelog_count, givelog_timestamp) ";
         sql += "VALUES (?, ?, ?, ?, ?, ?, unix_timestamp())";
 
-        PreparedStatement stmt = null;
-        try {
-            stmt = conn.prepareStatement(sql);
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, sender.getId());
             stmt.setInt(2, recipient.getId());
             stmt.setInt(3, stack.getTypeId());
@@ -130,8 +116,6 @@ public class DBLogDAO implements ILogDAO
             stmt.execute();
         } catch (SQLException e) {
             throw new DAOException(sql, e);
-        } finally {
-            SQLUtils.close(stmt);
         }
     }
 
@@ -143,16 +127,12 @@ public class DBLogDAO implements ILogDAO
         String sql = "INSERT INTO warp_log (player_id, warp_id, log_timestamp) ";
         sql += "VALUES (?, ?, unix_timestamp())";
 
-        PreparedStatement stmt = null;
-        try {
-            stmt = conn.prepareStatement(sql);
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, player.getId());
             stmt.setInt(2, warpId);
             stmt.execute();
         } catch (SQLException e) {
             throw new DAOException(sql, e);
-        } finally {
-            SQLUtils.close(stmt);
         }
     }
 
@@ -163,27 +143,20 @@ public class DBLogDAO implements ILogDAO
         String sql = "SELECT * FROM player_login WHERE player_id= ? ";
         sql += "ORDER BY login_timestamp DESC LIMIT 1";
 
-        Date date = null;
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-        try {
-            stmt = conn.prepareStatement(sql);
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, player.getId());
             stmt.execute();
 
-            rs = stmt.getResultSet();
+            try (ResultSet rs = stmt.getResultSet()) {
+                if (!rs.next()) {
+                    return null;
+                }
 
-            if (rs.next()) {
-                date = new Date(rs.getInt("login_timestamp") * 1000L);
+                return new Date(rs.getInt("login_timestamp") * 1000L);
             }
         } catch (SQLException e) {
             throw new DAOException(sql, e);
-        } finally {
-            SQLUtils.close(rs);
-            SQLUtils.close(stmt);
         }
-
-        return date;
     }
 
     @Override
@@ -196,24 +169,18 @@ public class DBLogDAO implements ILogDAO
 
         Set<String> aliases = new HashSet<String>();
 
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-        try {
-            stmt = conn.prepareStatement(sql);
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, player.getIp());
             stmt.execute();
 
-            rs = stmt.getResultSet();
-            while (rs.next()) {
-                aliases.add(rs.getString("player_name"));
+            try (ResultSet rs = stmt.getResultSet()) {
+                while (rs.next()) {
+                    aliases.add(rs.getString("player_name"));
+                }
             }
         }
         catch (SQLException e) {
             throw new DAOException(sql, e);
-        }
-        finally {
-            SQLUtils.close(rs);
-            SQLUtils.close(stmt);
         }
 
         return aliases;
