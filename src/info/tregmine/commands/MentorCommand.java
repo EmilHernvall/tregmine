@@ -1,8 +1,6 @@
 package info.tregmine.commands;
 
 import java.util.Queue;
-import java.sql.Connection;
-import java.sql.SQLException;
 
 import static org.bukkit.ChatColor.*;
 import org.bukkit.entity.Player;
@@ -12,8 +10,9 @@ import org.bukkit.scheduler.BukkitScheduler;
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
 import info.tregmine.api.Rank;
-import info.tregmine.database.ConnectionPool;
-import info.tregmine.database.DBPlayerDAO;
+import info.tregmine.database.DAOException;
+import info.tregmine.database.IContext;
+import info.tregmine.database.IPlayerDAO;
 
 public class MentorCommand extends AbstractCommand
 {
@@ -111,26 +110,16 @@ public class MentorCommand extends AbstractCommand
                                  "promoted to settler by " + player.getChatName() +
                                  ".");
 
-            Connection conn = null;
-            try {
-                conn = ConnectionPool.getConnection();
-
+            try (IContext ctx = tregmine.createContext()) {
                 student.setRank(Rank.SETTLER);
                 student.setTemporaryChatName(student.getNameColor()
                         + student.getName());
 
-                DBPlayerDAO playerDAO = new DBPlayerDAO(conn);
+                IPlayerDAO playerDAO = ctx.getPlayerDAO();
                 playerDAO.updatePlayer(student);
                 playerDAO.updatePlayerInfo(student);
-            } catch (SQLException e) {
+            } catch (DAOException e) {
                 throw new RuntimeException(e);
-            } finally {
-                if (conn != null) {
-                    try {
-                        conn.close();
-                    } catch (SQLException e) {
-                    }
-                }
             }
         }
         else {

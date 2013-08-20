@@ -11,8 +11,9 @@ import org.bukkit.Chunk;
 import org.bukkit.entity.Horse;
 
 import info.tregmine.Tregmine;
-import info.tregmine.database.ConnectionPool;
-import info.tregmine.database.DBHomeDAO;
+import info.tregmine.database.DAOException;
+import info.tregmine.database.IContext;
+import info.tregmine.database.IHomeDAO;
 import info.tregmine.api.TregminePlayer;
 import info.tregmine.api.math.Distance;
 

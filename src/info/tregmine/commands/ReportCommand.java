@@ -8,8 +8,9 @@ import static org.bukkit.ChatColor.*;
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
 import info.tregmine.api.PlayerReport;
-import info.tregmine.database.ConnectionPool;
-import info.tregmine.database.DBPlayerReportDAO;
+import info.tregmine.database.IContext;
+import info.tregmine.database.IPlayerReportDAO;
+import info.tregmine.database.DAOException;
 
 public class ReportCommand extends AbstractCommand
 {
@@ -52,27 +53,17 @@ public class ReportCommand extends AbstractCommand
 
         TregminePlayer victim = candidates.get(0);
 
-        Connection conn = null;
-        try {
-            conn = ConnectionPool.getConnection();
-
+        try (IContext ctx = tregmine.createContext()) {
             PlayerReport report = new PlayerReport();
             report.setSubjectId(victim.getId());
             report.setIssuerId(player.getId());
             report.setAction(PlayerReport.Action.COMMENT);
             report.setMessage(message);
 
-            DBPlayerReportDAO reportDAO = new DBPlayerReportDAO(conn);
+            IPlayerReportDAO reportDAO = ctx.getPlayerReportDAO();
             reportDAO.insertReport(report);
-        } catch (SQLException e) {
+        } catch (DAOException e) {
             throw new RuntimeException(e);
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                }
-            }
         }
 
         player.sendMessage(YELLOW + "Report filed.");

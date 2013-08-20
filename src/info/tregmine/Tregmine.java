@@ -41,17 +41,20 @@ import info.tregmine.api.PlayerBannedException;
 import info.tregmine.api.PlayerReport;
 import info.tregmine.api.TregminePlayer;
 import info.tregmine.api.Rank;
-import info.tregmine.database.ConnectionPool;
-import info.tregmine.database.DBInventoryDAO;
-import info.tregmine.database.DBLogDAO;
-import info.tregmine.database.DBPlayerDAO;
-import info.tregmine.database.DBPlayerReportDAO;
-import info.tregmine.database.DBZonesDAO;
+import info.tregmine.database.db.DBContextFactory;
+import info.tregmine.database.DAOException;
+import info.tregmine.database.IContextFactory;
+import info.tregmine.database.IContext;
+import info.tregmine.database.IInventoryDAO;
+import info.tregmine.database.ILogDAO;
+import info.tregmine.database.IPlayerDAO;
+import info.tregmine.database.IPlayerReportDAO;
+import info.tregmine.database.IZonesDAO;
 import info.tregmine.quadtree.IntersectionException;
 import info.tregmine.zones.Lot;
 import info.tregmine.zones.Zone;
 import info.tregmine.zones.ZoneWorld;
-import static info.tregmine.database.DBInventoryDAO.InventoryType;
+import static info.tregmine.database.IInventoryDAO.InventoryType;
 
 import info.tregmine.listeners.*;
 import info.tregmine.commands.*;
@@ -67,6 +70,8 @@ public class Tregmine extends JavaPlugin
     public final static int AMOUNT = 0;
 
     public final static Logger LOGGER = Logger.getLogger("Minecraft");
+
+    private IContextFactory contextFactory;
 
     private org.bukkit.Server server;
 
@@ -90,6 +95,8 @@ public class Tregmine extends JavaPlugin
     @Override
     public void onLoad()
     {
+        contextFactory = new DBContextFactory();
+
         // Set up all data structures
         players = new HashMap<String, TregminePlayer>();
         playersById = new HashMap<Integer, TregminePlayer>();
@@ -141,20 +148,13 @@ public class Tregmine extends JavaPlugin
         this.server = getServer();
 
         // Load blessed blocks
-        Connection conn = null;
-        try {
-            conn = ConnectionPool.getConnection();
-
-            DBInventoryDAO inventoryDAO = new DBInventoryDAO(conn);
+        try (IContext ctx = contextFactory.createContext()) {
+            IInventoryDAO inventoryDAO = ctx.getInventoryDAO();
             this.blessedBlocks = inventoryDAO.loadBlessedBlocks(getServer());
 
             LOGGER.info("Loaded " + blessedBlocks.size() + " blessed blocks");
-        } catch (SQLException e) {
+        } catch (DAOException e) {
             throw new RuntimeException(e);
-        } finally {
-            if (conn != null) {
-                try { conn.close(); } catch (SQLException e) { }
-            }
         }
 
         // Set up web server
@@ -305,6 +305,11 @@ public class Tregmine extends JavaPlugin
         }
     }
 
+    public IContext createContext()
+    {
+        return contextFactory.createContext();
+    }
+
     // ============================================================================
     // Data structure accessors
     // ============================================================================
@@ -354,11 +359,8 @@ public class Tregmine extends JavaPlugin
             return players.get(srcPlayer.getName());
         }
 
-        Connection conn = null;
-        try {
-            conn = ConnectionPool.getConnection();
-
-            DBPlayerDAO playerDAO = new DBPlayerDAO(conn);
+        try (IContext ctx = contextFactory.createContext()) {
+            IPlayerDAO playerDAO = ctx.getPlayerDAO();
             TregminePlayer player = playerDAO.getPlayer(srcPlayer.getPlayer());
 
             if (player == null) {
@@ -368,7 +370,7 @@ public class Tregmine extends JavaPlugin
             player.removeFlag(TregminePlayer.Flags.SOFTWARNED);
             player.removeFlag(TregminePlayer.Flags.HARDWARNED);
 
-            DBPlayerReportDAO reportDAO = new DBPlayerReportDAO(conn);
+            IPlayerReportDAO reportDAO = ctx.getPlayerReportDAO();
             List<PlayerReport> reports = reportDAO.getReportsBySubject(player);
             for (PlayerReport report : reports) {
                 Date validUntil = report.getValidUntil();
@@ -416,7 +418,7 @@ public class Tregmine extends JavaPlugin
                 onlinePlayerCount = onlinePlayers.length;
             }
 
-            DBLogDAO logDAO = new DBLogDAO(conn);
+            ILogDAO logDAO = ctx.getLogDAO();
             logDAO.insertLogin(player, false, onlinePlayerCount);
 
             player.setTemporaryChatName(player.getNameColor()
@@ -426,38 +428,27 @@ public class Tregmine extends JavaPlugin
             playersById.put(player.getId(), player);
 
             return player;
-        } catch (SQLException e) {
+        } catch (DAOException e) {
             throw new RuntimeException(e);
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                }
-            }
         }
-
     }
 
     public void removePlayer(TregminePlayer player)
     {
-        Connection conn = null;
-        try {
-            conn = ConnectionPool.getConnection();
-
+        try (IContext ctx = contextFactory.createContext()) {
             int onlinePlayerCount = 0;
             Player[] onlinePlayers = getServer().getOnlinePlayers();
             if (onlinePlayers != null) {
                 onlinePlayerCount = onlinePlayers.length;
             }
 
-            DBLogDAO logDAO = new DBLogDAO(conn);
+            ILogDAO logDAO = ctx.getLogDAO();
             logDAO.insertLogin(player, true, onlinePlayerCount);
 
             PlayerInventory inv = (PlayerInventory) player.getInventory();
 
             // Insert regular inventory
-            DBInventoryDAO invDAO = new DBInventoryDAO(conn);
+            IInventoryDAO invDAO = ctx.getInventoryDAO();
             int invId = invDAO.getInventoryId(player.getId(), InventoryType.PLAYER);
             if (invId == -1) {
                 invId = invDAO.insertInventory(player, null, InventoryType.PLAYER);
@@ -475,17 +466,10 @@ public class Tregmine extends JavaPlugin
 
             invDAO.insertStacks(armorId, inv.getArmorContents());
 
-            DBPlayerDAO playerDAO = new DBPlayerDAO(conn);
+            IPlayerDAO playerDAO = ctx.getPlayerDAO();
             playerDAO.updatePlayTime(player);
-        } catch (SQLException e) {
+        } catch (DAOException e) {
             throw new RuntimeException(e);
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                }
-            }
         }
 
         player.setValid(false);
@@ -517,21 +501,11 @@ public class Tregmine extends JavaPlugin
             return players.get(name);
         }
 
-        Connection conn = null;
-        try {
-            conn = ConnectionPool.getConnection();
-
-            DBPlayerDAO playerDAO = new DBPlayerDAO(conn);
+        try (IContext ctx = contextFactory.createContext()) {
+            IPlayerDAO playerDAO = ctx.getPlayerDAO();
             return playerDAO.getPlayer(name);
-        } catch (SQLException e) {
+        } catch (DAOException e) {
             throw new RuntimeException(e);
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                }
-            }
         }
     }
 
@@ -541,21 +515,11 @@ public class Tregmine extends JavaPlugin
             return playersById.get(id);
         }
 
-        Connection conn = null;
-        try {
-            conn = ConnectionPool.getConnection();
-
-            DBPlayerDAO playerDAO = new DBPlayerDAO(conn);
+        try (IContext ctx = contextFactory.createContext()) {
+            IPlayerDAO playerDAO = ctx.getPlayerDAO();
             return playerDAO.getPlayer(id);
-        } catch (SQLException e) {
+        } catch (DAOException e) {
             throw new RuntimeException(e);
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                }
-            }
         }
     }
 
@@ -588,10 +552,8 @@ public class Tregmine extends JavaPlugin
 
         // lazy load zone worlds as required
         if (zoneWorld == null) {
-            Connection conn = null;
-            try {
-                conn = ConnectionPool.getConnection();
-                DBZonesDAO dao = new DBZonesDAO(conn);
+            try (IContext ctx = contextFactory.createContext()) {
+                IZonesDAO dao = ctx.getZonesDAO();
 
                 zoneWorld = new ZoneWorld(world);
                 List<Zone> zones = dao.getZones(world.getName());
@@ -616,15 +578,8 @@ public class Tregmine extends JavaPlugin
                 }
 
                 worlds.put(world.getName(), zoneWorld);
-            } catch (SQLException e) {
+            } catch (DAOException e) {
                 throw new RuntimeException(e);
-            } finally {
-                if (conn != null) {
-                    try {
-                        conn.close();
-                    } catch (SQLException e) {
-                    }
-                }
             }
         }
 

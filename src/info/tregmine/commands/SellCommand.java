@@ -3,8 +3,6 @@ package info.tregmine.commands;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
-import java.sql.Connection;
-import java.sql.SQLException;
 
 import static org.bukkit.ChatColor.*;
 import org.bukkit.Server;
@@ -20,10 +18,11 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
-import info.tregmine.database.ConnectionPool;
-import info.tregmine.database.DBWalletDAO;
-import info.tregmine.database.DBTradeDAO;
-import info.tregmine.database.DBItemDAO;
+import info.tregmine.database.DAOException;
+import info.tregmine.database.IContext;
+import info.tregmine.database.IWalletDAO;
+import info.tregmine.database.ITradeDAO;
+import info.tregmine.database.IItemDAO;
 
 public class SellCommand extends AbstractCommand implements Listener
 {
@@ -74,12 +73,9 @@ public class SellCommand extends AbstractCommand implements Listener
 
         player.sendMessage("[Sell] You are offering: ");
 
-        Connection conn = null;
         int bid = 0;
-        try {
-            conn = ConnectionPool.getConnection();
-
-            DBItemDAO itemDAO = new DBItemDAO(conn);
+        try (IContext ctx = tregmine.createContext()) {
+            IItemDAO itemDAO = ctx.getItemDAO();
 
             ItemStack[] contents = inventory.getContents();
             for (ItemStack stack : contents) {
@@ -97,15 +93,8 @@ public class SellCommand extends AbstractCommand implements Listener
 
                 bid += amount * value;
             }
-        } catch (SQLException e) {
+        } catch (DAOException e) {
             throw new RuntimeException(e);
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                }
-            }
         }
 
         player.sendMessage(YELLOW + "[Sell] The Federal Reserve of Tregmine " +
@@ -153,11 +142,8 @@ public class SellCommand extends AbstractCommand implements Listener
         else if ("accept".equalsIgnoreCase(text)) {
             ItemStack[] contents = inventory.getContents();
 
-            Connection conn = null;
-            try {
-                conn = ConnectionPool.getConnection();
-
-                DBItemDAO itemDAO = new DBItemDAO(conn);
+            try (IContext ctx = tregmine.createContext()) {
+                IItemDAO itemDAO = ctx.getItemDAO();
 
                 // Recalculate cost
                 int bid = 0;
@@ -173,23 +159,16 @@ public class SellCommand extends AbstractCommand implements Listener
                     bid += amount * value;
                 }
 
-                DBWalletDAO walletDAO = new DBWalletDAO(conn);
-                DBTradeDAO tradeDAO = new DBTradeDAO(conn);
+                IWalletDAO walletDAO = ctx.getWalletDAO();
+                ITradeDAO tradeDAO = ctx.getTradeDAO();
 
                 walletDAO.add(player, bid);
                 walletDAO.insertTransaction(0, player.getId(), bid);
 
                 player.sendMessage(YELLOW + "[Sell] " + bid
                         + " tregs was " + "added to your wallet!");
-            } catch (SQLException e) {
+            } catch (DAOException e) {
                 throw new RuntimeException(e);
-            } finally {
-                if (conn != null) {
-                    try {
-                        conn.close();
-                    } catch (SQLException e) {
-                    }
-                }
             }
 
             // Finalize

@@ -15,9 +15,10 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
 import info.tregmine.Tregmine;
-import info.tregmine.database.ConnectionPool;
-import info.tregmine.database.DBPlayerDAO;
-import info.tregmine.database.DBLogDAO;
+import info.tregmine.database.DAOException;
+import info.tregmine.database.IContext;
+import info.tregmine.database.IPlayerDAO;
+import info.tregmine.database.ILogDAO;
 import info.tregmine.api.TregminePlayer;
 
 public class PlayerLookupListener implements Listener

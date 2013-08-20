@@ -1,8 +1,5 @@
 package info.tregmine.commands;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-
 import static org.bukkit.ChatColor.*;
 import org.bukkit.block.Block;
 
@@ -10,8 +7,9 @@ import info.tregmine.quadtree.Rectangle;
 import info.tregmine.quadtree.IntersectionException;
 
 import info.tregmine.Tregmine;
-import info.tregmine.database.ConnectionPool;
-import info.tregmine.database.DBZonesDAO;
+import info.tregmine.database.DAOException;
+import info.tregmine.database.IContext;
+import info.tregmine.database.IZonesDAO;
 import info.tregmine.api.TregminePlayer;
 import info.tregmine.zones.Zone;
 import static info.tregmine.zones.Zone.Permission;

@@ -1,7 +1,5 @@
 package info.tregmine.commands;
 
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.Date;
 
 import org.bukkit.ChatColor;
@@ -9,8 +7,9 @@ import org.bukkit.Server;
 
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
-import info.tregmine.database.DBLogDAO;
-import info.tregmine.database.ConnectionPool;
+import info.tregmine.database.DAOException;
+import info.tregmine.database.IContext;
+import info.tregmine.database.ILogDAO;
 
 public class SeenCommand extends AbstractCommand
 {
@@ -33,11 +32,8 @@ public class SeenCommand extends AbstractCommand
             return true;
         }
 
-        Connection conn = null;
-        try {
-            conn = ConnectionPool.getConnection();
-
-            DBLogDAO logDAO = new DBLogDAO(conn);
+        try (IContext ctx = tregmine.createContext()) {
+            ILogDAO logDAO = ctx.getLogDAO();
             Date seen = logDAO.getLastSeen(target);
 
             if (seen != null) {
@@ -47,15 +43,8 @@ public class SeenCommand extends AbstractCommand
                 player.sendMessage(ChatColor.GREEN + target.getChatName() + ChatColor.YELLOW
                         + " hasn't been seen for a while.");
             }
-        } catch (SQLException e) {
+        } catch (DAOException e) {
             throw new RuntimeException(e);
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                }
-            }
         }
 
         return true;
@@ -74,24 +63,14 @@ public class SeenCommand extends AbstractCommand
             return true;
         }
 
-        Connection conn = null;
-        try {
-            conn = ConnectionPool.getConnection();
-
-            DBLogDAO logDAO = new DBLogDAO(conn);
+        try (IContext ctx = tregmine.createContext()) {
+            ILogDAO logDAO = ctx.getLogDAO();
             Date seen = logDAO.getLastSeen(target);
 
             server.getConsoleSender()
                   .sendMessage(args[0] + " was last seen on: " + seen);
-        } catch (SQLException e) {
+        } catch (DAOException e) {
             throw new RuntimeException(e);
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                }
-            }
         }
 
         return true;

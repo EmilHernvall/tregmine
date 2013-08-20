@@ -55,15 +55,16 @@ import info.tregmine.api.Rank;
 import info.tregmine.api.PlayerBannedException;
 import info.tregmine.api.lore.Created;
 import info.tregmine.api.util.ScoreboardClearTask;
-import info.tregmine.database.ConnectionPool;
-import info.tregmine.database.DBInventoryDAO;
-import info.tregmine.database.DBMotdDAO;
-import info.tregmine.database.DBLogDAO;
-import info.tregmine.database.DBPlayerDAO;
-import info.tregmine.database.DBPlayerReportDAO;
-import info.tregmine.database.DBWalletDAO;
+import info.tregmine.database.DAOException;
+import info.tregmine.database.IContext;
+import info.tregmine.database.IInventoryDAO;
+import info.tregmine.database.IMotdDAO;
+import info.tregmine.database.ILogDAO;
+import info.tregmine.database.IPlayerDAO;
+import info.tregmine.database.IPlayerReportDAO;
+import info.tregmine.database.IWalletDAO;
 import info.tregmine.commands.MentorCommand;
-import static info.tregmine.database.DBInventoryDAO.InventoryType;
+import static info.tregmine.database.IInventoryDAO.InventoryType;
 
 public class TregminePlayerListener implements Listener
 {

@@ -22,9 +22,10 @@ import info.tregmine.commands.MentorCommand;
 import info.tregmine.api.TregminePlayer;
 import info.tregmine.api.Rank;
 import info.tregmine.api.PlayerReport;
-import info.tregmine.database.ConnectionPool;
-import info.tregmine.database.DBPlayerDAO;
-import info.tregmine.database.DBPlayerReportDAO;
+import info.tregmine.database.DAOException;
+import info.tregmine.database.IContext;
+import info.tregmine.database.IPlayerDAO;
+import info.tregmine.database.IPlayerReportDAO;
 
 public class SetupListener implements Listener
 {

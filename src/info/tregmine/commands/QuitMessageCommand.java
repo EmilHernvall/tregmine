@@ -1,7 +1,5 @@
 package info.tregmine.commands;
 
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.List;
 
 import org.bukkit.World;
@@ -11,8 +9,9 @@ import com.maxmind.geoip.Location;
 import static org.bukkit.ChatColor.*;
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
-import info.tregmine.database.ConnectionPool;
-import info.tregmine.database.DBPlayerDAO;
+import info.tregmine.database.DAOException;
+import info.tregmine.database.IContext;
+import info.tregmine.database.IPlayerDAO;
 
 public class QuitMessageCommand extends AbstractCommand
 {
@@ -93,22 +92,13 @@ public class QuitMessageCommand extends AbstractCommand
         player.sendMessage(YELLOW + "Your quit message has been set to:");
         player.sendMessage(YELLOW + message);
 
-        Connection conn = null;
-        try {
-            conn = ConnectionPool.getConnection();
-
-            DBPlayerDAO playerDAO = new DBPlayerDAO(conn);
+        try (IContext ctx = tregmine.createContext()) {
+            IPlayerDAO playerDAO = ctx.getPlayerDAO();
             playerDAO.updatePlayerInfo(player);
-        } catch (SQLException e) {
+        } catch (DAOException e) {
             throw new RuntimeException(e);
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                }
-            }
         }
+
         return true;
     }
 
@@ -158,22 +148,13 @@ public class QuitMessageCommand extends AbstractCommand
                 + " quit message has been set to:");
         player.sendMessage(YELLOW + quitmsgString);
 
-        Connection conn = null;
-        try {
-            conn = ConnectionPool.getConnection();
-
-            DBPlayerDAO playerDAO = new DBPlayerDAO(conn);
+        try (IContext ctx = tregmine.createContext()) {
+            IPlayerDAO playerDAO = ctx.getPlayerDAO();
             playerDAO.updatePlayerInfo(player);
-        } catch (SQLException e) {
+        } catch (DAOException e) {
             throw new RuntimeException(e);
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                }
-            }
         }
+
         return true;
     }
 

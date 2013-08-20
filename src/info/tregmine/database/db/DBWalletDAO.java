@@ -8,7 +8,6 @@ import java.sql.SQLException;
 import java.text.NumberFormat;
 
 import info.tregmine.api.TregminePlayer;
-import info.tregmine.database.ConnectionPool;
 import info.tregmine.database.IWalletDAO;
 import info.tregmine.database.DAOException;
 

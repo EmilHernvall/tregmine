@@ -6,8 +6,9 @@ import java.sql.SQLException;
 import org.bukkit.Location;
 import org.bukkit.ChatColor;
 import info.tregmine.Tregmine;
-import info.tregmine.database.ConnectionPool;
-import info.tregmine.database.DBWarpDAO;
+import info.tregmine.database.DAOException;
+import info.tregmine.database.IContext;
+import info.tregmine.database.IWarpDAO;
 import info.tregmine.api.TregminePlayer;
 import info.tregmine.api.Warp;
 

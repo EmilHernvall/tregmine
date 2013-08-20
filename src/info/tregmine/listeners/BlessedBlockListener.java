@@ -21,9 +21,10 @@ import org.bukkit.event.block.Action;
 import info.tregmine.Tregmine;
 import info.tregmine.api.Notification;
 import info.tregmine.api.TregminePlayer;
-import info.tregmine.database.ConnectionPool;
-import info.tregmine.database.DBInventoryDAO;
-import info.tregmine.database.DBWalletDAO;
+import info.tregmine.database.DAOException;
+import info.tregmine.database.IContext;
+import info.tregmine.database.IInventoryDAO;
+import info.tregmine.database.IWalletDAO;
 
 public class BlessedBlockListener implements Listener
 {
