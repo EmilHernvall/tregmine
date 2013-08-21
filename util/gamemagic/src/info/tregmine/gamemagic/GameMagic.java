@@ -12,52 +12,46 @@ import java.util.TimeZone;
 import java.util.logging.Logger;
 import java.util.zip.CRC32;
 
-import org.bukkit.WorldCreator;
-import org.bukkit.FireworkEffect;
-import org.bukkit.Color;
-import org.bukkit.World;
-import org.bukkit.Chunk;
-import org.bukkit.Server;
-import org.bukkit.Material;
-import org.bukkit.scheduler.BukkitScheduler;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.block.Block;
-import org.bukkit.Location;
 import org.bukkit.ChatColor;
-import org.bukkit.event.block.Action;
+import org.bukkit.Chunk;
+import org.bukkit.Color;
+import org.bukkit.FireworkEffect;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.World;
+import org.bukkit.WorldCreator;
+import org.bukkit.block.Block;
+import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.event.Listener;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.PluginManager;
-import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBurnEvent;
 import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.block.LeavesDecayEvent;
-import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
+import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerBucketFillEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
-import org.bukkit.event.entity.EntityExplodeEvent;
-import org.bukkit.event.entity.CreatureSpawnEvent;
-import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitScheduler;
 
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
 import info.tregmine.commands.ActionCommand;
-import info.tregmine.database.ConnectionPool;
-import info.tregmine.database.DBWalletDAO;
 import info.tregmine.api.*;
 
 public class GameMagic extends JavaPlugin implements Listener
 {
     private Map<Integer, String> portalLookup;
-
-    public final Logger log = Logger.getLogger("Minecraft");
 
     public Tregmine tregmine = null;
 
@@ -65,11 +59,29 @@ public class GameMagic extends JavaPlugin implements Listener
     {
         portalLookup = new HashMap<Integer, String>();
     }
+
     @Override
     public void onEnable()
     {
         PluginManager pluginMgm = getServer().getPluginManager();
+
+        // Check for tregmine plugin
+        if (tregmine == null) {
+            Plugin mainPlugin = pluginMgm.getPlugin("tregmine");
+            if (mainPlugin != null) {
+                tregmine = (Tregmine)mainPlugin;
+            } else {
+                Tregmine.LOGGER.info(getDescription().getName() + " " +
+                         getDescription().getVersion() +
+                         " - could not find Tregmine");
+                pluginMgm.disablePlugin(this);
+                return;
+            }
+        }
+
+        // Register events
         pluginMgm.registerEvents(this, this);
+        pluginMgm.registerEvents(new Gates(this), this);
 
         WorldCreator alpha = new WorldCreator("alpha");
         alpha.environment(World.Environment.NORMAL);
@@ -131,19 +143,6 @@ public class GameMagic extends JavaPlugin implements Listener
                 factory.shot(loc);
             }
         }, 100L, 200L);
-
-      //Check for tregmine plugin
-        Plugin test = this.getServer().getPluginManager().getPlugin("tregmine");
-
-        if(this.tregmine == null) {
-            if(test != null) {
-                this.tregmine = ((Tregmine)test);
-            } else {
-                log.info(this.getDescription().getName() + " " + this.getDescription().getVersion() + " - could not find Tregmine");
-                this.getServer().getPluginManager().disablePlugin(this);
-            }
-        }
-        getServer().getPluginManager().registerEvents(new Gates(this), this);
     }
 
     public static int locationChecksum(Location loc)
