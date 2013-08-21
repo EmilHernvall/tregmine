@@ -18,6 +18,11 @@ public class DBContext implements IContext
         this.conn = conn;
     }
 
+    public Connection getConnection()
+    {
+        return conn;
+    }
+
     @Override
     public void close()
     {
