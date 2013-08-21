@@ -6,6 +6,9 @@ import java.sql.*;
 
 import org.apache.commons.dbcp.BasicDataSource;
 
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
+
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IContextFactory;
 import info.tregmine.database.IContext;
@@ -14,9 +17,13 @@ public class DBContextFactory implements IContextFactory
 {
     private BasicDataSource ds;
 
-    public DBContextFactory()
+    public DBContextFactory(FileConfiguration config)
     {
-        String driver = "com.mysql.jdbc.Driver";
+        String driver = config.getString("db.driver");
+        if (driver == null) {
+            driver = "com.mysql.jdbc.Driver";
+        }
+
         try {
             Class.forName(driver).newInstance();
         } catch (ClassNotFoundException ex) {
@@ -27,16 +34,9 @@ public class DBContextFactory implements IContextFactory
             throw new RuntimeException(ex);
         }
 
-        String user = null, password = null, url = null;
-        try {
-            Properties settings = new Properties();
-            settings.load(new FileInputStream("mysql.cfg"));
-            url = settings.getProperty("url");
-            user = settings.getProperty("user");
-            password = settings.getProperty("password");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        String user = config.getString("db.user");
+        String password = config.getString("db.password");
+        String url = config.getString("db.url");
 
         ds = new BasicDataSource();
         ds.setDriverClassName(driver);

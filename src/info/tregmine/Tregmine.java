@@ -12,6 +12,7 @@ import java.util.Queue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.net.InetAddress;
+import java.io.File;
 import java.io.IOException;
 
 import org.bukkit.Bukkit;
@@ -33,6 +34,8 @@ import org.bukkit.configuration.file.FileConfiguration;
 import com.maxmind.geoip.LookupService;
 
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.handler.HandlerList;
+import org.eclipse.jetty.server.handler.ContextHandler;
 
 import info.tregmine.api.PlayerBannedException;
 import info.tregmine.api.PlayerReport;
@@ -92,16 +95,23 @@ public class Tregmine extends JavaPlugin
     @Override
     public void onLoad()
     {
-        contextFactory = new DBContextFactory();
+        File folder = getDataFolder();
+        Tregmine.LOGGER.info("Data folder is: " + folder);
+
+        reloadConfig();
+
+        FileConfiguration config = getConfig();
+
+        contextFactory = new DBContextFactory(config);
 
         // Set up all data structures
-        players = new HashMap<String, TregminePlayer>();
-        playersById = new HashMap<Integer, TregminePlayer>();
+        players = new HashMap<>();
+        playersById = new HashMap<>();
 
-        mentors = new LinkedList<TregminePlayer>();
-        students = new LinkedList<TregminePlayer>();
+        mentors = new LinkedList<>();
+        students = new LinkedList<>();
 
-        worlds = new TreeMap<String, ZoneWorld>(
+        worlds = new TreeMap<>(
             new Comparator<String>() {
                 @Override
                 public int compare(String a, String b)
@@ -110,7 +120,7 @@ public class Tregmine extends JavaPlugin
                 }
             });
 
-        zones = new HashMap<Integer, Zone>();
+        zones = new HashMap<>();
 
         Player[] players = getServer().getOnlinePlayers();
         for (Player player : players) {
@@ -122,7 +132,7 @@ public class Tregmine extends JavaPlugin
         }
 
         try {
-            cl = new LookupService("GeoIPCity.dat",
+            cl = new LookupService(new File(folder,"GeoIPCity.dat"),
                                    LookupService.GEOIP_MEMORY_CACHE);
         } catch (IOException e) {
             Tregmine.LOGGER.warning("GeoIPCity.dat was not found! " +
@@ -133,15 +143,6 @@ public class Tregmine extends JavaPlugin
     @Override
     public void onEnable()
     {
-        reloadConfig();
-
-        Tregmine.LOGGER.info("Data folder is: " + getDataFolder());
-
-        FileConfiguration config = getConfig();
-        String apiKey = config.getString("api.signing-key");
-
-        Tregmine.LOGGER.info("API Key: " + apiKey);
-
         this.server = getServer();
 
         // Load blessed blocks
@@ -158,6 +159,25 @@ public class Tregmine extends JavaPlugin
         PluginManager pluginMgm = server.getPluginManager();
 
         try {
+            FileConfiguration config = getConfig();
+            String apiKey = config.getString("api.signing-key", "");
+            int apiPort = config.getInt("api.port", 9192);
+
+            Tregmine.LOGGER.info("API Key: " + apiKey);
+            Tregmine.LOGGER.info("API Port: " + apiPort);
+
+            HandlerList handlers = new HandlerList();
+
+            // Start chat handler and bind to /chat
+            chatHandler = new ChatHandler(this, pluginMgm);
+            pluginMgm.registerEvents(chatHandler, this);
+
+            ContextHandler context = new ContextHandler();
+            context.setContextPath("/chat");
+            context.setHandler(chatHandler);
+            handlers.addHandler(context);
+
+            // Start web handler and bind to rest of paths
             webHandler = new WebHandler(this, pluginMgm, apiKey);
             pluginMgm.registerEvents(webHandler, this);
 
@@ -165,19 +185,12 @@ public class Tregmine extends JavaPlugin
             webHandler.addAction(new PlayerListAction.Factory());
             webHandler.addAction(new PlayerKickAction.Factory());
 
-            webServer = new Server(9192);
-            webServer.setHandler(webHandler);
+            handlers.addHandler(webHandler);
+
+            // Start server at apiPort
+            webServer = new Server(apiPort);
+            webServer.setHandler(handlers);
             webServer.start();
-
-            chatHandler = new ChatHandler(this, pluginMgm);
-            pluginMgm.registerEvents(chatHandler, this);
-
-            chatServer = new Server(9193);
-            chatServer.setHandler(chatHandler);
-            chatServer.start();
-
-            //BukkitScheduler scheduler = server.getScheduler();
-            //scheduler.scheduleSyncRepeatingTask(this, webHandler, 0, 20);
         }
         catch (Exception e) {
             LOGGER.log(Level.WARNING, "Failed to start web server!", e);
@@ -342,7 +355,7 @@ public class Tregmine extends JavaPlugin
 
     public List<TregminePlayer> getOnlinePlayers()
     {
-        List<TregminePlayer> players = new ArrayList<TregminePlayer>();
+        List<TregminePlayer> players = new ArrayList<>();
         for (Player player : server.getOnlinePlayers()) {
             players.add(getPlayer(player));
         }
@@ -525,10 +538,10 @@ public class Tregmine extends JavaPlugin
     {
         List<Player> matches = server.matchPlayer(pattern);
         if (matches.size() == 0) {
-            return new ArrayList<TregminePlayer>();
+            return new ArrayList<>();
         }
 
-        List<TregminePlayer> decoratedMatches = new ArrayList<TregminePlayer>();
+        List<TregminePlayer> decoratedMatches = new ArrayList<>();
         for (Player match : matches) {
             TregminePlayer decoratedMatch = getPlayer(match);
             if (decoratedMatch == null) {
