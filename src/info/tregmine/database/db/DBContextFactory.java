@@ -52,9 +52,12 @@ public class DBContextFactory implements IContextFactory
     public IContext createContext()
     throws DAOException
     {
-        try (Connection conn = ds.getConnection()) {
+        try {
+            // It's the responsibility of the context to make sure that the
+            // connection is correctly closed
+            Connection conn = ds.getConnection();
             try (Statement stmt = conn.createStatement()) {
-                stmt.execute("SET NAMES utf8");
+                stmt.execute("SET NAMES latin1");
             }
 
             return new DBContext(conn);
