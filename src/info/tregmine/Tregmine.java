@@ -76,7 +76,6 @@ public class Tregmine extends JavaPlugin
     private org.bukkit.Server server;
 
     private Server webServer;
-    private Server chatServer;
     private WebHandler webHandler;
     private ChatHandler chatHandler;
 
@@ -306,9 +305,6 @@ public class Tregmine extends JavaPlugin
         try {
             webServer.stop();
             webServer.join();
-
-            chatServer.stop();
-            chatServer.join();
         }
         catch (Exception e) {
             LOGGER.log(Level.WARNING, "Failed to start web server!", e);
