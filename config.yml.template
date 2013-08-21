@@ -1,0 +1,7 @@
+api:
+  signing-key: your-strong-random-key-here
+  port: 9192
+db:
+  url: jdbc:mysql://localhost:3306/tregmine?autoReconnect=true
+  user: tregmine
+  password: tregmine
