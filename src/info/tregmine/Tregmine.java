@@ -48,6 +48,7 @@ import info.tregmine.database.DBLogDAO;
 import info.tregmine.database.DBPlayerDAO;
 import info.tregmine.database.DBPlayerReportDAO;
 import info.tregmine.database.DBZonesDAO;
+import info.tregmine.gamemagic.ButtonListener;
 import info.tregmine.quadtree.IntersectionException;
 import info.tregmine.zones.Lot;
 import info.tregmine.zones.Zone;
@@ -209,7 +210,7 @@ public class Tregmine extends JavaPlugin
         pluginMgm.registerEvents(new ZoneBlockListener(this), this);
         pluginMgm.registerEvents(new ZoneEntityListener(this), this);
         pluginMgm.registerEvents(new ZonePlayerListener(this), this);
-//        pluginMgm.registerEvents(new ButtonListener(this), this);
+        //pluginMgm.registerEvents(new ButtonListener(this), this);
         
         // Declaration of all commands
         getCommand("admins").setExecutor(
