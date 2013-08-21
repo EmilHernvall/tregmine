@@ -48,6 +48,7 @@ import info.tregmine.database.DBLogDAO;
 import info.tregmine.database.DBPlayerDAO;
 import info.tregmine.database.DBPlayerReportDAO;
 import info.tregmine.database.DBZonesDAO;
+import info.tregmine.gamemagic.ButtonListener;
 import info.tregmine.quadtree.IntersectionException;
 import info.tregmine.zones.Lot;
 import info.tregmine.zones.Zone;
@@ -85,6 +86,8 @@ public class Tregmine extends JavaPlugin
 
     private Queue<TregminePlayer> mentors;
     private Queue<TregminePlayer> students;
+    
+    public ArrayList<String> lottery;
 
     private LookupService cl = null;
 
@@ -207,7 +210,8 @@ public class Tregmine extends JavaPlugin
         pluginMgm.registerEvents(new ZoneBlockListener(this), this);
         pluginMgm.registerEvents(new ZoneEntityListener(this), this);
         pluginMgm.registerEvents(new ZonePlayerListener(this), this);
-
+        //pluginMgm.registerEvents(new ButtonListener(this), this);
+        
         // Declaration of all commands
         getCommand("admins").setExecutor(
             new NotifyCommand(this, "admins") {
@@ -227,7 +231,10 @@ public class Tregmine extends JavaPlugin
                     return player.getRank() == Rank.GUARDIAN;
                 }
             });
+        
+        this.lottery = new ArrayList<String>();
 
+        getCommand("lottery").setExecutor(new LotteryCommand(this));
         getCommand("action").setExecutor(new ActionCommand(this));
         getCommand("ban").setExecutor(new BanCommand(this));
         getCommand("bless").setExecutor(new BlessCommand(this));
@@ -237,8 +244,7 @@ public class Tregmine extends JavaPlugin
         getCommand("cname").setExecutor(new ChangeNameCommand(this));
         getCommand("createmob").setExecutor(new CreateMobCommand(this));
         getCommand("createwarp").setExecutor(new CreateWarpCommand(this));
-        getCommand("creative").setExecutor(
-                new GameModeCommand(this, "creative", GameMode.CREATIVE));
+        getCommand("creative").setExecutor(new GameModeCommand(this, "creative", GameMode.CREATIVE));
         getCommand("fill").setExecutor(new FillCommand(this, "fill"));
         getCommand("force").setExecutor(new ForceCommand(this));
         getCommand("give").setExecutor(new GiveCommand(this));
@@ -256,8 +262,7 @@ public class Tregmine extends JavaPlugin
         getCommand("password").setExecutor(new PasswordCommand(this));
         getCommand("pos").setExecutor(new PositionCommand(this));
         getCommand("quitmessage").setExecutor(new QuitMessageCommand(this));
-        getCommand("regeneratechunk").setExecutor(
-                new RegenerateChunkCommand(this));
+        getCommand("regeneratechunk").setExecutor(new RegenerateChunkCommand(this));
         getCommand("report").setExecutor(new ReportCommand(this));
         getCommand("say").setExecutor(new SayCommand(this));
         getCommand("seen").setExecutor(new SeenCommand(this));
@@ -266,8 +271,7 @@ public class Tregmine extends JavaPlugin
         getCommand("setspawner").setExecutor(new SetSpawnerCommand(this));
         getCommand("spawn").setExecutor(new SpawnCommand(this));
         getCommand("summon").setExecutor(new SummonCommand(this));
-        getCommand("survival").setExecutor(
-                new GameModeCommand(this, "survival", GameMode.SURVIVAL));
+        getCommand("survival").setExecutor(new GameModeCommand(this, "survival", GameMode.SURVIVAL));
         getCommand("testfill").setExecutor(new FillCommand(this, "testfill"));
         getCommand("time").setExecutor(new TimeCommand(this));
         getCommand("town").setExecutor(new ZoneCommand(this, "town"));
