@@ -1,5 +1,7 @@
 package info.tregmine.database.db;
 
+import java.util.List;
+import java.util.ArrayList;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -23,22 +25,23 @@ public class DBHomeDAO implements IHomeDAO
     }
 
     @Override
-    public void insertHome(TregminePlayer player, Location loc)
+    public void insertHome(TregminePlayer player, String name, Location loc)
     throws DAOException
     {
-        String sql = "INSERT INTO player_home (player_id, " +
+        String sql = "INSERT INTO player_home (player_id, home_name, " +
             "home_x, home_y, home_z, home_yaw, home_pitch, home_world, " +
-            "home_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+            "home_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, player.getId());
-            stmt.setDouble(2, loc.getX());
-            stmt.setDouble(3, loc.getY());
-            stmt.setDouble(4, loc.getZ());
-            stmt.setFloat(5, loc.getYaw());
-            stmt.setFloat(6, loc.getPitch());
-            stmt.setString(7, loc.getWorld().getName());
-            stmt.setDouble(8, System.currentTimeMillis());
+            stmt.setString(2, name);
+            stmt.setDouble(3, loc.getX());
+            stmt.setDouble(4, loc.getY());
+            stmt.setDouble(5, loc.getZ());
+            stmt.setFloat(6, loc.getYaw());
+            stmt.setFloat(7, loc.getPitch());
+            stmt.setString(8, loc.getWorld().getName());
+            stmt.setDouble(9, System.currentTimeMillis());
             stmt.execute();
         } catch (SQLException e) {
             throw new DAOException(sql, e);
@@ -49,18 +52,26 @@ public class DBHomeDAO implements IHomeDAO
     public Location getHome(TregminePlayer player)
     throws DAOException
     {
-        return getHome(player.getId(), player.getServer());
+        return getHome(player.getId(), null, player.getServer());
     }
 
     @Override
-    public Location getHome(int playerId, Server server)
+    public Location getHome(TregminePlayer player, String name)
+    throws DAOException
+    {
+        return getHome(player.getId(), name, player.getServer());
+    }
+
+    @Override
+    public Location getHome(int playerId, String name, Server server)
     throws DAOException
     {
         String sql = "SELECT * FROM player_home " +
-            "WHERE player_id = ? ORDER BY home_time DESC";
+            "WHERE player_id = ? AND home_name = ? ORDER BY home_time DESC";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, playerId);
+            stmt.setString(2, name);
             stmt.execute();
 
             try (ResultSet rs = stmt.getResultSet()) {
@@ -76,6 +87,32 @@ public class DBHomeDAO implements IHomeDAO
                 String world = rs.getString("home_world");
 
                 return new Location(server.getWorld(world), x, y, z, yaw, pitch);
+            }
+        } catch (SQLException e) {
+            throw new DAOException(sql, e);
+        }
+    }
+
+    @Override
+    public List<String> getHomeNames(int playerId)
+    throws DAOException
+    {
+        String sql = "SELECT * FROM player_home " +
+            "WHERE player_id = ? AND NOT home_name IS NULL " +
+            "GROUP BY home_name ORDER BY max(home_time) DESC LIMIT 20";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, playerId);
+            stmt.execute();
+
+            try (ResultSet rs = stmt.getResultSet()) {
+                List<String> names = new ArrayList<String>();
+                while (rs.next()) {
+                    String name = rs.getString("home_name");
+                    names.add(name);
+                }
+
+                return names;
             }
         } catch (SQLException e) {
             throw new DAOException(sql, e);
