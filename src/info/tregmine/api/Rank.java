@@ -398,6 +398,14 @@ public enum Rank
             return 4000;
         }
     }
+    
+    public boolean canChooseLottery()
+    {
+    	return this == JUNIOR_ADMIN ||
+    		   this == SENIOR_ADMIN ||
+    		   this == GUARDIAN ||
+    		   this == CODER;
+    }
 
     public ChatColor getColor()
     {
