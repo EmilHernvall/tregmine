@@ -16,9 +16,12 @@ import info.tregmine.database.IContext;
 public class DBContextFactory implements IContextFactory
 {
     private BasicDataSource ds;
+    private Map<String, LoggingConnection.LogEntry> queryLog;
 
     public DBContextFactory(FileConfiguration config)
     {
+        queryLog = new HashMap<>();
+
         String driver = config.getString("db.driver");
         if (driver == null) {
             driver = "com.mysql.jdbc.Driver";
@@ -48,6 +51,11 @@ public class DBContextFactory implements IContextFactory
         ds.setDefaultAutoCommit(true);
     }
 
+    public Map<String, LoggingConnection.LogEntry> getLog()
+    {
+        return queryLog;
+    }
+
     @Override
     public IContext createContext()
     throws DAOException
@@ -60,7 +68,7 @@ public class DBContextFactory implements IContextFactory
                 stmt.execute("SET NAMES latin1");
             }
 
-            return new DBContext(conn);
+            return new DBContext(new LoggingConnection(conn, queryLog));
         } catch (SQLException e) {
             throw new DAOException(e);
         }
