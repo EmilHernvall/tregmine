@@ -160,10 +160,15 @@ public class SellCommand extends AbstractCommand implements Listener
                 }
 
                 IWalletDAO walletDAO = ctx.getWalletDAO();
-                ITradeDAO tradeDAO = ctx.getTradeDAO();
 
                 walletDAO.add(player, bid);
                 walletDAO.insertTransaction(0, player.getId(), bid);
+
+                ITradeDAO tradeDAO = ctx.getTradeDAO();
+                int tradeId = tradeDAO.insertTrade(player.getId(),
+                                                   0,
+                                                   bid);
+                tradeDAO.insertStacks(tradeId, contents);
 
                 player.sendMessage(YELLOW + "[Sell] " + bid
                         + " tregs was " + "added to your wallet!");
