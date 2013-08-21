@@ -181,6 +181,7 @@ public class Tregmine extends JavaPlugin
             pluginMgm.registerEvents(webHandler, this);
 
             webHandler.addAction(new VersionAction.Factory());
+            webHandler.addAction(new QueryLogAction.Factory());
             webHandler.addAction(new PlayerListAction.Factory());
             webHandler.addAction(new PlayerKickAction.Factory());
 
@@ -309,6 +310,11 @@ public class Tregmine extends JavaPlugin
         catch (Exception e) {
             LOGGER.log(Level.WARNING, "Failed to start web server!", e);
         }
+    }
+
+    public IContextFactory getContextFactory()
+    {
+        return contextFactory;
     }
 
     public IContext createContext()
