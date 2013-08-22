@@ -27,6 +27,10 @@ public class LotCommand extends AbstractCommand
     @Override
     public boolean handlePlayer(TregminePlayer player, String[] args)
     {
+        if (args.length == 0) {
+            return false;
+        }
+
         if ("create".equals(args[0])) {
             createLot(player, args);
             return true;
