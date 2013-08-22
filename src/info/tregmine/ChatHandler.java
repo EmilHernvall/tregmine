@@ -2,6 +2,7 @@ package info.tregmine;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Map;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.Queue;
@@ -48,18 +49,18 @@ public class ChatHandler extends WebSocketHandler
     {
         private static final HandlerList handlers = new HandlerList();
 
-        private String sender;
+        private String authToken;
         private String channel;
         private String text;
 
-        public WebChatEvent(String sender, String channel, String text)
+        public WebChatEvent(String authToken, String channel, String text)
         {
-            this.sender = sender;
+            this.authToken = authToken;
             this.channel = channel;
             this.text = text;
         }
 
-        public String getSender() { return sender; }
+        public String getAuthToken() { return authToken; }
         public String getChannel() { return channel; }
         public String getText() { return text; }
 
@@ -79,18 +80,18 @@ public class ChatHandler extends WebSocketHandler
     {
         private static final HandlerList handlers = new HandlerList();
 
-        private String sender;
+        private TregminePlayer sender;
         private String channel;
         private String text;
 
-        public MinecraftChatEvent(String sender, String channel, String text)
+        public MinecraftChatEvent(TregminePlayer sender, String channel, String text)
         {
             this.sender = sender;
             this.channel = channel;
             this.text = text;
         }
 
-        public String getSender() { return sender; }
+        public TregminePlayer getSender() { return sender; }
         public String getChannel() { return channel; }
         public String getText() { return text; }
 
@@ -146,8 +147,8 @@ public class ChatHandler extends WebSocketHandler
 
             try {
                 JSONObject obj = new JSONObject(message);
-                String sender = obj.getString("sender");
-                if (sender == null) {
+                String authToken = obj.getString("authToken");
+                if (authToken == null) {
                     return;
                 }
                 String channel = obj.getString("channel");
@@ -159,7 +160,7 @@ public class ChatHandler extends WebSocketHandler
                     return;
                 }
 
-                WebChatEvent event = new WebChatEvent(sender, channel, text);
+                WebChatEvent event = new WebChatEvent(authToken, channel, text);
                 pluginMgr.callEvent(event);
             }
             catch (JSONException e) {
@@ -211,11 +212,12 @@ public class ChatHandler extends WebSocketHandler
         }
     }
 
-    private void broadcastToWeb(String sender, String channel, String text)
+    private void broadcastToWeb(TregminePlayer sender, String channel, String text)
     {
         try {
             JSONObject obj = new JSONObject();
-            obj.put("sender", sender);
+            obj.put("sender", sender.getRealName());
+            obj.put("rank", sender.getRank().toString());
             obj.put("channel", channel);
             obj.put("text", text);
 
@@ -227,7 +229,12 @@ public class ChatHandler extends WebSocketHandler
                     continue;
                 }
 
-                session.getRemote().sendStringByFuture(message);
+                try {
+                    session.getRemote().sendString(message);
+                } catch (IOException e) {
+                    Tregmine.LOGGER.info("Chat disconnected");
+                    disconnect(socket);
+                }
             }
         }
         catch (JSONException e) {
@@ -256,7 +263,14 @@ public class ChatHandler extends WebSocketHandler
     @EventHandler
     public void onWebChat(ChatHandler.WebChatEvent event)
     {
-        String sender = event.getSender();
+        Map<String, TregminePlayer> authTokens = tregmine.getAuthTokens();
+        String authToken = event.getAuthToken();
+        if (!authTokens.containsKey(authToken)) {
+            Tregmine.LOGGER.info("Auth token " + authToken + " not found.");
+            return;
+        }
+        TregminePlayer sender = authTokens.get(authToken);
+
         String channel = event.getChannel();
         String text = event.getText();
 
@@ -269,16 +283,16 @@ public class ChatHandler extends WebSocketHandler
             }
 
             if ("global".equalsIgnoreCase(channel)) {
-                to.sendMessage("<" + ChatColor.YELLOW + sender
-                        + ChatColor.WHITE + "> " + ChatColor.WHITE + text);
+                to.sendMessage("(" + sender.getChatName()
+                        + ChatColor.WHITE + ") " + ChatColor.WHITE + text);
             } else {
-                to.sendMessage(channel + " <" + ChatColor.YELLOW + sender
-                        + ChatColor.WHITE + "> " + ChatColor.WHITE + text);
+                to.sendMessage(channel + " (" + sender.getChatName()
+                        + ChatColor.WHITE + ") " + ChatColor.WHITE + text);
             }
         }
 
         broadcastToWeb(sender, channel, text);
 
-        Tregmine.LOGGER.info(channel + " <" + sender + "> " + text);
+        Tregmine.LOGGER.info(channel + " <" + sender.getRealName() + "> " + text);
     }
 }

@@ -41,6 +41,7 @@ public class TregminePlayer extends PlayerDelegate
     // Persistent values
     private int id = 0;
     private String name = null;
+    private String realName = null;
     private String password = null;
     private String keyword = null;
     private Rank rank = Rank.UNVERIFIED;
@@ -82,6 +83,7 @@ public class TregminePlayer extends PlayerDelegate
         super(player);
 
         this.name = player.getName();
+        this.realName = player.getName();
         this.loginTime = new Date();
 
         this.flags = EnumSet.noneOf(Flags.class);
@@ -92,6 +94,7 @@ public class TregminePlayer extends PlayerDelegate
         super(null);
 
         this.name = name;
+        this.realName = name;
         this.flags = EnumSet.noneOf(Flags.class);
     }
 
@@ -103,15 +106,22 @@ public class TregminePlayer extends PlayerDelegate
         return name;
     }
 
+    public String getRealName()
+    {
+        return realName;
+    }
+
     public void setTemporaryChatName(String name)
     {
         this.name = name;
 
-        if (getChatName().length() > 16) {
-            setPlayerListName(name.substring(0, 15));
-        }
-        else {
-            setPlayerListName(name);
+        if (getDelegate() != null) {
+            if (getChatName().length() > 16) {
+                setPlayerListName(name.substring(0, 15));
+            }
+            else {
+                setPlayerListName(name);
+            }
         }
     }
 
@@ -140,10 +150,7 @@ public class TregminePlayer extends PlayerDelegate
     {
         this.rank = v;
 
-        if (getDelegate() != null) {
-            setTemporaryChatName(getNameColor() + getName());
-        }
-
+        setTemporaryChatName(getNameColor() + getName());
     }
 
     public void setGuardianRank(int v) { this.guardianRank = v; }

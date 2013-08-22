@@ -69,7 +69,7 @@ public class ChatListener implements Listener
 
         plugin.getServer()
               .getPluginManager()
-              .callEvent(new ChatHandler.MinecraftChatEvent(sender.getName(),
+              .callEvent(new ChatHandler.MinecraftChatEvent(sender,
                                                             channel,
                                                             text));
     }

@@ -59,12 +59,6 @@ public class SayCommand extends AbstractCommand
     {
         String msg = argsToMessage(args);
 
-        tregmine.getServer()
-              .getPluginManager()
-              .callEvent(new ChatHandler.MinecraftChatEvent("GOD",
-                                                            "GLOBAL",
-                                                            msg));
-
         server.broadcastMessage("<" + BLUE + "GOD" + WHITE + "> "
                 + LIGHT_PURPLE + msg);
         LOGGER.info("CONSOLE: <GOD> " + msg);

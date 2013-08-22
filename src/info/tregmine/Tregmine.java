@@ -79,6 +79,7 @@ public class Tregmine extends JavaPlugin
     private WebHandler webHandler;
     private ChatHandler chatHandler;
 
+    private Map<String, TregminePlayer> authTokens;
     private Map<String, TregminePlayer> players;
     private Map<Integer, TregminePlayer> playersById;
     private Map<Location, Integer> blessedBlocks;
@@ -104,6 +105,7 @@ public class Tregmine extends JavaPlugin
         contextFactory = new DBContextFactory(config);
 
         // Set up all data structures
+        authTokens = new HashMap<>();
         players = new HashMap<>();
         playersById = new HashMap<>();
 
@@ -180,10 +182,11 @@ public class Tregmine extends JavaPlugin
             webHandler = new WebHandler(this, pluginMgm, apiKey);
             pluginMgm.registerEvents(webHandler, this);
 
-            webHandler.addAction(new VersionAction.Factory());
-            webHandler.addAction(new QueryLogAction.Factory());
-            webHandler.addAction(new PlayerListAction.Factory());
+            webHandler.addAction(new AuthAction.Factory());
             webHandler.addAction(new PlayerKickAction.Factory());
+            webHandler.addAction(new PlayerListAction.Factory());
+            webHandler.addAction(new QueryLogAction.Factory());
+            webHandler.addAction(new VersionAction.Factory());
 
             handlers.addHandler(webHandler);
 
@@ -310,6 +313,11 @@ public class Tregmine extends JavaPlugin
         catch (Exception e) {
             LOGGER.log(Level.WARNING, "Failed to start web server!", e);
         }
+    }
+
+    public Map<String, TregminePlayer> getAuthTokens()
+    {
+        return authTokens;
     }
 
     public IContextFactory getContextFactory()
