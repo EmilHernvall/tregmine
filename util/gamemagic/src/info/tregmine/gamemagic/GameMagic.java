@@ -288,12 +288,19 @@ public class GameMagic extends JavaPlugin implements Listener
     public void onUseElevator(PlayerInteractEvent event)
     {
         Player player = event.getPlayer();
-        if (event.getClickedBlock().getType().equals(Material.STONE_BUTTON)) {
-            Location loc = event.getPlayer().getLocation();
-            Block standOn = event.getPlayer().getWorld().getBlockAt(loc.getBlockX(), loc.getBlockY()-1, loc.getBlockZ());
+        Block block = event.getClickedBlock();
+        if (block == null) {
+            return;
+        }
+
+        if (block.getType().equals(Material.STONE_BUTTON)) {
+            Location loc = player.getLocation();
+            World world = player.getWorld();
+            Block standOn = world.getBlockAt(loc.getBlockX(), loc.getBlockY()-1, loc.getBlockZ());
 
             if (Material.SPONGE.equals(standOn.getType())) {
-                Block signBlock = event.getPlayer().getWorld().getBlockAt(event.getClickedBlock().getLocation().getBlockX(), event.getClickedBlock().getLocation().getBlockY()+1, event.getClickedBlock().getLocation().getBlockZ());
+                Location bLoc = block.getLocation();
+                Block signBlock = world.getBlockAt(bLoc.getBlockX(), bLoc.getBlockY()+1, bLoc.getBlockZ());
 
                 if(signBlock.getState() instanceof Sign) {
                     Sign sign = (Sign) signBlock.getState();
