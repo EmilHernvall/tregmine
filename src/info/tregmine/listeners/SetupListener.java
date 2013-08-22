@@ -11,7 +11,7 @@ import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 
@@ -62,7 +62,7 @@ public class SetupListener implements Listener
     }
 
     @EventHandler
-    public void onPlayerChat(AsyncPlayerChatEvent event)
+    public void onPlayerChat(PlayerChatEvent event)
     {
         TregminePlayer player = plugin.getPlayer(event.getPlayer());
         if (player.getChatState() != TregminePlayer.ChatState.SETUP) {
