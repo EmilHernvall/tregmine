@@ -295,6 +295,20 @@ public class ZonePlayerListener implements Listener
         Zone zone = world.findZone(currentPos);
         Lot lot = world.findLot(currentPos);
 
+        // Check if this is a lot - if so, limit items that can be blessed to
+        // lot owner
+        if (BlessedBlockListener.ALLOWED_MATERIALS.contains(block.getType()) &&
+                 !player.getRank().canModifyZones()) {
+            if (lot == null) {
+                return;
+            }
+
+            if (!lot.isOwner(player.getName())) {
+                event.setCancelled(true);
+                player.sendMessage(ChatColor.RED + "Blessed to lot owners.");
+            }
+        }
+
         // Handle stick, for zone and lot creation
         if (item.getType() == Material.STICK) {
             // within a zone, lots can be created by zone owners or people with
@@ -351,19 +365,6 @@ public class ZonePlayerListener implements Listener
                 player.setZoneBlock2(block);
                 player.sendMessage("Second block set of new " + type + ".");
                 player.setZoneBlockCounter(0);
-            }
-        }
-        // Check if this is a lot - if so, limit items that can be blessed to
-        // lot owner
-        else if (BlessedBlockListener.ALLOWED_MATERIALS.contains(block.getType()) &&
-                 !player.getRank().canModifyZones()) {
-            if (lot == null) {
-                return;
-            }
-
-            if (!lot.isOwner(player.getName())) {
-                event.setCancelled(true);
-                player.sendMessage(ChatColor.RED + "Blessed to lot owners.");
             }
         }
     }
