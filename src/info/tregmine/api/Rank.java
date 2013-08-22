@@ -249,7 +249,8 @@ public enum Rank
 
     public boolean canSpawnMobs()
     {
-        return this == JUNIOR_ADMIN ||
+        return this == BUILDER ||
+               this == JUNIOR_ADMIN ||
                this == SENIOR_ADMIN;
     }
 
@@ -286,7 +287,8 @@ public enum Rank
 
     public boolean canSetSpawners()
     {
-        return this == JUNIOR_ADMIN ||
+        return this == BUILDER ||
+               this == JUNIOR_ADMIN ||
                this == SENIOR_ADMIN;
     }
 
