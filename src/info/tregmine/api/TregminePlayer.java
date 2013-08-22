@@ -92,6 +92,7 @@ public class TregminePlayer extends PlayerDelegate
         super(null);
 
         this.name = name;
+        this.flags = EnumSet.noneOf(Flags.class);
     }
 
     public void setId(int v) { this.id = v; }
