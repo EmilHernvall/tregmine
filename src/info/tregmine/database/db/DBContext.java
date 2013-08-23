@@ -30,6 +30,12 @@ public class DBContext implements IContext
             try { conn.close(); } catch (SQLException e) { }
         }
     }
+    
+    @Override
+    public IBankDAO getBankDAO()
+    {
+        return new DBBankDAO(conn);
+    }
 
     @Override
     public IHomeDAO getHomeDAO()
