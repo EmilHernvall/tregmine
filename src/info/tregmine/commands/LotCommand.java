@@ -158,7 +158,7 @@ public class LotCommand extends AbstractCommand
 
         Zone zone = tregmine.getZone(lot.getZoneId());
         Zone.Permission perm = zone.getUser(player.getName());
-        if (perm == Zone.Permission.Owner && !zone.isCommunist()) {
+        if (perm == Zone.Permission.Owner && zone.isCommunist()) {
             // Zone owners can do this in communist zones
         }
         else if (lot.isOwner(player.getName())) {
@@ -239,7 +239,7 @@ public class LotCommand extends AbstractCommand
 
         Zone zone = tregmine.getZone(lot.getZoneId());
         Zone.Permission perm = zone.getUser(player.getName());
-        if (perm == Zone.Permission.Owner && !zone.isCommunist()) {
+        if (perm == Zone.Permission.Owner && zone.isCommunist()) {
             // Zone owners can do this in communist zones
         }
         else if (lot.isOwner(player.getName())) {
