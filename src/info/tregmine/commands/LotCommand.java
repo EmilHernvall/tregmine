@@ -1,7 +1,5 @@
 package info.tregmine.commands;
 
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.List;
 
 import static org.bukkit.ChatColor.*;
@@ -11,8 +9,9 @@ import info.tregmine.quadtree.Point;
 import info.tregmine.quadtree.IntersectionException;
 
 import info.tregmine.Tregmine;
-import info.tregmine.database.ConnectionPool;
-import info.tregmine.database.DBZonesDAO;
+import info.tregmine.database.DAOException;
+import info.tregmine.database.IContext;
+import info.tregmine.database.IZonesDAO;
 import info.tregmine.api.TregminePlayer;
 import info.tregmine.zones.Zone;
 import info.tregmine.zones.ZoneWorld;
@@ -28,6 +27,10 @@ public class LotCommand extends AbstractCommand
     @Override
     public boolean handlePlayer(TregminePlayer player, String[] args)
     {
+        if (args.length == 0) {
+            return false;
+        }
+
         if ("create".equals(args[0])) {
             createLot(player, args);
             return true;
@@ -74,18 +77,15 @@ public class LotCommand extends AbstractCommand
 
         String playerName = args[2];
 
-        int userId;
-        Connection conn = null;
-        try {
-            conn = ConnectionPool.getConnection();
-            DBZonesDAO dao = new DBZonesDAO(conn);
-            userId = dao.getUserId(playerName);
+        TregminePlayer victim = tregmine.getPlayerOffline(playerName);
+        if (victim == null) {
+            player.sendMessage(RED + "Player " + playerName + " was not found.");
+            return;
+        }
 
-            if (userId == -1) {
-                player.sendMessage(RED + "Player " + args[2]
-                        + " was not found.");
-                return;
-            }
+        try (IContext ctx = tregmine.createContext()) {
+
+            IZonesDAO dao = ctx.getZonesDAO();
 
             Block b1 = player.getZoneBlock1();
             Block b2 = player.getZoneBlock2();
@@ -126,20 +126,13 @@ public class LotCommand extends AbstractCommand
             }
 
             dao.addLot(lot);
-            dao.addLotUser(lot.getId(), userId);
+            dao.addLotUser(lot.getId(), victim.getId());
 
             player.sendMessage(YELLOW + "[" + zone.getName() + "] Lot "
                     + args[1] + "." + zone.getName() + " created for player "
                     + playerName + ".");
-        } catch (SQLException e) {
+        } catch (DAOException e) {
             throw new RuntimeException(e);
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                }
-            }
         }
     }
 
@@ -165,7 +158,7 @@ public class LotCommand extends AbstractCommand
 
         Zone zone = tregmine.getZone(lot.getZoneId());
         Zone.Permission perm = zone.getUser(player.getName());
-        if (perm == Zone.Permission.Owner && !zone.isCommunist()) {
+        if (perm == Zone.Permission.Owner && zone.isCommunist()) {
             // Zone owners can do this in communist zones
         }
         else if (lot.isOwner(player.getName())) {
@@ -195,10 +188,8 @@ public class LotCommand extends AbstractCommand
             return;
         }
 
-        Connection conn = null;
-        try {
-            conn = ConnectionPool.getConnection();
-            DBZonesDAO dao = new DBZonesDAO(conn);
+        try (IContext ctx = tregmine.createContext()) {
+            IZonesDAO dao = ctx.getZonesDAO();
 
             if ("addowner".equals(args[0])) {
 
@@ -221,15 +212,8 @@ public class LotCommand extends AbstractCommand
                 player.sendMessage(YELLOW + candidate.getChatName() + RED +
                         " is no longer an owner of " + lot.getName() + ".");
             }
-        } catch (SQLException e) {
+        } catch (DAOException e) {
             throw new RuntimeException(e);
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                }
-            }
         }
     }
 
@@ -255,7 +239,7 @@ public class LotCommand extends AbstractCommand
 
         Zone zone = tregmine.getZone(lot.getZoneId());
         Zone.Permission perm = zone.getUser(player.getName());
-        if (perm == Zone.Permission.Owner && !zone.isCommunist()) {
+        if (perm == Zone.Permission.Owner && zone.isCommunist()) {
             // Zone owners can do this in communist zones
         }
         else if (lot.isOwner(player.getName())) {
@@ -270,10 +254,8 @@ public class LotCommand extends AbstractCommand
             return;
         }
 
-        Connection conn = null;
-        try {
-            conn = ConnectionPool.getConnection();
-            DBZonesDAO dao = new DBZonesDAO(conn);
+        try (IContext ctx = tregmine.createContext()) {
+            IZonesDAO dao = ctx.getZonesDAO();
 
             dao.deleteLot(lot.getId());
             dao.deleteLotUsers(lot.getId());
@@ -281,15 +263,8 @@ public class LotCommand extends AbstractCommand
             world.deleteLot(lot.getName());
 
             player.sendMessage(YELLOW + lot.getName() + " has been deleted.");
-        } catch (SQLException e) {
+        } catch (DAOException e) {
             throw new RuntimeException(e);
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                }
-            }
         }
     }
 }

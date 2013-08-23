@@ -1,7 +1,6 @@
 package info.tregmine.commands;
 
-import java.sql.Connection;
-import java.sql.SQLException;
+import java.util.List;
 
 import static org.bukkit.ChatColor.*;
 import org.bukkit.Server;
@@ -11,8 +10,9 @@ import org.bukkit.Chunk;
 import org.bukkit.entity.Horse;
 
 import info.tregmine.Tregmine;
-import info.tregmine.database.ConnectionPool;
-import info.tregmine.database.DBHomeDAO;
+import info.tregmine.database.DAOException;
+import info.tregmine.database.IContext;
+import info.tregmine.database.IHomeDAO;
 import info.tregmine.api.TregminePlayer;
 import info.tregmine.api.math.Distance;
 
@@ -23,24 +23,14 @@ public class HomeCommand extends AbstractCommand
         super(tregmine, "home");
     }
 
-    private boolean teleport(TregminePlayer player)
+    private boolean teleport(TregminePlayer player, String name)
     {
-        Connection conn = null;
         Location loc = null;
-        try {
-            conn = ConnectionPool.getConnection();
-            ;
-            DBHomeDAO homeDAO = new DBHomeDAO(conn);
-            loc = homeDAO.getHome(player);
-        } catch (SQLException e) {
+        try (IContext ctx = tregmine.createContext()) {
+            IHomeDAO homeDAO = ctx.getHomeDAO();
+            loc = homeDAO.getHome(player, name);
+        } catch (DAOException e) {
             throw new RuntimeException(e);
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                }
-            }
         }
 
         if (loc == null) {
@@ -60,20 +50,7 @@ public class HomeCommand extends AbstractCommand
                 return true;
             }
 
-            Horse horse = null;
-
-            if((player.getVehicle() != null) && (player.getVehicle() instanceof Horse)){
-                horse = (Horse)player.getVehicle();
-            }
-
-            if(horse != null){
-                horse.eject();
-                horse.teleport(loc);
-                player.teleport(loc);
-                horse.setPassenger(player.getDelegate());
-            }else{
-                player.teleport(loc);
-            }
+            player.teleportWithHorse(loc);
 
             player.sendMessage(AQUA + "Hoci poci, little gnome. Magic worked, "
                     + "you're in your home!");
@@ -86,7 +63,7 @@ public class HomeCommand extends AbstractCommand
         return true;
     }
 
-    private boolean save(TregminePlayer player)
+    private boolean save(TregminePlayer player, String name)
     {
         if (!player.getRank().canSaveHome()) {
             return true;
@@ -109,20 +86,11 @@ public class HomeCommand extends AbstractCommand
             return true;
         }
 
-        Connection conn = null;
-        try {
-            conn = ConnectionPool.getConnection();
-            DBHomeDAO homeDAO = new DBHomeDAO(conn);
-            homeDAO.insertHome(player, playerLoc);
-        } catch (SQLException e) {
+        try (IContext ctx = tregmine.createContext()) {
+            IHomeDAO homeDAO = ctx.getHomeDAO();
+            homeDAO.insertHome(player, name, playerLoc);
+        } catch (DAOException e) {
             throw new RuntimeException(e);
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                }
-            }
         }
 
         player.sendMessage(AQUA + "Home saved!");
@@ -130,7 +98,7 @@ public class HomeCommand extends AbstractCommand
         return true;
     }
 
-    private boolean teleportTo(TregminePlayer player, String playerName)
+    private boolean teleportTo(TregminePlayer player, String playerName, String name)
     {
         if (!player.getRank().canVisitHomes()) {
             return true;
@@ -142,21 +110,12 @@ public class HomeCommand extends AbstractCommand
             return true;
         }
 
-        Connection conn = null;
         Location loc = null;
-        try {
-            conn = ConnectionPool.getConnection();
-            DBHomeDAO homeDAO = new DBHomeDAO(conn);
-            loc = homeDAO.getHome(target.getId(), tregmine.getServer());
-        } catch (SQLException e) {
+        try (IContext ctx = tregmine.createContext()) {
+            IHomeDAO homeDAO = ctx.getHomeDAO();
+            loc = homeDAO.getHome(target.getId(), name, tregmine.getServer());
+        } catch (DAOException e) {
             throw new RuntimeException(e);
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                }
-            }
         }
 
         if (loc == null) {
@@ -170,21 +129,7 @@ public class HomeCommand extends AbstractCommand
         world.loadChunk(chunk);
 
         if (world.isChunkLoaded(chunk)) {
-        	
-        	Horse horse = null;
-            
-            if((player.getVehicle() != null) && (player.getVehicle() instanceof Horse)){
-            	horse = (Horse)player.getVehicle();
-            }
-            
-            if(horse != null){
-            	horse.eject();
-            	horse.teleport(loc);
-            	player.teleport(loc);
-            	horse.setPassenger(player.getDelegate());
-            }else{
-            	player.teleport(loc);
-            }
+            player.teleportWithHorse(loc);
 
             player.sendMessage(AQUA
                     + "Like a drunken gnome, you fly across the world to "
@@ -197,22 +142,90 @@ public class HomeCommand extends AbstractCommand
         return true;
     }
 
+    private boolean list(TregminePlayer player, String playerName)
+    {
+        if (!player.getRank().canVisitHomes()) {
+            return true;
+        }
+
+        TregminePlayer target = player;
+        if (playerName != null) {
+            if (!player.getRank().canVisitHomes()) {
+                return true;
+            }
+
+            target = tregmine.getPlayerOffline(playerName);
+            if (target == null) {
+                player.sendMessage(RED + playerName + " was not found in database.");
+                return true;
+            }
+        }
+
+        List<String> names = null;
+        try (IContext ctx = tregmine.createContext()) {
+            IHomeDAO homeDAO = ctx.getHomeDAO();
+            names = homeDAO.getHomeNames(target.getId());
+        } catch (DAOException e) {
+            throw new RuntimeException(e);
+        }
+
+        if (names.size() > 0) {
+            StringBuilder buffer = new StringBuilder();
+            String delim = "";
+            for (String name : names) {
+                buffer.append(delim);
+                buffer.append(name);
+                delim = ", ";
+            }
+
+            player.sendMessage(YELLOW + "List of homes:");
+            player.sendMessage(YELLOW + buffer.toString());
+        } else {
+            player.sendMessage(YELLOW + "No homes found!");
+        }
+
+        return true;
+    }
+
     @Override
     public boolean handlePlayer(TregminePlayer player, String[] args)
     {
         if (args.length == 0) {
-            return teleport(player);
+            return teleport(player, "default");
         }
         else if ("save".equalsIgnoreCase(args[0])) {
-            return save(player);
+            if (args.length == 2) {
+                return save(player, args[1]);
+            } else {
+                return save(player, "default");
+            }
         }
-        else if ("to".equalsIgnoreCase(args[0])) {
+        else if ("go".equalsIgnoreCase(args[0])) {
             if (args.length < 2) {
-                player.sendMessage(RED + "Usage: /home to <player>.");
+                player.sendMessage(RED + "Usage: /home go <name>.");
                 return true;
             }
 
-            return teleportTo(player, args[1]);
+            return teleport(player, args[1]);
+        }
+        else if ("list".equalsIgnoreCase(args[0])) {
+            if (args.length == 2) {
+                return list(player, args[1]);
+            } else {
+                return list(player, null);
+            }
+        }
+        else if ("to".equalsIgnoreCase(args[0])) {
+            if (args.length == 3) {
+                return teleportTo(player, args[1], args[2]);
+            }
+            else if (args.length == 2) {
+                return teleportTo(player, args[1], "default");
+            }
+            else if (args.length < 2) {
+                player.sendMessage(RED + "Usage: /home to <player> <name>");
+                return true;
+            }
         }
 
         return true;

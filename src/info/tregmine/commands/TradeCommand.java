@@ -3,8 +3,6 @@ package info.tregmine.commands;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
-import java.sql.Connection;
-import java.sql.SQLException;
 
 import static org.bukkit.ChatColor.*;
 import org.bukkit.Server;
@@ -20,9 +18,10 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
-import info.tregmine.database.ConnectionPool;
-import info.tregmine.database.DBWalletDAO;
-import info.tregmine.database.DBTradeDAO;
+import info.tregmine.database.DAOException;
+import info.tregmine.database.IContext;
+import info.tregmine.database.IWalletDAO;
+import info.tregmine.database.ITradeDAO;
 import info.tregmine.api.math.Distance;
 
 public class TradeCommand extends AbstractCommand implements Listener
@@ -228,10 +227,8 @@ public class TradeCommand extends AbstractCommand implements Listener
                 return;
             }
 
-            Connection conn = null;
-            try {
-                conn = ConnectionPool.getConnection();
-                DBWalletDAO walletDAO = new DBWalletDAO(conn);
+            try (IContext dbCtx = tregmine.createContext()) {
+                IWalletDAO walletDAO = dbCtx.getWalletDAO();
 
                 long balance = walletDAO.balance(second);
                 if (amount > balance) {
@@ -239,15 +236,8 @@ public class TradeCommand extends AbstractCommand implements Listener
                             + " tregs!");
                     return;
                 }
-            } catch (SQLException e) {
+            } catch (DAOException e) {
                 throw new RuntimeException(e);
-            } finally {
-                if (conn != null) {
-                    try {
-                        conn.close();
-                    } catch (SQLException e) {
-                    }
-                }
             }
 
             first.sendMessage(tradePre + second.getChatName() + YELLOW
@@ -306,20 +296,18 @@ public class TradeCommand extends AbstractCommand implements Listener
 
             // Withdraw ctx.bid tregs from second players wallet
             // Add ctx.bid tregs from first players wallet
-            Connection conn = null;
-            try {
-                conn = ConnectionPool.getConnection();
-                DBWalletDAO walletDAO = new DBWalletDAO(conn);
-                DBTradeDAO tradeDAO = new DBTradeDAO(conn);
+            try (IContext dbCtx = tregmine.createContext()) {
+                IWalletDAO walletDAO = dbCtx.getWalletDAO();
+                ITradeDAO tradeDAO = dbCtx.getTradeDAO();
 
                 if (walletDAO.take(second, ctx.bid)) {
                     walletDAO.add(first, ctx.bid);
                     walletDAO.insertTransaction(second.getId(), first.getId(),
                             ctx.bid);
 
-                    int tradeId =
-                            tradeDAO.insertTrade(first.getId(), second.getId(),
-                                    ctx.bid);
+                    int tradeId = tradeDAO.insertTrade(first.getId(),
+                                                       second.getId(),
+                                                       ctx.bid);
                     tradeDAO.insertStacks(tradeId, contents);
 
                     first.sendMessage(tradePre + ctx.bid
@@ -333,15 +321,8 @@ public class TradeCommand extends AbstractCommand implements Listener
                             + second.getChatName() + "!");
                     return;
                 }
-            } catch (SQLException e) {
+            } catch (DAOException e) {
                 throw new RuntimeException(e);
-            } finally {
-                if (conn != null) {
-                    try {
-                        conn.close();
-                    } catch (SQLException e) {
-                    }
-                }
             }
 
             // Move items to second players inventory

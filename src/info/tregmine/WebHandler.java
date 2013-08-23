@@ -74,7 +74,6 @@ public class WebHandler extends AbstractHandler implements Listener
             this.responseCode = 500;
         }
 
-
         public int getResponseCode() { return responseCode; }
     }
 

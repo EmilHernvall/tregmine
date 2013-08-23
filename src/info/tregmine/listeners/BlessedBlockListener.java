@@ -1,10 +1,8 @@
 package info.tregmine.listeners;
 
 import java.util.Set;
-import java.util.HashSet;
+import java.util.EnumSet;
 import java.util.Map;
-import java.sql.Connection;
-import java.sql.SQLException;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -21,40 +19,40 @@ import org.bukkit.event.block.Action;
 import info.tregmine.Tregmine;
 import info.tregmine.api.Notification;
 import info.tregmine.api.TregminePlayer;
-import info.tregmine.database.ConnectionPool;
-import info.tregmine.database.DBInventoryDAO;
-import info.tregmine.database.DBWalletDAO;
+import info.tregmine.database.DAOException;
+import info.tregmine.database.IContext;
+import info.tregmine.database.IInventoryDAO;
+import info.tregmine.database.IWalletDAO;
 
 public class BlessedBlockListener implements Listener
 {
     private Tregmine plugin;
-    private Set<Material> allowedMaterials;
+
+    public final static Set<Material> ALLOWED_MATERIALS =
+            EnumSet.of(Material.CHEST,
+                       Material.FURNACE,
+                       Material.BURNING_FURNACE,
+                       Material.WOOD_DOOR,
+                       Material.WOODEN_DOOR,
+                       Material.LEVER,
+                       Material.STONE_BUTTON,
+                       Material.STONE_PLATE,
+                       Material.WOOD_PLATE,
+                       Material.WORKBENCH,
+                       Material.SIGN_POST,
+                       Material.DIODE,
+                       Material.DIODE_BLOCK_OFF,
+                       Material.TRAP_DOOR,
+                       Material.DIODE_BLOCK_ON,
+                       Material.JUKEBOX,
+                       Material.SIGN,
+                       Material.FENCE_GATE,
+                       Material.DISPENSER,
+                       Material.WOOD_BUTTON);
 
     public BlessedBlockListener(Tregmine instance)
     {
         plugin = instance;
-
-        allowedMaterials = new HashSet<Material>();
-        allowedMaterials.add(Material.CHEST);
-        allowedMaterials.add(Material.FURNACE);
-        allowedMaterials.add(Material.BURNING_FURNACE);
-        allowedMaterials.add(Material.WOOD_DOOR);
-        allowedMaterials.add(Material.WOODEN_DOOR);
-        allowedMaterials.add(Material.LEVER);
-        allowedMaterials.add(Material.STONE_BUTTON);
-        allowedMaterials.add(Material.STONE_PLATE);
-        allowedMaterials.add(Material.WOOD_PLATE);
-        allowedMaterials.add(Material.WORKBENCH);
-        allowedMaterials.add(Material.SIGN_POST);
-        allowedMaterials.add(Material.DIODE);
-        allowedMaterials.add(Material.DIODE_BLOCK_OFF);
-        allowedMaterials.add(Material.TRAP_DOOR);
-        allowedMaterials.add(Material.DIODE_BLOCK_ON);
-        allowedMaterials.add(Material.JUKEBOX);
-        allowedMaterials.add(Material.SIGN);
-        allowedMaterials.add(Material.FENCE_GATE);
-        allowedMaterials.add(Material.DISPENSER);
-        allowedMaterials.add(Material.WOOD_BUTTON);
     }
 
     @EventHandler
@@ -66,7 +64,7 @@ public class BlessedBlockListener implements Listener
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK &&
             player.getItemInHand().getType() == Material.BONE &&
             player.getRank().canBless() &&
-            allowedMaterials.contains(block.getType())) {
+            ALLOWED_MATERIALS.contains(block.getType())) {
 
             int targetId = player.getBlessTarget();
             if (targetId == 0) {
@@ -82,10 +80,8 @@ public class BlessedBlockListener implements Listener
 
             int amount = player.getRank().getBlessCost(block);
             if (amount > 0) {
-                Connection conn = null;
-                try {
-                    conn = ConnectionPool.getConnection();
-                    DBWalletDAO walletDAO = new DBWalletDAO(conn);
+                try (IContext ctx = plugin.createContext()) {
+                    IWalletDAO walletDAO = ctx.getWalletDAO();
 
                     if (walletDAO.take(player, amount)) {
                         player.sendMessage(ChatColor.LIGHT_PURPLE
@@ -96,15 +92,8 @@ public class BlessedBlockListener implements Listener
                                 + " tregs");
                         return;
                     }
-                } catch (SQLException e) {
+                } catch (DAOException e) {
                     throw new RuntimeException(e);
-                } finally {
-                    if (conn != null) {
-                        try {
-                            conn.close();
-                        } catch (SQLException e) {
-                        }
-                    }
                 }
             }
 
@@ -121,22 +110,12 @@ public class BlessedBlockListener implements Listener
             Map<Location, Integer> blessedBlocks = plugin.getBlessedBlocks();
             blessedBlocks.put(loc, targetId);
 
-            Connection conn = null;
-            try {
-                conn = ConnectionPool.getConnection();
-
-                DBInventoryDAO invDAO = new DBInventoryDAO(conn);
+            try (IContext ctx = plugin.createContext()) {
+                IInventoryDAO invDAO = ctx.getInventoryDAO();
                 invDAO.insertInventory(target, loc,
-                        DBInventoryDAO.InventoryType.BLOCK);
-            } catch (SQLException e) {
+                        IInventoryDAO.InventoryType.BLOCK);
+            } catch (DAOException e) {
                 throw new RuntimeException(e);
-            } finally {
-                if (conn != null) {
-                    try {
-                        conn.close();
-                    } catch (SQLException e) {
-                    }
-                }
             }
 
             event.setCancelled(true);
@@ -145,7 +124,7 @@ public class BlessedBlockListener implements Listener
 
         if ((event.getAction() == Action.RIGHT_CLICK_BLOCK ||
              event.getAction() == Action.LEFT_CLICK_BLOCK) &&
-            allowedMaterials.contains(block.getType())) {
+            ALLOWED_MATERIALS.contains(block.getType())) {
 
             Location loc = block.getLocation();
 

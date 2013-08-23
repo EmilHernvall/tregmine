@@ -249,7 +249,8 @@ public enum Rank
 
     public boolean canSpawnMobs()
     {
-        return this == JUNIOR_ADMIN ||
+        return this == BUILDER ||
+               this == JUNIOR_ADMIN ||
                this == SENIOR_ADMIN;
     }
 
@@ -284,7 +285,29 @@ public enum Rank
                this == SENIOR_ADMIN;
     }
 
+    public boolean canChooseLottery()
+    {
+        return this == JUNIOR_ADMIN ||
+               this == SENIOR_ADMIN ||
+               this == GUARDIAN ||
+               this == CODER;
+    }
+
+    public boolean canGetPlayerHead()
+    {
+        return this == JUNIOR_ADMIN ||
+                this == SENIOR_ADMIN ||
+                this == BUILDER;
+    }
+
     public boolean canSetSpawners()
+    {
+        return this == BUILDER ||
+               this == JUNIOR_ADMIN ||
+               this == SENIOR_ADMIN;
+    }
+
+    public boolean canGetTrueTab()
     {
         return this == JUNIOR_ADMIN ||
                this == SENIOR_ADMIN;
@@ -353,7 +376,7 @@ public enum Rank
         } else if (this == DONATOR) {
             return 20 * 1;
         } else {
-            return 20 * 15;
+            return 20 * 5;
         }
     }
 

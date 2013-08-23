@@ -2,16 +2,15 @@ package info.tregmine.commands;
 
 import java.util.List;
 import java.util.Date;
-import java.sql.Connection;
-import java.sql.SQLException;
 
 import static org.bukkit.ChatColor.*;
 import org.bukkit.Server;
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
 import info.tregmine.api.PlayerReport;
-import info.tregmine.database.ConnectionPool;
-import info.tregmine.database.DBPlayerReportDAO;
+import info.tregmine.database.DAOException;
+import info.tregmine.database.IContext;
+import info.tregmine.database.IPlayerReportDAO;
 
 public class BanCommand extends AbstractCommand
 {
@@ -56,10 +55,7 @@ public class BanCommand extends AbstractCommand
 
         victim.kickPlayer("Banned by " + player.getName() + ": " + message);
 
-        Connection conn = null;
-        try {
-            conn = ConnectionPool.getConnection();
-
+        try (IContext ctx = tregmine.createContext()) {
             PlayerReport report = new PlayerReport();
             report.setSubjectId(victim.getId());
             report.setIssuerId(player.getId());
@@ -69,17 +65,10 @@ public class BanCommand extends AbstractCommand
             report.setValidUntil(new Date(
                     System.currentTimeMillis() + 3 * 86400 * 1000l));
 
-            DBPlayerReportDAO reportDAO = new DBPlayerReportDAO(conn);
+            IPlayerReportDAO reportDAO = ctx.getPlayerReportDAO();
             reportDAO.insertReport(report);
-        } catch (SQLException e) {
+        } catch (DAOException e) {
             throw new RuntimeException(e);
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                }
-            }
         }
 
         Server server = tregmine.getServer();

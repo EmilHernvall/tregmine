@@ -1,0 +1,39 @@
+<project name="mojang_nbt" default="compile" basedir=".">
+
+    <property name="src" value="src" />
+    <property name="build" value="bin" />
+    <property name="build.compiler" value="modern" />
+
+    <target name="init">
+        <tstamp />
+        <mkdir dir="${build}" />
+    </target>
+
+    <target name="compile" depends="init">
+
+        <javac 
+            includeantruntime="false"
+            srcdir="${src}" 
+            destdir="${build}"
+            debug="on"
+            debuglevel="lines,vars,source">
+
+            <compilerarg value="-Xlint:unchecked"/>
+
+            <classpath>
+                <pathelement path="${build}"/>
+            </classpath>
+
+        </javac>
+
+    </target>
+
+    <target name="jar" depends="compile">
+        <jar destfile="${ant.project.name}.jar" basedir="${build}"></jar>
+    </target>
+
+    <target name="clean" depends="init">
+        <delete dir="${build}"/>
+    </target>
+
+</project>

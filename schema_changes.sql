@@ -232,3 +232,25 @@ DROP TABLE tmp;
 DELETE FROM player_property WHERE property_key = "trusted";
 
 ALTER TABLE zone ADD COLUMN zone_communist ENUM ('0', '1') DEFAULT '0' AFTER zone_hostiles;
+
+ALTER TABLE warps RENAME warp;
+ALTER TABLE warp ADD COLUMN warp_id INT UNSIGNED FIRST,
+                 CHANGE COLUMN name warp_name VARCHAR (45),
+                 CHANGE COLUMN x warp_x DOUBLE,
+                 CHANGE COLUMN y warp_y DOUBLE,
+                 CHANGE COLUMN z warp_z DOUBLE,
+                 CHANGE COLUMN pitch warp_pitch DOUBLE,
+                 CHANGE COLUMN yaw warp_yaw DOUBLE,
+                 CHANGE COLUMN world warp_world VARCHAR (45);
+ALTER TABLE warp ADD PRIMARY KEY (warp_id);
+ALTER TABLE warp MODIFY COLUMN warp_id INT UNSIGNED AUTO_INCREMENT;
+
+CREATE TABLE warp_log (
+    log_id INT UNSIGNED AUTO_INCREMENT,
+    player_id INT UNSIGNED,
+    warp_id INT UNSIGNED,
+    log_timestamp INT UNSIGNED,
+    PRIMARY KEY (log_id),
+    INDEX idx_warp (warp_id, log_timestamp)
+) ENGINE=InnoDB;
+

@@ -1,8 +1,5 @@
 package info.tregmine.commands;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-
 import static org.bukkit.ChatColor.*;
 
 import org.bukkit.ChatColor;
@@ -17,9 +14,12 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import info.tregmine.Tregmine;
-import info.tregmine.database.ConnectionPool;
-import info.tregmine.database.DBWarpDAO;
+import info.tregmine.database.DAOException;
+import info.tregmine.database.IContext;
+import info.tregmine.database.IWarpDAO;
+import info.tregmine.database.ILogDAO;
 import info.tregmine.api.TregminePlayer;
+import info.tregmine.api.Warp;
 
 public class WarpCommand extends AbstractCommand
 {
@@ -74,30 +74,24 @@ public class WarpCommand extends AbstractCommand
         Server server = tregmine.getServer();
         String name = args[0];
 
-        Location warpPoint = null;
-        Connection conn = null;
-        try {
-            conn = ConnectionPool.getConnection();
-
-            DBWarpDAO warpDAO = new DBWarpDAO(conn);
-            warpPoint = warpDAO.getWarp(name, server);
-            if (warpPoint == null) {
+        Warp warp = null;
+        try (IContext ctx = tregmine.createContext()) {
+            IWarpDAO warpDAO = ctx.getWarpDAO();
+            warp = warpDAO.getWarp(name, server);
+            if (warp == null) {
                 player.sendMessage("Warp not found!");
                 LOGGER.info("[warp failed] + <" + player.getName() + "> "
                         + name + " -- not found");
                 return true;
             }
 
-        } catch (SQLException e) {
+            ILogDAO logDAO = ctx.getLogDAO();
+            logDAO.insertWarpLog(player, warp.getId());
+        } catch (DAOException e) {
             throw new RuntimeException(e);
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                }
-            }
         }
+
+        Location warpPoint = warp.getLocation();
 
         World world = warpPoint.getWorld();
 

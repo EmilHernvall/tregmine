@@ -1,7 +1,5 @@
 package info.tregmine.listeners;
 
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.ArrayList;
@@ -55,15 +53,16 @@ import info.tregmine.api.Rank;
 import info.tregmine.api.PlayerBannedException;
 import info.tregmine.api.lore.Created;
 import info.tregmine.api.util.ScoreboardClearTask;
-import info.tregmine.database.ConnectionPool;
-import info.tregmine.database.DBInventoryDAO;
-import info.tregmine.database.DBMotdDAO;
-import info.tregmine.database.DBLogDAO;
-import info.tregmine.database.DBPlayerDAO;
-import info.tregmine.database.DBPlayerReportDAO;
-import info.tregmine.database.DBWalletDAO;
+import info.tregmine.database.DAOException;
+import info.tregmine.database.IContext;
+import info.tregmine.database.IInventoryDAO;
+import info.tregmine.database.IMotdDAO;
+import info.tregmine.database.ILogDAO;
+import info.tregmine.database.IPlayerDAO;
+import info.tregmine.database.IPlayerReportDAO;
+import info.tregmine.database.IWalletDAO;
 import info.tregmine.commands.MentorCommand;
-import static info.tregmine.database.DBInventoryDAO.InventoryType;
+import static info.tregmine.database.IInventoryDAO.InventoryType;
 
 public class TregminePlayerListener implements Listener
 {
@@ -341,15 +340,12 @@ public class TregminePlayerListener implements Listener
             player.setAllowFlight(false);
         }
 
-        Connection conn = null;
-        try {
-            conn = ConnectionPool.getConnection();
-
+        try (IContext ctx = plugin.createContext()) {
             if (player.getPlayTime() > 10 * 3600 && rank == Rank.SETTLER) {
                 player.setRank(Rank.RESIDENT);
                 rank = Rank.RESIDENT;
 
-                DBPlayerDAO playerDAO = new DBPlayerDAO(conn);
+                IPlayerDAO playerDAO = ctx.getPlayerDAO();
                 playerDAO.updatePlayer(player);
                 playerDAO.updatePlayerInfo(player);
 
@@ -376,7 +372,7 @@ public class TregminePlayerListener implements Listener
             }*/
 
             // Load motd
-            DBMotdDAO motdDAO = new DBMotdDAO(conn);
+            IMotdDAO motdDAO = ctx.getMotdDAO();
             String message = motdDAO.getMotd();
             if (message != null) {
                 String[] lines = message.split("\n");
@@ -384,12 +380,8 @@ public class TregminePlayerListener implements Listener
                     player.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + line);
                 }
             }
-        } catch (SQLException e) {
+        } catch (DAOException e) {
             throw new RuntimeException(e);
-        } finally {
-            if (conn != null) {
-                try { conn.close(); } catch (SQLException e) { }
-            }
         }
 
         // Show a score board
@@ -402,23 +394,15 @@ public class TregminePlayerListener implements Listener
             objective.setDisplayName("" + ChatColor.DARK_RED + ""
                     + ChatColor.BOLD + "Welcome to Tregmine!");
 
-            try {
-                conn = ConnectionPool.getConnection();
-
-                DBWalletDAO walletDAO = new DBWalletDAO(conn);
+            try (IContext ctx = plugin.createContext()) {
+                IWalletDAO walletDAO = ctx.getWalletDAO();
 
                 // Get a fake offline player
-                Score score =
-                        objective.getScore(Bukkit
-                                .getOfflinePlayer(ChatColor.BLACK
-                                        + "Your Balance:"));
-                score.setScore((int) walletDAO.balance(player));
-            } catch (SQLException e) {
+                String desc = ChatColor.BLACK + "Your Balance:";
+                Score score = objective.getScore(Bukkit.getOfflinePlayer(desc));
+                score.setScore((int)walletDAO.balance(player));
+            } catch (DAOException e) {
                 throw new RuntimeException(e);
-            } finally {
-                if (conn != null) {
-                    try { conn.close(); } catch (SQLException e) { }
-                }
             }
 
             player.setScoreboard(board);
@@ -429,33 +413,15 @@ public class TregminePlayerListener implements Listener
         // Recalculate guardians
         activateGuardians();
 
-        // Try to find a mentor
         if (rank == Rank.TOURIST) {
-            // Is there an existing mentor online?
-            TregminePlayer mentor = plugin.getPlayer(player.getMentorId());
-            if (mentor != null) {
-                MentorCommand.startMentoring(plugin, player, mentor);
-            } else {
-                // Try to find a new available mentor
-                Queue<TregminePlayer> mentors = plugin.getMentorQueue();
-                mentor = mentors.poll();
-                if (mentor != null) {
-                    MentorCommand.startMentoring(plugin, player, mentor);
-                } else {
-                    // Ask people to volonteer
-                    Queue<TregminePlayer> students = plugin.getStudentQueue();
-                    students.offer(player);
-
-                    for (TregminePlayer p : plugin.getOnlinePlayers()) {
-                        if (!p.getRank().canMentor()) {
-                            continue;
-                        }
-
-                        p.sendMessage(player.getChatName() +
-                            ChatColor.BLUE + " needs a mentor! Type /mentor to " +
-                            "offer your services!");
-                    }
-                }
+            // Try to find a mentor for tourists that rejoin
+            MentorCommand.findMentor(plugin, player);
+        }
+        else if (player.canMentor()) {
+            Queue<TregminePlayer> students = plugin.getStudentQueue();
+            if (students.size() > 0) {
+                player.sendMessage(ChatColor.YELLOW + "Mentors are needed! " +
+                    "Type /mentor to offer your services!");
             }
         }
     }
@@ -485,29 +451,23 @@ public class TregminePlayerListener implements Listener
         }
 
         // Look if there are any students being mentored by the exiting player
-        for (TregminePlayer student : plugin.getOnlinePlayers()) {
-            if (student.getRank() == Rank.TOURIST &&
-                student.getMentorId() == player.getId()) {
+        if (player.getStudent() != null) {
+            TregminePlayer student = player.getStudent();
 
-                Queue<TregminePlayer> mentors = plugin.getMentorQueue();
-                TregminePlayer mentor = mentors.poll();
-                if (mentor != null) {
-                    MentorCommand.startMentoring(plugin, student, mentor);
-                } else {
-                    Queue<TregminePlayer> students = plugin.getStudentQueue();
-                    students.offer(student);
+            student.setMentor(null);
+            player.setStudent(null);
 
-                    for (TregminePlayer p : plugin.getOnlinePlayers()) {
-                        if (!p.getRank().canMentor()) {
-                            continue;
-                        }
+            student.sendMessage(ChatColor.RED + "Your mentor left. We'll try " +
+                    "to find a new one for you as quickly as possible.");
 
-                        p.sendMessage(student.getChatName() +
-                            ChatColor.BLUE + " needs a mentor! Type /mentor to " +
-                            "offer your services!");
-                    }
-                }
-            }
+            MentorCommand.findMentor(plugin, student);
+        }
+        else if (player.getMentor() != null) {
+            TregminePlayer mentor = player.getMentor();
+            mentor.setStudent(null);
+            player.setMentor(null);
+
+            mentor.sendMessage(ChatColor.RED + "Your student left. :(");
         }
 
         plugin.removePlayer(player);
@@ -544,17 +504,14 @@ public class TregminePlayerListener implements Listener
             return;
         }
 
-        Connection conn = null;
-        try {
-            conn = ConnectionPool.getConnection();
-
+        try (IContext ctx = plugin.createContext()) {
             Item item = event.getItem();
             TregminePlayer droppedBy = droppedItems.get(item);
 
             if (droppedBy != null && droppedBy.getId() != player.getId()) {
                 ItemStack stack = item.getItemStack();
 
-                DBLogDAO logDAO = new DBLogDAO(conn);
+                ILogDAO logDAO = ctx.getLogDAO();
                 logDAO.insertGiveLog(droppedBy, player, stack);
 
                 player.sendMessage(ChatColor.YELLOW + "You got " +
@@ -568,15 +525,8 @@ public class TregminePlayerListener implements Listener
                 }
             }
             droppedItems.remove(item);
-        } catch (SQLException e) {
+        } catch (DAOException e) {
             throw new RuntimeException(e);
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                }
-            }
         }
     }
 

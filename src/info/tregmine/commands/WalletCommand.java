@@ -1,15 +1,14 @@
 package info.tregmine.commands;
 
 import java.util.List;
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.text.NumberFormat;
 
 import static org.bukkit.ChatColor.*;
 import org.bukkit.Server;
 import info.tregmine.Tregmine;
-import info.tregmine.database.ConnectionPool;
-import info.tregmine.database.DBWalletDAO;
+import info.tregmine.database.DAOException;
+import info.tregmine.database.IContext;
+import info.tregmine.database.IWalletDAO;
 import info.tregmine.api.TregminePlayer;
 import info.tregmine.api.math.Distance;
 
@@ -24,10 +23,8 @@ public class WalletCommand extends AbstractCommand
 
     private boolean balance(TregminePlayer player)
     {
-        Connection conn = null;
-        try {
-            conn = ConnectionPool.getConnection();
-            DBWalletDAO walletDAO = new DBWalletDAO(conn);
+        try (IContext ctx = tregmine.createContext()) {
+            IWalletDAO walletDAO = ctx.getWalletDAO();
 
             long balance = walletDAO.balance(player);
             if (balance >= 0) {
@@ -37,15 +34,8 @@ public class WalletCommand extends AbstractCommand
             else {
                 player.sendMessage(RED + "An error occured.");
             }
-        } catch (SQLException e) {
+        } catch (DAOException e) {
             throw new RuntimeException(e);
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                }
-            }
         }
 
         return true;
@@ -53,10 +43,8 @@ public class WalletCommand extends AbstractCommand
 
     private boolean tell(TregminePlayer player)
     {
-        Connection conn = null;
-        try {
-            conn = ConnectionPool.getConnection();
-            DBWalletDAO walletDAO = new DBWalletDAO(conn);
+        try (IContext ctx = tregmine.createContext()) {
+            IWalletDAO walletDAO = ctx.getWalletDAO();
 
             long balance = walletDAO.balance(player);
             if (balance >= 0) {
@@ -68,15 +56,8 @@ public class WalletCommand extends AbstractCommand
             else {
                 player.sendMessage(RED + "An error occured.");
             }
-        } catch (SQLException e) {
+        } catch (DAOException e) {
             throw new RuntimeException(e);
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                }
-            }
         }
 
         return true;
@@ -94,10 +75,8 @@ public class WalletCommand extends AbstractCommand
             return true;
         }
 
-        Connection conn = null;
-        try {
-            conn = ConnectionPool.getConnection();
-            DBWalletDAO walletDAO = new DBWalletDAO(conn);
+        try (IContext ctx = tregmine.createContext()) {
+            IWalletDAO walletDAO = ctx.getWalletDAO();
 
             if (walletDAO.take(player, amount)) {
                 walletDAO.add(target, amount);
@@ -118,15 +97,8 @@ public class WalletCommand extends AbstractCommand
             else {
                 player.sendMessage(RED + "You cant give more then you have!");
             }
-        } catch (SQLException e) {
+        } catch (DAOException e) {
             throw new RuntimeException(e);
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                }
-            }
         }
 
         return true;
@@ -144,10 +116,8 @@ public class WalletCommand extends AbstractCommand
             return true;
         }
 
-        Connection conn = null;
-        try {
-            conn = ConnectionPool.getConnection();
-            DBWalletDAO walletDAO = new DBWalletDAO(conn);
+        try (IContext ctx = tregmine.createContext()) {
+            IWalletDAO walletDAO = ctx.getWalletDAO();
 
             if (walletDAO.take(player, amount)) {
                 walletDAO.add(target, amount);
@@ -167,15 +137,8 @@ public class WalletCommand extends AbstractCommand
             else {
                 player.sendMessage(RED + "You cant give more then you have!");
             }
-        } catch (SQLException e) {
+        } catch (DAOException e) {
             throw new RuntimeException(e);
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                }
-            }
         }
 
         return true;

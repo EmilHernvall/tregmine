@@ -1,7 +1,7 @@
 name: tregmine
 main: info.tregmine.Tregmine
 version: 1.0.0
-website: http://tregmine.info
+website: http://discourse.tregmine.info
 author: Ein Andersson, Emil Hernvall
 description: Tregmine
 
@@ -77,7 +77,7 @@ commands:
     usage: /lot
   mentor:
     description: Make yourself available for mentoring (residents and above)
-    usage: /mentor
+    usage: /mentor queue|complete|cancel
   msg:
     description: Message another player
     usage: /msg player message
@@ -192,3 +192,7 @@ commands:
            /zone place <zone> <true/false> \
            /zone destroy <zone> <true/false> \
            /zone info <name> [perm]
+  lottery:
+    description: Type /lottery for additional info.
+  head:
+    description: Receive a specified player's head.

@@ -2,9 +2,11 @@ package info.tregmine;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Map;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.Queue;
+import java.util.Iterator;
 import java.security.NoSuchAlgorithmException;
 import java.security.InvalidKeyException;
 import java.util.logging.Level;
@@ -30,6 +32,7 @@ import org.eclipse.jetty.websocket.api.UpgradeRequest;
 import org.eclipse.jetty.websocket.api.UpgradeResponse;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.servlet.WebSocketCreator;
+import org.eclipse.jetty.io.EofException;
 
 import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
@@ -40,6 +43,9 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import info.tregmine.api.TregminePlayer;
+import info.tregmine.database.DAOException;
+import info.tregmine.database.IContext;
+import info.tregmine.database.ILogDAO;
 
 public class ChatHandler extends WebSocketHandler
     implements WebSocketCreator, Listener
@@ -48,49 +54,18 @@ public class ChatHandler extends WebSocketHandler
     {
         private static final HandlerList handlers = new HandlerList();
 
-        private String sender;
+        private String authToken;
         private String channel;
         private String text;
 
-        public WebChatEvent(String sender, String channel, String text)
+        public WebChatEvent(String authToken, String channel, String text)
         {
-            this.sender = sender;
+            this.authToken = authToken;
             this.channel = channel;
             this.text = text;
         }
 
-        public String getSender() { return sender; }
-        public String getChannel() { return channel; }
-        public String getText() { return text; }
-
-        @Override
-        public HandlerList getHandlers()
-        {
-            return handlers;
-        }
-
-        public static HandlerList getHandlerList()
-        {
-            return handlers;
-        }
-    }
-
-    public static class MinecraftChatEvent extends Event
-    {
-        private static final HandlerList handlers = new HandlerList();
-
-        private String sender;
-        private String channel;
-        private String text;
-
-        public MinecraftChatEvent(String sender, String channel, String text)
-        {
-            this.sender = sender;
-            this.channel = channel;
-            this.text = text;
-        }
-
-        public String getSender() { return sender; }
+        public String getAuthToken() { return authToken; }
         public String getChannel() { return channel; }
         public String getText() { return text; }
 
@@ -146,8 +121,8 @@ public class ChatHandler extends WebSocketHandler
 
             try {
                 JSONObject obj = new JSONObject(message);
-                String sender = obj.getString("sender");
-                if (sender == null) {
+                String authToken = obj.getString("authToken");
+                if (authToken == null) {
                     return;
                 }
                 String channel = obj.getString("channel");
@@ -159,7 +134,7 @@ public class ChatHandler extends WebSocketHandler
                     return;
                 }
 
-                WebChatEvent event = new WebChatEvent(sender, channel, text);
+                WebChatEvent event = new WebChatEvent(authToken, channel, text);
                 pluginMgr.callEvent(event);
             }
             catch (JSONException e) {
@@ -170,6 +145,13 @@ public class ChatHandler extends WebSocketHandler
         @Override
         public void onWebSocketClose(int statusCode, String reason)
         {
+            handler.removeSession(this);
+        }
+
+        @Override
+        public void onWebSocketError(Throwable e)
+        {
+            Tregmine.LOGGER.log(Level.WARNING, "Socket error", e);
             handler.removeSession(this);
         }
     }
@@ -201,28 +183,31 @@ public class ChatHandler extends WebSocketHandler
 
     private void disconnect(ChatSocket socket)
     {
-        sockets.remove(socket);
-
         try {
             socket.getSession().disconnect();
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
+        } catch (IOException e) { }
     }
 
-    private void broadcastToWeb(String sender, String channel, String text)
+    /**
+     * Do not call directly! Calls are synchronized by
+     * WebServer.sendChatMessage.
+     **/
+    public void broadcastToWeb(TregminePlayer sender, String channel, String text)
     {
         try {
             JSONObject obj = new JSONObject();
-            obj.put("sender", sender);
+            obj.put("sender", sender.getRealName());
+            obj.put("rank", sender.getRank().toString());
             obj.put("channel", channel);
             obj.put("text", text);
 
             String message = obj.toString();
-            for (ChatSocket socket : sockets) {
+            Iterator<ChatSocket> it = sockets.iterator();
+            while (it.hasNext()) {
+                ChatSocket socket = it.next();
                 Session session = socket.getSession();
                 if (!session.isOpen()) {
+                    it.remove();
                     disconnect(socket);
                     continue;
                 }
@@ -248,15 +233,17 @@ public class ChatHandler extends WebSocketHandler
     }
 
     @EventHandler
-    public void onMinecraftChat(MinecraftChatEvent event)
-    {
-        broadcastToWeb(event.getSender(), event.getChannel(), event.getText());
-    }
-
-    @EventHandler
     public void onWebChat(ChatHandler.WebChatEvent event)
     {
-        String sender = event.getSender();
+        WebServer server = tregmine.getWebServer();
+        Map<String, TregminePlayer> authTokens = server.getAuthTokens();
+        String authToken = event.getAuthToken();
+        if (!authTokens.containsKey(authToken)) {
+            Tregmine.LOGGER.info("Auth token " + authToken + " not found.");
+            return;
+        }
+        TregminePlayer sender = authTokens.get(authToken);
+
         String channel = event.getChannel();
         String text = event.getText();
 
@@ -269,16 +256,23 @@ public class ChatHandler extends WebSocketHandler
             }
 
             if ("global".equalsIgnoreCase(channel)) {
-                to.sendMessage(" <" + ChatColor.YELLOW + sender
-                        + ChatColor.WHITE + "> " + ChatColor.GRAY + text);
+                to.sendMessage("(" + sender.getChatName()
+                        + ChatColor.WHITE + ") " + ChatColor.WHITE + text);
             } else {
-                to.sendMessage(channel + " <" + ChatColor.YELLOW + sender
-                        + ChatColor.WHITE + "> " + ChatColor.GRAY + text);
+                to.sendMessage(channel + " (" + sender.getChatName()
+                        + ChatColor.WHITE + ") " + ChatColor.WHITE + text);
             }
         }
 
-        broadcastToWeb(sender, channel, text);
+        server.sendChatMessage(new WebServer.ChatMessage(sender, channel, text));
 
-        Tregmine.LOGGER.info(channel + " <" + sender + "> " + text);
+        Tregmine.LOGGER.info(channel + " (" + sender.getRealName() + ") " + text);
+
+        try (IContext ctx = tregmine.createContext()) {
+            ILogDAO logDAO = ctx.getLogDAO();
+            logDAO.insertChatMessage(sender, channel, text);
+        } catch (DAOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

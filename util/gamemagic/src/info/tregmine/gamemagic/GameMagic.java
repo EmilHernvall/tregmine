@@ -9,46 +9,51 @@ import java.util.Date;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.TimeZone;
+import java.util.logging.Logger;
 import java.util.zip.CRC32;
 
-import org.bukkit.WorldCreator;
-import org.bukkit.FireworkEffect;
-import org.bukkit.Color;
-import org.bukkit.World;
-import org.bukkit.Chunk;
-import org.bukkit.Server;
-import org.bukkit.Material;
-import org.bukkit.scheduler.BukkitScheduler;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.block.Block;
-import org.bukkit.Location;
 import org.bukkit.ChatColor;
-import org.bukkit.event.block.Action;
+import org.bukkit.Chunk;
+import org.bukkit.Color;
+import org.bukkit.FireworkEffect;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.World;
+import org.bukkit.WorldCreator;
+import org.bukkit.block.Block;
+import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.event.Listener;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.plugin.PluginManager;
-import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBurnEvent;
 import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.block.LeavesDecayEvent;
-import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
+import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerBucketFillEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
-import org.bukkit.event.entity.EntityExplodeEvent;
-import org.bukkit.event.entity.CreatureSpawnEvent;
-import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitScheduler;
 
-import info.tregmine.database.ConnectionPool;
+import info.tregmine.Tregmine;
+import info.tregmine.api.TregminePlayer;
+import info.tregmine.commands.ActionCommand;
+import info.tregmine.api.*;
 
 public class GameMagic extends JavaPlugin implements Listener
 {
     private Map<Integer, String> portalLookup;
+
+    public Tregmine tregmine = null;
 
     public GameMagic()
     {
@@ -59,7 +64,24 @@ public class GameMagic extends JavaPlugin implements Listener
     public void onEnable()
     {
         PluginManager pluginMgm = getServer().getPluginManager();
+
+        // Check for tregmine plugin
+        if (tregmine == null) {
+            Plugin mainPlugin = pluginMgm.getPlugin("tregmine");
+            if (mainPlugin != null) {
+                tregmine = (Tregmine)mainPlugin;
+            } else {
+                Tregmine.LOGGER.info(getDescription().getName() + " " +
+                         getDescription().getVersion() +
+                         " - could not find Tregmine");
+                pluginMgm.disablePlugin(this);
+                return;
+            }
+        }
+
+        // Register events
         pluginMgm.registerEvents(this, this);
+        pluginMgm.registerEvents(new Gates(this), this);
 
         WorldCreator alpha = new WorldCreator("alpha");
         alpha.environment(World.Environment.NORMAL);
@@ -109,26 +131,26 @@ public class GameMagic extends JavaPlugin implements Listener
         // Shoot fireworks at spawn
         BukkitScheduler scheduler = getServer().getScheduler();
         scheduler.scheduleSyncRepeatingTask(this,
-            new Runnable() {
-                public void run() {
-                    World world = GameMagic.this.getServer().getWorld("world");
-                    Location loc = world.getSpawnLocation();
+                new Runnable() {
+            public void run() {
+                World world = GameMagic.this.getServer().getWorld("world");
+                Location loc = world.getSpawnLocation();
 
-                    FireworksFactory factory = new FireworksFactory();
-                    factory.addColor(Color.BLUE);
-                    factory.addColor(Color.YELLOW);
-                    factory.addType(FireworkEffect.Type.STAR);
-                    factory.shot(loc);
-                }
-            }, 100L, 200L);
+                FireworksFactory factory = new FireworksFactory();
+                factory.addColor(Color.BLUE);
+                factory.addColor(Color.YELLOW);
+                factory.addType(FireworkEffect.Type.STAR);
+                factory.shot(loc);
+            }
+        }, 100L, 200L);
     }
 
     public static int locationChecksum(Location loc)
     {
         int checksum = (loc.getBlockX() + "," +
-                        loc.getBlockZ() + "," +
-                        loc.getBlockY() + "," +
-                        loc.getWorld().getName()).hashCode();
+                loc.getBlockZ() + "," +
+                loc.getBlockY() + "," +
+                loc.getWorld().getName()).hashCode();
         return checksum;
     }
 
@@ -138,7 +160,7 @@ public class GameMagic extends JavaPlugin implements Listener
         for (int i = 0; i < inventory.getSize(); i++) {
             if (inventory.getItem(i) != null) {
                 player.sendMessage(ChatColor.RED + "You are carrying too much " +
-                                   "for the portal's magic to work.");
+                        "for the portal's magic to work.");
                 return;
             }
         }
@@ -149,10 +171,10 @@ public class GameMagic extends JavaPlugin implements Listener
         if (world.isChunkLoaded(chunk)) {
             player.teleport(loc);
             player.sendMessage(ChatColor.YELLOW + "Thanks for traveling with " +
-                               "TregPort!");
+                    "TregPort!");
         } else {
             player.sendMessage(ChatColor.RED + "The portal needs some " +
-                               "preparation. Please try again!");
+                    "preparation. Please try again!");
         }
     }
 
@@ -160,7 +182,7 @@ public class GameMagic extends JavaPlugin implements Listener
     public void buttons(PlayerInteractEvent event)
     {
         if (event.getAction() == Action.LEFT_CLICK_AIR ||
-            event.getAction() == Action.RIGHT_CLICK_AIR) {
+                event.getAction() == Action.RIGHT_CLICK_AIR) {
 
             return;
         }
@@ -238,8 +260,8 @@ public class GameMagic extends JavaPlugin implements Listener
         Location l = event.getBlock().getLocation();
         Block fence =
                 event.getBlock()
-                     .getWorld()
-                     .getBlockAt(l.getBlockX(), l.getBlockY() - 1, l.getBlockZ());
+                .getWorld()
+                .getBlockAt(l.getBlockX(), l.getBlockY() - 1, l.getBlockZ());
 
         if (fence.getType() == Material.FENCE) {
             event.setCancelled(true);
@@ -254,11 +276,110 @@ public class GameMagic extends JavaPlugin implements Listener
         Location l = event.getBlock().getLocation();
         Block block =
                 event.getBlock()
-                     .getWorld()
-                     .getBlockAt(l.getBlockX(), l.getBlockY() - 1, l.getBlockZ());
+                .getWorld()
+                .getBlockAt(l.getBlockX(), l.getBlockY() - 1, l.getBlockZ());
 
         if (block.getType() == Material.OBSIDIAN) {
             event.setCancelled(false);
+        }
+    }
+
+    @EventHandler
+    public void onUseElevator(PlayerInteractEvent event)
+    {
+        Player player = event.getPlayer();
+        Block block = event.getClickedBlock();
+        if (block == null) {
+            return;
+        }
+
+        if (block.getType().equals(Material.STONE_BUTTON)) {
+            Location loc = player.getLocation();
+            World world = player.getWorld();
+            Block standOn = world.getBlockAt(loc.getBlockX(), loc.getBlockY()-1, loc.getBlockZ());
+
+            if (Material.SPONGE.equals(standOn.getType())) {
+                Location bLoc = block.getLocation();
+                Block signBlock = world.getBlockAt(bLoc.getBlockX(), bLoc.getBlockY()+1, bLoc.getBlockZ());
+
+                if(signBlock.getState() instanceof Sign) {
+                    Sign sign = (Sign) signBlock.getState();
+
+                    if (sign.getLine(0).contains("up")) {
+
+                        sign.setLine(0, ChatColor.DARK_RED + "Elevator");
+                        sign.setLine(2, ChatColor.GOLD + "[" + ChatColor.DARK_GRAY + "UP" + ChatColor.GOLD + "]");
+                        sign.update(true);
+
+                        player.sendMessage(ChatColor.GREEN + "Elevator Setup!");
+
+                    }
+
+                    else if (sign.getLine(0).equals(ChatColor.DARK_RED + "Elevator")
+                            && sign.getLine(2).equals(ChatColor.GOLD + "[" + ChatColor.DARK_GRAY + "UP" + ChatColor.GOLD + "]")) {
+
+                        int i = standOn.getLocation().getBlockY();
+
+                        while (i < 255) {
+                            i++;
+                            Block sponge = event.getPlayer().getWorld().getBlockAt(standOn.getLocation().getBlockX(),  i, standOn.getLocation().getBlockZ());
+
+                            if (sponge.getType().equals(Material.SPONGE)) {
+                                i=256;
+                                Location tp = sponge.getLocation();
+                                tp.setY(tp.getBlockY() + 1.5);
+                                tp.setZ(tp.getBlockZ() + 0.5);
+                                tp.setX(tp.getBlockX() + 0.5);
+                                tp.setPitch(player.getLocation().getPitch());
+                                tp.setYaw(player.getLocation().getYaw());
+
+                                player.teleport(tp);
+
+                            }
+                        }
+                        player.sendMessage(ChatColor.AQUA + "Going up");
+                    }
+
+                    // sign.setLine(0, ChatColor.DARK_PURPLE + "Elevator");
+                    // sign.setLine(2, ChatColor.GOLD + "[ " + ChatColor.DARK_GRAY + "UP" + ChatColor.GOLD + " ]");
+
+                    if (sign.getLine(0).contains("down")) {
+
+                        sign.setLine(0, ChatColor.DARK_RED + "Elevator");
+                        sign.setLine(2, ChatColor.GOLD + "[" + ChatColor.DARK_GRAY + "DOWN" + ChatColor.GOLD + "]");
+                        sign.update(true);
+
+                        player.sendMessage(ChatColor.GREEN + "Elevator Setup!");
+
+                    }
+
+                    else if (sign.getLine(0).equals(ChatColor.DARK_RED + "Elevator")
+                            && sign.getLine(2).equals(ChatColor.GOLD + "[" + ChatColor.DARK_GRAY + "DOWN" + ChatColor.GOLD + "]")) {
+
+
+                        int i = standOn.getLocation().getBlockY();
+
+                        while (i > 0) {
+                            i--;
+                            Block sponge = event.getPlayer().getWorld().getBlockAt(standOn.getLocation().getBlockX(),  i, standOn.getLocation().getBlockZ());
+
+                            if (sponge.getType().equals(Material.SPONGE)) {
+                                i=0;
+                                Location tp = sponge.getLocation();
+                                tp.setY(tp.getBlockY() + 1.5);
+                                tp.setZ(tp.getBlockZ() + 0.5);
+                                tp.setX(tp.getBlockX() + 0.5);
+                                tp.setPitch(player.getLocation().getPitch());
+                                tp.setYaw(player.getLocation().getYaw());
+
+                                player.teleport(tp);
+
+                            }
+                        }
+                        player.sendMessage(ChatColor.AQUA +"Going down");
+                    }
+                }
+            }
         }
     }
 }
