@@ -43,6 +43,9 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import info.tregmine.api.TregminePlayer;
+import info.tregmine.database.DAOException;
+import info.tregmine.database.IContext;
+import info.tregmine.database.ILogDAO;
 
 public class ChatHandler extends WebSocketHandler
     implements WebSocketCreator, Listener
@@ -263,6 +266,13 @@ public class ChatHandler extends WebSocketHandler
 
         server.sendChatMessage(new WebServer.ChatMessage(sender, channel, text));
 
-        Tregmine.LOGGER.info(channel + " <" + sender.getRealName() + "> " + text);
+        Tregmine.LOGGER.info(channel + " (" + sender.getRealName() + ") " + text);
+
+        try (IContext ctx = tregmine.createContext()) {
+            ILogDAO logDAO = ctx.getLogDAO();
+            logDAO.insertChatMessage(sender, channel, text);
+        } catch (DAOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
