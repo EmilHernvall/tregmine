@@ -59,6 +59,10 @@ public class PlayerListAction implements WebHandler.Action
                 json.object()
                     .key("id").value(player.getId())
                     .key("name").value(player.getName())
+                    .key("rank").value(player.getRank().toString())
+                    .key("softwarned").value(player.hasFlag(TregminePlayer.Flags.SOFTWARNED))
+                    .key("hardwarned").value(player.hasFlag(TregminePlayer.Flags.HARDWARNED))
+                    .key("hidden").value(player.hasFlag(TregminePlayer.Flags.INVISIBLE))
                     .endObject();
             }
             json.endArray();
