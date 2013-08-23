@@ -361,7 +361,7 @@ public enum Rank
         } else if (this == DONATOR) {
             return 20 * 1;
         } else {
-            return 20 * 15;
+            return 20 * 5;
         }
     }
 
