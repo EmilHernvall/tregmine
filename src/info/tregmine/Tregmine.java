@@ -197,17 +197,18 @@ public class Tregmine extends JavaPlugin
         getCommand("cname").setExecutor(new ChangeNameCommand(this));
         getCommand("createmob").setExecutor(new CreateMobCommand(this));
         getCommand("createwarp").setExecutor(new CreateWarpCommand(this));
-        getCommand("creative").setExecutor(
-                new GameModeCommand(this, "creative", GameMode.CREATIVE));
+        getCommand("creative").setExecutor(new GameModeCommand(this, "creative", GameMode.CREATIVE));
         getCommand("fill").setExecutor(new FillCommand(this, "fill"));
         getCommand("force").setExecutor(new ForceCommand(this));
         getCommand("give").setExecutor(new GiveCommand(this));
+        getCommand("head").setExecutor(new HeadCommand(this));
         getCommand("home").setExecutor(new HomeCommand(this));
         getCommand("inv").setExecutor(new InventoryCommand(this));
         getCommand("item").setExecutor(new ItemCommand(this));
         getCommand("keyword").setExecutor(new KeywordCommand(this));
         getCommand("kick").setExecutor(new KickCommand(this));
         getCommand("lot").setExecutor(new LotCommand(this));
+        getCommand("lottery").setExecutor(new LotteryCommand(this));
         getCommand("mentor").setExecutor(new MentorCommand(this));
         getCommand("msg").setExecutor(new MsgCommand(this));
         getCommand("newspawn").setExecutor(new NewSpawnCommand(this));
@@ -216,8 +217,7 @@ public class Tregmine extends JavaPlugin
         getCommand("password").setExecutor(new PasswordCommand(this));
         getCommand("pos").setExecutor(new PositionCommand(this));
         getCommand("quitmessage").setExecutor(new QuitMessageCommand(this));
-        getCommand("regeneratechunk").setExecutor(
-                new RegenerateChunkCommand(this));
+        getCommand("regeneratechunk").setExecutor(new RegenerateChunkCommand(this));
         getCommand("report").setExecutor(new ReportCommand(this));
         getCommand("say").setExecutor(new SayCommand(this));
         getCommand("seen").setExecutor(new SeenCommand(this));
@@ -226,8 +226,7 @@ public class Tregmine extends JavaPlugin
         getCommand("setspawner").setExecutor(new SetSpawnerCommand(this));
         getCommand("spawn").setExecutor(new SpawnCommand(this));
         getCommand("summon").setExecutor(new SummonCommand(this));
-        getCommand("survival").setExecutor(
-                new GameModeCommand(this, "survival", GameMode.SURVIVAL));
+        getCommand("survival").setExecutor(new GameModeCommand(this, "survival", GameMode.SURVIVAL));
         getCommand("testfill").setExecutor(new FillCommand(this, "testfill"));
         getCommand("time").setExecutor(new TimeCommand(this));
         getCommand("town").setExecutor(new ZoneCommand(this, "town"));
