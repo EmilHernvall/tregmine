@@ -285,6 +285,14 @@ public enum Rank
                this == SENIOR_ADMIN;
     }
 
+    public boolean canChooseLottery()
+    {
+        return this == JUNIOR_ADMIN ||
+               this == SENIOR_ADMIN ||
+               this == GUARDIAN ||
+               this == CODER;
+    }
+
     public boolean canSetSpawners()
     {
         return this == BUILDER ||
