@@ -150,7 +150,7 @@ public class TregminePlayer extends PlayerDelegate
     {
         this.rank = v;
 
-        setTemporaryChatName(getNameColor() + getName());
+        setTemporaryChatName(getNameColor() + getRealName());
     }
 
     public void setGuardianRank(int v) { this.guardianRank = v; }
@@ -181,7 +181,7 @@ public class TregminePlayer extends PlayerDelegate
     {
         this.guardianState = v;
 
-        setTemporaryChatName(getNameColor() + getName());
+        setTemporaryChatName(getNameColor() + getRealName());
     }
 
     public void setQuitMessage(String v) { this.quitMessage = v; }

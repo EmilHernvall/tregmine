@@ -4,10 +4,10 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerChatEvent;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import info.tregmine.Tregmine;
-import info.tregmine.ChatHandler;
+import info.tregmine.WebServer;
 import info.tregmine.api.TregminePlayer;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
@@ -23,7 +23,7 @@ public class ChatListener implements Listener
     }
 
     @EventHandler
-    public void onPlayerChat(PlayerChatEvent event)
+    public void onPlayerChat(AsyncPlayerChatEvent event)
     {
         TregminePlayer sender = plugin.getPlayer(event.getPlayer());
         if (sender.getChatState() != TregminePlayer.ChatState.CHAT) {
@@ -67,10 +67,7 @@ public class ChatListener implements Listener
 
         event.setCancelled(true);
 
-        plugin.getServer()
-              .getPluginManager()
-              .callEvent(new ChatHandler.MinecraftChatEvent(sender,
-                                                            channel,
-                                                            text));
+        WebServer server = plugin.getWebServer();
+        server.sendChatMessage(new WebServer.ChatMessage(sender, channel, text));
     }
 }

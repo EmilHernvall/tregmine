@@ -13,6 +13,7 @@ import org.json.JSONException;
 
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
+import info.tregmine.WebServer;
 import info.tregmine.WebHandler;
 
 public class AuthAction implements WebHandler.Action
@@ -69,7 +70,8 @@ public class AuthAction implements WebHandler.Action
     @Override
     public void queryGameState(Tregmine tregmine)
     {
-        Map<String, TregminePlayer> authTokens = tregmine.getAuthTokens();
+        WebServer server = tregmine.getWebServer();
+        Map<String, TregminePlayer> authTokens = server.getAuthTokens();
 
         // look for existing tokens
         for (Map.Entry<String, TregminePlayer> entry : authTokens.entrySet()) {

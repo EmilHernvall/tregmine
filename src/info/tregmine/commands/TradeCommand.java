@@ -14,7 +14,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryType;
-import org.bukkit.event.player.PlayerChatEvent;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
@@ -155,7 +155,7 @@ public class TradeCommand extends AbstractCommand implements Listener
     }
 
     @EventHandler
-    public void onPlayerChat(PlayerChatEvent event)
+    public void onPlayerChat(AsyncPlayerChatEvent event)
     {
         TregminePlayer player = tregmine.getPlayer(event.getPlayer());
         if (player.getChatState() != TregminePlayer.ChatState.TRADE) {

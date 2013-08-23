@@ -16,26 +16,23 @@ import java.io.File;
 import java.io.IOException;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.Location;
+import org.bukkit.Server;
 import org.bukkit.World.Environment;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
 
 import com.maxmind.geoip.LookupService;
-
-import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.handler.HandlerList;
-import org.eclipse.jetty.server.handler.ContextHandler;
 
 import info.tregmine.api.PlayerBannedException;
 import info.tregmine.api.PlayerReport;
@@ -58,7 +55,6 @@ import static info.tregmine.database.IInventoryDAO.InventoryType;
 
 import info.tregmine.listeners.*;
 import info.tregmine.commands.*;
-import info.tregmine.web.*;
 
 /**
  * @author Ein Andersson
@@ -73,13 +69,9 @@ public class Tregmine extends JavaPlugin
 
     private IContextFactory contextFactory;
 
-    private org.bukkit.Server server;
+    private Server server;
+    private WebServer webServer;
 
-    private Server webServer;
-    private WebHandler webHandler;
-    private ChatHandler chatHandler;
-
-    private Map<String, TregminePlayer> authTokens;
     private Map<String, TregminePlayer> players;
     private Map<Integer, TregminePlayer> playersById;
     private Map<Location, Integer> blessedBlocks;
@@ -105,7 +97,6 @@ public class Tregmine extends JavaPlugin
         contextFactory = new DBContextFactory(config);
 
         // Set up all data structures
-        authTokens = new HashMap<>();
         players = new HashMap<>();
         playersById = new HashMap<>();
 
@@ -157,49 +148,11 @@ public class Tregmine extends JavaPlugin
         }
 
         // Set up web server
-        PluginManager pluginMgm = server.getPluginManager();
-
-        try {
-            FileConfiguration config = getConfig();
-            String apiKey = config.getString("api.signing-key", "");
-            int apiPort = config.getInt("api.port", 9192);
-
-            Tregmine.LOGGER.info("API Key: " + apiKey);
-            Tregmine.LOGGER.info("API Port: " + apiPort);
-
-            HandlerList handlers = new HandlerList();
-
-            // Start chat handler and bind to /chat
-            chatHandler = new ChatHandler(this, pluginMgm);
-            pluginMgm.registerEvents(chatHandler, this);
-
-            ContextHandler context = new ContextHandler();
-            context.setContextPath("/chat");
-            context.setHandler(chatHandler);
-            handlers.addHandler(context);
-
-            // Start web handler and bind to rest of paths
-            webHandler = new WebHandler(this, pluginMgm, apiKey);
-            pluginMgm.registerEvents(webHandler, this);
-
-            webHandler.addAction(new AuthAction.Factory());
-            webHandler.addAction(new PlayerKickAction.Factory());
-            webHandler.addAction(new PlayerListAction.Factory());
-            webHandler.addAction(new QueryLogAction.Factory());
-            webHandler.addAction(new VersionAction.Factory());
-
-            handlers.addHandler(webHandler);
-
-            // Start server at apiPort
-            webServer = new Server(apiPort);
-            webServer.setHandler(handlers);
-            webServer.start();
-        }
-        catch (Exception e) {
-            LOGGER.log(Level.WARNING, "Failed to start web server!", e);
-        }
+        webServer = new WebServer(this);
+        webServer.start();
 
         // Register all listeners
+        PluginManager pluginMgm = server.getPluginManager();
         pluginMgm.registerEvents(new BlessedBlockListener(this), this);
         pluginMgm.registerEvents(new BoxFillBlockListener(this), this);
         pluginMgm.registerEvents(new ChatListener(this), this);
@@ -308,16 +261,15 @@ public class Tregmine extends JavaPlugin
 
         try {
             webServer.stop();
-            webServer.join();
         }
         catch (Exception e) {
             LOGGER.log(Level.WARNING, "Failed to start web server!", e);
         }
     }
 
-    public Map<String, TregminePlayer> getAuthTokens()
+    public WebServer getWebServer()
     {
-        return authTokens;
+        return webServer;
     }
 
     public IContextFactory getContextFactory()
