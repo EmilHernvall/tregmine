@@ -22,6 +22,8 @@ curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
 curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 $data = json_decode(curl_exec($curl), true);
 
+usort($data, function($a, $b) { return $a["count"] > $b["count"]; });
+
 printf("count\tavg\tmax\tsql\n");
 foreach ($data as $query) {
     printf("%d\t%d\t%d\t%s\n", $query["count"], $query["avg"], $query["max"], $query["sql"]);
