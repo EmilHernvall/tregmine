@@ -406,6 +406,13 @@ public enum Rank
     		   this == GUARDIAN ||
     		   this == CODER;
     }
+    
+    public boolean canGetPlayerHead()
+    {
+        return this == JUNIOR_ADMIN ||
+                this == SENIOR_ADMIN ||
+                this == BUILDER;
+    }
 
     public ChatColor getColor()
     {
