@@ -194,3 +194,5 @@ commands:
            /zone info <name> [perm]
   lottery:
     description: Type /lottery for additional info.
+  head:
+    description: Receive a specified player's head.

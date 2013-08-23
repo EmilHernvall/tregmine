@@ -293,6 +293,13 @@ public enum Rank
                this == CODER;
     }
 
+    public boolean canGetPlayerHead()
+    {
+        return this == JUNIOR_ADMIN ||
+                this == SENIOR_ADMIN ||
+                this == BUILDER;
+    }
+
     public boolean canSetSpawners()
     {
         return this == BUILDER ||
