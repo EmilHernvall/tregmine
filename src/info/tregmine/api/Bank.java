@@ -1,9 +1,13 @@
 package info.tregmine.api;
 
+import info.tregmine.quadtree.Point;
 import info.tregmine.quadtree.Rectangle;
 
 import java.util.HashMap;
 import java.util.List;
+
+import org.bukkit.Bukkit;
+import org.bukkit.World;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -12,6 +16,7 @@ public class Bank
 {
     private int id;
     private String name;
+    private String world;
 
     private String owner;
 
@@ -74,6 +79,26 @@ public class Bank
         rects.add(rect);
     }
 
+    public String getWorld()
+    {
+        return world;
+    }
+
+    public void setWorld(String world)
+    {
+        this.world = world;
+    }
+    
+    public World getMinecraftWorld()
+    {
+        return Bukkit.getWorld(world);
+    }
+    
+    public void setMinecraftWorld(World world)
+    {
+        this.world = world.getName();
+    }
+
     public void setRects(List<Rectangle> rects)
     {
         this.rects = rects;
@@ -87,6 +112,17 @@ public class Bank
     public void setAccounts(HashMap<String, Long> accounts)
     {
         this.accounts = accounts;
+    }
+    
+    public boolean contains(Point p)
+    {
+        for(Rectangle rect: rects){
+            if(rect.contains(p)){
+                return true;
+            }
+        }
+        
+        return false;
     }
 
 }

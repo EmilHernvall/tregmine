@@ -42,6 +42,7 @@ public class DBBankDAO implements IBankDAO
                 bank.setId(rs.getInt("bank_id"));
                 bank.setAccounts(getAccounts(bank));
                 bank.setRects(getRectangles(bank.getId()));
+                bank.setWorld(rs.getString("bank_world"));
                 bank.setOwner(rs.getString("bank_owner"));
             }
         }catch(SQLException e){
@@ -65,6 +66,7 @@ public class DBBankDAO implements IBankDAO
                 bank.setId(rs.getInt("bank_id"));
                 bank.setAccounts(getAccounts(bank));
                 bank.setRects(getRectangles(bank.getId()));
+                bank.setWorld(rs.getString("bank_world"));
                 bank.setOwner(rs.getString("bank_owner"));
             }
         }catch(SQLException e){
@@ -89,9 +91,7 @@ public class DBBankDAO implements IBankDAO
                 int y1 = rs.getInt("rect_y1");
                 int x2 = rs.getInt("rect_x2");
                 int y2 = rs.getInt("rect_y2");
-                
                 rects.add(new Rectangle(x1, y1, x2, y2));
-                
             }
         }catch(SQLException e){
             throw new DAOException(sql, e);
@@ -188,5 +188,4 @@ public class DBBankDAO implements IBankDAO
         }
         return true;
     }
-
 }
