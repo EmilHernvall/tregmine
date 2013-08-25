@@ -5,6 +5,7 @@ import static org.bukkit.ChatColor.*;
 import org.bukkit.World;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
+import org.bukkit.entity.EntityType;
 
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
@@ -64,10 +65,28 @@ public class SetBiomeCommand extends AbstractCommand
         if(args[0].equalsIgnoreCase("help")){
             player.sendMessage(GREEN + "Availiable Biomes:");
             player.sendMessage(GRAY + "Beach, Desert, Desert_Hills, Extreme_Hills, Forest, Forest_Hills");
-            player.sendMessage(GRAY + "Frozen_Ocean, Frozen_River, Nether, Ice_Mountains, Ice_Plains");
+            player.sendMessage(GRAY + "Frozen_Ocean, Frozen_River, Hell, Ice_Mountains, Ice_Plains");
             player.sendMessage(GRAY + "Jungle, Jungle_Hills, Mushroom, Mushroom_Shore, Ocean, Plains");
-            player.sendMessage(GRAY + "River, Sky, Small_Mountains, Swamp, Taiga, Taiga_Hills");
+            player.sendMessage(GRAY + "River, Sky, Small_Mountains, Swampland, Taiga, Taiga_Hills");
         }
+        else{
+            try {
+                for(int x = minX; x <= maxX; x++)
+                {
+                    for(int z = minZ; z <= maxZ; z++)
+                    {
+                        world.getBlockAt(x, 0, z).setBiome(Biome.valueOf(args[0].toUpperCase()));
+                    }
+                }
+                player.sendMessage(GREEN + "Biome successfully changed to " + args[0].toLowerCase() + "!");
+            } catch (Exception error) {
+                player.sendMessage(RED
+                        + "An error has occured, Please type " + GRAY + "/setbiome help"
+                        + RED + "for a list of valid biomes.");
+
+            }
+        }
+        /*        
         else if(args[0].equalsIgnoreCase("beach")){
             for(int x = minX; x <= maxX; x++)
             {
@@ -302,7 +321,7 @@ public class SetBiomeCommand extends AbstractCommand
             player.sendMessage(RED + "You specified and invalid biome");
             player.sendMessage(RED + "For a list of availiable biomes type /setbiome help");
         }
-
+         */
 
         int minChunkX = (int) Math.floor((double) minX / 16);
         int maxChunkX = (int) Math.floor((double) maxX / 16);
