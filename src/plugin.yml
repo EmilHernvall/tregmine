@@ -118,6 +118,9 @@ commands:
   sendto:
     description: Send a player to another world (admins only)
     usage: /sendto player world
+  setbiome:
+    description: Set the selected area's biome
+    usage: /setbiome biome 
   setspawner:
     description: Change a mob spawners type (admins only)
     usage: /setspawner
