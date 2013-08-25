@@ -52,6 +52,12 @@ public enum Rank
                this == SENIOR_ADMIN;
     }
 
+    public boolean canRemItems()
+    {
+        return this == JUNIOR_ADMIN ||
+               this == SENIOR_ADMIN;
+    }
+
     public boolean canTeleport()
     {
         return this == SETTLER ||
