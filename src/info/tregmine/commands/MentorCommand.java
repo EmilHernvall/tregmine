@@ -38,6 +38,7 @@ public class MentorCommand extends AbstractCommand
             if (player.getStudent() != null) {
                 player.sendMessage(RED + "You can only mentor one " +
                         "student at any given time.");
+                return;
             }
 
             Queue<TregminePlayer> students = tregmine.getStudentQueue();
@@ -112,8 +113,8 @@ public class MentorCommand extends AbstractCommand
 
             try (IContext ctx = tregmine.createContext()) {
                 student.setRank(Rank.SETTLER);
-                student.setTemporaryChatName(student.getNameColor()
-                        + student.getName());
+                student.setMentor(null);
+                player.setStudent(null);
 
                 IPlayerDAO playerDAO = ctx.getPlayerDAO();
                 playerDAO.updatePlayer(student);
