@@ -36,6 +36,6 @@ public class HeadCommand extends AbstractCommand
         } else {
             player.sendMessage(ChatColor.RED + "Only admins can use this command!");
         }
-        return false;
+        return true;
     }
 }
