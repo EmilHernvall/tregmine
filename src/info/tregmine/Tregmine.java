@@ -65,7 +65,7 @@ public class Tregmine extends JavaPlugin
     public final static int VERSION = 0;
     public final static int AMOUNT = 0;
 
-    public final static Logger LOGGER = Logger.getLogger("Minecraft");
+    public static Logger LOGGER;
 
     private IContextFactory contextFactory;
 
@@ -88,6 +88,7 @@ public class Tregmine extends JavaPlugin
     public void onLoad()
     {
         File folder = getDataFolder();
+        LOGGER = getLogger();
         Tregmine.LOGGER.info("Data folder is: " + folder);
 
         reloadConfig();
