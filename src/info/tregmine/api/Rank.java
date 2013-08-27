@@ -54,12 +54,11 @@ public enum Rank
 
     public boolean canSetBiome()
     {
-        return this == CODER ||
-               this == BUILDER ||
+        return this == BUILDER ||
                this == JUNIOR_ADMIN ||
                this == SENIOR_ADMIN;
     }
-    
+
     public boolean canTeleport()
     {
         return this == SETTLER ||

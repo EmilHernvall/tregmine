@@ -38,7 +38,7 @@ public class MentorCommand extends AbstractCommand
             if (player.getStudent() != null) {
                 player.sendMessage(RED + "You can only mentor one " +
                         "student at any given time.");
-                return;
+                return true;
             }
 
             Queue<TregminePlayer> students = tregmine.getStudentQueue();
