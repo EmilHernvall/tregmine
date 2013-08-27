@@ -73,7 +73,6 @@ public class Main
         }
 
         String sql = "SELECT * FROM zone ";
-        sql += "WHERE zone_name = 'thebes'";
         List<Zone> zones = new ArrayList<Zone>();
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.execute();
@@ -94,11 +93,21 @@ public class Main
         }
 
         for (Zone zone : zones) {
+            File mapFile = new File(mapFolder, zone.name + ".png");
+            if (mapFile.exists()) {
+                continue;
+            }
+
+            if (zone.id == 314) {
+                continue;
+            }
+
+            System.out.printf("Processing %s (%d)\n", zone.name, zone.id);
+
             Mapper mapper = new Mapper(zone, baseFolder);
             mapper.map();
             BufferedImage image = mapper.getImage();
 
-            File mapFile = new File(mapFolder, zone.name + ".png");
             ImageIO.write(image, "png", mapFile);
 
             System.out.println("Saved " + mapFile.getName());

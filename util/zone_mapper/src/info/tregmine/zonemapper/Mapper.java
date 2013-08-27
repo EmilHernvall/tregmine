@@ -52,12 +52,12 @@ public class Mapper
         this.image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 
         File dir = new File(".");
-        System.out.println("Dir: " + dir.getAbsolutePath());
+        //System.out.println("Dir: " + dir.getAbsolutePath());
 
         this.colorScheme = ColorScheme.loadScheme(dir, "colorscheme");
 
-        System.out.printf("colors.length=%d\n", colorScheme.colors.length);
-        System.out.printf("datacolors.length=%d\n", colorScheme.datacolors.length);
+        //System.out.printf("colors.length=%d\n", colorScheme.colors.length);
+        //System.out.printf("datacolors.length=%d\n", colorScheme.datacolors.length);
     }
 
     public BufferedImage getImage() { return image; }
@@ -199,7 +199,7 @@ public class Mapper
                                 colors = colorScheme.colors[blockID];
                             }
                         } catch (ArrayIndexOutOfBoundsException e) {
-                            System.out.printf("skipping %d\n", blockID);
+                            //System.out.printf("skipping %d\n", blockID);
                             colorScheme.resizeColorArray(blockID);
                             colors = null;
                         }
