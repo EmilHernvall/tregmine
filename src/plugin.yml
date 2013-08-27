@@ -103,6 +103,9 @@ commands:
   regeneratechunk:
     description: Regenerate the current chunk (admin only)
     usage: /regeneratechunk
+  remitems:
+    description: remove all items in the specified radius
+    usage: /remitems radius
   report:
     description: Adds a report to the players record
     usage: /report player message
