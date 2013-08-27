@@ -4,6 +4,7 @@ public interface IContext extends AutoCloseable
 {
     public void close();
 
+    public IBankDAO getBankDAO();
     public IHomeDAO getHomeDAO();
     public IInventoryDAO getInventoryDAO();
     public IItemDAO getItemDAO();

@@ -13,7 +13,7 @@ import org.bukkit.potion.PotionEffectType;
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
 import info.tregmine.api.Rank;
-import info.tregmine.api.math.Distance;
+import info.tregmine.api.math.MathUtil;
 
 public class TeleportCommand extends AbstractCommand
 {
@@ -109,7 +109,7 @@ public class TeleportCommand extends AbstractCommand
                     + BLUE + targetWorld.getName() + ".");
         }
 
-        double distance = Distance.calc2d(player.getLocation(),
+        double distance = MathUtil.calc2d(player.getLocation(),
                                           target.getLocation());
         if (distance < rank.getTeleportDistanceLimit()) {
             player.sendMessage(AQUA + "You started teleport to " +

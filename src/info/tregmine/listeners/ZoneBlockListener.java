@@ -11,7 +11,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
-import info.tregmine.api.math.Distance;
+import info.tregmine.api.math.MathUtil;
 import info.tregmine.quadtree.Point;
 import info.tregmine.zones.Lot;
 import info.tregmine.zones.ZoneWorld;
@@ -104,7 +104,7 @@ public class ZoneBlockListener implements Listener
                 TregminePlayer mentor = player.getMentor();
                 Location a = player.getLocation();
                 Location b = mentor.getLocation();
-                if (Distance.calc2d(a, b) > 50) {
+                if (MathUtil.calc2d(a, b) > 50) {
                     player.sendMessage(ChatColor.YELLOW + "You have to stay within " +
                             "a 50 block radius of your mentor in order to build.");
                     mentor.sendMessage(ChatColor.YELLOW + "Your student has to stay " +
@@ -200,7 +200,7 @@ public class ZoneBlockListener implements Listener
                 TregminePlayer mentor = player.getMentor();
                 Location a = player.getLocation();
                 Location b = mentor.getLocation();
-                if (Distance.calc2d(a, b) > 50) {
+                if (MathUtil.calc2d(a, b) > 50) {
                     player.sendMessage(ChatColor.YELLOW + "You have to stay within " +
                             "a 50 block radius of your mentor in order to build.");
                     mentor.sendMessage(ChatColor.YELLOW + "Your student has to stay " +

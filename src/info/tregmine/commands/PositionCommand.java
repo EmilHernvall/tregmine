@@ -18,7 +18,7 @@ public class PositionCommand extends AbstractCommand
     {
         Location loc = player.getLocation();
         Location spawn = player.getWorld().getSpawnLocation();
-        double distance = info.tregmine.api.math.Distance.calc2d(spawn, loc);
+        double distance = info.tregmine.api.math.MathUtil.calc2d(spawn, loc);
 
         player.sendMessage(DARK_AQUA + "World: " + WHITE
                 + player.getWorld().getName());
