@@ -3,6 +3,7 @@ package info.tregmine.zonemapper;
 import java.io.*;
 import java.util.*;
 import java.util.zip.ZipException;
+import java.awt.image.BufferedImage;
 
 import com.mojang.nbt.*;
 
@@ -21,6 +22,10 @@ public class Mapper
     private int minX, maxX, minZ, maxZ;
     private int minRegX, maxRegX, minRegZ, maxRegZ;
 
+    private ColorScheme colorScheme;
+
+    private BufferedImage image;
+
     public Mapper(Zone zone, File serverDir)
     {
         this.zone = zone;
@@ -38,7 +43,24 @@ public class Mapper
         this.maxRegX = maxX / 32 / 16 + 1;
         this.minRegZ = minZ / 32 / 16 - 1;
         this.maxRegZ = maxZ / 32 / 16 + 1;
+
+        int width = maxX - minX + 1;
+        int height = maxZ - minZ + 1;
+
+        System.out.printf("Width: %d, Height: %d\n", width, height);
+
+        this.image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+
+        File dir = new File(".");
+        System.out.println("Dir: " + dir.getAbsolutePath());
+
+        this.colorScheme = ColorScheme.loadScheme(dir, "colorscheme");
+
+        System.out.printf("colors.length=%d\n", colorScheme.colors.length);
+        System.out.printf("datacolors.length=%d\n", colorScheme.datacolors.length);
     }
+
+    public BufferedImage getImage() { return image; }
 
     public void map()
     throws IOException
@@ -56,6 +78,8 @@ public class Mapper
 
         System.out.printf("Found %d chunks\n", chunkCounter);
         System.out.printf("Got %d errors\n", errorCounter);
+
+        image.flush();
     }
 
     private void processRegion(int regionX, int regionZ)
@@ -120,24 +144,32 @@ public class Mapper
 
         //System.out.printf("Chunk: pos=(%d, %d) chunk=(%d, %d) file=%s\n", xIdx, zIdx, x, z, regionFile.getName());
 
-        ListTag<? extends Tag> sections = level.getList("Sections");
-        for (int i = 0; i < sections.size(); i++) {
-            CompoundTag section = (CompoundTag)sections.get(i);
-            byte yIdx = section.getByte("Y");
-            byte[] blocks = section.getByteArray("Blocks");
-            byte[] add = section.getByteArray("Add");
-            byte[] data = section.getByteArray("Data");
+        for (int chunkX = 0; chunkX < 16; chunkX++) {
+            int blockX = xIdx + chunkX;
+            if (blockX < minX || blockX > maxX) {
+                continue;
+            }
+            for (int chunkZ = 0; chunkZ < 16; chunkZ++) {
+                int blockZ = zIdx + chunkZ;
+                if (blockZ < minZ || blockZ > maxZ) {
+                    continue;
+                }
 
-            for (int chunkX = 0; chunkX < 16; chunkX++) {
-                for (int chunkY = 0; chunkY < 16; chunkY++) {
-                    for (int chunkZ = 0; chunkZ < 16; chunkZ++) {
+                ListTag<? extends Tag> sections = level.getList("Sections");
+                for (int i = sections.size()-1; i >= 0; i--) {
+                    CompoundTag section = (CompoundTag)sections.get(i);
+                    byte yIdx = section.getByte("Y");
+                    byte[] blocks = section.getByteArray("Blocks");
+                    byte[] add = section.getByteArray("Add");
+                    byte[] data = section.getByteArray("Data");
+
+                    boolean solidFound = false;
+                    for (int chunkY = 16-1; chunkY >= 0; chunkY--) {
                         int blockPos = chunkY*16*16 +
                                        chunkZ*16 +
                                        chunkX;
 
-                        int blockX = xIdx + chunkX;
                         int blockY = 16 * yIdx + chunkY;
-                        int blockZ = zIdx + chunkZ;
 
                         byte blockID_a = blocks[blockPos];
                         byte blockID_b = 0;
@@ -151,7 +183,49 @@ public class Mapper
                             blockData = nibble4(data, blockPos);
                         }
 
-                        Material material = Material.getMaterial(blockID);
+                        if (blockID == 0) {
+                            continue;
+                        }
+
+                        //Material material = Material.getMaterial(blockID);
+                        //System.out.printf("\t%d: %s\n", blockY, material.toString());
+
+                        Color[] colors;
+                        try {
+                            if(colorScheme.datacolors[blockID] != null) {
+                                colors = colorScheme.datacolors[blockID][blockData];
+                            }
+                            else {
+                                colors = colorScheme.colors[blockID];
+                            }
+                        } catch (ArrayIndexOutOfBoundsException e) {
+                            System.out.printf("skipping %d\n", blockID);
+                            colorScheme.resizeColorArray(blockID);
+                            colors = null;
+                        }
+
+                        if (colors == null) {
+                            //System.out.printf("not found %d %d\n", blockID, blockData);
+                            continue;
+                        }
+
+                        int x = blockX - minX;
+                        int z = blockZ - minZ;
+
+                        Color color = colors[0];
+                        try {
+                            image.setRGB(x, z, color.getARGB());
+                        } catch (ArrayIndexOutOfBoundsException e) {
+                            System.out.printf("%d, %d\n", x, z);
+                            throw e;
+
+                        }
+                        solidFound = true;
+                        break;
+                    }
+
+                    if (solidFound) {
+                        break;
                     }
                 }
             }

@@ -67,20 +67,26 @@ public class Paster implements Runnable
             int z = state.getZ() - blocks.getZ();
 
             if (theta != 0.0) {
-                int xp =
-                        (int) Math.round(x * Math.cos(theta) - z
-                                * Math.sin(theta));
-                int zp =
-                        (int) Math.round(x * Math.sin(theta) + z
-                                * Math.cos(theta));
 
-                x = xp;
-                z = zp;
+                int xp = (int)(x - z*Math.tan(theta/2));
+                int zp = z;
+
+                int xp1 = xp;
+                int zp1 = (int)(xp*Math.sin(theta) - zp);
+
+                int xp2 = (int)(xp1 - zp1*Math.tan(theta/2));
+                int zp2 = zp1;
+
+                //int xp = (int)Math.round(x * Math.cos(theta) - z * Math.sin(theta));
+                //int zp = (int)Math.round(x * Math.sin(theta) + z * Math.cos(theta));
+
+                x = xp2;
+                z = zp2;
             }
 
-            Block block =
-                    world.getBlockAt(base.getX() + x, base.getY() + y,
-                            base.getZ() + z);
+            Block block = world.getBlockAt(base.getX() + x,
+                                           base.getY() + y,
+                                           base.getZ() + z);
 
             // use a set to make sure that we don't add the same block
             // more than once. this might happen because we apply

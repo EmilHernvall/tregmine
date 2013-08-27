@@ -8,6 +8,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 import java.util.zip.ZipException;
+import java.awt.image.BufferedImage;
+import javax.imageio.ImageIO;
 
 import com.mojang.nbt.*;
 
@@ -33,9 +35,9 @@ public class Main
             throw new RuntimeException(ex);
         }
 
-        String connectionString = System.getenv("TREGMINE_IMPORTER_CONNSTR");
+        String connectionString = System.getenv("TREGMINE_CONNSTR");
         if (connectionString == null) {
-            System.out.println("Please set environment var TREGMINE_IMPORTER_CONNSTR");
+            System.out.println("Please set environment var TREGMINE_CONNSTR");
             return;
         }
         Connection conn = DriverManager.getConnection(connectionString);
@@ -57,21 +59,21 @@ public class Main
 
         File mapFolder;
         try {
-            mapFolder = new File(args[0]);
+            mapFolder = new File(args[1]);
             if (!mapFolder.exists()) {
                 throw new RuntimeException(args[0] + " doesn't exist");
             } else if (!mapFolder.isDirectory()) {
                 throw new RuntimeException(args[0] + " is not a folder");
             }
         } catch (Exception e) {
-            System.err.println("Base folder problem: " + e.getMessage());
+            System.err.println("Map folder problem: " + e.getMessage());
             System.out.println("");
             printUsageAndExit();
             return;
         }
 
         String sql = "SELECT * FROM zone ";
-        sql += "WHERE zone_name = 'fora'";
+        sql += "WHERE zone_name = 'thebes'";
         List<Zone> zones = new ArrayList<Zone>();
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.execute();
@@ -94,6 +96,12 @@ public class Main
         for (Zone zone : zones) {
             Mapper mapper = new Mapper(zone, baseFolder);
             mapper.map();
+            BufferedImage image = mapper.getImage();
+
+            File mapFile = new File(mapFolder, zone.name + ".png");
+            ImageIO.write(image, "png", mapFile);
+
+            System.out.println("Saved " + mapFile.getName());
         }
     }
 

@@ -50,13 +50,13 @@ public class ColorScheme
         this.biomecolors = biomecolors;
         this.raincolors = raincolors;
         this.tempcolors = tempcolors;
-        for(int i = 0; i < colors.length; i++) {
+        /*for(int i = 0; i < colors.length; i++) {
             int id = getBlockIDAlias(i);
             if(id != i) {
                 this.colors[i] = this.colors[id];
                 this.datacolors[i] = this.datacolors[id];
             }
-        }
+        }*/
     }
 
     public int getBlockIDAlias(int id) {
@@ -232,6 +232,7 @@ public class ColorScheme
         } catch (RuntimeException e) {
             return null;
         } catch (FileNotFoundException e) {
+            System.out.println("color scheme not found");
         }
 
         return new ColorScheme(name, colors, datacolors, biomecolors, raincolors, tempcolors);
