@@ -82,7 +82,9 @@ public class GameMagic extends JavaPlugin implements Listener
         // Register events
         pluginMgm.registerEvents(this, this);
         pluginMgm.registerEvents(new Gates(this), this);
-
+        pluginMgm.registerEvents(new ButtonListener(this), this);
+        pluginMgm.registerEvents(new SpongeCouponListener(this), this);
+        
         WorldCreator alpha = new WorldCreator("alpha");
         alpha.environment(World.Environment.NORMAL);
         alpha.createWorld();
