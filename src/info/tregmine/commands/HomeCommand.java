@@ -144,10 +144,6 @@ public class HomeCommand extends AbstractCommand
 
     private boolean list(TregminePlayer player, String playerName)
     {
-        if (!player.getRank().canVisitHomes()) {
-            return true;
-        }
-
         TregminePlayer target = player;
         if (playerName != null) {
             if (!player.getRank().canVisitHomes()) {
