@@ -362,6 +362,12 @@ public enum Rank
         return this == JUNIOR_ADMIN ||
                this == SENIOR_ADMIN;
     }
+    
+    public boolean canBreakBannedBlocks()
+    {
+        return this == JUNIOR_ADMIN ||
+                this == SENIOR_ADMIN;
+    }
 
     public int getTeleportTimeout()
     {

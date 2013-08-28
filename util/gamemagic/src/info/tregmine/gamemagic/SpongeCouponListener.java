@@ -3,12 +3,10 @@ package info.tregmine.gamemagic;
 import info.tregmine.api.TregminePlayer;
 
 import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -37,28 +35,6 @@ public class SpongeCouponListener implements Listener {
                     }
                     event.setCancelled(true);
                 }
-            }
-        }
-
-        if(event.getBlock().getType().equals(Material.SPONGE)){
-            if(player.getGameMode().equals(GameMode.SURVIVAL)){
-                event.setCancelled(true);
-            } else {
-                event.setCancelled(false);
-            }
-        }
-    }
-
-    @EventHandler
-    public void onBlockPlace(BlockPlaceEvent event){
-
-        TregminePlayer player = plugin.tregmine.getPlayer(event.getPlayer());
-
-        if(event.getBlock().getType().equals(Material.SPONGE)){
-            if(player.getGameMode().equals(GameMode.SURVIVAL)){
-                event.setCancelled(true);
-            } else {
-                event.setCancelled(false);
             }
         }
     }
