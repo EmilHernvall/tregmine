@@ -145,8 +145,9 @@ public class TregminePlayerListener implements Listener
                 Skull skull = (Skull) block;
                 if (skull.getSkullType().equals(SkullType.PLAYER)) {
                     String owner = skull.getOwner();
-                    player.sendMessage(ChatColor.DARK_PURPLE + "This is " + owner + "'s head!");
-
+                    TregminePlayer skullowner = plugin.getPlayer(owner);
+                    ChatColor C = skullowner.getNameColor();
+                    player.sendMessage(ChatColor.AQUA + "This is " + C + owner + ChatColor.AQUA + "'s head!");
                 }
             }
         }
