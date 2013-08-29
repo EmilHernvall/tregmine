@@ -13,6 +13,7 @@ import info.tregmine.api.Rank;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
 import info.tregmine.database.IPlayerDAO;
+import info.tregmine.database.IMentorLogDAO;
 
 public class MentorCommand extends AbstractCommand
 {
@@ -58,6 +59,16 @@ public class MentorCommand extends AbstractCommand
         else if ("cancel".equalsIgnoreCase(action)) {
             if (player.getRank() == Rank.TOURIST) {
                 TregminePlayer mentor = player.getMentor();
+
+                try (IContext ctx = tregmine.createContext()) {
+                    IMentorLogDAO mentorLogDAO = ctx.getMentorLogDAO();
+                    int mentorLogId = mentorLogDAO.getMentorLogId(player, mentor);
+                    mentorLogDAO.updateMentorLogEvent(mentorLogId,
+                            IMentorLogDAO.MentoringEvent.CANCELLED);
+                } catch (DAOException e) {
+                    throw new RuntimeException(e);
+                }
+
                 player.setMentor(null);
                 mentor.setStudent(null);
 
@@ -119,6 +130,11 @@ public class MentorCommand extends AbstractCommand
                 IPlayerDAO playerDAO = ctx.getPlayerDAO();
                 playerDAO.updatePlayer(student);
                 playerDAO.updatePlayerInfo(student);
+
+                IMentorLogDAO mentorLogDAO = ctx.getMentorLogDAO();
+                int mentorLogId = mentorLogDAO.getMentorLogId(student, player);
+                mentorLogDAO.updateMentorLogEvent(mentorLogId,
+                        IMentorLogDAO.MentoringEvent.COMPLETED);
             } catch (DAOException e) {
                 throw new RuntimeException(e);
             }
@@ -161,6 +177,18 @@ public class MentorCommand extends AbstractCommand
     {
         student.setMentor(mentor);
         mentor.setStudent(student);
+
+        try (IContext ctx = tregmine.createContext()) {
+            IMentorLogDAO mentorLogDAO = ctx.getMentorLogDAO();
+            int mentorLogId = mentorLogDAO.getMentorLogId(student, mentor);
+            if (mentorLogId != 0) {
+                mentorLogDAO.insertMentorLog(student, mentor);
+            } else {
+                mentorLogDAO.updateMentorLogResume(mentorLogId);
+            }
+        } catch (DAOException e) {
+            throw new RuntimeException(e);
+        }
 
         Tregmine.LOGGER.info("[MENTOR] " + mentor.getChatName() + " is " +
                 "mentoring " + student.getChatName());

@@ -61,6 +61,7 @@ import info.tregmine.database.ILogDAO;
 import info.tregmine.database.IPlayerDAO;
 import info.tregmine.database.IPlayerReportDAO;
 import info.tregmine.database.IWalletDAO;
+import info.tregmine.database.IMentorLogDAO;
 import info.tregmine.commands.MentorCommand;
 import static info.tregmine.database.IInventoryDAO.InventoryType;
 
@@ -454,6 +455,15 @@ public class TregminePlayerListener implements Listener
         if (player.getStudent() != null) {
             TregminePlayer student = player.getStudent();
 
+            try (IContext ctx = plugin.createContext()) {
+                IMentorLogDAO mentorLogDAO = ctx.getMentorLogDAO();
+                int mentorLogId = mentorLogDAO.getMentorLogId(student, player);
+                mentorLogDAO.updateMentorLogEvent(mentorLogId,
+                        IMentorLogDAO.MentoringEvent.CANCELLED);
+            } catch (DAOException e) {
+                throw new RuntimeException(e);
+            }
+
             student.setMentor(null);
             player.setStudent(null);
 
@@ -464,6 +474,16 @@ public class TregminePlayerListener implements Listener
         }
         else if (player.getMentor() != null) {
             TregminePlayer mentor = player.getMentor();
+
+            try (IContext ctx = plugin.createContext()) {
+                IMentorLogDAO mentorLogDAO = ctx.getMentorLogDAO();
+                int mentorLogId = mentorLogDAO.getMentorLogId(player, mentor);
+                mentorLogDAO.updateMentorLogEvent(mentorLogId,
+                        IMentorLogDAO.MentoringEvent.CANCELLED);
+            } catch (DAOException e) {
+                throw new RuntimeException(e);
+            }
+
             mentor.setStudent(null);
             player.setMentor(null);
 

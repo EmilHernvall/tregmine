@@ -15,4 +15,5 @@ public interface IContext extends AutoCloseable
     public IWalletDAO getWalletDAO();
     public IWarpDAO getWarpDAO();
     public IZonesDAO getZonesDAO();
+    public IMentorLogDAO getMentorLogDAO();
 }

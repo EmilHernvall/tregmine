@@ -254,3 +254,16 @@ CREATE TABLE warp_log (
     INDEX idx_warp (warp_id, log_timestamp)
 ) ENGINE=InnoDB;
 
+CREATE TABLE mentorlog (
+    mentorlog_id INT UNSIGNED AUTO_INCREMENT,
+    student_id INT UNSIGNED,
+    mentor_id INT UNSIGNED,
+    mentorlog_resumed INT UNSIGNED DEFAULT 0,
+    mentorlog_startedtime INT UNSIGNED,
+    mentorlog_completedtime INT UNSIGNED DEFAULT 0,
+    mentorlog_cancelledtime INT UNSIGNED DEFAULT 0,
+    mentorlog_status ENUM ('started', 'completed', 'cancelled') DEFAULT 'started',
+    PRIMARY KEY (mentorlog_id),
+    UNIQUE idx_student (student_id, mentor_id),
+    UNIQUE idx_mentor (mentor_id, student_id)
+) ENGINE=InnoDB;

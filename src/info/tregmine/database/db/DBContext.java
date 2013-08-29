@@ -96,4 +96,10 @@ public class DBContext implements IContext
     {
         return new DBZonesDAO(conn);
     }
+
+    @Override
+    public IMentorLogDAO getMentorLogDAO()
+    {
+        return new DBMentorLogDAO(conn);
+    }
 }
