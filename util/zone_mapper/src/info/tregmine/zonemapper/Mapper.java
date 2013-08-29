@@ -51,7 +51,7 @@ public class Mapper
 
         this.image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 
-        File dir = new File(".");
+        File dir = new File("data");
         //System.out.println("Dir: " + dir.getAbsolutePath());
 
         this.colorScheme = ColorScheme.loadScheme(dir, "colorscheme");
@@ -133,13 +133,6 @@ public class Mapper
         int xIdx = level.getInt("xPos") * 16;
         int zIdx = level.getInt("zPos") * 16;
 
-        if (xIdx < minX || xIdx > maxX) {
-            return;
-        }
-        if (zIdx < minZ || zIdx > maxZ) {
-            return;
-        }
-
         chunkCounter++;
 
         //System.out.printf("Chunk: pos=(%d, %d) chunk=(%d, %d) file=%s\n", xIdx, zIdx, x, z, regionFile.getName());
@@ -155,7 +148,14 @@ public class Mapper
                     continue;
                 }
 
+                int x = blockX - minX;
+                int z = blockZ - minZ;
+                Color color = null;
+
+                // Iterate in the y direction from up to down
                 ListTag<? extends Tag> sections = level.getList("Sections");
+                boolean transparent = false;
+                int y = 0;
                 for (int i = sections.size()-1; i >= 0; i--) {
                     CompoundTag section = (CompoundTag)sections.get(i);
                     byte yIdx = section.getByte("Y");
@@ -209,24 +209,81 @@ public class Mapper
                             continue;
                         }
 
-                        int x = blockX - minX;
-                        int z = blockZ - minZ;
+                        Color current = new Color(colors[0]);
+                        int red = current.getRed();
+                        int green = current.getGreen();
+                        int blue = current.getBlue();
+                        int alpha = current.getAlpha();
 
-                        Color color = colors[0];
-                        try {
-                            image.setRGB(x, z, color.getARGB());
-                        } catch (ArrayIndexOutOfBoundsException e) {
-                            System.out.printf("%d, %d\n", x, z);
-                            throw e;
-
+                        if (color == null) {
+                            color = current;
+                        } else {
+                            int newRed = (red * color.getAlpha() + (0xFF - color.getAlpha())*color.getRed())/0xFF;
+                            int newGreen = (green * color.getAlpha()+ (0xFF - color.getAlpha())*color.getGreen())/0xFF;
+                            int newBlue = (blue * color.getAlpha()+ (0xFF - color.getAlpha())*color.getBlue())/0xFF;
+                            color.setRGBA(newRed, newGreen, newBlue, alpha);
                         }
-                        solidFound = true;
-                        break;
+
+                        if (alpha == 0xFF) {
+                            solidFound = true;
+                            y = blockY;
+                            break;
+                        } else {
+                            transparent = true;
+                        }
                     }
 
                     if (solidFound) {
                         break;
                     }
+                }
+
+                if (!transparent) {
+                    int worldheight = 256;
+                    boolean below = y < 64;
+
+                    // Make height range from 0 - 1 (1 - 0 for below and 0 - 1 above)
+                    float height = (below ? (64 - y)/64.0f : (y - 64)/(float)worldheight);
+
+                    // Defines the 'step' in coloring.
+                    float step = 10 / (float)(worldheight + 1);
+
+                    // The step applied to height.
+                    float scale = ((int)(height/step))*step;
+
+                    // Make the smaller values change the color (slightly) more than the higher values.
+                    scale = (float)Math.pow(scale, 1.1f);
+
+                    // Don't let the color go fully white or fully black.
+                    scale *= 0.8f;
+
+                    int red = color.getRed();
+                    int green = color.getGreen();
+                    int blue = color.getBlue();
+                    if (below) {
+                        red -= red * scale;
+                        green -= green * scale;
+                        blue -= blue * scale;
+                    } else {
+                        red += (255-red) * scale;
+                        green += (255-green) * scale;
+                        blue += (255-blue) * scale;
+                    }
+
+                    if (color.getRed() != red) {
+                        System.out.printf("%d => %d, %d => %d, %d => %d\n",
+                                color.getRed(), red,
+                                color.getBlue(), blue,
+                                color.getGreen(), green);
+                    }
+                    color.setRGBA(red, green, blue, 255);
+                }
+
+                try {
+                    image.setRGB(x, z, color.getARGB());
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    System.out.printf("%d, %d\n", x, z);
+                    throw e;
                 }
             }
         }

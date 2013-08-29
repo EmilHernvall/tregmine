@@ -21,6 +21,11 @@ public class Color
         setRGBA(red, green, blue, 0xFF);
     }
 
+    public Color(Color color)
+    {
+        this.val = color.val;
+    }
+
     public Color()
     {
         setTransparent();

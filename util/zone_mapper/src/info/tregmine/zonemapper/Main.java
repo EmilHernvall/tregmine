@@ -94,14 +94,6 @@ public class Main
 
         for (Zone zone : zones) {
             File mapFile = new File(mapFolder, zone.name + ".png");
-            if (mapFile.exists()) {
-                continue;
-            }
-
-            if (zone.id == 314) {
-                continue;
-            }
-
             System.out.printf("Processing %s (%d)\n", zone.name, zone.id);
 
             Mapper mapper = new Mapper(zone, baseFolder);
