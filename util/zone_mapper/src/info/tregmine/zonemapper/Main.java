@@ -72,7 +72,7 @@ public class Main
             return;
         }
 
-        String sql = "SELECT * FROM zone ";
+        String sql = "SELECT * FROM zone";
         List<Zone> zones = new ArrayList<Zone>();
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.execute();
@@ -97,6 +97,11 @@ public class Main
             System.out.printf("Processing %s (%d)\n", zone.name, zone.id);
 
             Mapper mapper = new Mapper(zone, baseFolder);
+            if (mapper.getWidth() > 3500 && mapper.getHeight() > 3500) {
+                System.out.printf("Skipping because it's too big.\n");
+                continue;
+            }
+
             mapper.map();
             BufferedImage image = mapper.getImage();
 

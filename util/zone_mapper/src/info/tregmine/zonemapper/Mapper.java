@@ -19,6 +19,7 @@ public class Mapper
 
     private int regionCounter = 0, chunkCounter = 0, errorCounter = 0;
 
+    private int width, height;
     private int minX, maxX, minZ, maxZ;
     private int minRegX, maxRegX, minRegZ, maxRegZ;
 
@@ -44,12 +45,10 @@ public class Mapper
         this.minRegZ = minZ / 32 / 16 - 1;
         this.maxRegZ = maxZ / 32 / 16 + 1;
 
-        int width = maxX - minX + 1;
-        int height = maxZ - minZ + 1;
+        this.width = maxX - minX + 1;
+        this.height = maxZ - minZ + 1;
 
         System.out.printf("Width: %d, Height: %d\n", width, height);
-
-        this.image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 
         File dir = new File("data");
         //System.out.println("Dir: " + dir.getAbsolutePath());
@@ -61,10 +60,14 @@ public class Mapper
     }
 
     public BufferedImage getImage() { return image; }
+    public int getWidth() { return width; }
+    public int getHeight() { return height; }
 
     public void map()
     throws IOException
     {
+        this.image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+
         int regionFiles = Math.abs((maxRegX - minRegX) * (minRegZ - maxRegZ));
 
         System.out.printf("Exporting zone %s at (%d, %d) - (%d, %d), covering %d regions\n",
@@ -236,6 +239,10 @@ public class Mapper
                     if (solidFound) {
                         break;
                     }
+                }
+
+                if (color == null) {
+                    throw new RuntimeException(x + ", " + y + ", "+ z);
                 }
 
                 if (!transparent) {

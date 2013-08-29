@@ -1,6 +1,6 @@
 <?php
 
-$key = "PO1BBUS3NEB9MR9CPW1X5AQE84B0QM1W";
+$key = "F67R4LNVSUG8SO8TQ07DXHDQC34NAU4I";
 $host = "localhost:9192";
 $path = "/querylog";
 $query = "";
