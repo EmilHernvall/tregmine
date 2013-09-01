@@ -8,8 +8,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 import java.util.zip.ZipException;
-import java.awt.image.BufferedImage;
-import javax.imageio.ImageIO;
 
 import com.mojang.nbt.*;
 
@@ -92,22 +90,10 @@ public class Main
             throw new RuntimeException(e);
         }
 
+        IMapper mapper = new FlatMapper(baseFolder, mapFolder);
         for (Zone zone : zones) {
-            File mapFile = new File(mapFolder, zone.name + ".png");
             System.out.printf("Processing %s (%d)\n", zone.name, zone.id);
-
-            Mapper mapper = new Mapper(zone, baseFolder);
-            if (mapper.getWidth() > 3500 && mapper.getHeight() > 3500) {
-                System.out.printf("Skipping because it's too big.\n");
-                continue;
-            }
-
-            mapper.map();
-            BufferedImage image = mapper.getImage();
-
-            ImageIO.write(image, "png", mapFile);
-
-            System.out.println("Saved " + mapFile.getName());
+            mapper.map(zone);
         }
     }
 

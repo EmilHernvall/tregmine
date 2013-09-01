@@ -4,16 +4,19 @@ import java.io.*;
 import java.util.*;
 import java.util.zip.ZipException;
 import java.awt.image.BufferedImage;
+import javax.imageio.ImageIO;
 
 import com.mojang.nbt.*;
 
 import org.bukkit.Material;
 
-public class Mapper
+public class FlatMapper implements IMapper
 {
+    private File serverDir;
+    private File mapDir;
+
     private Zone zone;
     private Rectangle rect;
-    private File serverDir;
     private File worldDir;
     private File regionDir;
 
@@ -27,10 +30,21 @@ public class Mapper
 
     private BufferedImage image;
 
-    public Mapper(Zone zone, File serverDir)
+    public FlatMapper(File serverDir, File mapDir)
+    {
+        this.serverDir = serverDir;
+        this.mapDir = mapDir;
+
+        File dataDir = new File("data");
+        this.colorScheme = ColorScheme.loadScheme(dataDir, "colorscheme");
+    }
+
+    public BufferedImage getImage() { return image; }
+
+    public void map(Zone zone)
+    throws IOException
     {
         this.zone = zone;
-        this.serverDir = serverDir;
         this.worldDir = new File(serverDir, zone.world);
         this.regionDir = new File(worldDir, "region");
         this.rect = zone.rect;
@@ -51,12 +65,8 @@ public class Mapper
         System.out.printf("Width: %d, Height: %d\n", width, height);
 
         File dir = new File("data");
-        //System.out.println("Dir: " + dir.getAbsolutePath());
 
         this.colorScheme = ColorScheme.loadScheme(dir, "colorscheme");
-
-        //System.out.printf("colors.length=%d\n", colorScheme.colors.length);
-        //System.out.printf("datacolors.length=%d\n", colorScheme.datacolors.length);
     }
 
     public BufferedImage getImage() { return image; }
@@ -83,6 +93,11 @@ public class Mapper
         System.out.printf("Got %d errors\n", errorCounter);
 
         image.flush();
+
+        File mapFile = new File(mapDir, zone.name + ".png");
+        ImageIO.write(image, "png", mapFile);
+
+        System.out.println("Saved " + mapFile.getName());
     }
 
     private void processRegion(int regionX, int regionZ)

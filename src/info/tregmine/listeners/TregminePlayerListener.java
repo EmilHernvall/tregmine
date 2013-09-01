@@ -139,16 +139,24 @@ public class TregminePlayerListener implements Listener
     @EventHandler
     public void onPlayerClick(PlayerInteractEvent event)
     {
-        if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-            Player player = event.getPlayer();
-            BlockState block = event.getClickedBlock().getState();
-            if (block instanceof Skull) {
-                Skull skull = (Skull) block;
-                if (skull.getSkullType().equals(SkullType.PLAYER)) {
-                    String owner = skull.getOwner();
-                    player.sendMessage(ChatColor.DARK_PURPLE + "This is " + owner + "'s head!");
+        if (event.getAction() != Action.RIGHT_CLICK_BLOCK) {
+            return;
+        } 
+        Player player = event.getPlayer();
+        BlockState block = event.getClickedBlock().getState();
+        if (block instanceof Skull) {
+            Skull skull = (Skull) block;
+            if (!skull.getSkullType().equals(SkullType.PLAYER)) {
+                return;
+            }
+            String owner = skull.getOwner();
+            TregminePlayer skullowner = plugin.getPlayerOffline(owner);
+            if (skullowner != null){
+                ChatColor C = skullowner.getNameColor();
+                player.sendMessage(ChatColor.AQUA + "This is " + C + owner + "'s " + ChatColor.AQUA + "head!");
+            }else{
+                player.sendMessage(ChatColor.AQUA + "This is " + ChatColor.WHITE + owner + ChatColor.AQUA + "'s head!");
 
-                }
             }
         }
     }
