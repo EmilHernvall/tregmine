@@ -356,10 +356,10 @@ public class Tregmine extends JavaPlugin
                 }
 
                 if (report.getAction() == PlayerReport.Action.SOFTWARN) {
-                    player.setFlag(TregminePlayer.Flags.HARDWARNED);
+                    player.setFlag(TregminePlayer.Flags.SOFTWARNED);
                 }
                 else if (report.getAction() == PlayerReport.Action.HARDWARN) {
-                    player.setFlag(TregminePlayer.Flags.SOFTWARNED);
+                    player.setFlag(TregminePlayer.Flags.HARDWARNED);
                 }
                 else if (report.getAction() == PlayerReport.Action.BAN) {
                     throw new PlayerBannedException(report.getMessage());

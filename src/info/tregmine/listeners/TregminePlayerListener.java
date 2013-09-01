@@ -340,7 +340,10 @@ public class TregminePlayerListener implements Listener
         }
 
         // Check if the player is allowed to fly
-        if (rank.canFly()) {
+        if (player.hasFlag(TregminePlayer.Flags.HARDWARNED)) {
+            player.sendMessage("You are hardwarned and are not allowed to fly.");
+            player.setAllowFlight(false);
+        } else if (rank.canFly()) {
             player.sendMessage("You are allowed to fly");
             player.setAllowFlight(true);
         } else {

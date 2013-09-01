@@ -68,17 +68,8 @@ public class Paster implements Runnable
 
             if (theta != 0.0) {
 
-                int xp = (int)(x - z*Math.tan(theta/2));
-                int zp = z;
-
-                int xp1 = xp;
-                int zp1 = (int)(xp*Math.sin(theta) - zp);
-
-                int xp2 = (int)(xp1 - zp1*Math.tan(theta/2));
-                int zp2 = zp1;
-
-                //int xp = (int)Math.round(x * Math.cos(theta) - z * Math.sin(theta));
-                //int zp = (int)Math.round(x * Math.sin(theta) + z * Math.cos(theta));
+                int xp2 = (int)Math.round(x * Math.cos(theta) - z * Math.sin(theta));
+                int zp2 = (int)Math.round(x * Math.sin(theta) + z * Math.cos(theta));
 
                 x = xp2;
                 z = zp2;
