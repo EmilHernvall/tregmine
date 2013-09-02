@@ -5,6 +5,9 @@ import java.util.List;
 import static org.bukkit.ChatColor.*;
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
+import info.tregmine.database.DAOException;
+import info.tregmine.database.IContext;
+import info.tregmine.database.IMentorLogDAO;
 
 public class ForceCommand extends AbstractCommand
 {
@@ -46,6 +49,18 @@ public class ForceCommand extends AbstractCommand
         LOGGER.info(player.getName() + " FORCED CHAT WITH "
                 + toPlayer.getDisplayName() + " IN CHANNEL "
                 + channel.toUpperCase());
+
+        // If this is a mentor forcing his student, log it in the mentorlog
+        TregminePlayer student = player.getStudent();
+        if (student != null && student.getId() == toPlayer.getId()) {
+            try (IContext ctx = tregmine.createContext()) {
+                IMentorLogDAO mentorLogDAO = ctx.getMentorLogDAO();
+                int mentorLogId = mentorLogDAO.getMentorLogId(student, player);
+                mentorLogDAO.updateMentorLogChannel(mentorLogId, channel);
+            } catch (DAOException e) {
+                throw new RuntimeException(e);
+            }
+        }
 
         return true;
     }

@@ -35,6 +35,9 @@ public interface IMentorLogDAO
 
     public void updateMentorLogResume(int mentorLogId) throws DAOException;
 
+    public void updateMentorLogChannel(int mentorLogId,
+                                       String channel) throws DAOException;
+
     public int getMentorLogId(TregminePlayer student,
                               TregminePlayer mentor) throws DAOException;
 }

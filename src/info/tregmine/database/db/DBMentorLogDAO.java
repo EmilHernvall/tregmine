@@ -50,7 +50,7 @@ public class DBMentorLogDAO implements IMentorLogDAO
                                      MentoringEvent event)
     throws DAOException
     {
-        String sql = "UPDATE mentorlog SET mentorlog_event = ?, " +
+        String sql = "UPDATE mentorlog SET mentorlog_status = ?, " +
             "mentorlog_completedtime = ?, mentorlog_cancelledtime = ? ";
         sql += "WHERE mentorlog_id = ?";
 
@@ -77,12 +77,28 @@ public class DBMentorLogDAO implements IMentorLogDAO
     public void updateMentorLogResume(int mentorLogId)
     throws DAOException
     {
-        String sql = "UPDATE mentorlog SET mentorlog_event = 'started', " +
-            "mentorlog_resumed = mentorlog_resumed + 1";
+        String sql = "UPDATE mentorlog SET mentorlog_status = 'started', " +
+            "mentorlog_resumed = mentorlog_resumed + 1 ";
         sql += "WHERE mentorlog_id = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, mentorLogId);
+            stmt.execute();
+        } catch (SQLException e) {
+            throw new DAOException(sql, e);
+        }
+    }
+
+    @Override
+    public void updateMentorLogChannel(int mentorLogId, String channel)
+    throws DAOException
+    {
+        String sql = "UPDATE mentorlog SET mentorlog_channel = ? ";
+        sql += "WHERE mentorlog_id = ?";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, channel);
+            stmt.setInt(2, mentorLogId);
             stmt.execute();
         } catch (SQLException e) {
             throw new DAOException(sql, e);

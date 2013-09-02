@@ -117,7 +117,11 @@ public class Tregmine extends JavaPlugin
         Player[] players = getServer().getOnlinePlayers();
         for (Player player : players) {
             try {
-                addPlayer(player, player.getAddress().getAddress());
+                TregminePlayer tp =
+                    addPlayer(player, player.getAddress().getAddress());
+                if (tp.getRank() == Rank.TOURIST) {
+                    students.offer(tp);
+                }
             } catch (PlayerBannedException e) {
                 player.kickPlayer(e.getMessage());
             }

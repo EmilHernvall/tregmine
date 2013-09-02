@@ -181,7 +181,8 @@ public class MentorCommand extends AbstractCommand
         try (IContext ctx = tregmine.createContext()) {
             IMentorLogDAO mentorLogDAO = ctx.getMentorLogDAO();
             int mentorLogId = mentorLogDAO.getMentorLogId(student, mentor);
-            if (mentorLogId != 0) {
+            Tregmine.LOGGER.info("Mentor log id: " + mentorLogId);
+            if (mentorLogId == 0) {
                 mentorLogDAO.insertMentorLog(student, mentor);
             } else {
                 mentorLogDAO.updateMentorLogResume(mentorLogId);
