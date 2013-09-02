@@ -263,7 +263,7 @@ CREATE TABLE mentorlog (
     mentorlog_completedtime INT UNSIGNED DEFAULT 0,
     mentorlog_cancelledtime INT UNSIGNED DEFAULT 0,
     mentorlog_status ENUM ('started', 'completed', 'cancelled') DEFAULT 'started',
-    mentorlog_channel VARCHAR (255)
+    mentorlog_channel VARCHAR (255),
     PRIMARY KEY (mentorlog_id),
     UNIQUE idx_student (student_id, mentor_id),
     UNIQUE idx_mentor (mentor_id, student_id)
