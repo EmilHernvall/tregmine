@@ -268,3 +268,6 @@ CREATE TABLE mentorlog (
     UNIQUE idx_student (student_id, mentor_id),
     UNIQUE idx_mentor (mentor_id, student_id)
 ) ENGINE=InnoDB;
+
+ALTER TABLE zone ADD COLUMN zone_publicprofile ENUM ('0', '1') DEFAULT '0' AFTER zone_communist;
+

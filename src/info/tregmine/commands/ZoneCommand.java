@@ -85,6 +85,10 @@ public class ZoneCommand extends AbstractCommand
             changeValue(player, args);
             return true;
         }
+        else if ("publicprofile".equals(args[0])) {
+            changeValue(player, args);
+            return true;
+        }
         else if ("enter".equals(args[0])) {
             changeValue(player, args);
             return true;
@@ -395,6 +399,12 @@ public class ZoneCommand extends AbstractCommand
             player.sendMessage(RED + "[" + zone.getName() + "] "
                     + "Communism changed to \"" + (status ? "yes" : "no") + "\".");
         }
+        else if ("publicprofile".equals(args[0])) {
+            boolean status = Boolean.parseBoolean(args[2]);
+            zone.setPublicProfile(status);
+            player.sendMessage(RED + "[" + zone.getName() + "] "
+                    + "Public profile changed to \"" + (status ? "yes" : "no") + "\".");
+        }
         else if ("enter".equals(args[0])) {
             boolean status = Boolean.parseBoolean(args[2]);
             zone.setEnterDefault(status);
@@ -478,6 +488,7 @@ public class ZoneCommand extends AbstractCommand
                             : "Only makers (false)"));
             player.sendMessage(YELLOW + "PVP: " + zone.isPvp());
             player.sendMessage(YELLOW + "Communism: " + zone.isCommunist());
+            player.sendMessage(YELLOW + "Public Profile: " + zone.hasPublicProfile());
             player.sendMessage(YELLOW + "Hostiles: " + zone.hasHostiles());
             player.sendMessage(YELLOW + "Enter message: " + zone.getTextEnter());
             player.sendMessage(YELLOW + "Exit message: " + zone.getTextExit());

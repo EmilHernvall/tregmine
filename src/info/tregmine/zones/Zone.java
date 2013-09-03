@@ -111,6 +111,7 @@ public class Zone
     private boolean pvp = false;
     private boolean hostiles = false;
     private boolean communism = false;
+    private boolean publicProfile = false;
 
     private String textEnter;
     private String textExit;
@@ -252,6 +253,16 @@ public class Zone
     public boolean isCommunist()
     {
         return communism;
+    }
+
+    public void setPublicProfile(boolean v)
+    {
+        this.publicProfile = v;
+    }
+
+    public boolean hasPublicProfile()
+    {
+        return publicProfile;
     }
 
     public String getTextEnter()

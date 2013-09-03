@@ -102,6 +102,7 @@ public class DBZonesDAO implements IZonesDAO
                     zone.setPvp("1".equals(rs.getString("zone_pvp")));
                     zone.setHostiles("1".equals(rs.getString("zone_hostiles")));
                     zone.setCommunist("1".equals(rs.getString("zone_communist")));
+                    zone.setPublicProfile("1".equals(rs.getString("zone_publicprofile")));
                     zone.setTextEnter(rs.getString("zone_entermessage"));
                     zone.setTextExit(rs.getString("zone_exitmessage"));
                     zone.setTexture(rs.getString("zone_texture"));
@@ -126,8 +127,9 @@ public class DBZonesDAO implements IZonesDAO
     {
         String sql = "INSERT INTO zone (zone_world, zone_name, " +
             "zone_enterdefault, zone_placedefault, zone_destroydefault, " +
-            "zone_pvp, zone_hostiles, zone_communist, zone_entermessage, " +
-            "zone_exitmessage, zone_owner) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+            "zone_pvp, zone_hostiles, zone_communist, zone_publicprofile, " +
+            "zone_entermessage, zone_exitmessage, zone_owner) ";
+        sql += "VALUES (?, ?,?,?,?,?,?,?,?,?,?,?)";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, zone.getWorld());
@@ -138,9 +140,10 @@ public class DBZonesDAO implements IZonesDAO
             stmt.setString(6, zone.isPvp() ? "1" : "0");
             stmt.setString(7, zone.hasHostiles() ? "1" : "0");
             stmt.setString(8, zone.isCommunist() ? "1" : "0");
-            stmt.setString(9, zone.getTextEnter());
-            stmt.setString(10, zone.getTextExit());
-            stmt.setString(11, zone.getMainOwner());
+            stmt.setString(9, zone.hasPublicProfile() ? "1" : "0");
+            stmt.setString(10, zone.getTextEnter());
+            stmt.setString(11, zone.getTextExit());
+            stmt.setString(12, zone.getMainOwner());
             stmt.execute();
 
             stmt.execute("SELECT LAST_INSERT_ID()");
@@ -164,7 +167,8 @@ public class DBZonesDAO implements IZonesDAO
         String sql = "UPDATE zone SET zone_world = ?, zone_name = ?, " +
             "zone_enterdefault = ?, zone_placedefault = ?, " +
             "zone_destroydefault = ?, zone_pvp = ?, zone_hostiles = ?, " +
-            "zone_communist = ?, zone_entermessage = ?, zone_exitmessage = ? " +
+            "zone_communist = ?, zone_publicprofile = ?, " +
+            "zone_entermessage = ?, zone_exitmessage = ? " +
             "WHERE zone_id = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -176,9 +180,10 @@ public class DBZonesDAO implements IZonesDAO
             stmt.setString(6, zone.isPvp() ? "1" : "0");
             stmt.setString(7, zone.hasHostiles() ? "1" : "0");
             stmt.setString(8, zone.isCommunist() ? "1" : "0");
-            stmt.setString(9, zone.getTextEnter());
-            stmt.setString(10, zone.getTextExit());
-            stmt.setInt(11, zone.getId());
+            stmt.setString(9, zone.hasPublicProfile() ? "1" : "0");
+            stmt.setString(10, zone.getTextEnter());
+            stmt.setString(11, zone.getTextExit());
+            stmt.setInt(12, zone.getId());
             stmt.execute();
         } catch (SQLException e) {
             throw new DAOException(sql, e);
