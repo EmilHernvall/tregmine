@@ -52,7 +52,8 @@ public class ForceCommand extends AbstractCommand
 
         // If this is a mentor forcing his student, log it in the mentorlog
         TregminePlayer student = player.getStudent();
-        if (student != null && student.getId() == toPlayer.getId()) {
+        if (student != null && student.getId() == toPlayer.getId() &&
+            !"global".equalsIgnoreCase(channel)) {
             try (IContext ctx = tregmine.createContext()) {
                 IMentorLogDAO mentorLogDAO = ctx.getMentorLogDAO();
                 int mentorLogId = mentorLogDAO.getMentorLogId(student, player);
