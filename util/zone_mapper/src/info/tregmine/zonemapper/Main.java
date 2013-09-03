@@ -33,6 +33,12 @@ public class Main
             throw new RuntimeException(ex);
         }
 
+        String secret = System.getenv("TREGMINE_SECRET");
+        if (secret == null) {
+            System.out.println("Please set environment var TREGMINE_SECRET");
+            return;
+        }
+
         String connectionString = System.getenv("TREGMINE_CONNSTR");
         if (connectionString == null) {
             System.out.println("Please set environment var TREGMINE_CONNSTR");
@@ -90,7 +96,7 @@ public class Main
             throw new RuntimeException(e);
         }
 
-        IMapper mapper = new FlatMapper(baseFolder, mapFolder);
+        IMapper mapper = new FlatMapper(baseFolder, mapFolder, secret);
         for (Zone zone : zones) {
             System.out.printf("Processing %s (%d)\n", zone.name, zone.id);
             mapper.map(zone);

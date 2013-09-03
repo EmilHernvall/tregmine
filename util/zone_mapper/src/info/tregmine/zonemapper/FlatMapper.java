@@ -14,9 +14,11 @@ public class FlatMapper implements IMapper
 {
     private File serverDir;
     private File mapDir;
+    private String secret;
 
     private Zone zone;
     private Rectangle rect;
+    private String hashedName;
     private File worldDir;
     private File regionDir;
 
@@ -30,16 +32,15 @@ public class FlatMapper implements IMapper
 
     private BufferedImage image;
 
-    public FlatMapper(File serverDir, File mapDir)
+    public FlatMapper(File serverDir, File mapDir, String secret)
     {
         this.serverDir = serverDir;
         this.mapDir = mapDir;
+        this.secret = secret;
 
         File dataDir = new File("data");
         this.colorScheme = ColorScheme.loadScheme(dataDir, "colorscheme");
     }
-
-    public BufferedImage getImage() { return image; }
 
     public void map(Zone zone)
     throws IOException
@@ -48,6 +49,14 @@ public class FlatMapper implements IMapper
         this.worldDir = new File(serverDir, zone.world);
         this.regionDir = new File(worldDir, "region");
         this.rect = zone.rect;
+
+        try {
+            Digest digest = new Digest("MD5");
+            hashedName = digest.hashAsString(zone.id + "," + secret);
+        }
+        catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         this.minX = Math.min(rect.x1, rect.x2);
         this.maxX = Math.max(rect.x1, rect.x2);
@@ -64,18 +73,11 @@ public class FlatMapper implements IMapper
 
         System.out.printf("Width: %d, Height: %d\n", width, height);
 
-        File dir = new File("data");
+        if (width > 3500 && height > 3500) {
+            System.out.println("Zone too big.");
+            return;
+        }
 
-        this.colorScheme = ColorScheme.loadScheme(dir, "colorscheme");
-    }
-
-    public BufferedImage getImage() { return image; }
-    public int getWidth() { return width; }
-    public int getHeight() { return height; }
-
-    public void map()
-    throws IOException
-    {
         this.image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 
         int regionFiles = Math.abs((maxRegX - minRegX) * (minRegZ - maxRegZ));
@@ -94,7 +96,7 @@ public class FlatMapper implements IMapper
 
         image.flush();
 
-        File mapFile = new File(mapDir, zone.name + ".png");
+        File mapFile = new File(mapDir, hashedName + ".png");
         ImageIO.write(image, "png", mapFile);
 
         System.out.println("Saved " + mapFile.getName());
@@ -257,7 +259,7 @@ public class FlatMapper implements IMapper
                 }
 
                 if (color == null) {
-                    throw new RuntimeException(x + ", " + y + ", "+ z);
+                    continue;
                 }
 
                 if (!transparent) {
@@ -292,12 +294,6 @@ public class FlatMapper implements IMapper
                         blue += (255-blue) * scale;
                     }
 
-                    if (color.getRed() != red) {
-                        System.out.printf("%d => %d, %d => %d, %d => %d\n",
-                                color.getRed(), red,
-                                color.getBlue(), blue,
-                                color.getGreen(), green);
-                    }
                     color.setRGBA(red, green, blue, 255);
                 }
 
