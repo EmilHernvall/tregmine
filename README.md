@@ -14,6 +14,10 @@ and tools in this repository:
  * gamemagic - Stuff specific to the main tregmine world
  * world_importer - Tool for transitioning from the old tregmine database
  format.
+ * fix_broken - Simple tool for scanning mc region files and discarding broken chunks
+ * mojang_nbt - Mojangs lib for parsing nbt files
+ * zone_exporter - Tool for exporting tregmine zones as single player levels
+ * zone_mapper - Tool for generating maps from tregmine zones
 
 Authors
 -------
