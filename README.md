@@ -3,6 +3,9 @@ Tregmine
 
 This is the tregmine.info bukkit plugin. Pull requests are welcome.
 
+The bukkit plugin has a web frontend called [TregAdm](https://github.com/EmilHernvall/TregAdm). It's
+used to power the [tregmine website](http://tregmine.info/).
+
 Index
 -----
 
