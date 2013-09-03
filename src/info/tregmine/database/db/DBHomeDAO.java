@@ -118,4 +118,20 @@ public class DBHomeDAO implements IHomeDAO
             throw new DAOException(sql, e);
         }
     }
+
+    @Override
+    public void deleteHome(int playerId, String name)
+    throws DAOException
+    {
+        String sql = "DELETE FROM player_home " +
+            "WHERE player_id = ? AND home_name = ?";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, playerId);
+            stmt.setString(2, name);
+            stmt.execute();
+        } catch (SQLException e) {
+            throw new DAOException(sql, e);
+        }
+    }
 }

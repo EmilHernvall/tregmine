@@ -416,6 +416,23 @@ public enum Rank
         }
     }
 
+    public int getHomeLimit()
+    {
+        if (this == CODER ||
+            this == BUILDER ||
+            this == JUNIOR_ADMIN ||
+            this == SENIOR_ADMIN) {
+
+            return Integer.MAX_VALUE;
+        } else if (this == GUARDIAN) {
+            return 20;
+        } else if (this == DONATOR) {
+            return 5;
+        } else {
+            return 0;
+        }
+    }
+
     public int getBlessCost(Block block)
     {
         if (this == JUNIOR_ADMIN ||

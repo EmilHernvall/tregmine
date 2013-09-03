@@ -14,4 +14,5 @@ public interface IHomeDAO
     public Location getHome(TregminePlayer player, String name) throws DAOException;
     public Location getHome(int playerId, String name, Server server) throws DAOException;
     public List<String> getHomeNames(int playerId) throws DAOException;
+    public void deleteHome(int playerId, String name) throws DAOException;
 }
