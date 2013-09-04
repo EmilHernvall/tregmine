@@ -298,7 +298,7 @@ public class ZonePlayerListener implements Listener
         // Check if this is a lot - if so, limit items that can be blessed to
         // lot owner
         if (BlessedBlockListener.ALLOWED_MATERIALS.contains(block.getType()) &&
-                 !player.getRank().canModifyZones()) {
+                !player.getRank().canModifyZones()) {
             if (lot == null) {
                 return;
             }
@@ -373,12 +373,12 @@ public class ZonePlayerListener implements Listener
             Location movingTo)
     {
         Vector a = new Vector(movingFrom.getX(),
-                              movingFrom.getY(),
-                              movingFrom.getZ());
+                movingFrom.getY(),
+                movingFrom.getZ());
 
         Vector b = new Vector(movingTo.getX(),
-                              movingTo.getY(),
-                              movingTo.getZ());
+                movingTo.getY(),
+                movingTo.getZ());
 
         Vector diff = b.subtract(a);
         diff = diff.multiply(-5);
@@ -386,9 +386,9 @@ public class ZonePlayerListener implements Listener
         Vector newPosVector = a.add(diff);
 
         Location newPos = new Location(player.getWorld(),
-                                       newPosVector.getX(),
-                                       newPosVector.getY(),
-                                       newPosVector.getZ());
+                newPosVector.getX(),
+                newPosVector.getY(),
+                newPosVector.getZ());
 
         player.teleport(newPos);
     }
@@ -439,31 +439,36 @@ public class ZonePlayerListener implements Listener
                         // movePlayerBack(player, movingFrom, movingTo);
                         return;
                     }
+                    // if this is a whitelist zone...
+                    else {
+                        // ...reject people not in the user list, as well as banned
+                        // people
+                        if (player.getRank().canModifyZones()) {
+                            // never applies to admins
+                        }
+                        else if (perm == null) {
+                            disallowedMessage(currentZone, player);
+                            movePlayerBack(player, movingFrom, movingTo);
+                            return;
+                        }
+                        else if (perm == Zone.Permission.Banned) {
+                            bannedMessage(currentZone, player);
+                            player.teleport(player.getWorld().getSpawnLocation());
+                            return;
+                        }
+                    }
                 }
-                // if this is a whitelist zone...
-                else {
-                    // ...reject people not in the user list, as well as banned
-                    // people
-                    if (player.getRank().canModifyZones()) {
-                        // never applies to admins
-                    }
-                    else if (perm == null) {
-                        disallowedMessage(currentZone, player);
-                        movePlayerBack(player, movingFrom, movingTo);
-                        return;
-                    }
-                    else if (perm == Zone.Permission.Banned) {
-                        bannedMessage(currentZone, player);
-                        player.teleport(player.getWorld().getSpawnLocation());
-                        return;
-                    }
-                }
-
                 welcomeMessage(currentZone, player, perm);
+                
+                if (currentZone.hasPublicProfile()){
+                    player.sendMessage(ChatColor.DARK_RED + currentZone.getName() + " has a public profile! You can view it here:");
+                    player.sendMessage(ChatColor.GRAY + "http://tregmine.info/index.php/zone/profile?id=" + currentZone.getId());
+                }
             }
             player.setCurrentZone(currentZone);
         }
     }
+
 
     @EventHandler
     public void onPlayerChangedWorld(PlayerChangedWorldEvent event)
