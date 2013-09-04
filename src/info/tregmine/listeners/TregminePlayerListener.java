@@ -116,7 +116,7 @@ public class TregminePlayerListener implements Listener
                     ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " found love elswhere.",
                     ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " rage quit the server.",
                     ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " was not accidently banned by " + ChatColor.DARK_RED + "BlackX",
-                    ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " got " + ChatColor.WHITE + " TROLLED by" + ChatColor.DARK_RED + "TheScavenger101",
+                    ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " got " + ChatColor.WHITE + "TROLLED by " + ChatColor.DARK_RED + "TheScavenger101",
                     ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " lost an epic rap battle with " + ChatColor.DARK_RED + "einand",
                     ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " was bored to death by " + ChatColor.DARK_RED + "knipil",
                     ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " went squid fishing with " + ChatColor.DARK_RED + "GeorgeBombadil",
