@@ -25,7 +25,7 @@ public class TregminePlayer extends PlayerDelegate
     };
 
     public enum ChatState {
-        SETUP, CHAT, TRADE, SELL;
+        SETUP, CHAT, TRADE, SELL, FISHY_SETUP, FISHY_WITHDRAW, FISHY_BUY;
     };
 
     // Flags are stored as integers - order must _NOT_ be changed
@@ -77,6 +77,9 @@ public class TregminePlayer extends PlayerDelegate
     private Block zoneBlock2 = null;
     private int zoneBlockCounter = 0;
     private int targetZoneId = 0;
+
+    // Fishy Block state
+    private FishyBlock newFishyBlock;
 
     public TregminePlayer(Player player)
     {
@@ -293,6 +296,10 @@ public class TregminePlayer extends PlayerDelegate
 
     public void setTargetZoneId(int v) { this.targetZoneId = v; }
     public int getTargetZoneId() { return targetZoneId; }
+
+    // Fishy block state
+    public void setNewFishyBlock(FishyBlock v) { this.newFishyBlock = v; }
+    public FishyBlock getNewFishyBlock() { return newFishyBlock; }
 
     // convenience methods
     public void hidePlayer(TregminePlayer player)
