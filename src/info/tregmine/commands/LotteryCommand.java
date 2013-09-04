@@ -112,6 +112,12 @@ public class LotteryCommand extends AbstractCommand
                             Random random = new Random();
                             String randomPlayer = lottery.get(random.nextInt(size));
                             TregminePlayer winner = tregmine.getPlayer(randomPlayer);
+                            if (winner == null) {
+                                player.sendMessage(ChatColor.RED + randomPlayer + " won, " +
+                                    "but is no longer online. Try again.");
+                                return true;
+                            }
+
                             wallet.add(winner, amount);
                             tregmine.getServer().broadcastMessage(
                                     winner.getChatName() + ChatColor.DARK_AQUA +
