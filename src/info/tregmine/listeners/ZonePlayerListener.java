@@ -439,31 +439,28 @@ public class ZonePlayerListener implements Listener
                         // movePlayerBack(player, movingFrom, movingTo);
                         return;
                     }
-                    // if this is a whitelist zone...
-                    else {
-                        // ...reject people not in the user list, as well as banned
-                        // people
-                        if (player.getRank().canModifyZones()) {
-                            // never applies to admins
-                        }
-                        else if (perm == null) {
-                            disallowedMessage(currentZone, player);
-                            movePlayerBack(player, movingFrom, movingTo);
-                            return;
-                        }
-                        else if (perm == Zone.Permission.Banned) {
-                            bannedMessage(currentZone, player);
-                            player.teleport(player.getWorld().getSpawnLocation());
-                            return;
-                        }
+                }
+                // if this is a whitelist zone...
+                else {
+                    // ...reject people not in the user list, as well as banned
+                    // people
+                    if (player.getRank().canModifyZones()) {
+                        // never applies to admins
+                    }
+                    else if (perm == null) {
+                        disallowedMessage(currentZone, player);
+                        movePlayerBack(player, movingFrom, movingTo);
+                        return;
+                    }
+                    else if (perm == Zone.Permission.Banned) {
+                        bannedMessage(currentZone, player);
+                        player.teleport(player.getWorld().getSpawnLocation());
+                        return;
                     }
                 }
+
                 welcomeMessage(currentZone, player, perm);
                 
-                if (currentZone.hasPublicProfile()){
-                    player.sendMessage(ChatColor.DARK_RED + currentZone.getName() + " has a public profile! You can view it here:");
-                    player.sendMessage(ChatColor.GRAY + "http://tregmine.info/index.php/zone/profile?id=" + currentZone.getId());
-                }
             }
             player.setCurrentZone(currentZone);
         }
@@ -713,6 +710,11 @@ public class ZonePlayerListener implements Listener
                     + "Warning! This is a PVP zone! Other players can damage or kill you here.");
         }
 
+        if (currentZone.hasPublicProfile()){
+            player.sendMessage(ChatColor.DARK_RED + currentZone.getName() + " has a public profile! You can view it here:");
+            player.sendMessage(ChatColor.GRAY + "http://tregmine.info/index.php/zone/profile?id=" + currentZone.getId());
+        }
+        
         if (perm != null) {
             String permNotification = perm.getPermissionNotification();
             player.sendMessage(ChatColor.RED + "[" + currentZone.getName()
