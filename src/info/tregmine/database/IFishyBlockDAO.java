@@ -15,6 +15,8 @@ public interface IFishyBlockDAO
 
     public void update(FishyBlock fishyBlock) throws DAOException;
 
+    public void delete(FishyBlock fishyBlock) throws DAOException;
+
     public Map<Location, FishyBlock> loadFishyBlocks(Server server)
     throws DAOException;
 }
