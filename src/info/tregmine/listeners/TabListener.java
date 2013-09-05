@@ -35,6 +35,10 @@ public class TabListener implements Listener//, TabCompleter
 
         e.getTabCompletions().clear();
         String[] args = e.getChatMessage().split(" ");
+        if (args.length == 0) {
+            return;
+        }
+
         List<String> nonOps = new ArrayList<String>();
         List<String> result = new ArrayList<String>();
 
@@ -44,8 +48,9 @@ public class TabListener implements Listener//, TabCompleter
         }
 
         for (String name : nonOps) {
-            if (name.toLowerCase().startsWith(args[args.length - 1].toLowerCase()))
+            if (name.toLowerCase().startsWith(args[args.length - 1].toLowerCase())) {
                 result.add(name);
+            }
         }
 
         e.getTabCompletions().addAll(result);
