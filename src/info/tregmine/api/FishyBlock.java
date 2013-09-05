@@ -12,6 +12,7 @@ public class FishyBlock
     private int playerId = 0;
     private MaterialData material = null;
     private Map<Enchantment, Integer> enchantments = null;
+    private int cost = 0;
     private int availableInventory = 0;
     private Location blockLoc = null;
     private Location signLoc = null;
@@ -32,8 +33,12 @@ public class FishyBlock
     public Map<Enchantment, Integer> getEnchantments() { return enchantments; }
     public void setEnchantments(Map<Enchantment, Integer> v) { this.enchantments = v; }
 
+    public int getCost() { return cost; }
+    public void setCost(int v) { this.cost = v; }
+
     public int getAvailableInventory() { return availableInventory; }
     public void setAvailableInventory(int v) { this.availableInventory = v; }
+    public void addAvailableInventory(int v) { this.availableInventory += v; }
 
     public Location getBlockLocation() { return blockLoc; }
     public void setBlockLocation(Location v) { this.blockLoc = v; }

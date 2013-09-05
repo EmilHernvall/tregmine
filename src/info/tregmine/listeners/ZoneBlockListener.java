@@ -9,10 +9,12 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+
+import info.tregmine.quadtree.Point;
+
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
 import info.tregmine.api.math.Distance;
-import info.tregmine.quadtree.Point;
 import info.tregmine.zones.Lot;
 import info.tregmine.zones.ZoneWorld;
 import info.tregmine.zones.Zone;

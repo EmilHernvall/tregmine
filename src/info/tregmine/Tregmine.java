@@ -38,6 +38,7 @@ import info.tregmine.api.PlayerBannedException;
 import info.tregmine.api.PlayerReport;
 import info.tregmine.api.TregminePlayer;
 import info.tregmine.api.Rank;
+import info.tregmine.api.FishyBlock;
 import info.tregmine.database.db.DBContextFactory;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IContextFactory;
@@ -75,6 +76,7 @@ public class Tregmine extends JavaPlugin
     private Map<String, TregminePlayer> players;
     private Map<Integer, TregminePlayer> playersById;
     private Map<Location, Integer> blessedBlocks;
+    private Map<Location, FishyBlock> fishyBlocks;
 
     private Map<String, ZoneWorld> worlds;
     private Map<Integer, Zone> zones;
@@ -295,6 +297,11 @@ public class Tregmine extends JavaPlugin
     public Map<Location, Integer> getBlessedBlocks()
     {
         return blessedBlocks;
+    }
+
+    public Map<Location, FishyBlock> getFishyBlocks()
+    {
+        return fishyBlocks;
     }
 
     public Queue<TregminePlayer> getMentorQueue()
