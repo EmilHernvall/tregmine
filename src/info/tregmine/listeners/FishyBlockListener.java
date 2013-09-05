@@ -529,7 +529,36 @@ public class FishyBlockListener implements Listener
             return;
         }
 
-        // look up location
+        Location loc = block.getLocation();
+
+        Map<Location, FishyBlock> fishyBlocks = plugin.getFishyBlocks();
+        if (!fishyBlocks.containsKey(loc)) {
+            return;
+        }
+
+        FishyBlock fishyBlock = fishyBlocks.get(loc);
+        Location blockLoc = fishyBlock.getBlockLocation();
+        Location signLoc = fishyBlock.getSignLocation();
+
+        if (signLoc.equals(loc)) {
+            event.setCancelled(true);
+            player.sendMessage(ChatColor.RED + "You cannot delete the sign " +
+                    "for a fishy block. Delete the obisidan to remove it.");
+            return;
+        }
+        else if (blockLoc.equals(loc)) {
+            player.sendMessage(ChatColor.GREEN + "Fishy block deleted.");
+
+            try (IContext ctx = plugin.createContext()) {
+                IFishyBlockDAO fishyBlockDAO = ctx.getFishyBlockDAO();
+                fishyBlockDAO.delete(fishyBlock);
+            } catch (DAOException e) {
+                throw new RuntimeException(e);
+            }
+
+            fishyBlocks.remove(blockLoc);
+            fishyBlocks.remove(signLoc);
+        }
     }
 
     private void updateSign(World world, FishyBlock fishyBlock)

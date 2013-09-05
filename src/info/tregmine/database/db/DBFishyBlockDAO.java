@@ -31,12 +31,40 @@ public class DBFishyBlockDAO implements IFishyBlockDAO
 
     private String serializeEnchants(Map<Enchantment, Integer> enchants)
     {
-        return null;
+        StringBuilder buffer = new StringBuilder();
+        String delim = "";
+        for (Map.Entry<Enchantment, Integer> entry : enchants.entrySet()) {
+            buffer.append(delim);
+            buffer.append(entry.getKey().getName());
+            buffer.append("=");
+            buffer.append(entry.getValue().toString());
+            delim = "&";
+        }
+
+        return buffer.toString();
     }
 
     private Map<Enchantment, Integer> deserializeEnchants(String data)
     {
-        return null;
+        String[] entries = data.split("&");
+        Map<Enchantment, Integer> result = new HashMap<>();
+        for (String entry : entries) {
+            String[] kv = entry.split("=");
+            if (kv.length != 2) {
+                continue;
+            }
+
+            try {
+                Enchantment ench = Enchantment.getByName(kv[0]);
+                if (ench == null) {
+                    continue;
+                }
+                Integer lvl = Integer.parseInt(kv[0]);
+                result.put(ench, lvl);
+            } catch (NumberFormatException e) { }
+        }
+
+        return result;
     }
 
     @Override
@@ -112,6 +140,20 @@ public class DBFishyBlockDAO implements IFishyBlockDAO
         }
     }
 
+    @Override
+    public void delete(FishyBlock block) throws DAOException
+    {
+        String sql = "UPDATE fishyblock SET fishyblock_status = 'deleted' ";
+        sql += "WHERE fishyblock_id = ?";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, block.getId());
+            stmt.execute();
+        } catch (SQLException e) {
+            throw new DAOException(sql, e);
+        }
+    }
+
     private World getWorld(Server server, String name)
     {
         for (World world : server.getWorlds()) {
@@ -127,7 +169,7 @@ public class DBFishyBlockDAO implements IFishyBlockDAO
     public Map<Location, FishyBlock> loadFishyBlocks(Server server)
     throws DAOException
     {
-        String sql = "SELECT * FROM fishyblock ";
+        String sql = "SELECT * FROM fishyblock WHERE fishyblock_status = 'active'";
 
         Map<Location, FishyBlock> fishyBlocks = new HashMap<>();
 

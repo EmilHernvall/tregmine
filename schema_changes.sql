@@ -275,6 +275,7 @@ CREATE TABLE fishyblock (
     fishyblock_id INT UNSIGNED AUTO_INCREMENT,
     player_id INT UNSIGNED,
     fishyblock_created INT UNSIGNED,
+    fishyblock_status ENUM ('active', 'deleted') DEFAULT 'active',
     fishyblock_material INT UNSIGNED,
     fishyblock_data INT,
     fishyblock_enchantments TEXT,
