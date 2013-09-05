@@ -415,9 +415,13 @@ public class TregminePlayerListener implements Listener
                 throw new RuntimeException(e);
             }
 
-            player.setScoreboard(board);
+            try {
+                player.setScoreboard(board);
 
-            ScoreboardClearTask.start(plugin, player);
+                ScoreboardClearTask.start(plugin, player);
+            } catch (IllegalStateException e) {
+                // ignore
+            }
         }
 
         // Recalculate guardians

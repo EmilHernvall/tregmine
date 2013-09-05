@@ -696,9 +696,14 @@ public class ZonePlayerListener implements Listener
 
             Score score = objective.getScore(fakePlayer);
             score.setScore(currentZone.getId());
-            player.setScoreboard(board);
 
-            ScoreboardClearTask.start(plugin, player);
+            try {
+                player.setScoreboard(board);
+
+                ScoreboardClearTask.start(plugin, player);
+            } catch (IllegalStateException e) {
+                // ignore
+            }
         }
 
         player.sendMessage(ChatColor.RED + "[" + currentZone.getName() + "] "
