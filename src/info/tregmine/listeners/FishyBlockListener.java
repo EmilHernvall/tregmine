@@ -241,7 +241,7 @@ public class FishyBlockListener implements Listener
                     ITradeDAO tradeDAO = dbCtx.getTradeDAO();
 
                     long balance = walletDAO.balance(player);
-                    if (balance > cost) {
+                    if (balance < cost) {
                         player.sendMessage(ChatColor.RED + "You do not have " +
                             "enough money to complete your purchase.");
                         return;
@@ -565,6 +565,11 @@ public class FishyBlockListener implements Listener
         }
 
         FishyBlock fishyBlock = fishyBlocks.get(loc);
+        if (fishyBlock.getPlayerId() != player.getId()) {
+            event.setCancelled(true);
+            return;
+        }
+
         Location blockLoc = fishyBlock.getBlockLocation();
         Location signLoc = fishyBlock.getSignLocation();
 
@@ -586,13 +591,41 @@ public class FishyBlockListener implements Listener
 
             fishyBlocks.remove(blockLoc);
             fishyBlocks.remove(signLoc);
+
+            World world = player.getWorld();
+            Block signBlock = world.getBlockAt(fishyBlock.getSignLocation());
+            signBlock.setType(Material.AIR);
         }
     }
 
     private void updateSign(World world, FishyBlock fishyBlock)
     {
+        Location blockLoc = fishyBlock.getBlockLocation();
+        Location signLoc = fishyBlock.getSignLocation();
+
         Block signBlock = world.getBlockAt(fishyBlock.getSignLocation());
-        signBlock.setType(Material.SIGN_POST);
+        Block mainBlock = world.getBlockAt(fishyBlock.getBlockLocation());
+        BlockFace facing = mainBlock.getFace(signBlock);
+
+        signBlock.setType(Material.WALL_SIGN);
+        switch (facing)
+        {
+            case WEST:
+                signBlock.setData((byte)0x04);
+                break;
+            case EAST:
+                signBlock.setData((byte)0x05);
+                break;
+            case NORTH:
+                signBlock.setData((byte)0x02);
+                break;
+            case SOUTH:
+                signBlock.setData((byte)0x03);
+                break;
+            default:
+                break;
+        }
+        //signBlock.getState().setData(new MaterialData(Material.WALL_SIGN));
 
         TregminePlayer player = plugin.getPlayerOffline(fishyBlock.getPlayerId());
 
