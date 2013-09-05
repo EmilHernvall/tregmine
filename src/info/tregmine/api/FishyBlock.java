@@ -39,6 +39,7 @@ public class FishyBlock
     public int getAvailableInventory() { return availableInventory; }
     public void setAvailableInventory(int v) { this.availableInventory = v; }
     public void addAvailableInventory(int v) { this.availableInventory += v; }
+    public void removeAvailableInventory(int v) { this.availableInventory -= v; }
 
     public Location getBlockLocation() { return blockLoc; }
     public void setBlockLocation(Location v) { this.blockLoc = v; }

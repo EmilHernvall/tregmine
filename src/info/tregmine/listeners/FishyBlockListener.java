@@ -1,6 +1,7 @@
 package info.tregmine.listeners;
 
 import java.util.Map;
+import java.util.HashMap;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -16,6 +17,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.MaterialData;
 
@@ -24,6 +26,10 @@ import info.tregmine.quadtree.Point;
 import info.tregmine.Tregmine;
 import info.tregmine.api.FishyBlock;
 import info.tregmine.api.TregminePlayer;
+import info.tregmine.database.IContext;
+import info.tregmine.database.IWalletDAO;
+import info.tregmine.database.ITradeDAO;
+import info.tregmine.database.DAOException;
 import info.tregmine.zones.Lot;
 import info.tregmine.zones.ZoneWorld;
 
@@ -49,7 +55,7 @@ public class FishyBlockListener implements Listener
         Map<Location, FishyBlock> fishyBlocks = plugin.getFishyBlocks();
 
         String text = event.getMessage().trim();
-        //String[] textSplit = text.split(" ");
+        String[] textSplit = text.split(" ");
 
         if (player.getChatState() != TregminePlayer.ChatState.FISHY_SETUP) {
 
@@ -91,11 +97,180 @@ public class FishyBlockListener implements Listener
             }
         }
         else if (player.getChatState() != TregminePlayer.ChatState.FISHY_WITHDRAW) {
+            FishyBlock fishyBlock = player.getCurrentFishyBlock();
+
             // expect withdraw x or quit
+            if ("withdraw".equalsIgnoreCase(textSplit[0])) {
+                if (textSplit.length != 2) {
+                    player.sendMessage(ChatColor.RED + "Type \"withdraw x\", with " +
+                            "x being the number of items you wish to withdraw.");
+                    return;
+                }
+
+                int num = 0;
+                try {
+                    num = Integer.parseInt(textSplit[1]);
+                } catch (NumberFormatException e) {
+                    player.sendMessage(ChatColor.RED + "Type \"withdraw x\", with " +
+                            "x being the number of items you wish to withdraw.");
+                    return;
+                }
+
+                if (num <= 0) {
+                    player.sendMessage(ChatColor.RED + "Type \"withdraw x\", with " +
+                            "x being the number of items you wish to withdraw.");
+                    return;
+                }
+
+                int available = fishyBlock.getAvailableInventory();
+                if (num > available) {
+                    player.sendMessage(ChatColor.RED + "There are only " +
+                            available + "items available.");
+                    return;
+                }
+
+                int added = transferToInventory(fishyBlock, player, num);
+
+                if (num != added) {
+                    player.sendMessage(ChatColor.GREEN + "Your inventory is full. " +
+                        "Could only withdraw " + added + " items.");
+                } else {
+                    player.sendMessage(ChatColor.GREEN + "" +
+                        added + " items withdrawn successfully.");
+                }
+
+                player.setChatState(TregminePlayer.ChatState.CHAT);
+                player.setCurrentFishyBlock(null);
+
+                updateSign(player.getWorld(), fishyBlock);
+            }
+            else if ("quit".equalsIgnoreCase(textSplit[0])) {
+                player.sendMessage(ChatColor.GREEN +
+                    "Quitting without withdrawing.");
+                player.setChatState(TregminePlayer.ChatState.CHAT);
+                player.setCurrentFishyBlock(null);
+            }
+            else {
+                player.sendMessage(ChatColor.RED + "Type withdraw or quit.");
+            }
         }
         else if (player.getChatState() != TregminePlayer.ChatState.FISHY_BUY) {
-            // expect buy x or quit
-            // expect accept
+            FishyBlock fishyBlock = player.getCurrentFishyBlock();
+
+            if ("buy".equalsIgnoreCase(textSplit[0])) {
+                if (textSplit.length != 2) {
+                    player.sendMessage(ChatColor.RED + "Type \"buy x\", with " +
+                            "x being the number of items you wish to biy.");
+                    return;
+                }
+
+                int num = 0;
+                try {
+                    num = Integer.parseInt(textSplit[1]);
+                } catch (NumberFormatException e) {
+                    player.sendMessage(ChatColor.RED + "Type \"buy x\", with " +
+                            "x being the number of items you wish to biy.");
+                    return;
+                }
+
+                if (num <= 0) {
+                    player.sendMessage(ChatColor.RED + "Type \"buy x\", with " +
+                            "x being the number of items you wish to buy.");
+                    return;
+                }
+
+                int available = fishyBlock.getAvailableInventory();
+                if (num > available) {
+                    player.sendMessage(ChatColor.RED + "There are only " +
+                            available + "items available.");
+                    return;
+                }
+
+                player.setFishyBuyCount(num);
+
+                int cost = num * fishyBlock.getCost();
+
+                player.sendMessage(ChatColor.YELLOW + "Do you wish to buy " +
+                    num + " items for a total cost of " + cost + " tregs?");
+                player.sendMessage(ChatColor.YELLOW + "Type \"accept\" to confirm " +
+                    "or quit to exit.");
+            }
+            else if ("accept".equalsIgnoreCase(textSplit[0])) {
+                if (player.getFishyBuyCount() == 0) {
+                    player.sendMessage(ChatColor.RED + "Please specify how many " +
+                            "items you wish to buy using \"buy x\".");
+                    return;
+                }
+
+                int num = player.getFishyBuyCount();
+
+                // Check availability again to make sure, in case someone else
+                // is buying at the same time
+                int available = fishyBlock.getAvailableInventory();
+                if (num > available) {
+                    player.sendMessage(ChatColor.RED + "There are only " +
+                            available + "items available.");
+                    return;
+                }
+
+                int cost = num * fishyBlock.getCost();
+                try (IContext dbCtx = plugin.createContext()) {
+                    IWalletDAO walletDAO = dbCtx.getWalletDAO();
+                    ITradeDAO tradeDAO = dbCtx.getTradeDAO();
+
+                    long balance = walletDAO.balance(player);
+                    if (balance > cost) {
+                        player.sendMessage(ChatColor.RED + "You do not have " +
+                            "enough money to complete your purchase.");
+                        return;
+                    }
+
+                    int added = transferToInventory(fishyBlock, player, num);
+
+                    if (num != added) {
+                        player.sendMessage(ChatColor.GREEN + "Your inventory is full. " +
+                            "Could only buy " + added + " items.");
+                        cost = added * fishyBlock.getCost();
+                    } else {
+                        player.sendMessage(ChatColor.GREEN + "" +
+                            added + " items added to your inventory.");
+                    }
+
+                    TregminePlayer seller =
+                        plugin.getPlayerOffline(fishyBlock.getPlayerId());
+
+                    if (walletDAO.take(player, cost)) {
+                        walletDAO.add(seller, cost);
+                        walletDAO.insertTransaction(player.getId(), seller.getId(),
+                                cost);
+
+                        //int tradeId = tradeDAO.insertTrade(first.getId(),
+                        //                                   second.getId(),
+                        //                                   ctx.bid);
+                        //tradeDAO.insertStacks(tradeId, contents);
+
+                        player.sendMessage(ChatColor.GREEN + "" + cost
+                                + " tregs was taken from your wallet!");
+                    }
+                } catch (DAOException e) {
+                    throw new RuntimeException(e);
+                }
+
+                player.setCurrentFishyBlock(null);
+                player.setFishyBuyCount(0);
+
+                updateSign(player.getWorld(), fishyBlock);
+            }
+            else if ("quit".equalsIgnoreCase(textSplit[0])) {
+                player.sendMessage(ChatColor.GREEN +
+                    "Quitting without buying.");
+                player.setChatState(TregminePlayer.ChatState.CHAT);
+                player.setCurrentFishyBlock(null);
+            }
+            else {
+                player.sendMessage(ChatColor.RED + "Type buy or quit.");
+            }
+
         }
     }
 
@@ -351,5 +526,46 @@ public class FishyBlockListener implements Listener
         sign.setLine(1, fishyBlock.getMaterial().toString());
         sign.setLine(2, fishyBlock.getCost() + " tregs");
         sign.setLine(3, fishyBlock.getAvailableInventory() + " available");
+    }
+
+    private int transferToInventory(FishyBlock fishyBlock,
+                                    TregminePlayer player,
+                                    int num)
+    {
+        MaterialData type = fishyBlock.getMaterial();
+        Material material = type.getItemType();
+
+        int available = fishyBlock.getAvailableInventory();
+        int stacks = available / material.getMaxStackSize();
+        Inventory inventory = player.getInventory();
+        int added = 0;
+        boolean full = false;
+        for (int i = 0; i < stacks; i++) {
+            ItemStack stack = type.toItemStack(material.getMaxStackSize());
+            stack.addEnchantments(fishyBlock.getEnchantments());
+            HashMap<Integer, ItemStack> notAdded = inventory.addItem(stack);
+
+            added += material.getMaxStackSize();
+            if (notAdded.size() > 0) {
+                full = true;
+                for (ItemStack partialStack : notAdded.values()) {
+                    added -= partialStack.getAmount();
+                }
+            }
+        }
+
+        if (!full) {
+            int rem = available % material.getMaxStackSize();
+            if (rem != 0) {
+                ItemStack stack = type.toItemStack(rem);
+                stack.addEnchantments(fishyBlock.getEnchantments());
+                inventory.addItem(stack);
+                added += rem;
+            }
+        }
+
+        fishyBlock.removeAvailableInventory(added);
+
+        return added;
     }
 }
