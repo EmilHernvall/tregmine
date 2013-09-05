@@ -80,6 +80,7 @@ public class TregminePlayer extends PlayerDelegate
 
     // Fishy Block state
     private FishyBlock newFishyBlock;
+    private FishyBlock currentFishyBlock;
 
     public TregminePlayer(Player player)
     {
@@ -300,6 +301,9 @@ public class TregminePlayer extends PlayerDelegate
     // Fishy block state
     public void setNewFishyBlock(FishyBlock v) { this.newFishyBlock = v; }
     public FishyBlock getNewFishyBlock() { return newFishyBlock; }
+
+    public void setCurrentFishyBlock(FishyBlock v) { this.currentFishyBlock = v; }
+    public FishyBlock getCurrentFishyBlock() { return currentFishyBlock; }
 
     // convenience methods
     public void hidePlayer(TregminePlayer player)
