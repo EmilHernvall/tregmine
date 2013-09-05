@@ -271,3 +271,22 @@ CREATE TABLE mentorlog (
 
 ALTER TABLE zone ADD COLUMN zone_publicprofile ENUM ('0', '1') DEFAULT '0' AFTER zone_communist;
 
+CREATE TABLE fishyblock (
+    fishyblock_id INT UNSIGNED AUTO_INCREMENT,
+    player_id INT UNSIGNED,
+    fishyblock_created INT UNSIGNED,
+    fishyblock_material INT UNSIGNED,
+    fishyblock_data INT,
+    fishyblock_enchantments TEXT,
+    fishyblock_cost INT UNSIGNED,
+    fishyblock_inventory INT UNSIGNED,
+    fishyblock_world VARCHAR(50),
+    fishyblock_blockx INT,
+    fishyblock_blocky INT,
+    fishyblock_blockz INT,
+    fishyblock_signx INT,
+    fishyblock_signy INT,
+    fishyblock_signz INT,
+    PRIMARY KEY (fishyblock_id),
+    INDEX player_idx (player_id)
+) ENGINE=InnoDB;

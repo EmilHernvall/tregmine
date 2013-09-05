@@ -102,4 +102,10 @@ public class DBContext implements IContext
     {
         return new DBMentorLogDAO(conn);
     }
+
+    @Override
+    public IFishyBlockDAO getFishyBlockDAO()
+    {
+        return new DBFishyBlockDAO(conn);
+    }
 }

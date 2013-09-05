@@ -48,6 +48,7 @@ import info.tregmine.database.ILogDAO;
 import info.tregmine.database.IPlayerDAO;
 import info.tregmine.database.IPlayerReportDAO;
 import info.tregmine.database.IZonesDAO;
+import info.tregmine.database.IFishyBlockDAO;
 import info.tregmine.quadtree.IntersectionException;
 import info.tregmine.zones.Lot;
 import info.tregmine.zones.Zone;
@@ -149,6 +150,11 @@ public class Tregmine extends JavaPlugin
             this.blessedBlocks = inventoryDAO.loadBlessedBlocks(getServer());
 
             LOGGER.info("Loaded " + blessedBlocks.size() + " blessed blocks");
+
+            IFishyBlockDAO fishyBlockDAO = ctx.getFishyBlockDAO();
+            this.fishyBlocks = fishyBlockDAO.loadFishyBlocks(getServer());
+
+            LOGGER.info("Loaded " + fishyBlocks.size() + " fishy blocks");
         } catch (DAOException e) {
             throw new RuntimeException(e);
         }

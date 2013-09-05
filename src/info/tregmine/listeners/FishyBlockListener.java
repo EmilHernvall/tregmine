@@ -29,6 +29,7 @@ import info.tregmine.api.TregminePlayer;
 import info.tregmine.database.IContext;
 import info.tregmine.database.IWalletDAO;
 import info.tregmine.database.ITradeDAO;
+import info.tregmine.database.IFishyBlockDAO;
 import info.tregmine.database.DAOException;
 import info.tregmine.zones.Lot;
 import info.tregmine.zones.ZoneWorld;
@@ -143,6 +144,13 @@ public class FishyBlockListener implements Listener
                 player.setCurrentFishyBlock(null);
 
                 updateSign(player.getWorld(), fishyBlock);
+
+                try (IContext ctx = plugin.createContext()) {
+                    IFishyBlockDAO fishyBlockDAO = ctx.getFishyBlockDAO();
+                    fishyBlockDAO.update(fishyBlock);
+                } catch (DAOException e) {
+                    throw new RuntimeException(e);
+                }
             }
             else if ("quit".equalsIgnoreCase(textSplit[0])) {
                 player.sendMessage(ChatColor.GREEN +
@@ -252,6 +260,9 @@ public class FishyBlockListener implements Listener
                         player.sendMessage(ChatColor.GREEN + "" + cost
                                 + " tregs was taken from your wallet!");
                     }
+
+                    IFishyBlockDAO fishyBlockDAO = dbCtx.getFishyBlockDAO();
+                    fishyBlockDAO.update(fishyBlock);
                 } catch (DAOException e) {
                     throw new RuntimeException(e);
                 }
@@ -448,6 +459,13 @@ public class FishyBlockListener implements Listener
                             heldItem.getAmount() + " items added to fishy block.");
 
                     updateSign(player.getWorld(), fishyBlock);
+
+                    try (IContext ctx = plugin.createContext()) {
+                        IFishyBlockDAO fishyBlockDAO = ctx.getFishyBlockDAO();
+                        fishyBlockDAO.update(fishyBlock);
+                    } catch (DAOException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
                 // Enter withdrawal mode
                 else {
