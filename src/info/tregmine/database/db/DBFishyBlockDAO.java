@@ -1,0 +1,185 @@
+package info.tregmine.database.db;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.bukkit.Location;
+import org.bukkit.Server;
+import org.bukkit.World;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.material.MaterialData;
+
+import info.tregmine.api.TregminePlayer;
+import info.tregmine.api.FishyBlock;
+import info.tregmine.database.IFishyBlockDAO;
+import info.tregmine.database.DAOException;
+
+public class DBFishyBlockDAO implements IFishyBlockDAO
+{
+    private Connection conn;
+
+    public DBFishyBlockDAO(Connection conn)
+    {
+        this.conn = conn;
+    }
+
+    private String serializeEnchants(Map<Enchantment, Integer> enchants)
+    {
+        return null;
+    }
+
+    private Map<Enchantment, Integer> deserializeEnchants(String data)
+    {
+        return null;
+    }
+
+    @Override
+    public void insert(FishyBlock block) throws DAOException
+    {
+        String sql = "INSERT INTO fishyblock (player_id, fishyblock_created, " +
+            "fishyblock_material, fishyblock_data, fishyblock_enchantments, " +
+            "fishyblock_cost, fishyblock_inventory, fishyblock_world, " +
+            "fishyblock_blockx, fishyblock_blocky, fishyblock_blockz, " +
+            "fishyblock_signx, fishyblock_signy, fishyblock_signz) ";
+        sql += "VALUES (?, unix_timestamp(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, block.getPlayerId());
+            stmt.setInt(2, block.getMaterial().getItemTypeId());
+            stmt.setInt(3, block.getMaterial().getData());
+            stmt.setString(4, serializeEnchants(block.getEnchantments()));
+            stmt.setInt(5, block.getCost());
+            stmt.setInt(6, block.getAvailableInventory());
+            stmt.setString(7, block.getBlockLocation().getWorld().getName());
+            stmt.setInt(8, block.getBlockLocation().getBlockX());
+            stmt.setInt(9, block.getBlockLocation().getBlockY());
+            stmt.setInt(10, block.getBlockLocation().getBlockZ());
+            stmt.setInt(11, block.getSignLocation().getBlockX());
+            stmt.setInt(12, block.getSignLocation().getBlockY());
+            stmt.setInt(13, block.getSignLocation().getBlockZ());
+            stmt.execute();
+
+            stmt.executeQuery("SELECT LAST_INSERT_ID()");
+
+            try (ResultSet rs = stmt.getResultSet()) {
+                if (!rs.next()) {
+                    throw new DAOException("Failed to get insert_id!", sql);
+                }
+
+                block.setId(rs.getInt(1));
+            }
+        } catch (SQLException e) {
+            throw new DAOException(sql, e);
+        }
+    }
+
+    @Override
+    public void update(FishyBlock block) throws DAOException
+    {
+        String sql = "UPDATE fishyblock SET player_id = ?, " +
+            "fishyblock_material = ?, fishyblock_data = ?, " +
+            "fishyblock_enchantments = ?, fishyblock_cost = ?, " +
+            "fishyblock_inventory = ?, fishyblock_world = ?, " +
+            "fishyblock_blockx = ?, fishyblock_blocky = ?, " +
+            "fishyblock_blockz = ?, fishyblock_signx = ?, " +
+            "fishyblock_signy = ?, fishyblock_signz = ? ";
+        sql += "WHERE fishyblock_id = ?";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, block.getPlayerId());
+            stmt.setInt(2, block.getMaterial().getItemTypeId());
+            stmt.setInt(3, block.getMaterial().getData());
+            stmt.setString(4, serializeEnchants(block.getEnchantments()));
+            stmt.setInt(5, block.getCost());
+            stmt.setInt(6, block.getAvailableInventory());
+            stmt.setString(7, block.getBlockLocation().getWorld().getName());
+            stmt.setInt(8, block.getBlockLocation().getBlockX());
+            stmt.setInt(9, block.getBlockLocation().getBlockY());
+            stmt.setInt(10, block.getBlockLocation().getBlockZ());
+            stmt.setInt(11, block.getSignLocation().getBlockX());
+            stmt.setInt(12, block.getSignLocation().getBlockY());
+            stmt.setInt(13, block.getSignLocation().getBlockZ());
+            stmt.setInt(14, block.getId());
+            stmt.execute();
+        } catch (SQLException e) {
+            throw new DAOException(sql, e);
+        }
+    }
+
+    private World getWorld(Server server, String name)
+    {
+        for (World world : server.getWorlds()) {
+            if (name.equalsIgnoreCase(world.getName())) {
+                return world;
+            }
+        }
+
+        return null;
+    }
+
+    @Override
+    public Map<Location, FishyBlock> loadFishyBlocks(Server server)
+    throws DAOException
+    {
+        String sql = "SELECT * FROM fishyblock ";
+
+        Map<Location, FishyBlock> fishyBlocks = new HashMap<>();
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.execute();
+
+            try (ResultSet rs = stmt.getResultSet()) {
+                while (rs.next()) {
+                    int id = rs.getInt("fishyblock_id");
+                    int playerId = rs.getInt("player_id");
+
+                    int material = rs.getInt("fishyblock_material");
+                    byte data = (byte)rs.getInt("fishyblock_data");
+                    Map<Enchantment, Integer> enchants =
+                        deserializeEnchants(rs.getString("fishyblock_enchantments"));
+                    MaterialData materialData = new MaterialData(material, data);
+
+                    int cost = rs.getInt("fishyblock_cost");
+                    int inventory = rs.getInt("fishyblock_inventory");
+
+                    String worldName = rs.getString("fishyblock_world");
+                    int blockX = rs.getInt("fishyblock_blockx");
+                    int blockY = rs.getInt("fishyblock_blocky");
+                    int blockZ = rs.getInt("fishyblock_blockz");
+                    int signX = rs.getInt("fishyblock_signx");
+                    int signY = rs.getInt("fishyblock_signy");
+                    int signZ = rs.getInt("fishyblock_signz");
+
+                    World world = getWorld(server, worldName);
+                    Location blockLoc =
+                        new Location(world, blockX, blockY, blockZ);
+                    Location signLoc =
+                        new Location(world, signX, signY, signZ);
+
+                    FishyBlock block = new FishyBlock();
+                    block.setId(id);
+                    block.setPlayerId(playerId);
+                    block.setMaterial(materialData);
+                    block.setEnchantments(enchants);
+                    block.setCost(cost);
+                    block.setAvailableInventory(inventory);
+                    block.setBlockLocation(blockLoc);
+                    block.setSignLocation(signLoc);
+
+                    fishyBlocks.put(blockLoc, block);
+                    fishyBlocks.put(signLoc, block);
+                }
+            }
+        } catch (SQLException e) {
+            throw new DAOException(sql, e);
+        }
+
+        return fishyBlocks;
+    }
+}
