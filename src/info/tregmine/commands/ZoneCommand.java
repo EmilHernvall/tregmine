@@ -502,7 +502,7 @@ public class ZoneCommand extends AbstractCommand
                     + zone.hasPublicProfile());
             if (zone.hasPublicProfile()) {
                 player.sendMessage(YELLOW + "Public Link: "
-                        + "http://tregmine.info/index.php/zone/profile?id="
+                        + "http://treg.co/index.php/zone/profile?id="
                         + zone.getId());
             }
             player.sendMessage(YELLOW + "Hostiles: " + zone.hasHostiles());
