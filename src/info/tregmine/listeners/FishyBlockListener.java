@@ -53,12 +53,19 @@ public class FishyBlockListener implements Listener
             return;
         }
 
+        event.setCancelled(true);
+
         Map<Location, FishyBlock> fishyBlocks = plugin.getFishyBlocks();
 
         String text = event.getMessage().trim();
         String[] textSplit = text.split(" ");
 
-        if (player.getChatState() != TregminePlayer.ChatState.FISHY_SETUP) {
+        player.sendMessage(ChatColor.YELLOW + "[FISHY] " +
+                ChatColor.WHITE + "<" +
+                player.getChatName() +
+                ChatColor.WHITE + "> " + text);
+
+        if (player.getChatState() == TregminePlayer.ChatState.FISHY_SETUP) {
 
             FishyBlock newFishyBlock = player.getNewFishyBlock();
             if (newFishyBlock == null) {
@@ -89,6 +96,13 @@ public class FishyBlockListener implements Listener
                     // Create info sign
                     World world = player.getWorld();
                     updateSign(world, newFishyBlock);
+
+                    try (IContext ctx = plugin.createContext()) {
+                        IFishyBlockDAO fishyBlockDAO = ctx.getFishyBlockDAO();
+                        fishyBlockDAO.insert(newFishyBlock);
+                    } catch (DAOException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
                 catch (NumberFormatException e) {
                     player.sendMessage(ChatColor.RED +
@@ -97,7 +111,7 @@ public class FishyBlockListener implements Listener
                 }
             }
         }
-        else if (player.getChatState() != TregminePlayer.ChatState.FISHY_WITHDRAW) {
+        else if (player.getChatState() == TregminePlayer.ChatState.FISHY_WITHDRAW) {
             FishyBlock fishyBlock = player.getCurrentFishyBlock();
 
             // expect withdraw x or quit
@@ -162,7 +176,7 @@ public class FishyBlockListener implements Listener
                 player.sendMessage(ChatColor.RED + "Type withdraw or quit.");
             }
         }
-        else if (player.getChatState() != TregminePlayer.ChatState.FISHY_BUY) {
+        else if (player.getChatState() == TregminePlayer.ChatState.FISHY_BUY) {
             FishyBlock fishyBlock = player.getCurrentFishyBlock();
 
             if ("buy".equalsIgnoreCase(textSplit[0])) {
@@ -309,6 +323,8 @@ public class FishyBlockListener implements Listener
             // We're creating a new fishy block
             if (heldItem.getType() == Material.RAW_FISH && newFishyBlock == null) {
 
+                event.setCancelled(true);
+
                 Location signLoc = new Location(loc.getWorld(),
                                                 loc.getX() + face.getModX(),
                                                 loc.getY() + face.getModY(),
@@ -379,10 +395,14 @@ public class FishyBlockListener implements Listener
 
                 fishyBlocks.put(loc, fishyBlock);
                 fishyBlocks.put(signLoc, fishyBlock);
+
+                player.setItemInHand(null);
             }
             // This is when the player sets the type of the fishy block
             else if (newFishyBlock != null &&
                      loc.equals(newFishyBlock.getBlockLocation())) {
+
+                event.setCancelled(true);
 
                 MaterialData material = heldItem.getData();
                 Map<Enchantment, Integer> enchantments = heldItem.getEnchantments();
@@ -427,8 +447,14 @@ public class FishyBlockListener implements Listener
             // mode or add items to this fishy block
             if (fishyBlock.getPlayerId() == player.getId()) {
 
+                event.setCancelled(true);
+
                 // Check if the held item equals the type of the fishy block
                 MaterialData fishyMaterial = fishyBlock.getMaterial();
+                if (fishyMaterial == null) {
+                    return;
+                }
+
                 MaterialData heldMaterial = heldItem.getData();
                 boolean match = false;
                 if (fishyMaterial.equals(heldMaterial)) {
@@ -483,6 +509,8 @@ public class FishyBlockListener implements Listener
 
             // This is somebody else, and the should enter buy mode
             else {
+                event.setCancelled(true);
+
                 MaterialData material = fishyBlock.getMaterial();
                 if (material.getData() != 0) {
                     player.sendMessage(ChatColor.YELLOW +
@@ -564,7 +592,7 @@ public class FishyBlockListener implements Listener
     private void updateSign(World world, FishyBlock fishyBlock)
     {
         Block signBlock = world.getBlockAt(fishyBlock.getSignLocation());
-        signBlock.setType(Material.SIGN);
+        signBlock.setType(Material.SIGN_POST);
 
         TregminePlayer player = plugin.getPlayerOffline(fishyBlock.getPlayerId());
 
@@ -573,6 +601,7 @@ public class FishyBlockListener implements Listener
         sign.setLine(1, fishyBlock.getMaterial().toString());
         sign.setLine(2, fishyBlock.getCost() + " tregs");
         sign.setLine(3, fishyBlock.getAvailableInventory() + " available");
+        sign.update();
     }
 
     private int transferToInventory(FishyBlock fishyBlock,
@@ -582,8 +611,7 @@ public class FishyBlockListener implements Listener
         MaterialData type = fishyBlock.getMaterial();
         Material material = type.getItemType();
 
-        int available = fishyBlock.getAvailableInventory();
-        int stacks = available / material.getMaxStackSize();
+        int stacks = num / material.getMaxStackSize();
         Inventory inventory = player.getInventory();
         int added = 0;
         boolean full = false;
@@ -602,7 +630,7 @@ public class FishyBlockListener implements Listener
         }
 
         if (!full) {
-            int rem = available % material.getMaxStackSize();
+            int rem = num % material.getMaxStackSize();
             if (rem != 0) {
                 ItemStack stack = type.toItemStack(rem);
                 stack.addEnchantments(fishyBlock.getEnchantments());
