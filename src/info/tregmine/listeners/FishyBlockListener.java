@@ -7,6 +7,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.GameMode;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
@@ -89,7 +90,7 @@ public class FishyBlockListener implements Listener
                         "Cost set to " + cost + " tregs. Fishy block set up.");
 
                     fishyBlocks.put(newFishyBlock.getBlockLocation(), newFishyBlock);
-                    fishyBlocks.put(newFishyBlock.getTopLocation(), newFishyBlock);
+                    fishyBlocks.put(newFishyBlock.getSignLocation(), newFishyBlock);
 
                     player.setNewFishyBlock(null);
 
@@ -283,6 +284,7 @@ public class FishyBlockListener implements Listener
 
                 player.setCurrentFishyBlock(null);
                 player.setFishyBuyCount(0);
+                player.setChatState(TregminePlayer.ChatState.CHAT);
 
                 updateSign(player.getWorld(), fishyBlock);
             }
@@ -322,6 +324,19 @@ public class FishyBlockListener implements Listener
 
             // We're creating a new fishy block
             if (heldItem.getType() == Material.RAW_FISH && newFishyBlock == null) {
+
+                if (player.getGameMode() == GameMode.CREATIVE) {
+                    player.sendMessage(ChatColor.RED + "Cannot use fishy blocks " +
+                            "whilst in creative mode.");
+                    event.setCancelled(true);
+                    return;
+                }
+
+                if (face.getModY() != 0) {
+                    player.sendMessage(ChatColor.RED + "Click on the sides of " +
+                            "the block to set up a fishy block.");
+                    return;
+                }
 
                 event.setCancelled(true);
 
@@ -393,15 +408,32 @@ public class FishyBlockListener implements Listener
                         "select the item or material you want to sell, " +
                         "and left click on this block again.");
 
-                player.setItemInHand(null);
+                heldItem.setAmount(heldItem.getAmount()-1);
+                player.setItemInHand(heldItem);
             }
             // This is when the player sets the type of the fishy block
             else if (newFishyBlock != null &&
                      loc.equals(newFishyBlock.getBlockLocation())) {
 
+                if (player.getGameMode() == GameMode.CREATIVE) {
+                    player.sendMessage(ChatColor.RED + "Cannot use fishy blocks " +
+                            "whilst in creative mode.");
+                    event.setCancelled(true);
+                    return;
+                }
+
                 event.setCancelled(true);
 
                 MaterialData material = heldItem.getData();
+                Material type = material.getItemType();
+                // This is an item with limited durability that has been
+                // damaged
+                if (type.getMaxDurability() != 0 && material.getData() != 0) {
+                    player.sendMessage(ChatColor.RED + "You cannot sell " +
+                            "damaged items.");
+                    return;
+                }
+
                 Map<Enchantment, Integer> enchantments = heldItem.getEnchantments();
 
                 newFishyBlock.setMaterial(material);
@@ -438,13 +470,25 @@ public class FishyBlockListener implements Listener
         // Whenever someone clicks on a fishy block that's already setup
         if (fishyBlocks.containsKey(loc)) {
 
+            if (player.getGameMode() == GameMode.CREATIVE) {
+                player.sendMessage(ChatColor.RED + "Cannot use fishy blocks " +
+                        "whilst in creative mode.");
+                event.setCancelled(true);
+                return;
+            }
+
+            if (player.getChatState() == TregminePlayer.ChatState.FISHY_WITHDRAW ||
+                player.getChatState() == TregminePlayer.ChatState.FISHY_BUY) {
+
+                event.setCancelled(true);
+                return;
+            }
+
             FishyBlock fishyBlock = fishyBlocks.get(loc);
 
             // Player owns this fishy block, and should either enter withdraw
             // mode or add items to this fishy block
             if (fishyBlock.getPlayerId() == player.getId()) {
-
-                event.setCancelled(true);
 
                 // Check if the held item equals the type of the fishy block
                 MaterialData fishyMaterial = fishyBlock.getMaterial();
@@ -453,6 +497,7 @@ public class FishyBlockListener implements Listener
                 }
 
                 MaterialData heldMaterial = heldItem.getData();
+
                 boolean match = false;
                 if (fishyMaterial.equals(heldMaterial)) {
                     match = true;
@@ -475,6 +520,13 @@ public class FishyBlockListener implements Listener
 
                 // Add to block inventory
                 if (match) {
+                    Material type = heldMaterial.getItemType();
+                    if (type.getMaxDurability() != 0 && heldMaterial.getData() != 0) {
+                        player.sendMessage(ChatColor.RED + "You cannot add " +
+                                "damaged items.");
+                        return;
+                    }
+
                     fishyBlock.addAvailableInventory(heldItem.getAmount());
                     player.setItemInHand(null);
 
@@ -547,9 +599,10 @@ public class FishyBlockListener implements Listener
     public void onBlockBreak(BlockBreakEvent event)
     {
         TregminePlayer player = plugin.getPlayer(event.getPlayer());
+
         Block block = event.getBlock();
         if (block.getType() != Material.OBSIDIAN &&
-            block.getType() != Material.SIGN) {
+            block.getType() != Material.WALL_SIGN) {
 
             return;
         }
@@ -567,8 +620,15 @@ public class FishyBlockListener implements Listener
             return;
         }
 
+        if (player.getGameMode() == GameMode.CREATIVE) {
+            player.sendMessage(ChatColor.RED + "Cannot use fishy blocks " +
+                    "whilst in creative mode.");
+            event.setCancelled(true);
+            return;
+        }
+
         Location blockLoc = fishyBlock.getBlockLocation();
-        Location signLoc = fishyBlock.getTopLocation();
+        Location signLoc = fishyBlock.getSignLocation();
 
         if (signLoc.equals(loc)) {
             event.setCancelled(true);
@@ -599,14 +659,12 @@ public class FishyBlockListener implements Listener
     {
         Location blockLoc = fishyBlock.getBlockLocation();
         Location signLoc = fishyBlock.getSignLocation();
-        Location topLoc = fishyBlock.getTopLocation();
 
-        Block frontBlock = world.getBlockAt(signLoc);
-        Block signBlock = world.getBlockAt(topLoc);
+        Block signBlock = world.getBlockAt(signLoc);
         Block mainBlock = world.getBlockAt(blockLoc);
-        BlockFace facing = mainBlock.getFace(frontBlock);
+        BlockFace facing = mainBlock.getFace(signBlock);
 
-        signBlock.setType(Material.SIGN_POST);
+        signBlock.setType(Material.WALL_SIGN);
         switch (facing) {
             case WEST:
                 signBlock.setData((byte)0x04);
