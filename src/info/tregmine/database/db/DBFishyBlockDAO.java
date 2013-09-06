@@ -215,7 +215,7 @@ public class DBFishyBlockDAO implements IFishyBlockDAO
                     block.setSignLocation(signLoc);
 
                     fishyBlocks.put(blockLoc, block);
-                    fishyBlocks.put(signLoc, block);
+                    fishyBlocks.put(block.getTopLocation(), block);
                 }
             }
         } catch (SQLException e) {

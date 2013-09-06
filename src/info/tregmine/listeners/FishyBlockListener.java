@@ -89,7 +89,7 @@ public class FishyBlockListener implements Listener
                         "Cost set to " + cost + " tregs. Fishy block set up.");
 
                     fishyBlocks.put(newFishyBlock.getBlockLocation(), newFishyBlock);
-                    fishyBlocks.put(newFishyBlock.getSignLocation(), newFishyBlock);
+                    fishyBlocks.put(newFishyBlock.getTopLocation(), newFishyBlock);
 
                     player.setNewFishyBlock(null);
 
@@ -302,7 +302,7 @@ public class FishyBlockListener implements Listener
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event)
     {
-        if (event.getAction() != Action.RIGHT_CLICK_BLOCK) {
+        if (event.getAction() != Action.LEFT_CLICK_BLOCK) {
             return;
         }
 
@@ -391,10 +391,7 @@ public class FishyBlockListener implements Listener
                 player.sendMessage(ChatColor.GREEN + "You are creating a new " +
                         "fishy block, which can be used to sell items. Now " +
                         "select the item or material you want to sell, " +
-                        "and right click on this block again.");
-
-                fishyBlocks.put(loc, fishyBlock);
-                fishyBlocks.put(signLoc, fishyBlock);
+                        "and left click on this block again.");
 
                 player.setItemInHand(null);
             }
@@ -571,7 +568,7 @@ public class FishyBlockListener implements Listener
         }
 
         Location blockLoc = fishyBlock.getBlockLocation();
-        Location signLoc = fishyBlock.getSignLocation();
+        Location signLoc = fishyBlock.getTopLocation();
 
         if (signLoc.equals(loc)) {
             event.setCancelled(true);
@@ -602,14 +599,15 @@ public class FishyBlockListener implements Listener
     {
         Location blockLoc = fishyBlock.getBlockLocation();
         Location signLoc = fishyBlock.getSignLocation();
+        Location topLoc = fishyBlock.getTopLocation();
 
-        Block signBlock = world.getBlockAt(fishyBlock.getSignLocation());
-        Block mainBlock = world.getBlockAt(fishyBlock.getBlockLocation());
-        BlockFace facing = mainBlock.getFace(signBlock);
+        Block frontBlock = world.getBlockAt(signLoc);
+        Block signBlock = world.getBlockAt(topLoc);
+        Block mainBlock = world.getBlockAt(blockLoc);
+        BlockFace facing = mainBlock.getFace(frontBlock);
 
-        signBlock.setType(Material.WALL_SIGN);
-        switch (facing)
-        {
+        signBlock.setType(Material.SIGN_POST);
+        switch (facing) {
             case WEST:
                 signBlock.setData((byte)0x04);
                 break;
