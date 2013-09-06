@@ -46,4 +46,12 @@ public class FishyBlock
 
     public Location getSignLocation() { return signLoc; }
     public void setSignLocation(Location v) { this.signLoc = v; }
+
+    public Location getTopLocation()
+    {
+        return new Location(blockLoc.getWorld(),
+                            blockLoc.getBlockX(),
+                            blockLoc.getBlockY() + 1,
+                            blockLoc.getBlockZ());
+    }
 }
