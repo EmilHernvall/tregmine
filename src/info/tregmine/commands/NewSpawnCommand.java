@@ -21,13 +21,13 @@ public class NewSpawnCommand extends AbstractCommand
 
         World world = player.getWorld();
         if (world == null) {
+            // TODO: error message
             return false;
         }
 
         Location loc = player.getLocation();
-        tregmine.getConfig().set("spawn.location.pitch", loc.getPitch());
-        tregmine.getConfig().set("spawn.location.yaw", loc.getYaw());
-        world.setSpawnLocation(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
+        world.setSpawnLocation(loc.getBlockX(), loc.getBlockY(),
+                loc.getBlockZ());
 
         return true;
     }

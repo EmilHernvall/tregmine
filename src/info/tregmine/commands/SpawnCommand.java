@@ -1,6 +1,5 @@
 package info.tregmine.commands;
 
-import org.bukkit.Location;
 import org.bukkit.entity.Horse;
 
 import info.tregmine.Tregmine;
@@ -28,13 +27,7 @@ public class SpawnCommand extends AbstractCommand
             player.teleport(player.getWorld().getSpawnLocation());
             horse.setPassenger(player.getDelegate());
         }else{
-            Location spawn = player.getWorld().getSpawnLocation();
-            spawn.setX(spawn.getBlockX() + 0.5);
-            spawn.setY(spawn.getBlockY());
-            spawn.setZ(spawn.getBlockZ() + 0.5);
-            spawn.setYaw(tregmine.getConfig().getInt("spawn.location.yaw"));
-            spawn.setPitch(tregmine.getConfig().getInt("spawn.location.pitch"));
-            player.teleport(spawn);
+            player.teleport(player.getWorld().getSpawnLocation());
         }
         return true;
     }
