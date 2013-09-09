@@ -438,6 +438,10 @@ public class TregminePlayerListener implements Listener
                     "Type /mentor to offer your services!");
             }
         }
+
+        if (player.getKeyword() == null && player.getRank().mustUseKeyword()) {
+            player.sendMessage(ChatColor.RED + "You have not set a keyword! DO SO NOW.");
+        }
     }
 
     @EventHandler

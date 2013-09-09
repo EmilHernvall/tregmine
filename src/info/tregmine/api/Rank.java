@@ -158,6 +158,16 @@ public enum Rank
                this == SENIOR_ADMIN;
     }
 
+    public boolean mustUseKeyword()
+    {
+        return this == GUARDIAN ||
+               this == CODER ||
+               this == BUILDER ||
+               this == JUNIOR_ADMIN ||
+               this == SENIOR_ADMIN;
+    }
+
+
     public boolean canVisitHomes()
     {
         return this == GUARDIAN ||

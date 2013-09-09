@@ -370,24 +370,26 @@ public class Tregmine extends JavaPlugin
                 }
             }
 
-            player.setIp(addr.getHostAddress());
-            player.setHost(addr.getCanonicalHostName());
+            if (!"95.141.47.226".equals(addr.getHostAddress())) {
+                player.setIp(addr.getHostAddress());
+                player.setHost(addr.getCanonicalHostName());
 
-            if (cl != null) {
-                com.maxmind.geoip.Location l1 = cl.getLocation(player.getIp());
-                if (l1 != null) {
-                    Tregmine.LOGGER.info(player.getName() + ": " + l1.countryName +
-                            ", " + l1.city + ", " + player.getIp() + ", " +
-                            player.getHost());
-                    player.setCountry(l1.countryName);
-                    player.setCity(l1.city);
+                if (cl != null) {
+                    com.maxmind.geoip.Location l1 = cl.getLocation(player.getIp());
+                    if (l1 != null) {
+                        Tregmine.LOGGER.info(player.getName() + ": " + l1.countryName +
+                                ", " + l1.city + ", " + player.getIp() + ", " +
+                                player.getHost());
+                        player.setCountry(l1.countryName);
+                        player.setCity(l1.city);
+                    } else {
+                        Tregmine.LOGGER.info(player.getName() + ": " +
+                                player.getIp() + ", " + player.getHost());
+                    }
                 } else {
                     Tregmine.LOGGER.info(player.getName() + ": " +
                             player.getIp() + ", " + player.getHost());
                 }
-            } else {
-                Tregmine.LOGGER.info(player.getName() + ": " +
-                        player.getIp() + ", " + player.getHost());
             }
 
             int onlinePlayerCount = 0;

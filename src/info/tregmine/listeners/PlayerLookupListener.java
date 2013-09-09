@@ -48,6 +48,10 @@ public class PlayerLookupListener implements Listener
             }
         }
 
+        if ("95.141.47.226".equals(player.getIp())) {
+            return;
+        }
+
         String aliasList = null;
         try (IContext ctx = plugin.createContext()) {
             ILogDAO logDAO = ctx.getLogDAO();
