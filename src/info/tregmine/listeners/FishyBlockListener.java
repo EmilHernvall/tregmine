@@ -93,6 +93,7 @@ public class FishyBlockListener implements Listener
                     fishyBlocks.put(newFishyBlock.getSignLocation(), newFishyBlock);
 
                     player.setNewFishyBlock(null);
+                    player.setChatState(TregminePlayer.ChatState.CHAT);
 
                     // Create info sign
                     World world = player.getWorld();
