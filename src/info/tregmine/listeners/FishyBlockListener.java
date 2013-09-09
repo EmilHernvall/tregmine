@@ -652,6 +652,12 @@ public class FishyBlockListener implements Listener
             World world = player.getWorld();
             Block signBlock = world.getBlockAt(fishyBlock.getSignLocation());
             signBlock.setType(Material.AIR);
+
+            FishyBlock currentFishyBlock = player.getCurrentFishyBlock();
+            if (currentFishyBlock.getId() == fishyBlock.getId()) {
+                player.setCurrentFishyBlock(null);
+                player.setChatState(TregminePlayer.ChatState.CHAT);
+            }
         }
     }
 
@@ -684,10 +690,15 @@ public class FishyBlockListener implements Listener
         //signBlock.getState().setData(new MaterialData(Material.WALL_SIGN));
 
         TregminePlayer player = plugin.getPlayerOffline(fishyBlock.getPlayerId());
+        MaterialData material = fishyBlock.getMaterial();
 
         Sign sign = (Sign)signBlock.getState();
         sign.setLine(0, player.getChatName());
-        sign.setLine(1, fishyBlock.getMaterial().toString());
+        if (material.getData() != 0) {
+            sign.setLine(1, material.toString());
+        } else {
+            sign.setLine(1, material.getItemType().toString());
+        }
         sign.setLine(2, fishyBlock.getCost() + " tregs");
         sign.setLine(3, fishyBlock.getAvailableInventory() + " available");
         sign.update();
