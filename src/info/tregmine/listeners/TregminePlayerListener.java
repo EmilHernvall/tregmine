@@ -45,6 +45,7 @@ import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
+import org.kitteh.tag.PlayerReceiveNameTagEvent;
 
 import info.tregmine.Tregmine;
 import info.tregmine.api.PlayerReport;
@@ -590,6 +591,11 @@ public class TregminePlayerListener implements Listener
     public void onPlayerKick(PlayerKickEvent event)
     {
         event.setLeaveMessage(null);
+    }
+    
+    @EventHandler
+    public void onNameTag(PlayerReceiveNameTagEvent event){
+        event.setTag(plugin.getPlayer(event.getPlayer().getName()).getChatName());
     }
 
     private void activateGuardians()
