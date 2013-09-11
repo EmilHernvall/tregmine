@@ -4,10 +4,12 @@ public interface IContext extends AutoCloseable
 {
     public void close();
 
+    public IFishyBlockDAO getFishyBlockDAO();
     public IHomeDAO getHomeDAO();
     public IInventoryDAO getInventoryDAO();
     public IItemDAO getItemDAO();
     public ILogDAO getLogDAO();
+    public IMentorLogDAO getMentorLogDAO();
     public IMotdDAO getMotdDAO();
     public IPlayerDAO getPlayerDAO();
     public IPlayerReportDAO getPlayerReportDAO();
@@ -15,5 +17,4 @@ public interface IContext extends AutoCloseable
     public IWalletDAO getWalletDAO();
     public IWarpDAO getWarpDAO();
     public IZonesDAO getZonesDAO();
-    public IMentorLogDAO getMentorLogDAO();
 }

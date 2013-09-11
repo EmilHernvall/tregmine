@@ -38,6 +38,7 @@ import info.tregmine.api.PlayerBannedException;
 import info.tregmine.api.PlayerReport;
 import info.tregmine.api.TregminePlayer;
 import info.tregmine.api.Rank;
+import info.tregmine.api.FishyBlock;
 import info.tregmine.database.db.DBContextFactory;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IContextFactory;
@@ -47,6 +48,7 @@ import info.tregmine.database.ILogDAO;
 import info.tregmine.database.IPlayerDAO;
 import info.tregmine.database.IPlayerReportDAO;
 import info.tregmine.database.IZonesDAO;
+import info.tregmine.database.IFishyBlockDAO;
 import info.tregmine.quadtree.IntersectionException;
 import info.tregmine.zones.Lot;
 import info.tregmine.zones.Zone;
@@ -75,6 +77,7 @@ public class Tregmine extends JavaPlugin
     private Map<String, TregminePlayer> players;
     private Map<Integer, TregminePlayer> playersById;
     private Map<Location, Integer> blessedBlocks;
+    private Map<Location, FishyBlock> fishyBlocks;
 
     private Map<String, ZoneWorld> worlds;
     private Map<Integer, Zone> zones;
@@ -147,6 +150,11 @@ public class Tregmine extends JavaPlugin
             this.blessedBlocks = inventoryDAO.loadBlessedBlocks(getServer());
 
             LOGGER.info("Loaded " + blessedBlocks.size() + " blessed blocks");
+
+            IFishyBlockDAO fishyBlockDAO = ctx.getFishyBlockDAO();
+            this.fishyBlocks = fishyBlockDAO.loadFishyBlocks(getServer());
+
+            LOGGER.info("Loaded " + fishyBlocks.size() + " fishy blocks");
         } catch (DAOException e) {
             throw new RuntimeException(e);
         }
@@ -171,6 +179,7 @@ public class Tregmine extends JavaPlugin
         pluginMgm.registerEvents(new ZoneBlockListener(this), this);
         pluginMgm.registerEvents(new ZoneEntityListener(this), this);
         pluginMgm.registerEvents(new ZonePlayerListener(this), this);
+        pluginMgm.registerEvents(new FishyBlockListener(this), this);
 
         // Declaration of all commands
         getCommand("admins").setExecutor(
@@ -295,6 +304,11 @@ public class Tregmine extends JavaPlugin
     public Map<Location, Integer> getBlessedBlocks()
     {
         return blessedBlocks;
+    }
+
+    public Map<Location, FishyBlock> getFishyBlocks()
+    {
+        return fishyBlocks;
     }
 
     public Queue<TregminePlayer> getMentorQueue()
