@@ -27,13 +27,14 @@ import info.tregmine.quadtree.Point;
 import info.tregmine.Tregmine;
 import info.tregmine.api.FishyBlock;
 import info.tregmine.api.TregminePlayer;
-import info.tregmine.database.IContext;
-import info.tregmine.database.IWalletDAO;
-import info.tregmine.database.ITradeDAO;
-import info.tregmine.database.IFishyBlockDAO;
 import info.tregmine.database.DAOException;
+import info.tregmine.database.IContext;
+import info.tregmine.database.IFishyBlockDAO;
+import info.tregmine.database.ITradeDAO;
+import info.tregmine.database.IWalletDAO;
 import info.tregmine.zones.Lot;
 import info.tregmine.zones.ZoneWorld;
+import static info.tregmine.database.IFishyBlockDAO.TransactionType;
 
 public class FishyBlockListener implements Listener
 {
@@ -164,6 +165,10 @@ public class FishyBlockListener implements Listener
                 try (IContext ctx = plugin.createContext()) {
                     IFishyBlockDAO fishyBlockDAO = ctx.getFishyBlockDAO();
                     fishyBlockDAO.update(fishyBlock);
+                    fishyBlockDAO.insertTransaction(fishyBlock,
+                                                    player,
+                                                    TransactionType.WITHDRAW,
+                                                    added);
                 } catch (DAOException e) {
                     throw new RuntimeException(e);
                 }
@@ -240,7 +245,6 @@ public class FishyBlockListener implements Listener
                 int cost = num * fishyBlock.getCost();
                 try (IContext dbCtx = plugin.createContext()) {
                     IWalletDAO walletDAO = dbCtx.getWalletDAO();
-                    ITradeDAO tradeDAO = dbCtx.getTradeDAO();
 
                     long balance = walletDAO.balance(player);
                     if (balance < cost) {
@@ -268,17 +272,17 @@ public class FishyBlockListener implements Listener
                         walletDAO.insertTransaction(player.getId(), seller.getId(),
                                 cost);
 
-                        //int tradeId = tradeDAO.insertTrade(first.getId(),
-                        //                                   second.getId(),
-                        //                                   ctx.bid);
-                        //tradeDAO.insertStacks(tradeId, contents);
-
                         player.sendMessage(ChatColor.GREEN + "" + cost
                                 + " tregs was taken from your wallet!");
-                    }
 
-                    IFishyBlockDAO fishyBlockDAO = dbCtx.getFishyBlockDAO();
-                    fishyBlockDAO.update(fishyBlock);
+                        IFishyBlockDAO fishyBlockDAO = dbCtx.getFishyBlockDAO();
+                        fishyBlockDAO.update(fishyBlock);
+                        fishyBlockDAO.insertTransaction(fishyBlock,
+                                                        player,
+                                                        TransactionType.BUY,
+                                                        added);
+
+                    }
                 } catch (DAOException e) {
                     throw new RuntimeException(e);
                 }
@@ -319,7 +323,137 @@ public class FishyBlockListener implements Listener
 
         ItemStack heldItem = player.getItemInHand();
 
-        if (block.getType() == Material.OBSIDIAN) {
+        // Whenever someone clicks on a fishy block that's already setup
+        if (fishyBlocks.containsKey(loc)) {
+
+            if (player.getGameMode() == GameMode.CREATIVE) {
+                player.sendMessage(ChatColor.RED + "Cannot use fishy blocks " +
+                        "whilst in creative mode.");
+                event.setCancelled(true);
+                return;
+            }
+
+            if (player.getChatState() == TregminePlayer.ChatState.FISHY_WITHDRAW ||
+                player.getChatState() == TregminePlayer.ChatState.FISHY_BUY) {
+
+                event.setCancelled(true);
+                return;
+            }
+
+            FishyBlock fishyBlock = fishyBlocks.get(loc);
+
+            // Player owns this fishy block, and should either enter withdraw
+            // mode or add items to this fishy block
+            if (fishyBlock.getPlayerId() == player.getId()) {
+
+                // Check if the held item equals the type of the fishy block
+                MaterialData fishyMaterial = fishyBlock.getMaterial();
+                if (fishyMaterial == null) {
+                    return;
+                }
+
+                MaterialData heldMaterial = heldItem.getData();
+
+                boolean match = false;
+                if (fishyMaterial.equals(heldMaterial)) {
+                    match = true;
+
+                    Map<Enchantment, Integer> fishyEnchants = fishyBlock.getEnchantments();
+                    Map<Enchantment, Integer> heldEnchants = heldItem.getEnchantments();
+                    if (fishyEnchants.size() == heldEnchants.size()) {
+                        for (Enchantment ench : fishyEnchants.keySet()) {
+                            Integer a = fishyEnchants.get(ench);
+                            Integer b = heldEnchants.get(ench);
+                            if (a != b) {
+                                match = false;
+                                break;
+                            }
+                        }
+                    } else {
+                        match = false;
+                    }
+                }
+
+                // Add to block inventory
+                if (match) {
+                    Material type = heldMaterial.getItemType();
+                    if (type.getMaxDurability() != 0 && heldMaterial.getData() != 0) {
+                        player.sendMessage(ChatColor.RED + "You cannot add " +
+                                "damaged items.");
+                        return;
+                    }
+
+                    fishyBlock.addAvailableInventory(heldItem.getAmount());
+                    player.setItemInHand(null);
+
+                    player.sendMessage(ChatColor.GREEN + "" +
+                            heldItem.getAmount() + " items added to fishy block.");
+
+                    updateSign(player.getWorld(), fishyBlock);
+
+                    try (IContext ctx = plugin.createContext()) {
+                        IFishyBlockDAO fishyBlockDAO = ctx.getFishyBlockDAO();
+                        fishyBlockDAO.update(fishyBlock);
+                        fishyBlockDAO.insertTransaction(fishyBlock,
+                                                        player,
+                                                        TransactionType.DEPOSIT,
+                                                        heldItem.getAmount());
+                    } catch (DAOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+                // Enter withdrawal mode
+                else {
+                    player.sendMessage(ChatColor.YELLOW + "There are " +
+                        fishyBlock.getAvailableInventory() + " items available. ");
+                    player.sendMessage(ChatColor.YELLOW +
+                        "Type \"withdraw x\" to withdraw items to your inventory.");
+                    player.sendMessage(ChatColor.YELLOW +
+                        "Type \"quit\" to exit without doing anything.");
+
+                    player.setChatState(TregminePlayer.ChatState.FISHY_WITHDRAW);
+                    player.setCurrentFishyBlock(fishyBlock);
+                }
+            }
+
+            // This is somebody else, and the should enter buy mode
+            else {
+                event.setCancelled(true);
+
+                MaterialData material = fishyBlock.getMaterial();
+                if (material.getData() != 0) {
+                    player.sendMessage(ChatColor.YELLOW +
+                        "You are now talking to a fishy block that is selling: " +
+                        material.getItemType().toString() + ":" +
+                        material.getData() + ".");
+                } else {
+                    player.sendMessage(ChatColor.YELLOW +
+                        "You are now talking to a fishy block that is selling: " +
+                        material.getItemType().toString() + ".");
+                }
+
+                Map<Enchantment, Integer> enchantments = fishyBlock.getEnchantments();
+                if (enchantments.size() > 0) {
+                    player.sendMessage(ChatColor.YELLOW +
+                            "With the following enchants:");
+                    for (Map.Entry<Enchantment, Integer> entry : enchantments.entrySet()) {
+                        Enchantment enchant = entry.getKey();
+                        Integer level = entry.getValue();
+                        player.sendMessage(ChatColor.YELLOW +
+                                enchant.toString() + " lvl " + level);
+                    }
+                }
+
+                player.sendMessage(ChatColor.YELLOW + "Each block is " +
+                    fishyBlock.getCost() + " tregs. Type \"buy x\" to buy, " +
+                    "with x being the number of items you want to buy. Type " +
+                    "\"quit\" to exit without buying anything.");
+
+                player.setChatState(TregminePlayer.ChatState.FISHY_BUY);
+                player.setCurrentFishyBlock(fishyBlock);
+            }
+        }
+        else if (block.getType() == Material.OBSIDIAN) {
 
             FishyBlock newFishyBlock = player.getNewFishyBlock();
 
@@ -465,133 +599,6 @@ public class FishyBlockListener implements Listener
                 player.sendMessage(ChatColor.YELLOW +
                         "How much should one item cost?");
                 return;
-            }
-        }
-
-        // Whenever someone clicks on a fishy block that's already setup
-        if (fishyBlocks.containsKey(loc)) {
-
-            if (player.getGameMode() == GameMode.CREATIVE) {
-                player.sendMessage(ChatColor.RED + "Cannot use fishy blocks " +
-                        "whilst in creative mode.");
-                event.setCancelled(true);
-                return;
-            }
-
-            if (player.getChatState() == TregminePlayer.ChatState.FISHY_WITHDRAW ||
-                player.getChatState() == TregminePlayer.ChatState.FISHY_BUY) {
-
-                event.setCancelled(true);
-                return;
-            }
-
-            FishyBlock fishyBlock = fishyBlocks.get(loc);
-
-            // Player owns this fishy block, and should either enter withdraw
-            // mode or add items to this fishy block
-            if (fishyBlock.getPlayerId() == player.getId()) {
-
-                // Check if the held item equals the type of the fishy block
-                MaterialData fishyMaterial = fishyBlock.getMaterial();
-                if (fishyMaterial == null) {
-                    return;
-                }
-
-                MaterialData heldMaterial = heldItem.getData();
-
-                boolean match = false;
-                if (fishyMaterial.equals(heldMaterial)) {
-                    match = true;
-
-                    Map<Enchantment, Integer> fishyEnchants = fishyBlock.getEnchantments();
-                    Map<Enchantment, Integer> heldEnchants = heldItem.getEnchantments();
-                    if (fishyEnchants.size() == heldEnchants.size()) {
-                        for (Enchantment ench : fishyEnchants.keySet()) {
-                            Integer a = fishyEnchants.get(ench);
-                            Integer b = heldEnchants.get(ench);
-                            if (a != b) {
-                                match = false;
-                                break;
-                            }
-                        }
-                    } else {
-                        match = false;
-                    }
-                }
-
-                // Add to block inventory
-                if (match) {
-                    Material type = heldMaterial.getItemType();
-                    if (type.getMaxDurability() != 0 && heldMaterial.getData() != 0) {
-                        player.sendMessage(ChatColor.RED + "You cannot add " +
-                                "damaged items.");
-                        return;
-                    }
-
-                    fishyBlock.addAvailableInventory(heldItem.getAmount());
-                    player.setItemInHand(null);
-
-                    player.sendMessage(ChatColor.GREEN + "" +
-                            heldItem.getAmount() + " items added to fishy block.");
-
-                    updateSign(player.getWorld(), fishyBlock);
-
-                    try (IContext ctx = plugin.createContext()) {
-                        IFishyBlockDAO fishyBlockDAO = ctx.getFishyBlockDAO();
-                        fishyBlockDAO.update(fishyBlock);
-                    } catch (DAOException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-                // Enter withdrawal mode
-                else {
-                    player.sendMessage(ChatColor.YELLOW + "There are " +
-                        fishyBlock.getAvailableInventory() + " items available. ");
-                    player.sendMessage(ChatColor.YELLOW +
-                        "Type \"withdraw x\" to withdraw items to your inventory.");
-                    player.sendMessage(ChatColor.YELLOW +
-                        "Type \"quit\" to exit without doing anything.");
-
-                    player.setChatState(TregminePlayer.ChatState.FISHY_WITHDRAW);
-                    player.setCurrentFishyBlock(fishyBlock);
-                }
-            }
-
-            // This is somebody else, and the should enter buy mode
-            else {
-                event.setCancelled(true);
-
-                MaterialData material = fishyBlock.getMaterial();
-                if (material.getData() != 0) {
-                    player.sendMessage(ChatColor.YELLOW +
-                        "You are now talking to a fishy block that is selling: " +
-                        material.getItemType().toString() + ":" +
-                        material.getData() + ".");
-                } else {
-                    player.sendMessage(ChatColor.YELLOW +
-                        "You are now talking to a fishy block that is selling: " +
-                        material.getItemType().toString() + ".");
-                }
-
-                Map<Enchantment, Integer> enchantments = fishyBlock.getEnchantments();
-                if (enchantments.size() > 0) {
-                    player.sendMessage(ChatColor.YELLOW +
-                            "With the following enchants:");
-                    for (Map.Entry<Enchantment, Integer> entry : enchantments.entrySet()) {
-                        Enchantment enchant = entry.getKey();
-                        Integer level = entry.getValue();
-                        player.sendMessage(ChatColor.YELLOW +
-                                enchant.toString() + " lvl " + level);
-                    }
-                }
-
-                player.sendMessage(ChatColor.YELLOW + "Each block is " +
-                    fishyBlock.getCost() + " tregs. Type \"buy x\" to buy, " +
-                    "with x being the number of items you want to buy. Type " +
-                    "\"quit\" to exit without buying anything.");
-
-                player.setChatState(TregminePlayer.ChatState.FISHY_BUY);
-                player.setCurrentFishyBlock(fishyBlock);
             }
         }
     }

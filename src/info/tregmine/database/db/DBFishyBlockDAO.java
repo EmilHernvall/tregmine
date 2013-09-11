@@ -166,6 +166,31 @@ public class DBFishyBlockDAO implements IFishyBlockDAO
     }
 
     @Override
+    public void insertTransaction(FishyBlock fishyBlock,
+                                  TregminePlayer player,
+                                  TransactionType type,
+                                  int amount)
+    throws DAOException
+    {
+        String sql = "INSERT INTO fishyblock_transaction (fishyblock_id, " +
+            "player_id, transaction_type, transaction_timestamp, " +
+            "transaction_amount, transaction_unitcost, transaction_totalcost) ";
+        sql += "VALUES (?, ?, ?, unix_timestamp(), ?, ?, ?)";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, fishyBlock.getId());
+            stmt.setInt(2, player.getId());
+            stmt.setString(3, type.toString());
+            stmt.setInt(4, amount);
+            stmt.setInt(5, fishyBlock.getCost());
+            stmt.setInt(6, amount * fishyBlock.getCost());
+            stmt.execute();
+        } catch (SQLException e) {
+            throw new DAOException(sql, e);
+        }
+    }
+
+    @Override
     public Map<Location, FishyBlock> loadFishyBlocks(Server server)
     throws DAOException
     {

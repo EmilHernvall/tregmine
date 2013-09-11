@@ -291,3 +291,26 @@ CREATE TABLE fishyblock (
     PRIMARY KEY (fishyblock_id),
     INDEX player_idx (player_id)
 ) ENGINE=InnoDB;
+
+CREATE TABLE fishyblock_transaction (
+    transaction_id INT UNSIGNED AUTO_INCREMENT,
+    fishyblock_id INT UNSIGNED,
+    player_id INT UNSIGNED,
+    transaction_type ENUM ('deposit', 'withdraw', 'buy'),
+    transaction_timestamp INT UNSIGNED,
+    transaction_amount INT UNSIGNED,
+    transaction_unitcost INT UNSIGNED,
+    transaction_totalcost INT UNSIGNED,
+    PRIMARY KEY (transaction_id),
+    KEY idx_fishyblock (fishyblock_id, transaction_timestamp),
+    KEY idx_player (player_id)
+) ENGINE=InnoDB;
+
+CREATE TABLE fishyblock_costlog (
+    costlog_id INT UNSIGNED AUTO_INCREMENT,
+    fishyblock_id INT UNSIGNED,
+    costlog_timestamp INT UNSIGNED,
+    costlog_newcost INT UNSIGNED,
+    PRIMARY KEY (costlog_id),
+    KEY idx_fishyblock (fishyblock_id, costlog_timestamp),
+) ENGINE=InnoDB;
