@@ -65,6 +65,9 @@ public class WhoCommand extends AbstractCommand
             player.sendMessage(GOLD + "Country: " + GRAY + whoPlayer.getCountry());
             player.sendMessage(GOLD + "City: " + GRAY + whoPlayer.getCity());
             player.sendMessage(GOLD + "IP Address: " + GRAY + whoPlayer.getIp());
+            player.sendMessage(GOLD + "Port: " + GRAY + whoPlayer.getAddress().getPort());
+            player.sendMessage(GOLD + "Gamemode: " + GRAY + whoPlayer.getGameMode().toString().toLowerCase());
+            player.sendMessage(GOLD + "Level: " + GRAY + whoPlayer.getLevel());
             player.sendMessage(DARK_GRAY + "*************************************" +
                                "*****************");
 
