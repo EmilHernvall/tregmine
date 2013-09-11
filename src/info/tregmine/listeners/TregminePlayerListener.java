@@ -140,7 +140,7 @@ public class TregminePlayerListener implements Listener
     {
         if (event.getAction() != Action.RIGHT_CLICK_BLOCK) {
             return;
-        } 
+        }
         Player player = event.getPlayer();
         BlockState block = event.getClickedBlock().getState();
         if (block instanceof Skull) {
@@ -596,10 +596,16 @@ public class TregminePlayerListener implements Listener
     {
         event.setLeaveMessage(null);
     }
-    
+
     @EventHandler
-    public void onNameTag(PlayerReceiveNameTagEvent event){
-        event.setTag(plugin.getPlayer(event.getPlayer().getName()).getChatName());
+    public void onNameTag(PlayerReceiveNameTagEvent event)
+    {
+        TregminePlayer player = plugin.getPlayer(event.getPlayer());
+        if (player == null) {
+            return;
+        }
+
+        event.setTag(player.getChatName());
     }
 
     private void activateGuardians()

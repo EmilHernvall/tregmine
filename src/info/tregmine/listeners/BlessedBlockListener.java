@@ -8,6 +8,8 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Zombie;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -15,6 +17,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.entity.EntityBreakDoorEvent;
 import org.bukkit.util.Vector;
 
 import info.tregmine.Tregmine;
@@ -167,11 +170,11 @@ public class BlessedBlockListener implements Listener
     {
         Location l = event.getBlock().getLocation();
         Entity e = event.getEntity();
-        
+
         Map<Location, Integer> b = plugin.getBlessedBlocks();
-        
-        if( b.containsKey(l)) {
-            if( e instanceof Zombie ) {
+
+        if (b.containsKey(l)) {
+            if (e instanceof Zombie) {
                 event.setCancelled(true);
             }
         }

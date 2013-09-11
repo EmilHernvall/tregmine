@@ -400,7 +400,7 @@ public class ZonePlayerListener implements Listener
         if (player == null) {
             event.getPlayer().kickPlayer("Something went wrong");
             Tregmine.LOGGER.info(event.getPlayer().getName() + " was not found " +
-                    "in players map.");
+                    "in players map (PlayerMoveEvent).");
             return;
         }
 
