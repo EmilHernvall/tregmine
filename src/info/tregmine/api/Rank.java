@@ -380,12 +380,21 @@ public enum Rank
                this == SENIOR_ADMIN;
     }
 
+    public boolean canUseEnhancedCompass()
+    {
+        return this == GUARDIAN ||
+               this == CODER ||
+               this == BUILDER ||
+               this == JUNIOR_ADMIN ||
+               this == SENIOR_ADMIN;
+    }
+
     public boolean canPlaceBannedBlocks()
     {
         return this == JUNIOR_ADMIN ||
                this == SENIOR_ADMIN;
     }
-    
+
     public boolean canBreakBannedBlocks()
     {
         return this == JUNIOR_ADMIN ||
