@@ -67,14 +67,14 @@ public class ZonePlayerListener implements Listener
         }
 
         if (currentZone != null) {
-            Zone.Permission perm = currentZone.getUser(player.getName());
+            Zone.Permission perm = currentZone.getUser(player);
 
             Lot lot = world.findLot(pos);
             if (lot != null) {
                 if (perm == Zone.Permission.Owner && currentZone.isCommunist()) {
                     // Zone owners can modify lots in communist zones
                 }
-                else if (lot.isOwner(player.getName())) {
+                else if (lot.isOwner(player)) {
                     // Lot owners can always modify lots
                 }
                 else {
@@ -137,14 +137,14 @@ public class ZonePlayerListener implements Listener
         }
 
         if (currentZone != null) {
-            Zone.Permission perm = currentZone.getUser(player.getName());
+            Zone.Permission perm = currentZone.getUser(player);
 
             Lot lot = world.findLot(pos);
             if (lot != null) {
                 if (perm == Zone.Permission.Owner && currentZone.isCommunist()) {
                     // Zone owners can modify lots in communist zones
                 }
-                else if (lot.isOwner(player.getName())) {
+                else if (lot.isOwner(player)) {
                     // Lot owners can always modify lots
                 }
                 else {
@@ -213,22 +213,14 @@ public class ZonePlayerListener implements Listener
         }
 
         if (currentZone != null) {
-            Zone.Permission perm;
-
-            try {
-                perm = currentZone.getUser(player.getName());
-            } catch (Exception e) {
-                player.sendMessage("ERROR");
-                e.printStackTrace();
-                return;
-            }
+            Zone.Permission perm = currentZone.getUser(player);
 
             Lot lot = world.findLot(pos);
             if (lot != null) {
                 if (perm == Zone.Permission.Owner && currentZone.isCommunist()) {
                     // Zone owners can modify lots in communist zones
                 }
-                else if (lot.isOwner(player.getName())) {
+                else if (lot.isOwner(player)) {
                     // Lot owners can always modify lots
                 }
                 else {
@@ -303,7 +295,7 @@ public class ZonePlayerListener implements Listener
                 return;
             }
 
-            if (!lot.isOwner(player.getName())) {
+            if (!lot.isOwner(player)) {
                 event.setCancelled(true);
                 player.sendMessage(ChatColor.RED + "Blessed to lot owners.");
             }
@@ -315,8 +307,10 @@ public class ZonePlayerListener implements Listener
             // the zones permission.
             String type = null;
             if (zone != null) {
-                Zone.Permission perm = zone.getUser(player.getName());
-                if (perm != Zone.Permission.Owner && !player.getRank().canModifyZones()) {
+                Zone.Permission perm = zone.getUser(player);
+                if (perm != Zone.Permission.Owner &&
+                    !player.getRank().canModifyZones()) {
+
                     return;
                 }
                 if (lot != null) {
@@ -425,7 +419,7 @@ public class ZonePlayerListener implements Listener
 
             currentZone = world.findZone(currentPos);
             if (currentZone != null) {
-                Zone.Permission perm = currentZone.getUser(player.getName());
+                Zone.Permission perm = currentZone.getUser(player);
 
                 // if anyone is allowed to enter by default...
                 if (currentZone.getEnterDefault()) {
@@ -460,7 +454,7 @@ public class ZonePlayerListener implements Listener
                 }
 
                 welcomeMessage(currentZone, player, perm);
-                
+
             }
             player.setCurrentZone(currentZone);
         }
@@ -483,7 +477,7 @@ public class ZonePlayerListener implements Listener
 
             currentZone = world.findZone(currentPos);
             if (currentZone != null) {
-                Zone.Permission perm = currentZone.getUser(player.getName());
+                Zone.Permission perm = currentZone.getUser(player);
 
                 if (currentZone.getEnterDefault()) {
                     if (player.getRank().canModifyZones()) {
@@ -585,8 +579,7 @@ public class ZonePlayerListener implements Listener
 
                 currentZone = world.findZone(currentPos);
                 if (currentZone != null) {
-                    Zone.Permission perm =
-                            currentZone.getUser(player.getName());
+                    Zone.Permission perm = currentZone.getUser(player);
 
                     if (currentZone.getEnterDefault()) {
                         if (player.getRank().canModifyZones()) {
@@ -719,7 +712,7 @@ public class ZonePlayerListener implements Listener
             player.sendMessage(ChatColor.DARK_RED + currentZone.getName() + " has a public profile! You can view it here:");
             player.sendMessage(ChatColor.GRAY + "http://treg.co/index.php/zone/profile?id=" + currentZone.getId());
         }
-        
+
         if (perm != null) {
             String permNotification = perm.getPermissionNotification();
             player.sendMessage(ChatColor.RED + "[" + currentZone.getName()

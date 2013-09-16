@@ -9,6 +9,8 @@ import java.util.Map;
 import info.tregmine.quadtree.Point;
 import info.tregmine.quadtree.Rectangle;
 
+import info.tregmine.api.TregminePlayer;
+
 public class Zone
 {
     private String texture;
@@ -118,12 +120,12 @@ public class Zone
 
     private String mainOwner;
 
-    private Map<String, Permission> users;
+    private Map<Integer, Permission> users;
 
     public Zone()
     {
         rects = new ArrayList<Rectangle>();
-        users = new HashMap<String, Permission>();
+        users = new HashMap<Integer, Permission>();
     }
 
     public int getId()
@@ -285,29 +287,29 @@ public class Zone
         this.textExit = textExit;
     }
 
-    public void setUsers(Map<String, Permission> v)
+    public void setUsers(Map<Integer, Permission> v)
     {
         this.users = v;
     }
 
-    public void addUser(String name, Permission perm)
+    public void addUser(TregminePlayer player, Permission perm)
     {
-        users.put(name, perm);
+        users.put(player.getId(), perm);
     }
 
-    public void deleteUser(String name)
+    public void deleteUser(TregminePlayer player)
     {
-        users.remove(name);
+        users.remove(player.getId());
     }
 
-    public Collection<String> getUsers()
+    public Collection<Integer> getUsers()
     {
         return users.keySet();
     }
 
-    public Permission getUser(String name)
+    public Permission getUser(TregminePlayer player)
     {
-        return users.get(name);
+        return users.get(player.getId());
     }
 
     public boolean contains(Point p)

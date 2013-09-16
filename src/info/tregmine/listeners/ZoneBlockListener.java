@@ -53,14 +53,14 @@ public class ZoneBlockListener implements Listener
         }
 
         if (currentZone != null) {
-            Zone.Permission perm = currentZone.getUser(player.getName());
+            Zone.Permission perm = currentZone.getUser(player);
 
             Lot lot = world.findLot(pos);
             if (lot != null) {
                 if (perm == Zone.Permission.Owner && currentZone.isCommunist()) {
                     // Zone owners can modify lots in communist zones
                 }
-                else if (lot.isOwner(player.getName())) {
+                else if (lot.isOwner(player)) {
                     // Lot owners can always modify lots
                 }
                 else {
@@ -146,14 +146,14 @@ public class ZoneBlockListener implements Listener
         }
 
         if (currentZone != null) {
-            Zone.Permission perm = currentZone.getUser(player.getName());
+            Zone.Permission perm = currentZone.getUser(player);
 
             Lot lot = world.findLot(pos);
             if (lot != null) {
                 if (perm == Zone.Permission.Owner && currentZone.isCommunist()) {
                     // Zone owners can modify lots in communist zones
                 }
-                else if (lot.isOwner(player.getName())) {
+                else if (lot.isOwner(player)) {
                     // Lot owners can always modify lots
                 }
                 else {

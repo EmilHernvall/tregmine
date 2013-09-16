@@ -552,7 +552,7 @@ public class FishyBlockListener implements Listener
                 }
                 // Since we've already verified that it's the same lot, we only
                 // need to check the owner for one of the lots
-                else if (!blockLot.isOwner(player.getName())) {
+                else if (!blockLot.isOwner(player)) {
                     player.sendMessage(ChatColor.RED +
                             "You have to be owner of the lot to create fishy blocks.");
                     return;

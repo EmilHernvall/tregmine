@@ -27,7 +27,7 @@ public interface IZonesDAO
 
     public List<Lot> getLots(String world) throws DAOException;
 
-    public List<String> getLotOwners(int lotId) throws DAOException;
+    public List<Integer> getLotOwners(int lotId) throws DAOException;
 
     public void addLot(Lot lot) throws DAOException;
 

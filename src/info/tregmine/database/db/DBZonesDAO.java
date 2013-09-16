@@ -51,26 +51,24 @@ public class DBZonesDAO implements IZonesDAO
         return rects;
     }
 
-    private Map<String, Zone.Permission> getZonePermissions(int zoneId)
-            throws DAOException
+    private Map<Integer, Zone.Permission> getZonePermissions(int zoneId)
+    throws DAOException
     {
         String sql = "SELECT * FROM zone_user " +
-            "INNER JOIN player ON user_id = player_id " +
             "WHERE zone_id = ?";
 
-        Map<String, Zone.Permission> permissions =
-                new HashMap<String, Zone.Permission>();
+        Map<Integer, Zone.Permission> permissions = new HashMap<>();
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, zoneId);
             stmt.execute();
 
             try (ResultSet rs = stmt.getResultSet()) {
                 while (rs.next()) {
-                    String player = rs.getString("player_name");
+                    int playerId = rs.getInt("user_id");
                     Zone.Permission permission =
                             Zone.Permission.fromString(rs.getString("user_perm"));
 
-                    permissions.put(player, permission);
+                    permissions.put(playerId, permission);
                 }
             }
         } catch (SQLException e) {
@@ -308,13 +306,12 @@ public class DBZonesDAO implements IZonesDAO
     }
 
     @Override
-    public List<String> getLotOwners(int lotId) throws DAOException
+    public List<Integer> getLotOwners(int lotId) throws DAOException
     {
         String sql = "SELECT * FROM zone_lotuser " +
-            "INNER JOIN player ON player_id = user_id " +
             "WHERE lot_id = ?";
 
-        List<String> owners = new ArrayList<String>();
+        List<Integer> owners = new ArrayList<>();
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setInt(1, lotId);
@@ -322,7 +319,7 @@ public class DBZonesDAO implements IZonesDAO
 
             try (ResultSet rs = stmt.getResultSet()) {
                 while (rs.next()) {
-                    owners.add(rs.getString("player_name"));
+                    owners.add(rs.getInt("user_id"));
                 }
             }
         } catch (SQLException e) {
