@@ -313,5 +313,5 @@ CREATE TABLE fishyblock_costlog (
     costlog_newcost INT UNSIGNED,
     costlog_oldcost INT UNSIGNED,
     PRIMARY KEY (costlog_id),
-    KEY idx_fishyblock (fishyblock_id, costlog_timestamp),
+    KEY idx_fishyblock (fishyblock_id, costlog_timestamp)
 ) ENGINE=InnoDB;

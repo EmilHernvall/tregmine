@@ -142,6 +142,9 @@ public class FishyBlockListener implements Listener
                 int oldCost = fishyBlock.getCost();
                 fishyBlock.setCost(cost);
 
+                player.sendMessage(ChatColor.GREEN + "Cost changed to " +
+                        cost + " tregs.");
+
                 player.setChatState(TregminePlayer.ChatState.CHAT);
                 player.setCurrentFishyBlock(null);
 
