@@ -117,8 +117,45 @@ public class FishyBlockListener implements Listener
         else if (player.getChatState() == TregminePlayer.ChatState.FISHY_WITHDRAW) {
             FishyBlock fishyBlock = player.getCurrentFishyBlock();
 
-            // expect withdraw x or quit
-            if ("withdraw".equalsIgnoreCase(textSplit[0])) {
+            if ("changecost".equalsIgnoreCase(textSplit[0])) {
+                if (textSplit.length != 2) {
+                    player.sendMessage(ChatColor.RED + "Type \"changecost x\", with " +
+                            "x being the cost in tregs of the item.");
+                    return;
+                }
+
+                int cost = 0;
+                try {
+                    cost = Integer.parseInt(textSplit[1]);
+                } catch (NumberFormatException e) {
+                    player.sendMessage(ChatColor.RED + "Type \"changecost x\", with " +
+                            "x being the cost in tregs of the item.");
+                    return;
+                }
+
+                if (cost <= 0) {
+                    player.sendMessage(ChatColor.RED + "Type \"changecost x\", with " +
+                            "x being the cost in tregs of the item.");
+                    return;
+                }
+
+                int oldCost = fishyBlock.getCost();
+                fishyBlock.setCost(cost);
+
+                player.setChatState(TregminePlayer.ChatState.CHAT);
+                player.setCurrentFishyBlock(null);
+
+                updateSign(player.getWorld(), fishyBlock);
+
+                try (IContext ctx = plugin.createContext()) {
+                    IFishyBlockDAO fishyBlockDAO = ctx.getFishyBlockDAO();
+                    fishyBlockDAO.update(fishyBlock);
+                    fishyBlockDAO.insertCostChange(fishyBlock, oldCost);
+                } catch (DAOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            else if ("withdraw".equalsIgnoreCase(textSplit[0])) {
                 if (textSplit.length != 2) {
                     player.sendMessage(ChatColor.RED + "Type \"withdraw x\", with " +
                             "x being the number of items you wish to withdraw.");
@@ -175,12 +212,13 @@ public class FishyBlockListener implements Listener
             }
             else if ("quit".equalsIgnoreCase(textSplit[0])) {
                 player.sendMessage(ChatColor.GREEN +
-                    "Quitting without withdrawing.");
+                    "Quitting without action.");
                 player.setChatState(TregminePlayer.ChatState.CHAT);
                 player.setCurrentFishyBlock(null);
             }
             else {
-                player.sendMessage(ChatColor.RED + "Type withdraw or quit.");
+                player.sendMessage(ChatColor.RED +
+                                   "Type withdraw, changecost or quit.");
             }
         }
         else if (player.getChatState() == TregminePlayer.ChatState.FISHY_BUY) {
@@ -408,6 +446,9 @@ public class FishyBlockListener implements Listener
                         fishyBlock.getAvailableInventory() + " items available. ");
                     player.sendMessage(ChatColor.YELLOW +
                         "Type \"withdraw x\" to withdraw items to your inventory.");
+                    player.sendMessage(ChatColor.YELLOW +
+                        "Type \"changecost x\" to change the cost of the items " +
+                        "sold by this block.");
                     player.sendMessage(ChatColor.YELLOW +
                         "Type \"quit\" to exit without doing anything.");
 

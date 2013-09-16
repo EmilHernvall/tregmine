@@ -28,6 +28,9 @@ public interface IFishyBlockDAO
                                   TransactionType type,
                                   int amount) throws DAOException;
 
+    public void insertCostChange(FishyBlock fishyBlock,
+                                 int oldCost) throws DAOException;
+
     public Map<Location, FishyBlock> loadFishyBlocks(Server server)
     throws DAOException;
 }

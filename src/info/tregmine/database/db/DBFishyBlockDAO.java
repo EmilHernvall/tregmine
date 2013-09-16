@@ -191,6 +191,24 @@ public class DBFishyBlockDAO implements IFishyBlockDAO
     }
 
     @Override
+    public void insertCostChange(FishyBlock fishyBlock, int oldCost)
+    throws DAOException
+    {
+        String sql = "INSERT INTO fishyblock_costlog (fishyblock_id, " +
+            "costlog_timestamp, costlog_newcost, costlog_oldcost) ";
+        sql += "VALUES (?, unix_timestamp(), ?, ?)";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, fishyBlock.getId());
+            stmt.setInt(2, fishyBlock.getCost());
+            stmt.setInt(3, oldCost);
+            stmt.execute();
+        } catch (SQLException e) {
+            throw new DAOException(sql, e);
+        }
+    }
+
+    @Override
     public Map<Location, FishyBlock> loadFishyBlocks(Server server)
     throws DAOException
     {
