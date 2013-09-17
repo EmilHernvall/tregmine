@@ -108,4 +108,10 @@ public class DBContext implements IContext
     {
         return new DBFishyBlockDAO(conn);
     }
+
+    @Override
+    public IBlessedBlockDAO getBlessedBlockDAO()
+    {
+        return new DBBlessedBlockDAO(conn);
+    }
 }

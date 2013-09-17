@@ -25,7 +25,7 @@ import info.tregmine.api.Notification;
 import info.tregmine.api.TregminePlayer;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
-import info.tregmine.database.IInventoryDAO;
+import info.tregmine.database.IBlessedBlockDAO;
 import info.tregmine.database.IWalletDAO;
 
 public class BlessedBlockListener implements Listener
@@ -115,9 +115,8 @@ public class BlessedBlockListener implements Listener
             blessedBlocks.put(loc, targetId);
 
             try (IContext ctx = plugin.createContext()) {
-                IInventoryDAO invDAO = ctx.getInventoryDAO();
-                invDAO.insertInventory(target, loc,
-                        IInventoryDAO.InventoryType.BLOCK);
+                IBlessedBlockDAO blessDAO = ctx.getBlessedBlockDAO();
+                blessDAO.insert(target, loc);
             } catch (DAOException e) {
                 throw new RuntimeException(e);
             }

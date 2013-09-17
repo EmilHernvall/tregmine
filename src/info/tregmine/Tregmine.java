@@ -34,21 +34,22 @@ import org.bukkit.scheduler.BukkitScheduler;
 
 import com.maxmind.geoip.LookupService;
 
+import info.tregmine.api.FishyBlock;
 import info.tregmine.api.PlayerBannedException;
 import info.tregmine.api.PlayerReport;
-import info.tregmine.api.TregminePlayer;
 import info.tregmine.api.Rank;
-import info.tregmine.api.FishyBlock;
-import info.tregmine.database.db.DBContextFactory;
+import info.tregmine.api.TregminePlayer;
 import info.tregmine.database.DAOException;
-import info.tregmine.database.IContextFactory;
+import info.tregmine.database.IBlessedBlockDAO;
 import info.tregmine.database.IContext;
+import info.tregmine.database.IContextFactory;
+import info.tregmine.database.IFishyBlockDAO;
 import info.tregmine.database.IInventoryDAO;
 import info.tregmine.database.ILogDAO;
 import info.tregmine.database.IPlayerDAO;
 import info.tregmine.database.IPlayerReportDAO;
 import info.tregmine.database.IZonesDAO;
-import info.tregmine.database.IFishyBlockDAO;
+import info.tregmine.database.db.DBContextFactory;
 import info.tregmine.quadtree.IntersectionException;
 import info.tregmine.zones.Lot;
 import info.tregmine.zones.Zone;
@@ -146,8 +147,8 @@ public class Tregmine extends JavaPlugin
 
         // Load blessed blocks
         try (IContext ctx = contextFactory.createContext()) {
-            IInventoryDAO inventoryDAO = ctx.getInventoryDAO();
-            this.blessedBlocks = inventoryDAO.loadBlessedBlocks(getServer());
+            IBlessedBlockDAO blessedBlockDAO = ctx.getBlessedBlockDAO();
+            this.blessedBlocks = blessedBlockDAO.load(getServer());
 
             LOGGER.info("Loaded " + blessedBlocks.size() + " blessed blocks");
 
@@ -180,6 +181,7 @@ public class Tregmine extends JavaPlugin
         pluginMgm.registerEvents(new ZoneEntityListener(this), this);
         pluginMgm.registerEvents(new ZonePlayerListener(this), this);
         pluginMgm.registerEvents(new FishyBlockListener(this), this);
+        pluginMgm.registerEvents(new InventoryListener(this), this);
 
         // Declaration of all commands
         getCommand("admins").setExecutor(

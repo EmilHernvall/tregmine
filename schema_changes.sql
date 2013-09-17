@@ -315,3 +315,48 @@ CREATE TABLE fishyblock_costlog (
     PRIMARY KEY (costlog_id),
     KEY idx_fishyblock (fishyblock_id, costlog_timestamp)
 ) ENGINE=InnoDB;
+
+CREATE TABLE `blessedblock` (
+  `blessedblock_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `player_id` int(10) unsigned DEFAULT NULL,
+  `blessedblock_checksum` int(11) DEFAULT NULL,
+  `blessedblock_x` int(11) DEFAULT NULL,
+  `blessedblock_y` int(11) DEFAULT NULL,
+  `blessedblock_z` int(11) DEFAULT NULL,
+  `blessedblock_world` varchar(32) COLLATE utf8_swedish_ci DEFAULT NULL,
+  PRIMARY KEY (`blessedblock_id`)
+) ENGINE=InnoDB;
+
+INSERT INTO blessedblock
+SELECT inventory_id,
+       player_id,
+       inventory_checksum,
+       inventory_x,
+       inventory_y,
+       inventory_z,
+       inventory_world FROM inventory WHERE inventory_type = "block";
+
+CREATE TABLE inventory_accesslog (
+    accesslog_id INT UNSIGNED AUTO_INCREMENT,
+    inventory_id INT UNSIGNED,
+    player_id INT UNSIGNED,
+    accesslog_timestamp INT UNSIGNED,
+    PRIMARY KEY (accesslog_id),
+    KEY idx_inventory (inventory_id, accesslog_timestamp)
+) ENGINE=InnoDB;
+
+CREATE TABLE inventory_changelog (
+    changelog_id INT UNSIGNED AUTO_INCREMENT,
+    inventory_id INT UNSIGNED,
+    player_id INT UNSIGNED,
+    changelog_timestamp INT UNSIGNED,
+    changelog_slot INT UNSIGNED,
+    changelog_material INT UNSIGNED,
+    changelog_data INT,
+    changelog_meta TEXT,
+    changelog_type ENUM ('add', 'remove'),
+    PRIMARY KEY (changelog_id),
+    KEY idx_inventory (inventory_id, changelog_timestamp)
+) ENGINE=InnoDB;
+
+ALTER TABLE inventory ADD INDEX idx_coords (inventory_x, inventory_y, inventory_z, inventory_world);

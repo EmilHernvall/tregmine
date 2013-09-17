@@ -6,6 +6,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Date;
 
 import org.bukkit.Location;
 import org.bukkit.Server;
@@ -16,6 +19,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.configuration.InvalidConfigurationException;
 
 import info.tregmine.api.TregminePlayer;
+import info.tregmine.api.InventoryAccess;
 import info.tregmine.database.IInventoryDAO;
 import info.tregmine.database.DAOException;
 
@@ -46,6 +50,35 @@ public class DBInventoryDAO implements IInventoryDAO
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, type.toString());
             stmt.setInt(2, playerId);
+            stmt.execute();
+
+            try (ResultSet rs = stmt.getResultSet()) {
+                if (!rs.next()) {
+                    return -1;
+                }
+
+                return rs.getInt("inventory_id");
+            }
+        } catch (SQLException e) {
+            throw new DAOException(sql, e);
+        }
+    }
+
+    @Override
+    public int getInventoryId(Location loc)
+    throws DAOException
+    {
+        String sql = "SELECT * FROM inventory " +
+                     "WHERE inventory_x = ? " +
+                     "AND inventory_y = ? " +
+                     "AND inventory_z = ? " +
+                     "AND inventory_world = ?";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, loc.getBlockX());
+            stmt.setInt(2, loc.getBlockY());
+            stmt.setInt(3, loc.getBlockZ());
+            stmt.setString(4, loc.getWorld().getName());
             stmt.execute();
 
             try (ResultSet rs = stmt.getResultSet()) {
@@ -97,6 +130,57 @@ public class DBInventoryDAO implements IInventoryDAO
 
                 return rs.getInt(1);
             }
+        } catch (SQLException e) {
+            throw new DAOException(sql, e);
+        }
+    }
+
+    @Override
+    public void insertAccessLog(TregminePlayer player, int inventoryId)
+    throws DAOException
+    {
+        String sql = "INSERT INTO inventory_accesslog (inventory_id, " +
+            "player_id, accesslog_timestamp) ";
+        sql += "VALUES (?, ?, unix_timestamp())";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, inventoryId);
+            stmt.setInt(2, player.getId());
+            stmt.execute();
+        } catch (SQLException e) {
+            throw new DAOException(sql, e);
+        }
+    }
+
+    @Override
+    public void insertChangeLog(TregminePlayer player,
+                                int inventoryId,
+                                int slot,
+                                ItemStack slotContent,
+                                IInventoryDAO.ChangeType type)
+    throws DAOException
+    {
+        String sql = "INSERT INTO inventory_changelog (inventory_id, " +
+            "player_id, changelog_timestamp, changelog_slot, changelog_material, " +
+            "changelog_data, changelog_meta, changelog_type) ";
+        sql += "VALUES (?, ?, unix_timestamp(), ?, ?, ?, ?, ?)";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, inventoryId);
+            stmt.setInt(2, player.getId());
+            stmt.setInt(3, slot);
+            stmt.setInt(4, slotContent.getTypeId());
+            stmt.setInt(5, slotContent.getData().getData());
+            if (slotContent.hasItemMeta()) {
+                YamlConfiguration config = new YamlConfiguration();
+                config.set("meta", slotContent.getItemMeta());
+                stmt.setString(6, config.saveToString());
+            }
+            else {
+                stmt.setString(6, "");
+            }
+            stmt.setString(7, type.toString());
+            stmt.execute();
         } catch (SQLException e) {
             throw new DAOException(sql, e);
         }
@@ -191,6 +275,36 @@ public class DBInventoryDAO implements IInventoryDAO
         }
     }
 
+    @Override
+    public List<InventoryAccess> getAccessLog(int inventoryId, int count)
+    throws DAOException
+    {
+        String sql = "SELECT * FROM inventory_accesslog " +
+                     "WHERE inventory_id = ? " +
+                     "ORDER BY accesslog_timestamp DESC LIMIT " + count;
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, inventoryId);
+            stmt.execute();
+
+            try (ResultSet rs = stmt.getResultSet()) {
+                List<InventoryAccess> accessLog = new ArrayList<>();
+                while (rs.next()) {
+                    InventoryAccess access = new InventoryAccess();
+                    access.setInventoryId(inventoryId);
+                    access.setPlayerId(rs.getInt("player_id"));
+                    access.setTimestamp(new Date(rs.getInt("accesslog_timestamp")*1000l));
+
+                    accessLog.add(access);
+                }
+
+                return accessLog;
+            }
+        } catch (SQLException e) {
+            throw new DAOException(sql, e);
+        }
+    }
+
     private World getWorld(Server server, String name)
     {
         for (World world : server.getWorlds()) {
@@ -200,38 +314,5 @@ public class DBInventoryDAO implements IInventoryDAO
         }
 
         return null;
-    }
-
-    @Override
-    public Map<Location, Integer> loadBlessedBlocks(Server server)
-    throws DAOException
-    {
-        String sql = "SELECT * FROM inventory " +
-                     "WHERE inventory_type = 'block'";
-
-        Map<Location, Integer> chests = new HashMap<Location, Integer>();
-
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.execute();
-
-            try (ResultSet rs = stmt.getResultSet()) {
-                while (rs.next()) {
-                    String worldName = rs.getString("inventory_world");
-                    int x = rs.getInt("inventory_x");
-                    int y = rs.getInt("inventory_y");
-                    int z = rs.getInt("inventory_z");
-                    int playerId = rs.getInt("player_id");
-
-                    World world = getWorld(server, worldName);
-                    Location loc = new Location(world, x, y, z);
-
-                    chests.put(loc, playerId);
-                }
-            }
-        } catch (SQLException e) {
-            throw new DAOException(sql, e);
-        }
-
-        return chests;
     }
 }
