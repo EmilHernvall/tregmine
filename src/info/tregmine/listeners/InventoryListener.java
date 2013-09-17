@@ -10,6 +10,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.block.BlockState;
+import org.bukkit.block.DoubleChest;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -58,12 +59,18 @@ public class InventoryListener implements Listener
 
         Inventory inv = event.getInventory();
         InventoryHolder holder = inv.getHolder();
-        if (!(holder instanceof BlockState)) {
+        Location loc = null;
+        if (holder instanceof BlockState) {
+            BlockState block = (BlockState)holder;
+            loc = block.getLocation();
+        }
+        else if (holder instanceof DoubleChest) {
+            DoubleChest block = (DoubleChest)holder;
+            loc = block.getLocation();
+        }
+        else {
             return;
         }
-
-        BlockState block = (BlockState)holder;
-        Location loc = block.getLocation();
 
         ItemStack[] contents = inv.getContents();
         ItemStack[] copy = new ItemStack[contents.length];
@@ -113,7 +120,16 @@ public class InventoryListener implements Listener
 
         Inventory inv = event.getInventory();
         InventoryHolder holder = inv.getHolder();
-        if (!(holder instanceof BlockState)) {
+        Location loc = null;
+        if (holder instanceof BlockState) {
+            BlockState block = (BlockState)holder;
+            loc = block.getLocation();
+        }
+        else if (holder instanceof DoubleChest) {
+            DoubleChest block = (DoubleChest)holder;
+            loc = block.getLocation();
+        }
+        else {
             return;
         }
 
@@ -121,9 +137,6 @@ public class InventoryListener implements Listener
             Tregmine.LOGGER.info("Holder not found.");
             return;
         }
-
-        BlockState block = (BlockState)holder;
-        Location loc = block.getLocation();
 
         Tregmine.LOGGER.info(player.getRealName() + " closed inventory: " +
                              "x=" + loc.getBlockX() + " " +
