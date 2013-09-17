@@ -40,7 +40,7 @@ import static info.tregmine.database.IInventoryDAO.ChangeType;
 public class InventoryListener implements Listener
 {
     private Tregmine plugin;
-    private Map<InventoryHolder, ItemStack[]> openInventories;
+    private Map<Location, ItemStack[]> openInventories;
 
     public InventoryListener(Tregmine instance)
     {
@@ -80,7 +80,7 @@ public class InventoryListener implements Listener
             }
         }
 
-        openInventories.put(holder, contents);
+        openInventories.put(loc, contents);
 
         try (IContext ctx = plugin.createContext()) {
             IInventoryDAO invDAO = ctx.getInventoryDAO();
@@ -133,8 +133,8 @@ public class InventoryListener implements Listener
             return;
         }
 
-        if (!openInventories.containsKey(holder)) {
-            Tregmine.LOGGER.info("Holder not found.");
+        if (!openInventories.containsKey(loc)) {
+            Tregmine.LOGGER.info("Inventory location not found.");
             return;
         }
 
@@ -143,7 +143,7 @@ public class InventoryListener implements Listener
                              "y=" + loc.getBlockY() + " " +
                              "z=" + loc.getBlockZ());
 
-        ItemStack[] oldContents = openInventories.get(holder);
+        ItemStack[] oldContents = openInventories.get(loc);
         ItemStack[] currentContents = inv.getContents();
 
         assert oldContents.length == currentContents.length;
@@ -189,7 +189,7 @@ public class InventoryListener implements Listener
             throw new RuntimeException(e);
         }
 
-        openInventories.remove(holder);
+        openInventories.remove(loc);
 
         /*Player player = (Player) event.getPlayer();
         if (player.getGameMode() == GameMode.CREATIVE) {
@@ -210,10 +210,10 @@ public class InventoryListener implements Listener
         }*/
     }
 
-    @EventHandler
+    /*@EventHandler
     public void onInventoryCreative(InventoryCreativeEvent event)
     {
         Tregmine.LOGGER.info("InventoryCreative");
         Tregmine.LOGGER.info(event.getInventory().getHolder().toString());
-    }
+    }*/
 }
