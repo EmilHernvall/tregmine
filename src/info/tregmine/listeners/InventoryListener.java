@@ -90,14 +90,29 @@ public class InventoryListener implements Listener
             if (id == -1) {
                 id = invDAO.insertInventory(player, loc, InventoryType.BLOCK);
             } else {
-                List<InventoryAccess> accessLog = invDAO.getAccessLog(id, 5);
-
-                player.sendMessage(ChatColor.YELLOW + "Last accessed by:");
-                SimpleDateFormat dfm = new SimpleDateFormat("dd/MM/yy hh:mm:ss a");
+                List<InventoryAccess> accessLog = invDAO.getAccessLog(id, 10);
+                int others = 0;
                 for (InventoryAccess access : accessLog) {
-                    TregminePlayer p = plugin.getPlayerOffline(access.getPlayerId());
-                    player.sendMessage(p.getChatName() + ChatColor.YELLOW + " on " +
-                        dfm.format(access.getTimestamp()) + ".");
+                    if (access.getPlayerId() != player.getId()) {
+                        others++;
+                    }
+                }
+
+                if (others > 0) {
+                    player.sendMessage(ChatColor.YELLOW + "Last accessed by:");
+                    SimpleDateFormat dfm = new SimpleDateFormat("dd/MM/yy hh:mm:ss a");
+                    int i = 0;
+                    for (InventoryAccess access : accessLog) {
+                        if (access.getPlayerId() != player.getId()) {
+                            if (i > 2) {
+                                break;
+                            }
+                            TregminePlayer p = plugin.getPlayerOffline(access.getPlayerId());
+                            player.sendMessage(p.getChatName() + ChatColor.YELLOW + " on " +
+                                dfm.format(access.getTimestamp()) + ".");
+                            i++;
+                        }
+                    }
                 }
             }
 
