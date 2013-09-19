@@ -162,8 +162,8 @@ public class DBInventoryDAO implements IInventoryDAO
     {
         String sql = "INSERT INTO inventory_changelog (inventory_id, " +
             "player_id, changelog_timestamp, changelog_slot, changelog_material, " +
-            "changelog_data, changelog_meta, changelog_type) ";
-        sql += "VALUES (?, ?, unix_timestamp(), ?, ?, ?, ?, ?)";
+            "changelog_data, changelog_meta, changelog_amount, changelog_type) ";
+        sql += "VALUES (?, ?, unix_timestamp(), ?, ?, ?, ?, ?, ?)";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, inventoryId);
@@ -179,7 +179,8 @@ public class DBInventoryDAO implements IInventoryDAO
             else {
                 stmt.setString(6, "");
             }
-            stmt.setString(7, type.toString());
+            stmt.setInt(7, slotContent.getAmount());
+            stmt.setString(8, type.toString());
             stmt.execute();
         } catch (SQLException e) {
             throw new DAOException(sql, e);
