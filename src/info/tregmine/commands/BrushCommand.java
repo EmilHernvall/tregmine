@@ -73,17 +73,23 @@ public class BrushCommand extends AbstractCommand implements Listener
             return true;
         }
 
-        // Check they submitted a number for the Item ID
-        int blockId;
-        try {
-            blockId = Integer.parseInt(args[0]);
-        } catch (NumberFormatException nfe) {
+        Material m = Material.matchMaterial(args[0]);
+        if (m == null) {
+            int blockId;
+            try {
+                blockId = Integer.parseInt(args[0]);
+            } catch (NumberFormatException nfe) {
+                p.sendMessage(RED + "[Sphere] We detected an issue with your block choice!");
+                return true;
+            }
+
+            m = Material.getMaterial(blockId);
+        }
+
+        if (m == null) {
             p.sendMessage(RED + "[Sphere] We detected an issue with your block choice!");
             return true;
         }
-
-        // Get block material of the ID they submitted
-        Material m = Material.getMaterial(blockId);
 
         // No liquids
         if (m == Material.WATER ||
@@ -147,6 +153,7 @@ public class BrushCommand extends AbstractCommand implements Listener
         }
 
         Location l = p.getTargetBlock(null, 0).getLocation();
+        Tregmine.LOGGER.info("Brush " + i.get(1) + " at " + l);
         List<Block> sphere = makeSphere(l, radius);
 
         Material m = Material.getMaterial(i.get(1));
