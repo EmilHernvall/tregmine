@@ -91,6 +91,20 @@ public class BrushCommand extends AbstractCommand implements Listener
             return true;
         }
 
+        int radius;
+        try {
+            radius = Integer.parseInt(args[1]);
+        }
+        catch (NumberFormatException e) {
+            p.sendMessage(RED + "[Sphere] Please specify an integer radius.");
+            return true;
+        }
+
+        if (radius > 10) {
+            p.sendMessage(RED + "[Sphere] Radius can't be larger than 10.");
+            return true;
+        }
+
         // No liquids
         if (m == Material.WATER ||
             m == Material.STATIONARY_WATER ||
@@ -110,14 +124,14 @@ public class BrushCommand extends AbstractCommand implements Listener
         List<String> lores = new ArrayList<String>();
         lores.add("Sphere");
         lores.add(m.name());
-        lores.add(args[1]);
+        lores.add(Integer.toString(radius));
         ItemMeta itemMeta = p.getItemInHand().getItemMeta();
         itemMeta.setLore(lores);
 
         p.getItemInHand().setItemMeta(itemMeta);
 
         p.sendMessage(GREEN + "Binded a " + m.name() + " brush with a " +
-                      args[1] + " block radius to this item!");
+                      radius + " block radius to this item!");
 
         return true;
     }
