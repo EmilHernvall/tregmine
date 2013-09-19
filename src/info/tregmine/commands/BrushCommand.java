@@ -153,6 +153,10 @@ public class BrushCommand extends AbstractCommand implements Listener
 
         // Check it's a sphere tool
         List<String> i = p.getItemInHand().getItemMeta().getLore();
+        if (i == null) {
+            return;
+        }
+
         if (!i.contains("Sphere")) {
             return;
         }

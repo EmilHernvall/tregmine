@@ -41,17 +41,25 @@ public class WalletCommand extends AbstractCommand
         return true;
     }
 
-    private boolean tell(TregminePlayer player)
+    private boolean tell(TregminePlayer player, String name)
     {
+        TregminePlayer target = tregmine.getPlayer(name);
+        if (target == null) {
+            player.sendMessage(RED + "Usage: /wallet tell <player>");
+            return true;
+        }
+
         try (IContext ctx = tregmine.createContext()) {
             IWalletDAO walletDAO = ctx.getWalletDAO();
 
             long balance = walletDAO.balance(player);
             if (balance >= 0) {
                 Server server = tregmine.getServer();
-                server.broadcastMessage(player.getChatName() + AQUA
-                        + " has " + GOLD + FORMAT.format(balance) + AQUA
-                        + " Tregs.");
+                target.sendMessage(player.getChatName() + AQUA +
+                    " has " + GOLD + FORMAT.format(balance) + AQUA +
+                    " Tregs.");
+                player.sendMessage(" You have " + GOLD +
+                    FORMAT.format(balance) + AQUA + " Tregs.");
             }
             else {
                 player.sendMessage(RED + "An error occured.");
@@ -153,8 +161,14 @@ public class WalletCommand extends AbstractCommand
 
         String cmd = args[0];
 
-        if ("tell".equalsIgnoreCase(cmd)) {
-            return tell(player);
+        // inform people that syntax has changed
+        if ("tell".equalsIgnoreCase(cmd) && args.length == 1) {
+            player.sendMessage(RED + "Usage: /wallet tell <player>");
+            return true;
+        }
+        // new version with player parameter
+        else if ("tell".equalsIgnoreCase(cmd) && args.length == 2) {
+            return tell(player, args[1]);
         }
         else if ("balance".equalsIgnoreCase(cmd)) {
             return balance(player);
