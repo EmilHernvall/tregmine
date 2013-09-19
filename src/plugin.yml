@@ -1,7 +1,7 @@
 name: tregmine
 main: info.tregmine.Tregmine
 version: 1.0.0
-website: http://discourse.tregmine.info
+website: http://tregmine.info
 author: Ein Andersson, Emil Hernvall
 description: Tregmine
 
@@ -33,6 +33,9 @@ commands:
   blockhere:
     description: Create a block of dirt beneath your feet (admins and builders only)
     usage: /blockhere
+  brush:
+    description: Create a brush
+    usage: /brush <material> <radius>
   cname:
     description: Change your name and color (admin only)
     usage: /cname color new_name

@@ -244,6 +244,13 @@ public enum Rank
                this == SENIOR_ADMIN;
     }
 
+    public boolean canBrush()
+    {
+        return this == BUILDER ||
+               this == JUNIOR_ADMIN ||
+               this == SENIOR_ADMIN;
+    }
+
     public boolean canTeleportBetweenWorlds()
     {
         return this == BUILDER ||

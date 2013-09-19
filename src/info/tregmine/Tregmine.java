@@ -207,6 +207,7 @@ public class Tregmine extends JavaPlugin
         getCommand("ban").setExecutor(new BanCommand(this));
         getCommand("bless").setExecutor(new BlessCommand(this));
         getCommand("blockhere").setExecutor(new BlockHereCommand(this));
+        getCommand("brush").setExecutor(new BrushCommand(this));
         getCommand("channel").setExecutor(new ChannelCommand(this));
         getCommand("clean").setExecutor(new CleanInventoryCommand(this));
         getCommand("cname").setExecutor(new ChangeNameCommand(this));
