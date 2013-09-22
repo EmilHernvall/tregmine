@@ -1,0 +1,12 @@
+name: TregSpleef
+version: 1.0
+main: info.tregmine.spleef.Spleef
+author: Josh Morgan
+description: Tregmine's Spleef Plugin
+depends: Tregmine
+
+commands:
+    spleef:
+        usage: /<command> <args> [optional args]
+        aliases: [sp]
+        description: Spleef command.
