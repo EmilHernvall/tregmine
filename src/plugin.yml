@@ -137,6 +137,10 @@ commands:
     description: Summon a player to your location
     usage: /summon player
     aliases: s
+  support:
+    description: Send support message
+    usage: /support message
+    aliases: sup
   testfill:
     description: Like fill, but with fake blocks (admins and builders only)
     usage: /testfill
