@@ -59,7 +59,9 @@
                            lib/servlet-api.jar
                            lib/jetty-all.jar
                            lib/commons-pool-1.5.6.jar
-                           lib/TagAPI.jar" />
+                           lib/TagAPI.jar
+						   lib/activation.jar 
+                	       lib/mail.jar" />
             </manifest>
         </jar>
     </target>
