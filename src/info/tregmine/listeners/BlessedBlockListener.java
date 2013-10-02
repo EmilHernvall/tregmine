@@ -34,6 +34,7 @@ public class BlessedBlockListener implements Listener
 
     public final static Set<Material> ALLOWED_MATERIALS =
             EnumSet.of(Material.CHEST,
+                       Material.TRAPPED_CHEST,
                        Material.FURNACE,
                        Material.BURNING_FURNACE,
                        Material.WOOD_DOOR,
