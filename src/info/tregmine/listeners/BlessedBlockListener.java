@@ -37,6 +37,7 @@ public class BlessedBlockListener implements Listener
                        Material.TRAPPED_CHEST,
                        Material.FURNACE,
                        Material.BURNING_FURNACE,
+                       Material.BREWING_STAND,
                        Material.WOOD_DOOR,
                        Material.WOODEN_DOOR,
                        Material.LEVER,
