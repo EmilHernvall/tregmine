@@ -74,8 +74,9 @@ public class DBFishyBlockDAO implements IFishyBlockDAO
             "fishyblock_material, fishyblock_data, fishyblock_enchantments, " +
             "fishyblock_cost, fishyblock_inventory, fishyblock_world, " +
             "fishyblock_blockx, fishyblock_blocky, fishyblock_blockz, " +
-            "fishyblock_signx, fishyblock_signy, fishyblock_signz) ";
-        sql += "VALUES (?, unix_timestamp(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            "fishyblock_signx, fishyblock_signy, fishyblock_signz, " +
+            "fishyblock_storedenchants) ";
+        sql += "VALUES (?, unix_timestamp(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, block.getPlayerId());
@@ -91,6 +92,7 @@ public class DBFishyBlockDAO implements IFishyBlockDAO
             stmt.setInt(11, block.getSignLocation().getBlockX());
             stmt.setInt(12, block.getSignLocation().getBlockY());
             stmt.setInt(13, block.getSignLocation().getBlockZ());
+            stmt.setString(14, block.hasStoredEnchantments() ? "1" : "0");
             stmt.execute();
 
             stmt.executeQuery("SELECT LAST_INSERT_ID()");
@@ -116,7 +118,8 @@ public class DBFishyBlockDAO implements IFishyBlockDAO
             "fishyblock_inventory = ?, fishyblock_world = ?, " +
             "fishyblock_blockx = ?, fishyblock_blocky = ?, " +
             "fishyblock_blockz = ?, fishyblock_signx = ?, " +
-            "fishyblock_signy = ?, fishyblock_signz = ? ";
+            "fishyblock_signy = ?, fishyblock_signz = ?, " +
+            "fishyblock_storedenchants = ? ";
         sql += "WHERE fishyblock_id = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -133,7 +136,8 @@ public class DBFishyBlockDAO implements IFishyBlockDAO
             stmt.setInt(11, block.getSignLocation().getBlockX());
             stmt.setInt(12, block.getSignLocation().getBlockY());
             stmt.setInt(13, block.getSignLocation().getBlockZ());
-            stmt.setInt(14, block.getId());
+            stmt.setString(14, block.hasStoredEnchantments() ? "1" : "0");
+            stmt.setInt(15, block.getId());
             stmt.execute();
         } catch (SQLException e) {
             throw new DAOException(sql, e);
@@ -240,6 +244,8 @@ public class DBFishyBlockDAO implements IFishyBlockDAO
                     int signX = rs.getInt("fishyblock_signx");
                     int signY = rs.getInt("fishyblock_signy");
                     int signZ = rs.getInt("fishyblock_signz");
+                    boolean storedEnchants =
+                        "1".equals(rs.getString("fishyblock_storedenchants"));
 
                     World world = getWorld(server, worldName);
                     Location blockLoc =
@@ -256,6 +262,7 @@ public class DBFishyBlockDAO implements IFishyBlockDAO
                     block.setAvailableInventory(inventory);
                     block.setBlockLocation(blockLoc);
                     block.setSignLocation(signLoc);
+                    block.setStoredEnchantments(storedEnchants);
 
                     fishyBlocks.put(blockLoc, block);
                     fishyBlocks.put(signLoc, block);

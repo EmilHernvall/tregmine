@@ -16,6 +16,7 @@ public class FishyBlock
     private int availableInventory = 0;
     private Location blockLoc = null;
     private Location signLoc = null;
+    private boolean storedEnchants = false;
 
     public FishyBlock()
     {
@@ -46,4 +47,7 @@ public class FishyBlock
 
     public Location getSignLocation() { return signLoc; }
     public void setSignLocation(Location v) { this.signLoc = v; }
+
+    public void setStoredEnchantments(boolean v) { this.storedEnchants = v; }
+    public boolean hasStoredEnchantments() { return storedEnchants; }
 }

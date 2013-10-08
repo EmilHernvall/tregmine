@@ -20,6 +20,8 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.material.MaterialData;
 
 import info.tregmine.quadtree.Point;
@@ -399,19 +401,18 @@ public class FishyBlockListener implements Listener
                 if (fishyMaterial.equals(heldMaterial)) {
                     match = true;
 
-                    Map<Enchantment, Integer> fishyEnchants = fishyBlock.getEnchantments();
-                    Map<Enchantment, Integer> heldEnchants = heldItem.getEnchantments();
-                    if (fishyEnchants.size() == heldEnchants.size()) {
-                        for (Enchantment ench : fishyEnchants.keySet()) {
-                            Integer a = fishyEnchants.get(ench);
-                            Integer b = heldEnchants.get(ench);
-                            if (a != b) {
-                                match = false;
-                                break;
-                            }
+                    if (fishyBlock.hasStoredEnchantments()) {
+                        EnchantmentStorageMeta storageMeta = getStorageMeta(heldItem);
+                        if (storageMeta != null) {
+                            match = compareEnchants(fishyBlock.getEnchantments(),
+                                                    storageMeta.getStoredEnchants());
+                        }
+                        else if (fishyBlock.getEnchantments().size() > 0) {
+                            match = false;
                         }
                     } else {
-                        match = false;
+                        match = compareEnchants(fishyBlock.getEnchantments(),
+                                                heldItem.getEnchantments());
                     }
                 }
 
@@ -478,13 +479,18 @@ public class FishyBlockListener implements Listener
 
                 Map<Enchantment, Integer> enchantments = fishyBlock.getEnchantments();
                 if (enchantments.size() > 0) {
-                    player.sendMessage(ChatColor.YELLOW +
-                            "With the following enchants:");
+                    if (fishyBlock.hasStoredEnchantments()) {
+                        player.sendMessage(ChatColor.YELLOW +
+                                "With the following STORED enchants:");
+                    } else {
+                        player.sendMessage(ChatColor.YELLOW +
+                                "With the following enchants:");
+                    }
                     for (Map.Entry<Enchantment, Integer> entry : enchantments.entrySet()) {
                         Enchantment enchant = entry.getKey();
                         Integer level = entry.getValue();
                         player.sendMessage(ChatColor.YELLOW +
-                                enchant.toString() + " lvl " + level);
+                                enchant.getName() + " lvl " + level);
                     }
                 }
 
@@ -614,6 +620,16 @@ public class FishyBlockListener implements Listener
                 }
 
                 Map<Enchantment, Integer> enchantments = heldItem.getEnchantments();
+                if (enchantments == null || enchantments.size() == 0) {
+                    if (heldItem.hasItemMeta()) {
+                        EnchantmentStorageMeta enchantMeta =
+                            getStorageMeta(heldItem);
+                        if (enchantMeta != null) {
+                            enchantments = enchantMeta.getStoredEnchants();
+                            newFishyBlock.setStoredEnchantments(true);
+                        }
+                    }
+                }
 
                 newFishyBlock.setMaterial(material);
                 newFishyBlock.setEnchantments(enchantments);
@@ -632,11 +648,17 @@ public class FishyBlockListener implements Listener
                 }
 
                 if (enchantments.size() > 0) {
-                    player.sendMessage(ChatColor.GREEN + "With the following enchants:");
+                    if (newFishyBlock.hasStoredEnchantments()) {
+                        player.sendMessage(ChatColor.GREEN +
+                                "With the following STORED enchants:");
+                    } else {
+                        player.sendMessage(ChatColor.GREEN +
+                                "With the following enchants:");
+                    }
                     for (Map.Entry<Enchantment, Integer> entry : enchantments.entrySet()) {
                         Enchantment enchant = entry.getKey();
                         Integer level = entry.getValue();
-                        player.sendMessage(enchant.toString() + " lvl " + level);
+                        player.sendMessage(enchant.getName() + " lvl " + level);
                     }
                 }
 
@@ -769,7 +791,8 @@ public class FishyBlockListener implements Listener
         boolean full = false;
         for (int i = 0; i < stacks; i++) {
             ItemStack stack = type.toItemStack(material.getMaxStackSize());
-            stack.addEnchantments(fishyBlock.getEnchantments());
+            addEnchants(stack, fishyBlock);
+
             HashMap<Integer, ItemStack> notAdded = inventory.addItem(stack);
 
             added += material.getMaxStackSize();
@@ -785,7 +808,7 @@ public class FishyBlockListener implements Listener
             int rem = num % material.getMaxStackSize();
             if (rem != 0) {
                 ItemStack stack = type.toItemStack(rem);
-                stack.addEnchantments(fishyBlock.getEnchantments());
+                addEnchants(stack, fishyBlock);
                 inventory.addItem(stack);
                 added += rem;
             }
@@ -794,5 +817,50 @@ public class FishyBlockListener implements Listener
         fishyBlock.removeAvailableInventory(added);
 
         return added;
+    }
+
+    private void addEnchants(ItemStack stack, FishyBlock fishyBlock)
+    {
+        Map<Enchantment, Integer> enchants = fishyBlock.getEnchantments();
+        if (fishyBlock.hasStoredEnchantments()) {
+            EnchantmentStorageMeta enchantMeta = getStorageMeta(stack);
+            for (Map.Entry<Enchantment, Integer> enchant : enchants.entrySet()) {
+                enchantMeta.addStoredEnchant(enchant.getKey(),
+                                             enchant.getValue(),
+                                             false);
+            }
+        } else {
+            stack.addEnchantments(fishyBlock.getEnchantments());
+        }
+    }
+
+    private EnchantmentStorageMeta getStorageMeta(ItemStack stack)
+    {
+        ItemMeta meta = stack.getItemMeta();
+        if (meta instanceof EnchantmentStorageMeta) {
+            return (EnchantmentStorageMeta)meta;
+        }
+
+        return null;
+    }
+
+    private boolean compareEnchants(Map<Enchantment, Integer> fst,
+                                    Map<Enchantment, Integer> snd)
+    {
+        boolean match = true;
+        if (fst.size() == snd.size()) {
+            for (Enchantment ench : fst.keySet()) {
+                Integer a = fst.get(ench);
+                Integer b = snd.get(ench);
+                if (a != b) {
+                    match = false;
+                    break;
+                }
+            }
+        } else {
+            match = false;
+        }
+
+        return match;
     }
 }
