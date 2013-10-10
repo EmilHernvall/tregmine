@@ -33,7 +33,7 @@ public class Zone
         // is allowed in the zone, if this isn't the default
         Allowed("%s is now allowed in %s.", "You are now allowed in %s.",
                 "%s is no longer allowed in %s.",
-                "You are no longer allowd in %s.",
+                "You are no longer allowed in %s.",
                 "You are allowed in this zone."),
         // banned from the zone
         Banned("%s is now banned from %s.", "You have been banned from %s.",
