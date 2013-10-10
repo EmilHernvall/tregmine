@@ -164,14 +164,19 @@ public class FishyBlockListener implements Listener
                             "x being the number of items you wish to withdraw.");
                     return;
                 }
-
-                int num = 0;
-                try {
-                    num = Integer.parseInt(textSplit[1]);
-                } catch (NumberFormatException e) {
-                    player.sendMessage(ChatColor.RED + "Type \"withdraw x\", with " +
-                            "x being the number of items you wish to withdraw.");
-                    return;
+                
+                if ("all".equalsIgnoreCase(textSplit[1])){
+                    int available = fishyBlock.getAvailableInventory();
+                    num = available;
+                }else{
+                    int num = 0;
+                    try {
+                        num = Integer.parseInt(textSplit[1]);
+                    } catch (NumberFormatException e) {
+                        player.sendMessage(ChatColor.RED + "Type \"withdraw x\", with " +
+                                "x being the number of items you wish to withdraw.");
+                        return;
+                    }
                 }
 
                 if (num <= 0) {
