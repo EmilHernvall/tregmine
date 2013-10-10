@@ -164,12 +164,12 @@ public class FishyBlockListener implements Listener
                             "x being the number of items you wish to withdraw.");
                     return;
                 }
-                
-                if ("all".equalsIgnoreCase(textSplit[1])){
+
+                int num = 0;
+                if ("all".equalsIgnoreCase(textSplit[1])) {
                     int available = fishyBlock.getAvailableInventory();
                     num = available;
-                }else{
-                    int num = 0;
+                } else {
                     try {
                         num = Integer.parseInt(textSplit[1]);
                     } catch (NumberFormatException e) {
