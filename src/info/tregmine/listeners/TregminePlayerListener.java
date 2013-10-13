@@ -515,15 +515,6 @@ public class TregminePlayerListener implements Listener
     }
 
     @EventHandler
-    public void onPlayerMove(PlayerMoveEvent event)
-    {
-        TregminePlayer player = this.plugin.getPlayer(event.getPlayer());
-        if (player == null) {
-            event.getPlayer().kickPlayer("error loading profile!");
-        }
-    }
-
-    @EventHandler
     public void onPlayerPickupItem(PlayerPickupItemEvent event)
     {
         TregminePlayer player = this.plugin.getPlayer(event.getPlayer());
