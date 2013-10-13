@@ -362,6 +362,10 @@ public class FishyBlockListener implements Listener
         Map<Location, FishyBlock> fishyBlocks = plugin.getFishyBlocks();
 
         TregminePlayer player = plugin.getPlayer(event.getPlayer());
+        
+        if(player.getChatState() != TregminePlayer.ChatState.CHAT){
+            return;
+        }
 
         Block block = event.getClickedBlock();
         BlockFace face = event.getBlockFace();
