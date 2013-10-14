@@ -145,21 +145,7 @@ public class ExpListener extends JavaPlugin implements Listener
         expThrow.setVelocity(event.getPlayer().getEyeLocation().getDirection());
 
         int experience = Integer.parseInt(splitLore[2]);
-        int start = event.getPlayer().getLevel();
-        int current = start;
-        int orbs = 0;
-        for(int i = 0; i < experience; i++){
-            if(current < 16){
-                orbs = orbs + 17;
-                current = current + 1;
-            }else if( (current < 30) && (current > 15) ){
-                orbs = orbs + (3 * current) - 28;
-                current = current + 1;
-            }else if(current > 29){
-                orbs = orbs + (7 * current) - 148;
-            }
-        }
-        expThrow.setExperience(orbs);
+        event.getPlayer().setLevel(event.getPlayer().getLevel()+experience);
     }
 
     @EventHandler
