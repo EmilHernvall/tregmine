@@ -103,7 +103,9 @@ public class ExpListener extends JavaPlugin implements Listener
         XPMeta.setLore(lores);
         XPMeta.setDisplayName(itemName);
         XPBottle.setItemMeta(XPMeta);
-
+        
+        if(Integer.parseInt(splitLore[2]) < 31){
+        
         if(event.getItem().getAmount() == 1){
             event.getPlayer().getInventory().setItemInHand(XPBottle);
         }else{
@@ -120,6 +122,10 @@ public class ExpListener extends JavaPlugin implements Listener
             event.getItem().setAmount(event.getItem().getAmount() - 1);
         }
         event.getPlayer().setLevel(event.getPlayer().getLevel() - 1);
+        
+        }else{
+            event.getPlayer().sendMessage("ERROR: Experience in a bottle caps at 30 levels!");
+        }
     }
 
     @EventHandler
