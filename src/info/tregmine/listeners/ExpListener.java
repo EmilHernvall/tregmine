@@ -5,22 +5,23 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Logger;
 
-import info.tregmine.Tregmine;
-
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.ExperienceOrb;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.entity.ExpBottleEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.Vector;
 
-public class ExpListener extends JavaPlugin implements Listener
+import info.tregmine.Tregmine;
+import info.tregmine.api.TregminePlayer;
+
+public class ExpListener implements Listener
 {
     public static String itemName = "Tregmine XP Bottle";
 
@@ -29,11 +30,6 @@ public class ExpListener extends JavaPlugin implements Listener
     public ExpListener(Tregmine instance)
     {
         this.plugin = instance;
-    }
-
-    @Override
-    public void onEnable(){
-        Bukkit.getPluginManager().registerEvents(this, this);
     }
 
     @EventHandler
@@ -48,6 +44,11 @@ public class ExpListener extends JavaPlugin implements Listener
             return;
         }
         if(event.getPlayer().getLevel() < 1){
+            return;
+        }
+
+        TregminePlayer TGPlayer = this.plugin.getPlayer(event.getPlayer());
+        if (!TGPlayer.getRank().canBottleXP()) {
             return;
         }
 
@@ -95,6 +96,15 @@ public class ExpListener extends JavaPlugin implements Listener
         }
         int level = Integer.parseInt(splitLore[2])+1;
 
+        if(level > 30){
+            event.getPlayer().sendMessage(ChatColor.AQUA + "XP in a bottle is capped at 30 levels per bottle!");
+            return;
+        }
+        TregminePlayer TGPlayer = this.plugin.getPlayer(event.getPlayer());
+        if (!TGPlayer.getRank().canBottleXP()) {
+            return;
+        }
+
         // Creating the XPBottle
         List<String> lores = new ArrayList<String>();
         lores.add("XP Value: "+ level +" Levels");
@@ -140,6 +150,8 @@ public class ExpListener extends JavaPlugin implements Listener
             return;
         }
 
+        event.setCancelled(true);
+
         Vector expBottle = event.getPlayer().getEyeLocation().getDirection().multiply(2);
         ExperienceOrb expThrow = (ExperienceOrb)event.getPlayer().getWorld().spawn(event.getPlayer().getEyeLocation().add(expBottle.getX(), expBottle.getY(), expBottle.getZ()), ExperienceOrb.class);
         expThrow.setVelocity(event.getPlayer().getEyeLocation().getDirection());
@@ -147,10 +159,4 @@ public class ExpListener extends JavaPlugin implements Listener
         int experience = Integer.parseInt(splitLore[2]);
         event.getPlayer().setLevel(event.getPlayer().getLevel()+experience);
     }
-
-    @EventHandler
-    public void stopExp(ExpBottleEvent event){
-        event.setExperience(0); // Stops MC's bottles
-    }
-
 }
