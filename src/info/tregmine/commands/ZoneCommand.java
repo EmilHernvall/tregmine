@@ -316,7 +316,7 @@ public class ZoneCommand extends AbstractCommand
 
         Zone.Permission oldPerm = zone.getUser(victim);
         if (oldPerm == null) {
-            player.sendMessage(RED + "[" + zone.getName() + "]" + userName
+            player.sendMessage(RED + "[" + zone.getName() + "] " + userName
                     + " doesn't have any permissions.");
             return;
         }
