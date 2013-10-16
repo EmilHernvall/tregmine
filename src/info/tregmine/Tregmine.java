@@ -183,6 +183,7 @@ public class Tregmine extends JavaPlugin
         pluginMgm.registerEvents(new FishyBlockListener(this), this);
         pluginMgm.registerEvents(new InventoryListener(this), this);
         pluginMgm.registerEvents(new DonationSigns(this), this);
+        pluginMgm.registerEvents(new ExpListener(this), this);
 
         // Declaration of all commands
         getCommand("admins").setExecutor(
@@ -245,7 +246,7 @@ public class Tregmine extends JavaPlugin
         getCommand("setspawner").setExecutor(new SetSpawnerCommand(this));
         getCommand("spawn").setExecutor(new SpawnCommand(this));
         getCommand("summon").setExecutor(new SummonCommand(this));
-		getCommand("support").setExecutor(new SupportCommand(this));
+        getCommand("support").setExecutor(new SupportCommand(this));
         getCommand("survival").setExecutor(new GameModeCommand(this, "survival", GameMode.SURVIVAL));
         getCommand("testfill").setExecutor(new FillCommand(this, "testfill"));
         getCommand("time").setExecutor(new TimeCommand(this));
