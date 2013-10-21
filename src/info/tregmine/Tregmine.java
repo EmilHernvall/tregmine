@@ -184,6 +184,8 @@ public class Tregmine extends JavaPlugin
         pluginMgm.registerEvents(new InventoryListener(this), this);
         pluginMgm.registerEvents(new DonationSigns(this), this);
         pluginMgm.registerEvents(new ExpListener(this), this);
+        pluginMgm.registerEvents(new ItemFrameListener(this), this);
+        pluginMgm.registerEvents(new EggListener(this), this);
 
         // Declaration of all commands
         getCommand("admins").setExecutor(
