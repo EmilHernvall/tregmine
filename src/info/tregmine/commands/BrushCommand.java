@@ -3,7 +3,6 @@ package info.tregmine.commands;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.bukkit.ChatColor.*;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -15,9 +14,11 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import static org.bukkit.ChatColor.*;
 
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
@@ -151,8 +152,15 @@ public class BrushCommand extends AbstractCommand implements Listener
             return;
         }
 
+        ItemStack heldItem = p.getItemInHand();
+        if (heldItem == null ||
+            heldItem.getItemMeta() == null ||
+            heldItem.getItemMeta().getLore() == null) {
+            return;
+        }
+
         // Check it's a sphere tool
-        List<String> i = p.getItemInHand().getItemMeta().getLore();
+        List<String> i = heldItem.getItemMeta().getLore();
         if (i == null) {
             return;
         }

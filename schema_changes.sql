@@ -361,3 +361,5 @@ CREATE TABLE inventory_changelog (
 
 ALTER TABLE inventory ADD INDEX idx_coords (inventory_x, inventory_y, inventory_z, inventory_world);
 ALTER TABLE inventory_changelog ADD COLUMN changelog_amount INT UNSIGNED AFTER changelog_meta;
+
+ALTER TABLE fishyblock ADD COLUMN fishyblock_storedenchants ENUM ('0', '1') DEFAULT '0';

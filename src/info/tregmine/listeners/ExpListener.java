@@ -13,6 +13,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -23,7 +24,7 @@ import info.tregmine.api.TregminePlayer;
 
 public class ExpListener implements Listener
 {
-    public static String itemName = "Tregmine XP Bottle";
+    public final static String ITEM_NAME = "Tregmine XP Bottle";
 
     private Tregmine plugin;
 
@@ -33,130 +34,154 @@ public class ExpListener implements Listener
     }
 
     @EventHandler
-    public void xpFirstFill(PlayerInteractEvent event){
-        if( event.getItem() == null ){
+    public void xpFirstFill(PlayerInteractEvent event)
+    {
+        ItemStack item = event.getItem();
+        if (item == null) {
             return;
         }
-        if( event.getItem().getType() != Material.GLASS_BOTTLE ){
+        if (item.getType() != Material.GLASS_BOTTLE) {
             return;
         }
-        if( (event.getAction() == Action.RIGHT_CLICK_AIR) || (event.getAction() == Action.RIGHT_CLICK_BLOCK) ){
-            return;
-        }
-        if(event.getPlayer().getLevel() < 1){
+        if (event.getAction() == Action.RIGHT_CLICK_AIR ||
+            event.getAction() == Action.RIGHT_CLICK_BLOCK) {
             return;
         }
 
-        TregminePlayer TGPlayer = this.plugin.getPlayer(event.getPlayer());
-        if (!TGPlayer.getRank().canBottleXP()) {
+        TregminePlayer player = plugin.getPlayer(event.getPlayer());
+        if (player.getLevel() < 1) {
+            return;
+        }
+
+        if (!player.getRank().canBottleXP()) {
             return;
         }
 
         // Creating the XPBottle
         List<String> lores = new ArrayList<String>();
         lores.add("XP Value: 1 Level");
-        ItemStack XPBottle = new ItemStack(Material.EXP_BOTTLE, 1);
-        ItemMeta XPMeta = XPBottle.getItemMeta();
-        XPMeta.setLore(lores);
-        XPMeta.setDisplayName(itemName);
-        XPBottle.setItemMeta(XPMeta);
+        ItemStack xpBottle = new ItemStack(Material.EXP_BOTTLE, 1);
+        ItemMeta xpMeta = xpBottle.getItemMeta();
+        xpMeta.setLore(lores);
+        xpMeta.setDisplayName(ITEM_NAME);
+        xpBottle.setItemMeta(xpMeta);
 
-        HashMap<Integer, ItemStack> map = event.getPlayer().getInventory().addItem(XPBottle);
-        if(map.containsValue(XPBottle)){
-            return;
+        Inventory inv = player.getInventory();
+        if (item != null && item.getAmount() == 1) {
+            player.setItemInHand(xpBottle);
+        } else{
+            HashMap<Integer, ItemStack> map = inv.addItem(xpBottle);
+            if (map.containsValue(xpBottle)) {
+                return;
+            }
+
+            item.setAmount(item.getAmount() - 1);
         }
 
-        if( event.getItem() != null && event.getItem().getAmount() == 1){
-            event.getPlayer().getInventory().remove(event.getItem());
-        }else{
-            event.getItem().setAmount(event.getItem().getAmount() - 1);
-        }
-        event.getPlayer().setLevel(event.getPlayer().getLevel() - 1);
+        player.setLevel(player.getLevel() - 1);
     }
 
     @EventHandler
-    public void xpHigherFill(PlayerInteractEvent event){
-        if( event.getItem() != null && event.getItem().getType() != Material.EXP_BOTTLE ){
+    public void xpHigherFill(PlayerInteractEvent event)
+    {
+        ItemStack item = event.getItem();
+        if (item != null &&
+            item.getType() != Material.EXP_BOTTLE) {
+           return;
+        }
+        if (item != null && !ITEM_NAME.equals(item.getItemMeta().getDisplayName())) {
             return;
         }
-        if( event.getItem() != null && event.getItem().getItemMeta().getDisplayName() != itemName){
+        if (event.getAction() != Action.LEFT_CLICK_AIR &&
+            event.getAction() != Action.LEFT_CLICK_BLOCK) {
             return;
         }
-        if( !(event.getAction()==Action.LEFT_CLICK_AIR) && !(event.getAction()==Action.LEFT_CLICK_BLOCK)){
+
+        TregminePlayer player = this.plugin.getPlayer(event.getPlayer());
+        if (!player.getRank().canBottleXP()) {
             return;
         }
-        if(event.getPlayer().getLevel() < 1){
+
+        if (player.getLevel() < 1) {
             return;
         }
+
         String[] splitLore = null;
         try{
-            splitLore = event.getItem().getItemMeta().getLore().toString().split(" ");
-        }catch(NullPointerException e){
+            splitLore = item.getItemMeta().getLore().toString().split(" ");
+        } catch(NullPointerException e) {
             return;
         }
+
         int level = Integer.parseInt(splitLore[2])+1;
 
-        if(level > 30){
-            event.getPlayer().sendMessage(ChatColor.AQUA + "XP in a bottle is capped at 30 levels per bottle!");
-            return;
-        }
-        TregminePlayer TGPlayer = this.plugin.getPlayer(event.getPlayer());
-        if (!TGPlayer.getRank().canBottleXP()) {
+        if (level > 30) {
+            player.sendMessage(ChatColor.AQUA +
+                    "XP in a bottle is capped at 30 levels per bottle!");
             return;
         }
 
         // Creating the XPBottle
         List<String> lores = new ArrayList<String>();
         lores.add("XP Value: "+ level +" Levels");
-        ItemStack XPBottle = new ItemStack(Material.EXP_BOTTLE, 1);
-        ItemMeta XPMeta = XPBottle.getItemMeta();
-        XPMeta.setLore(lores);
-        XPMeta.setDisplayName(itemName);
-        XPBottle.setItemMeta(XPMeta);
+        ItemStack xpBottle = new ItemStack(Material.EXP_BOTTLE, 1);
+        ItemMeta xpMeta = xpBottle.getItemMeta();
+        xpMeta.setLore(lores);
+        xpMeta.setDisplayName(ITEM_NAME);
+        xpBottle.setItemMeta(xpMeta);
 
-        if(event.getItem().getAmount() == 1){
-            event.getPlayer().getInventory().setItemInHand(XPBottle);
-        }else{
-            HashMap<Integer, ItemStack> map = event.getPlayer().getInventory().addItem(XPBottle);
-            if(map.containsValue(XPBottle)){
+        Inventory inv = player.getInventory();
+        if (item.getAmount() == 1) {
+            player.setItemInHand(xpBottle);
+        } else {
+            HashMap<Integer, ItemStack> map = inv.addItem(xpBottle);
+            if (map.containsValue(xpBottle)) {
                 return;
             }
         }
 
-
-        if(event.getItem().getAmount() == 1){
-            event.getPlayer().getInventory().remove(event.getItem());
-        }else{
-            event.getItem().setAmount(event.getItem().getAmount() - 1);
+        if (event.getItem().getAmount() == 1) {
+            inv.remove(event.getItem());
+        } else {
+            item.setAmount(item.getAmount() - 1);
         }
-        event.getPlayer().setLevel(event.getPlayer().getLevel() - 1);
+        player.setLevel(player.getLevel() - 1);
     }
 
     @EventHandler
-    public void xpEmpty(PlayerInteractEvent event){
-        if( event.getItem() != null && event.getItem().getType() != Material.EXP_BOTTLE ){
+    public void xpEmpty(PlayerInteractEvent event)
+    {
+        ItemStack item = event.getItem();
+        if (item == null || item.getType() != Material.EXP_BOTTLE) {
             return;
         }
-        if( event.getItem() != null && event.getItem().getItemMeta().getDisplayName() != itemName){
+        if (item != null && !ITEM_NAME.equals(item.getItemMeta().getDisplayName())) {
             return;
         }
-        if( !(event.getAction()==Action.RIGHT_CLICK_AIR) && !(event.getAction()==Action.RIGHT_CLICK_BLOCK)){
+        if (event.getAction() != Action.RIGHT_CLICK_AIR &&
+            event.getAction() != Action.RIGHT_CLICK_BLOCK) {
             return;
         }
+
         String[] splitLore = null;
-        try{
-            splitLore = event.getItem().getItemMeta().getLore().toString().split(" ");
-        }catch(NullPointerException e){
+        try {
+            splitLore = item.getItemMeta().getLore().toString().split(" ");
+        } catch (NullPointerException e) {
             return;
         }
 
         event.setCancelled(true);
 
-        Vector expBottle = event.getPlayer().getEyeLocation().getDirection().multiply(2);
-        ExperienceOrb expThrow = (ExperienceOrb)event.getPlayer().getWorld().spawn(event.getPlayer().getEyeLocation().add(expBottle.getX(), expBottle.getY(), expBottle.getZ()), ExperienceOrb.class);
-        expThrow.setVelocity(event.getPlayer().getEyeLocation().getDirection());
-
         int experience = Integer.parseInt(splitLore[2]);
-        event.getPlayer().setLevel(event.getPlayer().getLevel()+experience);
+
+        TregminePlayer player = this.plugin.getPlayer(event.getPlayer());
+        player.setLevel(player.getLevel()+experience);
+
+        Inventory inv = player.getInventory();
+        if (event.getItem().getAmount() == 1) {
+            inv.remove(event.getItem());
+        } else {
+            item.setAmount(item.getAmount() - 1);
+        }
     }
 }

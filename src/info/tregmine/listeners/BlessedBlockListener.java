@@ -145,7 +145,6 @@ public class BlessedBlockListener implements Listener
                     }
                 } else {
                     player.sendMessage(ChatColor.AQUA + "Blessed to you.");
-                    event.setCancelled(false);
                 }
             }
         }

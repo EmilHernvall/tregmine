@@ -364,8 +364,7 @@ public class FishyBlockListener implements Listener
         Map<Location, FishyBlock> fishyBlocks = plugin.getFishyBlocks();
 
         TregminePlayer player = plugin.getPlayer(event.getPlayer());
-        
-        if(player.getChatState() != TregminePlayer.ChatState.CHAT){
+        if (player.getChatState() != TregminePlayer.ChatState.CHAT) {
             return;
         }
 
@@ -393,6 +392,35 @@ public class FishyBlockListener implements Listener
             }
 
             FishyBlock fishyBlock = fishyBlocks.get(loc);
+
+            MaterialData material = fishyBlock.getMaterial();
+            if (material.getData() != 0) {
+                player.sendMessage(ChatColor.YELLOW +
+                    "You are now talking to a fishy block that is selling: " +
+                    material.getItemType().toString() + ":" +
+                    material.getData() + ".");
+            } else {
+                player.sendMessage(ChatColor.YELLOW +
+                    "You are now talking to a fishy block that is selling: " +
+                    material.getItemType().toString() + ".");
+            }
+
+            Map<Enchantment, Integer> enchantments = fishyBlock.getEnchantments();
+            if (enchantments.size() > 0) {
+                if (fishyBlock.hasStoredEnchantments()) {
+                    player.sendMessage(ChatColor.YELLOW +
+                            "With the following STORED enchants:");
+                } else {
+                    player.sendMessage(ChatColor.YELLOW +
+                            "With the following enchants:");
+                }
+                for (Map.Entry<Enchantment, Integer> entry : enchantments.entrySet()) {
+                    Enchantment enchant = entry.getKey();
+                    Integer level = entry.getValue();
+                    player.sendMessage(ChatColor.YELLOW +
+                            enchant.getName() + " lvl " + level);
+                }
+            }
 
             // Player owns this fishy block, and should either enter withdraw
             // mode or add items to this fishy block
@@ -473,35 +501,6 @@ public class FishyBlockListener implements Listener
             // This is somebody else, and the should enter buy mode
             else {
                 event.setCancelled(true);
-
-                MaterialData material = fishyBlock.getMaterial();
-                if (material.getData() != 0) {
-                    player.sendMessage(ChatColor.YELLOW +
-                        "You are now talking to a fishy block that is selling: " +
-                        material.getItemType().toString() + ":" +
-                        material.getData() + ".");
-                } else {
-                    player.sendMessage(ChatColor.YELLOW +
-                        "You are now talking to a fishy block that is selling: " +
-                        material.getItemType().toString() + ".");
-                }
-
-                Map<Enchantment, Integer> enchantments = fishyBlock.getEnchantments();
-                if (enchantments.size() > 0) {
-                    if (fishyBlock.hasStoredEnchantments()) {
-                        player.sendMessage(ChatColor.YELLOW +
-                                "With the following STORED enchants:");
-                    } else {
-                        player.sendMessage(ChatColor.YELLOW +
-                                "With the following enchants:");
-                    }
-                    for (Map.Entry<Enchantment, Integer> entry : enchantments.entrySet()) {
-                        Enchantment enchant = entry.getKey();
-                        Integer level = entry.getValue();
-                        player.sendMessage(ChatColor.YELLOW +
-                                enchant.getName() + " lvl " + level);
-                    }
-                }
 
                 player.sendMessage(ChatColor.YELLOW + "Each block is " +
                     fishyBlock.getCost() + " tregs. Type \"buy x\" to buy, " +
@@ -832,12 +831,17 @@ public class FishyBlockListener implements Listener
     {
         Map<Enchantment, Integer> enchants = fishyBlock.getEnchantments();
         if (fishyBlock.hasStoredEnchantments()) {
+            Tregmine.LOGGER.info("Adding stored enchants to: " + stack.toString());
             EnchantmentStorageMeta enchantMeta = getStorageMeta(stack);
             for (Map.Entry<Enchantment, Integer> enchant : enchants.entrySet()) {
+                Tregmine.LOGGER.info(enchant.getKey() + ": " + enchant.getValue());
                 enchantMeta.addStoredEnchant(enchant.getKey(),
                                              enchant.getValue(),
                                              false);
             }
+            Tregmine.LOGGER.info("Withdrawing: " + enchantMeta.toString());
+            Tregmine.LOGGER.info("Withdrawing: " + stack.toString());
+            stack.setItemMeta(enchantMeta);
         } else {
             stack.addEnchantments(fishyBlock.getEnchantments());
         }

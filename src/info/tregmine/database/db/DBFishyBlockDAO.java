@@ -15,6 +15,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.material.MaterialData;
 
+import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
 import info.tregmine.api.FishyBlock;
 import info.tregmine.database.IFishyBlockDAO;
@@ -46,6 +47,7 @@ public class DBFishyBlockDAO implements IFishyBlockDAO
 
     private Map<Enchantment, Integer> deserializeEnchants(String data)
     {
+        Tregmine.LOGGER.info("Got " + data);
         String[] entries = data.split("&");
         Map<Enchantment, Integer> result = new HashMap<>();
         for (String entry : entries) {
@@ -59,10 +61,12 @@ public class DBFishyBlockDAO implements IFishyBlockDAO
                 if (ench == null) {
                     continue;
                 }
-                Integer lvl = Integer.parseInt(kv[0]);
+                Integer lvl = Integer.parseInt(kv[1]);
                 result.put(ench, lvl);
             } catch (NumberFormatException e) { }
         }
+
+        Tregmine.LOGGER.info("size: " + result.size());
 
         return result;
     }
