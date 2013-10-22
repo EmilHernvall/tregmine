@@ -47,7 +47,6 @@ public class DBFishyBlockDAO implements IFishyBlockDAO
 
     private Map<Enchantment, Integer> deserializeEnchants(String data)
     {
-        Tregmine.LOGGER.info("Got " + data);
         String[] entries = data.split("&");
         Map<Enchantment, Integer> result = new HashMap<>();
         for (String entry : entries) {
@@ -65,8 +64,6 @@ public class DBFishyBlockDAO implements IFishyBlockDAO
                 result.put(ench, lvl);
             } catch (NumberFormatException e) { }
         }
-
-        Tregmine.LOGGER.info("size: " + result.size());
 
         return result;
     }

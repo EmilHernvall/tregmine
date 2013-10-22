@@ -831,16 +831,12 @@ public class FishyBlockListener implements Listener
     {
         Map<Enchantment, Integer> enchants = fishyBlock.getEnchantments();
         if (fishyBlock.hasStoredEnchantments()) {
-            Tregmine.LOGGER.info("Adding stored enchants to: " + stack.toString());
             EnchantmentStorageMeta enchantMeta = getStorageMeta(stack);
             for (Map.Entry<Enchantment, Integer> enchant : enchants.entrySet()) {
-                Tregmine.LOGGER.info(enchant.getKey() + ": " + enchant.getValue());
                 enchantMeta.addStoredEnchant(enchant.getKey(),
                                              enchant.getValue(),
                                              false);
             }
-            Tregmine.LOGGER.info("Withdrawing: " + enchantMeta.toString());
-            Tregmine.LOGGER.info("Withdrawing: " + stack.toString());
             stack.setItemMeta(enchantMeta);
         } else {
             stack.addEnchantments(fishyBlock.getEnchantments());
