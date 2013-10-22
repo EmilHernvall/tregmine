@@ -30,3 +30,4 @@ Authors
  * Josh Morgan
  * Robby Catron
  * Joe Notaro
+ * James Sherlock
