@@ -49,7 +49,7 @@ public class ExpListener implements Listener
         }
 
         TregminePlayer player = plugin.getPlayer(event.getPlayer());
-        if (player.getLevel() < 1) {
+        if (player.getLevel() < 2) {
             return;
         }
 
@@ -78,7 +78,7 @@ public class ExpListener implements Listener
             item.setAmount(item.getAmount() - 1);
         }
 
-        player.setLevel(player.getLevel() - 1);
+        player.setLevel(player.getLevel() - 2);
     }
 
     @EventHandler
@@ -102,7 +102,7 @@ public class ExpListener implements Listener
             return;
         }
 
-        if (player.getLevel() < 1) {
+        if (player.getLevel() < 2) {
             return;
         }
 
@@ -113,7 +113,7 @@ public class ExpListener implements Listener
             return;
         }
 
-        int level = Integer.parseInt(splitLore[2])+1;
+        int level = Integer.parseInt(splitLore[2])+2;
 
         if (level > 30) {
             player.sendMessage(ChatColor.AQUA +
@@ -145,7 +145,7 @@ public class ExpListener implements Listener
         } else {
             item.setAmount(item.getAmount() - 1);
         }
-        player.setLevel(player.getLevel() - 1);
+        player.setLevel(player.getLevel() - 2);
     }
 
     @EventHandler
