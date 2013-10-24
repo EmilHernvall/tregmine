@@ -1,9 +1,12 @@
 package info.tregmine.listeners;
 
+import java.util.HashSet;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Set;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -16,8 +19,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -741,6 +746,59 @@ public class FishyBlockListener implements Listener
                 player.setChatState(TregminePlayer.ChatState.CHAT);
             }
         }
+    }
+    
+    public void chunkLoad(ChunkLoadEvent event) // Outputs Redstone
+    {
+        if(event.isNewChunk() == true){ // If it's a new chunk then there will not be a fishy block.
+            return;
+        }
+        Chunk c = event.getChunk();
+        Map<Location, FishyBlock> fb = this.plugin.getFishyBlocks();
+        Set<Location> blocks = new HashSet<Location>();
+        
+        for( Location i : fb.keySet() ){ // For all locations in FishyBlock map
+            Chunk fishyChunk = i.getChunk(); // Get the chunk of that location
+            if(fishyChunk != c){ // If the chunk is not one of which is loaded
+                return; // return (Close)
+            }
+            blocks.add(i); // Else, add it to a new set
+        }
+        
+        // Yes I could do it all in one for loop but for neatness and such I'm doing it in two seperate.
+        
+        for( Location i : blocks ){ // For all locations in the set of locations of fishy blocks in the chunk
+            FishyBlock fishyBlock = fb.get(i); // Get the fishyblock at that location
+            Location fishyBlockLocation = fishyBlock.getBlockLocation(); // Location of fishyblock for convenience
+            Block blockAbove = fishyBlockLocation.getWorld().getBlockAt(fishyBlockLocation.getBlockX(), fishyBlockLocation.getBlockY()+1, fishyBlockLocation.getBlockZ()); // Get block above fishyblock
+            if(blockAbove.getType() != Material.REDSTONE_LAMP_OFF && blockAbove.getType() != Material.REDSTONE_LAMP_ON){ // If not Redstone Lamp above fishyblock then return;
+                return;
+            }
+            if( fishyBlock.getAvailableInventory() == 0 ){ // If no items in inventory; make sure its off.
+                blockAbove.setType(Material.REDSTONE_LAMP_OFF);
+            }
+            if( fishyBlock.getAvailableInventory() > 0 ){ // If items in the inventory; make sure its on.
+                blockAbove.setType(Material.REDSTONE_LAMP_ON);
+            }
+            
+        }
+    }
+    
+    public void redstoneUpdate(BlockRedstoneEvent event)
+    {
+        if(event.getBlock().getType() != Material.REDSTONE_LAMP_OFF && event.getBlock().getType() != Material.REDSTONE_LAMP_ON )
+        {
+            return; // If its not a redstone lamp then stop here
+        }
+        Map<Location, FishyBlock> fb = this.plugin.getFishyBlocks();
+        Location location = event.getBlock().getLocation(); // Convenience
+        Location fishyBlockLocation = new Location(location.getWorld(), location.getBlockX(), location.getBlockY()-1, location.getBlockZ()); // Get block under the block being updated
+        if(!fb.containsKey(fishyBlockLocation)){
+            return; // If its not a fishyblock then stop here
+        }
+        // If you get here then its a fishyblock with a redstone lamp
+        event.setNewCurrent(event.getOldCurrent()); // Should stop the update
+        
     }
 
     private void updateSign(World world, FishyBlock fishyBlock)
