@@ -45,6 +45,9 @@ public class EggListener implements Listener
                perm == Zone.Permission.Owner){ // Checks if player is Allowed/Maker/Owner
                 return;
             }
+            if(zone.isPvp()){ // If pvp is on then let it fly... It's an awesome weapon
+                return;
+            }
             if(zone.getDestroyDefault()){ // If people can destroy, Then we will let them throw eggs.
                 return;
             }
