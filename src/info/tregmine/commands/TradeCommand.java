@@ -7,8 +7,10 @@ import java.util.HashMap;
 import static org.bukkit.ChatColor.*;
 import org.bukkit.Server;
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.*;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.event.Listener;
 import org.bukkit.event.EventHandler;
@@ -138,10 +140,37 @@ public class TradeCommand extends AbstractCommand implements Listener
             }
             Material material = stack.getType();
             int amount = stack.getAmount();
-            target.sendMessage(tradePre + amount + " "
-                    + material.toString());
-            player.sendMessage(tradePre + amount + " "
-                    + material.toString());
+            
+            ItemMeta materialMeta = stack.getItemMeta();
+            String[] materialLore = null;
+            try{
+                materialLore = materialMeta.getLore().toString().split(" ");
+            } catch(NullPointerException e) {
+                return;
+            }
+            int xpValue = Integer.parseInt(materialLore[2])+1;
+            
+            Map<Enchantment, Integer> enchantments = stack.getEnchantments();
+            
+            if (material == Material.EXP_BOTTLE && xpValue > 0 && materialMeta.getDisplayName() == "Tregmine XP Bottle") {
+                target.sendMessage(tradePre + amount + " XP Bottle holding "
+                        + xpValue + " levels");
+                player.sendMessage(tradePre + amount + " XP Bottle holding "
+                        + xpValue + " levels");
+            }else if(!enchantments.isEmpty()){
+                target.sendMessage(tradePre + " Enchanted " + material.toString() + " with: ");
+                player.sendMessage(tradePre + " Enchanted " + material.toString() + " with: ");
+                for( Enchantment i : enchantments.keySet() ){
+                    String enchantName = i.getName().replace("_", " ");
+                    target.sendMessage("- " + enchantName + " LEVEL: " + enchantments.get(i).toString() );
+                    player.sendMessage("- " + enchantName + " LEVEL: " + enchantments.get(i).toString() );
+                }
+            }else{
+                target.sendMessage(tradePre + amount + " "
+                        + material.toString());
+                player.sendMessage(tradePre + amount + " "
+                        + material.toString());
+            }
         }
 
         target.sendMessage(YELLOW
