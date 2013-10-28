@@ -31,6 +31,8 @@ public class ZoneBlockListener implements Listener
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event)
     {
+        Location poldlocation = event.getPlayer().getLocation();
+        
         TregminePlayer player = plugin.getPlayer(event.getPlayer());
         if (player.getRank().canModifyZones()) {
             return;
@@ -64,6 +66,7 @@ public class ZoneBlockListener implements Listener
                     // Lot owners can always modify lots
                 }
                 else {
+                    player.teleport(poldlocation);
                     player.sendMessage(ChatColor.RED + "["
                             + currentZone.getName() + "] "
                             + "You are not allowed to break blocks in lot "
@@ -92,6 +95,7 @@ public class ZoneBlockListener implements Listener
                 if (perm == null
                         || (perm != Zone.Permission.Maker && perm != Zone.Permission.Owner)) {
                     player.setFireTicks(50);
+                    player.teleport(poldlocation);
                     event.setCancelled(true);
                     player.sendMessage(ChatColor.RED + "["
                             + currentZone.getName() + "] "
@@ -124,6 +128,8 @@ public class ZoneBlockListener implements Listener
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent event)
     {
+        Location poldlocation = event.getPlayer().getLocation();
+        
         TregminePlayer player = plugin.getPlayer(event.getPlayer());
         if (player.getRank().canModifyZones()) {
             return;
@@ -157,9 +163,10 @@ public class ZoneBlockListener implements Listener
                     // Lot owners can always modify lots
                 }
                 else {
+                    player.teleport(poldlocation);
                     player.sendMessage(ChatColor.RED + "["
                             + currentZone.getName() + "] "
-                            + "You are not allowed to break blocks in lot "
+                            + "You are not allowed to place blocks in lot "
                             + lot.getName() + ".");
                     event.setCancelled(true);
                     return;
@@ -188,6 +195,7 @@ public class ZoneBlockListener implements Listener
                 if (perm == null
                         || (perm != Zone.Permission.Maker && perm != Zone.Permission.Owner)) {
                     player.setFireTicks(50);
+                    player.teleport(poldlocation);
                     event.setCancelled(true);
                     player.sendMessage(ChatColor.RED + "["
                             + currentZone.getName() + "] "
