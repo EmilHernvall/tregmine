@@ -16,29 +16,36 @@ import org.bukkit.event.player.PlayerEggThrowEvent;
 public class EggListener implements Listener
 {
     private Tregmine plugin;
-    
+
     public EggListener(Tregmine instance)
     {
         this.plugin = instance;
     }
-    
+
     @EventHandler
-    public void onRotate(PlayerEggThrowEvent event)
+    public void onEggThrown(PlayerEggThrowEvent event)
     {
         TregminePlayer player = plugin.getPlayer(event.getPlayer());
-        if(player.getRank().canModifyZones()){ // Lets people with "canModifyZones"
+        if (player.getRank().canModifyZones()) {
             return;
         }
-        
+
         ZoneWorld world = plugin.getWorld(player.getWorld());
-        
+        if (world == null) {
+            return;
+        }
+
         Location location = player.getLocation();
         Point pos = new Point(location.getBlockX(), location.getBlockZ());
-        
+
         Zone zone = world.findZone(pos);
+        if (zone == null) {
+            return;
+        }
+
         Zone.Permission perm = zone.getUser(player);
         Lot lot = world.findLot(pos);
-        
+
         if(zone != null && lot == null){ // If Zone but not Lot
             if(perm == Zone.Permission.Allowed ||
                perm == Zone.Permission.Maker ||
