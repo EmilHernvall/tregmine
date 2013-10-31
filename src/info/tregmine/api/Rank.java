@@ -150,7 +150,9 @@ public enum Rank
 
     public boolean canSaveHome()
     {
-        return this == DONATOR ||
+        return this == SETTLER ||
+               this == RESIDENT ||
+               this == DONATOR ||
                this == GUARDIAN ||
                this == CODER ||
                this == BUILDER ||
@@ -464,6 +466,8 @@ public enum Rank
             return 20;
         } else if (this == DONATOR) {
             return 5;
+        } else if (this == RESIDENT || this == SETTLER) {
+            return 1;
         } else {
             return 0;
         }
