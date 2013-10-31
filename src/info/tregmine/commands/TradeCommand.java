@@ -143,16 +143,13 @@ public class TradeCommand extends AbstractCommand implements Listener
             int amount = stack.getAmount();
             
             ItemMeta materialMeta = stack.getItemMeta();
-            String[] materialLore = null;
-            try{
-                materialLore = materialMeta.getLore().toString().split(" ");
-            } catch(NullPointerException e) {
-                return;
-            }
             int xpValue;
             try{
+                String[] materialLore = materialMeta.getLore().toString().split(" ");
                 xpValue = Integer.parseInt(materialLore[2]);
-            } catch(NumberFormatException e) {
+            } catch (NullPointerException e) {
+                xpValue = 0;
+            } catch (NumberFormatException e) {
                 xpValue = 0;
             }
             
