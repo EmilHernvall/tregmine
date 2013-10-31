@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.HashMap;
 
 import static org.bukkit.ChatColor.*;
+
 import org.bukkit.Server;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -148,16 +149,20 @@ public class TradeCommand extends AbstractCommand implements Listener
             } catch(NullPointerException e) {
                 return;
             }
-            int xpValue = Integer.parseInt(materialLore[2])+1;
+            int xpValue;
+            try{
+                xpValue = Integer.parseInt(materialLore[2]);
+            } catch(NumberFormatException e) {
+                xpValue = 0;
+            }
             
             Map<Enchantment, Integer> enchantments = stack.getEnchantments();
-            
             if (material == Material.EXP_BOTTLE && xpValue > 0 && materialMeta.getDisplayName() == "Tregmine XP Bottle") {
                 target.sendMessage(tradePre + amount + " XP Bottle holding "
                         + xpValue + " levels");
                 player.sendMessage(tradePre + amount + " XP Bottle holding "
                         + xpValue + " levels");
-            }else if(!enchantments.isEmpty()){
+            }else if(enchantments.size() > 0){
                 target.sendMessage(tradePre + " Enchanted " + material.toString() + " with: ");
                 player.sendMessage(tradePre + " Enchanted " + material.toString() + " with: ");
                 for( Enchantment i : enchantments.keySet() ){
