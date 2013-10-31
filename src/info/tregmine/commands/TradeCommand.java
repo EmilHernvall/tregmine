@@ -25,6 +25,7 @@ import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
 import info.tregmine.database.IWalletDAO;
 import info.tregmine.database.ITradeDAO;
+import info.tregmine.listeners.ExpListener;
 import info.tregmine.api.math.Distance;
 
 public class TradeCommand extends AbstractCommand implements Listener
@@ -141,7 +142,7 @@ public class TradeCommand extends AbstractCommand implements Listener
             }
             Material material = stack.getType();
             int amount = stack.getAmount();
-            
+
             ItemMeta materialMeta = stack.getItemMeta();
             int xpValue;
             try{
@@ -152,22 +153,25 @@ public class TradeCommand extends AbstractCommand implements Listener
             } catch (NumberFormatException e) {
                 xpValue = 0;
             }
-            
+
             Map<Enchantment, Integer> enchantments = stack.getEnchantments();
-            if (material == Material.EXP_BOTTLE && xpValue > 0 && materialMeta.getDisplayName() == "Tregmine XP Bottle") {
+            if (material == Material.EXP_BOTTLE &&
+                xpValue > 0 &&
+                ExpListener.ITEM_NAME.equals(materialMeta.getDisplayName())) {
+
                 target.sendMessage(tradePre + amount + " XP Bottle holding "
                         + xpValue + " levels");
                 player.sendMessage(tradePre + amount + " XP Bottle holding "
                         + xpValue + " levels");
-            }else if(enchantments.size() > 0){
+            } else if (enchantments.size() > 0) {
                 target.sendMessage(tradePre + " Enchanted " + material.toString() + " with: ");
                 player.sendMessage(tradePre + " Enchanted " + material.toString() + " with: ");
                 for( Enchantment i : enchantments.keySet() ){
                     String enchantName = i.getName().replace("_", " ");
-                    target.sendMessage("- " + enchantName + " LEVEL: " + enchantments.get(i).toString() );
-                    player.sendMessage("- " + enchantName + " LEVEL: " + enchantments.get(i).toString() );
+                    target.sendMessage("- " + enchantName + " LEVEL: " + enchantments.get(i).toString());
+                    player.sendMessage("- " + enchantName + " LEVEL: " + enchantments.get(i).toString());
                 }
-            }else{
+            } else {
                 target.sendMessage(tradePre + amount + " "
                         + material.toString());
                 player.sendMessage(tradePre + amount + " "
