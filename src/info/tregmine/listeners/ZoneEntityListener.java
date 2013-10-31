@@ -16,6 +16,7 @@ import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 //import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
@@ -57,6 +58,8 @@ public class ZoneEntityListener implements Listener
         if (zone == null || zone.hasHostiles()) {
             return;
         }
+        
+        if (event.getSpawnReason() != SpawnReason.NATURAL) return;
 
         if (!allowedMobs.contains(event.getEntityType())) {
             event.setCancelled(true);
