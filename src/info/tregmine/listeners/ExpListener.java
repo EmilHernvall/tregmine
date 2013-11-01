@@ -113,7 +113,7 @@ public class ExpListener implements Listener
             return;
         }
 
-        int level = Integer.parseInt(splitLore[2])+2;
+        int level = Integer.parseInt(splitLore[2])+1;
 
         if (level > 30) {
             player.sendMessage(ChatColor.AQUA +
