@@ -25,6 +25,7 @@ import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
 import info.tregmine.database.IWalletDAO;
 import info.tregmine.database.ITradeDAO;
+import info.tregmine.database.IEnchantmentDAO;
 import info.tregmine.listeners.ExpListener;
 import info.tregmine.api.math.Distance;
 
@@ -162,14 +163,21 @@ public class TradeCommand extends AbstractCommand implements Listener
                 target.sendMessage(tradePre + amount + " XP Bottle holding "
                         + xpValue + " levels");
                 player.sendMessage(tradePre + amount + " XP Bottle holding "
-                        + xpValue + " levels");
+                        + xpValue + " levels"); 
             } else if (enchantments.size() > 0) {
                 target.sendMessage(tradePre + " Enchanted " + material.toString() + " with: ");
                 player.sendMessage(tradePre + " Enchanted " + material.toString() + " with: ");
                 for( Enchantment i : enchantments.keySet() ){
-                    String enchantName = i.getName().replace("_", " ");
-                    target.sendMessage("- " + enchantName + " LEVEL: " + enchantments.get(i).toString());
-                    player.sendMessage("- " + enchantName + " LEVEL: " + enchantments.get(i).toString());
+                    String enchantName;
+                    try (IContext dbCtx = tregmine.createContext()) {
+                        IEnchantmentDAO enchantDAO = dbCtx.getEnchantmentDAO();
+                        enchantName = enchantDAO.localize(i.getName());
+                    } catch (DAOException e) {
+                        enchantName = i.getName();
+                        throw new RuntimeException(e);
+                    }
+                    target.sendMessage("- " + enchantName + " Level: " + enchantments.get(i).toString());
+                    player.sendMessage("- " + enchantName + " Level: " + enchantments.get(i).toString());
                 }
             } else {
                 target.sendMessage(tradePre + amount + " "

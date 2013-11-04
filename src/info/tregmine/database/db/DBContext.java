@@ -8,6 +8,7 @@ import info.tregmine.database.*;
 
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
+import info.tregmine.database.IEnchantmentDAO;
 
 public class DBContext implements IContext
 {
@@ -113,5 +114,11 @@ public class DBContext implements IContext
     public IBlessedBlockDAO getBlessedBlockDAO()
     {
         return new DBBlessedBlockDAO(conn);
+    }
+
+    @Override
+    public IEnchantmentDAO getEnchantmentDAO()
+    {
+        return new DBEnchantmentDAO(conn);
     }
 }
