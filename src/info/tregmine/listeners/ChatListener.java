@@ -1,7 +1,6 @@
 package info.tregmine.listeners;
 
 import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
@@ -54,6 +53,11 @@ public class ChatListener implements Listener
                             + ChatColor.WHITE + "> " + txtColor + text);
                 }
             }
+            
+            if(event.getMessage().contains(to.getChatName()) && sender.getChatChannel().equalsIgnoreCase("GLOBAL")){
+                to.sendMessage(ChatColor.BLUE + "You were mentioned in GLOBAL by " + sender.getNameColor() + sender.getChatName());
+            }
+            
         }
 
         Tregmine.LOGGER.info(channel + " <" + sender.getName() + "> " + text);
