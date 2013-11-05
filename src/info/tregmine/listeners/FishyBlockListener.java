@@ -31,6 +31,7 @@ import info.tregmine.api.FishyBlock;
 import info.tregmine.api.TregminePlayer;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
+import info.tregmine.database.IEnchantmentDAO;
 import info.tregmine.database.IFishyBlockDAO;
 import info.tregmine.database.ITradeDAO;
 import info.tregmine.database.IWalletDAO;
@@ -414,11 +415,17 @@ public class FishyBlockListener implements Listener
                     player.sendMessage(ChatColor.YELLOW +
                             "With the following enchants:");
                 }
-                for (Map.Entry<Enchantment, Integer> entry : enchantments.entrySet()) {
-                    Enchantment enchant = entry.getKey();
-                    Integer level = entry.getValue();
-                    player.sendMessage(ChatColor.YELLOW +
-                            enchant.getName() + " lvl " + level);
+                try (IContext dbCtx = plugin.createContext()) {
+                    IEnchantmentDAO enchantDAO = dbCtx.getEnchantmentDAO();
+                    for (Map.Entry<Enchantment, Integer> entry : enchantments.entrySet()) {
+                        Enchantment enchant = entry.getKey();
+                        Integer level = entry.getValue();
+                        String enchantName = enchantDAO.localize(enchant.getName());
+                        player.sendMessage("- " + enchantName +
+                                " Level: " + level.toString());
+                    }
+                } catch (DAOException e) {
+                    throw new RuntimeException(e);
                 }
             }
 
@@ -663,10 +670,17 @@ public class FishyBlockListener implements Listener
                         player.sendMessage(ChatColor.GREEN +
                                 "With the following enchants:");
                     }
-                    for (Map.Entry<Enchantment, Integer> entry : enchantments.entrySet()) {
-                        Enchantment enchant = entry.getKey();
-                        Integer level = entry.getValue();
-                        player.sendMessage(enchant.getName() + " lvl " + level);
+                    try (IContext dbCtx = plugin.createContext()) {
+                        IEnchantmentDAO enchantDAO = dbCtx.getEnchantmentDAO();
+                        for (Map.Entry<Enchantment, Integer> entry : enchantments.entrySet()) {
+                            Enchantment enchant = entry.getKey();
+                            Integer level = entry.getValue();
+                            String enchantName = enchantDAO.localize(enchant.getName());
+                            player.sendMessage("- " + enchantName +
+                                    " Level: " + level.toString());
+                        }
+                    } catch (DAOException e) {
+                        throw new RuntimeException(e);
                     }
                 }
 

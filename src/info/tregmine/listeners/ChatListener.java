@@ -53,11 +53,14 @@ public class ChatListener implements Listener
                             + ChatColor.WHITE + "> " + txtColor + text);
                 }
             }
-            
-            if(event.getMessage().contains(to.getChatName()) && sender.getChatChannel().equalsIgnoreCase("GLOBAL")){
-                to.sendMessage(ChatColor.BLUE + "You were mentioned in GLOBAL by " + sender.getNameColor() + sender.getChatName());
+
+            if (text.contains(to.getName()) &&
+                "GLOBAL".equalsIgnoreCase(sender.getChatChannel())) {
+
+                to.sendMessage(ChatColor.BLUE +
+                    "You were mentioned in GLOBAL by " + sender.getNameColor() +
+                    sender.getChatName());
             }
-            
         }
 
         Tregmine.LOGGER.info(channel + " <" + sender.getName() + "> " + text);

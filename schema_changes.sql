@@ -363,3 +363,33 @@ ALTER TABLE inventory ADD INDEX idx_coords (inventory_x, inventory_y, inventory_
 ALTER TABLE inventory_changelog ADD COLUMN changelog_amount INT UNSIGNED AFTER changelog_meta;
 
 ALTER TABLE fishyblock ADD COLUMN fishyblock_storedenchants ENUM ('0', '1') DEFAULT '0';
+
+CREATE TABLE IF NOT EXISTS `enchantment` (
+  `enchantment_name` varchar(255) NOT NULL,
+  `enchantment_title` varchar(255) NOT NULL,
+  PRIMARY KEY (enchantment_name)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO `enchantment` (`enchantment_name`, `enchantment_title`) VALUES
+('ARROW_DAMAGE', 'Power'),
+('ARROW_FIRE', 'Flame'),
+('ARROW_INFINITE', 'Infinity'),
+('ARROW_KNOCKBACK', 'Punch'),
+('DAMAGE_ALL', 'Sharpness'),
+('DAMAGE_ARTHROPODS', 'Bane of Arthropods'),
+('DAMAGE_UNDEAD', 'Smite'),
+('DIG_SPEED', 'Efficiency'),
+('DURABILITY', 'Unbreaking'),
+('FIRE_ASPECT', 'Fire Aspect'),
+('KNOCKBACK', 'Knockback'),
+('LOOT_BONUS_BLOCKS', 'Fortune'),
+('LOOT_BONUS_MOBS', 'Looting'),
+('OXYGEN', 'Respiration'),
+('PROTECTION_ENVIRONMENTAL', 'Protection'),
+('PROTECTION_EXPLOSIONS', 'Blast Protection'),
+('PROTECTION_FIRE', 'Fire Protection'),
+('PROTECTION_PROJECTILE', 'Projectile Protection'),
+('PROTECTION_FALL', 'Feather Falling'),
+('SILK_TOUCH', 'Silk Touch'),
+('THORNS', 'Thorns'),
+('WATER_WORKER', 'Aqua Affinity');

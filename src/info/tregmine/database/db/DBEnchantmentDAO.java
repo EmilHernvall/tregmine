@@ -18,24 +18,26 @@ public class DBEnchantmentDAO implements IEnchantmentDAO
     }
 
     @Override
-    public String localize(String enchantmentName) 
+    public String localize(String enchantmentName)
     throws DAOException
     {
-        String sql = "SELECT enchantment.new FROM enchantment " +
-                "WHERE old = ?";
-        
+        String sql = "SELECT enchantment_title FROM enchantment " +
+                "WHERE enchantment_name = ?";
+
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            
+
             stmt.setString(1, enchantmentName);
             stmt.execute();
-            
+
             try (ResultSet rs = stmt.getResultSet()) {
                 if (!rs.next()) {
-                    return enchantmentName; // If can't find the localized name - Return the original enchantment name
+                    // If can't find the localized name - Return the original
+                    // enchantment name
+                    return enchantmentName;
                 }
-                return rs.getString(1);
+                return rs.getString("enchantment_title");
             }
-            
+
         } catch (SQLException e) {
             throw new DAOException(sql, e);
         }

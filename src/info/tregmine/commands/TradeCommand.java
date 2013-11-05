@@ -163,21 +163,21 @@ public class TradeCommand extends AbstractCommand implements Listener
                 target.sendMessage(tradePre + amount + " XP Bottle holding "
                         + xpValue + " levels");
                 player.sendMessage(tradePre + amount + " XP Bottle holding "
-                        + xpValue + " levels"); 
+                        + xpValue + " levels");
             } else if (enchantments.size() > 0) {
                 target.sendMessage(tradePre + " Enchanted " + material.toString() + " with: ");
                 player.sendMessage(tradePre + " Enchanted " + material.toString() + " with: ");
-                for( Enchantment i : enchantments.keySet() ){
-                    String enchantName;
-                    try (IContext dbCtx = tregmine.createContext()) {
-                        IEnchantmentDAO enchantDAO = dbCtx.getEnchantmentDAO();
-                        enchantName = enchantDAO.localize(i.getName());
-                    } catch (DAOException e) {
-                        enchantName = i.getName();
-                        throw new RuntimeException(e);
+                try (IContext dbCtx = tregmine.createContext()) {
+                    IEnchantmentDAO enchantDAO = dbCtx.getEnchantmentDAO();
+                    for (Enchantment i : enchantments.keySet()) {
+                        String enchantName = enchantDAO.localize(i.getName());
+                        target.sendMessage("- " + enchantName +
+                                " Level: " + enchantments.get(i).toString());
+                        player.sendMessage("- " + enchantName +
+                                " Level: " + enchantments.get(i).toString());
                     }
-                    target.sendMessage("- " + enchantName + " Level: " + enchantments.get(i).toString());
-                    player.sendMessage("- " + enchantName + " Level: " + enchantments.get(i).toString());
+                } catch (DAOException e) {
+                    throw new RuntimeException(e);
                 }
             } else {
                 target.sendMessage(tradePre + amount + " "
