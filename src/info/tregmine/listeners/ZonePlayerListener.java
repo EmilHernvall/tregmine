@@ -1,7 +1,13 @@
 package info.tregmine.listeners;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -362,6 +368,104 @@ public class ZonePlayerListener implements Listener
             }
         }
     }
+    
+    @SuppressWarnings("deprecation")
+    @EventHandler
+    public void boneMealUsage(PlayerInteractEvent event){
+        if (event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
+
+        if (event.getItem() == null) return;
+        if (!event.getItem().getType().equals(Material.INK_SACK)) return;
+        if (event.getItem().getData().getData() != (byte) 15) return;
+        
+        Block b = event.getClickedBlock();
+        if (b == null || !(b.getType().equals(Material.GRASS))) return;
+        Location center = b.getLocation();
+        
+        event.setCancelled(true); // Stops normal bonemealing
+        if (event.getPlayer().getGameMode() == GameMode.SURVIVAL) {
+            if (event.getItem().getAmount() == 1){
+                event.getPlayer().getInventory().remove(event.getItem());
+            }else{
+                event.getItem().setAmount(event.getItem().getAmount() - 1);
+            }
+        }
+        
+        List<Integer> radius_options = Arrays.asList(3,4,5,6,7);
+        Random radius_random = new Random();
+        Integer radius = radius_options.get(radius_random.nextInt(radius_options.size()));
+        List<Block> areaofeffect = new ArrayList<Block>();
+        for (int X = -radius; X < radius; X++) {
+            for (int Y = -(radius/2); Y < (radius/2); Y++) {
+                for (int Z = -radius; Z < radius; Z++) {
+                    if (Math.sqrt((X*X) + (Z*Z)) <= radius &&
+                        Y + center.getBlockY() >= 0) {
+                        Block block = b.getWorld().getBlockAt(X + center.getBlockX(),
+                                                               Y + center.getBlockY(),
+                                                               Z + center.getBlockZ());
+                        areaofeffect.add(block);
+                    }
+                }
+            }
+        }
+        
+        TregminePlayer player = plugin.getPlayer(event.getPlayer());
+        
+        for ( Block block : areaofeffect ) {
+            Block block_under = block.getWorld().getBlockAt(block.getX(), 
+                                                            block.getY() - 1, 
+                                                            block.getZ());
+            if (block_under.getType() != Material.GRASS) continue;
+            if (block.getType() != Material.AIR) continue;
+            
+            ZoneWorld world = plugin.getWorld(block.getWorld());
+            Point pos = new Point(block.getX(), block.getZ());
+            Zone zone = world.findZone(pos);
+            
+            if(zone != null){
+                Zone.Permission perm = zone.getUser(player);
+                
+                Lot lot = world.findLot(pos);
+                if(lot != null){ // Handle lots
+                    if (perm == Zone.Permission.Owner && zone.isCommunist()) { // If communist zone & Player is zone owner
+                        boneMealPlant(block);
+                    }
+                    else if (lot.isOwner(player)) { // If lot owner
+                        boneMealPlant(block);
+                    }
+                    continue;
+                }
+                
+                if (zone.getPlaceDefault()) { // If placing is allowed in zone
+                    boneMealPlant(block);
+                }
+                
+                if (perm == null
+                        || (perm != Zone.Permission.Maker && perm != Zone.Permission.Owner)) {
+                    continue;
+                }
+                boneMealPlant(block);
+            }else{
+                boneMealPlant(block);
+            }
+        }
+    }
+    
+    @SuppressWarnings("deprecation")
+    public void boneMealPlant(Block block){
+        List<Material> bonemeal_produce = Arrays.asList(Material.AIR, Material.AIR, Material.AIR, Material.AIR, Material.AIR,
+                                                        Material.YELLOW_FLOWER,
+                                                        Material.RED_ROSE,
+                                                        Material.LONG_GRASS, Material.LONG_GRASS, Material.LONG_GRASS, Material.LONG_GRASS);
+        Random bonemeal_random = new Random();
+        Material produce = bonemeal_produce.get(bonemeal_random.nextInt(bonemeal_produce.size()));
+        
+        block.setType(produce);
+        if(block.getType().equals(Material.LONG_GRASS)){
+            block.setData((byte) 1);
+        }
+    }
+    
 
     private void movePlayerBack(TregminePlayer player, Location movingFrom,
             Location movingTo)
