@@ -343,8 +343,13 @@ public class TregminePlayerListener implements Listener
             player.sendMessage("You are hardwarned and are not allowed to fly.");
             player.setAllowFlight(false);
         } else if (rank.canFly()) {
-            player.sendMessage("You are allowed to fly");
-            player.setAllowFlight(true);
+            if (player.hasFlag(TregminePlayer.Flags.FLY_ENABLED)) {
+                player.sendMessage("Flying: Allowed and Enabled! Toggle flying with /fly");
+                player.setAllowFlight(true);
+            } else {
+                player.sendMessage("Flying: Allowed but Disabled! Toggle flying with /fly");
+                player.setAllowFlight(false);
+            }
         } else {
             player.sendMessage("no-z-cheat");
             player.sendMessage("You are NOT allowed to fly");
