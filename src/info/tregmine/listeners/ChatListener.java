@@ -55,7 +55,8 @@ public class ChatListener implements Listener
             }
 
             if (text.contains(to.getName()) &&
-                "GLOBAL".equalsIgnoreCase(sender.getChatChannel())) {
+                "GLOBAL".equalsIgnoreCase(sender.getChatChannel()) &&
+                !("GLOBAL".equalsIgnoreCase(to.getChatChannel()))) {
 
                 to.sendMessage(ChatColor.BLUE +
                     "You were mentioned in GLOBAL by " + sender.getNameColor() +
