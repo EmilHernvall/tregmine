@@ -54,6 +54,9 @@ commands:
   fill:
     description: Fill, replace and copy blocks using a wooden spade (admins and builders only)
     usage: /fill
+  fly:
+    description: Fly, Toggles flying using the Player Flags system
+    usage: /fly
   force:
     description: Force someone into a channel
     usage: /force player channel
