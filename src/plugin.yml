@@ -10,6 +10,9 @@ commands:
     description: Send a message to all active admins
     usage: /admins message
     aliases: a
+  alert:
+    description: Change your alerts (Cyan text in chat)
+    usage: /alert
   guardians:
     description: Send a message to all active guardians
     usage: /guardians message
