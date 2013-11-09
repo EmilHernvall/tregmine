@@ -1,5 +1,7 @@
 package info.tregmine.listeners;
 
+import java.util.List;
+
 import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -11,6 +13,7 @@ import info.tregmine.api.TregminePlayer;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
 import info.tregmine.database.ILogDAO;
+import info.tregmine.database.IPlayerDAO;
 
 public class ChatListener implements Listener
 {
@@ -41,6 +44,28 @@ public class ChatListener implements Listener
             ChatColor txtColor = ChatColor.WHITE;
             if (sender.equals(to)) {
                 txtColor = ChatColor.GRAY;
+            }
+            
+            for (TregminePlayer online : plugin.getOnlinePlayers()) {
+                if (text.contains(online.getName())){
+                    text = text.replaceAll(online.getName(), online.getChatName() + txtColor);
+                }
+            }
+            
+            List<String> player_keywords;
+            try (IContext ctx = plugin.createContext()) {
+                IPlayerDAO playerDAO = ctx.getPlayerDAO();
+                player_keywords = playerDAO.getKeywords(to);
+            } catch (DAOException e) {
+                throw new RuntimeException(e);
+            }
+
+            if (player_keywords.size() > 0 && player_keywords != null) {
+                for( String keyword : player_keywords ){
+                    if (text.toLowerCase().contains(keyword.toLowerCase())) {
+                        text = text.replaceAll(keyword, ChatColor.AQUA + keyword + txtColor);
+                    }
+                }
             }
 
             if (sender.getChatChannel().equalsIgnoreCase(to.getChatChannel())) {

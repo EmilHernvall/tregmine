@@ -1,5 +1,7 @@
 package info.tregmine.database;
 
+import java.util.List;
+
 import org.bukkit.entity.Player;
 
 import info.tregmine.api.TregminePlayer;
@@ -16,4 +18,7 @@ public interface IPlayerDAO
     public void updatePlayTime(TregminePlayer player) throws DAOException;
     public void updatePlayerInfo(TregminePlayer player) throws DAOException;
     public void updatePlayer(TregminePlayer player) throws DAOException;
+    
+    public List<String> getKeywords(TregminePlayer to) throws DAOException;
+    public void updateKeywords(TregminePlayer player, List<String> update) throws DAOException;
 }

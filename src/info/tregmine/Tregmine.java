@@ -210,6 +210,7 @@ public class Tregmine extends JavaPlugin
             });
 
         getCommand("action").setExecutor(new ActionCommand(this));
+        getCommand("alert").setExecutor(new AlertCommand(this));
         getCommand("ban").setExecutor(new BanCommand(this));
         getCommand("bless").setExecutor(new BlessCommand(this));
         getCommand("blockhere").setExecutor(new BlockHereCommand(this));
