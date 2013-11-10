@@ -63,6 +63,9 @@ commands:
   force:
     description: Force someone into a channel
     usage: /force player channel
+  forceblock:
+    description: Stop people forcing you into channels
+    usage: /forceblock <on/off/status>
   give:
     description: Give a user an item (admin only)
     usage: /give player item amount data
@@ -72,6 +75,9 @@ commands:
   inv:
     description: Look in a players inventory (admin only)
     usage: /inv <player>
+  invlog:
+    description: Toggle inventory logging display
+    usage: /invlog <on/off/status>
   item:
     description: Spawn an item
     usage: /item item amount data (admin only)
@@ -179,6 +185,9 @@ commands:
   trade:
     description: Trade safely
     usage: /trade player
+  update:
+    description: See what was last updated!
+    usage: /update [version number]
   vanish:
     description: Become invisible (admin only)
     usage: /vanish <on|off>

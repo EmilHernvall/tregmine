@@ -1,30 +1,24 @@
 package info.tregmine;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.net.InetAddress;
+import info.tregmine.api.*;
+import info.tregmine.commands.*;
+import info.tregmine.database.*;
+import info.tregmine.database.IInventoryDAO.InventoryType;
+import info.tregmine.database.db.DBContextFactory;
+import info.tregmine.listeners.*;
+import info.tregmine.quadtree.IntersectionException;
+import info.tregmine.zones.Lot;
+import info.tregmine.zones.Zone;
+import info.tregmine.zones.ZoneWorld;
+
 import java.io.File;
 import java.io.IOException;
+import java.net.InetAddress;
+import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.Location;
-import org.bukkit.Server;
-import org.bukkit.World.Environment;
-import org.bukkit.World;
-import org.bukkit.WorldCreator;
-import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -32,34 +26,8 @@ import org.bukkit.event.world.WorldSaveEvent;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitScheduler;
 
 import com.maxmind.geoip.LookupService;
-
-import info.tregmine.api.FishyBlock;
-import info.tregmine.api.PlayerBannedException;
-import info.tregmine.api.PlayerReport;
-import info.tregmine.api.Rank;
-import info.tregmine.api.TregminePlayer;
-import info.tregmine.database.DAOException;
-import info.tregmine.database.IBlessedBlockDAO;
-import info.tregmine.database.IContext;
-import info.tregmine.database.IContextFactory;
-import info.tregmine.database.IFishyBlockDAO;
-import info.tregmine.database.IInventoryDAO;
-import info.tregmine.database.ILogDAO;
-import info.tregmine.database.IPlayerDAO;
-import info.tregmine.database.IPlayerReportDAO;
-import info.tregmine.database.IZonesDAO;
-import info.tregmine.database.db.DBContextFactory;
-import info.tregmine.quadtree.IntersectionException;
-import info.tregmine.zones.Lot;
-import info.tregmine.zones.Zone;
-import info.tregmine.zones.ZoneWorld;
-import static info.tregmine.database.IInventoryDAO.InventoryType;
-
-import info.tregmine.listeners.*;
-import info.tregmine.commands.*;
 
 /**
  * @author Ein Andersson
@@ -224,10 +192,12 @@ public class Tregmine extends JavaPlugin
         getCommand("fill").setExecutor(new FillCommand(this, "fill"));
         getCommand("fly").setExecutor(new FlyCommand(this));
         getCommand("force").setExecutor(new ForceCommand(this));
+        getCommand("forceblock").setExecutor(new ForceShieldCommand(this));
         getCommand("give").setExecutor(new GiveCommand(this));
         getCommand("head").setExecutor(new HeadCommand(this));
         getCommand("home").setExecutor(new HomeCommand(this));
         getCommand("inv").setExecutor(new InventoryCommand(this));
+        getCommand("invlog").setExecutor(new InventoryLogCommand(this));
         getCommand("item").setExecutor(new ItemCommand(this));
         getCommand("keyword").setExecutor(new KeywordCommand(this));
         getCommand("kick").setExecutor(new KickCommand(this));
@@ -261,6 +231,7 @@ public class Tregmine extends JavaPlugin
         getCommand("tpshield").setExecutor(new TeleportShieldCommand(this));
         getCommand("tpto").setExecutor(new TeleportToCommand(this));
         getCommand("trade").setExecutor(new TradeCommand(this));
+        getCommand("update").setExecutor(new UpdateCommand(this));
         getCommand("vanish").setExecutor(new VanishCommand(this));
         getCommand("wallet").setExecutor(new WalletCommand(this));
         getCommand("warn").setExecutor(new WarnCommand(this));
@@ -279,7 +250,7 @@ public class Tregmine extends JavaPlugin
         // Add a record of logout to db for all players
         for (TregminePlayer player : getOnlinePlayers()) {
             player.sendMessage(ChatColor.AQUA
-                    + "Tregmine successfully unloaded. Build "
+                    + "Tregmine successfully unloaded. Version "
                     + getDescription().getVersion());
 
             removePlayer(player);
