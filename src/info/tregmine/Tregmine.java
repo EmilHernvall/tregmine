@@ -1,30 +1,126 @@
 package info.tregmine;
 
+import info.tregmine.api.FishyBlock;
+import info.tregmine.api.PlayerBannedException;
+import info.tregmine.api.PlayerReport;
+import info.tregmine.api.Rank;
+import info.tregmine.api.TregminePlayer;
+import info.tregmine.commands.ActionCommand;
+import info.tregmine.commands.AlertCommand;
+import info.tregmine.commands.BanCommand;
+import info.tregmine.commands.BlessCommand;
+import info.tregmine.commands.BlockHereCommand;
+import info.tregmine.commands.BrushCommand;
+import info.tregmine.commands.ChangeNameCommand;
+import info.tregmine.commands.ChannelCommand;
+import info.tregmine.commands.CleanInventoryCommand;
+import info.tregmine.commands.CreateMobCommand;
+import info.tregmine.commands.CreateWarpCommand;
+import info.tregmine.commands.FillCommand;
+import info.tregmine.commands.FlyCommand;
+import info.tregmine.commands.ForceCommand;
+import info.tregmine.commands.GameModeCommand;
+import info.tregmine.commands.GiveCommand;
+import info.tregmine.commands.HeadCommand;
+import info.tregmine.commands.HomeCommand;
+import info.tregmine.commands.InventoryCommand;
+import info.tregmine.commands.ItemCommand;
+import info.tregmine.commands.KeywordCommand;
+import info.tregmine.commands.KickCommand;
+import info.tregmine.commands.LotCommand;
+import info.tregmine.commands.LotteryCommand;
+import info.tregmine.commands.MentorCommand;
+import info.tregmine.commands.MsgCommand;
+import info.tregmine.commands.NewSpawnCommand;
+import info.tregmine.commands.NormalCommand;
+import info.tregmine.commands.NotifyCommand;
+import info.tregmine.commands.NukeCommand;
+import info.tregmine.commands.PasswordCommand;
+import info.tregmine.commands.PositionCommand;
+import info.tregmine.commands.QuitMessageCommand;
+import info.tregmine.commands.RegenerateChunkCommand;
+import info.tregmine.commands.RemItemsCommand;
+import info.tregmine.commands.ReportCommand;
+import info.tregmine.commands.SayCommand;
+import info.tregmine.commands.SeenCommand;
+import info.tregmine.commands.SellCommand;
+import info.tregmine.commands.SendToCommand;
+import info.tregmine.commands.SetBiomeCommand;
+import info.tregmine.commands.SetSpawnerCommand;
+import info.tregmine.commands.SpawnCommand;
+import info.tregmine.commands.SummonCommand;
+import info.tregmine.commands.SupportCommand;
+import info.tregmine.commands.TeleportCommand;
+import info.tregmine.commands.TeleportShieldCommand;
+import info.tregmine.commands.TeleportToCommand;
+import info.tregmine.commands.TimeCommand;
+import info.tregmine.commands.TradeCommand;
+import info.tregmine.commands.UpdateCommand;
+import info.tregmine.commands.VanishCommand;
+import info.tregmine.commands.WalletCommand;
+import info.tregmine.commands.WarnCommand;
+import info.tregmine.commands.WarpCommand;
+import info.tregmine.commands.WeatherCommand;
+import info.tregmine.commands.WhoCommand;
+import info.tregmine.commands.ZoneCommand;
+import info.tregmine.database.DAOException;
+import info.tregmine.database.IBlessedBlockDAO;
+import info.tregmine.database.IContext;
+import info.tregmine.database.IContextFactory;
+import info.tregmine.database.IFishyBlockDAO;
+import info.tregmine.database.IInventoryDAO;
+import info.tregmine.database.IInventoryDAO.InventoryType;
+import info.tregmine.database.ILogDAO;
+import info.tregmine.database.IPlayerDAO;
+import info.tregmine.database.IPlayerReportDAO;
+import info.tregmine.database.IZonesDAO;
+import info.tregmine.database.db.DBContextFactory;
+import info.tregmine.listeners.BlessedBlockListener;
+import info.tregmine.listeners.BoxFillBlockListener;
+import info.tregmine.listeners.ChatListener;
+import info.tregmine.listeners.CompassListener;
+import info.tregmine.listeners.DonationSigns;
+import info.tregmine.listeners.EggListener;
+import info.tregmine.listeners.ExpListener;
+import info.tregmine.listeners.FishyBlockListener;
+import info.tregmine.listeners.InventoryListener;
+import info.tregmine.listeners.ItemFrameListener;
+import info.tregmine.listeners.PlayerLookupListener;
+import info.tregmine.listeners.SetupListener;
+import info.tregmine.listeners.SignColorListener;
+import info.tregmine.listeners.TabListener;
+import info.tregmine.listeners.TauntListener;
+import info.tregmine.listeners.TregmineBlockListener;
+import info.tregmine.listeners.TregminePlayerListener;
+import info.tregmine.listeners.ZoneBlockListener;
+import info.tregmine.listeners.ZoneEntityListener;
+import info.tregmine.listeners.ZonePlayerListener;
+import info.tregmine.quadtree.IntersectionException;
+import info.tregmine.zones.Lot;
+import info.tregmine.zones.Zone;
+import info.tregmine.zones.ZoneWorld;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
-import java.util.LinkedList;
 import java.util.Queue;
+import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.net.InetAddress;
-import java.io.File;
-import java.io.IOException;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
-import org.bukkit.Location;
 import org.bukkit.Server;
-import org.bukkit.World.Environment;
 import org.bukkit.World;
-import org.bukkit.WorldCreator;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -32,34 +128,8 @@ import org.bukkit.event.world.WorldSaveEvent;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitScheduler;
 
 import com.maxmind.geoip.LookupService;
-
-import info.tregmine.api.FishyBlock;
-import info.tregmine.api.PlayerBannedException;
-import info.tregmine.api.PlayerReport;
-import info.tregmine.api.Rank;
-import info.tregmine.api.TregminePlayer;
-import info.tregmine.database.DAOException;
-import info.tregmine.database.IBlessedBlockDAO;
-import info.tregmine.database.IContext;
-import info.tregmine.database.IContextFactory;
-import info.tregmine.database.IFishyBlockDAO;
-import info.tregmine.database.IInventoryDAO;
-import info.tregmine.database.ILogDAO;
-import info.tregmine.database.IPlayerDAO;
-import info.tregmine.database.IPlayerReportDAO;
-import info.tregmine.database.IZonesDAO;
-import info.tregmine.database.db.DBContextFactory;
-import info.tregmine.quadtree.IntersectionException;
-import info.tregmine.zones.Lot;
-import info.tregmine.zones.Zone;
-import info.tregmine.zones.ZoneWorld;
-import static info.tregmine.database.IInventoryDAO.InventoryType;
-
-import info.tregmine.listeners.*;
-import info.tregmine.commands.*;
 
 /**
  * @author Ein Andersson
@@ -261,6 +331,7 @@ public class Tregmine extends JavaPlugin
         getCommand("tpshield").setExecutor(new TeleportShieldCommand(this));
         getCommand("tpto").setExecutor(new TeleportToCommand(this));
         getCommand("trade").setExecutor(new TradeCommand(this));
+        getCommand("update").setExecutor(new UpdateCommand(this));
         getCommand("vanish").setExecutor(new VanishCommand(this));
         getCommand("wallet").setExecutor(new WalletCommand(this));
         getCommand("warn").setExecutor(new WarnCommand(this));
@@ -279,7 +350,7 @@ public class Tregmine extends JavaPlugin
         // Add a record of logout to db for all players
         for (TregminePlayer player : getOnlinePlayers()) {
             player.sendMessage(ChatColor.AQUA
-                    + "Tregmine successfully unloaded. Build "
+                    + "Tregmine successfully unloaded. Version "
                     + getDescription().getVersion());
 
             removePlayer(player);
