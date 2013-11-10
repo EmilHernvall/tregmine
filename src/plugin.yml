@@ -179,6 +179,9 @@ commands:
   trade:
     description: Trade safely
     usage: /trade player
+  update:
+    description: See what was last updated!
+    usage: /update [version number]
   vanish:
     description: Become invisible (admin only)
     usage: /vanish <on|off>
