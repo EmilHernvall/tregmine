@@ -98,7 +98,7 @@ public class InventoryListener implements Listener
                     }
                 }
 
-                if (others > 0) {
+                if (others > 0 && player.hasFlag(TregminePlayer.Flags.CHEST_LOG)) {
                     player.sendMessage(ChatColor.YELLOW + "Last accessed by:");
                     SimpleDateFormat dfm = new SimpleDateFormat("dd/MM/yy hh:mm:ss a");
                     int i = 0;
