@@ -51,26 +51,24 @@ public class DBZonesDAO implements IZonesDAO
         return rects;
     }
 
-    private Map<String, Zone.Permission> getZonePermissions(int zoneId)
-            throws DAOException
+    private Map<Integer, Zone.Permission> getZonePermissions(int zoneId)
+    throws DAOException
     {
         String sql = "SELECT * FROM zone_user " +
-            "INNER JOIN player ON user_id = player_id " +
             "WHERE zone_id = ?";
 
-        Map<String, Zone.Permission> permissions =
-                new HashMap<String, Zone.Permission>();
+        Map<Integer, Zone.Permission> permissions = new HashMap<>();
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, zoneId);
             stmt.execute();
 
             try (ResultSet rs = stmt.getResultSet()) {
                 while (rs.next()) {
-                    String player = rs.getString("player_name");
+                    int playerId = rs.getInt("user_id");
                     Zone.Permission permission =
                             Zone.Permission.fromString(rs.getString("user_perm"));
 
-                    permissions.put(player, permission);
+                    permissions.put(playerId, permission);
                 }
             }
         } catch (SQLException e) {
@@ -102,6 +100,7 @@ public class DBZonesDAO implements IZonesDAO
                     zone.setPvp("1".equals(rs.getString("zone_pvp")));
                     zone.setHostiles("1".equals(rs.getString("zone_hostiles")));
                     zone.setCommunist("1".equals(rs.getString("zone_communist")));
+                    zone.setPublicProfile("1".equals(rs.getString("zone_publicprofile")));
                     zone.setTextEnter(rs.getString("zone_entermessage"));
                     zone.setTextExit(rs.getString("zone_exitmessage"));
                     zone.setTexture(rs.getString("zone_texture"));
@@ -126,8 +125,9 @@ public class DBZonesDAO implements IZonesDAO
     {
         String sql = "INSERT INTO zone (zone_world, zone_name, " +
             "zone_enterdefault, zone_placedefault, zone_destroydefault, " +
-            "zone_pvp, zone_hostiles, zone_communist, zone_entermessage, " +
-            "zone_exitmessage, zone_owner) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+            "zone_pvp, zone_hostiles, zone_communist, zone_publicprofile, " +
+            "zone_entermessage, zone_exitmessage, zone_owner) ";
+        sql += "VALUES (?, ?,?,?,?,?,?,?,?,?,?,?)";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, zone.getWorld());
@@ -138,9 +138,10 @@ public class DBZonesDAO implements IZonesDAO
             stmt.setString(6, zone.isPvp() ? "1" : "0");
             stmt.setString(7, zone.hasHostiles() ? "1" : "0");
             stmt.setString(8, zone.isCommunist() ? "1" : "0");
-            stmt.setString(9, zone.getTextEnter());
-            stmt.setString(10, zone.getTextExit());
-            stmt.setString(11, zone.getMainOwner());
+            stmt.setString(9, zone.hasPublicProfile() ? "1" : "0");
+            stmt.setString(10, zone.getTextEnter());
+            stmt.setString(11, zone.getTextExit());
+            stmt.setString(12, zone.getMainOwner());
             stmt.execute();
 
             stmt.execute("SELECT LAST_INSERT_ID()");
@@ -164,7 +165,8 @@ public class DBZonesDAO implements IZonesDAO
         String sql = "UPDATE zone SET zone_world = ?, zone_name = ?, " +
             "zone_enterdefault = ?, zone_placedefault = ?, " +
             "zone_destroydefault = ?, zone_pvp = ?, zone_hostiles = ?, " +
-            "zone_communist = ?, zone_entermessage = ?, zone_exitmessage = ? " +
+            "zone_communist = ?, zone_publicprofile = ?, " +
+            "zone_entermessage = ?, zone_exitmessage = ? " +
             "WHERE zone_id = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -176,9 +178,10 @@ public class DBZonesDAO implements IZonesDAO
             stmt.setString(6, zone.isPvp() ? "1" : "0");
             stmt.setString(7, zone.hasHostiles() ? "1" : "0");
             stmt.setString(8, zone.isCommunist() ? "1" : "0");
-            stmt.setString(9, zone.getTextEnter());
-            stmt.setString(10, zone.getTextExit());
-            stmt.setInt(11, zone.getId());
+            stmt.setString(9, zone.hasPublicProfile() ? "1" : "0");
+            stmt.setString(10, zone.getTextEnter());
+            stmt.setString(11, zone.getTextExit());
+            stmt.setInt(12, zone.getId());
             stmt.execute();
         } catch (SQLException e) {
             throw new DAOException(sql, e);
@@ -303,13 +306,12 @@ public class DBZonesDAO implements IZonesDAO
     }
 
     @Override
-    public List<String> getLotOwners(int lotId) throws DAOException
+    public List<Integer> getLotOwners(int lotId) throws DAOException
     {
         String sql = "SELECT * FROM zone_lotuser " +
-            "INNER JOIN player ON player_id = user_id " +
             "WHERE lot_id = ?";
 
-        List<String> owners = new ArrayList<String>();
+        List<Integer> owners = new ArrayList<>();
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setInt(1, lotId);
@@ -317,7 +319,7 @@ public class DBZonesDAO implements IZonesDAO
 
             try (ResultSet rs = stmt.getResultSet()) {
                 while (rs.next()) {
-                    owners.add(rs.getString("player_name"));
+                    owners.add(rs.getInt("user_id"));
                 }
             }
         } catch (SQLException e) {

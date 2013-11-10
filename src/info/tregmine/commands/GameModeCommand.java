@@ -28,6 +28,10 @@ public class GameModeCommand extends AbstractCommand
         player.sendMessage(YELLOW + "You are now in "
                 + mode.toString().toLowerCase() + " mode.");
 
+        if (player.getRank().canFly()) {
+            player.setAllowFlight(true);
+        }
+
         return true;
     }
 }

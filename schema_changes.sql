@@ -254,3 +254,142 @@ CREATE TABLE warp_log (
     INDEX idx_warp (warp_id, log_timestamp)
 ) ENGINE=InnoDB;
 
+CREATE TABLE mentorlog (
+    mentorlog_id INT UNSIGNED AUTO_INCREMENT,
+    student_id INT UNSIGNED,
+    mentor_id INT UNSIGNED,
+    mentorlog_resumed INT UNSIGNED DEFAULT 0,
+    mentorlog_startedtime INT UNSIGNED,
+    mentorlog_completedtime INT UNSIGNED DEFAULT 0,
+    mentorlog_cancelledtime INT UNSIGNED DEFAULT 0,
+    mentorlog_status ENUM ('started', 'completed', 'cancelled') DEFAULT 'started',
+    mentorlog_channel VARCHAR (255),
+    PRIMARY KEY (mentorlog_id),
+    UNIQUE idx_student (student_id, mentor_id),
+    UNIQUE idx_mentor (mentor_id, student_id)
+) ENGINE=InnoDB;
+
+ALTER TABLE zone ADD COLUMN zone_publicprofile ENUM ('0', '1') DEFAULT '0' AFTER zone_communist;
+
+CREATE TABLE fishyblock (
+    fishyblock_id INT UNSIGNED AUTO_INCREMENT,
+    player_id INT UNSIGNED,
+    fishyblock_created INT UNSIGNED,
+    fishyblock_status ENUM ('active', 'deleted') DEFAULT 'active',
+    fishyblock_material INT UNSIGNED,
+    fishyblock_data INT,
+    fishyblock_enchantments TEXT,
+    fishyblock_cost INT UNSIGNED,
+    fishyblock_inventory INT UNSIGNED,
+    fishyblock_world VARCHAR(50),
+    fishyblock_blockx INT,
+    fishyblock_blocky INT,
+    fishyblock_blockz INT,
+    fishyblock_signx INT,
+    fishyblock_signy INT,
+    fishyblock_signz INT,
+    PRIMARY KEY (fishyblock_id),
+    INDEX player_idx (player_id)
+) ENGINE=InnoDB;
+
+CREATE TABLE fishyblock_transaction (
+    transaction_id INT UNSIGNED AUTO_INCREMENT,
+    fishyblock_id INT UNSIGNED,
+    player_id INT UNSIGNED,
+    transaction_type ENUM ('deposit', 'withdraw', 'buy'),
+    transaction_timestamp INT UNSIGNED,
+    transaction_amount INT UNSIGNED,
+    transaction_unitcost INT UNSIGNED,
+    transaction_totalcost INT UNSIGNED,
+    PRIMARY KEY (transaction_id),
+    KEY idx_fishyblock (fishyblock_id, transaction_timestamp),
+    KEY idx_player (player_id)
+) ENGINE=InnoDB;
+
+CREATE TABLE fishyblock_costlog (
+    costlog_id INT UNSIGNED AUTO_INCREMENT,
+    fishyblock_id INT UNSIGNED,
+    costlog_timestamp INT UNSIGNED,
+    costlog_newcost INT UNSIGNED,
+    costlog_oldcost INT UNSIGNED,
+    PRIMARY KEY (costlog_id),
+    KEY idx_fishyblock (fishyblock_id, costlog_timestamp)
+) ENGINE=InnoDB;
+
+CREATE TABLE `blessedblock` (
+  `blessedblock_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `player_id` int(10) unsigned DEFAULT NULL,
+  `blessedblock_checksum` int(11) DEFAULT NULL,
+  `blessedblock_x` int(11) DEFAULT NULL,
+  `blessedblock_y` int(11) DEFAULT NULL,
+  `blessedblock_z` int(11) DEFAULT NULL,
+  `blessedblock_world` varchar(32) COLLATE utf8_swedish_ci DEFAULT NULL,
+  PRIMARY KEY (`blessedblock_id`)
+) ENGINE=InnoDB;
+
+INSERT INTO blessedblock
+SELECT inventory_id,
+       player_id,
+       inventory_checksum,
+       inventory_x,
+       inventory_y,
+       inventory_z,
+       inventory_world FROM inventory WHERE inventory_type = "block";
+
+CREATE TABLE inventory_accesslog (
+    accesslog_id INT UNSIGNED AUTO_INCREMENT,
+    inventory_id INT UNSIGNED,
+    player_id INT UNSIGNED,
+    accesslog_timestamp INT UNSIGNED,
+    PRIMARY KEY (accesslog_id),
+    KEY idx_inventory (inventory_id, accesslog_timestamp)
+) ENGINE=InnoDB;
+
+CREATE TABLE inventory_changelog (
+    changelog_id INT UNSIGNED AUTO_INCREMENT,
+    inventory_id INT UNSIGNED,
+    player_id INT UNSIGNED,
+    changelog_timestamp INT UNSIGNED,
+    changelog_slot INT UNSIGNED,
+    changelog_material INT UNSIGNED,
+    changelog_data INT,
+    changelog_meta TEXT,
+    changelog_type ENUM ('add', 'remove'),
+    PRIMARY KEY (changelog_id),
+    KEY idx_inventory (inventory_id, changelog_timestamp)
+) ENGINE=InnoDB;
+
+ALTER TABLE inventory ADD INDEX idx_coords (inventory_x, inventory_y, inventory_z, inventory_world);
+ALTER TABLE inventory_changelog ADD COLUMN changelog_amount INT UNSIGNED AFTER changelog_meta;
+
+ALTER TABLE fishyblock ADD COLUMN fishyblock_storedenchants ENUM ('0', '1') DEFAULT '0';
+
+CREATE TABLE IF NOT EXISTS `enchantment` (
+  `enchantment_name` varchar(255) NOT NULL,
+  `enchantment_title` varchar(255) NOT NULL,
+  PRIMARY KEY (enchantment_name)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO `enchantment` (`enchantment_name`, `enchantment_title`) VALUES
+('ARROW_DAMAGE', 'Power'),
+('ARROW_FIRE', 'Flame'),
+('ARROW_INFINITE', 'Infinity'),
+('ARROW_KNOCKBACK', 'Punch'),
+('DAMAGE_ALL', 'Sharpness'),
+('DAMAGE_ARTHROPODS', 'Bane of Arthropods'),
+('DAMAGE_UNDEAD', 'Smite'),
+('DIG_SPEED', 'Efficiency'),
+('DURABILITY', 'Unbreaking'),
+('FIRE_ASPECT', 'Fire Aspect'),
+('KNOCKBACK', 'Knockback'),
+('LOOT_BONUS_BLOCKS', 'Fortune'),
+('LOOT_BONUS_MOBS', 'Looting'),
+('OXYGEN', 'Respiration'),
+('PROTECTION_ENVIRONMENTAL', 'Protection'),
+('PROTECTION_EXPLOSIONS', 'Blast Protection'),
+('PROTECTION_FIRE', 'Fire Protection'),
+('PROTECTION_PROJECTILE', 'Projectile Protection'),
+('PROTECTION_FALL', 'Feather Falling'),
+('SILK_TOUCH', 'Silk Touch'),
+('THORNS', 'Thorns'),
+('WATER_WORKER', 'Aqua Affinity');

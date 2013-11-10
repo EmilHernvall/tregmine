@@ -68,14 +68,13 @@ public class WarnCommand extends AbstractCommand
 
         TregminePlayer victim = candidates.get(0);
         if (hard) {
-            server.broadcastMessage(player.getChatName() + AQUA
-                    + " hardwarned " + victim.getChatName() + AQUA + ": "
+            player.sendMessage(GREEN + "You hardwarned " + victim.getChatName() + GREEN + ": "
                     + message);
             LOGGER.info(victim.getName() + " hardwarned by " + player.getName());
         }
         else {
-            server.broadcastMessage(player.getChatName() + AQUA + " warned "
-                    + victim.getChatName() + AQUA + ": " + message);
+            player.sendMessage(GREEN + "You warned "
+                    + victim.getChatName() + GREEN + ": " + message);
             LOGGER.info(victim.getName() + " warned by " + player.getName());
         }
 

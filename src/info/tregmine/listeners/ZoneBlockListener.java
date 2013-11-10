@@ -9,10 +9,12 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+
+import info.tregmine.quadtree.Point;
+
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
 import info.tregmine.api.math.Distance;
-import info.tregmine.quadtree.Point;
 import info.tregmine.zones.Lot;
 import info.tregmine.zones.ZoneWorld;
 import info.tregmine.zones.Zone;
@@ -29,6 +31,8 @@ public class ZoneBlockListener implements Listener
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event)
     {
+        Location poldlocation = event.getPlayer().getLocation();
+        
         TregminePlayer player = plugin.getPlayer(event.getPlayer());
         if (player.getRank().canModifyZones()) {
             return;
@@ -51,17 +55,18 @@ public class ZoneBlockListener implements Listener
         }
 
         if (currentZone != null) {
-            Zone.Permission perm = currentZone.getUser(player.getName());
+            Zone.Permission perm = currentZone.getUser(player);
 
             Lot lot = world.findLot(pos);
             if (lot != null) {
                 if (perm == Zone.Permission.Owner && currentZone.isCommunist()) {
                     // Zone owners can modify lots in communist zones
                 }
-                else if (lot.isOwner(player.getName())) {
+                else if (lot.isOwner(player)) {
                     // Lot owners can always modify lots
                 }
                 else {
+                    player.teleport(poldlocation);
                     player.sendMessage(ChatColor.RED + "["
                             + currentZone.getName() + "] "
                             + "You are not allowed to break blocks in lot "
@@ -90,6 +95,7 @@ public class ZoneBlockListener implements Listener
                 if (perm == null
                         || (perm != Zone.Permission.Maker && perm != Zone.Permission.Owner)) {
                     player.setFireTicks(50);
+                    player.teleport(poldlocation);
                     event.setCancelled(true);
                     player.sendMessage(ChatColor.RED + "["
                             + currentZone.getName() + "] "
@@ -122,6 +128,8 @@ public class ZoneBlockListener implements Listener
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent event)
     {
+        Location poldlocation = event.getPlayer().getLocation();
+        
         TregminePlayer player = plugin.getPlayer(event.getPlayer());
         if (player.getRank().canModifyZones()) {
             return;
@@ -144,20 +152,21 @@ public class ZoneBlockListener implements Listener
         }
 
         if (currentZone != null) {
-            Zone.Permission perm = currentZone.getUser(player.getName());
+            Zone.Permission perm = currentZone.getUser(player);
 
             Lot lot = world.findLot(pos);
             if (lot != null) {
                 if (perm == Zone.Permission.Owner && currentZone.isCommunist()) {
                     // Zone owners can modify lots in communist zones
                 }
-                else if (lot.isOwner(player.getName())) {
+                else if (lot.isOwner(player)) {
                     // Lot owners can always modify lots
                 }
                 else {
+                    player.teleport(poldlocation);
                     player.sendMessage(ChatColor.RED + "["
                             + currentZone.getName() + "] "
-                            + "You are not allowed to break blocks in lot "
+                            + "You are not allowed to place blocks in lot "
                             + lot.getName() + ".");
                     event.setCancelled(true);
                     return;
@@ -186,6 +195,7 @@ public class ZoneBlockListener implements Listener
                 if (perm == null
                         || (perm != Zone.Permission.Maker && perm != Zone.Permission.Owner)) {
                     player.setFireTicks(50);
+                    player.teleport(poldlocation);
                     event.setCancelled(true);
                     player.sendMessage(ChatColor.RED + "["
                             + currentZone.getName() + "] "

@@ -8,20 +8,24 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.util.Vector;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Zombie;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.EntityBreakDoorEvent;
+import org.bukkit.util.Vector;
+
 import info.tregmine.Tregmine;
 import info.tregmine.api.Notification;
 import info.tregmine.api.TregminePlayer;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
-import info.tregmine.database.IInventoryDAO;
+import info.tregmine.database.IBlessedBlockDAO;
 import info.tregmine.database.IWalletDAO;
 
 public class BlessedBlockListener implements Listener
@@ -30,8 +34,10 @@ public class BlessedBlockListener implements Listener
 
     public final static Set<Material> ALLOWED_MATERIALS =
             EnumSet.of(Material.CHEST,
+                       Material.TRAPPED_CHEST,
                        Material.FURNACE,
                        Material.BURNING_FURNACE,
+                       Material.BREWING_STAND,
                        Material.WOOD_DOOR,
                        Material.WOODEN_DOOR,
                        Material.LEVER,
@@ -111,9 +117,8 @@ public class BlessedBlockListener implements Listener
             blessedBlocks.put(loc, targetId);
 
             try (IContext ctx = plugin.createContext()) {
-                IInventoryDAO invDAO = ctx.getInventoryDAO();
-                invDAO.insertInventory(target, loc,
-                        IInventoryDAO.InventoryType.BLOCK);
+                IBlessedBlockDAO blessDAO = ctx.getBlessedBlockDAO();
+                blessDAO.insert(target, loc);
             } catch (DAOException e) {
                 throw new RuntimeException(e);
             }
@@ -140,7 +145,6 @@ public class BlessedBlockListener implements Listener
                     }
                 } else {
                     player.sendMessage(ChatColor.AQUA + "Blessed to you.");
-                    event.setCancelled(false);
                 }
             }
         }
@@ -158,6 +162,21 @@ public class BlessedBlockListener implements Listener
                     + "You can't destroy a blessed item.");
             event.setCancelled(true);
             return;
+        }
+    }
+
+    @EventHandler
+    public void onDoorBreak(EntityBreakDoorEvent event)
+    {
+        Location l = event.getBlock().getLocation();
+        Entity e = event.getEntity();
+
+        Map<Location, Integer> b = plugin.getBlessedBlocks();
+
+        if (b.containsKey(l)) {
+            if (e instanceof Zombie) {
+                event.setCancelled(true);
+            }
         }
     }
 

@@ -9,6 +9,8 @@ import java.util.Map;
 import info.tregmine.quadtree.Point;
 import info.tregmine.quadtree.Rectangle;
 
+import info.tregmine.api.TregminePlayer;
+
 public class Zone
 {
     private String texture;
@@ -31,7 +33,7 @@ public class Zone
         // is allowed in the zone, if this isn't the default
         Allowed("%s is now allowed in %s.", "You are now allowed in %s.",
                 "%s is no longer allowed in %s.",
-                "You are no longer allowd in %s.",
+                "You are no longer allowed in %s.",
                 "You are allowed in this zone."),
         // banned from the zone
         Banned("%s is now banned from %s.", "You have been banned from %s.",
@@ -111,18 +113,19 @@ public class Zone
     private boolean pvp = false;
     private boolean hostiles = false;
     private boolean communism = false;
+    private boolean publicProfile = false;
 
     private String textEnter;
     private String textExit;
 
     private String mainOwner;
 
-    private Map<String, Permission> users;
+    private Map<Integer, Permission> users;
 
     public Zone()
     {
         rects = new ArrayList<Rectangle>();
-        users = new HashMap<String, Permission>();
+        users = new HashMap<Integer, Permission>();
     }
 
     public int getId()
@@ -254,6 +257,16 @@ public class Zone
         return communism;
     }
 
+    public void setPublicProfile(boolean v)
+    {
+        this.publicProfile = v;
+    }
+
+    public boolean hasPublicProfile()
+    {
+        return publicProfile;
+    }
+
     public String getTextEnter()
     {
         return textEnter;
@@ -274,29 +287,29 @@ public class Zone
         this.textExit = textExit;
     }
 
-    public void setUsers(Map<String, Permission> v)
+    public void setUsers(Map<Integer, Permission> v)
     {
         this.users = v;
     }
 
-    public void addUser(String name, Permission perm)
+    public void addUser(TregminePlayer player, Permission perm)
     {
-        users.put(name, perm);
+        users.put(player.getId(), perm);
     }
 
-    public void deleteUser(String name)
+    public void deleteUser(TregminePlayer player)
     {
-        users.remove(name);
+        users.remove(player.getId());
     }
 
-    public Collection<String> getUsers()
+    public Collection<Integer> getUsers()
     {
         return users.keySet();
     }
 
-    public Permission getUser(String name)
+    public Permission getUser(TregminePlayer player)
     {
-        return users.get(name);
+        return users.get(player.getId());
     }
 
     public boolean contains(Point p)

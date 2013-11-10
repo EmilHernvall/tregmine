@@ -63,6 +63,7 @@ public class PlayerListAction implements WebHandler.Action
                     .key("softwarned").value(player.hasFlag(TregminePlayer.Flags.SOFTWARNED))
                     .key("hardwarned").value(player.hasFlag(TregminePlayer.Flags.HARDWARNED))
                     .key("hidden").value(player.hasFlag(TregminePlayer.Flags.INVISIBLE))
+                    .key("playtime").value(player.getTimeOnline())
                     .endObject();
             }
             json.endArray();

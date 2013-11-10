@@ -27,11 +27,11 @@ import info.tregmine.database.ILogDAO;
 public class TregmineBlockListener implements Listener
 {
     private Set<Material> loggedMaterials = EnumSet.of(Material.DIAMOND_ORE,
-                                                       Material.EMERALD_ORE,
-                                                       Material.GOLD_ORE,
-                                                       Material.LAPIS_ORE,
-                                                       Material.QUARTZ_ORE,
-                                                       Material.REDSTONE_ORE);
+            Material.EMERALD_ORE,
+            Material.GOLD_ORE,
+            Material.LAPIS_ORE,
+            Material.QUARTZ_ORE,
+            Material.REDSTONE_ORE);
 
     private Tregmine plugin;
 
@@ -65,6 +65,12 @@ public class TregmineBlockListener implements Listener
                 logDAO.insertOreLog(player, block.getLocation(), material.getId());
             } catch (DAOException e) {
                 throw new RuntimeException(e);
+            }
+        }
+        if (event.getBlock().getType().equals(Material.SPONGE)) {
+            if (!player.getRank().canBreakBannedBlocks()) {
+                event.setCancelled(true);
+                return;
             }
         }
     }

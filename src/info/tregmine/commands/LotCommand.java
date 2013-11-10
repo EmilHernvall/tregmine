@@ -92,7 +92,7 @@ public class LotCommand extends AbstractCommand
 
             Zone zone = world.findZone(new Point(b1.getX(), b1.getZ()));
 
-            Zone.Permission perm = zone.getUser(player.getName());
+            Zone.Permission perm = zone.getUser(player);
             if (perm != Zone.Permission.Owner) {
                 player.sendMessage(RED
                         + "You are not allowed to create lots in zone "
@@ -115,7 +115,7 @@ public class LotCommand extends AbstractCommand
             lot.setZoneId(zone.getId());
             lot.setRect(rect);
             lot.setName(args[1] + "." + zone.getName());
-            lot.addOwner(playerName);
+            lot.addOwner(victim);
 
             try {
                 world.addLot(lot);
@@ -128,7 +128,7 @@ public class LotCommand extends AbstractCommand
             dao.addLot(lot);
             dao.addLotUser(lot.getId(), victim.getId());
 
-            player.sendMessage(YELLOW + "[" + zone.getName() + "] Lot "
+            player.sendMessage(GREEN + "[" + zone.getName() + "] Lot "
                     + args[1] + "." + zone.getName() + " created for player "
                     + playerName + ".");
         } catch (DAOException e) {
@@ -157,11 +157,11 @@ public class LotCommand extends AbstractCommand
         }
 
         Zone zone = tregmine.getZone(lot.getZoneId());
-        Zone.Permission perm = zone.getUser(player.getName());
+        Zone.Permission perm = zone.getUser(player);
         if (perm == Zone.Permission.Owner && zone.isCommunist()) {
             // Zone owners can do this in communist zones
         }
-        else if (lot.isOwner(player.getName())) {
+        else if (lot.isOwner(player)) {
             // Lot owners can always do it
         }
         else if (player.getRank().canModifyZones()) {
@@ -173,19 +173,20 @@ public class LotCommand extends AbstractCommand
             return;
         }
 
+        // try partial matching
         List<TregminePlayer> candidates = tregmine.matchPlayer(args[2]);
+        TregminePlayer candidate = null;
         if (candidates.size() != 1) {
-            player.sendMessage(RED + "Player " + args[2]
-                    + " was not found.");
-            return;
-        }
-
-        TregminePlayer candidate = candidates.get(0);
-
-        if (lot.isOwner(candidate.getName())) {
-            player.sendMessage(RED + candidate.getChatName() + RED + " is " +
-                    "already an owner of lot " + name + ".");
-            return;
+            // try exact matching
+            candidate = tregmine.getPlayerOffline(args[2]);
+            if (candidate == null) {
+                // give up
+                player.sendMessage(RED + "Player " + args[2]
+                        + " was not found.");
+                return;
+            }
+        } else {
+            candidate = candidates.get(0);
         }
 
         try (IContext ctx = tregmine.createContext()) {
@@ -193,24 +194,31 @@ public class LotCommand extends AbstractCommand
 
             if ("addowner".equals(args[0])) {
 
-                if (lot.isOwner(candidate.getName())) {
+                if (lot.isOwner(candidate)) {
                     player.sendMessage(RED + candidate.getChatName() + RED +
                             " is already an owner of lot " + name + ".");
                     return;
                 }
                 else {
-                    lot.addOwner(candidate.getName());
+                    lot.addOwner(candidate);
                     dao.addLotUser(lot.getId(), candidate.getId());
-                    player.sendMessage(YELLOW + candidate.getChatName() + YELLOW +
+                    player.sendMessage(GREEN + candidate.getChatName() + GREEN +
                             " has been added as owner of " + lot.getName() + ".");
                 }
             }
             else if ("delowner".equals(args[0])) {
-                lot.deleteOwner(candidate.getName());
-                dao.deleteLotUser(lot.getId(), candidate.getId());
+                if (!lot.isOwner(candidate)) {
+                    player.sendMessage(RED + candidate.getChatName() + RED +
+                            " is not an owner of lot " + name + ".");
+                    return;
+                }
+                else {
+                    lot.deleteOwner(candidate);
+                    dao.deleteLotUser(lot.getId(), candidate.getId());
 
-                player.sendMessage(YELLOW + candidate.getChatName() + RED +
-                        " is no longer an owner of " + lot.getName() + ".");
+                    player.sendMessage(GREEN + candidate.getChatName() + GREEN +
+                            " is no longer an owner of " + lot.getName() + ".");
+                }
             }
         } catch (DAOException e) {
             throw new RuntimeException(e);
@@ -238,11 +246,11 @@ public class LotCommand extends AbstractCommand
         }
 
         Zone zone = tregmine.getZone(lot.getZoneId());
-        Zone.Permission perm = zone.getUser(player.getName());
+        Zone.Permission perm = zone.getUser(player);
         if (perm == Zone.Permission.Owner && zone.isCommunist()) {
             // Zone owners can do this in communist zones
         }
-        else if (lot.isOwner(player.getName())) {
+        else if (lot.isOwner(player)) {
             // Lot owners can always do it
         }
         else if (player.getRank().canModifyZones()) {
@@ -262,7 +270,7 @@ public class LotCommand extends AbstractCommand
 
             world.deleteLot(lot.getName());
 
-            player.sendMessage(YELLOW + lot.getName() + " has been deleted.");
+            player.sendMessage(GREEN + lot.getName() + " has been deleted.");
         } catch (DAOException e) {
             throw new RuntimeException(e);
         }

@@ -40,6 +40,16 @@ public enum Rank
                this == SENIOR_ADMIN;
     }
 
+    public boolean canBottleXP()
+    {
+        return this == DONATOR ||
+               this == GUARDIAN ||
+               this == BUILDER ||
+               this == CODER ||
+               this == JUNIOR_ADMIN ||
+               this == SENIOR_ADMIN;
+    }
+
     public boolean canPickup()
     {
         return this == SETTLER ||
@@ -54,12 +64,17 @@ public enum Rank
 
     public boolean canSetBiome()
     {
-        return this == CODER ||
-               this == BUILDER ||
+        return this == BUILDER ||
                this == JUNIOR_ADMIN ||
                this == SENIOR_ADMIN;
     }
-    
+
+    public boolean canRemItems()
+    {
+        return this == JUNIOR_ADMIN ||
+               this == SENIOR_ADMIN;
+    }
+
     public boolean canTeleport()
     {
         return this == SETTLER ||
@@ -135,7 +150,9 @@ public enum Rank
 
     public boolean canSaveHome()
     {
-        return this == DONATOR ||
+        return this == SETTLER ||
+               this == RESIDENT ||
+               this == DONATOR ||
                this == GUARDIAN ||
                this == CODER ||
                this == BUILDER ||
@@ -152,6 +169,16 @@ public enum Rank
                this == JUNIOR_ADMIN ||
                this == SENIOR_ADMIN;
     }
+
+    public boolean mustUseKeyword()
+    {
+        return this == GUARDIAN ||
+               this == CODER ||
+               this == BUILDER ||
+               this == JUNIOR_ADMIN ||
+               this == SENIOR_ADMIN;
+    }
+
 
     public boolean canVisitHomes()
     {
@@ -223,6 +250,13 @@ public enum Rank
     }
 
     public boolean canFill()
+    {
+        return this == BUILDER ||
+               this == JUNIOR_ADMIN ||
+               this == SENIOR_ADMIN;
+    }
+
+    public boolean canBrush()
     {
         return this == BUILDER ||
                this == JUNIOR_ADMIN ||
@@ -365,10 +399,25 @@ public enum Rank
                this == SENIOR_ADMIN;
     }
 
+    public boolean canUseEnhancedCompass()
+    {
+        return this == GUARDIAN ||
+               this == CODER ||
+               this == BUILDER ||
+               this == JUNIOR_ADMIN ||
+               this == SENIOR_ADMIN;
+    }
+
     public boolean canPlaceBannedBlocks()
     {
         return this == JUNIOR_ADMIN ||
                this == SENIOR_ADMIN;
+    }
+
+    public boolean canBreakBannedBlocks()
+    {
+        return this == JUNIOR_ADMIN ||
+                this == SENIOR_ADMIN;
     }
 
     public int getTeleportTimeout()
@@ -402,6 +451,25 @@ public enum Rank
             return 10000;
         } else {
             return 100;
+        }
+    }
+
+    public int getHomeLimit()
+    {
+        if (this == CODER ||
+            this == BUILDER ||
+            this == JUNIOR_ADMIN ||
+            this == SENIOR_ADMIN) {
+
+            return Integer.MAX_VALUE;
+        } else if (this == GUARDIAN) {
+            return 20;
+        } else if (this == DONATOR) {
+            return 5;
+        } else if (this == RESIDENT || this == SETTLER) {
+            return 1;
+        } else {
+            return 0;
         }
     }
 

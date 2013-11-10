@@ -45,6 +45,7 @@ import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
+import org.kitteh.tag.PlayerReceiveNameTagEvent;
 
 import info.tregmine.Tregmine;
 import info.tregmine.api.PlayerReport;
@@ -61,6 +62,7 @@ import info.tregmine.database.ILogDAO;
 import info.tregmine.database.IPlayerDAO;
 import info.tregmine.database.IPlayerReportDAO;
 import info.tregmine.database.IWalletDAO;
+import info.tregmine.database.IMentorLogDAO;
 import info.tregmine.commands.MentorCommand;
 import static info.tregmine.database.IInventoryDAO.InventoryType;
 
@@ -93,7 +95,6 @@ public class TregminePlayerListener implements Listener
                     ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " stole the cookies and ran!",
                     ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " was eaten by a teenage mutant ninja platypus!",
                     ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " parachuted of the plane and into the unknown!",
-                    ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " stole the cookies and ran!",
                     ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " was eaten by a teenage mutant ninja creeper!",
                     ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " jumped off the plane with a cobble stone parachute!",
                     ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " built Rome in one day and now deserves a break!",
@@ -102,28 +103,27 @@ public class TregminePlayerListener implements Listener
                     ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " disconnects from a better life.",
                     ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " already miss the best friends in the world!",
                     ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " will build something epic next time.",
-                    ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " is not banned yet!",
+                    ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " is not banned... yet!",
                     ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " has left our world!",
                     ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " went to browse Tregmine's forums instead!",
                     ChatColor.DARK_GRAY + "Quit - %s" + "'s" + ChatColor.DARK_GRAY + " CPU was killed by the Rendermen!",
-                    ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " logged out on accident!",
+                    ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " logged out by accident!",
                     ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " found the IRL warp!",
                     ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " left the game due to IRL chunk error issues!",
                     ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " left the Matrix. Say hi to Morpheus!",
                     ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " disconnected? What is this!? Impossibru!",
-                    ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " Come to Exon (Near sunspot)",
-                    ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " his/her mom called.",
-                    ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " toliet brb",
                     ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " found a lose cable and ate it.",
                     ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " found the true END of minecraft.",
-                    ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " sorry was that the kick button?",
+                    ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " found love elswhere.",
+                    ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " rage quit the server.",
                     ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " was not accidently banned by " + ChatColor.DARK_RED + "BlackX",
-                    ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " found love elswhere",
-                    ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " rage quit this server",
-                    ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " Tregmine will miss you a LOT, I hope your away time is almost as pleasant as being here",
-                    ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " NOOOOOO What did i do?",
-                    ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " Voz just got an eargasm (or is it a eyegasm)",
-                    ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " maybe I won't be back tomorrow." };
+                    ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " got " + ChatColor.WHITE + "TROLLED by " + ChatColor.DARK_RED + "TheScavenger101",
+                    ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " lost an epic rap battle with " + ChatColor.DARK_RED + "einand",
+                    ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " was bored to death by " + ChatColor.DARK_RED + "knipil",
+                    ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " went squid fishing with " + ChatColor.DARK_RED + "GeorgeBombadil",
+                    ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " shouldn't have joined a spelling bee with " + ChatColor.DARK_RED + "mejjad",
+                    ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " was paralyzed by a gaze from " + ChatColor.DARK_RED + "mksen",
+            };
 
     private Tregmine plugin;
     private Map<Item, TregminePlayer> droppedItems;
@@ -138,16 +138,24 @@ public class TregminePlayerListener implements Listener
     @EventHandler
     public void onPlayerClick(PlayerInteractEvent event)
     {
-        if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-            Player player = event.getPlayer();
-            BlockState block = event.getClickedBlock().getState();
-            if (block instanceof Skull) {
-                Skull skull = (Skull) block;
-                if (skull.getSkullType().equals(SkullType.PLAYER)) {
-                    String owner = skull.getOwner();
-                    player.sendMessage(ChatColor.DARK_PURPLE + "This is " + owner + "'s head!");
+        if (event.getAction() != Action.RIGHT_CLICK_BLOCK) {
+            return;
+        }
+        Player player = event.getPlayer();
+        BlockState block = event.getClickedBlock().getState();
+        if (block instanceof Skull) {
+            Skull skull = (Skull) block;
+            if (!skull.getSkullType().equals(SkullType.PLAYER)) {
+                return;
+            }
+            String owner = skull.getOwner();
+            TregminePlayer skullowner = plugin.getPlayerOffline(owner);
+            if (skullowner != null){
+                ChatColor C = skullowner.getNameColor();
+                player.sendMessage(ChatColor.AQUA + "This is " + C + owner + "'s " + ChatColor.AQUA + "head!");
+            }else{
+                player.sendMessage(ChatColor.AQUA + "This is " + ChatColor.WHITE + owner + ChatColor.AQUA + "'s head!");
 
-                }
             }
         }
     }
@@ -331,9 +339,17 @@ public class TregminePlayerListener implements Listener
         }
 
         // Check if the player is allowed to fly
-        if (rank.canFly()) {
-            player.sendMessage("You are allowed to fly");
-            player.setAllowFlight(true);
+        if (player.hasFlag(TregminePlayer.Flags.HARDWARNED)) {
+            player.sendMessage("You are hardwarned and are not allowed to fly.");
+            player.setAllowFlight(false);
+        } else if (rank.canFly()) {
+            if (player.hasFlag(TregminePlayer.Flags.FLY_ENABLED)) {
+                player.sendMessage("Flying: Allowed and Enabled! Toggle flying with /fly");
+                player.setAllowFlight(true);
+            } else {
+                player.sendMessage("Flying: Allowed but Disabled! Toggle flying with /fly");
+                player.setAllowFlight(false);
+            }
         } else {
             player.sendMessage("no-z-cheat");
             player.sendMessage("You are NOT allowed to fly");
@@ -405,9 +421,13 @@ public class TregminePlayerListener implements Listener
                 throw new RuntimeException(e);
             }
 
-            player.setScoreboard(board);
+            try {
+                player.setScoreboard(board);
 
-            ScoreboardClearTask.start(plugin, player);
+                ScoreboardClearTask.start(plugin, player);
+            } catch (IllegalStateException e) {
+                // ignore
+            }
         }
 
         // Recalculate guardians
@@ -423,6 +443,10 @@ public class TregminePlayerListener implements Listener
                 player.sendMessage(ChatColor.YELLOW + "Mentors are needed! " +
                     "Type /mentor to offer your services!");
             }
+        }
+
+        if (player.getKeyword() == null && player.getRank().mustUseKeyword()) {
+            player.sendMessage(ChatColor.RED + "You have not set a keyword! DO SO NOW.");
         }
     }
 
@@ -454,6 +478,15 @@ public class TregminePlayerListener implements Listener
         if (player.getStudent() != null) {
             TregminePlayer student = player.getStudent();
 
+            try (IContext ctx = plugin.createContext()) {
+                IMentorLogDAO mentorLogDAO = ctx.getMentorLogDAO();
+                int mentorLogId = mentorLogDAO.getMentorLogId(student, player);
+                mentorLogDAO.updateMentorLogEvent(mentorLogId,
+                        IMentorLogDAO.MentoringEvent.CANCELLED);
+            } catch (DAOException e) {
+                throw new RuntimeException(e);
+            }
+
             student.setMentor(null);
             player.setStudent(null);
 
@@ -464,6 +497,16 @@ public class TregminePlayerListener implements Listener
         }
         else if (player.getMentor() != null) {
             TregminePlayer mentor = player.getMentor();
+
+            try (IContext ctx = plugin.createContext()) {
+                IMentorLogDAO mentorLogDAO = ctx.getMentorLogDAO();
+                int mentorLogId = mentorLogDAO.getMentorLogId(player, mentor);
+                mentorLogDAO.updateMentorLogEvent(mentorLogId,
+                        IMentorLogDAO.MentoringEvent.CANCELLED);
+            } catch (DAOException e) {
+                throw new RuntimeException(e);
+            }
+
             mentor.setStudent(null);
             player.setMentor(null);
 
@@ -557,6 +600,17 @@ public class TregminePlayerListener implements Listener
     public void onPlayerKick(PlayerKickEvent event)
     {
         event.setLeaveMessage(null);
+    }
+
+    @EventHandler
+    public void onNameTag(PlayerReceiveNameTagEvent event)
+    {
+        TregminePlayer player = plugin.getPlayer(event.getPlayer());
+        if (player == null) {
+            return;
+        }
+
+        event.setTag(player.getChatName());
     }
 
     private void activateGuardians()

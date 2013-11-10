@@ -1,7 +1,13 @@
 package info.tregmine.listeners;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -67,14 +73,14 @@ public class ZonePlayerListener implements Listener
         }
 
         if (currentZone != null) {
-            Zone.Permission perm = currentZone.getUser(player.getName());
+            Zone.Permission perm = currentZone.getUser(player);
 
             Lot lot = world.findLot(pos);
             if (lot != null) {
                 if (perm == Zone.Permission.Owner && currentZone.isCommunist()) {
                     // Zone owners can modify lots in communist zones
                 }
-                else if (lot.isOwner(player.getName())) {
+                else if (lot.isOwner(player)) {
                     // Lot owners can always modify lots
                 }
                 else {
@@ -137,14 +143,14 @@ public class ZonePlayerListener implements Listener
         }
 
         if (currentZone != null) {
-            Zone.Permission perm = currentZone.getUser(player.getName());
+            Zone.Permission perm = currentZone.getUser(player);
 
             Lot lot = world.findLot(pos);
             if (lot != null) {
                 if (perm == Zone.Permission.Owner && currentZone.isCommunist()) {
                     // Zone owners can modify lots in communist zones
                 }
-                else if (lot.isOwner(player.getName())) {
+                else if (lot.isOwner(player)) {
                     // Lot owners can always modify lots
                 }
                 else {
@@ -213,22 +219,14 @@ public class ZonePlayerListener implements Listener
         }
 
         if (currentZone != null) {
-            Zone.Permission perm;
-
-            try {
-                perm = currentZone.getUser(player.getName());
-            } catch (Exception e) {
-                player.sendMessage("ERROR");
-                e.printStackTrace();
-                return;
-            }
+            Zone.Permission perm = currentZone.getUser(player);
 
             Lot lot = world.findLot(pos);
             if (lot != null) {
                 if (perm == Zone.Permission.Owner && currentZone.isCommunist()) {
                     // Zone owners can modify lots in communist zones
                 }
-                else if (lot.isOwner(player.getName())) {
+                else if (lot.isOwner(player)) {
                     // Lot owners can always modify lots
                 }
                 else {
@@ -298,12 +296,12 @@ public class ZonePlayerListener implements Listener
         // Check if this is a lot - if so, limit items that can be blessed to
         // lot owner
         if (BlessedBlockListener.ALLOWED_MATERIALS.contains(block.getType()) &&
-                 !player.getRank().canModifyZones()) {
+                !player.getRank().canModifyZones()) {
             if (lot == null) {
                 return;
             }
 
-            if (!lot.isOwner(player.getName())) {
+            if (!lot.isOwner(player)) {
                 event.setCancelled(true);
                 player.sendMessage(ChatColor.RED + "Blessed to lot owners.");
             }
@@ -315,8 +313,10 @@ public class ZonePlayerListener implements Listener
             // the zones permission.
             String type = null;
             if (zone != null) {
-                Zone.Permission perm = zone.getUser(player.getName());
-                if (perm != Zone.Permission.Owner && !player.getRank().canModifyZones()) {
+                Zone.Permission perm = zone.getUser(player);
+                if (perm != Zone.Permission.Owner &&
+                    !player.getRank().canModifyZones()) {
+
                     return;
                 }
                 if (lot != null) {
@@ -368,17 +368,115 @@ public class ZonePlayerListener implements Listener
             }
         }
     }
+    
+    @SuppressWarnings("deprecation")
+    @EventHandler
+    public void boneMealUsage(PlayerInteractEvent event){
+        if (event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
+
+        if (event.getItem() == null) return;
+        if (!event.getItem().getType().equals(Material.INK_SACK)) return;
+        if (event.getItem().getData().getData() != (byte) 15) return;
+        
+        Block b = event.getClickedBlock();
+        if (b == null || !(b.getType().equals(Material.GRASS))) return;
+        Location center = b.getLocation();
+        
+        event.setCancelled(true); // Stops normal bonemealing
+        if (event.getPlayer().getGameMode() == GameMode.SURVIVAL) {
+            if (event.getItem().getAmount() == 1){
+                event.getPlayer().getInventory().remove(event.getItem());
+            }else{
+                event.getItem().setAmount(event.getItem().getAmount() - 1);
+            }
+        }
+        
+        List<Integer> radius_options = Arrays.asList(3,4,5,6,7);
+        Random radius_random = new Random();
+        Integer radius = radius_options.get(radius_random.nextInt(radius_options.size()));
+        List<Block> areaofeffect = new ArrayList<Block>();
+        for (int X = -radius; X < radius; X++) {
+            for (int Y = -(radius/2); Y < (radius/2); Y++) {
+                for (int Z = -radius; Z < radius; Z++) {
+                    if (Math.sqrt((X*X) + (Z*Z)) <= radius &&
+                        Y + center.getBlockY() >= 0) {
+                        Block block = b.getWorld().getBlockAt(X + center.getBlockX(),
+                                                               Y + center.getBlockY(),
+                                                               Z + center.getBlockZ());
+                        areaofeffect.add(block);
+                    }
+                }
+            }
+        }
+        
+        TregminePlayer player = plugin.getPlayer(event.getPlayer());
+        
+        for ( Block block : areaofeffect ) {
+            Block block_under = block.getWorld().getBlockAt(block.getX(), 
+                                                            block.getY() - 1, 
+                                                            block.getZ());
+            if (block_under.getType() != Material.GRASS) continue;
+            if (block.getType() != Material.AIR) continue;
+            
+            ZoneWorld world = plugin.getWorld(block.getWorld());
+            Point pos = new Point(block.getX(), block.getZ());
+            Zone zone = world.findZone(pos);
+            
+            if(zone != null){
+                Zone.Permission perm = zone.getUser(player);
+                
+                Lot lot = world.findLot(pos);
+                if(lot != null){ // Handle lots
+                    if (perm == Zone.Permission.Owner && zone.isCommunist()) { // If communist zone & Player is zone owner
+                        boneMealPlant(block);
+                    }
+                    else if (lot.isOwner(player)) { // If lot owner
+                        boneMealPlant(block);
+                    }
+                    continue;
+                }
+                
+                if (zone.getPlaceDefault()) { // If placing is allowed in zone
+                    boneMealPlant(block);
+                }
+                
+                if (perm == null
+                        || (perm != Zone.Permission.Maker && perm != Zone.Permission.Owner)) {
+                    continue;
+                }
+                boneMealPlant(block);
+            }else{
+                boneMealPlant(block);
+            }
+        }
+    }
+    
+    @SuppressWarnings("deprecation")
+    public void boneMealPlant(Block block){
+        List<Material> bonemeal_produce = Arrays.asList(Material.AIR, Material.AIR, Material.AIR, Material.AIR, Material.AIR,
+                                                        Material.YELLOW_FLOWER,
+                                                        Material.RED_ROSE,
+                                                        Material.LONG_GRASS, Material.LONG_GRASS, Material.LONG_GRASS, Material.LONG_GRASS);
+        Random bonemeal_random = new Random();
+        Material produce = bonemeal_produce.get(bonemeal_random.nextInt(bonemeal_produce.size()));
+        
+        block.setType(produce);
+        if(block.getType().equals(Material.LONG_GRASS)){
+            block.setData((byte) 1);
+        }
+    }
+    
 
     private void movePlayerBack(TregminePlayer player, Location movingFrom,
             Location movingTo)
     {
         Vector a = new Vector(movingFrom.getX(),
-                              movingFrom.getY(),
-                              movingFrom.getZ());
+                movingFrom.getY(),
+                movingFrom.getZ());
 
         Vector b = new Vector(movingTo.getX(),
-                              movingTo.getY(),
-                              movingTo.getZ());
+                movingTo.getY(),
+                movingTo.getZ());
 
         Vector diff = b.subtract(a);
         diff = diff.multiply(-5);
@@ -386,9 +484,9 @@ public class ZonePlayerListener implements Listener
         Vector newPosVector = a.add(diff);
 
         Location newPos = new Location(player.getWorld(),
-                                       newPosVector.getX(),
-                                       newPosVector.getY(),
-                                       newPosVector.getZ());
+                newPosVector.getX(),
+                newPosVector.getY(),
+                newPosVector.getZ());
 
         player.teleport(newPos);
     }
@@ -400,7 +498,7 @@ public class ZonePlayerListener implements Listener
         if (player == null) {
             event.getPlayer().kickPlayer("Something went wrong");
             Tregmine.LOGGER.info(event.getPlayer().getName() + " was not found " +
-                    "in players map.");
+                    "in players map (PlayerMoveEvent).");
             return;
         }
 
@@ -425,7 +523,7 @@ public class ZonePlayerListener implements Listener
 
             currentZone = world.findZone(currentPos);
             if (currentZone != null) {
-                Zone.Permission perm = currentZone.getUser(player.getName());
+                Zone.Permission perm = currentZone.getUser(player);
 
                 // if anyone is allowed to enter by default...
                 if (currentZone.getEnterDefault()) {
@@ -460,10 +558,12 @@ public class ZonePlayerListener implements Listener
                 }
 
                 welcomeMessage(currentZone, player, perm);
+
             }
             player.setCurrentZone(currentZone);
         }
     }
+
 
     @EventHandler
     public void onPlayerChangedWorld(PlayerChangedWorldEvent event)
@@ -481,7 +581,7 @@ public class ZonePlayerListener implements Listener
 
             currentZone = world.findZone(currentPos);
             if (currentZone != null) {
-                Zone.Permission perm = currentZone.getUser(player.getName());
+                Zone.Permission perm = currentZone.getUser(player);
 
                 if (currentZone.getEnterDefault()) {
                     if (player.getRank().canModifyZones()) {
@@ -583,8 +683,7 @@ public class ZonePlayerListener implements Listener
 
                 currentZone = world.findZone(currentPos);
                 if (currentZone != null) {
-                    Zone.Permission perm =
-                            currentZone.getUser(player.getName());
+                    Zone.Permission perm = currentZone.getUser(player);
 
                     if (currentZone.getEnterDefault()) {
                         if (player.getRank().canModifyZones()) {
@@ -694,9 +793,14 @@ public class ZonePlayerListener implements Listener
 
             Score score = objective.getScore(fakePlayer);
             score.setScore(currentZone.getId());
-            player.setScoreboard(board);
 
-            ScoreboardClearTask.start(plugin, player);
+            try {
+                player.setScoreboard(board);
+
+                ScoreboardClearTask.start(plugin, player);
+            } catch (IllegalStateException e) {
+                // ignore
+            }
         }
 
         player.sendMessage(ChatColor.RED + "[" + currentZone.getName() + "] "
@@ -706,6 +810,11 @@ public class ZonePlayerListener implements Listener
             player.sendMessage(ChatColor.RED
                     + "[" + currentZone.getName() + "] "
                     + "Warning! This is a PVP zone! Other players can damage or kill you here.");
+        }
+
+        if (currentZone.hasPublicProfile()){
+            player.sendMessage(ChatColor.DARK_RED + currentZone.getName() + " has a public profile! You can view it here:");
+            player.sendMessage(ChatColor.GRAY + "http://treg.co/index.php/zone/profile?id=" + currentZone.getId());
         }
 
         if (perm != null) {

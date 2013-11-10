@@ -1,18 +1,14 @@
 package info.tregmine.commands;
 
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.text.NumberFormat;
 import java.util.Random;
 import java.util.List;
 import java.util.ArrayList;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
-import info.tregmine.database.db.DBContextFactory;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
 import info.tregmine.database.IWalletDAO;
@@ -116,6 +112,12 @@ public class LotteryCommand extends AbstractCommand
                             Random random = new Random();
                             String randomPlayer = lottery.get(random.nextInt(size));
                             TregminePlayer winner = tregmine.getPlayer(randomPlayer);
+                            if (winner == null) {
+                                player.sendMessage(ChatColor.RED + randomPlayer + " won, " +
+                                    "but is no longer online. Try again.");
+                                return true;
+                            }
+
                             wallet.add(winner, amount);
                             tregmine.getServer().broadcastMessage(
                                     winner.getChatName() + ChatColor.DARK_AQUA +
@@ -138,6 +140,6 @@ public class LotteryCommand extends AbstractCommand
                 throw new RuntimeException(error);
             }
         }
-        return false;
+        return true;
     }
 }

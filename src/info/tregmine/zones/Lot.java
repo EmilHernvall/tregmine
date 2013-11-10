@@ -6,17 +6,19 @@ import java.util.Set;
 
 import info.tregmine.quadtree.Rectangle;
 
+import info.tregmine.api.TregminePlayer;
+
 public class Lot
 {
     private int id;
     private int zoneId;
     private String name;
     private Rectangle rect;
-    private Set<String> owners;
+    private Set<Integer> owners;
 
     public Lot()
     {
-        this.owners = new HashSet<String>();
+        this.owners = new HashSet<Integer>();
     }
 
     public int getId()
@@ -39,29 +41,29 @@ public class Lot
         this.zoneId = zoneId;
     }
 
-    public Set<String> getOwners()
+    public Set<Integer> getOwners()
     {
         return owners;
     }
 
-    public void setOwner(List<String> owners)
+    public void setOwner(List<Integer> owners)
     {
         this.owners.addAll(owners);
     }
 
-    public boolean isOwner(String player)
+    public boolean isOwner(TregminePlayer player)
     {
-        return owners.contains(player);
+        return owners.contains(player.getId());
     }
 
-    public void addOwner(String player)
+    public void addOwner(TregminePlayer player)
     {
-        owners.add(player);
+        owners.add(player.getId());
     }
 
-    public void deleteOwner(String player)
+    public void deleteOwner(TregminePlayer player)
     {
-        owners.remove(player);
+        owners.remove(player.getId());
     }
 
     public String getName()

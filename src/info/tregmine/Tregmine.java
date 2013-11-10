@@ -27,6 +27,8 @@ import org.bukkit.WorldCreator;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.world.WorldSaveEvent;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -34,19 +36,22 @@ import org.bukkit.scheduler.BukkitScheduler;
 
 import com.maxmind.geoip.LookupService;
 
+import info.tregmine.api.FishyBlock;
 import info.tregmine.api.PlayerBannedException;
 import info.tregmine.api.PlayerReport;
-import info.tregmine.api.TregminePlayer;
 import info.tregmine.api.Rank;
-import info.tregmine.database.db.DBContextFactory;
+import info.tregmine.api.TregminePlayer;
 import info.tregmine.database.DAOException;
-import info.tregmine.database.IContextFactory;
+import info.tregmine.database.IBlessedBlockDAO;
 import info.tregmine.database.IContext;
+import info.tregmine.database.IContextFactory;
+import info.tregmine.database.IFishyBlockDAO;
 import info.tregmine.database.IInventoryDAO;
 import info.tregmine.database.ILogDAO;
 import info.tregmine.database.IPlayerDAO;
 import info.tregmine.database.IPlayerReportDAO;
 import info.tregmine.database.IZonesDAO;
+import info.tregmine.database.db.DBContextFactory;
 import info.tregmine.quadtree.IntersectionException;
 import info.tregmine.zones.Lot;
 import info.tregmine.zones.Zone;
@@ -75,6 +80,7 @@ public class Tregmine extends JavaPlugin
     private Map<String, TregminePlayer> players;
     private Map<Integer, TregminePlayer> playersById;
     private Map<Location, Integer> blessedBlocks;
+    private Map<Location, FishyBlock> fishyBlocks;
 
     private Map<String, ZoneWorld> worlds;
     private Map<Integer, Zone> zones;
@@ -117,7 +123,11 @@ public class Tregmine extends JavaPlugin
         Player[] players = getServer().getOnlinePlayers();
         for (Player player : players) {
             try {
-                addPlayer(player, player.getAddress().getAddress());
+                TregminePlayer tp =
+                    addPlayer(player, player.getAddress().getAddress());
+                if (tp.getRank() == Rank.TOURIST) {
+                    students.offer(tp);
+                }
             } catch (PlayerBannedException e) {
                 player.kickPlayer(e.getMessage());
             }
@@ -139,10 +149,15 @@ public class Tregmine extends JavaPlugin
 
         // Load blessed blocks
         try (IContext ctx = contextFactory.createContext()) {
-            IInventoryDAO inventoryDAO = ctx.getInventoryDAO();
-            this.blessedBlocks = inventoryDAO.loadBlessedBlocks(getServer());
+            IBlessedBlockDAO blessedBlockDAO = ctx.getBlessedBlockDAO();
+            this.blessedBlocks = blessedBlockDAO.load(getServer());
 
             LOGGER.info("Loaded " + blessedBlocks.size() + " blessed blocks");
+
+            IFishyBlockDAO fishyBlockDAO = ctx.getFishyBlockDAO();
+            this.fishyBlocks = fishyBlockDAO.loadFishyBlocks(getServer());
+
+            LOGGER.info("Loaded " + fishyBlocks.size() + " fishy blocks");
         } catch (DAOException e) {
             throw new RuntimeException(e);
         }
@@ -167,6 +182,12 @@ public class Tregmine extends JavaPlugin
         pluginMgm.registerEvents(new ZoneBlockListener(this), this);
         pluginMgm.registerEvents(new ZoneEntityListener(this), this);
         pluginMgm.registerEvents(new ZonePlayerListener(this), this);
+        pluginMgm.registerEvents(new FishyBlockListener(this), this);
+        pluginMgm.registerEvents(new InventoryListener(this), this);
+        pluginMgm.registerEvents(new DonationSigns(this), this);
+        pluginMgm.registerEvents(new ExpListener(this), this);
+        pluginMgm.registerEvents(new ItemFrameListener(this), this);
+        pluginMgm.registerEvents(new EggListener(this), this);
 
         // Declaration of all commands
         getCommand("admins").setExecutor(
@@ -189,9 +210,11 @@ public class Tregmine extends JavaPlugin
             });
 
         getCommand("action").setExecutor(new ActionCommand(this));
+        getCommand("alert").setExecutor(new AlertCommand(this));
         getCommand("ban").setExecutor(new BanCommand(this));
         getCommand("bless").setExecutor(new BlessCommand(this));
         getCommand("blockhere").setExecutor(new BlockHereCommand(this));
+        getCommand("brush").setExecutor(new BrushCommand(this));
         getCommand("channel").setExecutor(new ChannelCommand(this));
         getCommand("clean").setExecutor(new CleanInventoryCommand(this));
         getCommand("cname").setExecutor(new ChangeNameCommand(this));
@@ -199,6 +222,7 @@ public class Tregmine extends JavaPlugin
         getCommand("createwarp").setExecutor(new CreateWarpCommand(this));
         getCommand("creative").setExecutor(new GameModeCommand(this, "creative", GameMode.CREATIVE));
         getCommand("fill").setExecutor(new FillCommand(this, "fill"));
+        getCommand("fly").setExecutor(new FlyCommand(this));
         getCommand("force").setExecutor(new ForceCommand(this));
         getCommand("give").setExecutor(new GiveCommand(this));
         getCommand("head").setExecutor(new HeadCommand(this));
@@ -218,6 +242,7 @@ public class Tregmine extends JavaPlugin
         getCommand("pos").setExecutor(new PositionCommand(this));
         getCommand("quitmessage").setExecutor(new QuitMessageCommand(this));
         getCommand("regeneratechunk").setExecutor(new RegenerateChunkCommand(this));
+        getCommand("remitems").setExecutor(new RemItemsCommand(this));
         getCommand("report").setExecutor(new ReportCommand(this));
         getCommand("say").setExecutor(new SayCommand(this));
         getCommand("seen").setExecutor(new SeenCommand(this));
@@ -227,6 +252,7 @@ public class Tregmine extends JavaPlugin
         getCommand("setspawner").setExecutor(new SetSpawnerCommand(this));
         getCommand("spawn").setExecutor(new SpawnCommand(this));
         getCommand("summon").setExecutor(new SummonCommand(this));
+        getCommand("support").setExecutor(new SupportCommand(this));
         getCommand("survival").setExecutor(new GameModeCommand(this, "survival", GameMode.SURVIVAL));
         getCommand("testfill").setExecutor(new FillCommand(this, "testfill"));
         getCommand("time").setExecutor(new TimeCommand(this));
@@ -292,6 +318,11 @@ public class Tregmine extends JavaPlugin
         return blessedBlocks;
     }
 
+    public Map<Location, FishyBlock> getFishyBlocks()
+    {
+        return fishyBlocks;
+    }
+
     public Queue<TregminePlayer> getMentorQueue()
     {
         return mentors;
@@ -355,34 +386,36 @@ public class Tregmine extends JavaPlugin
                 }
 
                 if (report.getAction() == PlayerReport.Action.SOFTWARN) {
-                    player.setFlag(TregminePlayer.Flags.HARDWARNED);
+                    player.setFlag(TregminePlayer.Flags.SOFTWARNED);
                 }
                 else if (report.getAction() == PlayerReport.Action.HARDWARN) {
-                    player.setFlag(TregminePlayer.Flags.SOFTWARNED);
+                    player.setFlag(TregminePlayer.Flags.HARDWARNED);
                 }
                 else if (report.getAction() == PlayerReport.Action.BAN) {
                     throw new PlayerBannedException(report.getMessage());
                 }
             }
 
-            player.setIp(addr.getHostAddress());
-            player.setHost(addr.getCanonicalHostName());
+            if (!"95.141.47.226".equals(addr.getHostAddress())) {
+                player.setIp(addr.getHostAddress());
+                player.setHost(addr.getCanonicalHostName());
 
-            if (cl != null) {
-                com.maxmind.geoip.Location l1 = cl.getLocation(player.getIp());
-                if (l1 != null) {
-                    Tregmine.LOGGER.info(player.getName() + ": " + l1.countryName +
-                            ", " + l1.city + ", " + player.getIp() + ", " +
-                            player.getHost());
-                    player.setCountry(l1.countryName);
-                    player.setCity(l1.city);
+                if (cl != null) {
+                    com.maxmind.geoip.Location l1 = cl.getLocation(player.getIp());
+                    if (l1 != null) {
+                        Tregmine.LOGGER.info(player.getName() + ": " + l1.countryName +
+                                ", " + l1.city + ", " + player.getIp() + ", " +
+                                player.getHost());
+                        player.setCountry(l1.countryName);
+                        player.setCity(l1.city);
+                    } else {
+                        Tregmine.LOGGER.info(player.getName() + ": " +
+                                player.getIp() + ", " + player.getHost());
+                    }
                 } else {
                     Tregmine.LOGGER.info(player.getName() + ": " +
                             player.getIp() + ", " + player.getHost());
                 }
-            } else {
-                Tregmine.LOGGER.info(player.getName() + ": " +
-                        player.getIp() + ", " + player.getHost());
             }
 
             int onlinePlayerCount = 0;
@@ -562,5 +595,14 @@ public class Tregmine extends JavaPlugin
     public Zone getZone(int zoneId)
     {
         return zones.get(zoneId);
+    }
+    
+    // ============================================================================
+    // Auto Save Alert
+    // ============================================================================
+    
+    @EventHandler
+    public void autoSave(WorldSaveEvent event){
+        Bukkit.broadcastMessage(ChatColor.DARK_RED + "Tregmine is saving, You may experience some slowness.");
     }
 }

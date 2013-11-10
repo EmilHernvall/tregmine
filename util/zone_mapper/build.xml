@@ -1,0 +1,57 @@
+<project name="zone_mapper" default="compile" basedir=".">
+
+    <property name="src" value="src" />
+    <property name="build" value="bin" />
+    <property name="lib" value="lib" />
+    <property name="build.compiler" value="modern" />
+
+    <target name="init">
+        <tstamp />
+        <mkdir dir="${build}" />
+        <mkdir dir="${lib}" />
+        <ant dir="../mojang_nbt" target="jar" inheritAll="false" />
+        <copy file="../mojang_nbt/mojang_nbt.jar" tofile="lib/mojang_nbt.jar" />
+        <copy file="../../lib/bukkit.jar" tofile="lib/bukkit.jar" />
+        <copy file="../../lib/mysql-connector-java-bin.jar" tofile="lib/mysql-connector-java-bin.jar" />
+    </target>
+
+    <target name="compile" depends="init">
+
+        <javac
+            includeantruntime="false"
+            srcdir="${src}"
+            destdir="${build}"
+            debug="on"
+            debuglevel="lines,vars,source">
+
+            <compilerarg value="-Xlint:unchecked"/>
+
+            <classpath>
+                <pathelement path="${build}"/>
+                <fileset dir="${lib}">
+                    <include name="**/*.jar"/>
+                </fileset>
+            </classpath>
+
+        </javac>
+
+    </target>
+
+    <target name="jar" depends="compile">
+        <jar destfile="${ant.project.name}.jar" basedir="${build}">
+            <manifest>
+                <attribute name="Main-Class" value="info.tregmine.zonemapper.Main" />
+                <attribute name="Class-Path"
+                           value="lib/mojang_nbt.jar
+                                  lib/bukkit.jar
+                                  lib/mysql-connector-java-bin.jar" />
+            </manifest>
+        </jar>
+    </target>
+
+    <target name="clean" depends="init">
+        <delete dir="${build}"/>
+        <delete dir="${lib}"/>
+    </target>
+
+</project>

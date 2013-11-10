@@ -1,7 +1,7 @@
 name: tregmine
 main: info.tregmine.Tregmine
 version: 1.0.0
-website: http://discourse.tregmine.info
+website: http://tregmine.info
 author: Ein Andersson, Emil Hernvall
 description: Tregmine
 
@@ -10,6 +10,9 @@ commands:
     description: Send a message to all active admins
     usage: /admins message
     aliases: a
+  alert:
+    description: Change your alerts (Cyan text in chat)
+    usage: /alert
   guardians:
     description: Send a message to all active guardians
     usage: /guardians message
@@ -33,6 +36,9 @@ commands:
   blockhere:
     description: Create a block of dirt beneath your feet (admins and builders only)
     usage: /blockhere
+  brush:
+    description: Create a brush
+    usage: /brush <material> <radius>
   cname:
     description: Change your name and color (admin only)
     usage: /cname color new_name
@@ -51,6 +57,9 @@ commands:
   fill:
     description: Fill, replace and copy blocks using a wooden spade (admins and builders only)
     usage: /fill
+  fly:
+    description: Fly, Toggles flying using the Player Flags system
+    usage: /fly
   force:
     description: Force someone into a channel
     usage: /force player channel
@@ -103,6 +112,9 @@ commands:
   regeneratechunk:
     description: Regenerate the current chunk (admin only)
     usage: /regeneratechunk
+  remitems:
+    description: remove all items in the specified radius
+    usage: /remitems radius
   report:
     description: Adds a report to the players record
     usage: /report player message
@@ -131,6 +143,10 @@ commands:
     description: Summon a player to your location
     usage: /summon player
     aliases: s
+  support:
+    description: Send support message
+    usage: /support message
+    aliases: sup
   testfill:
     description: Like fill, but with fake blocks (admins and builders only)
     usage: /testfill
@@ -197,5 +213,7 @@ commands:
            /zone info <name> [perm]
   lottery:
     description: Type /lottery for additional info.
+    usage: /lottery
   head:
     description: Receive a specified player's head.
+    usage: /head <player>

@@ -5,10 +5,13 @@ import java.util.Map;
 import java.util.HashMap;
 
 import static org.bukkit.ChatColor.*;
+
 import org.bukkit.Server;
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.*;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.event.Listener;
 import org.bukkit.event.EventHandler;
@@ -22,6 +25,8 @@ import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
 import info.tregmine.database.IWalletDAO;
 import info.tregmine.database.ITradeDAO;
+import info.tregmine.database.IEnchantmentDAO;
+import info.tregmine.listeners.ExpListener;
 import info.tregmine.api.math.Distance;
 
 public class TradeCommand extends AbstractCommand implements Listener
@@ -138,10 +143,48 @@ public class TradeCommand extends AbstractCommand implements Listener
             }
             Material material = stack.getType();
             int amount = stack.getAmount();
-            target.sendMessage(tradePre + amount + " "
-                    + material.toString());
-            player.sendMessage(tradePre + amount + " "
-                    + material.toString());
+
+            ItemMeta materialMeta = stack.getItemMeta();
+            int xpValue;
+            try{
+                String[] materialLore = materialMeta.getLore().toString().split(" ");
+                xpValue = Integer.parseInt(materialLore[2]);
+            } catch (NullPointerException e) {
+                xpValue = 0;
+            } catch (NumberFormatException e) {
+                xpValue = 0;
+            }
+
+            Map<Enchantment, Integer> enchantments = stack.getEnchantments();
+            if (material == Material.EXP_BOTTLE &&
+                xpValue > 0 &&
+                ExpListener.ITEM_NAME.equals(materialMeta.getDisplayName())) {
+
+                target.sendMessage(tradePre + amount + " XP Bottle holding "
+                        + xpValue + " levels");
+                player.sendMessage(tradePre + amount + " XP Bottle holding "
+                        + xpValue + " levels");
+            } else if (enchantments.size() > 0) {
+                target.sendMessage(tradePre + " Enchanted " + material.toString() + " with: ");
+                player.sendMessage(tradePre + " Enchanted " + material.toString() + " with: ");
+                try (IContext dbCtx = tregmine.createContext()) {
+                    IEnchantmentDAO enchantDAO = dbCtx.getEnchantmentDAO();
+                    for (Enchantment i : enchantments.keySet()) {
+                        String enchantName = enchantDAO.localize(i.getName());
+                        target.sendMessage("- " + enchantName +
+                                " Level: " + enchantments.get(i).toString());
+                        player.sendMessage("- " + enchantName +
+                                " Level: " + enchantments.get(i).toString());
+                    }
+                } catch (DAOException e) {
+                    throw new RuntimeException(e);
+                }
+            } else {
+                target.sendMessage(tradePre + amount + " "
+                        + material.toString());
+                player.sendMessage(tradePre + amount + " "
+                        + material.toString());
+            }
         }
 
         target.sendMessage(YELLOW

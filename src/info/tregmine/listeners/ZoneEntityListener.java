@@ -3,8 +3,10 @@ package info.tregmine.listeners;
 import java.util.EnumSet;
 import java.util.Set;
 
+import org.bukkit.ChatColor;
 //import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.entity.Arrow;
 //import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -68,41 +70,7 @@ public class ZoneEntityListener implements Listener
         if (event.getEntity().getWorld().getName().matches("world_the_end")) {
             return;
         }
-
-        if (event.getCause() == DamageCause.PROJECTILE) {
-
-            Projectile proj = (Projectile) event.getDamager();
-            LivingEntity shooter = proj.getShooter();
-
-            if (shooter instanceof Player) {
-                Player p = (Player) shooter;
-
-                ZoneWorld world = plugin.getWorld(p.getWorld());
-
-                TregminePlayer player = plugin.getPlayer(p);
-
-                Location location = player.getLocation();
-                Point pos =
-                        new Point(location.getBlockX(), location.getBlockZ());
-
-                Zone currentZone = player.getCurrentZone();
-                if (currentZone == null || !currentZone.contains(pos)) {
-                    currentZone = world.findZone(pos);
-                    player.setCurrentZone(currentZone);
-                }
-
-                if (currentZone == null || !currentZone.isPvp()) {
-                    event.setCancelled(true);
-                }
-                else {
-                    event.setCancelled(false);
-                }
-
-            }
-
-        }
-
-        // public void onEntityDamage(EntityDamageEvent event) {
+     
         if (event.getEntity() instanceof Player
                 && event instanceof EntityDamageByEntityEvent
                 && ((EntityDamageByEntityEvent) event).getDamager() instanceof Player) {
@@ -132,4 +100,38 @@ public class ZoneEntityListener implements Listener
         }
         return;
     }
+    
+    
+    @EventHandler
+    public void onDamage(EntityDamageByEntityEvent e){
+        Entity e1 = e.getEntity();
+        Entity d1 = e.getDamager();
+
+        if(e1 instanceof Player && d1 instanceof Arrow){
+            if(((Arrow)d1).getShooter() instanceof Player){
+
+                ZoneWorld world = plugin.getWorld(e1.getWorld());
+
+                TregminePlayer player =
+                        plugin.getPlayer((Player) e1);
+
+                Location location = player.getLocation();
+                Point pos = new Point(location.getBlockX(), location.getBlockZ());
+
+                Zone currentZone = player.getCurrentZone();
+                if (currentZone == null || !currentZone.contains(pos)) {
+                    currentZone = world.findZone(pos);
+                    player.setCurrentZone(currentZone);
+                }
+
+                if (currentZone == null || !currentZone.isPvp()) {
+                    e.setCancelled(true);
+                }
+                else {
+                    e.setCancelled(false);
+                }
+            }
+        }
+    }
 }
+

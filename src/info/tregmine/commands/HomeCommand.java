@@ -88,12 +88,45 @@ public class HomeCommand extends AbstractCommand
 
         try (IContext ctx = tregmine.createContext()) {
             IHomeDAO homeDAO = ctx.getHomeDAO();
+            List<String> homes = homeDAO.getHomeNames(player.getId());
+            int limit = player.getRank().getHomeLimit();
+            if (homes.size() > limit) {
+                player.sendMessage(RED + "You can't have more than " +
+                    limit + " homes.");
+                return true;
+            }
+
             homeDAO.insertHome(player, name, playerLoc);
         } catch (DAOException e) {
             throw new RuntimeException(e);
         }
 
         player.sendMessage(AQUA + "Home saved!");
+
+        return true;
+    }
+
+    private boolean deleteHome(TregminePlayer player, String name)
+    {
+        if (!player.getRank().canSaveHome()) {
+            return true;
+        }
+
+        Location playerLoc = player.getLocation();
+        World playerWorld = playerLoc.getWorld();
+        if ("world_the_end".equalsIgnoreCase(playerWorld.getName())) {
+            player.sendMessage(RED + "You can't set your home in The End");
+            return true;
+        }
+
+        try (IContext ctx = tregmine.createContext()) {
+            IHomeDAO homeDAO = ctx.getHomeDAO();
+            homeDAO.deleteHome(player.getId(), name);
+        } catch (DAOException e) {
+            throw new RuntimeException(e);
+        }
+
+        player.sendMessage(AQUA + "Home " + name + " deleted!");
 
         return true;
     }
@@ -144,10 +177,6 @@ public class HomeCommand extends AbstractCommand
 
     private boolean list(TregminePlayer player, String playerName)
     {
-        if (!player.getRank().canVisitHomes()) {
-            return true;
-        }
-
         TregminePlayer target = player;
         if (playerName != null) {
             if (!player.getRank().canVisitHomes()) {
@@ -199,6 +228,9 @@ public class HomeCommand extends AbstractCommand
             } else {
                 return save(player, "default");
             }
+        }
+        else if ("delete".equalsIgnoreCase(args[0]) && args.length == 2) {
+            return deleteHome(player, args[1]);
         }
         else if ("go".equalsIgnoreCase(args[0])) {
             if (args.length < 2) {
