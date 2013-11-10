@@ -36,7 +36,8 @@ public class TregminePlayer extends PlayerDelegate
         HARDWARNED,
         INVISIBLE,
         HIDDEN_LOCATION,
-        FLY_ENABLED;
+        FLY_ENABLED,
+        FORCESHIELD;
     };
 
     // Persistent values
