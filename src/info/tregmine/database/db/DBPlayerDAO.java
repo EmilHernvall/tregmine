@@ -149,13 +149,14 @@ public class DBPlayerDAO implements IPlayerDAO
     @Override
     public TregminePlayer createPlayer(Player wrap) throws DAOException
     {
-        String sql = "INSERT INTO player (player_name, player_rank) VALUE (?, ?)";
+        String sql = "INSERT INTO player (player_name, player_rank, player_keywords) VALUE (?, ?, ?)";
 
         TregminePlayer player = new TregminePlayer(wrap);
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, player.getName());
             stmt.setString(2, player.getRank().toString());
+            stmt.setString(3, player.getDisplayName());
             stmt.execute();
 
             stmt.executeQuery("SELECT LAST_INSERT_ID()");
