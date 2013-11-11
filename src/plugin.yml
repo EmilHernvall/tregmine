@@ -75,6 +75,9 @@ commands:
   inv:
     description: Look in a players inventory (admin only)
     usage: /inv <player>
+  invlog:
+    description: Toggle inventory logging display
+    usage: /invlog <on/off/status>
   item:
     description: Spawn an item
     usage: /item item amount data (admin only)
