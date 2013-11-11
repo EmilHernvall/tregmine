@@ -373,6 +373,12 @@ public enum Rank
         return this == JUNIOR_ADMIN ||
                this == SENIOR_ADMIN;
     }
+    
+    public boolean canOverrideForceShield()
+    {
+        return this == JUNIOR_ADMIN ||
+               this == SENIOR_ADMIN;
+    }
 
     public boolean canTeleportToPlayers()
     {

@@ -63,6 +63,9 @@ commands:
   force:
     description: Force someone into a channel
     usage: /force player channel
+  forceblock:
+    description: Stop people forcing you into channels
+    usage: /forceblock <on/off/status>
   give:
     description: Give a user an item (admin only)
     usage: /give player item amount data

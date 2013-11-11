@@ -2,6 +2,8 @@ package info.tregmine.commands;
 
 import java.util.List;
 
+import org.bukkit.ChatColor;
+
 import static org.bukkit.ChatColor.*;
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
@@ -33,6 +35,13 @@ public class ForceCommand extends AbstractCommand
         }
 
         TregminePlayer toPlayer = matches.get(0);
+        
+        if (toPlayer.hasFlag(TregminePlayer.Flags.FORCESHIELD) &&
+                !player.getRank().canOverrideForceShield()) {
+            toPlayer.sendMessage(ChatColor.AQUA + player.getChatName() + " tried to force you into a channel!");
+            player.sendMessage(ChatColor.AQUA + "Can not force " + toPlayer.getChatName() + " into a channel!");
+            return true;
+        }
 
         player.setChatChannel(channel);
         toPlayer.setChatChannel(channel);
