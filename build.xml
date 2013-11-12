@@ -33,6 +33,7 @@
             debuglevel="lines,vars,source">
 
             <compilerarg value="-Xlint:unchecked"/>
+            <compilerarg value="-Xlint:deprecation"/>
 
             <classpath>
                 <pathelement path="${build}"/>
