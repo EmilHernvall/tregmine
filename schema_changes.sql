@@ -393,3 +393,17 @@ INSERT INTO `enchantment` (`enchantment_name`, `enchantment_title`) VALUES
 ('SILK_TOUCH', 'Silk Touch'),
 ('THORNS', 'Thorns'),
 ('WATER_WORKER', 'Aqua Affinity');
+
+CREATE TABLE IF NOT EXISTS `version` (
+  `version_id` int(255) NOT NULL AUTO_INCREMENT,
+  `version_number` varchar(255) NOT NULL,
+  `version_string` varchar(255) NOT NULL,
+  PRIMARY KEY (`version_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+INSERT INTO `version` (`version_id`, `version_number`, `version_string`) VALUES
+(1, '1.0.0', 'Added toggleable flying (/fly)::Bonemeal Enhancements::Coloured names in messages::Added alert words (/alert)');
+
+INSERT INTO `motd` (`motd_timestamp`, `motd_message`) VALUES
+(unix_timestamp(), 'Use /update to find what was added!');
+
