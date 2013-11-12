@@ -29,7 +29,7 @@ public class SetSpawnerCommand extends AbstractCommand
             return false;
         }
 
-        Block target = player.getTargetBlock(null, 15);
+        Block target = player.getDelegate().getTargetBlock(null, 15);
         if (!target.getType().equals(Material.MOB_SPAWNER)) {
             player.sendMessage(RED + "Please point at a spawner.");
             return false;

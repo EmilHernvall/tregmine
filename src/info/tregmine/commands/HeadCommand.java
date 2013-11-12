@@ -28,7 +28,6 @@ public class HeadCommand extends AbstractCommand
                 item.setItemMeta(itemMeta);
                 PlayerInventory inventory = player.getInventory();
                 inventory.addItem(item);
-                player.updateInventory();
                 player.sendMessage(ChatColor.YELLOW + "You received the head of " + args[0]);
             } else {
                 player.sendMessage(ChatColor.RED + "Type /head <player>");
