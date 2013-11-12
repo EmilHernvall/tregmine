@@ -255,23 +255,23 @@ public class DBPlayerDAO implements IPlayerDAO
     {
         String sql = "SELECT * FROM player " +
                 "WHERE player_id = ? ";
-        
+
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, to.getId());
             stmt.execute();
-            
+
             try (ResultSet rs = stmt.getResultSet()) {
                 if(!rs.next()) return null;
-                
+
                 String stringofkeywords = rs.getString("player_keywords");
                 String[] strings = stringofkeywords.split(",");
-                
+
                 List<String> playerkeywords = new ArrayList<String>();
                 for (String i : strings){
                     if("".equalsIgnoreCase(i)) continue;
                     playerkeywords.add(i);
                 }
-                
+
                 return playerkeywords;
             }
         } catch (SQLException e) {
@@ -284,7 +284,7 @@ public class DBPlayerDAO implements IPlayerDAO
     {
         String sql = "UPDATE player SET player_keywords = ? " +
                 "WHERE player_id = ?";
-        
+
         StringBuilder buffer = new StringBuilder();
         String delim = "";
         for (String keyword : update) {
@@ -293,7 +293,7 @@ public class DBPlayerDAO implements IPlayerDAO
             delim = ",";
         }
         String keywordsString = buffer.toString();
-        
+
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, keywordsString);
             stmt.setInt(2, player.getId());

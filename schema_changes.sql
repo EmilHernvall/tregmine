@@ -407,3 +407,4 @@ INSERT INTO `version` (`version_id`, `version_number`, `version_string`) VALUES
 INSERT INTO `motd` (`motd_timestamp`, `motd_message`) VALUES
 (unix_timestamp(), 'Use /update to find what was added!');
 
+ALTER TABLE player ADD COLUMN player_keywords TEXT NOT NULL DEFAULT '';

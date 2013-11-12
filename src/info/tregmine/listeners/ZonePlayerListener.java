@@ -368,7 +368,7 @@ public class ZonePlayerListener implements Listener
             }
         }
     }
-    
+
     @SuppressWarnings("deprecation")
     @EventHandler
     public void boneMealUsage(PlayerInteractEvent event){
@@ -377,11 +377,11 @@ public class ZonePlayerListener implements Listener
         if (event.getItem() == null) return;
         if (!event.getItem().getType().equals(Material.INK_SACK)) return;
         if (event.getItem().getData().getData() != (byte) 15) return;
-        
+
         Block b = event.getClickedBlock();
         if (b == null || !(b.getType().equals(Material.GRASS))) return;
         Location center = b.getLocation();
-        
+
         event.setCancelled(true); // Stops normal bonemealing
         if (event.getPlayer().getGameMode() == GameMode.SURVIVAL) {
             if (event.getItem().getAmount() == 1){
@@ -390,7 +390,7 @@ public class ZonePlayerListener implements Listener
                 event.getItem().setAmount(event.getItem().getAmount() - 1);
             }
         }
-        
+
         List<Integer> radius_options = Arrays.asList(3,4,5,6,7);
         Random radius_random = new Random();
         Integer radius = radius_options.get(radius_random.nextInt(radius_options.size()));
@@ -408,23 +408,23 @@ public class ZonePlayerListener implements Listener
                 }
             }
         }
-        
+
         TregminePlayer player = plugin.getPlayer(event.getPlayer());
-        
+
         for ( Block block : areaofeffect ) {
-            Block block_under = block.getWorld().getBlockAt(block.getX(), 
-                                                            block.getY() - 1, 
+            Block block_under = block.getWorld().getBlockAt(block.getX(),
+                                                            block.getY() - 1,
                                                             block.getZ());
             if (block_under.getType() != Material.GRASS) continue;
             if (block.getType() != Material.AIR) continue;
-            
+
             ZoneWorld world = plugin.getWorld(block.getWorld());
             Point pos = new Point(block.getX(), block.getZ());
             Zone zone = world.findZone(pos);
-            
+
             if(zone != null){
                 Zone.Permission perm = zone.getUser(player);
-                
+
                 Lot lot = world.findLot(pos);
                 if(lot != null){ // Handle lots
                     if (perm == Zone.Permission.Owner && zone.isCommunist()) { // If communist zone & Player is zone owner
@@ -435,11 +435,11 @@ public class ZonePlayerListener implements Listener
                     }
                     continue;
                 }
-                
+
                 if (zone.getPlaceDefault()) { // If placing is allowed in zone
                     boneMealPlant(block);
                 }
-                
+
                 if (perm == null
                         || (perm != Zone.Permission.Maker && perm != Zone.Permission.Owner)) {
                     continue;
@@ -450,7 +450,7 @@ public class ZonePlayerListener implements Listener
             }
         }
     }
-    
+
     @SuppressWarnings("deprecation")
     public void boneMealPlant(Block block){
         List<Material> bonemeal_produce = Arrays.asList(Material.AIR, Material.AIR, Material.AIR, Material.AIR, Material.AIR,
@@ -459,13 +459,13 @@ public class ZonePlayerListener implements Listener
                                                         Material.LONG_GRASS, Material.LONG_GRASS, Material.LONG_GRASS, Material.LONG_GRASS);
         Random bonemeal_random = new Random();
         Material produce = bonemeal_produce.get(bonemeal_random.nextInt(bonemeal_produce.size()));
-        
+
         block.setType(produce);
         if(block.getType().equals(Material.LONG_GRASS)){
             block.setData((byte) 1);
         }
     }
-    
+
 
     private void movePlayerBack(TregminePlayer player, Location movingFrom,
             Location movingTo)
