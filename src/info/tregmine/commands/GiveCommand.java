@@ -74,6 +74,10 @@ public class GiveCommand extends AbstractCommand
         }
 
         PlayerInventory inv = target.getInventory();
+        if (inv == null) {
+            return true;
+        }
+
         inv.addItem(item);
 
         Material material = Material.getMaterial(materialId);
