@@ -210,7 +210,7 @@ public class BlessedBlockListener implements Listener
             TregminePlayer player = plugin.getPlayer(event.getPlayer());
 
             Location loc = block.getLocation();
-            Location loc1 = loc.subtract(new Vector(0, 0, 1));
+            Location loc1 = loc.subtract(new Vector(0, 1, 0));
 
             if (blessedBlocks.containsKey(loc)
                     || blessedBlocks.containsKey(loc1)) {
