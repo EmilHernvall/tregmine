@@ -2,21 +2,16 @@ package info.tregmine.commands;
 
 import static org.bukkit.ChatColor.*;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.Set;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.Server;
-import org.bukkit.entity.Player;
 
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
+import info.tregmine.database.ILogDAO;
 import info.tregmine.database.IWalletDAO;
 
 public class WhoCommand extends AbstractCommand
@@ -48,6 +43,47 @@ public class WhoCommand extends AbstractCommand
         float X2 = (float)Math.round(X);
         float Y2 = (float)Math.round(Y);
         float Z2 = (float)Math.round(Z);
+        
+        String aliasList = null;
+        
+        if (player.getRank().canSeeAliases() && 
+                whoPlayer.hasFlag(TregminePlayer.Flags.HIDDEN_LOCATION)) {
+            
+            try (IContext ctx = tregmine.createContext()) {
+                
+                ILogDAO logDAO = ctx.getLogDAO();
+                Set<String> aliases = logDAO.getAliases(whoPlayer);
+    
+                StringBuilder buffer = new StringBuilder();
+                String delim = "";
+                for (String name : aliases) {
+                    buffer.append(delim);
+                    buffer.append(name);
+                    delim = ", ";
+                }
+    
+                aliasList = buffer.toString();
+    
+                if (aliases.size() > 1) {
+                    Tregmine.LOGGER.info("Aliases: " + aliasList);
+    
+                    for (TregminePlayer current : tregmine.getOnlinePlayers()) {
+                        if (!current.getRank().canSeeAliases()) {
+                            continue;
+                        }
+                        if (player.hasFlag(TregminePlayer.Flags.HIDDEN_LOCATION)) {
+                            continue;
+                        }
+                        current.sendMessage(ChatColor.YELLOW
+                                + "This player have also used names: " + aliasList);
+                    }
+                }
+            } catch (DAOException e) {
+                throw new RuntimeException(e);
+            }
+            
+        }
+        
 
         try (IContext ctx = tregmine.createContext()) {
             IWalletDAO walletDAO = ctx.getWalletDAO();
@@ -68,6 +104,9 @@ public class WhoCommand extends AbstractCommand
             player.sendMessage(GOLD + "Port: " + GRAY + whoPlayer.getAddress().getPort());
             player.sendMessage(GOLD + "Gamemode: " + GRAY + whoPlayer.getGameMode().toString().toLowerCase());
             player.sendMessage(GOLD + "Level: " + GRAY + whoPlayer.getLevel());
+            if (aliasList != null) {
+                player.sendMessage(GOLD + "Aliases: " + aliasList);
+            }
             player.sendMessage(DARK_GRAY + "*************************************" +
                                "*****************");
 
