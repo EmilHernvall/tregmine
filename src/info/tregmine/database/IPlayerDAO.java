@@ -21,4 +21,8 @@ public interface IPlayerDAO
     
     public List<String> getKeywords(TregminePlayer to) throws DAOException;
     public void updateKeywords(TregminePlayer player, List<String> update) throws DAOException;
+    
+    public List<String> getIgnored(TregminePlayer to) throws DAOException;
+    public void updateIgnore(TregminePlayer player, List<String> update) throws DAOException;
+    public boolean doesIgnore(TregminePlayer player, TregminePlayer victim) throws DAOException;
 }
