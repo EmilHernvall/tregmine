@@ -156,6 +156,7 @@ public class Tregmine extends JavaPlugin
         pluginMgm.registerEvents(new ExpListener(this), this);
         pluginMgm.registerEvents(new ItemFrameListener(this), this);
         pluginMgm.registerEvents(new EggListener(this), this);
+        pluginMgm.registerEvents(new ChristmasListener(this), this);
 
         // Declaration of all commands
         getCommand("admins").setExecutor(
@@ -173,7 +174,9 @@ public class Tregmine extends JavaPlugin
                 @Override
                 public boolean isTarget(TregminePlayer player)
                 {
-                    return player.getRank() == Rank.GUARDIAN;
+                    return player.getRank() == Rank.GUARDIAN ||
+                           player.getRank() == Rank.JUNIOR_ADMIN ||
+                           player.getRank() == Rank.SENIOR_ADMIN;
                 }
             });
 
@@ -196,6 +199,7 @@ public class Tregmine extends JavaPlugin
         getCommand("give").setExecutor(new GiveCommand(this));
         getCommand("head").setExecutor(new HeadCommand(this));
         getCommand("home").setExecutor(new HomeCommand(this));
+        getCommand("ignore").setExecutor(new IgnoreCommand(this));
         getCommand("inv").setExecutor(new InventoryCommand(this));
         getCommand("invlog").setExecutor(new InventoryLogCommand(this));
         getCommand("item").setExecutor(new ItemCommand(this));
