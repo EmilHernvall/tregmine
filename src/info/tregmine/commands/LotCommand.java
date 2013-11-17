@@ -253,13 +253,22 @@ public class LotCommand extends AbstractCommand
             player.sendMessage(RED + "No lot named " + name + " found.");
             return;
         }
+        
+        int lotOwnerId;
+        try (IContext ctx = tregmine.createContext()) {
+            IZonesDAO dao = ctx.getZonesDAO();
+            lotOwnerId = dao.getLotMainOwner(lot.getId());
+        } catch (DAOException e) {
+            throw new RuntimeException(e);
+        }
+        TregminePlayer lotMainOwner = tregmine.getPlayer(lotOwnerId);
 
         Zone zone = tregmine.getZone(lot.getZoneId());
         Zone.Permission perm = zone.getUser(player);
         if (perm == Zone.Permission.Owner && zone.isCommunist()) {
             // Zone owners can do this in communist zones
         }
-        else if (lot.isOwner(player)) {
+        else if (lotMainOwner.equals(player)) {
             // Lot owners can always do it
         }
         else if (player.getRank().canModifyZones()) {
@@ -267,7 +276,7 @@ public class LotCommand extends AbstractCommand
         }
         else {
             player.sendMessage(RED
-                    + "You are not an owner of lot " + lot.getName() + ".");
+                    + "You are not the main owner of lot " + lot.getName() + ".");
             return;
         }
 
