@@ -90,7 +90,8 @@ public class TradeCommand extends AbstractCommand implements Listener
         }
 
         double distance = Distance.calc2d(player.getLocation(), target.getLocation());
-        if (distance > 100) {
+
+        if (!target.hasFlag(TregminePlayer.Flags.INVISIBLE) && (distance > 100)) {
             player.sendMessage(RED + "You can only trade with people less than " +
                     "100 blocks away.");
             return true;
