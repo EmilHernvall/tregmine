@@ -4,12 +4,14 @@ import static org.bukkit.ChatColor.*;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Server;
-import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
 import info.tregmine.Tregmine;
 import info.tregmine.api.Notification;
 import info.tregmine.api.TregminePlayer;
+import info.tregmine.database.DAOException;
+import info.tregmine.database.IContext;
+import info.tregmine.database.IPlayerDAO;
 
 public class MsgCommand extends AbstractCommand
 {
@@ -51,6 +53,16 @@ public class MsgCommand extends AbstractCommand
             player.sendNotification(Notification.COMMAND_FAIL, ChatColor.RED + "No player found by the name of " + args[0]);
             return true;
         }
+        
+        boolean ignored;
+        try (IContext ctx = tregmine.createContext()) {
+            IPlayerDAO playerDAO = ctx.getPlayerDAO();
+            ignored = playerDAO.doesIgnore(recvPlayer, player);
+        } catch (DAOException e) {
+            throw new RuntimeException(e);
+        }
+        if (player.getRank().canNotBeIgnored()) ignored = false;
+        if (ignored == true) return true;
 
         // Show message in senders terminal, as long as the recipient isn't
         // invisible, to prevent /msg from giving away hidden players presence
