@@ -46,6 +46,7 @@ import info.tregmine.api.TregminePlayer;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
 import info.tregmine.database.ILogDAO;
+import info.tregmine.database.IPlayerDAO;
 
 public class ChatHandler extends WebSocketHandler
     implements WebSocketCreator, Listener
@@ -245,7 +246,6 @@ public class ChatHandler extends WebSocketHandler
         TregminePlayer sender = authTokens.get(authToken);
 
         String channel = event.getChannel();
-        String text = event.getText();
 
         for (TregminePlayer to : tregmine.getOnlinePlayers()) {
             if (to.getChatState() == TregminePlayer.ChatState.SETUP) {
@@ -253,6 +253,23 @@ public class ChatHandler extends WebSocketHandler
             }
             if (!channel.equalsIgnoreCase(to.getChatChannel())) {
                 continue;
+            }
+            
+            boolean ignored;
+            try (IContext ctx = tregmine.createContext()) {
+                IPlayerDAO playerDAO = ctx.getPlayerDAO();
+                ignored = playerDAO.doesIgnore(to, sender);
+            } catch (DAOException e) {
+                throw new RuntimeException(e);
+            }
+            if (sender.getRank().canNotBeIgnored()) ignored = false;
+            if (ignored == true) continue;
+            
+            String text = event.getText();
+            for (TregminePlayer online : tregmine.getOnlinePlayers()) {
+                if (text.contains(online.getName()) && !online.hasFlag(TregminePlayer.Flags.INVISIBLE)){
+                    text = text.replaceAll(online.getName(), online.getChatName() + ChatColor.WHITE);
+                }
             }
 
             if ("global".equalsIgnoreCase(channel)) {
@@ -264,13 +281,13 @@ public class ChatHandler extends WebSocketHandler
             }
         }
 
-        server.sendChatMessage(new WebServer.ChatMessage(sender, channel, text));
+        server.sendChatMessage(new WebServer.ChatMessage(sender, channel, event.getText()));
 
-        Tregmine.LOGGER.info(channel + " (" + sender.getRealName() + ") " + text);
+        Tregmine.LOGGER.info(channel + " (" + sender.getRealName() + ") " + event.getText());
 
         try (IContext ctx = tregmine.createContext()) {
             ILogDAO logDAO = ctx.getLogDAO();
-            logDAO.insertChatMessage(sender, channel, text);
+            logDAO.insertChatMessage(sender, channel, event.getText());
         } catch (DAOException e) {
             throw new RuntimeException(e);
         }
