@@ -15,6 +15,7 @@ public abstract class NotifyCommand extends AbstractCommand
     }
 
     protected abstract boolean isTarget(TregminePlayer player);
+    protected abstract ChatColor getColor();
 
     private String argsToMessage(String[] args)
     {
@@ -34,26 +35,19 @@ public abstract class NotifyCommand extends AbstractCommand
         if (args.length == 0) {
             return false;
         }
-        
-        ChatColor color;
-        if ("admins".equalsIgnoreCase(command)) {
-            color = ChatColor.DARK_RED;
-        } else {
-            color = ChatColor.DARK_BLUE;
-        }
-        
+
         String msg = argsToMessage(args);
 
         // Don't send it twice
         if (!isTarget(player)) {
-            player.sendMessage(color + " + " + player.getChatName() + " " + WHITE + msg);
+            player.sendMessage(getColor() + " + " + player.getChatName() + " " + WHITE + msg);
         }
 
         for (TregminePlayer to : tregmine.getOnlinePlayers()) {
             if (!isTarget(to)) {
                 continue;
             }
-            to.sendMessage(color + " + " + player.getChatName() + " " + WHITE + msg);
+            to.sendMessage(getColor() + " + " + player.getChatName() + " " + WHITE + msg);
         }
 
         return true;

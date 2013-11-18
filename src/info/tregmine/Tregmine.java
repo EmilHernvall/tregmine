@@ -166,6 +166,11 @@ public class Tregmine extends JavaPlugin
                     return player.getRank() == Rank.JUNIOR_ADMIN ||
                            player.getRank() == Rank.SENIOR_ADMIN;
                 }
+                @Override
+                public ChatColor getColor()
+                {
+                    return ChatColor.DARK_RED;
+                }
             });
 
         getCommand("guardians").setExecutor(
@@ -176,6 +181,11 @@ public class Tregmine extends JavaPlugin
                     return player.getRank() == Rank.GUARDIAN ||
                            player.getRank() == Rank.JUNIOR_ADMIN ||
                            player.getRank() == Rank.SENIOR_ADMIN;
+                }
+                @Override
+                public ChatColor getColor()
+                {
+                    return ChatColor.DARK_BLUE;
                 }
             });
 
@@ -198,7 +208,6 @@ public class Tregmine extends JavaPlugin
         getCommand("give").setExecutor(new GiveCommand(this));
         getCommand("head").setExecutor(new HeadCommand(this));
         getCommand("home").setExecutor(new HomeCommand(this));
-        getCommand("ignore").setExecutor(new IgnoreCommand(this));
         getCommand("inv").setExecutor(new InventoryCommand(this));
         getCommand("invlog").setExecutor(new InventoryLogCommand(this));
         getCommand("item").setExecutor(new ItemCommand(this));
