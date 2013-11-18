@@ -1,4 +1,4 @@
-package info.tregmine;
+package info.tregmine.commands;
 
 import static org.bukkit.ChatColor.AQUA;
 import static org.bukkit.ChatColor.RED;

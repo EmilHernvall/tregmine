@@ -46,7 +46,7 @@ public class ChatListener implements Listener
 
             String text = event.getMessage();
             for (TregminePlayer online : plugin.getOnlinePlayers()) {
-                if (text.contains(online.getName())){
+                if (text.contains(online.getName()) && !online.hasFlag(TregminePlayer.Flags.INVISIBLE)){
                     text = text.replaceAll(online.getName(), online.getChatName() + txtColor);
                 }
             }
