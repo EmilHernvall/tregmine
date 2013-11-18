@@ -43,17 +43,15 @@ public class WhoCommand extends AbstractCommand
         float X2 = (float)Math.round(X);
         float Y2 = (float)Math.round(Y);
         float Z2 = (float)Math.round(Z);
-        
+
         String aliasList = null;
-        
-        if (player.getRank().canSeeAliases() && 
-                whoPlayer.hasFlag(TregminePlayer.Flags.HIDDEN_LOCATION)) {
-            
+
+        if (player.getRank().canSeeAliases()) {
             try (IContext ctx = tregmine.createContext()) {
-                
+
                 ILogDAO logDAO = ctx.getLogDAO();
                 Set<String> aliases = logDAO.getAliases(whoPlayer);
-    
+
                 StringBuilder buffer = new StringBuilder();
                 String delim = "";
                 for (String name : aliases) {
@@ -61,29 +59,12 @@ public class WhoCommand extends AbstractCommand
                     buffer.append(name);
                     delim = ", ";
                 }
-    
+
                 aliasList = buffer.toString();
-    
-                if (aliases.size() > 1) {
-                    Tregmine.LOGGER.info("Aliases: " + aliasList);
-    
-                    for (TregminePlayer current : tregmine.getOnlinePlayers()) {
-                        if (!current.getRank().canSeeAliases()) {
-                            continue;
-                        }
-                        if (player.hasFlag(TregminePlayer.Flags.HIDDEN_LOCATION)) {
-                            continue;
-                        }
-                        current.sendMessage(ChatColor.YELLOW
-                                + "This player have also used names: " + aliasList);
-                    }
-                }
             } catch (DAOException e) {
                 throw new RuntimeException(e);
             }
-            
         }
-        
 
         try (IContext ctx = tregmine.createContext()) {
             IWalletDAO walletDAO = ctx.getWalletDAO();
