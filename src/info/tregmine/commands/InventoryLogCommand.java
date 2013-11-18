@@ -2,6 +2,7 @@ package info.tregmine.commands;
 
 import static org.bukkit.ChatColor.AQUA;
 import static org.bukkit.ChatColor.RED;
+import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
 import info.tregmine.commands.AbstractCommand;
 import info.tregmine.database.DAOException;
