@@ -302,4 +302,92 @@ public class DBPlayerDAO implements IPlayerDAO
             throw new DAOException(sql, e);
         }
     }
+    
+    @Override
+    public List<String> getIgnored(TregminePlayer to) throws DAOException
+    {
+        String sql = "SELECT * FROM player " +
+                "WHERE player_id = ? ";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, to.getId());
+            stmt.execute();
+
+            try (ResultSet rs = stmt.getResultSet()) {
+                if(!rs.next()) return null;
+
+                String stringofignored = rs.getString("player_ignore");
+                String[] strings = stringofignored.split(",");
+
+                List<String> playerignore = new ArrayList<String>();
+                for (String i : strings){
+                    if("".equalsIgnoreCase(i)) continue;
+                    playerignore.add(i);
+                }
+
+                return playerignore;
+            }
+        } catch (SQLException e) {
+            throw new DAOException(sql, e);
+        }
+    }
+
+    @Override
+    public void updateIgnore(TregminePlayer player, List<String> update) throws DAOException
+    {
+        String sql = "UPDATE player SET player_ignore = ? " +
+                "WHERE player_id = ?";
+
+        StringBuilder buffer = new StringBuilder();
+        String delim = "";
+        for (String ignored : update) {
+            buffer.append(delim);
+            buffer.append(ignored);
+            delim = ",";
+        }
+        String updateIgnoreString = buffer.toString();
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, updateIgnoreString);
+            stmt.setInt(2, player.getId());
+            stmt.execute();
+        } catch (SQLException e) {
+            throw new DAOException(sql, e);
+        }
+    }
+    
+    @Override
+    public boolean doesIgnore(TregminePlayer player, TregminePlayer victim) throws DAOException
+    {
+        String sql = "SELECT * FROM player " +
+                "WHERE player_id = ? ";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, player.getId());
+            stmt.execute();
+
+            try (ResultSet rs = stmt.getResultSet()) {
+                if(!rs.next()) return false;
+
+                String stringofignored = rs.getString("player_ignore");
+                String[] strings = stringofignored.split(",");
+
+                List<String> playerignore = new ArrayList<String>();
+                for (String i : strings){
+                    if("".equalsIgnoreCase(i)) continue;
+                    playerignore.add(i);
+                }
+                
+                if (playerignore.contains(victim.getDisplayName())) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        } catch (SQLException e) {
+            throw new DAOException(sql, e);
+        }
+    }
+    
+    
 }

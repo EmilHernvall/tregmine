@@ -38,6 +38,16 @@ public class ChatListener implements Listener
             if (to.getChatState() == TregminePlayer.ChatState.SETUP) {
                 continue;
             }
+            
+            boolean ignored;
+            try (IContext ctx = plugin.createContext()) {
+                IPlayerDAO playerDAO = ctx.getPlayerDAO();
+                ignored = playerDAO.doesIgnore(to, sender);
+            } catch (DAOException e) {
+                throw new RuntimeException(e);
+            }
+            if (sender.getRank().canNotBeIgnored()) ignored = false;
+            if (ignored == true) continue;
 
             ChatColor txtColor = ChatColor.WHITE;
             if (sender.equals(to)) {

@@ -203,6 +203,20 @@ public enum Rank
                this == JUNIOR_ADMIN ||
                this == SENIOR_ADMIN;
     }
+    
+    public boolean canNotBeIgnored()
+    {
+        return this == GUARDIAN ||
+               this == JUNIOR_ADMIN ||
+               this == SENIOR_ADMIN;
+    }
+    
+    public boolean canViewIgnored()
+    {
+        return this == GUARDIAN ||
+               this == JUNIOR_ADMIN ||
+               this == SENIOR_ADMIN;
+    }
 
     public boolean canWarn()
     {

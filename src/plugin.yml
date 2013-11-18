@@ -72,6 +72,9 @@ commands:
   home:
     description: Teleport to, or set, your home
     usage: /home
+  ignore:
+    description: Ignore a player (not staff)
+    usage: /ignore <add/remove> <player_name> or /ignore <list>
   inv:
     description: Look in a players inventory (admin only)
     usage: /inv <player>

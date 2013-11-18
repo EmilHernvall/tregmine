@@ -6,6 +6,9 @@ import org.bukkit.entity.Player;
 
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
+import info.tregmine.database.DAOException;
+import info.tregmine.database.IContext;
+import info.tregmine.database.IPlayerDAO;
 
 public class ActionCommand extends AbstractCommand
 {
@@ -43,6 +46,17 @@ public class ActionCommand extends AbstractCommand
             if (!channel.equals(to.getChatChannel())) {
                 continue;
             }
+            
+            boolean ignored;
+            try (IContext ctx = tregmine.createContext()) {
+                IPlayerDAO playerDAO = ctx.getPlayerDAO();
+                ignored = playerDAO.doesIgnore(to, player);
+            } catch (DAOException e) {
+                throw new RuntimeException(e);
+            }
+            if (player.getRank().canNotBeIgnored()) ignored = false;
+            if (ignored == true) continue;
+
             to.sendMessage("* " + player.getChatName() + " " + WHITE + msg);
         }
 
