@@ -1,21 +1,17 @@
 package info.tregmine.listeners;
 
-import java.io.IOException;
-import java.net.InetSocketAddress;
+import info.tregmine.Tregmine;
+import info.tregmine.api.TregminePlayer;
+import info.tregmine.database.DAOException;
+import info.tregmine.database.IContext;
+import info.tregmine.database.ILogDAO;
+
 import java.util.Set;
 
 import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
-
-import info.tregmine.Tregmine;
-import info.tregmine.database.DAOException;
-import info.tregmine.database.IContext;
-import info.tregmine.database.IPlayerDAO;
-import info.tregmine.database.ILogDAO;
-import info.tregmine.api.TregminePlayer;
 
 public class PlayerLookupListener implements Listener
 {
@@ -38,14 +34,39 @@ public class PlayerLookupListener implements Listener
         }
 
         if (!player.hasFlag(TregminePlayer.Flags.HIDDEN_LOCATION)) {
-            if (player.getCountry() != null) {
-                plugin.getServer().broadcastMessage(
-                    ChatColor.DARK_AQUA + "Welcome " + player.getChatName() +
-                    ChatColor.DARK_AQUA + " from " + player.getCountry() + "!");
+            
+            if (player.hasFlag(TregminePlayer.Flags.INVISIBLE)) {
+                
+                for (TregminePlayer to : plugin.getOnlinePlayers()) {
+                    if (to.getRank().canSeeHiddenInfo()) {
+                        if (player.getCountry() != null) {
+                            to.sendMessage(
+                                    ChatColor.DARK_AQUA + "Welcome " + player.getChatName() +
+                                    ChatColor.DARK_AQUA + " from " + player.getCountry() + "!");
+                            to.sendMessage(
+                                    player.getChatName() + ChatColor.DARK_AQUA + " is invisible!");
+                        } else {
+                            to.sendMessage(
+                                    ChatColor.DARK_AQUA + "Welcome " + player.getChatName());
+                            to.sendMessage(
+                                    player.getChatName() + ChatColor.DARK_AQUA + " is invisible!");
+                        }
+                    }
+                }
+                
             } else {
-                plugin.getServer().broadcastMessage(
-                    ChatColor.DARK_AQUA + "Welcome " + player.getChatName());
+                
+                if (player.getCountry() != null) {
+                    plugin.getServer().broadcastMessage(
+                        ChatColor.DARK_AQUA + "Welcome " + player.getChatName() +
+                        ChatColor.DARK_AQUA + " from " + player.getCountry() + "!");
+                } else {
+                    plugin.getServer().broadcastMessage(
+                        ChatColor.DARK_AQUA + "Welcome " + player.getChatName());
+                }
+                
             }
+            
         }
 
         if ("95.141.47.226".equals(player.getIp())) {
