@@ -56,6 +56,10 @@ public class TauntListener implements Listener
         
         EntityDamageEvent damage = player.getLastDamageCause();
         DamageCause cause = damage.getCause();
+        
+        boolean playerCause = false;
+        if (damage.getEntity() instanceof Player) playerCause = true;
+        
         Location location = player.getLocation();
         
         Point pos = new Point(location.getBlockX(), location.getBlockZ());
@@ -69,7 +73,8 @@ public class TauntListener implements Listener
         }
         
         if (cause == DamageCause.ENTITY_ATTACK &&
-                currentZone.isPvp()) {
+                currentZone.isPvp() &&
+                playerCause == true) {
             
             World w = player.getWorld();
             Entity a = w.spawnEntity(player.getLocation(), EntityType.ZOMBIE);
