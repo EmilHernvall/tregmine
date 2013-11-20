@@ -408,3 +408,7 @@ INSERT INTO `motd` (`motd_timestamp`, `motd_message`) VALUES
 (unix_timestamp(), 'Use /update to find what was added!');
 
 ALTER TABLE player ADD COLUMN player_keywords TEXT NOT NULL DEFAULT '';
+ALTER TABLE player ADD COLUMN player_ignore TEXT NOT NULL DEFAULT '';
+
+INSERT INTO `version` (`version_number`, `version_string`) VALUES
+('1.1.0', 'Added ignore command::Many bug fixes::Plenty of staff-only feature changes::Tweaked head dropping');
