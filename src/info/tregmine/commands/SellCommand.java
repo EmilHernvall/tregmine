@@ -1,28 +1,26 @@
 package info.tregmine.commands;
 
-import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
+import static org.bukkit.ChatColor.RED;
+import static org.bukkit.ChatColor.YELLOW;
+import info.tregmine.Tregmine;
+import info.tregmine.api.TregminePlayer;
+import info.tregmine.database.*;
 
-import static org.bukkit.ChatColor.*;
-import org.bukkit.Server;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.bukkit.Material;
+import org.bukkit.Server;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.*;
-import org.bukkit.plugin.PluginManager;
-import org.bukkit.event.Listener;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
-
-import info.tregmine.Tregmine;
-import info.tregmine.api.TregminePlayer;
-import info.tregmine.database.DAOException;
-import info.tregmine.database.IContext;
-import info.tregmine.database.IWalletDAO;
-import info.tregmine.database.ITradeDAO;
-import info.tregmine.database.IItemDAO;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.PluginManager;
 
 public class SellCommand extends AbstractCommand implements Listener
 {
@@ -180,5 +178,14 @@ public class SellCommand extends AbstractCommand implements Listener
             player.setChatState(TregminePlayer.ChatState.CHAT);
             inventories.remove(player);
         }
+    }
+    
+    public void sellPlayerDeath(PlayerDeathEvent event)
+    {
+        TregminePlayer player = tregmine.getPlayer(event.getEntity());
+        if(!inventories.containsKey(player)) return;
+        
+        player.setChatState(TregminePlayer.ChatState.CHAT);
+        inventories.remove(player);
     }
 }
