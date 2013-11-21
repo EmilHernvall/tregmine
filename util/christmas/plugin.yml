@@ -1,0 +1,7 @@
+name: Christmas
+version: 1.0
+load: startup
+main: info.tregmine.christmas.ChristmasMain
+author: ice374
+description: Christmas
+
