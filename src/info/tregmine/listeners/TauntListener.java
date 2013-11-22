@@ -7,7 +7,6 @@ import info.tregmine.api.Insult;
 import info.tregmine.api.TregminePlayer;
 import info.tregmine.quadtree.Point;
 import info.tregmine.zones.Zone;
-import info.tregmine.zones.ZoneWorld;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,13 +62,12 @@ public class TauntListener implements Listener
         Location location = player.getLocation();
         
         Point pos = new Point(location.getBlockX(), location.getBlockZ());
-        ZoneWorld world = plugin.getWorld(player.getWorld());
         TregminePlayer player2 = plugin.getPlayer(player);
         
         Zone currentZone = player2.getCurrentZone();
         if (currentZone == null || !currentZone.contains(pos)) {
-            currentZone = world.findZone(pos);
-            player2.setCurrentZone(currentZone);
+            e.setDeathMessage(death);
+            return;
         }
         
         if (cause == DamageCause.ENTITY_ATTACK &&
