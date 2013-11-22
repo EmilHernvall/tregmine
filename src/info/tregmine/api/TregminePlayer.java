@@ -1,22 +1,23 @@
 package info.tregmine.api;
 
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Set;
-import java.util.EnumSet;
+import info.tregmine.Tregmine;
+import info.tregmine.api.encryption.BCrypt;
+import info.tregmine.quadtree.Point;
+import info.tregmine.zones.Lot;
+import info.tregmine.zones.Zone;
+import info.tregmine.zones.ZoneWorld;
+
 import java.util.Date;
-//import java.util.List;
-import java.net.InetSocketAddress;
+import java.util.EnumSet;
+import java.util.Set;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Horse;
 import org.bukkit.entity.Entity;
-
-import info.tregmine.api.encryption.BCrypt;
-import info.tregmine.zones.Zone;
+import org.bukkit.entity.Horse;
+import org.bukkit.entity.Player;
+//import java.util.List;
 
 public class TregminePlayer extends PlayerDelegate
 {
@@ -85,8 +86,10 @@ public class TregminePlayer extends PlayerDelegate
     private FishyBlock newFishyBlock;
     private FishyBlock currentFishyBlock;
     private int fishyBuyCount;
+    
+    private Tregmine plugin;
 
-    public TregminePlayer(Player player)
+    public TregminePlayer(Player player, Tregmine instance)
     {
         super(player);
 
@@ -95,15 +98,19 @@ public class TregminePlayer extends PlayerDelegate
         this.loginTime = new Date();
 
         this.flags = EnumSet.noneOf(Flags.class);
+        
+        this.plugin = instance;
     }
 
-    public TregminePlayer(String name)
+    public TregminePlayer(String name, Tregmine instance)
     {
         super(null);
 
         this.name = name;
         this.realName = name;
         this.flags = EnumSet.noneOf(Flags.class);
+        
+        this.plugin = instance;
     }
 
     public void setId(int v) { this.id = v; }
@@ -365,6 +372,87 @@ public class TregminePlayer extends PlayerDelegate
         else {
             teleport(loc);
         }
+    }
+    
+    /**
+     * Returns true or false if the player has permission for that block
+     * @param loc - Location of the block in question
+     * @param punish - Should it return an error message and set fire ticks
+     * @param instance - Plugin instance
+     * @return true or false
+     */
+    public boolean hasBlockPermission(Location loc, boolean punish)
+    {
+        ZoneWorld world = plugin.getWorld(loc.getWorld());
+        Point point = new Point(loc.getBlockX(), loc.getBlockZ());
+        
+        Zone zone = world.findZone(point);
+        Lot lot = world.findLot(point);
+        
+        if (zone == null) { // Is in the wilderness - So return true
+            return true;
+        }
+        
+        if (this.getRank().canModifyZones()) { // Lets people with canModifyZones have block permission
+            return true;
+        }
+        
+        Zone.Permission perm = zone.getUser(this);
+        
+        if (perm == Zone.Permission.Banned) { // If banned then return false
+            if (punish == true) {
+                this.setFireTicks(100);
+                this.sendMessage(ChatColor.RED + "["
+                        + zone.getName() + "] "
+                        + "You are banned from this zone!");
+            }
+            return false;
+        }
+        
+        if (lot == null &&
+                (perm == Zone.Permission.Allowed ||
+                 perm == Zone.Permission.Maker ||
+                 perm == Zone.Permission.Owner)) { // If allowed/maker/owner and not in a lot : return true
+            return true;
+        }
+        
+        if (lot == null &&
+                zone.getPlaceDefault()) { // If placeDefault and not in a lot : return true
+            return true;
+        }
+        
+        if (lot != null &&
+                perm == Zone.Permission.Owner &&
+                zone.isCommunist()) { // If communist zone return true
+            return true;
+        }
+        
+        if (lot != null &&
+                lot.isOwner(this)) { // If is lot owner
+            return true;
+        }
+        
+        if (punish == true) {
+            if (lot != null && zone != null) { // Lot Error Message
+                
+                this.setFireTicks(100);
+                this.sendMessage(ChatColor.RED + "["
+                        + currentZone.getName() + "] "
+                        + "You do not have sufficient permissions in "
+                        + lot.getName() + ".");
+                
+            } else { // Zone Error Message
+                
+                this.setFireTicks(100);
+                this.sendMessage(ChatColor.RED + "["
+                        + currentZone.getName() + "] "
+                        + "You do not have sufficient permissions in "
+                        + zone.getName() + ".");
+                
+            }
+        }
+        
+        return false; // If they don't fit into any of that. Return false
     }
 
     // java.lang.Object overrides

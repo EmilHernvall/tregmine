@@ -68,7 +68,7 @@ public class Tregmine extends JavaPlugin
 
         FileConfiguration config = getConfig();
 
-        contextFactory = new DBContextFactory(config);
+        contextFactory = new DBContextFactory(config, this);
 
         // Set up all data structures
         players = new HashMap<>();
