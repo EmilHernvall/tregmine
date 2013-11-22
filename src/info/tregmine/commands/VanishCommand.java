@@ -1,13 +1,16 @@
 package info.tregmine.commands;
 
-import java.util.List;
-
-import static org.bukkit.ChatColor.*;
+import static org.bukkit.ChatColor.DARK_AQUA;
+import static org.bukkit.ChatColor.YELLOW;
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
 import info.tregmine.database.IPlayerDAO;
+
+import java.util.List;
+
+import org.bukkit.ChatColor;
 
 public class VanishCommand extends AbstractCommand
 {
@@ -64,9 +67,32 @@ public class VanishCommand extends AbstractCommand
 
         if (vanish) {
             player.sendMessage(YELLOW + "You are now invisible!");
+            
+            for (TregminePlayer to : tregmine.getOnlinePlayers()) {
+                if (player.getQuitMessage() != null) {
+                    to.sendMessage(player.getChatName() + " quit: " + ChatColor.YELLOW + player.getQuitMessage());
+                }
+                if (to.getRank().canSeeHiddenInfo()) {
+                    to.sendMessage(player.getChatName() + ChatColor.DARK_AQUA + " just went invisible!");
+                }
+            }
         }
         else {
             player.sendMessage(YELLOW + "You are no longer hidden!");
+            
+            for (TregminePlayer to : tregmine.getOnlinePlayers()) {
+                if (player.getCountry() == null) {
+                    to.sendMessage(
+                            ChatColor.DARK_AQUA + "Welcome " + player.getChatName());
+                } else {
+                    to.sendMessage(
+                            ChatColor.DARK_AQUA + "Welcome " + player.getChatName() +
+                            ChatColor.DARK_AQUA + " from " + player.getCountry() + "!");
+                }
+                if (to.getRank().canSeeHiddenInfo()) {
+                    to.sendMessage(player.getChatName() + ChatColor.DARK_AQUA + " is no longer invisible!");
+                }
+            }
         }
 
         return true;
