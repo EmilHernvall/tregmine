@@ -72,6 +72,11 @@ public class TauntListener implements Listener
             player2.setCurrentZone(currentZone);
         }
         
+        if (currentZone == null) {
+            e.setDeathMessage(death);
+            return;
+        }
+        
         if (cause == DamageCause.ENTITY_ATTACK &&
                 currentZone.isPvp() &&
                 playerCause == true) {
