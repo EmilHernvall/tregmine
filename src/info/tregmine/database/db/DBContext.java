@@ -1,22 +1,20 @@
 package info.tregmine.database.db;
 
-import java.io.*;
-import java.util.*;
-import java.sql.*;
-
+import info.tregmine.Tregmine;
 import info.tregmine.database.*;
 
-import info.tregmine.database.DAOException;
-import info.tregmine.database.IContext;
-import info.tregmine.database.IEnchantmentDAO;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 public class DBContext implements IContext
 {
     private Connection conn;
+    private Tregmine plugin;
 
-    public DBContext(Connection conn)
+    public DBContext(Connection conn, Tregmine instance)
     {
         this.conn = conn;
+        this.plugin = instance;
     }
 
     public Connection getConnection()
@@ -65,7 +63,7 @@ public class DBContext implements IContext
     @Override
     public IPlayerDAO getPlayerDAO()
     {
-        return new DBPlayerDAO(conn);
+        return new DBPlayerDAO(conn, plugin);
     }
 
     @Override
