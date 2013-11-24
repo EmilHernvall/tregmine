@@ -1,5 +1,11 @@
 package info.tregmine.database.db;
 
+import info.tregmine.Tregmine;
+import info.tregmine.api.Rank;
+import info.tregmine.api.TregminePlayer;
+import info.tregmine.database.DAOException;
+import info.tregmine.database.IPlayerDAO;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -9,18 +15,15 @@ import java.util.List;
 
 import org.bukkit.entity.Player;
 
-import info.tregmine.api.TregminePlayer;
-import info.tregmine.api.Rank;
-import info.tregmine.database.IPlayerDAO;
-import info.tregmine.database.DAOException;
-
 public class DBPlayerDAO implements IPlayerDAO
 {
     private Connection conn;
+    private Tregmine plugin;
 
-    public DBPlayerDAO(Connection conn)
+    public DBPlayerDAO(Connection conn, Tregmine instance)
     {
         this.conn = conn;
+        this.plugin = instance;
     }
 
     @Override
@@ -39,7 +42,7 @@ public class DBPlayerDAO implements IPlayerDAO
                     return null;
                 }
 
-                player = new TregminePlayer(rs.getString("player_name"));
+                player = new TregminePlayer(rs.getString("player_name"), plugin);
                 player.setId(rs.getInt("player_id"));
                 player.setPasswordHash(rs.getString("player_password"));
                 player.setRank(Rank.fromString(rs.getString("player_rank")));
@@ -81,9 +84,9 @@ public class DBPlayerDAO implements IPlayerDAO
 
         TregminePlayer player;
         if (wrap != null) {
-            player = new TregminePlayer(wrap);
+            player = new TregminePlayer(wrap, plugin);
         } else {
-            player = new TregminePlayer(name);
+            player = new TregminePlayer(name, plugin);
         }
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -151,7 +154,7 @@ public class DBPlayerDAO implements IPlayerDAO
     {
         String sql = "INSERT INTO player (player_name, player_rank, player_keywords) VALUE (?, ?, ?)";
 
-        TregminePlayer player = new TregminePlayer(wrap);
+        TregminePlayer player = new TregminePlayer(wrap, plugin);
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, player.getName());
