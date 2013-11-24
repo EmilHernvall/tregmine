@@ -72,6 +72,9 @@ commands:
   home:
     description: Teleport to, or set, your home
     usage: /home
+  hide:
+    description: Hide from users on Login
+    usage: /hide
   ignore:
     description: Ignore a player (not staff)
     usage: /ignore <add/remove> <player_name> or /ignore <list>

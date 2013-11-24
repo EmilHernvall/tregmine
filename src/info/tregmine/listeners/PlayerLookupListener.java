@@ -32,37 +32,39 @@ public class PlayerLookupListener implements Listener
                     "in players map.");
             return;
         }
-
-        if (player.hasFlag(TregminePlayer.Flags.INVISIBLE)) {
-
-            for (TregminePlayer to : plugin.getOnlinePlayers()) {
-                if (to.getRank().canSeeHiddenInfo()) {
-                    if (player.getCountry() != null) {
-                        to.sendMessage(
-                                ChatColor.DARK_AQUA + "Welcome " + player.getChatName() +
-                                ChatColor.DARK_AQUA + " from " + player.getCountry() + "!");
-                        to.sendMessage(
-                                player.getChatName() + ChatColor.DARK_AQUA + " is invisible!");
-                    } else {
-                        to.sendMessage(
-                                ChatColor.DARK_AQUA + "Welcome " + player.getChatName());
-                        to.sendMessage(
-                                player.getChatName() + ChatColor.DARK_AQUA + " is invisible!");
+        
+        if (!player.hasFlag(TregminePlayer.Flags.HIDDEN_ANNOUNCEMENT)) {
+            if (player.hasFlag(TregminePlayer.Flags.INVISIBLE)) {
+    
+                for (TregminePlayer to : plugin.getOnlinePlayers()) {
+                    if (to.getRank().canSeeHiddenInfo()) {
+                        if (player.getCountry() != null) {
+                            to.sendMessage(
+                                    ChatColor.DARK_AQUA + "Welcome " + player.getChatName() +
+                                    ChatColor.DARK_AQUA + " from " + player.getCountry() + "!");
+                            to.sendMessage(
+                                    player.getChatName() + ChatColor.DARK_AQUA + " is invisible!");
+                        } else {
+                            to.sendMessage(
+                                    ChatColor.DARK_AQUA + "Welcome " + player.getChatName());
+                            to.sendMessage(
+                                    player.getChatName() + ChatColor.DARK_AQUA + " is invisible!");
+                        }
                     }
                 }
-            }
-
-        } else {
-
-            if (player.getCountry() != null && !player.hasFlag(TregminePlayer.Flags.HIDDEN_LOCATION)) {
-                plugin.getServer().broadcastMessage(
-                    ChatColor.DARK_AQUA + "Welcome " + player.getChatName() +
-                    ChatColor.DARK_AQUA + " from " + player.getCountry() + "!");
+    
             } else {
-                plugin.getServer().broadcastMessage(
-                    ChatColor.DARK_AQUA + "Welcome " + player.getChatName());
+    
+                if (player.getCountry() != null && !player.hasFlag(TregminePlayer.Flags.HIDDEN_LOCATION)) {
+                    plugin.getServer().broadcastMessage(
+                        ChatColor.DARK_AQUA + "Welcome " + player.getChatName() +
+                        ChatColor.DARK_AQUA + " from " + player.getCountry() + "!");
+                } else {
+                    plugin.getServer().broadcastMessage(
+                        ChatColor.DARK_AQUA + "Welcome " + player.getChatName());
+                }
+    
             }
-
         }
 
         if ("95.141.47.226".equals(player.getIp())) {
