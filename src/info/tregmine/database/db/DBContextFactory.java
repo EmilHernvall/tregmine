@@ -1,24 +1,26 @@
 package info.tregmine.database.db;
 
-import java.io.*;
-import java.util.*;
-import java.sql.*;
+import info.tregmine.Tregmine;
+import info.tregmine.database.DAOException;
+import info.tregmine.database.IContext;
+import info.tregmine.database.IContextFactory;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.commons.dbcp.BasicDataSource;
-
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
-
-import info.tregmine.database.DAOException;
-import info.tregmine.database.IContextFactory;
-import info.tregmine.database.IContext;
 
 public class DBContextFactory implements IContextFactory
 {
     private BasicDataSource ds;
     private Map<String, LoggingConnection.LogEntry> queryLog;
+    private Tregmine plugin;
 
-    public DBContextFactory(FileConfiguration config)
+    public DBContextFactory(FileConfiguration config, Tregmine instance)
     {
         queryLog = new HashMap<>();
 
@@ -49,6 +51,8 @@ public class DBContextFactory implements IContextFactory
         ds.setMaxActive(5);
         ds.setMaxIdle(5);
         ds.setDefaultAutoCommit(true);
+        
+        this.plugin = instance;
     }
 
     public Map<String, LoggingConnection.LogEntry> getLog()
@@ -68,7 +72,7 @@ public class DBContextFactory implements IContextFactory
                 stmt.execute("SET NAMES latin1");
             }
 
-            return new DBContext(new LoggingConnection(conn, queryLog));
+            return new DBContext(new LoggingConnection(conn, queryLog), plugin);
         } catch (SQLException e) {
             throw new DAOException(e);
         }
