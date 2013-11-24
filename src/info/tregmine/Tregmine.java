@@ -7,6 +7,9 @@ import info.tregmine.database.IInventoryDAO.InventoryType;
 import info.tregmine.database.db.DBContextFactory;
 import info.tregmine.listeners.*;
 import info.tregmine.quadtree.IntersectionException;
+import info.tregmine.tools.ToolCraft;
+import info.tregmine.tools.ToolCraftRegistry;
+import info.tregmine.tools.ToolSpawnCommand;
 import info.tregmine.zones.Lot;
 import info.tregmine.zones.Zone;
 import info.tregmine.zones.ZoneWorld;
@@ -68,7 +71,7 @@ public class Tregmine extends JavaPlugin
 
         FileConfiguration config = getConfig();
 
-        contextFactory = new DBContextFactory(config);
+        contextFactory = new DBContextFactory(config, this);
 
         // Set up all data structures
         players = new HashMap<>();
