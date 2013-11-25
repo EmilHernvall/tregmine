@@ -254,7 +254,7 @@ public class ChatHandler extends WebSocketHandler
             if (!channel.equalsIgnoreCase(to.getChatChannel())) {
                 continue;
             }
-            
+
             boolean ignored;
             try (IContext ctx = tregmine.createContext()) {
                 IPlayerDAO playerDAO = ctx.getPlayerDAO();
@@ -262,9 +262,13 @@ public class ChatHandler extends WebSocketHandler
             } catch (DAOException e) {
                 throw new RuntimeException(e);
             }
-            if (sender.getRank().canNotBeIgnored()) ignored = false;
-            if (ignored == true) continue;
-            
+            if (sender.getRank().canNotBeIgnored()) {
+                ignored = false;
+            }
+            if (ignored == true) {
+                continue;
+            }
+
             String text = event.getText();
             for (TregminePlayer online : tregmine.getOnlinePlayers()) {
                 if (text.contains(online.getName()) && !online.hasFlag(TregminePlayer.Flags.INVISIBLE)){

@@ -56,9 +56,9 @@ public class ZonePlayerListener implements Listener
     public void onPlayerBucketEmpty(PlayerBucketEmptyEvent event)
     {
         TregminePlayer player = plugin.getPlayer(event.getPlayer());
-        
+
         Location location = event.getBlockClicked().getLocation();
-        
+
         if (!player.hasBlockPermission(location, true)) {
             event.setCancelled(true);
         }
@@ -70,7 +70,7 @@ public class ZonePlayerListener implements Listener
         TregminePlayer player = plugin.getPlayer(event.getPlayer());
 
         Location location = event.getBlock().getLocation();
-        
+
         if (!player.hasBlockPermission(location, true)) {
             event.setCancelled(true);
         }
@@ -86,7 +86,7 @@ public class ZonePlayerListener implements Listener
         }
 
         TregminePlayer player = plugin.getPlayer((Player) event.getRemover());
-        
+
         if (!player.hasBlockPermission(player.getLocation(), true)) {
             event.setCancelled(true);
         }

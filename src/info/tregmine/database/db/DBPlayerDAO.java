@@ -1,19 +1,22 @@
 package info.tregmine.database.db;
 
-import info.tregmine.Tregmine;
-import info.tregmine.api.Rank;
-import info.tregmine.api.TregminePlayer;
-import info.tregmine.database.DAOException;
-import info.tregmine.database.IPlayerDAO;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.EnumMap;
 
 import org.bukkit.entity.Player;
+
+import info.tregmine.Tregmine;
+import info.tregmine.api.Rank;
+import info.tregmine.api.TregminePlayer;
+import info.tregmine.api.Badge;
+import info.tregmine.database.DAOException;
+import info.tregmine.database.IPlayerDAO;
 
 public class DBPlayerDAO implements IPlayerDAO
 {
@@ -305,7 +308,7 @@ public class DBPlayerDAO implements IPlayerDAO
             throw new DAOException(sql, e);
         }
     }
-    
+
     @Override
     public List<String> getIgnored(TregminePlayer to) throws DAOException
     {
@@ -358,7 +361,7 @@ public class DBPlayerDAO implements IPlayerDAO
             throw new DAOException(sql, e);
         }
     }
-    
+
     @Override
     public boolean doesIgnore(TregminePlayer player, TregminePlayer victim) throws DAOException
     {
@@ -380,7 +383,7 @@ public class DBPlayerDAO implements IPlayerDAO
                     if("".equalsIgnoreCase(i)) continue;
                     playerignore.add(i);
                 }
-                
+
                 if (playerignore.contains(victim.getDisplayName())) {
                     return true;
                 } else {
@@ -391,6 +394,97 @@ public class DBPlayerDAO implements IPlayerDAO
             throw new DAOException(sql, e);
         }
     }
-    
-    
+
+    @Override
+    public Map<Badge, Integer> getBadges(TregminePlayer player)
+    throws DAOException
+    {
+        String sql = "SELECT * FROM player_badge " +
+                "WHERE player_id = ?";
+
+        Map<Badge, Integer> badges = new EnumMap<Badge, Integer>(Badge.class);
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, player.getId());
+            stmt.execute();
+
+            try (ResultSet rs = stmt.getResultSet()) {
+                while (rs.next()) {
+                    Badge badge = Badge.fromString(rs.getString("badge_name"));
+                    int lvl = rs.getInt("badge_level");
+                    badges.put(badge, lvl);
+                }
+            }
+        } catch (SQLException e) {
+            throw new DAOException(sql, e);
+        }
+
+        return badges;
+    }
+
+    @Override
+    public void updateBadges(TregminePlayer player)
+    throws DAOException
+    {
+        Map<Badge, Integer> dbBadges = player.getBadges();
+        Map<Badge, Integer> memBadges = getBadges(player);
+
+        Map<Badge, Integer> added = new EnumMap<Badge, Integer>(Badge.class);
+        Map<Badge, Integer> changed = new EnumMap<Badge, Integer>(Badge.class);
+        for (Map.Entry<Badge, Integer> entry : memBadges.entrySet()) {
+            if (dbBadges.containsKey(entry.getKey()) &&
+                dbBadges.get(entry.getKey()) != entry.getValue()) {
+
+                changed.put(entry.getKey(), entry.getValue());
+            }
+            else if (!dbBadges.containsKey(entry.getKey())) {
+                added.put(entry.getKey(), entry.getValue());
+            }
+        }
+
+        Map<Badge, Integer> deleted = new EnumMap<Badge, Integer>(Badge.class);
+        for (Map.Entry<Badge, Integer> entry : dbBadges.entrySet()) {
+            if (!memBadges.containsKey(entry.getKey())) {
+                deleted.put(entry.getKey(), entry.getValue());
+            }
+        }
+
+        String sqlInsert = "INSERT INTO player_badge (player_id, badge_name, " +
+            "badge_level, badge_timestamp) ";
+        sqlInsert += "VALUES (?, ?, ?, unix_timestamp())";
+        try (PreparedStatement stmt = conn.prepareStatement(sqlInsert)) {
+            for (Map.Entry<Badge, Integer> entry : added.entrySet()) {
+                stmt.setInt(1, player.getId());
+                stmt.setString(2, entry.getKey().toString());
+                stmt.setInt(3, entry.getValue());
+                stmt.execute();
+            }
+        } catch (SQLException e) {
+            throw new DAOException(sqlInsert, e);
+        }
+
+        String sqlUpdate = "UPDATE player_badge SET badge_level = ? " +
+            "WHERE player_id = ? AND badge_name = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sqlUpdate)) {
+            for (Map.Entry<Badge, Integer> entry : changed.entrySet()) {
+                stmt.setInt(1, entry.getValue());
+                stmt.setInt(2, player.getId());
+                stmt.setString(3, entry.getKey().toString());
+                stmt.execute();
+            }
+        } catch (SQLException e) {
+            throw new DAOException(sqlUpdate, e);
+        }
+
+        String sqlDelete = "DELETE FROM player_badge " +
+            "WHERE player_id = ? AND badge_name = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sqlDelete)) {
+            for (Map.Entry<Badge, Integer> entry : deleted.entrySet()) {
+                stmt.setInt(1, player.getId());
+                stmt.setString(2, entry.getKey().toString());
+                stmt.execute();
+            }
+        } catch (SQLException e) {
+            throw new DAOException(sqlDelete, e);
+        }
+    }
 }

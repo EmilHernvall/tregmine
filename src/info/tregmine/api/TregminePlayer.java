@@ -1,15 +1,10 @@
 package info.tregmine.api;
 
-import info.tregmine.Tregmine;
-import info.tregmine.api.encryption.BCrypt;
-import info.tregmine.quadtree.Point;
-import info.tregmine.zones.Lot;
-import info.tregmine.zones.Zone;
-import info.tregmine.zones.ZoneWorld;
-
 import java.util.Date;
 import java.util.EnumSet;
+import java.util.EnumMap;
 import java.util.Set;
+import java.util.Map;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -17,7 +12,13 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Horse;
 import org.bukkit.entity.Player;
-//import java.util.List;
+
+import info.tregmine.Tregmine;
+import info.tregmine.api.encryption.BCrypt;
+import info.tregmine.quadtree.Point;
+import info.tregmine.zones.Lot;
+import info.tregmine.zones.Zone;
+import info.tregmine.zones.ZoneWorld;
 
 public class TregminePlayer extends PlayerDelegate
 {
@@ -54,6 +55,7 @@ public class TregminePlayer extends PlayerDelegate
     private int guardianRank = 0;
     private int playTime = 0;
     private Set<Flags> flags;
+    private Map<Badge, Integer> badges;
 
     // One-time state
     private String chatChannel = "GLOBAL";
@@ -86,7 +88,7 @@ public class TregminePlayer extends PlayerDelegate
     private FishyBlock newFishyBlock;
     private FishyBlock currentFishyBlock;
     private int fishyBuyCount;
-    
+
     private Tregmine plugin;
 
     public TregminePlayer(Player player, Tregmine instance)
@@ -98,7 +100,8 @@ public class TregminePlayer extends PlayerDelegate
         this.loginTime = new Date();
 
         this.flags = EnumSet.noneOf(Flags.class);
-        
+        this.badges = new EnumMap<Badge, Integer>(Badge.class);
+
         this.plugin = instance;
     }
 
@@ -109,7 +112,8 @@ public class TregminePlayer extends PlayerDelegate
         this.name = name;
         this.realName = name;
         this.flags = EnumSet.noneOf(Flags.class);
-        
+        this.badges = new EnumMap<Badge, Integer>(Badge.class);
+
         this.plugin = instance;
     }
 
@@ -156,6 +160,35 @@ public class TregminePlayer extends PlayerDelegate
     public void setFlag(Flags flag) { flags.add(flag); }
     public void removeFlag(Flags flag) { flags.remove(flag); }
     public boolean hasFlag(Flags flag) { return flags.contains(flag); }
+
+    public boolean hasBadge(Badge badge) { return badges.containsKey(badge); }
+
+    public void setBadges(Map<Badge, Integer> v) { this.badges = v; }
+    public Map<Badge, Integer> getBadges() { return badges; }
+
+    public int getBadgeLevel(Badge badge)
+    {
+        if (!hasBadge(badge)) {
+            return 0;
+        } else {
+            return badges.get(badge);
+        }
+    }
+
+    public void awardBadgeLevel(Badge badge, String message)
+    {
+        int badgeLevel = getBadgeLevel(badge) + 1;
+        badges.put(badge, badgeLevel);
+
+        if (badgeLevel == 1) {
+            sendMessage(ChatColor.GOLD + "Congratulations! You've been awarded " +
+                    "the " + badge.getName() + " badge of honor: " + message);
+        } else {
+            sendMessage(ChatColor.GOLD + "Congratulations! You've been awarded " +
+                    "the level " + ChatColor.GREEN + badgeLevel + " " +
+                    ChatColor.GOLD + badge.getName() + "badge of honor: " + message);
+        }
+    }
 
     public String getKeyword() { return keyword; }
     public void setKeyword(String v) { this.keyword = v; }
@@ -373,7 +406,7 @@ public class TregminePlayer extends PlayerDelegate
             teleport(loc);
         }
     }
-    
+
     /**
      * Returns true or false if the player has permission for that block
      * @param loc - Location of the block in question
@@ -385,16 +418,16 @@ public class TregminePlayer extends PlayerDelegate
     {
         ZoneWorld world = plugin.getWorld(loc.getWorld());
         Point point = new Point(loc.getBlockX(), loc.getBlockZ());
-        
+
         Zone zone = world.findZone(point);
         Lot lot = world.findLot(point);
-        
+
         Zone currentZone = this.getCurrentZone();
         if (currentZone == null || !currentZone.contains(point)) {
             currentZone = world.findZone(point);
             this.setCurrentZone(currentZone);
         }
-        
+
         if (this.hasFlag(TregminePlayer.Flags.HARDWARNED)) {
             if (punish == true) {
                 this.setFireTicks(100);
@@ -404,17 +437,17 @@ public class TregminePlayer extends PlayerDelegate
             }
             return false;
         }
-        
+
         if (zone == null) { // Is in the wilderness - So return true
             return true;
         }
-        
+
         if (this.getRank().canModifyZones()) { // Lets people with canModifyZones have block permission
             return true;
         }
-        
+
         Zone.Permission perm = zone.getUser(this);
-        
+
         if (perm == Zone.Permission.Banned) { // If banned then return false
             if (punish == true) {
                 this.setFireTicks(100);
@@ -424,50 +457,50 @@ public class TregminePlayer extends PlayerDelegate
             }
             return false;
         }
-        
+
         if (lot == null &&
                 (perm == Zone.Permission.Allowed ||
                  perm == Zone.Permission.Maker ||
                  perm == Zone.Permission.Owner)) { // If allowed/maker/owner and not in a lot : return true
             return true;
         }
-        
+
         if (lot == null &&
                 zone.getPlaceDefault()) { // If placeDefault and not in a lot : return true
             return true;
         }
-        
+
         if (lot != null &&
                 perm == Zone.Permission.Owner &&
                 zone.isCommunist()) { // If communist zone return true
             return true;
         }
-        
+
         if (lot != null &&
                 lot.isOwner(this)) { // If is lot owner
             return true;
         }
-        
+
         if (punish == true) {
             if (lot != null && zone != null) { // Lot Error Message
-                
+
                 this.setFireTicks(100);
                 this.sendMessage(ChatColor.RED + "["
                         + currentZone.getName() + "] "
                         + "You do not have sufficient permissions in "
                         + lot.getName() + ".");
-                
+
             } else { // Zone Error Message
-                
+
                 this.setFireTicks(100);
                 this.sendMessage(ChatColor.RED + "["
                         + currentZone.getName() + "] "
                         + "You do not have sufficient permissions in "
                         + zone.getName() + ".");
-                
+
             }
         }
-        
+
         return false; // If they don't fit into any of that. Return false
     }
 
