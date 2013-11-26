@@ -1,5 +1,8 @@
 package info.tregmine.listeners;
 
+import java.util.Set;
+import java.util.Date;
+
 import info.tregmine.Tregmine;
 import info.tregmine.api.PlayerReport;
 import info.tregmine.api.PlayerReport.Action;
@@ -10,8 +13,6 @@ import info.tregmine.database.ILogDAO;
 import info.tregmine.database.IPlayerReportDAO;
 import java.text.SimpleDateFormat;
 import java.util.List;
-
-import java.util.Set;
 
 import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
@@ -37,28 +38,38 @@ public class PlayerLookupListener implements Listener
                     "in players map.");
             return;
         }
-        
+
         try (IContext ctx = plugin.createContext()) {
             IPlayerReportDAO report = ctx.getPlayerReportDAO();
             List<PlayerReport> list = report.getReportsBySubject(player);
             if (list.size() > 0) {
-                player.sendMessage(ChatColor.RED + 
+                player.sendMessage(ChatColor.RED +
                             "You have been reported:");
-                for(PlayerReport i : list){
-                    if (i.getAction() == Action.COMMENT){
+                for (PlayerReport i : list) {
+                    if (i.getAction() != Action.HARDWARN &&
+                        i.getAction() != Action.SOFTWARN) {
                         continue;
                     }
-                    
+                    Date validUntil = i.getValidUntil();
+                    if (validUntil == null) {
+                        continue;
+                    }
+                    if (validUntil.getTime() < System.currentTimeMillis()) {
+                        continue;
+                    }
+
                     SimpleDateFormat dfm = new SimpleDateFormat("dd/MM/yy hh:mm:ss a");
                     player.sendMessage(ChatColor.RED +
                             "[" + i.getAction() + "]" +
                             i.getMessage() + " - Valid until: " +
                             dfm.format(i.getTimestamp()));
+                    break;
                 }
             }
         } catch (DAOException e) {
             throw new RuntimeException(e);
         }
+
         if (player.hasFlag(TregminePlayer.Flags.INVISIBLE)) {
 
             for (TregminePlayer to : plugin.getOnlinePlayers()) {
