@@ -285,7 +285,7 @@ public class ZonePlayerListener implements Listener
                 newPosVector.getY(),
                 newPosVector.getZ());
 
-        player.teleport(newPos);
+        player.teleportWithHorse(newPos);
     }
 
     @EventHandler
