@@ -91,7 +91,8 @@ public class PlayerLookupListener implements Listener
                     if (!current.getRank().canSeeAliases()) {
                         continue;
                     }
-                    if (player.hasFlag(TregminePlayer.Flags.HIDDEN_LOCATION)) {
+                    if (player.hasFlag(TregminePlayer.Flags.INVISIBLE) ||
+                            player.hasFlag(TregminePlayer.Flags.HIDDEN_LOCATION)){
                         continue;
                     }
                     current.sendMessage(ChatColor.YELLOW
