@@ -162,7 +162,7 @@ public class DBPlayerDAO implements IPlayerDAO
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, player.getName());
             stmt.setString(2, player.getRank().toString());
-            stmt.setString(3, player.getDisplayName());
+            stmt.setString(3, player.getRealName());
             stmt.execute();
 
             stmt.executeQuery("SELECT LAST_INSERT_ID()");
@@ -384,7 +384,7 @@ public class DBPlayerDAO implements IPlayerDAO
                     playerignore.add(i);
                 }
 
-                if (playerignore.contains(victim.getDisplayName())) {
+                if (playerignore.contains(victim.getRealName())) {
                     return true;
                 } else {
                     return false;
