@@ -40,7 +40,8 @@ public class TregminePlayer extends PlayerDelegate
         HIDDEN_LOCATION,
         FLY_ENABLED,
         FORCESHIELD,
-        CHEST_LOG;
+        CHEST_LOG,
+        HIDDEN_ANNOUNCEMENT;
     };
 
     // Persistent values
@@ -101,7 +102,6 @@ public class TregminePlayer extends PlayerDelegate
 
         this.flags = EnumSet.noneOf(Flags.class);
         this.badges = new EnumMap<Badge, Integer>(Badge.class);
-
         this.plugin = instance;
     }
 
@@ -113,7 +113,6 @@ public class TregminePlayer extends PlayerDelegate
         this.realName = name;
         this.flags = EnumSet.noneOf(Flags.class);
         this.badges = new EnumMap<Badge, Integer>(Badge.class);
-
         this.plugin = instance;
     }
 
@@ -411,7 +410,6 @@ public class TregminePlayer extends PlayerDelegate
      * Returns true or false if the player has permission for that block
      * @param loc - Location of the block in question
      * @param punish - Should it return an error message and set fire ticks
-     * @param instance - Plugin instance
      * @return true or false
      */
     public boolean hasBlockPermission(Location loc, boolean punish)

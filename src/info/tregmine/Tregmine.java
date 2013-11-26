@@ -207,6 +207,7 @@ public class Tregmine extends JavaPlugin
         getCommand("forceblock").setExecutor(new ForceShieldCommand(this));
         getCommand("give").setExecutor(new GiveCommand(this));
         getCommand("head").setExecutor(new HeadCommand(this));
+        getCommand("hide").setExecutor(new HideCommand(this));
         getCommand("home").setExecutor(new HomeCommand(this));
         getCommand("ignore").setExecutor(new IgnoreCommand(this));
         getCommand("inv").setExecutor(new InventoryCommand(this));
@@ -380,26 +381,24 @@ public class Tregmine extends JavaPlugin
                 }
             }
 
-            if (!"95.141.47.226".equals(addr.getHostAddress())) {
-                player.setIp(addr.getHostAddress());
-                player.setHost(addr.getCanonicalHostName());
+            player.setIp(addr.getHostAddress());
+            player.setHost(addr.getCanonicalHostName());
 
-                if (cl != null) {
-                    com.maxmind.geoip.Location l1 = cl.getLocation(player.getIp());
-                    if (l1 != null) {
-                        Tregmine.LOGGER.info(player.getName() + ": " + l1.countryName +
-                                ", " + l1.city + ", " + player.getIp() + ", " +
-                                player.getHost());
-                        player.setCountry(l1.countryName);
-                        player.setCity(l1.city);
-                    } else {
-                        Tregmine.LOGGER.info(player.getName() + ": " +
-                                player.getIp() + ", " + player.getHost());
-                    }
+            if (cl != null) {
+                com.maxmind.geoip.Location l1 = cl.getLocation(player.getIp());
+                if (l1 != null) {
+                    Tregmine.LOGGER.info(player.getName() + ": " + l1.countryName +
+                            ", " + l1.city + ", " + player.getIp() + ", " +
+                            player.getHost());
+                    player.setCountry(l1.countryName);
+                    player.setCity(l1.city);
                 } else {
                     Tregmine.LOGGER.info(player.getName() + ": " +
                             player.getIp() + ", " + player.getHost());
                 }
+            } else {
+                Tregmine.LOGGER.info(player.getName() + ": " +
+                        player.getIp() + ", " + player.getHost());
             }
 
             int onlinePlayerCount = 0;
@@ -580,11 +579,11 @@ public class Tregmine extends JavaPlugin
     {
         return zones.get(zoneId);
     }
-    
+
     // ============================================================================
     // Auto Save Alert
     // ============================================================================
-    
+
     @EventHandler
     public void autoSave(WorldSaveEvent event){
         Bukkit.broadcastMessage(ChatColor.DARK_RED + "Tregmine is saving, You may experience some slowness.");
