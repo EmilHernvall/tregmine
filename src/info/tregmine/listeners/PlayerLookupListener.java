@@ -1,10 +1,14 @@
 package info.tregmine.listeners;
 
 import info.tregmine.Tregmine;
+import info.tregmine.api.PlayerReport;
 import info.tregmine.api.TregminePlayer;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
 import info.tregmine.database.ILogDAO;
+import info.tregmine.database.IPlayerReportDAO;
+import java.text.SimpleDateFormat;
+import java.util.List;
 
 import java.util.Set;
 
@@ -32,7 +36,24 @@ public class PlayerLookupListener implements Listener
                     "in players map.");
             return;
         }
-
+        
+        try (IContext ctx = plugin.createContext()) {
+            IPlayerReportDAO report = ctx.getPlayerReportDAO();
+            List<PlayerReport> list = report.getReportsBySubject(player);
+            if (list.size() > 0) {
+                player.sendMessage(ChatColor.RED + 
+                            "You have been reported:");
+                for(PlayerReport i : list){
+                    SimpleDateFormat dfm = new SimpleDateFormat("dd/MM/yy hh:mm:ss a");
+                    player.sendMessage(ChatColor.RED +
+                            "[" + i.getAction() + "]" +
+                            i.getMessage() + " - Valid until: " +
+                            dfm.format(i.getTimestamp()));
+                }
+            }
+        } catch (DAOException e) {
+            throw new RuntimeException(e);
+        }
         if (player.hasFlag(TregminePlayer.Flags.INVISIBLE)) {
 
             for (TregminePlayer to : plugin.getOnlinePlayers()) {
@@ -91,7 +112,8 @@ public class PlayerLookupListener implements Listener
                     if (!current.getRank().canSeeAliases()) {
                         continue;
                     }
-                    if (player.hasFlag(TregminePlayer.Flags.HIDDEN_LOCATION)) {
+                    if (player.hasFlag(TregminePlayer.Flags.INVISIBLE) ||
+                            player.hasFlag(TregminePlayer.Flags.HIDDEN_LOCATION)){
                         continue;
                     }
                     current.sendMessage(ChatColor.YELLOW
