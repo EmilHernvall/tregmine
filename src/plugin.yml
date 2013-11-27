@@ -30,6 +30,9 @@ commands:
   ban:
     description: Ban the specified player
     usage: /ban player
+  badge:
+    description: All commands for badges
+    usage: /badge
   bless:
     description: Specify the player for which the next block will be blessed
     usage: /bless player
