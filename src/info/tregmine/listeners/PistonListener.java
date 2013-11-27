@@ -9,10 +9,11 @@ import java.util.Set;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPistonRetractEvent;
 
-public class PistonListener {
+public class PistonListener implements Listener{
     private Tregmine plugin;
 
     public PistonListener(Tregmine instance)
