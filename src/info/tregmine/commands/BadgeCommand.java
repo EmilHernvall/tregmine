@@ -32,6 +32,10 @@ public class BadgeCommand extends AbstractCommand
             
         } else if (args.length == 2 && "list".equalsIgnoreCase(args[0])) {
             
+            if (!player.getRank().canViewPlayersBadge()) {
+                return true;
+            }
+            
             TregminePlayer target = tregmine.getPlayerOffline(args[0]);
             
             if (target == null) {
