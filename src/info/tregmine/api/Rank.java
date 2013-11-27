@@ -248,6 +248,12 @@ public enum Rank
                this == JUNIOR_ADMIN ||
                this == SENIOR_ADMIN;
     }
+    
+    public boolean canViewPlayersBadge()
+    {
+        return this == JUNIOR_ADMIN ||
+               this == SENIOR_ADMIN;
+    }
 
     public boolean canBless()
     {
@@ -509,6 +515,25 @@ public enum Rank
             return 2000;
         default:
             return 4000;
+        }
+    }
+    
+    public int getTradeDistance(TregminePlayer player)
+    {
+        if (this == JUNIOR_ADMIN ||
+            this == SENIOR_ADMIN) {
+            return 1000;
+        } else if (this == GUARDIAN) {
+            return 1000;
+        } else if (this == CODER ||
+                   this == BUILDER) {
+            return 1000;
+        } else if (this == DONATOR) {
+            return 200;
+        } else if (player.hasBadge(Badge.MERCHANT)) {
+            return 500;
+        } else {
+            return 100;
         }
     }
 
