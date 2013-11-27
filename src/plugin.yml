@@ -162,6 +162,9 @@ commands:
   testfill:
     description: Like fill, but with fake blocks (admins and builders only)
     usage: /testfill
+  tool:
+    description: Spawn in Special Tools (Admin)
+    usage: /tool
   town:
     description: Shorthand for /zone
     usage: /town delete \
