@@ -100,9 +100,6 @@ commands:
     description: Message another player
     usage: /msg player message
     aliases: [m, tell]
-  hide:
-    description: Hide
-    usage: /hide
   newspawn:
     description: Temporarily change the spawn on this map (admin only)
     usage: /newspawn
