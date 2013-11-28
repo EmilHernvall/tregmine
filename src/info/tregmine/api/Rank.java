@@ -439,6 +439,45 @@ public enum Rank
         return this == JUNIOR_ADMIN ||
                 this == SENIOR_ADMIN;
     }
+    
+    public boolean canSpawnTools()
+    {
+        return this == JUNIOR_ADMIN ||
+               this == SENIOR_ADMIN;
+    }
+    
+    public boolean canCraftTools()
+    {
+        return this == RESIDENT ||
+                this == DONATOR ||
+                this == GUARDIAN ||
+                this == CODER ||
+                this == BUILDER ||
+                this == JUNIOR_ADMIN ||
+                this == SENIOR_ADMIN;
+    }
+    
+    public boolean canUseTools()
+    {
+        return this == RESIDENT ||
+                this == DONATOR ||
+                this == GUARDIAN ||
+                this == CODER ||
+                this == BUILDER ||
+                this == JUNIOR_ADMIN ||
+                this == SENIOR_ADMIN;
+    }
+    
+    public boolean canRepairTools()
+    {
+        return this == RESIDENT ||
+                this == DONATOR ||
+                this == GUARDIAN ||
+                this == CODER ||
+                this == BUILDER ||
+                this == JUNIOR_ADMIN ||
+                this == SENIOR_ADMIN;
+    }
 
     public int getTeleportTimeout()
     {
