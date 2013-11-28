@@ -1,6 +1,6 @@
 name: tregmine
 main: info.tregmine.Tregmine
-version: 1.2.0
+version: 1.1.0
 website: http://tregmine.info
 author: Ein Andersson, Emil Hernvall
 description: Tregmine
@@ -72,9 +72,6 @@ commands:
   home:
     description: Teleport to, or set, your home
     usage: /home
-  hide:
-    description: Hide from users on Login
-    usage: /hide
   ignore:
     description: Ignore a player (not staff)
     usage: /ignore <add/remove> <player_name> or /ignore <list>
@@ -103,6 +100,9 @@ commands:
     description: Message another player
     usage: /msg player message
     aliases: [m, tell]
+  hide:
+    description: Hide
+    usage: /hide
   newspawn:
     description: Temporarily change the spawn on this map (admin only)
     usage: /newspawn
@@ -127,6 +127,9 @@ commands:
   remitems:
     description: remove all items in the specified radius
     usage: /remitems radius
+  repair:
+    description: Repair special tools
+    usage: /repair
   report:
     description: Adds a report to the players record
     usage: /report player message
@@ -162,6 +165,9 @@ commands:
   testfill:
     description: Like fill, but with fake blocks (admins and builders only)
     usage: /testfill
+  tool:
+    description: Spawn in Special Tools (Admin)
+    usage: /tool
   town:
     description: Shorthand for /zone
     usage: /town delete \
