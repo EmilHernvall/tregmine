@@ -54,7 +54,13 @@ public class BlessedBlockListener implements Listener
                        Material.SIGN,
                        Material.FENCE_GATE,
                        Material.DISPENSER,
-                       Material.WOOD_BUTTON);
+                       Material.WOOD_BUTTON,
+					   Material.NOTE_BLOCK,
+					   Material.REDSTONE_COMPARATOR,
+					   Material.REDSTONE_COMPARATOR_OFF,
+					   Material.REDSTONE_COMPARATOR_ON,
+                       Material.HOPPER,
+					   Material.DROPPER);
 
     public BlessedBlockListener(Tregmine instance)
     {

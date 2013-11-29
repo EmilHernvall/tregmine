@@ -105,6 +105,14 @@ public class DBZonesDAO implements IZonesDAO
                     zone.setTextExit(rs.getString("zone_exitmessage"));
                     zone.setTexture(rs.getString("zone_texture"));
                     zone.setMainOwner(rs.getString("zone_owner"));
+
+					int flags = rs.getInt("zone_flags");
+					for (Zone.Flags flag : Zone.Flags.values()) {
+						if ((flags & (1 << flag.ordinal())) != 0) {
+							zone.setFlag(flag);
+						}
+					}
+
                     zones.add(zone);
                 }
             }
@@ -290,6 +298,13 @@ public class DBZonesDAO implements IZonesDAO
                     int y2 = rs.getInt("lot_y2");
 
                     lot.setRect(new Rectangle(x1, y1, x2, y2));
+
+					int flags = rs.getInt("lot_flags");
+					for (Lot.Flags flag : Lot.Flags.values()) {
+						if ((flags & (1 << flag.ordinal())) != 0) {
+							lot.setFlag(flag);
+						}
+					}
 
                     lots.add(lot);
                 }
