@@ -13,7 +13,7 @@ public class Lot
 {
 	// Flags are stored as integers - order must _NOT_ be changed
 	public enum Flags {
-
+		AUTOBLESS;
 	}
 
     private int id;
