@@ -7,6 +7,7 @@ import info.tregmine.database.IInventoryDAO.InventoryType;
 import info.tregmine.database.db.DBContextFactory;
 import info.tregmine.listeners.*;
 import info.tregmine.quadtree.IntersectionException;
+import info.tregmine.tools.*;
 import info.tregmine.zones.Lot;
 import info.tregmine.zones.Zone;
 import info.tregmine.zones.ZoneWorld;
@@ -157,6 +158,9 @@ public class Tregmine extends JavaPlugin
         pluginMgm.registerEvents(new ItemFrameListener(this), this);
         pluginMgm.registerEvents(new EggListener(this), this);
         pluginMgm.registerEvents(new PistonListener(this), this);
+        pluginMgm.registerEvents(new ToolCraft(this), this);
+        pluginMgm.registerEvents(new LumberListener(this), this);
+        pluginMgm.registerEvents(new VeinListener(this), this);
 
         // Declaration of all commands
         getCommand("admins").setExecutor(
@@ -229,6 +233,7 @@ public class Tregmine extends JavaPlugin
         getCommand("quitmessage").setExecutor(new QuitMessageCommand(this));
         getCommand("regeneratechunk").setExecutor(new RegenerateChunkCommand(this));
         getCommand("remitems").setExecutor(new RemItemsCommand(this));
+        getCommand("repair").setExecutor(new ToolRepairCommand(this));
         getCommand("report").setExecutor(new ReportCommand(this));
         getCommand("say").setExecutor(new SayCommand(this));
         getCommand("seen").setExecutor(new SeenCommand(this));
@@ -242,6 +247,7 @@ public class Tregmine extends JavaPlugin
         getCommand("survival").setExecutor(new GameModeCommand(this, "survival", GameMode.SURVIVAL));
         getCommand("testfill").setExecutor(new FillCommand(this, "testfill"));
         getCommand("time").setExecutor(new TimeCommand(this));
+        getCommand("tool").setExecutor(new ToolSpawnCommand(this));
         getCommand("town").setExecutor(new ZoneCommand(this, "town"));
         getCommand("tp").setExecutor(new TeleportCommand(this));
         getCommand("tpshield").setExecutor(new TeleportShieldCommand(this));
@@ -255,6 +261,8 @@ public class Tregmine extends JavaPlugin
         getCommand("weather").setExecutor(new WeatherCommand(this));
         getCommand("who").setExecutor(new WhoCommand(this));
         getCommand("zone").setExecutor(new ZoneCommand(this, "zone"));
+        
+        ToolCraftRegistry.RegisterRecipes(getServer()); // Registers all tool recipes
     }
 
     // run when plugin is disabled
@@ -581,11 +589,11 @@ public class Tregmine extends JavaPlugin
     {
         return zones.get(zoneId);
     }
-
+    
     // ============================================================================
     // Auto Save Alert
     // ============================================================================
-
+    
     @EventHandler
     public void autoSave(WorldSaveEvent event){
         Bukkit.broadcastMessage(ChatColor.DARK_RED + "Tregmine is saving, You may experience some slowness.");

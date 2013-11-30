@@ -47,9 +47,68 @@ public class LotCommand extends AbstractCommand
             deleteLot(player, args);
             return true;
         }
+		else if ("flag".equals(args[0])) {
+			flagLot(player, args);
+			return true;
+		}
 
         return false;
     }
+
+	public void flagLot(TregminePlayer player, String[] args)
+	{
+		ZoneWorld world = tregmine.getWorld(player.getWorld());
+		if (world == null) {
+			return;
+		}
+
+		if (args.length < 4) {
+			player.sendMessage("syntax: /lot flag [name] [flag] [true/false]");
+			return;
+		}
+
+		String name = args[1];
+
+		Lot lot = world.getLot(name);
+		if (lot == null) {
+			player.sendMessage(RED + "No lot named " + name + " found.");
+			return;
+		}
+
+		Lot.Flags flag = null;
+		boolean found = false;
+		for(Lot.Flags i : Lot.Flags.values()) {
+			if (args[2].equals(i.name()) && found == false) {
+				flag = i;
+				found = true;
+				continue;
+			}
+		}
+
+		if (found == false || flag == null) {
+			player.sendMessage(RED + "Flag not found! Try the following:");
+
+			for(Lot.Flags i : Lot.Flags.values()) {
+				player.sendMessage(AQUA + i.name());
+			}
+			return;
+		}
+
+		boolean value;
+		if ("true".equals(args[3])) {
+			value = true;
+		} else {
+			value = false;
+		}
+
+		if(value == true) {
+			lot.removeFlag(flag);
+			player.sendMessage(GREEN + "Added flag: " + flag.name());
+		} else {
+			lot.setFlag(flag);
+			player.sendMessage(GREEN + "Removed flag: " + flag.name());
+		}
+	}
 
     public void createLot(TregminePlayer player, String[] args)
     {

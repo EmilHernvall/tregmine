@@ -203,20 +203,20 @@ public enum Rank
                this == JUNIOR_ADMIN ||
                this == SENIOR_ADMIN;
     }
-    
+
     public boolean canViewPlayersBadge()
     {
         return this == JUNIOR_ADMIN ||
                this == SENIOR_ADMIN;
     }
-    
+
     public boolean canNotBeIgnored()
     {
         return this == GUARDIAN ||
                this == JUNIOR_ADMIN ||
                this == SENIOR_ADMIN;
     }
-    
+
     public boolean canViewIgnored()
     {
         return this == GUARDIAN ||
@@ -252,12 +252,6 @@ public enum Rank
     {
         return this == GUARDIAN ||
                this == JUNIOR_ADMIN ||
-               this == SENIOR_ADMIN;
-    }
-    
-    public boolean canViewPlayersBadge()
-    {
-        return this == JUNIOR_ADMIN ||
                this == SENIOR_ADMIN;
     }
 
@@ -399,7 +393,7 @@ public enum Rank
         return this == JUNIOR_ADMIN ||
                this == SENIOR_ADMIN;
     }
-    
+
     public boolean canOverrideForceShield()
     {
         return this == JUNIOR_ADMIN ||
@@ -449,6 +443,45 @@ public enum Rank
     public boolean canBreakBannedBlocks()
     {
         return this == JUNIOR_ADMIN ||
+                this == SENIOR_ADMIN;
+    }
+
+    public boolean canSpawnTools()
+    {
+        return this == JUNIOR_ADMIN ||
+               this == SENIOR_ADMIN;
+    }
+
+    public boolean canCraftTools()
+    {
+        return this == RESIDENT ||
+                this == DONATOR ||
+                this == GUARDIAN ||
+                this == CODER ||
+                this == BUILDER ||
+                this == JUNIOR_ADMIN ||
+                this == SENIOR_ADMIN;
+    }
+
+    public boolean canUseTools()
+    {
+        return this == RESIDENT ||
+                this == DONATOR ||
+                this == GUARDIAN ||
+                this == CODER ||
+                this == BUILDER ||
+                this == JUNIOR_ADMIN ||
+                this == SENIOR_ADMIN;
+    }
+
+    public boolean canRepairTools()
+    {
+        return this == RESIDENT ||
+                this == DONATOR ||
+                this == GUARDIAN ||
+                this == CODER ||
+                this == BUILDER ||
+                this == JUNIOR_ADMIN ||
                 this == SENIOR_ADMIN;
     }
 
@@ -523,7 +556,7 @@ public enum Rank
             return 4000;
         }
     }
-    
+
     public int getTradeDistance(TregminePlayer player)
     {
         if (this == JUNIOR_ADMIN ||
