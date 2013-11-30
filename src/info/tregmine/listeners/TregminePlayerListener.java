@@ -528,6 +528,11 @@ public class TregminePlayerListener implements Listener
 		if (!player.getRank().canFly()) {
 			event.setCancelled(true);
 		}
+
+		if (player.hasFlag(TregminePlayer.Flags.HARDWARNED) ||
+				player.hasFlag(TregminePlayer.Flags.SOFTWARNED)) {
+			event.setCancelled(true);
+		}
 	}
 
     @EventHandler
