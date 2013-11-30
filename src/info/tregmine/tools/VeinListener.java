@@ -53,7 +53,6 @@ public class VeinListener implements Listener
         
         if (!lore.get(0).equals(ToolsRegistry.VeinMinerLoreTag)) return; 
 
-        event.setCancelled(true);
         boolean stop = false;
         
         List<Block> connectedBlocks = new ArrayList<>();
