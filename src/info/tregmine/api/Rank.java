@@ -204,6 +204,12 @@ public enum Rank
                this == SENIOR_ADMIN;
     }
     
+    public boolean canViewPlayersBadge()
+    {
+        return this == JUNIOR_ADMIN ||
+               this == SENIOR_ADMIN;
+    }
+    
     public boolean canNotBeIgnored()
     {
         return this == GUARDIAN ||
