@@ -27,16 +27,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerKickEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.event.player.PlayerLoginEvent.Result;
-import org.bukkit.event.player.PlayerLoginEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerPickupItemEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -339,8 +331,9 @@ public class TregminePlayerListener implements Listener
         }
 
         // Check if the player is allowed to fly
-        if (player.hasFlag(TregminePlayer.Flags.HARDWARNED)) {
-            player.sendMessage("You are hardwarned and are not allowed to fly.");
+        if (player.hasFlag(TregminePlayer.Flags.HARDWARNED) ||
+				player.hasFlag(TregminePlayer.Flags.SOFTWARNED)) {
+            player.sendMessage("You are warned and are not allowed to fly.");
             player.setAllowFlight(false);
         } else if (rank.canFly()) {
             if (player.hasFlag(TregminePlayer.Flags.FLY_ENABLED)) {
@@ -527,6 +520,15 @@ public class TregminePlayerListener implements Listener
             event.getPlayer().kickPlayer("error loading profile!");
         }
     }
+
+	@EventHandler
+	public void onPlayerFlight(PlayerToggleFlightEvent event)
+	{
+		TregminePlayer player = plugin.getPlayer(event.getPlayer());
+		if (!player.getRank().canFly()) {
+			event.setCancelled(true);
+		}
+	}
 
     @EventHandler
     public void onPlayerPickupItem(PlayerPickupItemEvent event)
