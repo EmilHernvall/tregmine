@@ -44,7 +44,6 @@ public class LumberListener implements Listener
         
         if (!lore.get(0).equals(ToolsRegistry.LumberAxeLoreTag)) return; 
 
-        event.setCancelled(true);
         boolean stop = false;
         
         List<Block> connectedBlocks = new ArrayList<>();
