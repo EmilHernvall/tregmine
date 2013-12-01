@@ -12,6 +12,9 @@ import java.util.Random;
 import java.util.Set;
 import java.util.Queue;
 
+import info.tregmine.quadtree.Point;
+import info.tregmine.zones.Lot;
+import info.tregmine.zones.ZoneWorld;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -531,6 +534,16 @@ public class TregminePlayerListener implements Listener
 
 		if (player.hasFlag(TregminePlayer.Flags.HARDWARNED) ||
 				player.hasFlag(TregminePlayer.Flags.SOFTWARNED)) {
+			event.setCancelled(true);
+		}
+
+		ZoneWorld world = plugin.getWorld(event.getPlayer().getLocation().getWorld());
+		Lot lot = world.findLot(new Point(event.getPlayer().getLocation().getBlockX(), event.getPlayer().getLocation().getBlockZ()));
+		if (lot == null) {
+			return;
+		}
+
+		if (!lot.hasFlag(Lot.Flags.FLIGHT_ALLOWED)) {
 			event.setCancelled(true);
 		}
 	}

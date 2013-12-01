@@ -42,9 +42,8 @@ public class LumberListener implements Listener
         
         List<String> lore = player.getItemInHand().getItemMeta().getLore();
         
-        if (!lore.get(0).equals(ToolsRegistry.LumberAxeLoreTag)) return; 
+        if (!lore.get(0).equals(ToolsRegistry.LumberAxeLoreTag)) return;
 
-        event.setCancelled(true);
         boolean stop = false;
         
         List<Block> connectedBlocks = new ArrayList<>();
