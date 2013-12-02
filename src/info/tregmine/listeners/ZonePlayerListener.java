@@ -125,7 +125,7 @@ public class ZonePlayerListener implements Listener
                 return;
             }
 
-            if (!lot.isOwner(player) && lot.hasFlag(Lot.Flags.AUTOBLESS)) {
+            if (!lot.isOwner(player) && !lot.hasFlag(Lot.Flags.AUTOBLESS)) {
                 event.setCancelled(true);
                 player.sendMessage(ChatColor.RED + "Blessed to lot owners.");
             }
