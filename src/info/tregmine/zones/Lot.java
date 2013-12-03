@@ -15,7 +15,8 @@ public class Lot
 	public enum Flags {
 		AUTOBLESS,
 		FLIGHT_ALLOWED,
-		FISHY_SHARE;
+		FISHY_SHARE,
+		PRIVATE;
 	}
 
     private int id;
