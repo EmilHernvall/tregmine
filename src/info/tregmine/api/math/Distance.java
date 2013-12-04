@@ -20,9 +20,13 @@ public class Distance
      */
     public static double calc2d(Location loc1, Location loc2)
     {
-        double x = Math.pow(loc1.getX() - loc2.getX(), 2);
-        double z = Math.pow(loc1.getZ() - loc2.getZ(), 2);
-        return Math.sqrt(x + z);
+        if (loc1.getWorld().equals(loc2.getWorld())) {
+            double x = Math.pow(loc1.getX() - loc2.getX(), 2);
+            double z = Math.pow(loc1.getZ() - loc2.getZ(), 2);
+            return Math.sqrt(x + z);
+        } else {
+            return Integer.MAX_VALUE;
+        }
     }
 
 }
