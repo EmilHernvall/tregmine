@@ -156,7 +156,12 @@ public class WalletCommand extends AbstractCommand
     public boolean handlePlayer(TregminePlayer player, String[] args)
     {
         if (args.length == 0) {
-            return false;
+            player.sendMessage(RED + "Incorrect usage! Try:");
+            player.sendMessage(AQUA + "/wallet tell <player>");
+            player.sendMessage(AQUA + "/wallet balance");
+            player.sendMessage(AQUA + "/wallet donate <player> <amount>");
+            player.sendMessage(AQUA + "/wallet give <player> <amount>");
+            return true;
         }
 
         String cmd = args[0];
@@ -183,11 +188,17 @@ public class WalletCommand extends AbstractCommand
 
             List<TregminePlayer> candidates = tregmine.matchPlayer(args[1]);
             if (candidates.size() != 1) {
-                // TODO: error msg
+                player.sendMessage(RED + "Unknown Player: " + args[1]);
                 return true;
             }
 
             TregminePlayer target = candidates.get(0);
+            
+            // Sneaky ;)
+            if (target.hasFlag(TregminePlayer.Flags.INVISIBLE)) {
+                player.sendMessage(RED + "Unknown Player: " + args[1]);
+                return true;
+            }
             return donate(player, target, amount);
         }
         else if ("give".equalsIgnoreCase(cmd) && args.length == 3) {
@@ -200,11 +211,17 @@ public class WalletCommand extends AbstractCommand
 
             List<TregminePlayer> candidates = tregmine.matchPlayer(args[1]);
             if (candidates.size() != 1) {
-                // TODO: error msg
+                player.sendMessage(RED + "Unknown Player: " + args[1]);
+                return true;
+            }
+            
+            TregminePlayer target = candidates.get(0);
+            
+            if (target.hasFlag(TregminePlayer.Flags.INVISIBLE)) {
+                player.sendMessage(RED + "Unknown Player: " + args[1]);
                 return true;
             }
 
-            TregminePlayer target = candidates.get(0);
             return give(player, target, amount);
         }
 
