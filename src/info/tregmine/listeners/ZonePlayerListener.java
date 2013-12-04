@@ -334,6 +334,15 @@ public class ZonePlayerListener implements Listener
                         // movePlayerBack(player, movingFrom, movingTo);
                         return;
                     }
+                    // If blockWarned is true, and they are either hardwarned
+                    // or softwarned then get them out of there with an error.
+                    else if (currentZone.hasFlag(Zone.Flags.BLOCK_WARNED) &&
+                            (player.hasFlag(TregminePlayer.Flags.HARDWARNED) ||
+                             player.hasFlag(TregminePlayer.Flags.SOFTWARNED))) {
+                        blockedMessage(currentZone, player);
+                        player.teleport(player.getWorld().getSpawnLocation());
+                        return;
+                    }
                 }
                 // if this is a whitelist zone...
                 else {
@@ -530,6 +539,12 @@ public class ZonePlayerListener implements Listener
     {
         player.sendMessage(ChatColor.RED + "[" + currentZone.getName() + "] "
                 + "You are banned from " + currentZone.getName() + ".");
+    }
+    
+    private void blockedMessage(Zone currentZone, TregminePlayer player)
+    {
+        player.sendMessage(ChatColor.RED + "[" + currentZone.getName() + "] "
+                + "You are blocked from " + currentZone.getName() + ".");
     }
 
     private void welcomeMessage(Zone currentZone, TregminePlayer player,
