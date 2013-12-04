@@ -107,8 +107,67 @@ public class ZoneCommand extends AbstractCommand
             zoneInfo(player, args);
             return true;
         }
+        else if ("flag".equals(args[0])) {
+            flagZone(player, args);
+            return true;
+	}
 
         return false;
+    }
+    
+    public void flagZone(TregminePlayer player, String[] args)
+    {
+	ZoneWorld world = tregmine.getWorld(player.getWorld());
+        if (world == null) {
+            return;
+        }
+                
+	if (args.length < 4) {
+		player.sendMessage("syntax: /zone flag [name] [flag] [true/false]");
+		return;
+	}
+
+	String name = args[1];
+
+	Zone zone = world.getZone(name);
+	if (zone == null) {
+		player.sendMessage(RED + "No zone named " + name + " found.");
+		return;
+	}
+
+	Zone.Flags flag = null;
+	boolean found = false;
+	for(Zone.Flags i : Zone.Flags.values()) {
+		if (args[2].equals(i.name()) && found == false) {
+			flag = i;
+			found = true;
+			continue;
+		}
+	}
+
+	if (found == false || flag == null) {
+		player.sendMessage(RED + "Flag not found! Try the following:");
+
+		for(Zone.Flags i : Zone.Flags.values()) {
+			player.sendMessage(AQUA + i.name());
+		}
+		return;
+	}
+
+	boolean value;
+	if ("true".equals(args[3])) {
+		value = true;
+	} else {
+		value = false;
+	}
+
+	if(value == true) {
+		zone.removeFlag(flag);
+		player.sendMessage(GREEN + "Added flag: " + flag.name());
+	} else {
+		zone.setFlag(flag);
+		player.sendMessage(GREEN + "Removed flag: " + flag.name());
+	}
     }
 
     public void createZone(TregminePlayer player, String[] args)
