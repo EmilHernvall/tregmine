@@ -16,6 +16,7 @@ import info.tregmine.api.TregminePlayer;
 import info.tregmine.zones.Zone;
 import info.tregmine.zones.ZoneWorld;
 import info.tregmine.zones.Lot;
+import org.bukkit.ChatColor;
 
 public class LotCommand extends AbstractCommand
 {
@@ -28,7 +29,19 @@ public class LotCommand extends AbstractCommand
     public boolean handlePlayer(TregminePlayer player, String[] args)
     {
         if (args.length == 0) {
-            return false;
+            player.sendMessage(ChatColor.RED +
+                    "Incorrect usage! Try:");
+            player.sendMessage(ChatColor.AQUA +
+                    "/lot create <lot name> <player>");
+            player.sendMessage(ChatColor.AQUA +
+                    "/lot addowner <lot name> <player>");
+            player.sendMessage(ChatColor.AQUA +
+                    "/lot delowner <lot name> <owner>");
+            player.sendMessage(ChatColor.AQUA +
+                    "/lot delete <lot name>");
+            player.sendMessage(ChatColor.AQUA +
+                    "/lot flag <lot name> <flag name> <true/false>");
+            return true;
         }
 
         if ("create".equals(args[0])) {
