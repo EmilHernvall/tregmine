@@ -422,9 +422,15 @@ public class FishyBlockListener implements Listener
                 }
             }
 
+			// Find the lot of which the fishyblock is in
+			// Won't return null as a fishyblock has to be in a lot
+			ZoneWorld world = plugin.getWorld(block.getWorld());
+			Lot lot = world.findLot(new Point(loc.getBlockX(), loc.getBlockZ()));
+
             // Player owns this fishy block, and should either enter withdraw
             // mode or add items to this fishy block
-            if (fishyBlock.getPlayerId() == player.getId()) {
+            if (fishyBlock.getPlayerId() == player.getId() ||
+					(lot.isOwner(player) && lot.hasFlag(Lot.Flags.FISHY_SHARE))) {
 
                 // Check if the held item equals the type of the fishy block
                 MaterialData fishyMaterial = fishyBlock.getMaterial();
