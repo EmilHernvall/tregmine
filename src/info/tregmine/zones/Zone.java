@@ -100,7 +100,7 @@ public class Zone
 
 	// Flags are stored as integers - order must _NOT_ be changed
 	public enum Flags {
-
+            BLOCK_WARNED;
 	}
 
     private int id;
