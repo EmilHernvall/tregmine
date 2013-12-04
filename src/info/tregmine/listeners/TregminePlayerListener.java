@@ -48,6 +48,7 @@ import org.bukkit.scoreboard.ScoreboardManager;
 import org.kitteh.tag.PlayerReceiveNameTagEvent;
 
 import info.tregmine.Tregmine;
+import info.tregmine.api.Badge;
 import info.tregmine.api.PlayerReport;
 import info.tregmine.api.TregminePlayer;
 import info.tregmine.api.Rank;
@@ -447,6 +448,12 @@ public class TregminePlayerListener implements Listener
 
         if (player.getKeyword() == null && player.getRank().mustUseKeyword()) {
             player.sendMessage(ChatColor.RED + "You have not set a keyword! DO SO NOW.");
+        }
+        
+        if (rank == Rank.DONATOR &&
+                !player.hasBadge(Badge.PHILANTROPIST)) {
+            player.awardBadgeLevel(Badge.PHILANTROPIST, 
+                    "For being a Tregmine donator!");
         }
     }
 
