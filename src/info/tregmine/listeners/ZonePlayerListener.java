@@ -320,8 +320,6 @@ public class ZonePlayerListener implements Listener
 		}
 
 		if (player.getRank().canModifyZones()) { // Let admins bypass protection, but warn them just incase.
-			player.sendMessage(ChatColor.YELLOW + "[" + lot.getName() + "] "
-					+ "Entering private lot... Bypassing protection.");
 			return;
 		}
 
