@@ -155,10 +155,10 @@ public class ZoneCommand extends AbstractCommand
         boolean value = Boolean.valueOf(args[3]);
 
         if (value) {
-            zone.removeFlag(flag);
+            zone.setFlag(flag);
             player.sendMessage(GREEN + "Added flag: " + flag.name());
         } else {
-            zone.setFlag(flag);
+            zone.removeFlag(flag);
             player.sendMessage(GREEN + "Removed flag: " + flag.name());
         }
 

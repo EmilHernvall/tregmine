@@ -98,16 +98,16 @@ public class Zone
         }
     }
 
-	// Flags are stored as integers - order must _NOT_ be changed
-	public enum Flags {
-            BLOCK_WARNED;
-	}
+    // Flags are stored as integers - order must _NOT_ be changed
+    public enum Flags {
+        BLOCK_WARNED;
+    }
 
     private int id;
     private String world;
     private String name;
     private List<Rectangle> rects;
-	private Set<Flags> flags;
+    private Set<Flags> flags;
 
     private boolean enterDefault = true;
     private boolean placeDefault = true;
@@ -129,7 +129,7 @@ public class Zone
         rects = new ArrayList<Rectangle>();
         users = new HashMap<Integer, Permission>();
 
-		this.flags = EnumSet.noneOf(Flags.class);
+        this.flags = EnumSet.noneOf(Flags.class);
     }
 
     public int getId()
@@ -327,8 +327,7 @@ public class Zone
         return false;
     }
 
-	public void setFlag(Flags flag) { flags.add(flag); }
-	public void removeFlag(Flags flag) { flags.remove(flag); }
-	public boolean hasFlag(Flags flag) { return flags.contains(flag); }
-
+    public void setFlag(Flags flag) { flags.add(flag); }
+    public void removeFlag(Flags flag) { flags.remove(flag); }
+    public boolean hasFlag(Flags flag) { return flags.contains(flag); }
 }

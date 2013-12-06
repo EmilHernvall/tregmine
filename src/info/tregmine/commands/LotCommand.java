@@ -108,10 +108,10 @@ public class LotCommand extends AbstractCommand
         boolean value = Boolean.valueOf(args[3]);
 
         if (value) {
-            lot.removeFlag(flag);
+            lot.setFlag(flag);
             player.sendMessage(GREEN + "Added flag: " + flag.name());
         } else {
-            lot.setFlag(flag);
+            lot.removeFlag(flag);
             player.sendMessage(GREEN + "Removed flag: " + flag.name());
         }
 
