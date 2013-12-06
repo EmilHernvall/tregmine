@@ -314,6 +314,13 @@ public class ZonePlayerListener implements Listener
 		if (lot == null) { // Not a lot so I dont care.
 			return;
 		}
+		
+		// sneaky placement
+		if (!lot.hasFlag(Lot.Flags.FLIGHT_ALLOWED) &&
+			!player.getRank().canModifyZones()) {
+			player.setFlying(false);
+			player.setAllowFlight(false);	
+		}
 
 		if (lot.isOwner(player)) { // Owner of the lot so bypasses private flag.
 			return;
