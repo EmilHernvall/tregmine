@@ -125,7 +125,7 @@ public class ZonePlayerListener implements Listener
                 return;
             }
 
-            if (!lot.isOwner(player) && !lot.hasFlag(Lot.Flags.AUTOBLESS)) {
+            if (!lot.isOwner(player) && lot.hasFlag(Lot.Flags.AUTOBLESS)) {
                 event.setCancelled(true);
                 player.sendMessage(ChatColor.RED + "Blessed to lot owners.");
             }
@@ -337,7 +337,6 @@ public class ZonePlayerListener implements Listener
         movePlayerBack(player, movingFrom, movingTo);
         player.sendMessage(ChatColor.RED + "[" + lot.getName() + "] "
                 + "This lot is private to it's owners! Please contact the lot owners.");
-
     }
 
     @EventHandler

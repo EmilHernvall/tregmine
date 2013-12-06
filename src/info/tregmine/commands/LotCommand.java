@@ -115,6 +115,9 @@ public class LotCommand extends AbstractCommand
             player.sendMessage(GREEN + "Removed flag: " + flag.name());
         }
 
+        Tregmine.LOGGER.info("Setting " + flag.name() + " to " + value +
+                " for lot " + lot.getName());
+
         try (IContext ctx = tregmine.createContext()) {
             IZonesDAO dao = ctx.getZonesDAO();
             dao.updateLotFlags(lot);
