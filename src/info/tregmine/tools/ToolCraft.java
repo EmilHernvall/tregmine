@@ -81,7 +81,6 @@ public class ToolCraft implements Listener
                 }
             }
         } else {
-            event.getInventory().setResult(null);
             return;
         }
         
