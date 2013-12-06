@@ -161,6 +161,10 @@ public class LotCommand extends AbstractCommand
 
             Block b1 = player.getZoneBlock1();
             Block b2 = player.getZoneBlock2();
+            if (b1 == null || b2 == null) {
+                player.sendMessage("Please select two corners");
+                return;
+            }
 
             Zone zone = world.findZone(new Point(b1.getX(), b1.getZ()));
 

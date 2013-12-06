@@ -191,6 +191,10 @@ public class ZoneCommand extends AbstractCommand
 
         Block b1 = player.getZoneBlock1();
         Block b2 = player.getZoneBlock2();
+        if (b1 == null || b2 == null) {
+            player.sendMessage("Please select two corners");
+            return;
+        }
 
         Rectangle rect =
                 new Rectangle(b1.getX(), b1.getZ(), b2.getX(), b2.getZ());
