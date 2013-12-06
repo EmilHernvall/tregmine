@@ -238,3 +238,6 @@ commands:
   head:
     description: Receive a specified player's head.
     usage: /head <player>
+  hide:
+    description: Hide logon message
+    usage: /hide
