@@ -11,26 +11,26 @@ import info.tregmine.api.TregminePlayer;
 
 public class Lot
 {
-	// Flags are stored as integers - order must _NOT_ be changed
-	public enum Flags {
-		AUTOBLESS,
-		FLIGHT_ALLOWED,
-		FISHY_SHARE,
-		PRIVATE;
-	}
+    // Flags are stored as integers - order must _NOT_ be changed
+    public enum Flags {
+        AUTOBLESS,
+            FLIGHT_ALLOWED,
+            FISHY_SHARE,
+            PRIVATE;
+    }
 
     private int id;
     private int zoneId;
     private String name;
     private Rectangle rect;
     private Set<Integer> owners;
-	private Set<Flags> flags;
+    private Set<Flags> flags;
 
     public Lot()
     {
         this.owners = new HashSet<Integer>();
 
-		this.flags = EnumSet.noneOf(Flags.class);
+        this.flags = EnumSet.noneOf(Flags.class);
     }
 
     public int getId()
@@ -98,7 +98,7 @@ public class Lot
         this.rect = rect;
     }
 
-	public void setFlag(Flags flag) { flags.add(flag); }
-	public void removeFlag(Flags flag) { flags.remove(flag); }
-	public boolean hasFlag(Flags flag) { return flags.contains(flag); }
+    public void setFlag(Flags flag) { flags.add(flag); }
+    public void removeFlag(Flags flag) { flags.remove(flag); }
+    public boolean hasFlag(Flags flag) { return flags.contains(flag); }
 }

@@ -89,32 +89,25 @@ public class LotCommand extends AbstractCommand
         }
 
         Lot.Flags flag = null;
-        boolean found = false;
-        for(Lot.Flags i : Lot.Flags.values()) {
-            if (args[2].equals(i.name()) && found == false) {
+        for (Lot.Flags i : Lot.Flags.values()) {
+            if (args[2].equalsIgnoreCase(i.name())) {
                 flag = i;
-                found = true;
-                continue;
+                break;
             }
         }
 
-        if (found == false || flag == null) {
+        if (flag == null) {
             player.sendMessage(RED + "Flag not found! Try the following:");
 
-            for(Lot.Flags i : Lot.Flags.values()) {
+            for (Lot.Flags i : Lot.Flags.values()) {
                 player.sendMessage(AQUA + i.name());
             }
             return;
         }
 
-        boolean value;
-        if ("true".equals(args[3])) {
-            value = true;
-        } else {
-            value = false;
-        }
+        boolean value = Boolean.valueOf(args[3]);
 
-        if(value == true) {
+        if (value) {
             lot.removeFlag(flag);
             player.sendMessage(GREEN + "Added flag: " + flag.name());
         } else {
