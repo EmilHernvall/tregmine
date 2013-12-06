@@ -535,6 +535,10 @@ public class TregminePlayerListener implements Listener
 	public void onPlayerFlight(PlayerToggleFlightEvent event)
 	{
 		TregminePlayer player = plugin.getPlayer(event.getPlayer());
+		if(player.getRank().canModifyZones()) {
+			return;
+		}
+		
 		if (!player.getRank().canFly()) {
 			event.setCancelled(true);
 		}
