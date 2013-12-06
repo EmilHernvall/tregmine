@@ -175,8 +175,14 @@ public class DBZonesDAO implements IZonesDAO
             "zone_destroydefault = ?, zone_pvp = ?, zone_hostiles = ?, " +
             "zone_communist = ?, zone_publicprofile = ?, " +
             "zone_entermessage = ?, zone_exitmessage = ? " +
+            "zone_flagd = ? "
             "WHERE zone_id = ?";
-
+	
+	int flags = 0;
+        for (Zone.Flags flag : Zone.Flags.values()) {
+            flags |= zone.hasFlag(flag) ? 1 << flag.ordinal() : 0;
+        }
+	
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, zone.getWorld());
             stmt.setString(2, zone.getName());
@@ -189,7 +195,8 @@ public class DBZonesDAO implements IZonesDAO
             stmt.setString(9, zone.hasPublicProfile() ? "1" : "0");
             stmt.setString(10, zone.getTextEnter());
             stmt.setString(11, zone.getTextExit());
-            stmt.setInt(12, zone.getId());
+            stmt.setInt(12, flags);
+            stmt.setInt(13, zone.getId());
             stmt.execute();
         } catch (SQLException e) {
             throw new DAOException(sql, e);
