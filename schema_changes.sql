@@ -414,7 +414,7 @@ INSERT INTO `version` (`version_number`, `version_string`) VALUES
 ('1.1.0', 'Added ignore command::Many bug fixes::Plenty of staff-only feature changes::Tweaked head dropping');
 
 CREATE TABLE player_badge (
-    badge_id INT UNSIGNED PRIMARY KEY,
+    badge_id INT UNSIGNED AUTO_INCREMENT,
     player_id INT UNSIGNED NOT NULL,
     badge_name VARCHAR (255) NOT NULL,
     badge_level INT UNSIGNED NOT NULL DEFAULT 0,
@@ -422,3 +422,6 @@ CREATE TABLE player_badge (
     PRIMARY KEY (badge_id),
     UNIQUE badge_idx (player_id, badge_name)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+ALTER TABLE zone ADD COLUMN zone_flags INT UNSIGNED DEFAULT 0;
+ALTER TABLE zone_lot ADD COLUMN lot_flags INT UNSIGNED DEFAULT 0;

@@ -31,7 +31,7 @@ public class ZoneBlockListener implements Listener
         Location location = event.getBlock().getLocation();
         if (player.hasBlockPermission(location, true)) return;
         
-        if (!player.getRank().canBuild() &&
+        /*if (!player.getRank().canBuild() &&
                 player.getMentor() != null) {
             
                 TregminePlayer mentor = player.getMentor();
@@ -49,7 +49,9 @@ public class ZoneBlockListener implements Listener
         } else {
             event.setCancelled(true);
             return;
-        }
+        }*/
+
+        event.setCancelled(true);
     }
 
     @EventHandler
@@ -61,7 +63,7 @@ public class ZoneBlockListener implements Listener
         
         if (player.hasBlockPermission(location, true)) return;
 
-        if (!player.getRank().canBuild() &&
+        /*if (!player.getRank().canBuild() &&
                 player.getMentor() != null) {
             
                 TregminePlayer mentor = player.getMentor();
@@ -79,6 +81,8 @@ public class ZoneBlockListener implements Listener
         } else {
             event.setCancelled(true);
             return;
-        }
+        }*/
+
+        event.setCancelled(true);
     }
 }

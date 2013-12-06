@@ -33,7 +33,7 @@ public class PistonListener implements Listener{
         
         for(Block b : event.getBlocks()){
             for(Integer i : owner){
-                TregminePlayer p = plugin.getPlayer(i);
+                TregminePlayer p = plugin.getPlayerOffline(i);
                 if(!p.hasBlockPermission(b.getLocation(), false)){
                     event.setCancelled(true);
                 }
@@ -52,7 +52,7 @@ public class PistonListener implements Listener{
         Set<Integer> owner = lot.getOwners();
         
         for(Integer i : owner){
-            TregminePlayer p = plugin.getPlayer(i);
+            TregminePlayer p = plugin.getPlayerOffline(i);
             if(!p.hasBlockPermission(event.getRetractLocation(), false)){
                 event.setCancelled(true);
             }

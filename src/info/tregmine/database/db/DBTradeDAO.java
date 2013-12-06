@@ -87,7 +87,7 @@ public class DBTradeDAO implements ITradeDAO
     public int getAmountofTrades(int id)
             throws DAOException
     {
-        String sql = "SELECT * FROM trade_item";
+        String sql = "SELECT * FROM trade_item ";
         sql += "WHERE sender_id = ?";
         
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
