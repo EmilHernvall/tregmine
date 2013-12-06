@@ -31,6 +31,8 @@ public interface IZonesDAO
 
     public void addLot(Lot lot) throws DAOException;
 
+    public void updateLotFlags(Lot lot) throws DAOException;
+
     public void deleteLot(int lotId) throws DAOException;
 
     public void addLotUser(int lotId, int userId) throws DAOException;

@@ -106,12 +106,12 @@ public class DBZonesDAO implements IZonesDAO
                     zone.setTexture(rs.getString("zone_texture"));
                     zone.setMainOwner(rs.getString("zone_owner"));
 
-					int flags = rs.getInt("zone_flags");
-					for (Zone.Flags flag : Zone.Flags.values()) {
-						if ((flags & (1 << flag.ordinal())) != 0) {
-							zone.setFlag(flag);
-						}
-					}
+                    int flags = rs.getInt("zone_flags");
+                    for (Zone.Flags flag : Zone.Flags.values()) {
+                        if ((flags & (1 << flag.ordinal())) != 0) {
+                            zone.setFlag(flag);
+                        }
+                    }
 
                     zones.add(zone);
                 }
@@ -299,12 +299,12 @@ public class DBZonesDAO implements IZonesDAO
 
                     lot.setRect(new Rectangle(x1, y1, x2, y2));
 
-					int flags = rs.getInt("lot_flags");
-					for (Lot.Flags flag : Lot.Flags.values()) {
-						if ((flags & (1 << flag.ordinal())) != 0) {
-							lot.setFlag(flag);
-						}
-					}
+                    int flags = rs.getInt("lot_flags");
+                    for (Lot.Flags flag : Lot.Flags.values()) {
+                        if ((flags & (1 << flag.ordinal())) != 0) {
+                            lot.setFlag(flag);
+                        }
+                    }
 
                     lots.add(lot);
                 }
@@ -369,6 +369,25 @@ public class DBZonesDAO implements IZonesDAO
                     lot.setId(rs.getInt(1));
                 }
             }
+        } catch (SQLException e) {
+            throw new DAOException(sql, e);
+        }
+    }
+
+    @Override
+    public void updateLotFlags(Lot lot) throws DAOException
+    {
+        String sql = "UPDATE zone_lot SET lot_flags = ? WHERE lot_id = ?";
+
+        int flags = 0;
+        for (Lot.Flags flag : Lot.Flags.values()) {
+            flags |= lot.hasFlag(flag) ? 1 << flag.ordinal() : 0;
+        }
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, flags);
+            stmt.setInt(2, lot.getId());
+            stmt.execute();
         } catch (SQLException e) {
             throw new DAOException(sql, e);
         }
