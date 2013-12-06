@@ -288,57 +288,57 @@ public class ZonePlayerListener implements Listener
         player.teleportWithHorse(newPos);
     }
 
-	// For Lot Flag: Lot.Flags.PRIVATE;
-	@EventHandler
-	public void onPlayerMoveLot(PlayerMoveEvent event)
-	{
-		TregminePlayer player = plugin.getPlayer(event.getPlayer());
-		if (player == null) {
-			event.getPlayer().kickPlayer("Something went wrong");
-			Tregmine.LOGGER.info(event.getPlayer().getName() + " was not found " +
-					"in players map (PlayerMoveEvent).");
-			return;
-		}
+    // For Lot Flag: Lot.Flags.PRIVATE;
+    @EventHandler
+    public void onPlayerMoveLot(PlayerMoveEvent event)
+    {
+        TregminePlayer player = plugin.getPlayer(event.getPlayer());
+        if (player == null) {
+            event.getPlayer().kickPlayer("Something went wrong");
+            Tregmine.LOGGER.info(event.getPlayer().getName() + " was not found " +
+                    "in players map (PlayerMoveEvent).");
+            return;
+        }
 
-		ZoneWorld world = plugin.getWorld(player.getWorld());
+        ZoneWorld world = plugin.getWorld(player.getWorld());
 
-		Location movingFrom = event.getFrom();
-		Point oldPos =
-				new Point(movingFrom.getBlockX(), movingFrom.getBlockZ());
+        Location movingFrom = event.getFrom();
+        Point oldPos =
+            new Point(movingFrom.getBlockX(), movingFrom.getBlockZ());
 
-		Location movingTo = event.getTo();
-		Point currentPos =
-				new Point(movingTo.getBlockX(), movingTo.getBlockZ());
+        Location movingTo = event.getTo();
+        Point currentPos =
+            new Point(movingTo.getBlockX(), movingTo.getBlockZ());
 
-		Lot lot = world.findLot(currentPos);
-		if (lot == null) { // Not a lot so I dont care.
-			return;
-		}
-		
-		// sneaky placement
-		if (!lot.hasFlag(Lot.Flags.FLIGHT_ALLOWED) &&
-			!player.getRank().canModifyZones()) {
-			player.setFlying(false);
-			player.setAllowFlight(false);	
-		}
+        Lot lot = world.findLot(currentPos);
+        if (lot == null) { // Not a lot so I dont care.
+            return;
+        }
 
-		if (lot.isOwner(player)) { // Owner of the lot so bypasses private flag.
-			return;
-		}
+        // sneaky placement
+        if (!lot.hasFlag(Lot.Flags.FLIGHT_ALLOWED) &&
+            !player.getRank().canModifyZones()) {
 
-		if (player.getRank().canModifyZones()) { // Let admins bypass protection, but warn them just incase.
-			return;
-		}
+            player.setFlying(false);
+        }
 
-		if (!lot.hasFlag(Lot.Flags.PRIVATE)) { // If not private flagged lot, then return.
-			return;
-		}
+        if (lot.isOwner(player)) { // Owner of the lot so bypasses private flag.
+            return;
+        }
 
-		movePlayerBack(player, movingFrom, movingTo);
-		player.sendMessage(ChatColor.RED + "[" + lot.getName() + "] "
-				+ "This lot is private to it's owners! Please contact the lot owners.");
+        if (player.getRank().canModifyZones()) { // Let admins bypass protection, but warn them just incase.
+            return;
+        }
 
-	}
+        if (!lot.hasFlag(Lot.Flags.PRIVATE)) { // If not private flagged lot, then return.
+            return;
+        }
+
+        movePlayerBack(player, movingFrom, movingTo);
+        player.sendMessage(ChatColor.RED + "[" + lot.getName() + "] "
+                + "This lot is private to it's owners! Please contact the lot owners.");
+
+    }
 
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent event)
