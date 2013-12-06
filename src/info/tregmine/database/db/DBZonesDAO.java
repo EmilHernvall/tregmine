@@ -174,15 +174,15 @@ public class DBZonesDAO implements IZonesDAO
             "zone_enterdefault = ?, zone_placedefault = ?, " +
             "zone_destroydefault = ?, zone_pvp = ?, zone_hostiles = ?, " +
             "zone_communist = ?, zone_publicprofile = ?, " +
-            "zone_entermessage = ?, zone_exitmessage = ? " +
-            "zone_flagd = ? "
+            "zone_entermessage = ?, zone_exitmessage = ?, " +
+            "zone_flags = ? " +
             "WHERE zone_id = ?";
-	
-	int flags = 0;
+
+        int flags = 0;
         for (Zone.Flags flag : Zone.Flags.values()) {
             flags |= zone.hasFlag(flag) ? 1 << flag.ordinal() : 0;
         }
-	
+
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, zone.getWorld());
             stmt.setString(2, zone.getName());
