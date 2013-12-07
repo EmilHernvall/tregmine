@@ -51,6 +51,7 @@ public class VeinListener implements Listener
         
         List<String> lore = player.getItemInHand().getItemMeta().getLore();
         
+        if (lore.isEmpty()) return;
         if (!lore.get(0).equals(ToolsRegistry.VeinMinerLoreTag)) return; 
 
         boolean stop = false;
