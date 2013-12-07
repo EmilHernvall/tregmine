@@ -134,7 +134,6 @@ public class ButtonListener implements Listener {
                             meta.setDisplayName(ChatColor.GREEN + "DIRT -> SPONGE Coupon");
                             item.setItemMeta(meta);
                             inventory.addItem(item);
-                            player.updateInventory();
                             player.sendMessage(ChatColor.AQUA + "You received 1 coupon for 25,000 Tregs.");
                         }else{
                             player.sendMessage(ChatColor.RED + "You need at least 25,000 Tregs for this button!");

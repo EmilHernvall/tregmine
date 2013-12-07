@@ -29,8 +29,9 @@ public class TestReplacer extends AbstractFiller
         if (block.getTypeId() == match.getItemTypeId()
                 && (match.getData() == 0 || block.getData() == match.getData())) {
 
-            player.sendBlockChange(block.getLocation(), item.getItemType(),
-                    item.getData());
+            player.getDelegate().sendBlockChange(block.getLocation(),
+                                                 item.getItemType(),
+                                                 item.getData());
         }
     }
 }

@@ -1,41 +1,29 @@
 package info.tregmine.listeners;
 
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.HashMap;
+import info.tregmine.Tregmine;
+import info.tregmine.api.InventoryAccess;
+import info.tregmine.api.TregminePlayer;
+import info.tregmine.database.*;
+import info.tregmine.database.IInventoryDAO.ChangeType;
+import info.tregmine.database.IInventoryDAO.InventoryType;
+
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.DoubleChest;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.inventory.InventoryCreativeEvent;
-import org.bukkit.event.inventory.InventoryDragEvent;
-import org.bukkit.event.inventory.InventoryInteractEvent;
-import org.bukkit.event.inventory.InventoryMoveItemEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
-import org.bukkit.event.inventory.InventoryPickupItemEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-
-import info.tregmine.Tregmine;
-import info.tregmine.api.TregminePlayer;
-import info.tregmine.api.InventoryAccess;
-import info.tregmine.api.lore.Created;
-import info.tregmine.database.DAOException;
-import info.tregmine.database.IContext;
-import info.tregmine.database.IInventoryDAO;
-import static info.tregmine.database.IInventoryDAO.InventoryType;
-import static info.tregmine.database.IInventoryDAO.ChangeType;
 
 public class InventoryListener implements Listener
 {
@@ -98,7 +86,7 @@ public class InventoryListener implements Listener
                     }
                 }
 
-                if (others > 0) {
+                if (others > 0 && player.hasFlag(TregminePlayer.Flags.CHEST_LOG)) {
                     player.sendMessage(ChatColor.YELLOW + "Last accessed by:");
                     SimpleDateFormat dfm = new SimpleDateFormat("dd/MM/yy hh:mm:ss a");
                     int i = 0;

@@ -56,141 +56,24 @@ public class ZonePlayerListener implements Listener
     public void onPlayerBucketEmpty(PlayerBucketEmptyEvent event)
     {
         TregminePlayer player = plugin.getPlayer(event.getPlayer());
-        if (player.getRank().canModifyZones()) {
-            return;
+
+        Location location = event.getBlockClicked().getLocation();
+
+        if (!player.hasBlockPermission(location, true)) {
+            event.setCancelled(true);
         }
-
-        ZoneWorld world = plugin.getWorld(player.getWorld());
-
-        Block block = event.getBlockClicked();
-        Location location = block.getLocation();
-        Point pos = new Point(location.getBlockX(), location.getBlockZ());
-
-        Zone currentZone = player.getCurrentZone();
-        if (currentZone == null || !currentZone.contains(pos)) {
-            currentZone = world.findZone(pos);
-            player.setCurrentZone(currentZone);
-        }
-
-        if (currentZone != null) {
-            Zone.Permission perm = currentZone.getUser(player);
-
-            Lot lot = world.findLot(pos);
-            if (lot != null) {
-                if (perm == Zone.Permission.Owner && currentZone.isCommunist()) {
-                    // Zone owners can modify lots in communist zones
-                }
-                else if (lot.isOwner(player)) {
-                    // Lot owners can always modify lots
-                }
-                else {
-                    player.sendMessage(ChatColor.RED +
-                            "[" + currentZone.getName() + "] " +
-                            "You are not allowed to break blocks in lot " +
-                            lot.getName() + ".");
-                    event.setCancelled(true);
-                    return;
-                }
-
-                return;
-            }
-
-            // if everyone is allowed to build in this zone...
-            if (currentZone.getDestroyDefault()) {
-                // ...the only people that can't build are those that are banned
-                if (perm != null && perm == Zone.Permission.Banned) {
-                    event.setCancelled(true);
-                    player.sendMessage(ChatColor.RED + "["
-                            + currentZone.getName() + "] "
-                            + "You are banned from " + currentZone.getName()
-                            + ".");
-                }
-            }
-            // if this zone has limited building privileges...
-            else {
-                // ...we only allow builders and owners to make changes.
-                if (perm == null
-                        || (perm != Zone.Permission.Maker && perm != Zone.Permission.Owner)) {
-                    player.setFireTicks(50);
-                    event.setCancelled(true);
-                    player.sendMessage(ChatColor.RED + "["
-                            + currentZone.getName() + "] "
-                            + "You are not allowed to break blocks in "
-                            + currentZone.getName() + ".");
-                }
-            }
-        }
-
     }
 
     @EventHandler
     public void onHangingPlace(HangingPlaceEvent event)
     {
         TregminePlayer player = plugin.getPlayer(event.getPlayer());
-        if (player.getRank().canModifyZones()) {
-            return;
-        }
-
-        ZoneWorld world = plugin.getWorld(player.getWorld());
 
         Location location = event.getBlock().getLocation();
-        Point pos = new Point(location.getBlockX(), location.getBlockZ());
 
-        Zone currentZone = player.getCurrentZone();
-        if (currentZone == null || !currentZone.contains(pos)) {
-            currentZone = world.findZone(pos);
-            player.setCurrentZone(currentZone);
+        if (!player.hasBlockPermission(location, true)) {
+            event.setCancelled(true);
         }
-
-        if (currentZone != null) {
-            Zone.Permission perm = currentZone.getUser(player);
-
-            Lot lot = world.findLot(pos);
-            if (lot != null) {
-                if (perm == Zone.Permission.Owner && currentZone.isCommunist()) {
-                    // Zone owners can modify lots in communist zones
-                }
-                else if (lot.isOwner(player)) {
-                    // Lot owners can always modify lots
-                }
-                else {
-                    player.sendMessage(ChatColor.RED + "["
-                            + currentZone.getName() + "] "
-                            + "You are not allowed to place paintings in lot "
-                            + lot.getName() + ".");
-                    event.setCancelled(true);
-                    return;
-                }
-
-                return;
-            }
-
-            // if everyone is allowed to build in this zone...
-            if (currentZone.getDestroyDefault()) {
-                // ...the only people that can't build are those that are banned
-                if (perm != null && perm == Zone.Permission.Banned) {
-                    event.setCancelled(true);
-                    player.sendMessage(ChatColor.RED + "["
-                            + currentZone.getName() + "] "
-                            + "You are banned from " + currentZone.getName()
-                            + ".");
-                }
-            }
-            // if this zone has limited building privileges...
-            else {
-                // ...we only allow builders and owners to make changes.
-                if (perm == null
-                        || (perm != Zone.Permission.Maker && perm != Zone.Permission.Owner)) {
-                    player.setFireTicks(50);
-                    event.setCancelled(true);
-                    player.sendMessage(ChatColor.RED + "["
-                            + currentZone.getName() + "] "
-                            + "You are not allowed to place paintings in "
-                            + currentZone.getName() + ".");
-                }
-            }
-        }
-
     }
 
     @EventHandler
@@ -203,68 +86,9 @@ public class ZonePlayerListener implements Listener
         }
 
         TregminePlayer player = plugin.getPlayer((Player) event.getRemover());
-        if (player.getRank().canModifyZones()) {
-            return;
-        }
 
-        ZoneWorld world = plugin.getWorld(player.getWorld());
-
-        Location location = player.getLocation();
-        Point pos = new Point(location.getBlockX(), location.getBlockZ());
-
-        Zone currentZone = player.getCurrentZone();
-        if (currentZone == null || !currentZone.contains(pos)) {
-            currentZone = world.findZone(pos);
-            player.setCurrentZone(currentZone);
-        }
-
-        if (currentZone != null) {
-            Zone.Permission perm = currentZone.getUser(player);
-
-            Lot lot = world.findLot(pos);
-            if (lot != null) {
-                if (perm == Zone.Permission.Owner && currentZone.isCommunist()) {
-                    // Zone owners can modify lots in communist zones
-                }
-                else if (lot.isOwner(player)) {
-                    // Lot owners can always modify lots
-                }
-                else {
-                    player.sendMessage(ChatColor.RED +
-                            "[" + currentZone.getName() + "] " +
-                            "You are not allowed to destroy paintings in lot " +
-                            lot.getName() + ".");
-                    event.setCancelled(true);
-                    return;
-                }
-
-                return;
-            }
-
-            // if everyone is allowed to build in this zone...
-            if (currentZone.getDestroyDefault()) {
-                // ...the only people that can't build are those that are banned
-                if (perm != null && perm == Zone.Permission.Banned) {
-                    event.setCancelled(true);
-                    player.sendMessage(ChatColor.RED + "["
-                            + currentZone.getName() + "] "
-                            + "You are banned from " + currentZone.getName()
-                            + ".");
-                }
-            }
-            // if this zone has limited building privileges...
-            else {
-                // ...we only allow builders and owners to make changes.
-                if (perm == null
-                        || (perm != Zone.Permission.Maker && perm != Zone.Permission.Owner)) {
-                    player.setFireTicks(50);
-                    event.setCancelled(true);
-                    player.sendMessage(ChatColor.RED + "["
-                            + currentZone.getName() + "] "
-                            + "You are not allowed to destroy paintings in "
-                            + currentZone.getName() + ".");
-                }
-            }
+        if (!player.hasBlockPermission(player.getLocation(), true)) {
+            event.setCancelled(true);
         }
     }
 
@@ -301,7 +125,7 @@ public class ZonePlayerListener implements Listener
                 return;
             }
 
-            if (!lot.isOwner(player)) {
+            if (!lot.isOwner(player) && lot.hasFlag(Lot.Flags.AUTOBLESS)) {
                 event.setCancelled(true);
                 player.sendMessage(ChatColor.RED + "Blessed to lot owners.");
             }
@@ -368,7 +192,7 @@ public class ZonePlayerListener implements Listener
             }
         }
     }
-    
+
     @SuppressWarnings("deprecation")
     @EventHandler
     public void boneMealUsage(PlayerInteractEvent event){
@@ -377,11 +201,11 @@ public class ZonePlayerListener implements Listener
         if (event.getItem() == null) return;
         if (!event.getItem().getType().equals(Material.INK_SACK)) return;
         if (event.getItem().getData().getData() != (byte) 15) return;
-        
+
         Block b = event.getClickedBlock();
         if (b == null || !(b.getType().equals(Material.GRASS))) return;
         Location center = b.getLocation();
-        
+
         event.setCancelled(true); // Stops normal bonemealing
         if (event.getPlayer().getGameMode() == GameMode.SURVIVAL) {
             if (event.getItem().getAmount() == 1){
@@ -390,7 +214,7 @@ public class ZonePlayerListener implements Listener
                 event.getItem().setAmount(event.getItem().getAmount() - 1);
             }
         }
-        
+
         List<Integer> radius_options = Arrays.asList(3,4,5,6,7);
         Random radius_random = new Random();
         Integer radius = radius_options.get(radius_random.nextInt(radius_options.size()));
@@ -408,49 +232,22 @@ public class ZonePlayerListener implements Listener
                 }
             }
         }
-        
+
         TregminePlayer player = plugin.getPlayer(event.getPlayer());
-        
+
         for ( Block block : areaofeffect ) {
-            Block block_under = block.getWorld().getBlockAt(block.getX(), 
-                                                            block.getY() - 1, 
+            Block block_under = block.getWorld().getBlockAt(block.getX(),
+                                                            block.getY() - 1,
                                                             block.getZ());
             if (block_under.getType() != Material.GRASS) continue;
             if (block.getType() != Material.AIR) continue;
-            
-            ZoneWorld world = plugin.getWorld(block.getWorld());
-            Point pos = new Point(block.getX(), block.getZ());
-            Zone zone = world.findZone(pos);
-            
-            if(zone != null){
-                Zone.Permission perm = zone.getUser(player);
-                
-                Lot lot = world.findLot(pos);
-                if(lot != null){ // Handle lots
-                    if (perm == Zone.Permission.Owner && zone.isCommunist()) { // If communist zone & Player is zone owner
-                        boneMealPlant(block);
-                    }
-                    else if (lot.isOwner(player)) { // If lot owner
-                        boneMealPlant(block);
-                    }
-                    continue;
-                }
-                
-                if (zone.getPlaceDefault()) { // If placing is allowed in zone
-                    boneMealPlant(block);
-                }
-                
-                if (perm == null
-                        || (perm != Zone.Permission.Maker && perm != Zone.Permission.Owner)) {
-                    continue;
-                }
-                boneMealPlant(block);
-            }else{
+
+            if (player.hasBlockPermission(block.getLocation(), false)) {
                 boneMealPlant(block);
             }
         }
     }
-    
+
     @SuppressWarnings("deprecation")
     public void boneMealPlant(Block block){
         List<Material> bonemeal_produce = Arrays.asList(Material.AIR, Material.AIR, Material.AIR, Material.AIR, Material.AIR,
@@ -459,13 +256,13 @@ public class ZonePlayerListener implements Listener
                                                         Material.LONG_GRASS, Material.LONG_GRASS, Material.LONG_GRASS, Material.LONG_GRASS);
         Random bonemeal_random = new Random();
         Material produce = bonemeal_produce.get(bonemeal_random.nextInt(bonemeal_produce.size()));
-        
+
         block.setType(produce);
         if(block.getType().equals(Material.LONG_GRASS)){
             block.setData((byte) 1);
         }
     }
-    
+
 
     private void movePlayerBack(TregminePlayer player, Location movingFrom,
             Location movingTo)
@@ -488,7 +285,58 @@ public class ZonePlayerListener implements Listener
                 newPosVector.getY(),
                 newPosVector.getZ());
 
-        player.teleport(newPos);
+        player.teleportWithHorse(newPos);
+    }
+
+    // For Lot Flag: Lot.Flags.PRIVATE;
+    @EventHandler
+    public void onPlayerMoveLot(PlayerMoveEvent event)
+    {
+        TregminePlayer player = plugin.getPlayer(event.getPlayer());
+        if (player == null) {
+            event.getPlayer().kickPlayer("Something went wrong");
+            Tregmine.LOGGER.info(event.getPlayer().getName() + " was not found " +
+                    "in players map (PlayerMoveEvent).");
+            return;
+        }
+
+        ZoneWorld world = plugin.getWorld(player.getWorld());
+
+        Location movingFrom = event.getFrom();
+        Point oldPos =
+            new Point(movingFrom.getBlockX(), movingFrom.getBlockZ());
+
+        Location movingTo = event.getTo();
+        Point currentPos =
+            new Point(movingTo.getBlockX(), movingTo.getBlockZ());
+
+        Lot lot = world.findLot(currentPos);
+        if (lot == null) { // Not a lot so I dont care.
+            return;
+        }
+
+        // sneaky placement
+        if (!lot.hasFlag(Lot.Flags.FLIGHT_ALLOWED) &&
+            !player.getRank().canModifyZones()) {
+
+            player.setFlying(false);
+        }
+
+        if (lot.isOwner(player)) { // Owner of the lot so bypasses private flag.
+            return;
+        }
+
+        if (player.getRank().canModifyZones()) { // Let admins bypass protection, but warn them just incase.
+            return;
+        }
+
+        if (!lot.hasFlag(Lot.Flags.PRIVATE)) { // If not private flagged lot, then return.
+            return;
+        }
+
+        movePlayerBack(player, movingFrom, movingTo);
+        player.sendMessage(ChatColor.RED + "[" + lot.getName() + "] "
+                + "This lot is private to it's owners! Please contact the lot owners.");
     }
 
     @EventHandler
@@ -535,6 +383,15 @@ public class ZonePlayerListener implements Listener
                         bannedMessage(currentZone, player);
                         player.teleport(player.getWorld().getSpawnLocation());
                         // movePlayerBack(player, movingFrom, movingTo);
+                        return;
+                    }
+                    // If blockWarned is true, and they are either hardwarned
+                    // or softwarned then get them out of there with an error.
+                    else if (currentZone.hasFlag(Zone.Flags.BLOCK_WARNED) &&
+                            (player.hasFlag(TregminePlayer.Flags.HARDWARNED) ||
+                             player.hasFlag(TregminePlayer.Flags.SOFTWARNED))) {
+                        blockedMessage(currentZone, player);
+                        player.teleport(player.getWorld().getSpawnLocation());
                         return;
                     }
                 }
@@ -733,6 +590,12 @@ public class ZonePlayerListener implements Listener
     {
         player.sendMessage(ChatColor.RED + "[" + currentZone.getName() + "] "
                 + "You are banned from " + currentZone.getName() + ".");
+    }
+    
+    private void blockedMessage(Zone currentZone, TregminePlayer player)
+    {
+        player.sendMessage(ChatColor.RED + "[" + currentZone.getName() + "] "
+                + "You are blocked from " + currentZone.getName() + ".");
     }
 
     private void welcomeMessage(Zone currentZone, TregminePlayer player,

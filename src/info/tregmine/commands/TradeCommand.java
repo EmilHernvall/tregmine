@@ -20,6 +20,7 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import info.tregmine.Tregmine;
+import info.tregmine.api.Badge;
 import info.tregmine.api.TregminePlayer;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
@@ -90,9 +91,11 @@ public class TradeCommand extends AbstractCommand implements Listener
         }
 
         double distance = Distance.calc2d(player.getLocation(), target.getLocation());
-        if (distance > 100) {
+
+        if (!target.hasFlag(TregminePlayer.Flags.INVISIBLE) && 
+                (distance > player.getRank().getTradeDistance(player))) {
             player.sendMessage(RED + "You can only trade with people less than " +
-                    "100 blocks away.");
+                    player.getRank().getTradeDistance(player) + " blocks away.");
             return true;
         }
 
@@ -357,6 +360,11 @@ public class TradeCommand extends AbstractCommand implements Listener
                             + " tregs was " + "added to your wallet!");
                     second.sendMessage(tradePre + ctx.bid
                             + " tregs was " + "withdrawn to your wallet!");
+                    
+                    if ((tradeDAO.getAmountofTrades(first.getId()) > 100) && 
+                            !(first.getBadgeLevel(Badge.MERCHANT) == 0)){
+                        first.awardBadgeLevel(Badge.MERCHANT, "For completing 100 transactions!");
+                    }
                 }
                 else {
                     first.sendMessage(RED + "[Trade] Failed to withdraw "

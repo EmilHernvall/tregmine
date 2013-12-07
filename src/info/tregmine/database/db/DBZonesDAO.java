@@ -105,6 +105,14 @@ public class DBZonesDAO implements IZonesDAO
                     zone.setTextExit(rs.getString("zone_exitmessage"));
                     zone.setTexture(rs.getString("zone_texture"));
                     zone.setMainOwner(rs.getString("zone_owner"));
+
+                    int flags = rs.getInt("zone_flags");
+                    for (Zone.Flags flag : Zone.Flags.values()) {
+                        if ((flags & (1 << flag.ordinal())) != 0) {
+                            zone.setFlag(flag);
+                        }
+                    }
+
                     zones.add(zone);
                 }
             }
@@ -166,8 +174,14 @@ public class DBZonesDAO implements IZonesDAO
             "zone_enterdefault = ?, zone_placedefault = ?, " +
             "zone_destroydefault = ?, zone_pvp = ?, zone_hostiles = ?, " +
             "zone_communist = ?, zone_publicprofile = ?, " +
-            "zone_entermessage = ?, zone_exitmessage = ? " +
+            "zone_entermessage = ?, zone_exitmessage = ?, " +
+            "zone_flags = ? " +
             "WHERE zone_id = ?";
+
+        int flags = 0;
+        for (Zone.Flags flag : Zone.Flags.values()) {
+            flags |= zone.hasFlag(flag) ? 1 << flag.ordinal() : 0;
+        }
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, zone.getWorld());
@@ -181,7 +195,8 @@ public class DBZonesDAO implements IZonesDAO
             stmt.setString(9, zone.hasPublicProfile() ? "1" : "0");
             stmt.setString(10, zone.getTextEnter());
             stmt.setString(11, zone.getTextExit());
-            stmt.setInt(12, zone.getId());
+            stmt.setInt(12, flags);
+            stmt.setInt(13, zone.getId());
             stmt.execute();
         } catch (SQLException e) {
             throw new DAOException(sql, e);
@@ -291,6 +306,13 @@ public class DBZonesDAO implements IZonesDAO
 
                     lot.setRect(new Rectangle(x1, y1, x2, y2));
 
+                    int flags = rs.getInt("lot_flags");
+                    for (Lot.Flags flag : Lot.Flags.values()) {
+                        if ((flags & (1 << flag.ordinal())) != 0) {
+                            lot.setFlag(flag);
+                        }
+                    }
+
                     lots.add(lot);
                 }
             }
@@ -354,6 +376,25 @@ public class DBZonesDAO implements IZonesDAO
                     lot.setId(rs.getInt(1));
                 }
             }
+        } catch (SQLException e) {
+            throw new DAOException(sql, e);
+        }
+    }
+
+    @Override
+    public void updateLotFlags(Lot lot) throws DAOException
+    {
+        String sql = "UPDATE zone_lot SET lot_flags = ? WHERE lot_id = ?";
+
+        int flags = 0;
+        for (Lot.Flags flag : Lot.Flags.values()) {
+            flags |= lot.hasFlag(flag) ? 1 << flag.ordinal() : 0;
+        }
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, flags);
+            stmt.setInt(2, lot.getId());
+            stmt.execute();
         } catch (SQLException e) {
             throw new DAOException(sql, e);
         }

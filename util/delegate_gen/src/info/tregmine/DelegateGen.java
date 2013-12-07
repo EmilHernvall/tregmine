@@ -114,7 +114,8 @@ public class DelegateGen
                 //out.println("    @Override");
                 Deprecated depr = method.getAnnotation(Deprecated.class);
                 if (depr != null) {
-                    out.println("    @SuppressWarnings(\"deprecated\")");
+                    continue;
+                    //out.println("    @SuppressWarnings(\"deprecated\")");
                 }
 
                 // Modifiers

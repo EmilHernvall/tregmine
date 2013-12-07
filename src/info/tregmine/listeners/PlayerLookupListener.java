@@ -1,21 +1,23 @@
 package info.tregmine.listeners;
 
-import java.io.IOException;
-import java.net.InetSocketAddress;
 import java.util.Set;
+import java.util.Date;
+
+import info.tregmine.Tregmine;
+import info.tregmine.api.PlayerReport;
+import info.tregmine.api.PlayerReport.Action;
+import info.tregmine.api.TregminePlayer;
+import info.tregmine.database.DAOException;
+import info.tregmine.database.IContext;
+import info.tregmine.database.ILogDAO;
+import info.tregmine.database.IPlayerReportDAO;
+import java.text.SimpleDateFormat;
+import java.util.List;
 
 import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
-
-import info.tregmine.Tregmine;
-import info.tregmine.database.DAOException;
-import info.tregmine.database.IContext;
-import info.tregmine.database.IPlayerDAO;
-import info.tregmine.database.ILogDAO;
-import info.tregmine.api.TregminePlayer;
 
 public class PlayerLookupListener implements Listener
 {
@@ -37,19 +39,61 @@ public class PlayerLookupListener implements Listener
             return;
         }
 
-        if (!player.hasFlag(TregminePlayer.Flags.HIDDEN_LOCATION)) {
-            if (player.getCountry() != null) {
-                plugin.getServer().broadcastMessage(
-                    ChatColor.DARK_AQUA + "Welcome " + player.getChatName() +
-                    ChatColor.DARK_AQUA + " from " + player.getCountry() + "!");
-            } else {
-                plugin.getServer().broadcastMessage(
-                    ChatColor.DARK_AQUA + "Welcome " + player.getChatName());
+        try (IContext ctx = plugin.createContext()) {
+            IPlayerReportDAO report = ctx.getPlayerReportDAO();
+            List<PlayerReport> list = report.getReportsBySubject(player);
+            for (PlayerReport i : list) {
+                if (i.getAction() != Action.HARDWARN &&
+                    i.getAction() != Action.SOFTWARN) {
+                    continue;
+                }
+                Date validUntil = i.getValidUntil();
+                if (validUntil == null) {
+                    continue;
+                }
+                if (validUntil.getTime() < System.currentTimeMillis()) {
+                    continue;
+                }
+
+                SimpleDateFormat dfm = new SimpleDateFormat("dd/MM/yy hh:mm:ss a");
+                player.sendMessage(ChatColor.RED +
+                        "[" + i.getAction() + "]" +
+                        i.getMessage() + " - Valid until: " +
+                        dfm.format(i.getTimestamp()));
+                break;
             }
+        } catch (DAOException e) {
+            throw new RuntimeException(e);
         }
 
-        if ("95.141.47.226".equals(player.getIp())) {
-            return;
+        if (!player.hasFlag(TregminePlayer.Flags.HIDDEN_ANNOUNCEMENT)) {
+            if (player.hasFlag(TregminePlayer.Flags.INVISIBLE)) {
+                for (TregminePlayer to : plugin.getOnlinePlayers()) {
+                    if (to.getRank().canSeeHiddenInfo()) {
+                        if (player.getCountry() != null) {
+                            to.sendMessage(
+                                    ChatColor.DARK_AQUA + "Welcome " + player.getChatName() +
+                                    ChatColor.DARK_AQUA + " from " + player.getCountry() + "!");
+                            to.sendMessage(
+                                    player.getChatName() + ChatColor.DARK_AQUA + " is invisible!");
+                        } else {
+                            to.sendMessage(
+                                    ChatColor.DARK_AQUA + "Welcome " + player.getChatName());
+                            to.sendMessage(
+                                    player.getChatName() + ChatColor.DARK_AQUA + " is invisible!");
+                        }
+                    }
+                }
+            } else {
+                if (player.getCountry() != null && !player.hasFlag(TregminePlayer.Flags.HIDDEN_LOCATION)) {
+                    plugin.getServer().broadcastMessage(
+                        ChatColor.DARK_AQUA + "Welcome " + player.getChatName() +
+                        ChatColor.DARK_AQUA + " from " + player.getCountry() + "!");
+                } else {
+                    plugin.getServer().broadcastMessage(
+                        ChatColor.DARK_AQUA + "Welcome " + player.getChatName());
+                }
+            }
         }
 
         String aliasList = null;
@@ -74,7 +118,8 @@ public class PlayerLookupListener implements Listener
                     if (!current.getRank().canSeeAliases()) {
                         continue;
                     }
-                    if (player.hasFlag(TregminePlayer.Flags.HIDDEN_LOCATION)) {
+                    if (player.hasFlag(TregminePlayer.Flags.INVISIBLE) ||
+                            player.hasFlag(TregminePlayer.Flags.HIDDEN_LOCATION)){
                         continue;
                     }
                     current.sendMessage(ChatColor.YELLOW

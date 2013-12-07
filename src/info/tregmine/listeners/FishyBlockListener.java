@@ -1,13 +1,18 @@
 package info.tregmine.listeners;
 
-import java.util.Map;
-import java.util.HashMap;
+import info.tregmine.Tregmine;
+import info.tregmine.api.FishyBlock;
+import info.tregmine.api.TregminePlayer;
+import info.tregmine.database.*;
+import info.tregmine.database.IFishyBlockDAO.TransactionType;
+import info.tregmine.quadtree.Point;
+import info.tregmine.zones.Lot;
+import info.tregmine.zones.ZoneWorld;
 
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.World;
-import org.bukkit.GameMode;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
@@ -20,24 +25,9 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.material.MaterialData;
-
-import info.tregmine.quadtree.Point;
-
-import info.tregmine.Tregmine;
-import info.tregmine.api.FishyBlock;
-import info.tregmine.api.TregminePlayer;
-import info.tregmine.database.DAOException;
-import info.tregmine.database.IContext;
-import info.tregmine.database.IEnchantmentDAO;
-import info.tregmine.database.IFishyBlockDAO;
-import info.tregmine.database.ITradeDAO;
-import info.tregmine.database.IWalletDAO;
-import info.tregmine.zones.Lot;
-import info.tregmine.zones.ZoneWorld;
-import static info.tregmine.database.IFishyBlockDAO.TransactionType;
 
 public class FishyBlockListener implements Listener
 {
@@ -102,6 +92,8 @@ public class FishyBlockListener implements Listener
                     // Create info sign
                     World world = player.getWorld();
                     updateSign(world, newFishyBlock);
+                    
+                    world.getBlockAt(newFishyBlock.getBlockLocation()).setType(Material.OBSIDIAN);
 
                     try (IContext ctx = plugin.createContext()) {
                         IFishyBlockDAO fishyBlockDAO = ctx.getFishyBlockDAO();
@@ -355,6 +347,7 @@ public class FishyBlockListener implements Listener
         }
     }
 
+    @SuppressWarnings("deprecation")
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event)
     {
@@ -429,9 +422,15 @@ public class FishyBlockListener implements Listener
                 }
             }
 
+            // Find the lot of which the fishyblock is in
+            // Won't return null as a fishyblock has to be in a lot
+            ZoneWorld world = plugin.getWorld(block.getWorld());
+            Lot lot = world.findLot(new Point(loc.getBlockX(), loc.getBlockZ()));
+
             // Player owns this fishy block, and should either enter withdraw
             // mode or add items to this fishy block
-            if (fishyBlock.getPlayerId() == player.getId()) {
+            if (fishyBlock.getPlayerId() == player.getId() ||
+                (lot.isOwner(player) && lot.hasFlag(Lot.Flags.FISHY_SHARE))) {
 
                 // Check if the held item equals the type of the fishy block
                 MaterialData fishyMaterial = fishyBlock.getMaterial();
@@ -757,6 +756,7 @@ public class FishyBlockListener implements Listener
         }
     }
 
+    @SuppressWarnings("deprecation")
     private void updateSign(World world, FishyBlock fishyBlock)
     {
         Location blockLoc = fishyBlock.getBlockLocation();

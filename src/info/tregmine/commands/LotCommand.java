@@ -16,6 +16,7 @@ import info.tregmine.api.TregminePlayer;
 import info.tregmine.zones.Zone;
 import info.tregmine.zones.ZoneWorld;
 import info.tregmine.zones.Lot;
+import org.bukkit.ChatColor;
 
 public class LotCommand extends AbstractCommand
 {
@@ -28,7 +29,19 @@ public class LotCommand extends AbstractCommand
     public boolean handlePlayer(TregminePlayer player, String[] args)
     {
         if (args.length == 0) {
-            return false;
+            player.sendMessage(ChatColor.RED +
+                    "Incorrect usage! Try:");
+            player.sendMessage(ChatColor.AQUA +
+                    "/lot create <lot name> <player>");
+            player.sendMessage(ChatColor.AQUA +
+                    "/lot addowner <lot name> <player>");
+            player.sendMessage(ChatColor.AQUA +
+                    "/lot delowner <lot name> <owner>");
+            player.sendMessage(ChatColor.AQUA +
+                    "/lot delete <lot name>");
+            player.sendMessage(ChatColor.AQUA +
+                    "/lot flag <lot name> <flag name> <true/false>");
+            return true;
         }
 
         if ("create".equals(args[0])) {
@@ -47,8 +60,70 @@ public class LotCommand extends AbstractCommand
             deleteLot(player, args);
             return true;
         }
+        else if ("flag".equals(args[0])) {
+            flagLot(player, args);
+            return true;
+        }
 
         return false;
+    }
+
+    public void flagLot(TregminePlayer player, String[] args)
+    {
+        ZoneWorld world = tregmine.getWorld(player.getWorld());
+        if (world == null) {
+            return;
+        }
+
+        if (args.length < 4) {
+            player.sendMessage("syntax: /lot flag [name] [flag] [true/false]");
+            return;
+        }
+
+        String name = args[1];
+
+        Lot lot = world.getLot(name);
+        if (lot == null) {
+            player.sendMessage(RED + "No lot named " + name + " found.");
+            return;
+        }
+
+        Lot.Flags flag = null;
+        for (Lot.Flags i : Lot.Flags.values()) {
+            if (args[2].equalsIgnoreCase(i.name())) {
+                flag = i;
+                break;
+            }
+        }
+
+        if (flag == null) {
+            player.sendMessage(RED + "Flag not found! Try the following:");
+
+            for (Lot.Flags i : Lot.Flags.values()) {
+                player.sendMessage(AQUA + i.name());
+            }
+            return;
+        }
+
+        boolean value = Boolean.valueOf(args[3]);
+
+        if (value) {
+            lot.setFlag(flag);
+            player.sendMessage(GREEN + "Added flag: " + flag.name());
+        } else {
+            lot.removeFlag(flag);
+            player.sendMessage(GREEN + "Removed flag: " + flag.name());
+        }
+
+        Tregmine.LOGGER.info("Setting " + flag.name() + " to " + value +
+                " for lot " + lot.getName());
+
+        try (IContext ctx = tregmine.createContext()) {
+            IZonesDAO dao = ctx.getZonesDAO();
+            dao.updateLotFlags(lot);
+        } catch (DAOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void createLot(TregminePlayer player, String[] args)
@@ -89,6 +164,10 @@ public class LotCommand extends AbstractCommand
 
             Block b1 = player.getZoneBlock1();
             Block b2 = player.getZoneBlock2();
+            if (b1 == null || b2 == null) {
+                player.sendMessage("Please select two corners");
+                return;
+            }
 
             Zone zone = world.findZone(new Point(b1.getX(), b1.getZ()));
 

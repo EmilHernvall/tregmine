@@ -1,10 +1,6 @@
 package info.tregmine.zones;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import info.tregmine.quadtree.Point;
 import info.tregmine.quadtree.Rectangle;
@@ -102,10 +98,16 @@ public class Zone
         }
     }
 
+    // Flags are stored as integers - order must _NOT_ be changed
+    public enum Flags {
+        BLOCK_WARNED;
+    }
+
     private int id;
     private String world;
     private String name;
     private List<Rectangle> rects;
+    private Set<Flags> flags;
 
     private boolean enterDefault = true;
     private boolean placeDefault = true;
@@ -126,6 +128,8 @@ public class Zone
     {
         rects = new ArrayList<Rectangle>();
         users = new HashMap<Integer, Permission>();
+
+        this.flags = EnumSet.noneOf(Flags.class);
     }
 
     public int getId()
@@ -323,4 +327,7 @@ public class Zone
         return false;
     }
 
+    public void setFlag(Flags flag) { flags.add(flag); }
+    public void removeFlag(Flags flag) { flags.remove(flag); }
+    public boolean hasFlag(Flags flag) { return flags.contains(flag); }
 }

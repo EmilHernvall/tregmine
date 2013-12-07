@@ -83,7 +83,7 @@ public class CompassListener implements Listener
         }
         else if (player.getRank().canUseCompass()) {
 
-            Block target = player.getTargetBlock(null, 300);
+            Block target = player.getDelegate().getTargetBlock(null, 300);
 
             Block b1 = world.getBlockAt(new Location(player.getWorld(),
                                                      target.getX(),

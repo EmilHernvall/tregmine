@@ -1,31 +1,28 @@
 package info.tregmine.listeners;
 
-import java.util.EnumSet;
-import java.util.Set;
-
-import org.bukkit.ChatColor;
-//import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.entity.Arrow;
-//import org.bukkit.entity.Arrow;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Projectile;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.entity.CreatureSpawnEvent;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-//import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
-//import org.bukkit.event.entity.EntityShootBowEvent;
-
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
 import info.tregmine.quadtree.Point;
 import info.tregmine.zones.Zone;
 import info.tregmine.zones.ZoneWorld;
+
+import java.util.EnumSet;
+import java.util.Set;
+
+import org.bukkit.Location;
+import org.bukkit.entity.Arrow;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+//import org.bukkit.ChatColor;
+//import org.bukkit.entity.Arrow;
+//import org.bukkit.event.entity.EntityDamageEvent;
+//import org.bukkit.event.entity.EntityShootBowEvent;
 
 public class ZoneEntityListener implements Listener
 {
@@ -57,8 +54,8 @@ public class ZoneEntityListener implements Listener
         if (zone == null || zone.hasHostiles()) {
             return;
         }
-
-        if (!allowedMobs.contains(event.getEntityType())) {
+        
+        if (!allowedMobs.contains(event.getEntityType()) && event.getSpawnReason() == SpawnReason.NATURAL) {
             event.setCancelled(true);
         }
     }

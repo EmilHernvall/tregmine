@@ -1,8 +1,8 @@
 name: tregmine
 main: info.tregmine.Tregmine
-version: 1.0.0
+version: 1.3.1
 website: http://tregmine.info
-author: Ein Andersson, Emil Hernvall
+author: Ein Andersson, Emil Hernvall, James Sherlock
 description: Tregmine
 
 commands:
@@ -30,6 +30,9 @@ commands:
   ban:
     description: Ban the specified player
     usage: /ban player
+  badge:
+    description: All commands for badges
+    usage: /badge
   bless:
     description: Specify the player for which the next block will be blessed
     usage: /bless player
@@ -63,15 +66,24 @@ commands:
   force:
     description: Force someone into a channel
     usage: /force player channel
+  forceblock:
+    description: Stop people forcing you into channels
+    usage: /forceblock <on/off/status>
   give:
     description: Give a user an item (admin only)
     usage: /give player item amount data
   home:
     description: Teleport to, or set, your home
     usage: /home
+  ignore:
+    description: Ignore a player (not staff)
+    usage: /ignore <add/remove> <player_name> or /ignore <list>
   inv:
     description: Look in a players inventory (admin only)
     usage: /inv <player>
+  invlog:
+    description: Toggle inventory logging display
+    usage: /invlog <on/off/status>
   item:
     description: Spawn an item
     usage: /item item amount data (admin only)
@@ -115,6 +127,9 @@ commands:
   remitems:
     description: remove all items in the specified radius
     usage: /remitems radius
+  repair:
+    description: Repair special tools
+    usage: /repair
   report:
     description: Adds a report to the players record
     usage: /report player message
@@ -150,6 +165,9 @@ commands:
   testfill:
     description: Like fill, but with fake blocks (admins and builders only)
     usage: /testfill
+  tool:
+    description: Spawn in Special Tools (Admin)
+    usage: /tool
   town:
     description: Shorthand for /zone
     usage: /town delete \
@@ -179,6 +197,9 @@ commands:
   trade:
     description: Trade safely
     usage: /trade player
+  update:
+    description: See what was last updated!
+    usage: /update [version number]
   vanish:
     description: Become invisible (admin only)
     usage: /vanish <on|off>
@@ -217,3 +238,6 @@ commands:
   head:
     description: Receive a specified player's head.
     usage: /head <player>
+  hide:
+    description: Hide logon message
+    usage: /hide

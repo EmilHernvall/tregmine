@@ -107,8 +107,67 @@ public class ZoneCommand extends AbstractCommand
             zoneInfo(player, args);
             return true;
         }
+        else if ("flag".equals(args[0])) {
+            flagZone(player, args);
+            return true;
+        }
 
         return false;
+    }
+
+    public void flagZone(TregminePlayer player, String[] args)
+    {
+        ZoneWorld world = tregmine.getWorld(player.getWorld());
+        if (world == null) {
+            return;
+        }
+
+        if (args.length < 4) {
+            player.sendMessage("syntax: /zone flag [name] [flag] [true/false]");
+            return;
+        }
+
+        String name = args[1];
+
+        Zone zone = world.getZone(name);
+        if (zone == null) {
+            player.sendMessage(RED + "No zone named " + name + " found.");
+            return;
+        }
+
+        Zone.Flags flag = null;
+        for (Zone.Flags i : Zone.Flags.values()) {
+            if (args[2].equalsIgnoreCase(i.name())) {
+                flag = i;
+                break;
+            }
+        }
+
+        if (flag == null) {
+            player.sendMessage(RED + "Flag not found! Try the following:");
+
+            for (Zone.Flags i : Zone.Flags.values()) {
+                player.sendMessage(AQUA + i.name());
+            }
+            return;
+        }
+
+        boolean value = Boolean.valueOf(args[3]);
+
+        if (value) {
+            zone.setFlag(flag);
+            player.sendMessage(GREEN + "Added flag: " + flag.name());
+        } else {
+            zone.removeFlag(flag);
+            player.sendMessage(GREEN + "Removed flag: " + flag.name());
+        }
+
+        try (IContext ctx = tregmine.createContext()) {
+            IZonesDAO dao = ctx.getZonesDAO();
+            dao.updateZone(zone);
+        } catch (DAOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void createZone(TregminePlayer player, String[] args)
@@ -132,6 +191,10 @@ public class ZoneCommand extends AbstractCommand
 
         Block b1 = player.getZoneBlock1();
         Block b2 = player.getZoneBlock2();
+        if (b1 == null || b2 == null) {
+            player.sendMessage("Please select two corners");
+            return;
+        }
 
         Rectangle rect =
                 new Rectangle(b1.getX(), b1.getZ(), b2.getX(), b2.getZ());

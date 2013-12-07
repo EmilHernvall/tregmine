@@ -12,6 +12,9 @@ import java.util.Random;
 import java.util.Set;
 import java.util.Queue;
 
+import info.tregmine.quadtree.Point;
+import info.tregmine.zones.Lot;
+import info.tregmine.zones.ZoneWorld;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -27,16 +30,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerKickEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.event.player.PlayerLoginEvent.Result;
-import org.bukkit.event.player.PlayerLoginEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerPickupItemEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -48,6 +43,7 @@ import org.bukkit.scoreboard.ScoreboardManager;
 import org.kitteh.tag.PlayerReceiveNameTagEvent;
 
 import info.tregmine.Tregmine;
+import info.tregmine.api.Badge;
 import info.tregmine.api.PlayerReport;
 import info.tregmine.api.TregminePlayer;
 import info.tregmine.api.Rank;
@@ -339,8 +335,9 @@ public class TregminePlayerListener implements Listener
         }
 
         // Check if the player is allowed to fly
-        if (player.hasFlag(TregminePlayer.Flags.HARDWARNED)) {
-            player.sendMessage("You are hardwarned and are not allowed to fly.");
+        if (player.hasFlag(TregminePlayer.Flags.HARDWARNED) ||
+				player.hasFlag(TregminePlayer.Flags.SOFTWARNED)) {
+            player.sendMessage("You are warned and are not allowed to fly.");
             player.setAllowFlight(false);
         } else if (rank.canFly()) {
             if (player.hasFlag(TregminePlayer.Flags.FLY_ENABLED)) {
@@ -448,6 +445,12 @@ public class TregminePlayerListener implements Listener
         if (player.getKeyword() == null && player.getRank().mustUseKeyword()) {
             player.sendMessage(ChatColor.RED + "You have not set a keyword! DO SO NOW.");
         }
+        
+        if (rank == Rank.DONATOR &&
+                !player.hasBadge(Badge.PHILANTROPIST)) {
+            player.awardBadgeLevel(Badge.PHILANTROPIST, 
+                    "For being a Tregmine donator!");
+        }
     }
 
     @EventHandler
@@ -527,6 +530,34 @@ public class TregminePlayerListener implements Listener
             event.getPlayer().kickPlayer("error loading profile!");
         }
     }
+
+	@EventHandler
+	public void onPlayerFlight(PlayerToggleFlightEvent event)
+	{
+		TregminePlayer player = plugin.getPlayer(event.getPlayer());
+		if(player.getRank().canModifyZones()) {
+			return;
+		}
+		
+		if (!player.getRank().canFly()) {
+			event.setCancelled(true);
+		}
+
+		if (player.hasFlag(TregminePlayer.Flags.HARDWARNED) ||
+				player.hasFlag(TregminePlayer.Flags.SOFTWARNED)) {
+			event.setCancelled(true);
+		}
+
+		ZoneWorld world = plugin.getWorld(event.getPlayer().getLocation().getWorld());
+		Lot lot = world.findLot(new Point(event.getPlayer().getLocation().getBlockX(), event.getPlayer().getLocation().getBlockZ()));
+		if (lot == null) {
+			return;
+		}
+
+		if (!lot.hasFlag(Lot.Flags.FLIGHT_ALLOWED)) {
+			event.setCancelled(true);
+		}
+	}
 
     @EventHandler
     public void onPlayerPickupItem(PlayerPickupItemEvent event)

@@ -54,7 +54,13 @@ public class BlessedBlockListener implements Listener
                        Material.SIGN,
                        Material.FENCE_GATE,
                        Material.DISPENSER,
-                       Material.WOOD_BUTTON);
+                       Material.WOOD_BUTTON,
+					   Material.NOTE_BLOCK,
+					   Material.REDSTONE_COMPARATOR,
+					   Material.REDSTONE_COMPARATOR_OFF,
+					   Material.REDSTONE_COMPARATOR_ON,
+                       Material.HOPPER,
+					   Material.DROPPER);
 
     public BlessedBlockListener(Tregmine instance)
     {
@@ -210,7 +216,7 @@ public class BlessedBlockListener implements Listener
             TregminePlayer player = plugin.getPlayer(event.getPlayer());
 
             Location loc = block.getLocation();
-            Location loc1 = loc.subtract(new Vector(0, 0, 1));
+            Location loc1 = loc.subtract(new Vector(0, 1, 0));
 
             if (blessedBlocks.containsKey(loc)
                     || blessedBlocks.containsKey(loc1)) {

@@ -393,3 +393,35 @@ INSERT INTO `enchantment` (`enchantment_name`, `enchantment_title`) VALUES
 ('SILK_TOUCH', 'Silk Touch'),
 ('THORNS', 'Thorns'),
 ('WATER_WORKER', 'Aqua Affinity');
+
+CREATE TABLE IF NOT EXISTS `version` (
+  `version_id` int(255) NOT NULL AUTO_INCREMENT,
+  `version_number` varchar(255) NOT NULL,
+  `version_string` varchar(255) NOT NULL,
+  PRIMARY KEY (`version_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+INSERT INTO `version` (`version_id`, `version_number`, `version_string`) VALUES
+(1, '1.0.0', 'Added toggleable flying (/fly)::Bonemeal Enhancements::Coloured names in messages::Added alert words (/alert)');
+
+INSERT INTO `motd` (`motd_timestamp`, `motd_message`) VALUES
+(unix_timestamp(), 'Use /update to find what was added!');
+
+ALTER TABLE player ADD COLUMN player_keywords TEXT NOT NULL DEFAULT '';
+ALTER TABLE player ADD COLUMN player_ignore TEXT NOT NULL DEFAULT '';
+
+INSERT INTO `version` (`version_number`, `version_string`) VALUES
+('1.1.0', 'Added ignore command::Many bug fixes::Plenty of staff-only feature changes::Tweaked head dropping');
+
+CREATE TABLE player_badge (
+    badge_id INT UNSIGNED AUTO_INCREMENT,
+    player_id INT UNSIGNED NOT NULL,
+    badge_name VARCHAR (255) NOT NULL,
+    badge_level INT UNSIGNED NOT NULL DEFAULT 0,
+    badge_timestamp INT UNSIGNED NOT NULL,
+    PRIMARY KEY (badge_id),
+    UNIQUE badge_idx (player_id, badge_name)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+ALTER TABLE zone ADD COLUMN zone_flags INT UNSIGNED DEFAULT 0;
+ALTER TABLE zone_lot ADD COLUMN lot_flags INT UNSIGNED DEFAULT 3;
