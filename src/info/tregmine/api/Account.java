@@ -12,7 +12,7 @@ public class Account
     private Bank bank;
     private int id;
     private String player;
-    private long amount;
+    private long balance;
 
     public Account(){}
     
@@ -25,6 +25,6 @@ public class Account
     public String getPlayer(){ return player; }
     public void setPlayer(String player){ this.player = player; }
     
-    public long getAmount(){ return amount; }
-    public void setAmount(long amount){ this.amount = amount; }
+    public long getBalance(){ return balance; }
+    public void setBalance(long balance){ this.balance = balance; }
 }
