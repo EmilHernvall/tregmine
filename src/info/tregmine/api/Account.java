@@ -10,6 +10,7 @@ public class Account
 {
     
     private Bank bank;
+    private int id;
     private String player;
     private long amount;
 
@@ -17,6 +18,9 @@ public class Account
     
     public Bank getBank(){ return bank; }
     public void setBank(Bank bank){ this.bank = bank; }
+    
+    public int getId(){ return id; }
+    public void setId(int id){ this.id = id; }
     
     public String getPlayer(){ return player; }
     public void setPlayer(String player){ this.player = player; }
