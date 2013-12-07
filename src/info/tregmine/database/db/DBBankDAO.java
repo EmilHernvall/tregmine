@@ -39,7 +39,7 @@ public class DBBankDAO implements IBankDAO
                 bank = new Bank(name);
                 bank.setId(rs.getInt("bank_id"));
                 bank.setAccounts(this.getAccounts(bank));
-                //TODO: Use lots to set bank rect
+                bank.setLotId(rs.getInt("lot_id"));
                 
                 return bank;
             }
@@ -51,11 +51,25 @@ public class DBBankDAO implements IBankDAO
     }
 
     @Override
-    public Bank createBank(Bank bank)
+    public int createBank(Bank bank)
     throws DAOException
     {
-        String sql = "INSERT INTO banks (bank_id, bank_name) VALUES (?,?)";
-        return null;
+        String sql = "INSERT INTO banks (bank_name, lot_id) VALUES (?, ?)";
+        try(PreparedStatement stm = conn.prepareStatement(sql)){
+            stm.setString(1, bank.getName());
+            stm.setInt(2, bank.getLotId());
+            stm.execute();
+            
+            try(ResultSet rs = stm.getResultSet()){
+                if(!rs.next()){
+                    return 0;
+                }
+                return rs.getInt("bank_id");
+            }
+            
+        }catch(SQLException e){
+            throw new DAOException(sql, e);
+        }
     }
 
     @Override
@@ -68,16 +82,17 @@ public class DBBankDAO implements IBankDAO
             stm.setString(1, bank.getName());
             stm.execute();
             
-            ResultSet rs = stm.getResultSet();
+            try(ResultSet rs = stm.getResultSet()){
             
-            while(rs.next()){
-                Account acct = new Account();
-                acct.setBank(bank);
-                acct.setPlayer(rs.getString("player_name"));
-                acct.setAmount(rs.getLong("account_balance"));
-                accounts.add(acct);
+                while(rs.next()){
+                    Account acct = new Account();
+                    acct.setBank(bank);
+                    acct.setPlayer(rs.getString("player_name"));
+                    acct.setAmount(rs.getLong("account_balance"));
+                    accounts.add(acct);
+                }
+            
             }
-            
             return accounts;
             
         }catch(SQLException e){
@@ -90,6 +105,23 @@ public class DBBankDAO implements IBankDAO
     throws DAOException
     {
         String sql = "SELECT * FROM bank_accounts WHERE bank_name = ? AND player_name = ?";
+        Account acct = null;
+        try(PreparedStatement stm = conn.prepareStatement(sql)){
+            stm.setInt(1, bank.getId());
+            stm.setString(2, player);
+            stm.execute();
+            
+            ResultSet rs = stm.getResultSet();
+            if(rs.next()){
+                acct = new Account();
+                acct.setBank(bank);
+                acct.setPlayer(player);
+                acct.setAmount(rs.getLong("account_balance"));
+                return acct;
+            }
+        }catch(SQLException e){
+            throw new DAOException(sql, e);
+        }
         return null;
     }
 
