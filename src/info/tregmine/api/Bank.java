@@ -1,7 +1,5 @@
 package info.tregmine.api;
 
-import info.tregmine.quadtree.Rectangle;
-
 import java.util.List;
 
 import com.google.common.collect.Lists;
@@ -18,7 +16,7 @@ public class Bank
     private int id;
     
     private List<Account> accounts;
-    private Rectangle rect;
+    private int lot_id;
     
     public Bank(String name)
     {
@@ -44,7 +42,6 @@ public class Bank
     public List<Account> getAccounts(){ return accounts; }
     public void setAccounts(List<Account> accounts){ this.accounts = accounts; }
     
-    public Rectangle getRect(){ return rect; }
-    public void setRect(Rectangle rect){ this.rect = rect; }
-    
+    public int getLotId(){ return lot_id; }
+    public void setLotId(int id){ this.lot_id = id; }
 }
