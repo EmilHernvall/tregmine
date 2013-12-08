@@ -123,14 +123,15 @@ public class DBBankDAO implements IBankDAO
             stm.setInt(1, bank.getId());
             stm.setString(2, player);
             stm.execute();
-
-            ResultSet rs = stm.getResultSet();
-            if (rs.next()) {
-                acct = new Account();
-                acct.setBank(bank);
-                acct.setPlayer(player);
-                acct.setBalance(rs.getLong("account_balance"));
-                return acct;
+            
+            try(ResultSet rs = stm.getResultSet()){
+                if (rs.next()) {
+                    acct = new Account();
+                    acct.setBank(bank);
+                    acct.setPlayer(player);
+                    acct.setBalance(rs.getLong("account_balance"));
+                    return acct;
+                }
             }
         } catch (SQLException e) {
             throw new DAOException(sql, e);
