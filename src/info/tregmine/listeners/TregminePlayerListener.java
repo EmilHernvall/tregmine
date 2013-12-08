@@ -15,6 +15,7 @@ import java.util.Queue;
 import info.tregmine.quadtree.Point;
 import info.tregmine.zones.Lot;
 import info.tregmine.zones.ZoneWorld;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -29,6 +30,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.event.player.PlayerLoginEvent.Result;
@@ -49,6 +51,7 @@ import info.tregmine.api.TregminePlayer;
 import info.tregmine.api.Rank;
 import info.tregmine.api.PlayerBannedException;
 import info.tregmine.api.lore.Created;
+import info.tregmine.api.math.MathUtil;
 import info.tregmine.api.util.ScoreboardClearTask;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
@@ -530,6 +533,18 @@ public class TregminePlayerListener implements Listener
             event.getPlayer().kickPlayer("error loading profile!");
         }
     }
+    
+    /*@EventHandler
+    public void onDeath(PlayerDeathEvent event)
+    {
+        TregminePlayer player = plugin.getPlayer(event.getEntity());
+        try(IContext ctx = plugin.createContext()){
+            IWalletDAO dao = ctx.getWalletDAO();
+            dao.take(player, MathUtil.percentOf(dao.balance(player), 5));
+        } catch (DAOException e) {
+            e.printStackTrace();
+        }
+    }*/
 
 	@EventHandler
 	public void onPlayerFlight(PlayerToggleFlightEvent event)
