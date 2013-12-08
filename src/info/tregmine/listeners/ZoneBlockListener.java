@@ -2,7 +2,7 @@ package info.tregmine.listeners;
 
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
-import info.tregmine.api.math.Distance;
+import info.tregmine.api.math.MathUtil;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;

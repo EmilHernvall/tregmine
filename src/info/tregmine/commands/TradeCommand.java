@@ -28,7 +28,7 @@ import info.tregmine.database.IWalletDAO;
 import info.tregmine.database.ITradeDAO;
 import info.tregmine.database.IEnchantmentDAO;
 import info.tregmine.listeners.ExpListener;
-import info.tregmine.api.math.Distance;
+import info.tregmine.api.math.MathUtil;
 
 public class TradeCommand extends AbstractCommand implements Listener
 {
@@ -90,7 +90,7 @@ public class TradeCommand extends AbstractCommand implements Listener
             return true;
         }
 
-        double distance = Distance.calc2d(player.getLocation(), target.getLocation());
+        double distance = MathUtil.calcDistance2d(player.getLocation(), target.getLocation());
 
         if (!target.hasFlag(TregminePlayer.Flags.INVISIBLE) && 
                 (distance > player.getRank().getTradeDistance(player))) {
