@@ -48,6 +48,9 @@ commands:
   channel:
     description: Change to the specified channel
     usage: /channel channel_name
+  channelview:
+    description: View all channels whilst in one channel (admins)
+    usage: /channelview <on/off>
   clean:
     description: Clean your inventory
     usage: /clean
