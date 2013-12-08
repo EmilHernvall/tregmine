@@ -581,6 +581,14 @@ public enum Rank
             return 100;
         }
     }
+    
+    public boolean canEditBanks()
+    {
+        return (this == JUNIOR_ADMIN ||
+                this == SENIOR_ADMIN
+                /* || this == CODER */ ); //Possibly? :P
+                
+    }
 
     public ChatColor getColor()
     {
