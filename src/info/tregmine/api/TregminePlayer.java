@@ -29,7 +29,7 @@ public class TregminePlayer extends PlayerDelegate
     };
 
     public enum ChatState {
-        SETUP, CHAT, TRADE, SELL, FISHY_SETUP, FISHY_WITHDRAW, FISHY_BUY;
+        SETUP, CHAT, TRADE, SELL, FISHY_SETUP, FISHY_WITHDRAW, FISHY_BUY, BANK;
     };
 
     // Flags are stored as integers - order must _NOT_ be changed
