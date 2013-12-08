@@ -77,7 +77,8 @@ public class ChatListener implements Listener
                 }
             }
 
-            if (sender.getChatChannel().equalsIgnoreCase(to.getChatChannel())) {
+            if (sender.getChatChannel().equalsIgnoreCase(to.getChatChannel()) ||
+                    to.hasFlag(TregminePlayer.Flags.CHANNEL_VIEW)) {
                 if ("GLOBAL".equalsIgnoreCase(sender.getChatChannel())) {
                     to.sendMessage("<" + sender.getChatName()
                             + ChatColor.WHITE + "> " + txtColor + text);
