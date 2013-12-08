@@ -15,6 +15,7 @@ public interface IBankDAO
     public List<Account> getAccounts(Bank bank) throws DAOException;
     public Account getAccount(Bank bank, String player) throws DAOException;
     
+    public void createAccount(Bank bank, String player, long amount) throws DAOException;
     public void deposit(Bank bank, Account acct, long amount) throws DAOException;
     public boolean withdraw(Bank bank, Account acct, long amount) throws DAOException;
     
