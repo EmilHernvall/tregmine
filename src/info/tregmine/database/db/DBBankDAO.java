@@ -138,6 +138,20 @@ public class DBBankDAO implements IBankDAO
         }
         return null;
     }
+    
+    public void createAccount(Bank bank, String player, long amount)
+    throws DAOException
+    {
+        String sql = "INSERT INTO bank_accounts (bank_name, player_name, account_balance) VALUES (?,?,?)";
+        try(PreparedStatement stm = conn.prepareStatement(sql)){
+            stm.setString(1, bank.getName());
+            stm.setString(2, player);
+            stm.setLong(3, amount);
+            stm.execute();
+        }catch(SQLException e){
+            throw new DAOException(sql, e);
+        }
+    }
 
     @Override
     public void deposit(Bank bank, Account acct, long amount)
