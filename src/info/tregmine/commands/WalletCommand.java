@@ -10,7 +10,7 @@ import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
 import info.tregmine.database.IWalletDAO;
 import info.tregmine.api.TregminePlayer;
-import info.tregmine.api.math.Distance;
+import info.tregmine.api.math.MathUtil;
 
 public class WalletCommand extends AbstractCommand
 {
@@ -74,7 +74,7 @@ public class WalletCommand extends AbstractCommand
     private boolean donate(TregminePlayer player, TregminePlayer target,
             int amount)
     {
-        if (Distance.calc2d(player.getLocation(), target.getLocation()) > 5) {
+        if (MathUtil.calcDistance2d(player.getLocation(), target.getLocation()) > 5) {
             if (player.canSee(target.getDelegate())) {
                 player.sendMessage(RED
                         + target.getName()
@@ -115,7 +115,7 @@ public class WalletCommand extends AbstractCommand
     private boolean give(TregminePlayer player, TregminePlayer target,
             int amount)
     {
-        if (Distance.calc2d(player.getLocation(), target.getLocation()) > 5) {
+        if (MathUtil.calcDistance2d(player.getLocation(), target.getLocation()) > 5) {
             if (player.canSee(target.getDelegate())) {
                 player.sendMessage(RED
                         + target.getName()
