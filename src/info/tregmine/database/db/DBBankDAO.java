@@ -70,6 +70,19 @@ public class DBBankDAO implements IBankDAO
             throw new DAOException(sql, e);
         }
     }
+    
+    public void deleteBank(Bank bank)
+    throws DAOException
+    {
+        String sql = "DELETE FROM banks WHERE bank_id = ?";
+        
+        try(PreparedStatement stm = conn.prepareStatement(sql)){
+            stm.setInt(1, bank.getId());
+            stm.execute();
+        }catch(SQLException e){
+            throw new DAOException(sql, e);
+        }
+    }
 
     @Override
     public List<Account> getAccounts(Bank bank)
