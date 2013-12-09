@@ -1,6 +1,7 @@
 package info.tregmine.listeners;
 
 import info.tregmine.Tregmine;
+import info.tregmine.api.Account;
 import info.tregmine.api.Bank;
 import info.tregmine.api.TregminePlayer;
 import info.tregmine.api.TregminePlayer.ChatState;
@@ -45,11 +46,11 @@ public class BankListener implements Listener
         if(!lot.hasFlag(Flags.BANK))return;
         String[] args = event.getMessage().split(" ");
         if(args[0].equalsIgnoreCase("help")){
-            player.sendMessage(ChatColor.RED + "Type \"exit\" to go back to chat");
-            player.sendMessage(ChatColor.GREEN + "Type \"withdraw x\" to withdraw x from your account");
-            player.sendMessage(ChatColor.GREEN + "Type \"deposit x\" to deposit x into your account, \n"
+            player.sendMessage(ChatColor.RED + "[BANK] "+ "Type \"exit\" to go back to chat");
+            player.sendMessage(ChatColor.GREEN + "[BANK] " + "Type \"withdraw x\" to withdraw x from your account");
+            player.sendMessage(ChatColor.GREEN + "[BANK] " + "Type \"deposit x\" to deposit x into your account, \n"
                     + "if you do not have an account, a new one will be created.");
-            player.sendMessage(ChatColor.GREEN + "Type \"balance\" to check your current balance");
+            player.sendMessage(ChatColor.GREEN + "[BANK] " + "Type \"balance\" to check your current balance");
             return;
         }
         
@@ -69,15 +70,15 @@ public class BankListener implements Listener
                     try{
                         long amount = Long.parseLong(args[1]);
                         if(dao.withdraw(bank, dao.getAccount(bank, player.getName()), amount)){
-                            player.sendMessage(ChatColor.AQUA + "You withdrew " + ChatColor.GOLD + 
-                                    amount + ChatColor.AQUA + " tregs from your bank.");
-                            player.sendMessage(ChatColor.AQUA + "You now have " + ChatColor.GOLD + 
+                            player.sendMessage(ChatColor.AQUA + "[BANK] " + "You withdrew " + ChatColor.GOLD + 
+                                    amount + ChatColor.AQUA + "[BANK] " + " tregs from your bank.");
+                            player.sendMessage(ChatColor.AQUA + "[BANK] " + "You now have " + ChatColor.GOLD + 
                                     + dao.getAccount(bank, player.getName()).getBalance() + " tregs in your bank");
                         }else{
-                            player.sendMessage(ChatColor.RED + "You do not have that much money in your bank");
+                            player.sendMessage(ChatColor.RED + "[BANK] " + "You do not have that much money in your bank");
                         }
                     }catch(NumberFormatException e){
-                        player.sendMessage(ChatColor.RED + args[1] + " is not a number");
+                        player.sendMessage(ChatColor.RED + "[BANK] " + args[1] + " is not a number");
                     }
                 }
                 return;
@@ -89,26 +90,29 @@ public class BankListener implements Listener
                         long amount = Long.parseLong(args[1]);
                         if(wDao.take(player, amount)){
                             if(dao.getAccount(bank, player.getName()) == null){
-                                dao.createAccount(bank, player.getName(), amount);
-                                player.sendMessage(ChatColor.AQUA + "You created a new account with a balance of"
+                                Account acct = new Account();
+                                acct.setBank(bank);
+                                acct.setPlayer(player.getName());
+                                dao.createAccount(acct, player.getName(), amount);
+                                player.sendMessage(ChatColor.AQUA + "[BANK] " + "You created a new account with a balance of"
                                         + ChatColor.GOLD + amount + ChatColor.AQUA + " tregs");
                             }else{
                                 dao.deposit(bank, dao.getAccount(bank, player.getName()), amount);
-                                player.sendMessage(ChatColor.AQUA + "You deposited " + ChatColor.GOLD + amount
+                                player.sendMessage(ChatColor.AQUA + "[BANK] " + "You deposited " + ChatColor.GOLD + amount
                                         + ChatColor.AQUA + " tregs into your account");
                             }
                         }else{
-                            player.sendMessage(ChatColor.RED + "You do not have enough money to deposit that much.");
+                            player.sendMessage(ChatColor.RED + "[BANK] " + "You do not have enough money to deposit that much.");
                         }
                     }catch(NumberFormatException e){
-                        player.sendMessage(ChatColor.RED + args[1] + " is not a number");
+                        player.sendMessage(ChatColor.RED + "[BANK] " + args[1] + " is not a number");
                     }
                 }
                 return;
             }
             
             if(args[0].equalsIgnoreCase("balance")){
-                player.sendMessage(ChatColor.AQUA + "Your account balance is " + ChatColor.GOLD +
+                player.sendMessage(ChatColor.AQUA + "[BANK] " + "Your account balance is " + ChatColor.GOLD +
                         dao.getAccount(bank, player.getName()).getBalance() + ChatColor.AQUA + " tregs");
                 return;
             }
@@ -135,7 +139,7 @@ public class BankListener implements Listener
                 player.setChatState(ChatState.CHAT);
             }else{
                 player.setChatState(ChatState.BANK);
-                player.sendMessage(ChatColor.GREEN + "You are now banking, type \"help\" for help");
+                player.sendMessage(ChatColor.GREEN + "[BANK] " + "You are now banking, type \"help\" for help");
             }
         }
     }
