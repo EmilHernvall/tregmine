@@ -70,6 +70,7 @@ public class BankListener implements Listener
                     try{
                         long amount = Long.parseLong(args[1]);
                         if(dao.withdraw(bank, dao.getAccount(bank, player.getName()), amount)){
+                            wDao.add(player, amount);
                             player.sendMessage(ChatColor.AQUA + "[BANK] " + "You withdrew " + ChatColor.GOLD + 
                                     amount + ChatColor.AQUA + "[BANK] " + " tregs from your bank.");
                             player.sendMessage(ChatColor.AQUA + "[BANK] " + "You now have " + ChatColor.GOLD + 
