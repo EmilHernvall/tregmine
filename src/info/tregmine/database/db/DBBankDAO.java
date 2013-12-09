@@ -101,6 +101,7 @@ public class DBBankDAO implements IBankDAO
                     acct.setBank(bank);
                     acct.setPlayer(rs.getString("player_name"));
                     acct.setBalance(rs.getLong("account_balance"));
+                    acct.setAccountNumber(rs.getInt("account_number"));
                     accounts.add(acct);
                 }
 
@@ -130,6 +131,7 @@ public class DBBankDAO implements IBankDAO
                     acct.setBank(bank);
                     acct.setPlayer(player);
                     acct.setBalance(rs.getLong("account_balance"));
+                    acct.setAccountNumber(rs.getInt("account_number"));
                     return acct;
                 }
             }
@@ -139,14 +141,15 @@ public class DBBankDAO implements IBankDAO
         return null;
     }
     
-    public void createAccount(Bank bank, String player, long amount)
+    public void createAccount(Account acct, String player, long amount)
     throws DAOException
     {
-        String sql = "INSERT INTO bank_accounts (bank_name, player_name, account_balance) VALUES (?,?,?)";
+        String sql = "INSERT INTO bank_accounts (bank_name, player_name, account_balance, account_number) VALUES (?,?,?,?)";
         try(PreparedStatement stm = conn.prepareStatement(sql)){
-            stm.setString(1, bank.getName());
+            stm.setString(1, acct.getBank().getName());
             stm.setString(2, player);
             stm.setLong(3, amount);
+            stm.setInt(4, acct.getAccountNumber());
             stm.execute();
         }catch(SQLException e){
             throw new DAOException(sql, e);
