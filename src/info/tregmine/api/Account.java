@@ -1,5 +1,7 @@
 package info.tregmine.api;
 
+import java.util.Random;
+
 /**
  * Represents a bank account holding information as to
  * how much a player currently has in a certain bank.
@@ -13,8 +15,22 @@ public class Account
     private int id;
     private String player;
     private long balance;
+    
+    private int account_number;
 
-    public Account(){}
+    public Account()
+    {
+        Random r = new Random(9);
+        StringBuilder sb = new StringBuilder();
+        for(int i = 0; i < 12; i++){
+            sb.append(r.nextInt());
+        }
+        try{
+            account_number = Integer.parseInt(sb.toString().trim());
+        }catch(NumberFormatException e){
+            
+        }
+    }
     
     public Bank getBank(){ return bank; }
     public void setBank(Bank bank){ this.bank = bank; }
@@ -27,4 +43,7 @@ public class Account
     
     public long getBalance(){ return balance; }
     public void setBalance(long balance){ this.balance = balance; }
+
+    public int getAccountNumber(){ return account_number; }
+    public void setAccountNumber(int account_number) { this.account_number = account_number; }
 }
