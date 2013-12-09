@@ -19,7 +19,12 @@ import info.tregmine.web.*;
 
 public class WebServer implements Runnable
 {
-    public static class ChatMessage
+    public static interface ChatAction
+    {
+        public void execute(ChatHandler handler);
+    }
+
+    public static class ChatMessage implements ChatAction
     {
         private TregminePlayer sender;
         private String channel;
@@ -35,6 +40,36 @@ public class WebServer implements Runnable
         public TregminePlayer getSender() { return sender; }
         public String getChannel() { return channel; }
         public String getText() { return text; }
+
+        @Override
+        public void execute(ChatHandler handler)
+        {
+            handler.broadcastToWeb(sender,
+                                   channel,
+                                   text);
+        }
+    }
+
+    public static class KickAction implements ChatAction
+    {
+        private TregminePlayer sender;
+        private TregminePlayer victim;
+        private String message;
+
+        public KickAction(TregminePlayer sender,
+                          TregminePlayer victim,
+                          String message)
+        {
+            this.sender = sender;
+            this.victim = victim;
+            this.message = message;
+        }
+
+        @Override
+        public void execute(ChatHandler handler)
+        {
+            handler.kickPlayer(sender, victim, message);
+        }
     }
 
     private static class DummyLogger implements org.eclipse.jetty.util.log.Logger
@@ -90,7 +125,7 @@ public class WebServer implements Runnable
     private ChatHandler chatHandler;
 
     private Map<String, TregminePlayer> authTokens;
-    private BlockingQueue<ChatMessage> messageQueue;
+    private BlockingQueue<ChatAction> messageQueue;
 
     private Thread thread = null;
     private boolean running = true;
@@ -162,7 +197,12 @@ public class WebServer implements Runnable
         return webHandler;
     }
 
-    public void sendChatMessage(ChatMessage msg)
+    public boolean isPlayerOnWeb(TregminePlayer player)
+    {
+        return chatHandler.isOnline(player);
+    }
+
+    public void executeChatAction(ChatAction msg)
     {
         messageQueue.offer(msg);
     }
@@ -184,12 +224,13 @@ public class WebServer implements Runnable
 
         while (running) {
             try {
-                ChatMessage msg = messageQueue.take();
-                chatHandler.broadcastToWeb(msg.getSender(),
-                                           msg.getChannel(),
-                                           msg.getText());
+                ChatAction msg = messageQueue.take();
+                msg.execute(chatHandler);
             }
             catch (InterruptedException e) {
+            }
+            catch (Exception e) {
+                Tregmine.LOGGER.log(Level.WARNING, "Exception in WebServer message loop.", e);
             }
         }
 

@@ -241,3 +241,6 @@ commands:
   hide:
     description: Hide logon message
     usage: /hide
+  webkick:
+    description: Kick <player> from web chat for 10 minutes
+    usage: /webkick <player> <message>

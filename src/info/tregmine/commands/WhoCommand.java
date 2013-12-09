@@ -100,11 +100,32 @@ public class WhoCommand extends AbstractCommand
         return true;
     }
 
+    private String padString(String str, int len)
+    {
+        int diff = len - (str.length() + 2);
+        if (diff % 2 == 1) {
+            str = " " + str + "  ";
+            diff--;
+        } else {
+            str = " " + str + " ";
+        }
+
+        int side = diff/2;
+        StringBuilder buf = new StringBuilder();
+        for (int i = 0; i < side; i++) {
+            buf.append("*");
+        }
+
+        return DARK_GRAY + buf.toString() + str + DARK_GRAY + buf.toString();
+    }
+
     private boolean who(TregminePlayer player)
     {
         StringBuilder sb = new StringBuilder();
         String delim = "";
-        for (TregminePlayer online : tregmine.getOnlinePlayers()) {
+
+        List<TregminePlayer> players = tregmine.getOnlinePlayers();
+        for (TregminePlayer online : players) {
             if (online.hasFlag(TregminePlayer.Flags.INVISIBLE)){
                 continue;
             }
@@ -114,11 +135,10 @@ public class WhoCommand extends AbstractCommand
         }
         String playerList = sb.toString();
 
-        player.sendMessage(DARK_GRAY + "******************** " + DARK_PURPLE +
-                           "Player List" + DARK_GRAY + " ********************");
+        player.sendMessage(padString(DARK_PURPLE + "Player List", 55));
         player.sendMessage(playerList);
-        player.sendMessage(DARK_GRAY + "***********************************" +
-                           "******************");
+        player.sendMessage(padString(DARK_PURPLE +
+                    Integer.toString(players.size()) + " players online", 55));
         return true;
     }
 

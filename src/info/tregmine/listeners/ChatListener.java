@@ -34,68 +34,67 @@ public class ChatListener implements Listener
 
         String channel = sender.getChatChannel();
 
-        for (TregminePlayer to : plugin.getOnlinePlayers()) {
-            if (to.getChatState() == TregminePlayer.ChatState.SETUP) {
-                continue;
-            }
-            
-            boolean ignored;
-            try (IContext ctx = plugin.createContext()) {
-                IPlayerDAO playerDAO = ctx.getPlayerDAO();
-                ignored = playerDAO.doesIgnore(to, sender);
-            } catch (DAOException e) {
-                throw new RuntimeException(e);
-            }
-            if (sender.getRank().canNotBeIgnored()) ignored = false;
-            if (ignored == true) continue;
-
-            ChatColor txtColor = ChatColor.WHITE;
-            if (sender.equals(to)) {
-                txtColor = ChatColor.GRAY;
-            }
-
-            String text = event.getMessage();
-            for (TregminePlayer online : plugin.getOnlinePlayers()) {
-                if (text.contains(online.getName()) && !online.hasFlag(TregminePlayer.Flags.INVISIBLE)){
-                    text = text.replaceAll(online.getName(), online.getChatName() + txtColor);
+        try (IContext ctx = plugin.createContext()) {
+            IPlayerDAO playerDAO = ctx.getPlayerDAO();
+            for (TregminePlayer to : plugin.getOnlinePlayers()) {
+                if (to.getChatState() == TregminePlayer.ChatState.SETUP) {
+                    continue;
                 }
-            }
 
-            List<String> player_keywords;
-            try (IContext ctx = plugin.createContext()) {
-                IPlayerDAO playerDAO = ctx.getPlayerDAO();
-                player_keywords = playerDAO.getKeywords(to);
-            } catch (DAOException e) {
-                throw new RuntimeException(e);
-            }
-
-            if (player_keywords.size() > 0 && player_keywords != null) {
-                for( String keyword : player_keywords ){
-                    if (text.toLowerCase().contains(keyword.toLowerCase())) {
-                        text = text.replaceAll(keyword, ChatColor.AQUA + keyword + txtColor);
+                if (!sender.getRank().canNotBeIgnored()) {
+                    if (playerDAO.doesIgnore(to, sender)) {
+                        continue;
                     }
                 }
-            }
 
-            if (sender.getChatChannel().equalsIgnoreCase(to.getChatChannel())) {
-                if ("GLOBAL".equalsIgnoreCase(sender.getChatChannel())) {
-                    to.sendMessage("<" + sender.getChatName()
-                            + ChatColor.WHITE + "> " + txtColor + text);
+                ChatColor txtColor = ChatColor.WHITE;
+                if (sender.equals(to)) {
+                    txtColor = ChatColor.GRAY;
                 }
-                else {
-                    to.sendMessage(channel + " <" + sender.getChatName()
-                            + ChatColor.WHITE + "> " + txtColor + text);
+
+                String text = event.getMessage();
+                for (TregminePlayer online : plugin.getOnlinePlayers()) {
+                    if (text.contains(online.getName()) &&
+                        !online.hasFlag(TregminePlayer.Flags.INVISIBLE)) {
+
+                        text = text.replaceAll(online.getName(),
+                                               online.getChatName() + txtColor);
+                    }
+                }
+
+                List<String> player_keywords = playerDAO.getKeywords(to);
+
+                if (player_keywords.size() > 0 && player_keywords != null) {
+                    for( String keyword : player_keywords ){
+                        if (text.toLowerCase().contains(keyword.toLowerCase())) {
+                            text = text.replaceAll(keyword,
+                                    ChatColor.AQUA + keyword + txtColor);
+                        }
+                    }
+                }
+
+                if (sender.getChatChannel().equalsIgnoreCase(to.getChatChannel())) {
+                    if ("GLOBAL".equalsIgnoreCase(sender.getChatChannel())) {
+                        to.sendMessage("<" + sender.getChatName()
+                                + ChatColor.WHITE + "> " + txtColor + text);
+                    }
+                    else {
+                        to.sendMessage(channel + " <" + sender.getChatName()
+                                + ChatColor.WHITE + "> " + txtColor + text);
+                    }
+                }
+
+                if (text.contains(to.getName()) &&
+                    "GLOBAL".equalsIgnoreCase(sender.getChatChannel()) &&
+                    !("GLOBAL".equalsIgnoreCase(to.getChatChannel()))) {
+
+                    to.sendMessage(ChatColor.BLUE +
+                        "You were mentioned in GLOBAL by " + sender.getNameColor() +
+                        sender.getChatName());
                 }
             }
-
-            if (text.contains(to.getName()) &&
-                "GLOBAL".equalsIgnoreCase(sender.getChatChannel()) &&
-                !("GLOBAL".equalsIgnoreCase(to.getChatChannel()))) {
-
-                to.sendMessage(ChatColor.BLUE +
-                    "You were mentioned in GLOBAL by " + sender.getNameColor() +
-                    sender.getChatName());
-            }
+        } catch (DAOException e) {
+            throw new RuntimeException(e);
         }
 
         Tregmine.LOGGER.info(channel + " <" + sender.getName() + "> " +
@@ -111,8 +110,8 @@ public class ChatListener implements Listener
         event.setCancelled(true);
 
         WebServer server = plugin.getWebServer();
-        server.sendChatMessage(new WebServer.ChatMessage(sender,
-                                                         channel,
-                                                         event.getMessage()));
+        server.executeChatAction(new WebServer.ChatMessage(sender,
+                                                           channel,
+                                                           event.getMessage()));
     }
 }
