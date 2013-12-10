@@ -42,7 +42,7 @@ public class TabListener implements Listener//, TabCompleter
         List<String> nonOps = new ArrayList<String>();
         List<String> result = new ArrayList<String>();
 
-        for (Player player : Bukkit.getOnlinePlayers ()) {
+        for (TregminePlayer player : plugin.getOnlinePlayers()) {
             if (!player.hasFlag(TregminePlayer.Flags.INVISIBLE)) {
                 nonOps.add(player.getName());
             }
