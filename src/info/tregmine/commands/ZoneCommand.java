@@ -151,6 +151,14 @@ public class ZoneCommand extends AbstractCommand
             }
             return;
         }
+        
+        if (flag == Zone.Flags.ADMIN_ONLY &&
+            (player.getRank() != Rank.JUNIOR_ADMIN ||
+            player.getRank() != Rank.SENIOR_ADMIN)) {
+                
+            player.sendMessage(RED + "This flag is only for administrators!");
+            return;
+        }
 
         boolean value = Boolean.valueOf(args[3]);
 
