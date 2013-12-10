@@ -10,6 +10,7 @@ import java.util.logging.Logger;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.server.handler.ContextHandler;
+import org.eclipse.jetty.server.ServerConnector;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.PluginManager;
@@ -174,7 +175,14 @@ public class WebServer implements Runnable
             org.eclipse.jetty.util.log.Log.setLog(new DummyLogger());
 
             // Start server at apiPort
-            webServer = new Server(apiPort);
+            webServer = new Server();
+
+            ServerConnector connector = new ServerConnector(webServer);
+            connector.setPort(apiPort);
+            connector.setReuseAddress(true);
+            connector.setSoLingerTime(-1);
+            webServer.addConnector(connector);
+
             webServer.setHandler(handlers);
         }
         catch (Exception e) {

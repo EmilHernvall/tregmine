@@ -27,17 +27,16 @@ public class ZoneBlockListener implements Listener
     {
         TregminePlayer player = plugin.getPlayer(event.getPlayer());
 
-        
         Location location = event.getBlock().getLocation();
         if (player.hasBlockPermission(location, true)) return;
-        
+
         /*if (!player.getRank().canBuild() &&
                 player.getMentor() != null) {
-            
+
                 TregminePlayer mentor = player.getMentor();
                 Location a = player.getLocation();
                 Location b = mentor.getLocation();
-                
+
                 if (Distance.calc2d(a, b) > 50) {
                     player.sendMessage(ChatColor.YELLOW + "You have to stay within " +
                             "a 50 block radius of your mentor in order to build.");
@@ -60,16 +59,16 @@ public class ZoneBlockListener implements Listener
         TregminePlayer player = plugin.getPlayer(event.getPlayer());
 
         Location location = event.getBlock().getLocation();
-        
+
         if (player.hasBlockPermission(location, true)) return;
 
         /*if (!player.getRank().canBuild() &&
                 player.getMentor() != null) {
-            
+
                 TregminePlayer mentor = player.getMentor();
                 Location a = player.getLocation();
                 Location b = mentor.getLocation();
-                
+
                 if (Distance.calc2d(a, b) > 50) {
                     player.sendMessage(ChatColor.YELLOW + "You have to stay within " +
                             "a 50 block radius of your mentor in order to build.");

@@ -270,13 +270,13 @@ public class TregminePlayer extends PlayerDelegate
     {
         Point pos = new Point(this.getLocation().getBlockX(), this.getLocation().getBlockZ());
         Zone localZone = this.getCurrentZone();
-        
+
         if (localZone == null || !localZone.contains(pos)) {
                 ZoneWorld world = plugin.getWorld(this.getLocation().getWorld());
                 localZone = world.findZone(pos);
                 this.setCurrentZone(localZone);
         }
-        
+
         return currentZone;
     }
 
@@ -449,7 +449,7 @@ public class TregminePlayer extends PlayerDelegate
             }
             return false;
         }
-        
+
         if (this.getRank() == Rank.TOURIST) {
             return false;
             // Don't punish as that's just cruel ;p
@@ -497,7 +497,7 @@ public class TregminePlayer extends PlayerDelegate
                 lot.isOwner(this)) { // If is lot owner
             return true;
         }
-        
+
         if (lot != null &&
                 lot.hasFlag(Lot.Flags.FREE_BUILD)) {
             return true;

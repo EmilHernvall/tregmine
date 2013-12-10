@@ -102,7 +102,7 @@ public class Zone
     public enum Flags {
         BLOCK_WARNED, // default false == 1
         ADMIN_ONLY, // default false == 2
-        BLOCK_RESIDENT; // default false == 4
+        REQUIRE_RESIDENCY; // default false == 4
     }
 
     private int id;

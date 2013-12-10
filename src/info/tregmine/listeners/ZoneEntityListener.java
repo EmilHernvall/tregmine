@@ -105,6 +105,7 @@ public class ZoneEntityListener implements Listener
 
         if (currentLot.hasFlag(Lot.Flags.PVP)) {
             event.setCancelled(false);
+            return;
         }
         else {
             event.setCancelled(true);

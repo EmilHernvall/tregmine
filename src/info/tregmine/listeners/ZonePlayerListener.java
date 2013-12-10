@@ -402,8 +402,10 @@ public class ZonePlayerListener implements Listener
                         movePlayerBack(player, movingFrom, movingTo);
                         return;
                     }
-                    else if (currentZone.hasFlag(Zone.Flags.BLOCK_RESIDENT) &&
-                             player.getRank() == Rank.RESIDENT) {
+                    else if (currentZone.hasFlag(Zone.Flags.REQUIRE_RESIDENCY) &&
+                             (player.getRank() == Rank.TOURIST ||
+                              player.getRank() == Rank.SETTLER ||
+                              player.getRank() == Rank.UNVERIFIED)) {
                         blockedMessage(currentZone, player);
                         movePlayerBack(player, movingFrom, movingTo);
                         return;

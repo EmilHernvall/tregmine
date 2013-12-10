@@ -105,11 +105,11 @@ public class LotCommand extends AbstractCommand
             }
             return;
         }
-        
+
         if (flag == Lot.Flags.PVP &&
-            (player.getRank() != Rank.JUNIOR_ADMIN ||
+            (player.getRank() != Rank.JUNIOR_ADMIN &&
              player.getRank() != Rank.SENIOR_ADMIN)) {
-                 
+
             player.sendMessage(RED + "This is an admin only flag, Please contact an admin!");
             return;
         }
