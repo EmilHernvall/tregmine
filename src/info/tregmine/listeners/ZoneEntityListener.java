@@ -81,10 +81,23 @@ public class ZoneEntityListener implements Listener
             Location location = player.getLocation();
             Point pos = new Point(location.getBlockX(), location.getBlockZ());
 
-            Zone currentZone = player.getCurrentZone();
-            if (currentZone == null || !currentZone.contains(pos)) {
-                currentZone = world.findZone(pos);
-                player.setCurrentZone(currentZone);
+            Zone currentZone = player.updateCurrentZone();
+            if (currentZone == null) {
+                event.setCancelled(true);
+                return;
+            }
+            
+            Lot currentLot = world.findLot(pos);
+            if (currentLot == null) {
+                event.setCanccelled(true);
+                return;
+            }
+            
+            if (currentLot.hasFlag(Lot.Flags.PVP)) {
+                event.setCancelled(false);
+            }
+            else {
+                event.setCancelled(true);
             }
 
             if (currentZone == null || !currentZone.isPvp()) {
@@ -115,17 +128,23 @@ public class ZoneEntityListener implements Listener
                 Location location = player.getLocation();
                 Point pos = new Point(location.getBlockX(), location.getBlockZ());
 
-                Zone currentZone = player.getCurrentZone();
-                if (currentZone == null || !currentZone.contains(pos)) {
-                    currentZone = world.findZone(pos);
-                    player.setCurrentZone(currentZone);
-                }
-
-                if (currentZone == null || !currentZone.isPvp()) {
+                Zone currentZone = player.updateCurrentZone();
+                if (currentZone == null) {
                     e.setCancelled(true);
+                    return;
+                }
+                
+                Lot currentLot = world.findLot(pos);
+                if (currentLot == null) {
+                    e.setCanccelled(true);
+                    return;
+                }
+                
+                if (currentLot.hasFlag(Lot.Flags.PVP)) {
+                    e.setCancelled(false);
                 }
                 else {
-                    e.setCancelled(false);
+                    e.setCancelled(true);
                 }
             }
         }
