@@ -138,7 +138,7 @@ public class FillCommand extends AbstractCommand
             if (mat != null && toMat == null) {
 
                 if (!player.isOp() &&
-						!mat.toItemStack().getType().isSolid()) {
+						!mat.toItemStack().getType().isBlock()) {
                     player.sendMessage(RED + "Disabled!");
                     return true;
                 }
@@ -168,7 +168,7 @@ public class FillCommand extends AbstractCommand
             if (mat != null && toMat != null) {
 
 				if (!player.isOp() &&
-						!mat.toItemStack().getType().isSolid()) {
+						!mat.toItemStack().getType().isBlock()) {
                     player.sendMessage(RED + "Disabled!");
                     return true;
 
