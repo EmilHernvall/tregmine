@@ -391,7 +391,20 @@ public class ZonePlayerListener implements Listener
                             (player.hasFlag(TregminePlayer.Flags.HARDWARNED) ||
                              player.hasFlag(TregminePlayer.Flags.SOFTWARNED))) {
                         blockedMessage(currentZone, player);
-                        player.teleport(player.getWorld().getSpawnLocation());
+                        movePlayerBack(player, movingFrom, movingTo);
+                        return;
+                    }
+                    else if (currentZone.hasFlag(Zone.Flags.ADMIN_ONLY) &&
+                            (player.getRank() != Rank.JUNIOR_ADMIN &&
+                             player.getRank() != Rank.SENIOR_ADMIN)) {
+                        blockedMessage(currentZone, player);
+                        movePlayerBack(player, movingFrom, movingTo);
+                        return;
+                    }
+                    else if (currentZone.hasFlag(Zone.Flags.BLOCK_RESIDENT) &&
+                             player.getRank() == Rank.RESIDENT) {
+                        blockedMessage(currentZone, player);
+                        movePlayerBack(player, movingFrom, movingTo);
                         return;
                     }
                 }

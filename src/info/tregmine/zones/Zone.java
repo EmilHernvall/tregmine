@@ -100,7 +100,9 @@ public class Zone
 
     // Flags are stored as integers - order must _NOT_ be changed
     public enum Flags {
-        BLOCK_WARNED;
+        BLOCK_WARNED, // default false == 1
+        ADMIN_ONLY, // default false == 2
+        BLOCK_RESIDENT; // default false == 4
     }
 
     private int id;
