@@ -89,6 +89,18 @@ public class ZoneWorld
     {
         return lotLookup.find(p);
     }
+    
+    public Zone findZone(Location location)
+    {
+        Point p = new Point(location.getBlockX(), location.getBlockZ());
+        return zonesLookup.find(p);
+    }
+    
+    public Zone findLot(Location location)
+    {
+        Point p = new Point(location.getBlockX(), location.getBlockZ());
+        return lotLookup.find(p);
+    }
 
     public void deleteZone(String name)
     {
