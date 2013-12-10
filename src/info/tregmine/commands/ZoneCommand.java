@@ -233,7 +233,8 @@ public class ZoneCommand extends AbstractCommand
 
         try (IContext ctx = tregmine.createContext()) {
             IZonesDAO dao = ctx.getZonesDAO();
-            dao.createZone(zone);
+            int zoneId = dao.createZone(zone);
+            zone.setId(zoneId);
             dao.addRectangle(zone.getId(), rect);
             dao.addUser(zone.getId(), player.getId(), Zone.Permission.Owner);
         } catch (DAOException e) {
