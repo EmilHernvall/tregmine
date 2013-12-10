@@ -11,6 +11,7 @@ import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
 import info.tregmine.database.IZonesDAO;
 import info.tregmine.api.TregminePlayer;
+import info.tregmine.api.Rank;
 import info.tregmine.zones.Zone;
 import static info.tregmine.zones.Zone.Permission;
 import info.tregmine.zones.ZoneWorld;
@@ -151,11 +152,11 @@ public class ZoneCommand extends AbstractCommand
             }
             return;
         }
-        
+
         if (flag == Zone.Flags.ADMIN_ONLY &&
             (player.getRank() != Rank.JUNIOR_ADMIN ||
             player.getRank() != Rank.SENIOR_ADMIN)) {
-                
+
             player.sendMessage(RED + "This flag is only for administrators!");
             return;
         }
