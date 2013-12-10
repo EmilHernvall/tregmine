@@ -83,7 +83,7 @@ public class MentorCommand extends AbstractCommand
                 if (!mentors.contains(player)) {
                     player.sendMessage(RED + "You are not part of the mentor queue. " +
                             "If you have already been assigned a student, you cannot " +
-                            "about the mentoring.");
+                            "abort the mentoring.");
                     return true;
                 }
                 mentors.remove(player);
