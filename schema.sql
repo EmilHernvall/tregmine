@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 5.1.66, for debian-linux-gnu (x86_64)
+-- MySQL dump 10.13  Distrib 5.5.34, for debian-linux-gnu (x86_64)
 --
--- Host: localhost    Database: tregmine1
+-- Host: localhost    Database: tregmine
 -- ------------------------------------------------------
--- Server version	5.1.66-0+squeeze1
+-- Server version	5.5.34-0ubuntu0.13.10.1
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -54,6 +54,20 @@ CREATE TABLE `donation` (
   `donation_message` text,
   PRIMARY KEY (`donation_id`),
   KEY `idx_player` (`player_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `enchantment`
+--
+
+DROP TABLE IF EXISTS `enchantment`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `enchantment` (
+  `enchantment_name` varchar(255) NOT NULL,
+  `enchantment_title` varchar(255) NOT NULL,
+  PRIMARY KEY (`enchantment_name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -280,9 +294,29 @@ CREATE TABLE `player` (
   `player_wallet` bigint(20) DEFAULT '50000',
   `player_rank` enum('unverified','tourist','settler','resident','donator','guardian','builder','coder','junior_admin','senior_admin') COLLATE utf8_swedish_ci DEFAULT 'unverified',
   `player_flags` int(10) unsigned DEFAULT NULL,
+  `player_keywords` text COLLATE utf8_swedish_ci NOT NULL,
+  `player_ignore` text COLLATE utf8_swedish_ci NOT NULL,
   PRIMARY KEY (`player_id`),
   UNIQUE KEY `name` (`player_name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `player_badge`
+--
+
+DROP TABLE IF EXISTS `player_badge`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `player_badge` (
+  `badge_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `player_id` int(10) unsigned NOT NULL,
+  `badge_name` varchar(255) NOT NULL,
+  `badge_level` int(10) unsigned NOT NULL DEFAULT '0',
+  `badge_timestamp` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`badge_id`),
+  UNIQUE KEY `badge_idx` (`player_id`,`badge_name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -497,7 +531,7 @@ CREATE TABLE `stats_blocks` (
   `world` varchar(16) NOT NULL DEFAULT 'world',
   KEY `checksum` (`world`,`checksum`,`time`),
   KEY `coords` (`world`,`x`,`y`,`z`,`time`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -534,6 +568,21 @@ CREATE TABLE `trade_item` (
   PRIMARY KEY (`item_id`),
   KEY `idx_trade_id` (`trade_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `version`
+--
+
+DROP TABLE IF EXISTS `version`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `version` (
+  `version_id` int(255) NOT NULL AUTO_INCREMENT,
+  `version_number` varchar(255) NOT NULL,
+  `version_string` text,
+  PRIMARY KEY (`version_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -596,6 +645,7 @@ CREATE TABLE `zone` (
   `zone_exitmessage` varchar(250) COLLATE utf8_swedish_ci NOT NULL,
   `zone_texture` text COLLATE utf8_swedish_ci,
   `zone_owner` varchar(24) COLLATE utf8_swedish_ci DEFAULT NULL,
+  `zone_flags` int(10) unsigned DEFAULT '0',
   PRIMARY KEY (`zone_id`),
   UNIQUE KEY `name` (`zone_name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
@@ -617,6 +667,7 @@ CREATE TABLE `zone_lot` (
   `lot_x2` int(10) NOT NULL,
   `lot_y2` int(10) NOT NULL,
   `special` int(11) DEFAULT NULL,
+  `lot_flags` int(10) unsigned NOT NULL DEFAULT '3',
   PRIMARY KEY (`lot_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -696,4 +747,4 @@ CREATE TABLE `zone_user` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2013-10-29 17:01:25
+-- Dump completed on 2013-12-10 22:18:14
