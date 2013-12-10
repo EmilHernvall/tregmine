@@ -265,6 +265,19 @@ public class TregminePlayer extends PlayerDelegate
 
     public void setCurrentZone(Zone zone) { this.currentZone = zone; }
     public Zone getCurrentZone() { return currentZone; }
+    public Zone updateCurrentZone()
+    {
+        Point pos = new Point(this.getLocation().getBlockX(), this.getLocation().getBlockZ());
+        Zone localZone = this.getCurrentZone();
+        
+        if (localZone == null || !localZone.contains(pos)) {
+                ZoneWorld world = plugin.getWorld(this.getLocation().getWorld());
+                localZone = world.findZone(pos);
+                this.setCurrentZone(localZone);
+        }
+        
+        return currentZone;
+    }
 
     public void setCurrentTexture(String url)
     {
