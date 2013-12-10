@@ -449,6 +449,11 @@ public class TregminePlayer extends PlayerDelegate
             }
             return false;
         }
+        
+        if (this.getRank() == Rank.TOURIST) {
+            return false;
+            // Don't punish as that's just cruel ;p
+        }
 
         if (zone == null) { // Is in the wilderness - So return true
             return true;

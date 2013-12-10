@@ -42,7 +42,7 @@ public class ForceCommand extends AbstractCommand
             player.sendMessage(ChatColor.AQUA + "Can not force " + toPlayer.getChatName() + " into a channel!");
             return true;
         }
-
+        String oldChannel = player.getChatChannel();
         player.setChatChannel(channel);
         toPlayer.setChatChannel(channel);
 
@@ -58,6 +58,16 @@ public class ForceCommand extends AbstractCommand
         LOGGER.info(player.getName() + " FORCED CHAT WITH "
                 + toPlayer.getDisplayName() + " IN CHANNEL "
                 + channel.toUpperCase());
+        
+        for (TregminePlayer players : tregmine.getOnlinePlayers()) {
+            if (oldChannel.equalsIgnoreCase(players.getChatChannel())) {
+                players.sendMessage(player.getChatName() + " and " + toPlayer.getChatName() + ChatColor.YELLOW +
+                        " has left channel " + oldChannel);
+            } else if (channel.equalsIgnoreCase(players.getChatChannel())) {
+                players.sendMessage(player.getChatName() + " and " + toPlayer.getChatName() + ChatColor.YELLOW +
+                        " has joined channel " + channel);
+            }
+        }
 
         // If this is a mentor forcing his student, log it in the mentorlog
         TregminePlayer student = player.getStudent();
