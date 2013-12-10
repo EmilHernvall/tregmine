@@ -41,7 +41,8 @@ public class TregminePlayer extends PlayerDelegate
         FLY_ENABLED,
         FORCESHIELD,
         CHEST_LOG,
-        HIDDEN_ANNOUNCEMENT;
+        HIDDEN_ANNOUNCEMENT,
+        CHANNEL_VIEW;
     };
 
     // Persistent values

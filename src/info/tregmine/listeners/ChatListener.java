@@ -65,7 +65,7 @@ public class ChatListener implements Listener
                 List<String> player_keywords = playerDAO.getKeywords(to);
 
                 if (player_keywords.size() > 0 && player_keywords != null) {
-                    for( String keyword : player_keywords ){
+                    for (String keyword : player_keywords) {
                         if (text.toLowerCase().contains(keyword.toLowerCase())) {
                             text = text.replaceAll(keyword,
                                     ChatColor.AQUA + keyword + txtColor);
@@ -73,8 +73,11 @@ public class ChatListener implements Listener
                     }
                 }
 
-                if (sender.getChatChannel().equalsIgnoreCase(to.getChatChannel())) {
-                    if ("GLOBAL".equalsIgnoreCase(sender.getChatChannel())) {
+                String senderChan = sender.getChatChannel();
+                String toChan = to.getChatChannel();
+                if (senderChan.equalsIgnoreCase(toChan) ||
+                    to.hasFlag(TregminePlayer.Flags.CHANNEL_VIEW)) {
+                    if ("GLOBAL".equalsIgnoreCase(senderChan)) {
                         to.sendMessage("<" + sender.getChatName()
                                 + ChatColor.WHITE + "> " + txtColor + text);
                     }
@@ -85,8 +88,8 @@ public class ChatListener implements Listener
                 }
 
                 if (text.contains(to.getName()) &&
-                    "GLOBAL".equalsIgnoreCase(sender.getChatChannel()) &&
-                    !("GLOBAL".equalsIgnoreCase(to.getChatChannel()))) {
+                    "GLOBAL".equalsIgnoreCase(senderChan) &&
+                    !"GLOBAL".equalsIgnoreCase(toChan)) {
 
                     to.sendMessage(ChatColor.BLUE +
                         "You were mentioned in GLOBAL by " + sender.getNameColor() +
