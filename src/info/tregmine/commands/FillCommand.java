@@ -137,13 +137,10 @@ public class FillCommand extends AbstractCommand
             // regular fills
             if (mat != null && toMat == null) {
 
-                if (!player.isOp()) {
-                    if (mat != null
-                            && Arrays.binarySearch(disallowedMaterials,
-                                    mat.getItemType()) > 0) {
-                        player.sendMessage(RED + "Disabled!");
-                        return true;
-                    }
+                if (!player.isOp() &&
+						!mat.toItemStack().getType().isSolid()) {
+                    player.sendMessage(RED + "Disabled!");
+                    return true;
                 }
 
                 player.sendMessage("You filled with " + DARK_AQUA
@@ -170,13 +167,10 @@ public class FillCommand extends AbstractCommand
             // replacers
             if (mat != null && toMat != null) {
 
-                if (toMat != null && Arrays.binarySearch(disallowedMaterials,
-                                toMat.getItemType()) > 0) {
-
-                    if (!player.isOp()) {
-                        player.sendMessage(RED + "Disabled!");
-                        return true;
-                    }
+				if (!player.isOp() &&
+						!mat.toItemStack().getType().isSolid()) {
+                    player.sendMessage(RED + "Disabled!");
+                    return true;
 
                 }
 
