@@ -478,6 +478,11 @@ public class TregminePlayer extends PlayerDelegate
                 lot.isOwner(this)) { // If is lot owner
             return true;
         }
+        
+        if (lot != null &&
+                lot.hasFlag(Lot.Flags.FREE_BUILD)) {
+            return true;
+        }
 
         if (punish == true) {
             if (lot != null && zone != null) { // Lot Error Message
