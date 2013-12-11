@@ -22,7 +22,11 @@ public class TreePopulator extends BlockPopulator {
 
     public boolean generate(World world, Random rand, int i, int j, int k) {
     	
-    	Location loc1 = new Location(world, i, j -1, k );
+		if (world.getBlockAt(i, j - 2, k).getType() != (Material.SNOW_BLOCK)){
+			return false;
+		}
+    	
+    	Location loc1 = new Location(world, i, j - 1, k );
     	world.getBlockAt(loc1).setType(Material.GRASS);
     	
     	Location loc = new Location(world, i, j, k );
