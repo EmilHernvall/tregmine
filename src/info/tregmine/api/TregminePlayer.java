@@ -1,24 +1,26 @@
 package info.tregmine.api;
 
-import java.util.Date;
-import java.util.EnumSet;
-import java.util.EnumMap;
-import java.util.Set;
-import java.util.Map;
-
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.block.Block;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Horse;
-import org.bukkit.entity.Player;
-
 import info.tregmine.Tregmine;
 import info.tregmine.api.encryption.BCrypt;
+import info.tregmine.database.DAOException;
+import info.tregmine.database.IContext;
+import info.tregmine.database.IInventoryDAO;
+import info.tregmine.database.IPlayerDAO;
 import info.tregmine.quadtree.Point;
 import info.tregmine.zones.Lot;
 import info.tregmine.zones.Zone;
 import info.tregmine.zones.ZoneWorld;
+
+import java.util.*;
+
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Horse;
+import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 
 public class TregminePlayer extends PlayerDelegate
 {
@@ -74,6 +76,7 @@ public class TregminePlayer extends PlayerDelegate
     private String country;
     private TregminePlayer mentor;
     private TregminePlayer student;
+    private String currentInventory;
 
     // Player state for block fill
     private Block fillBlock1 = null;
@@ -270,13 +273,13 @@ public class TregminePlayer extends PlayerDelegate
     {
         Point pos = new Point(this.getLocation().getBlockX(), this.getLocation().getBlockZ());
         Zone localZone = this.getCurrentZone();
-
+        
         if (localZone == null || !localZone.contains(pos)) {
                 ZoneWorld world = plugin.getWorld(this.getLocation().getWorld());
                 localZone = world.findZone(pos);
                 this.setCurrentZone(localZone);
         }
-
+        
         return currentZone;
     }
 
@@ -449,7 +452,7 @@ public class TregminePlayer extends PlayerDelegate
             }
             return false;
         }
-
+        
         if (this.getRank() == Rank.TOURIST) {
             return false;
             // Don't punish as that's just cruel ;p
@@ -497,7 +500,7 @@ public class TregminePlayer extends PlayerDelegate
                 lot.isOwner(this)) { // If is lot owner
             return true;
         }
-
+        
         if (lot != null &&
                 lot.hasFlag(Lot.Flags.FREE_BUILD)) {
             return true;
@@ -538,4 +541,112 @@ public class TregminePlayer extends PlayerDelegate
     {
         return getId();
     }
+
+    public Plugin getPlugin()
+    {
+        return plugin;
+    }
+    
+    //-----------------------------//
+    // Tregmine Inventory Handling //
+    //-----------------------------//
+    
+    public String getCurrentInventory() { return currentInventory; }
+    public void setCurrentInventory(String inv) { this.currentInventory = inv; }
+    
+    /*
+     * Load an already existing inventory
+     * @param name - Name of the inventory
+     * @param save - Same current inventory
+     */
+    public void loadInventory(String name, boolean save)
+    {
+        try (IContext ctx = plugin.createContext()) {
+            IInventoryDAO dao = ctx.getInventoryDAO();
+            
+            if (save) {
+                this.saveInventory(currentInventory);
+            }
+
+            this.getInventory().clear();
+            this.getInventory().setHelmet(null);
+            this.getInventory().setChestplate(null);
+            this.getInventory().setLeggings(null);
+            this.getInventory().setBoots(null);
+            
+            int id3;
+            id3 = dao.fetchInventory(this, name, "main");
+            while (id3 == -1) {
+                dao.createInventory(this, name, "main");
+                plugin.LOGGER.info("INVENTORY: Creating");
+                id3 = dao.fetchInventory(this, name, "main");
+            }
+            
+            dao.loadInventory(this, id3, "main");
+            plugin.LOGGER.info("INVENTORY: Loading main inventory " + id3 + " (" + this.getName() + ")");
+            
+            int id4;
+            id4 = dao.fetchInventory(this, name, "armour");
+            while (id4 == -1) {
+                dao.createInventory(this, name, "armour");
+                plugin.LOGGER.info("INVENTORY: Creating");
+                id4 = dao.fetchInventory(this, name, "armour");
+            }
+            
+            dao.loadInventory(this, id4, "armour");
+            plugin.LOGGER.info("INVENTORY: Loading armour inventory " + id4 + " (" + this.getName() + ")");
+            
+            this.currentInventory = name;
+            
+            IPlayerDAO playerDAO = ctx.getPlayerDAO();
+            playerDAO.updatePlayer(this);
+
+        } catch (DAOException e) {
+            plugin.LOGGER.info("INVENTORY ERROR: Trying to load " + this.getName() + " inventory named: " + name);
+            throw new RuntimeException(e);
+        }
+    }
+    
+    /*
+     * Save the inventory specified, if null - saves current inventory.
+     * @param name - Name of the new inventory
+     */
+    public void saveInventory(String name)
+    {
+        String inventory = name;
+        if (name == null) {
+            inventory = this.currentInventory;
+        }
+        
+        try (IContext ctx = plugin.createContext()) {
+            IInventoryDAO dao = ctx.getInventoryDAO();
+            
+            int id;
+            id = dao.fetchInventory(this, inventory, "main");
+            while (id == -1) {
+                dao.createInventory(this, inventory, "main");
+                plugin.LOGGER.info("INVENTORY: Creating");
+                id = dao.fetchInventory(this, inventory, "main");
+            }
+            
+            dao.saveInventory(this, id, "main");
+            plugin.LOGGER.info("INVENTORY: Saving main inventory " + id + " (" + this.getName() + ")");
+            
+            int id2;
+            id2 = dao.fetchInventory(this, inventory, "armour");
+            while (id2 == -1) {
+                dao.createInventory(this, inventory, "armour");
+                plugin.LOGGER.info("INVENTORY: Creating");
+                id2 = dao.fetchInventory(this, inventory, "armour");
+            }
+            
+            dao.saveInventory(this, id2, "armour");
+            plugin.LOGGER.info("INVENTORY: Saving armour inventory " + id2 + " (" + this.getName() + ")");
+
+        } catch (DAOException e) {
+            plugin.LOGGER.info("INVENTORY ERROR: Trying to save " + this.getName() + " inventory named: " + name);
+            throw new RuntimeException(e);
+        }
+    }
+
 }
