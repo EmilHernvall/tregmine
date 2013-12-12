@@ -306,7 +306,9 @@ public class TregminePlayerListener implements Listener
                 current.showPlayer(player);
             }
         }
-
+        
+        player.loadInventory("survival", false);
+        
         // Hide currently invisible players from the player that just signed on
         for (TregminePlayer current : players) {
             if (current.hasFlag(TregminePlayer.Flags.INVISIBLE)) {
@@ -462,7 +464,8 @@ public class TregminePlayerListener implements Listener
                     "in players map when quitting.");
             return;
         }
-
+        
+        player.saveInventory(player.getCurrentInventory());
         event.setQuitMessage(null);
 
         if (!player.isOp()) {
