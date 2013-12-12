@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.inventory.ItemStack;
@@ -315,5 +316,165 @@ public class DBInventoryDAO implements IInventoryDAO
         }
 
         return null;
+    }
+
+    @Override
+    public void saveInventory(TregminePlayer player, int inventoryID, String type)
+            throws DAOException
+    {
+        String sqlDelete = "DELETE FROM playerInventory_items WHERE inventory_id = ?";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sqlDelete)) {
+            stmt.setInt(1, inventoryID);
+            stmt.execute();
+        } catch (SQLException e) {
+            throw new DAOException(sqlDelete, e);
+        }
+        
+        ItemStack[] contents;
+        if ("main".equalsIgnoreCase(type)) {
+            contents = player.getInventory().getContents();
+        } else {
+            contents = player.getInventory().getArmorContents();
+        }
+        
+        String sqlInsert = "INSERT INTO playerInventory_items (inventory_id, item_slot, " +
+            "item_material, item_data, item_meta, item_count) ";
+        sqlInsert += "VALUES (?, ?, ?, ?, ?, ?)";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sqlInsert)) {
+            int counter = 0;
+            for (ItemStack stack : contents) {
+                if (stack == null) {
+                    counter++;
+                    continue;
+                }
+
+                stmt.setInt(1, inventoryID);
+                stmt.setInt(2, counter);
+                stmt.setInt(3, stack.getTypeId());
+                stmt.setInt(4, stack.getData().getData());
+                if (stack.hasItemMeta()) {
+                    YamlConfiguration config = new YamlConfiguration();
+                    config.set("meta", stack.getItemMeta());
+                    stmt.setString(5, config.saveToString());
+                }
+                else {
+                    stmt.setString(5, "");
+                }
+                stmt.setInt(6, stack.getAmount());
+                stmt.execute();
+
+                counter++;
+            }
+        } catch (SQLException e) {
+            throw new DAOException(sqlInsert, e);
+        }
+    }
+
+    @Override
+    public void loadInventory(TregminePlayer player, int inventoryID, String type)
+            throws DAOException
+    {
+        String sql = "SELECT * FROM playerInventory_items " +
+                "WHERE inventory_id = ?";
+
+           try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+               stmt.setInt(1, inventoryID);
+               stmt.execute();
+        
+               try (ResultSet rs = stmt.getResultSet()) {
+                   while (rs.next()) {
+                       int slot = rs.getInt("item_slot");
+                       int materialId = rs.getInt("item_material");
+                       int data = rs.getInt("item_data");
+                       int count = rs.getInt("item_count");
+                       String meta = rs.getString("item_meta");
+        
+                       ItemMeta metaObj = null;
+                       if (!"".equals(meta)) {
+                           YamlConfiguration config = new YamlConfiguration();
+                           config.loadFromString(meta);
+                           metaObj = (ItemMeta) config.get("meta");
+                       }
+                       
+                       ItemStack item = new ItemStack(materialId, count, (short) data);
+                       if ("main".equalsIgnoreCase(type)) {
+                           player.getInventory().setItem(slot, item);
+                           if (metaObj != null) {
+                               player.getInventory().getItem(slot).setItemMeta(metaObj);
+                           }
+                       } else {
+                           if (slot == 3) {
+                               player.getInventory().setHelmet(item);
+                               if (metaObj != null) {
+                                   player.getInventory().getHelmet().setItemMeta(metaObj);
+                               }
+                           } else if (slot == 2) {
+                               player.getInventory().setChestplate(item);
+                               if (metaObj != null) {
+                                   player.getInventory().getChestplate().setItemMeta(metaObj);
+                               }
+                           } else if (slot == 1) {
+                               player.getInventory().setLeggings(item);
+                               if (metaObj != null) {
+                                   player.getInventory().getLeggings().setItemMeta(metaObj);
+                               }
+                           } else if (slot == 0) {
+                               player.getInventory().setBoots(item);
+                               if (metaObj != null) {
+                                   player.getInventory().getBoots().setItemMeta(metaObj);
+                               }
+                           }
+                       }
+                   }
+               }
+           } catch (SQLException e) {
+               throw new DAOException(sql, e);
+           } catch (InvalidConfigurationException e) {
+               throw new RuntimeException(e);
+           }
+    }
+
+    @Override
+    public int fetchInventory(TregminePlayer player, String inventoryName, String type)
+            throws DAOException
+    {
+        String sql = "SELECT * FROM playerInventory " +
+                     "WHERE inventory_name = ? AND inventory_type = ? AND player_id = ?";
+        
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, inventoryName);
+            stmt.setString(2, type);
+            stmt.setInt(3, player.getId());
+            stmt.execute();
+            
+            try (ResultSet rs = stmt.getResultSet()) {
+                if (!rs.next()) {
+                    return -1;
+                }
+                return rs.getInt("inventory_id");
+            }
+            
+        } catch (SQLException e) {
+            throw new DAOException(sql, e);
+        }
+    }
+
+    @Override
+    public void createInventory(TregminePlayer player, String inventoryName,
+            String type) throws DAOException
+    {
+        String sql = "INSERT INTO playerInventory (player_id, inventory_name, inventory_type) " +
+                "VALUES(?,?,?)";
+   
+           try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+               stmt.setInt(1, player.getId());
+               stmt.setString(2, inventoryName);
+               stmt.setString(3, type);
+               stmt.execute();
+           } catch (SQLException e) {
+               throw new DAOException(sql, e);
+           }
     }
 }
