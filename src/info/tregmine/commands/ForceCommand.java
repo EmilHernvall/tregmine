@@ -61,11 +61,11 @@ public class ForceCommand extends AbstractCommand
         
         for (TregminePlayer players : tregmine.getOnlinePlayers()) {
             if (oldChannel.equalsIgnoreCase(players.getChatChannel())) {
-                players.sendMessage(player.getChatName() + " and " + toPlayer.getChatName() + ChatColor.YELLOW +
-                        " has left channel " + oldChannel);
+                players.sendMessage(player.getChatName() + ChatColor.YELLOW + " and " + toPlayer.getChatName() + ChatColor.YELLOW +
+                        " have left channel " + oldChannel);
             } else if (channel.equalsIgnoreCase(players.getChatChannel())) {
-                players.sendMessage(player.getChatName() + " and " + toPlayer.getChatName() + ChatColor.YELLOW +
-                        " has joined channel " + channel);
+                players.sendMessage(player.getChatName() + ChatColor.YELLOW + " and " + toPlayer.getChatName() + ChatColor.YELLOW +
+                        " have joined channel " + channel);
             }
         }
 
