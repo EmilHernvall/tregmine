@@ -447,27 +447,6 @@ public class Tregmine extends JavaPlugin
             ILogDAO logDAO = ctx.getLogDAO();
             logDAO.insertLogin(player, true, onlinePlayerCount);
 
-            PlayerInventory inv = (PlayerInventory) player.getInventory();
-
-            // Insert regular inventory
-            IInventoryDAO invDAO = ctx.getInventoryDAO();
-            int invId = invDAO.getInventoryId(player.getId(), InventoryType.PLAYER);
-            if (invId == -1) {
-                invId = invDAO.insertInventory(player, null, InventoryType.PLAYER);
-            }
-
-            invDAO.insertStacks(invId, inv.getContents());
-
-            // Insert armor inventory
-            int armorId = invDAO.getInventoryId(player.getId(),
-                                                InventoryType.PLAYER_ARMOR);
-            if (armorId == -1) {
-                armorId = invDAO.insertInventory(player, null,
-                                                 InventoryType.PLAYER_ARMOR);
-            }
-
-            invDAO.insertStacks(armorId, inv.getArmorContents());
-
             IPlayerDAO playerDAO = ctx.getPlayerDAO();
             playerDAO.updatePlayTime(player);
         } catch (DAOException e) {
