@@ -348,24 +348,6 @@ public class TregminePlayerListener implements Listener
                                    "You are now a resident on Tregmine!");
             }
 
-            // Load inventory from DB - disabled until we know it's reliable
-            /*PlayerInventory inv = (PlayerInventory) player.getInventory();
-
-            DBInventoryDAO invDAO = new DBInventoryDAO(conn);
-
-            int invId = invDAO.getInventoryId(player.getId(), InventoryType.PLAYER);
-            if (invId != -1) {
-                Tregmine.LOGGER.info("Loaded inventory from DB");
-                inv.setContents(invDAO.getStacks(invId, inv.getSize()));
-            }
-
-            int armorId = invDAO.getInventoryId(player.getId(),
-                                                InventoryType.PLAYER_ARMOR);
-            if (armorId != -1) {
-                Tregmine.LOGGER.info("Loaded armor from DB");
-                inv.setArmorContents(invDAO.getStacks(armorId, 4));
-            }*/
-
             // Load motd
             IMotdDAO motdDAO = ctx.getMotdDAO();
             String message = motdDAO.getMotd();
