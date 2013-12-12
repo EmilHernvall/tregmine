@@ -50,6 +50,7 @@ public class Tregmine extends JavaPlugin
     private Map<Integer, TregminePlayer> playersById;
     private Map<Location, Integer> blessedBlocks;
     private Map<Location, FishyBlock> fishyBlocks;
+    private Map<Integer, Tank> liquidTanks;
 
     private Map<String, ZoneWorld> worlds;
     private Map<Integer, Zone> zones;
@@ -127,6 +128,7 @@ public class Tregmine extends JavaPlugin
             this.fishyBlocks = fishyBlockDAO.loadFishyBlocks(getServer());
 
             LOGGER.info("Loaded " + fishyBlocks.size() + " fishy blocks");
+            
         } catch (DAOException e) {
             throw new RuntimeException(e);
         }
@@ -161,6 +163,7 @@ public class Tregmine extends JavaPlugin
         pluginMgm.registerEvents(new ToolCraft(this), this);
         pluginMgm.registerEvents(new LumberListener(this), this);
         pluginMgm.registerEvents(new VeinListener(this), this);
+        pluginMgm.registerEvents(new PortalListener(this), this);
 
         // Declaration of all commands
         getCommand("admins").setExecutor(
@@ -278,7 +281,8 @@ public class Tregmine extends JavaPlugin
             player.sendMessage(ChatColor.AQUA
                     + "Tregmine successfully unloaded. Version "
                     + getDescription().getVersion());
-
+            
+            player.saveInventory(player.getCurrentInventory());
             removePlayer(player);
         }
 
@@ -590,6 +594,11 @@ public class Tregmine extends JavaPlugin
     public Zone getZone(int zoneId)
     {
         return zones.get(zoneId);
+    }
+    
+    public Map<Integer, Tank> getTanks()
+    {
+        return liquidTanks;
     }
 
     // ============================================================================
