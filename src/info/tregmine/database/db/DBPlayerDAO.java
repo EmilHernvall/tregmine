@@ -49,6 +49,12 @@ public class DBPlayerDAO implements IPlayerDAO
                 player.setId(rs.getInt("player_id"));
                 player.setPasswordHash(rs.getString("player_password"));
                 player.setRank(Rank.fromString(rs.getString("player_rank")));
+                
+                if (rs.getString("player_inventory") == null) {
+                    player.setCurrentInventory("survival");
+                } else {
+                    player.setCurrentInventory(rs.getString("player_inventory"));
+                }
 
                 int flags = rs.getInt("player_flags");
                 for (TregminePlayer.Flags flag : TregminePlayer.Flags.values()) {
@@ -104,6 +110,12 @@ public class DBPlayerDAO implements IPlayerDAO
                 player.setId(rs.getInt("player_id"));
                 player.setPasswordHash(rs.getString("player_password"));
                 player.setRank(Rank.fromString(rs.getString("player_rank")));
+                
+                if (rs.getString("player_inventory") == null) {
+                    player.setCurrentInventory("survival");
+                } else {
+                    player.setCurrentInventory(rs.getString("player_inventory"));
+                }
 
                 int flags = rs.getInt("player_flags");
                 for (TregminePlayer.Flags flag : TregminePlayer.Flags.values()) {
@@ -237,7 +249,7 @@ public class DBPlayerDAO implements IPlayerDAO
     public void updatePlayer(TregminePlayer player) throws DAOException
     {
         String sql = "UPDATE player SET player_password = ?, player_rank = ?, " +
-            "player_flags = ? ";
+            "player_flags = ?, player_inventory = ? ";
         sql += "WHERE player_id = ?";
 
         int flags = 0;
@@ -249,7 +261,8 @@ public class DBPlayerDAO implements IPlayerDAO
             stmt.setString(1, player.getPasswordHash());
             stmt.setString(2, player.getRank().toString());
             stmt.setInt(3, flags);
-            stmt.setInt(4, player.getId());
+            stmt.setString(4, player.getCurrentInventory());
+            stmt.setInt(5, player.getId());
             stmt.execute();
         } catch (SQLException e) {
             throw new DAOException(sql, e);
