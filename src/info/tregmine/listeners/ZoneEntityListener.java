@@ -97,6 +97,14 @@ public class ZoneEntityListener implements Listener
             return;
         }
 
+        if (currentZone == null || !currentZone.isPvp()) {
+            event.setCancelled(true);
+        }
+        else {
+            event.setCancelled(false);
+            return;
+        }
+        
         Lot currentLot = world.findLot(pos);
         if (currentLot == null) {
             event.setCancelled(true);
@@ -109,13 +117,6 @@ public class ZoneEntityListener implements Listener
         }
         else {
             event.setCancelled(true);
-        }
-
-        if (currentZone == null || !currentZone.isPvp()) {
-            event.setCancelled(true);
-        }
-        else {
-            event.setCancelled(false);
         }
     }
 
