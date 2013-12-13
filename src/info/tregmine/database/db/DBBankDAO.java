@@ -141,11 +141,43 @@ public class DBBankDAO implements IBankDAO
         return null;
     }
     
+    public Account getAccount(Bank bank, int accNumber)
+    throws DAOException
+    {
+        String sql = "SELECT * FROM bank_accounts WHERE bank_name = ? AND account_number = ?";
+        try(PreparedStatement stm = conn.prepareStatement(sql)){
+            stm.setString(1, bank.getName());
+            stm.setInt(2, accNumber);
+            
+            stm.execute();
+            
+            try(ResultSet rs = stm.getResultSet()){
+                if(rs.next()){
+                    Account acc = new Account();
+                    acc.setAccountNumber(accNumber);
+                    acc.setBank(bank);
+                    acc.setBalance(rs.getLong("account_balance"));
+                    acc.setPlayer(rs.getString("player_name"));
+                    
+                    return acc;
+                }
+            }
+            
+        } catch (SQLException e) {
+            throw new DAOException(sql, e);
+        }
+        return null;
+    }
+    
     public void createAccount(Account acct, String player, long amount)
     throws DAOException
     {
         String sql = "INSERT INTO bank_accounts (bank_name, player_name, account_balance, account_number) VALUES (?,?,?,?)";
+        
         try(PreparedStatement stm = conn.prepareStatement(sql)){
+            if(getAccount(acct.getBank(), acct.getAccountNumber()) != null){
+                acct.setAccountNumber(acct.getAccountNumber() + 1);
+            }
             stm.setString(1, acct.getBank().getName());
             stm.setString(2, player);
             stm.setLong(3, amount);
