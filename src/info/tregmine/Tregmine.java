@@ -50,7 +50,6 @@ public class Tregmine extends JavaPlugin
     private Map<Integer, TregminePlayer> playersById;
     private Map<Location, Integer> blessedBlocks;
     private Map<Location, FishyBlock> fishyBlocks;
-    private Map<Integer, Tank> liquidTanks;
 
     private Map<String, ZoneWorld> worlds;
     private Map<Integer, Zone> zones;
