@@ -37,6 +37,7 @@ import org.bukkit.util.Vector;
 
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
+import info.tregmine.api.Rank;
 import info.tregmine.quadtree.Point;
 import info.tregmine.zones.Lot;
 import info.tregmine.zones.Zone;
@@ -391,7 +392,22 @@ public class ZonePlayerListener implements Listener
                             (player.hasFlag(TregminePlayer.Flags.HARDWARNED) ||
                              player.hasFlag(TregminePlayer.Flags.SOFTWARNED))) {
                         blockedMessage(currentZone, player);
-                        player.teleport(player.getWorld().getSpawnLocation());
+                        movePlayerBack(player, movingFrom, movingTo);
+                        return;
+                    }
+                    else if (currentZone.hasFlag(Zone.Flags.ADMIN_ONLY) &&
+                            (player.getRank() != Rank.JUNIOR_ADMIN &&
+                             player.getRank() != Rank.SENIOR_ADMIN)) {
+                        blockedMessage(currentZone, player);
+                        movePlayerBack(player, movingFrom, movingTo);
+                        return;
+                    }
+                    else if (currentZone.hasFlag(Zone.Flags.REQUIRE_RESIDENCY) &&
+                             (player.getRank() == Rank.TOURIST ||
+                              player.getRank() == Rank.SETTLER ||
+                              player.getRank() == Rank.UNVERIFIED)) {
+                        blockedMessage(currentZone, player);
+                        movePlayerBack(player, movingFrom, movingTo);
                         return;
                     }
                 }

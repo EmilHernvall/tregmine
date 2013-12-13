@@ -32,6 +32,10 @@ public class ChannelCommand extends AbstractCommand
 
         if (player.hasFlag(TregminePlayer.Flags.INVISIBLE)) return true; // Doesn't announce channel change if invisible.
         
+        if (oldchannel.equalsIgnoreCase(channel)) {
+            return true;
+        }
+        
         for (TregminePlayer players : tregmine.getOnlinePlayers()) {
             if (oldchannel.equalsIgnoreCase(players.getChatChannel())) {
                 players.sendMessage(player.getChatName() + ChatColor.YELLOW +

@@ -41,7 +41,8 @@ public class TregminePlayer extends PlayerDelegate
         FLY_ENABLED,
         FORCESHIELD,
         CHEST_LOG,
-        HIDDEN_ANNOUNCEMENT;
+        HIDDEN_ANNOUNCEMENT,
+        CHANNEL_VIEW;
     };
 
     // Persistent values
@@ -265,6 +266,19 @@ public class TregminePlayer extends PlayerDelegate
 
     public void setCurrentZone(Zone zone) { this.currentZone = zone; }
     public Zone getCurrentZone() { return currentZone; }
+    public Zone updateCurrentZone()
+    {
+        Point pos = new Point(this.getLocation().getBlockX(), this.getLocation().getBlockZ());
+        Zone localZone = this.getCurrentZone();
+
+        if (localZone == null || !localZone.contains(pos)) {
+                ZoneWorld world = plugin.getWorld(this.getLocation().getWorld());
+                localZone = world.findZone(pos);
+                this.setCurrentZone(localZone);
+        }
+
+        return currentZone;
+    }
 
     public void setCurrentTexture(String url)
     {
@@ -436,6 +450,11 @@ public class TregminePlayer extends PlayerDelegate
             return false;
         }
 
+        if (this.getRank() == Rank.TOURIST) {
+            return false;
+            // Don't punish as that's just cruel ;p
+        }
+
         if (zone == null) { // Is in the wilderness - So return true
             return true;
         }
@@ -476,6 +495,11 @@ public class TregminePlayer extends PlayerDelegate
 
         if (lot != null &&
                 lot.isOwner(this)) { // If is lot owner
+            return true;
+        }
+
+        if (lot != null &&
+                lot.hasFlag(Lot.Flags.FREE_BUILD)) {
             return true;
         }
 

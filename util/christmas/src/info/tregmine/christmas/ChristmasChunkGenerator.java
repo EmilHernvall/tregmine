@@ -2,9 +2,13 @@ package info.tregmine.christmas;
 
 import info.tregmine.christmas.populators.CandyCanePopulator;
 import info.tregmine.christmas.populators.ChristmasTreePopulator;
-import info.tregmine.christmas.populators.IcePopulator;
 import info.tregmine.christmas.populators.PresentPopulator;
+import info.tregmine.christmas.populators.SantaPopulator;
+import info.tregmine.christmas.populators.SkySignPopulator;
+import info.tregmine.christmas.populators.SleighPopulator;
+import info.tregmine.christmas.populators.SnowmanPopulator;
 import info.tregmine.christmas.populators.TreePopulator;
+import info.tregmine.christmas.populators.WreathPopulator;
 
 import java.util.Arrays;
 import java.util.List;
@@ -61,8 +65,12 @@ public class ChristmasChunkGenerator extends ChunkGenerator {
 				new ChristmasTreePopulator(),
 				new TreePopulator(),
 				new CandyCanePopulator(),
-				new PresentPopulator(),
-				new IcePopulator());
+				new WreathPopulator(),
+				new SantaPopulator(),
+				new SkySignPopulator(),
+				new SnowmanPopulator(),
+				new SleighPopulator(),
+				new PresentPopulator());
 	}
 
 	@Override

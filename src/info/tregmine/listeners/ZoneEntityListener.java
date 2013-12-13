@@ -1,11 +1,5 @@
 package info.tregmine.listeners;
 
-import info.tregmine.Tregmine;
-import info.tregmine.api.TregminePlayer;
-import info.tregmine.quadtree.Point;
-import info.tregmine.zones.Zone;
-import info.tregmine.zones.ZoneWorld;
-
 import java.util.EnumSet;
 import java.util.Set;
 
@@ -23,6 +17,13 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 //import org.bukkit.entity.Arrow;
 //import org.bukkit.event.entity.EntityDamageEvent;
 //import org.bukkit.event.entity.EntityShootBowEvent;
+
+import info.tregmine.Tregmine;
+import info.tregmine.api.TregminePlayer;
+import info.tregmine.quadtree.Point;
+import info.tregmine.zones.Zone;
+import info.tregmine.zones.Lot;
+import info.tregmine.zones.ZoneWorld;
 
 public class ZoneEntityListener implements Listener
 {
@@ -54,8 +55,10 @@ public class ZoneEntityListener implements Listener
         if (zone == null || zone.hasHostiles()) {
             return;
         }
-        
-        if (!allowedMobs.contains(event.getEntityType()) && event.getSpawnReason() == SpawnReason.NATURAL) {
+
+        if (!allowedMobs.contains(event.getEntityType()) &&
+            event.getSpawnReason() == SpawnReason.NATURAL) {
+
             event.setCancelled(true);
         }
     }
@@ -63,49 +66,67 @@ public class ZoneEntityListener implements Listener
     @EventHandler
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event)
     {
-
         if (event.getEntity().getWorld().getName().matches("world_the_end")) {
             return;
         }
-     
-        if (event.getEntity() instanceof Player
-                && event instanceof EntityDamageByEntityEvent
-                && ((EntityDamageByEntityEvent) event).getDamager() instanceof Player) {
-            Entity entity = event.getEntity();
-
-            ZoneWorld world = plugin.getWorld(entity.getWorld());
-
-            TregminePlayer player =
-                    plugin.getPlayer((Player) event.getEntity());
-
-            Location location = player.getLocation();
-            Point pos = new Point(location.getBlockX(), location.getBlockZ());
-
-            Zone currentZone = player.getCurrentZone();
-            if (currentZone == null || !currentZone.contains(pos)) {
-                currentZone = world.findZone(pos);
-                player.setCurrentZone(currentZone);
-            }
-
-            if (currentZone == null || !currentZone.isPvp()) {
-                event.setCancelled(true);
-            }
-            else {
-                event.setCancelled(false);
-            }
-
+        if (!(event instanceof EntityDamageByEntityEvent)) {
+            return;
         }
-        return;
+        if (!(event.getEntity() instanceof Player)) {
+            return;
+        }
+
+        EntityDamageByEntityEvent edbeEvent = (EntityDamageByEntityEvent)event;
+        if (!(edbeEvent.getDamager() instanceof Player)) {
+            return;
+        }
+
+        Entity entity = event.getEntity();
+
+        ZoneWorld world = plugin.getWorld(entity.getWorld());
+
+        TregminePlayer player =
+                plugin.getPlayer((Player) event.getEntity());
+
+        Location location = player.getLocation();
+        Point pos = new Point(location.getBlockX(), location.getBlockZ());
+
+        Zone currentZone = player.updateCurrentZone();
+        if (currentZone == null) {
+            event.setCancelled(true);
+            return;
+        }
+
+        Lot currentLot = world.findLot(pos);
+        if (currentLot == null) {
+            event.setCancelled(true);
+            return;
+        }
+
+        if (currentLot.hasFlag(Lot.Flags.PVP)) {
+            event.setCancelled(false);
+            return;
+        }
+        else {
+            event.setCancelled(true);
+        }
+
+        if (currentZone == null || !currentZone.isPvp()) {
+            event.setCancelled(true);
+        }
+        else {
+            event.setCancelled(false);
+        }
     }
-    
-    
+
     @EventHandler
-    public void onDamage(EntityDamageByEntityEvent e){
+    public void onDamage(EntityDamageByEntityEvent e)
+    {
         Entity e1 = e.getEntity();
         Entity d1 = e.getDamager();
 
-        if(e1 instanceof Player && d1 instanceof Arrow){
-            if(((Arrow)d1).getShooter() instanceof Player){
+        if (e1 instanceof Player && d1 instanceof Arrow) {
+            if (((Arrow)d1).getShooter() instanceof Player) {
 
                 ZoneWorld world = plugin.getWorld(e1.getWorld());
 
@@ -115,17 +136,23 @@ public class ZoneEntityListener implements Listener
                 Location location = player.getLocation();
                 Point pos = new Point(location.getBlockX(), location.getBlockZ());
 
-                Zone currentZone = player.getCurrentZone();
-                if (currentZone == null || !currentZone.contains(pos)) {
-                    currentZone = world.findZone(pos);
-                    player.setCurrentZone(currentZone);
+                Zone currentZone = player.updateCurrentZone();
+                if (currentZone == null) {
+                    e.setCancelled(true);
+                    return;
                 }
 
-                if (currentZone == null || !currentZone.isPvp()) {
+                Lot currentLot = world.findLot(pos);
+                if (currentLot == null) {
                     e.setCancelled(true);
+                    return;
+                }
+
+                if (currentLot.hasFlag(Lot.Flags.PVP)) {
+                    e.setCancelled(false);
                 }
                 else {
-                    e.setCancelled(false);
+                    e.setCancelled(true);
                 }
             }
         }

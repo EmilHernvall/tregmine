@@ -19,7 +19,7 @@ import org.bukkit.plugin.Plugin;
 
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
-import info.tregmine.api.math.MathUtil;
+import info.tregmine.api.math.Distance;
 
 public class RemItemsCommand extends AbstractCommand
 {
@@ -70,7 +70,7 @@ public class RemItemsCommand extends AbstractCommand
 
             for(Entity current : entList){
                 if (current instanceof Item){
-                    if (MathUtil.calcDistance2d(loc, current.getLocation()) > distance) {
+                    if (Distance.calc2d(loc, current.getLocation()) > distance) {
                         continue;
                     }
                     total++;

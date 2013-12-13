@@ -14,7 +14,7 @@ import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
 import info.tregmine.database.IHomeDAO;
 import info.tregmine.api.TregminePlayer;
-import info.tregmine.api.math.MathUtil;
+import info.tregmine.api.math.Distance;
 
 public class HomeCommand extends AbstractCommand
 {
@@ -78,7 +78,7 @@ public class HomeCommand extends AbstractCommand
 
         Server server = tregmine.getServer();
         World mainWorld = server.getWorld("world");
-        if (MathUtil.calcDistance2d(mainWorld.getSpawnLocation(), player.getLocation()) < 700) {
+        if (Distance.calc2d(mainWorld.getSpawnLocation(), player.getLocation()) < 700) {
 
             player.sendMessage(RED
                     + "Telogric lift malfunctioned. Teleportation "

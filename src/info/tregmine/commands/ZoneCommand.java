@@ -11,6 +11,7 @@ import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
 import info.tregmine.database.IZonesDAO;
 import info.tregmine.api.TregminePlayer;
+import info.tregmine.api.Rank;
 import info.tregmine.zones.Zone;
 import static info.tregmine.zones.Zone.Permission;
 import info.tregmine.zones.ZoneWorld;
@@ -152,6 +153,14 @@ public class ZoneCommand extends AbstractCommand
             return;
         }
 
+        if (flag == Zone.Flags.ADMIN_ONLY &&
+            (player.getRank() != Rank.JUNIOR_ADMIN ||
+            player.getRank() != Rank.SENIOR_ADMIN)) {
+
+            player.sendMessage(RED + "This flag is only for administrators!");
+            return;
+        }
+
         boolean value = Boolean.valueOf(args[3]);
 
         if (value) {
@@ -224,7 +233,8 @@ public class ZoneCommand extends AbstractCommand
 
         try (IContext ctx = tregmine.createContext()) {
             IZonesDAO dao = ctx.getZonesDAO();
-            dao.createZone(zone);
+            int zoneId = dao.createZone(zone);
+            zone.setId(zoneId);
             dao.addRectangle(zone.getId(), rect);
             dao.addUser(zone.getId(), player.getId(), Zone.Permission.Owner);
         } catch (DAOException e) {

@@ -10,7 +10,7 @@ import org.bukkit.entity.Entity;
 
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
-import info.tregmine.api.math.MathUtil;
+import info.tregmine.api.math.Distance;
 
 public class NukeCommand extends AbstractCommand
 {
@@ -42,7 +42,7 @@ public class NukeCommand extends AbstractCommand
 
         Location loc = player.getLocation();
         for (Entity ent : player.getWorld().getLivingEntities()) {
-            if (MathUtil.calcDistance2d(loc, ent.getLocation()) > distance) {
+            if (Distance.calc2d(loc, ent.getLocation()) > distance) {
                 continue;
             }
 

@@ -12,32 +12,32 @@ public class BadgeCommand extends AbstractCommand
     {
         super(tregmine, "badge");
     }
-    
+
     @Override
     public boolean handlePlayer(TregminePlayer player, String args[])
     {
         if (args.length == 1 && "list".equalsIgnoreCase(args[0])) {
-            
+
             Map<Badge, Integer> badges = player.getBadges();
             if(badges.isEmpty()){
                 player.sendMessage(ChatColor.AQUA +
                         "You currently have no badges!");
                 return true;
             }
-            
+
             for(Map.Entry<Badge, Integer> badge : badges.entrySet()){
                 player.sendMessage(ChatColor.AQUA + badge.getKey().name() +
                         " - Level " + badge.getValue());
             }
-            
+
         } else if (args.length == 2 && "list".equalsIgnoreCase(args[0])) {
-            
+
             if (!player.getRank().canViewPlayersBadge()) {
                 return true;
             }
-            
+
             TregminePlayer target = tregmine.getPlayerOffline(args[0]);
-            
+
             if (target == null) {
                 player.sendMessage(ChatColor.RED + "Could not find player: "
                         + ChatColor.YELLOW + args[0]);
@@ -49,12 +49,12 @@ public class BadgeCommand extends AbstractCommand
                         " currently has no badges!");
                 return true;
             }
-            
+
             for(Map.Entry<Badge, Integer> badge : badges.entrySet()){
                 player.sendMessage(ChatColor.AQUA + badge.getKey().name() +
                         " - Level " + badge.getValue());
             }
-            
+
         }
         return true;
     }

@@ -51,7 +51,7 @@ import info.tregmine.api.TregminePlayer;
 import info.tregmine.api.Rank;
 import info.tregmine.api.PlayerBannedException;
 import info.tregmine.api.lore.Created;
-import info.tregmine.api.math.MathUtil;
+import info.tregmine.api.math.Distance;
 import info.tregmine.api.util.ScoreboardClearTask;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;

@@ -16,6 +16,7 @@ import info.tregmine.database.IContext;
 import info.tregmine.database.IZonesDAO;
 import info.tregmine.api.Bank;
 import info.tregmine.api.TregminePlayer;
+import info.tregmine.api.Rank;
 import info.tregmine.zones.Zone;
 import info.tregmine.zones.ZoneWorld;
 import info.tregmine.zones.Lot;
@@ -106,6 +107,14 @@ public class LotCommand extends AbstractCommand
             for (Lot.Flags i : Lot.Flags.values()) {
                 player.sendMessage(AQUA + i.name());
             }
+            return;
+        }
+
+        if (flag == Lot.Flags.PVP &&
+            (player.getRank() != Rank.JUNIOR_ADMIN &&
+             player.getRank() != Rank.SENIOR_ADMIN)) {
+
+            player.sendMessage(RED + "This is an admin only flag, Please contact an admin!");
             return;
         }
 

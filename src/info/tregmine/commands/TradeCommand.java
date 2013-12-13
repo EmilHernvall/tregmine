@@ -28,7 +28,7 @@ import info.tregmine.database.IWalletDAO;
 import info.tregmine.database.ITradeDAO;
 import info.tregmine.database.IEnchantmentDAO;
 import info.tregmine.listeners.ExpListener;
-import info.tregmine.api.math.MathUtil;
+import info.tregmine.api.math.Distance;
 
 public class TradeCommand extends AbstractCommand implements Listener
 {
@@ -90,9 +90,9 @@ public class TradeCommand extends AbstractCommand implements Listener
             return true;
         }
 
-        double distance = MathUtil.calcDistance2d(player.getLocation(), target.getLocation());
+        double distance = Distance.calc2d(player.getLocation(), target.getLocation());
 
-        if (!target.hasFlag(TregminePlayer.Flags.INVISIBLE) && 
+        if (!target.hasFlag(TregminePlayer.Flags.INVISIBLE) &&
                 (distance > player.getRank().getTradeDistance(player))) {
             player.sendMessage(RED + "You can only trade with people less than " +
                     player.getRank().getTradeDistance(player) + " blocks away.");
@@ -360,8 +360,8 @@ public class TradeCommand extends AbstractCommand implements Listener
                             + " tregs was " + "added to your wallet!");
                     second.sendMessage(tradePre + ctx.bid
                             + " tregs was " + "withdrawn to your wallet!");
-                    
-                    if ((tradeDAO.getAmountofTrades(first.getId()) > 100) && 
+
+                    if ((tradeDAO.getAmountofTrades(first.getId()) > 100) &&
                             !(first.getBadgeLevel(Badge.MERCHANT) == 0)){
                         first.awardBadgeLevel(Badge.MERCHANT, "For completing 100 transactions!");
                     }

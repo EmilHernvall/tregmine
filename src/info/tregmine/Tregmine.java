@@ -1,17 +1,5 @@
 package info.tregmine;
 
-import info.tregmine.api.*;
-import info.tregmine.commands.*;
-import info.tregmine.database.*;
-import info.tregmine.database.IInventoryDAO.InventoryType;
-import info.tregmine.database.db.DBContextFactory;
-import info.tregmine.listeners.*;
-import info.tregmine.quadtree.IntersectionException;
-import info.tregmine.tools.*;
-import info.tregmine.zones.Lot;
-import info.tregmine.zones.Zone;
-import info.tregmine.zones.ZoneWorld;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
@@ -29,6 +17,18 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.maxmind.geoip.LookupService;
+
+import info.tregmine.api.*;
+import info.tregmine.commands.*;
+import info.tregmine.database.*;
+import info.tregmine.database.IInventoryDAO.InventoryType;
+import info.tregmine.database.db.DBContextFactory;
+import info.tregmine.listeners.*;
+import info.tregmine.quadtree.IntersectionException;
+import info.tregmine.tools.*;
+import info.tregmine.zones.Lot;
+import info.tregmine.zones.Zone;
+import info.tregmine.zones.ZoneWorld;
 
 /**
  * @author Ein Andersson
@@ -197,12 +197,13 @@ public class Tregmine extends JavaPlugin
 
         getCommand("action").setExecutor(new ActionCommand(this));
         getCommand("alert").setExecutor(new AlertCommand(this));
-        getCommand("ban").setExecutor(new BanCommand(this));
         getCommand("badge").setExecutor(new BadgeCommand(this));
+        getCommand("ban").setExecutor(new BanCommand(this));
         getCommand("bless").setExecutor(new BlessCommand(this));
         getCommand("blockhere").setExecutor(new BlockHereCommand(this));
         getCommand("brush").setExecutor(new BrushCommand(this));
         getCommand("channel").setExecutor(new ChannelCommand(this));
+        getCommand("channelview").setExecutor(new ChannelViewCommand(this));
         getCommand("clean").setExecutor(new CleanInventoryCommand(this));
         getCommand("cname").setExecutor(new ChangeNameCommand(this));
         getCommand("createmob").setExecutor(new CreateMobCommand(this));
@@ -260,9 +261,10 @@ public class Tregmine extends JavaPlugin
         getCommand("warn").setExecutor(new WarnCommand(this));
         getCommand("warp").setExecutor(new WarpCommand(this));
         getCommand("weather").setExecutor(new WeatherCommand(this));
+        getCommand("webkick").setExecutor(new WebKickCommand(this));
         getCommand("who").setExecutor(new WhoCommand(this));
         getCommand("zone").setExecutor(new ZoneCommand(this, "zone"));
-        
+
         ToolCraftRegistry.RegisterRecipes(getServer()); // Registers all tool recipes
     }
 
@@ -590,11 +592,11 @@ public class Tregmine extends JavaPlugin
     {
         return zones.get(zoneId);
     }
-    
+
     // ============================================================================
     // Auto Save Alert
     // ============================================================================
-    
+
     @EventHandler
     public void autoSave(WorldSaveEvent event){
         Bukkit.broadcastMessage(ChatColor.DARK_RED + "Tregmine is saving, You may experience some slowness.");
