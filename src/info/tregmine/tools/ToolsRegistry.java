@@ -77,11 +77,11 @@ public class ToolsRegistry
         ItemStack Aoe = new ItemStack(Material.PAPER, 1);
         ItemMeta meta = Aoe.getItemMeta();
         
-        meta.setDisplayName(ChatColor.GREEN + "Token: Area of Effect!");
+        meta.setDisplayName(ChatColor.GREEN + "Token: GravityGun!");
         
         List<String> lores = new ArrayList<String>();
-        lores.add(ChatColor.AQUA + "Shapeless craft with a tool of your choice!");
-        lores.add(ChatColor.GOLD + "Pickaxe / Shovel");
+        lores.add(ChatColor.AQUA + "Shapeless craft with a diamond hoe!");
+        lores.add(ChatColor.GOLD + "Diamond Hoe");
         
         meta.setLore(lores);
         
