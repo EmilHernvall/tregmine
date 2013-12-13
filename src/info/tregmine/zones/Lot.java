@@ -18,7 +18,8 @@ public class Lot
         FISHY_SHARE, // default false == 4
         PRIVATE, // default false == 8
         FREE_BUILD, // default false == 16
-        PVP; // default false == 32
+        PVP, // default false == 32
+        BANK;
     }
 
     private int id;

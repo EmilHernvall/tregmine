@@ -119,4 +119,10 @@ public class DBContext implements IContext
     {
         return new DBEnchantmentDAO(conn);
     }
+    
+    @Override
+    public IBankDAO getBankDAO()
+    {
+        return new DBBankDAO(conn);
+    }
 }
