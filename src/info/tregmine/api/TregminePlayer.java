@@ -568,11 +568,7 @@ public class TregminePlayer extends PlayerDelegate
                 this.saveInventory(currentInventory);
             }
 
-            this.getInventory().clear();
-            this.getInventory().setHelmet(null);
-            this.getInventory().setChestplate(null);
-            this.getInventory().setLeggings(null);
-            this.getInventory().setBoots(null);
+            boolean firstTime = false;
             
             int id3;
             id3 = dao.fetchInventory(this, name, "main");
@@ -580,18 +576,31 @@ public class TregminePlayer extends PlayerDelegate
                 dao.createInventory(this, name, "main");
                 plugin.LOGGER.info("INVENTORY: Creating");
                 id3 = dao.fetchInventory(this, name, "main");
+                this.saveInventory(name);
+                firstTime = true;
             }
-            
-            dao.loadInventory(this, id3, "main");
-            plugin.LOGGER.info("INVENTORY: Loading main inventory " + id3 + " (" + this.getName() + ")");
-            
+
             int id4;
             id4 = dao.fetchInventory(this, name, "armour");
             while (id4 == -1) {
                 dao.createInventory(this, name, "armour");
                 plugin.LOGGER.info("INVENTORY: Creating");
                 id4 = dao.fetchInventory(this, name, "armour");
+                firstTime = true;
             }
+            
+            if (firstTime) {
+                this.saveInventory(name);
+            }
+            
+            this.getInventory().clear();
+            this.getInventory().setHelmet(null);
+            this.getInventory().setChestplate(null);
+            this.getInventory().setLeggings(null);
+            this.getInventory().setBoots(null);
+            
+            dao.loadInventory(this, id3, "main");
+            plugin.LOGGER.info("INVENTORY: Loading main inventory " + id3 + " (" + this.getName() + ")");
             
             dao.loadInventory(this, id4, "armour");
             plugin.LOGGER.info("INVENTORY: Loading armour inventory " + id4 + " (" + this.getName() + ")");
