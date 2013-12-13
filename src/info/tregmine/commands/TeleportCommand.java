@@ -111,7 +111,7 @@ public class TeleportCommand extends AbstractCommand
 
         double distance = Distance.calc2d(player.getLocation(),
                                           target.getLocation());
-        if (distance < rank.getTeleportDistanceLimit()) {
+        if (distance <= rank.getTeleportDistanceLimit()) {
             player.sendMessage(AQUA + "You started teleport to " +
                     target.getName() + AQUA + " in " + BLUE +
                     targetWorld.getName() + ".");
