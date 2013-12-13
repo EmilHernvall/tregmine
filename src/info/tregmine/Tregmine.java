@@ -128,7 +128,6 @@ public class Tregmine extends JavaPlugin
             this.fishyBlocks = fishyBlockDAO.loadFishyBlocks(getServer());
 
             LOGGER.info("Loaded " + fishyBlocks.size() + " fishy blocks");
-            
         } catch (DAOException e) {
             throw new RuntimeException(e);
         }
@@ -282,7 +281,6 @@ public class Tregmine extends JavaPlugin
                     + "Tregmine successfully unloaded. Version "
                     + getDescription().getVersion());
             
-            player.saveInventory(player.getCurrentInventory());
             removePlayer(player);
         }
 
@@ -594,11 +592,6 @@ public class Tregmine extends JavaPlugin
     public Zone getZone(int zoneId)
     {
         return zones.get(zoneId);
-    }
-    
-    public Map<Integer, Tank> getTanks()
-    {
-        return liquidTanks;
     }
 
     // ============================================================================
