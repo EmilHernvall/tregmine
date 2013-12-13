@@ -21,7 +21,7 @@ public class ToolSpawnCommand extends AbstractCommand
     {
         if (!player.getRank().canSpawnTools()) return true;
         if (args.length != 1) {
-            player.sendMessage(ChatColor.RED + "Usage: /tool <lumber/vein/aoe>");
+            player.sendMessage(ChatColor.RED + "Usage: /tool <lumber/vein/gravity>");
             return true;
         }
         
@@ -37,10 +37,13 @@ public class ToolSpawnCommand extends AbstractCommand
             case "aoe":
                 tool = ToolsRegistry.AreaOfEffect();
                 break;
+            case "gravity":
+                tool = ToolsRegistry.GravityGun();
+                break;
         }
         
         if (tool == null) {
-            player.sendMessage(ChatColor.RED + "Usage: /tool <lumber/vein/aoe>");
+            player.sendMessage(ChatColor.RED + "Usage: /tool <lumber/vein/gravity>");
             return true;
         }
         
