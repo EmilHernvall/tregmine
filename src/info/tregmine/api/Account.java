@@ -22,11 +22,11 @@ public class Account
     {
         Random r = new Random(9);
         StringBuilder sb = new StringBuilder();
-        for(int i = 0; i < 12; i++){
+        for(int i = 0; i < 3; i++){
             sb.append(r.nextInt());
         }
         try{
-            account_number = Integer.parseInt(sb.toString().trim());
+            account_number = Integer.parseInt(String.valueOf(id) + sb.toString().trim());
         }catch(NumberFormatException e){
             
         }
