@@ -51,6 +51,7 @@ public class BankListener implements Listener
             player.sendMessage(ChatColor.GREEN + "[BANK] " + "Type \"deposit x\" to deposit x into your account, \n"
                     + "if you do not have an account, a new one will be created.");
             player.sendMessage(ChatColor.GREEN + "[BANK] " + "Type \"balance\" to check your current balance");
+            player.sendMessage(ChatColor.GREEN + "[BANK] " + "Type \"account x\" to switch account number");
             return;
         }
         
@@ -65,6 +66,7 @@ public class BankListener implements Listener
             IBankDAO dao = ctx.getBankDAO();
             IWalletDAO wDao = ctx.getWalletDAO();
             Bank bank = dao.getBank(lot.getName());
+            Account acct = dao.getAccount(bank, player.getName());
             if(args[0].equalsIgnoreCase("withdraw")){
                 if(args.length == 2){
                     try{
@@ -91,10 +93,10 @@ public class BankListener implements Listener
                         long amount = Long.parseLong(args[1]);
                         if(wDao.take(player, amount)){
                             if(dao.getAccount(bank, player.getName()) == null){
-                                Account acct = new Account();
+                                Account acct1 = new Account();
                                 acct.setBank(bank);
                                 acct.setPlayer(player.getName());
-                                dao.createAccount(acct, player.getName(), amount);
+                                dao.createAccount(acct1, player.getName(), amount);
                                 player.sendMessage(ChatColor.AQUA + "[BANK] " + "You created a new account with a balance of"
                                         + ChatColor.GOLD + amount + ChatColor.AQUA + " tregs");
                             }else{
@@ -116,6 +118,19 @@ public class BankListener implements Listener
                 player.sendMessage(ChatColor.AQUA + "[BANK] " + "Your account balance is " + ChatColor.GOLD +
                         dao.getAccount(bank, player.getName()).getBalance() + ChatColor.AQUA + " tregs");
                 return;
+            }
+            
+            if(args[0].equalsIgnoreCase("account")){
+                if(args.length == 2){
+                    int i = 0;
+                    try{
+                        i = Integer.parseInt(args[1]);
+                    }catch(NumberFormatException e){
+                        i = dao.getAccount(bank, player.getName()).getAccountNumber();
+                    }
+                    acct = dao.getAccount(bank, i);
+                    player.sendMessage(ChatColor.GREEN + "[BANK] " + "Switched to account " + i);
+                }
             }
             
         } catch (DAOException e) {
