@@ -3,6 +3,7 @@ package info.tregmine.christmas.listeners;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Giant;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -76,9 +77,9 @@ public class SpawnListener implements Listener {
 
 	public void setHand(LivingEntity e)
 	{
-		ItemStack hand = new ItemStack(Material.CAKE_BLOCK,1);
+		ItemStack hand = new ItemStack(Material.CAKE,1);
 		ItemMeta meta = hand.getItemMeta();
-		meta.setDisplayName("Present");
+		meta.setDisplayName("Christmas Pudding");
 		hand.setItemMeta(meta);
 
 		EntityEquipment ee = e.getEquipment();
@@ -87,13 +88,24 @@ public class SpawnListener implements Listener {
 
 	@EventHandler
 	public void onSpawn(CreatureSpawnEvent e) {
-		if (e.getEntityType() == EntityType.ZOMBIE || e.getEntityType() == EntityType.SKELETON) {
+		if (e.getEntity().getWorld().getName() != "Christmas"){
+			return;
+		}
+
+		if(e.getEntityType() == EntityType.GIANT ||
+				e.getEntityType() == EntityType.VILLAGER ||
+				e.getEntityType() == EntityType.WITCH){
+			return;
+		}
+		
+		if (e.getEntityType() == EntityType.ZOMBIE || 
+				e.getEntityType() == EntityType.SKELETON) {
 			setHelmet(e.getEntity());
 			setChest(e.getEntity());
 			setLegs(e.getEntity());
 			setBoots(e.getEntity());
 			setHand(e.getEntity());
-		}else{
+		}else if (e.getEntity().getCustomName() == null){
 			e.setCancelled(true);
 		}
 	}

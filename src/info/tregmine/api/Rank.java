@@ -484,6 +484,12 @@ public enum Rank
                 this == JUNIOR_ADMIN ||
                 this == SENIOR_ADMIN;
     }
+    
+    public boolean canChannelView()
+    {
+        return this == JUNIOR_ADMIN ||
+               this == SENIOR_ADMIN;
+    }
 
     public int getTeleportTimeout()
     {

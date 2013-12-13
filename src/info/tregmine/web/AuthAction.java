@@ -3,6 +3,8 @@ package info.tregmine.web;
 import java.io.PrintWriter;
 import java.util.Random;
 import java.util.Map;
+import java.util.List;
+import java.util.Date;
 
 import org.eclipse.jetty.server.Request;
 
@@ -13,8 +15,12 @@ import org.json.JSONException;
 
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
+import info.tregmine.api.PlayerReport;
 import info.tregmine.WebServer;
 import info.tregmine.WebHandler;
+import info.tregmine.database.DAOException;
+import info.tregmine.database.IContext;
+import info.tregmine.database.IPlayerReportDAO;
 
 public class AuthAction implements WebHandler.Action
 {
@@ -50,6 +56,7 @@ public class AuthAction implements WebHandler.Action
     private int playerId;
     private boolean found = false;
     private String token = null;
+    private String reason = null;
 
     public AuthAction(int playerId)
     {
@@ -67,6 +74,31 @@ public class AuthAction implements WebHandler.Action
         return buffer.toString();
     }
 
+    private boolean checkForBan(Tregmine tregmine, TregminePlayer player)
+    {
+        try (IContext ctx = tregmine.createContext()) {
+            IPlayerReportDAO reportDAO = ctx.getPlayerReportDAO();
+            List<PlayerReport> reports = reportDAO.getReportsBySubject(player);
+            for (PlayerReport report : reports) {
+                Date validUntil = report.getValidUntil();
+                if (validUntil == null) {
+                    continue;
+                }
+                if (validUntil.getTime() < System.currentTimeMillis()) {
+                    continue;
+                }
+
+                if (report.getAction() == PlayerReport.Action.BAN) {
+                    return true;
+                }
+            }
+        } catch (DAOException e) {
+            throw new RuntimeException(e);
+        }
+
+        return false;
+    }
+
     @Override
     public void queryGameState(Tregmine tregmine)
     {
@@ -78,10 +110,19 @@ public class AuthAction implements WebHandler.Action
             String currentToken = entry.getKey();
             TregminePlayer currentPlayer = entry.getValue();
             if (currentPlayer.getId() == playerId) {
-                token = currentToken;
-                found = true;
-                Tregmine.LOGGER.info("Restoring token " + token + " to " +
-                                     currentPlayer.getChatName());
+                if (!checkForBan(tregmine, currentPlayer)) {
+                    token = currentToken;
+                    found = true;
+                    Tregmine.LOGGER.info("Restoring token " + token + " to " +
+                                         currentPlayer.getRealName());
+                } else {
+                    token = null;
+                    found = false;
+                    reason = "Banned";
+                    Tregmine.LOGGER.info("Refused to restore token for " +
+                            currentPlayer.getRealName() + " due to ban.");
+                    authTokens.remove(currentToken);
+                }
                 return;
             }
         }
@@ -93,12 +134,21 @@ public class AuthAction implements WebHandler.Action
             return;
         }
 
-        // and generate a new token
-        token = generateToken();
-        authTokens.put(token, player);
-        found = true;
+        if (!checkForBan(tregmine, player)) {
+            // and generate a new token
+            token = generateToken();
+            authTokens.put(token, player);
+            found = true;
 
-        Tregmine.LOGGER.info("Assigned token " + token + " to " + player.getChatName());
+            Tregmine.LOGGER.info("Assigned token " + token + " to " + player.getRealName());
+        } else {
+            token = null;
+            found = false;
+            reason = "Banned";
+
+            Tregmine.LOGGER.info("Denied token for " + player.getRealName() +
+                    " due to ban.");
+        }
     }
 
     @Override

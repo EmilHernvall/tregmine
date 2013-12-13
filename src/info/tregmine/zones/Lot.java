@@ -16,7 +16,9 @@ public class Lot
         AUTOBLESS, // default true == 1
         FLIGHT_ALLOWED, // default true == 2
         FISHY_SHARE, // default false == 4
-        PRIVATE; // default false == 8
+        PRIVATE, // default false == 8
+        FREE_BUILD, // default false == 16
+        PVP; // default false == 32
     }
 
     private int id;

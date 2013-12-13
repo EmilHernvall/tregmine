@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import org.bukkit.World;
+import org.bukkit.Location;
 
 public class ZoneWorld
 {
@@ -87,6 +88,18 @@ public class ZoneWorld
 
     public Lot findLot(Point p)
     {
+        return lotLookup.find(p);
+    }
+
+    public Zone findZone(Location location)
+    {
+        Point p = new Point(location.getBlockX(), location.getBlockZ());
+        return zonesLookup.find(p);
+    }
+
+    public Lot findLot(Location location)
+    {
+        Point p = new Point(location.getBlockX(), location.getBlockZ());
         return lotLookup.find(p);
     }
 

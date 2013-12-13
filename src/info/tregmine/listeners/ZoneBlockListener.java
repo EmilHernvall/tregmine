@@ -3,12 +3,16 @@ package info.tregmine.listeners;
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
 import info.tregmine.api.math.Distance;
+import info.tregmine.zones.Lot;
+import info.tregmine.zones.Zone;
+import info.tregmine.zones.ZoneWorld;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 //import org.bukkit.entity.HumanEntity;
 //import org.bukkit.entity.Player;
@@ -27,17 +31,16 @@ public class ZoneBlockListener implements Listener
     {
         TregminePlayer player = plugin.getPlayer(event.getPlayer());
 
-        
         Location location = event.getBlock().getLocation();
         if (player.hasBlockPermission(location, true)) return;
-        
+
         /*if (!player.getRank().canBuild() &&
                 player.getMentor() != null) {
-            
+
                 TregminePlayer mentor = player.getMentor();
                 Location a = player.getLocation();
                 Location b = mentor.getLocation();
-                
+
                 if (Distance.calc2d(a, b) > 50) {
                     player.sendMessage(ChatColor.YELLOW + "You have to stay within " +
                             "a 50 block radius of your mentor in order to build.");
@@ -60,16 +63,16 @@ public class ZoneBlockListener implements Listener
         TregminePlayer player = plugin.getPlayer(event.getPlayer());
 
         Location location = event.getBlock().getLocation();
-        
+
         if (player.hasBlockPermission(location, true)) return;
 
         /*if (!player.getRank().canBuild() &&
                 player.getMentor() != null) {
-            
+
                 TregminePlayer mentor = player.getMentor();
                 Location a = player.getLocation();
                 Location b = mentor.getLocation();
-                
+
                 if (Distance.calc2d(a, b) > 50) {
                     player.sendMessage(ChatColor.YELLOW + "You have to stay within " +
                             "a 50 block radius of your mentor in order to build.");
@@ -84,5 +87,55 @@ public class ZoneBlockListener implements Listener
         }*/
 
         event.setCancelled(true);
+    }
+    
+    // Keeps liquids in the zone/lot they were originally placed in.
+    @EventHandler
+    public void onLiquid(BlockFromToEvent event)
+    {
+        ZoneWorld world = plugin.getWorld(event.getBlock().getWorld());
+        
+        Zone zone = world.findZone(event.getBlock().getLocation());
+        Zone zoneTo = world.findZone(event.getToBlock().getLocation());
+        
+        // If liquid flows into a zone from wilderness
+        if (zone == null &&
+                zoneTo != null) {
+            event.setCancelled(true);
+            return;
+        }
+        
+        // If liquid flows from a zone into another zone
+        if (zone != null &&
+                zoneTo != null &&
+                !zone.getName().equalsIgnoreCase(zoneTo.getName())) {
+            event.setCancelled(true);
+            return;
+        }
+        
+        Lot lot = world.findLot(event.getBlock().getLocation());
+        Lot lotTo = world.findLot(event.getToBlock().getLocation());
+        
+        // If liquid flows from a lot into a lot
+        if (lot != null &&
+                lotTo != null &&
+                !lot.getName().equalsIgnoreCase(lotTo.getName())) {
+            event.setCancelled(true);
+            return;
+        }
+        
+        // If liquid flows from a zone into a lot
+        if (lot == null &&
+                lotTo != null) {
+            event.setCancelled(true);
+            return;
+        }
+        
+        // If liquid flows from a lot into a zone
+        if (lot != null &&
+                lotTo == null) {
+            event.setCancelled(true);
+            return;
+        }
     }
 }
