@@ -88,6 +88,11 @@ public class LotCommand extends AbstractCommand
             player.sendMessage(RED + "No lot named " + name + " found.");
             return;
         }
+        
+        if(!lot.isOwner(player)) {
+            player.sendMessage(RED + "Must be a lot owner!");
+            return;
+        }
 
         Lot.Flags flag = null;
         for (Lot.Flags i : Lot.Flags.values()) {
