@@ -4,10 +4,11 @@ import info.tregmine.api.TregminePlayer;
 import info.tregmine.zones.Zone;
 
 import org.bukkit.Location;
+import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-public final class PlayerZoneChangeEvent extends Event
+public final class PlayerZoneChangeEvent extends Event implements Cancellable
 {
     private static final HandlerList handlers = new HandlerList();
     private boolean cancelled;
