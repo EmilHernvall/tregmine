@@ -10,6 +10,7 @@ import org.bukkit.event.HandlerList;
 public final class PlayerZoneChangeEvent extends Event
 {
     private static final HandlerList handlers = new HandlerList();
+    private boolean cancelled;
     private Location from;
     private Location to;
     private TregminePlayer player;
@@ -78,5 +79,15 @@ public final class PlayerZoneChangeEvent extends Event
     public void setNew(Zone value)
     {
         this.newZone = value;
+    }
+    
+    public boolean isCancelled()
+    {
+        return cancelled;
+    }
+ 
+    public void setCancelled(boolean cancel)
+    {
+        cancelled = cancel;
     }
 }
