@@ -36,7 +36,7 @@ public class GrinchDefeatSpeech implements Listener {
 			@Override
 			public void run() {
 				p.sendMessage(string2);
-				speechPt2(p);
+				speechPt3(p);
 			}
         }, 20L);
 	}
