@@ -135,6 +135,11 @@ public class ZoneCommand extends AbstractCommand
             player.sendMessage(RED + "No zone named " + name + " found.");
             return;
         }
+        
+        if (zone.getUser(player) != Zone.Permission.Owner) {
+            player.sendMessage(RED + "You must be the zone owner to flag!");
+            return;
+        }
 
         Zone.Flags flag = null;
         for (Zone.Flags i : Zone.Flags.values()) {
