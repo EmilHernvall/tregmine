@@ -4,12 +4,14 @@ import info.tregmine.api.TregminePlayer;
 import info.tregmine.zones.Lot;
 
 import org.bukkit.Location;
+import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-public final class PlayerLotChangeEvent extends Event
+public final class PlayerLotChangeEvent extends Event implements Cancellable
 {
     private static final HandlerList handlers = new HandlerList();
+    private boolean cancelled;
     private Location from;
     private Location to;
     private TregminePlayer player;
@@ -78,5 +80,15 @@ public final class PlayerLotChangeEvent extends Event
     public void setNew(Lot value)
     {
         this.newLot = value;
+    }
+    
+    public boolean isCancelled()
+    {
+        return cancelled;
+    }
+ 
+    public void setCancelled(boolean cancel)
+    {
+        cancelled = cancel;
     }
 }
