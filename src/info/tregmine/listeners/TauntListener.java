@@ -77,8 +77,15 @@ public class TauntListener implements Listener
             return;
         }
         
+        boolean lotPVP = false;
+        Lot potentialLot = world.findLot(location);
+        if (lot != null &&
+            potentialLot.hasFlag(Lot.Flags.PVP)) {
+            lotPVP = true;
+        }
+        
         if (cause == DamageCause.ENTITY_ATTACK &&
-                currentZone.isPvp() &&
+                (currentZone.isPvp() || lotPVP == true) &&
                 playerCause == true) {
             
             World w = player.getWorld();
