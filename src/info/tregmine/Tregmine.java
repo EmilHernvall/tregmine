@@ -23,6 +23,7 @@ import info.tregmine.commands.*;
 import info.tregmine.database.*;
 import info.tregmine.database.IInventoryDAO.InventoryType;
 import info.tregmine.database.db.DBContextFactory;
+import info.tregmine.events.CallEventListener;
 import info.tregmine.listeners.*;
 import info.tregmine.quadtree.IntersectionException;
 import info.tregmine.tools.*;
@@ -161,6 +162,7 @@ public class Tregmine extends JavaPlugin
         pluginMgm.registerEvents(new ToolCraft(this), this);
         pluginMgm.registerEvents(new LumberListener(this), this);
         pluginMgm.registerEvents(new VeinListener(this), this);
+        pluginMgm.registerEvents(new CallEventListener(this), this);
 
         // Declaration of all commands
         getCommand("admins").setExecutor(
