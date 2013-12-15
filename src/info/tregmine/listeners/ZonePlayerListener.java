@@ -317,7 +317,7 @@ public class ZonePlayerListener implements Listener
         }
 
         // sneaky placement
-        if (!lot.hasFlag(Lot.Flags.FLIGHT_ALLOWED) &&
+        if (lot.hasFlag(Lot.Flags.FLIGHT_ALLOWED) &&
             !player.getRank().canModifyZones()) {
 
             player.setFlying(false);
