@@ -1,26 +1,21 @@
 package info.tregmine.listeners;
 
-import java.util.Map;
-import java.util.HashMap;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Random;
-import java.util.Set;
-import java.util.Queue;
-
+import info.tregmine.Tregmine;
+import info.tregmine.api.Badge;
+import info.tregmine.api.PlayerBannedException;
+import info.tregmine.api.Rank;
+import info.tregmine.api.TregminePlayer;
+import info.tregmine.api.lore.Created;
+import info.tregmine.api.util.ScoreboardClearTask;
+import info.tregmine.commands.MentorCommand;
+import info.tregmine.database.*;
 import info.tregmine.quadtree.Point;
 import info.tregmine.zones.Lot;
 import info.tregmine.zones.ZoneWorld;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.SkullType;
+
+import java.util.*;
+
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Skull;
@@ -33,34 +28,9 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.event.player.PlayerLoginEvent.Result;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.scoreboard.DisplaySlot;
-import org.bukkit.scoreboard.Objective;
-import org.bukkit.scoreboard.Score;
-import org.bukkit.scoreboard.Scoreboard;
-import org.bukkit.scoreboard.ScoreboardManager;
+import org.bukkit.scoreboard.*;
 import org.kitteh.tag.PlayerReceiveNameTagEvent;
-
-import info.tregmine.Tregmine;
-import info.tregmine.api.Badge;
-import info.tregmine.api.PlayerReport;
-import info.tregmine.api.TregminePlayer;
-import info.tregmine.api.Rank;
-import info.tregmine.api.PlayerBannedException;
-import info.tregmine.api.lore.Created;
-import info.tregmine.api.util.ScoreboardClearTask;
-import info.tregmine.database.DAOException;
-import info.tregmine.database.IContext;
-import info.tregmine.database.IInventoryDAO;
-import info.tregmine.database.IMotdDAO;
-import info.tregmine.database.ILogDAO;
-import info.tregmine.database.IPlayerDAO;
-import info.tregmine.database.IPlayerReportDAO;
-import info.tregmine.database.IWalletDAO;
-import info.tregmine.database.IMentorLogDAO;
-import info.tregmine.commands.MentorCommand;
-import static info.tregmine.database.IInventoryDAO.InventoryType;
 
 public class TregminePlayerListener implements Listener
 {
@@ -176,6 +146,16 @@ public class TregminePlayerListener implements Listener
                 }
             }
         }
+        
+        TregminePlayer p = plugin.getPlayer(player);
+        p.saveInventory(p.getCurrentInventory());
+    }
+    
+    @EventHandler
+    public void onPlayerRespawnSave(PlayerRespawnEvent event)
+    {
+        TregminePlayer p = plugin.getPlayer(event.getPlayer());
+        p.saveInventory(p.getCurrentInventory());
     }
 
     @EventHandler
@@ -306,7 +286,9 @@ public class TregminePlayerListener implements Listener
                 current.showPlayer(player);
             }
         }
-
+        
+        player.loadInventory("survival", false);
+        
         // Hide currently invisible players from the player that just signed on
         for (TregminePlayer current : players) {
             if (current.hasFlag(TregminePlayer.Flags.INVISIBLE)) {
@@ -365,24 +347,6 @@ public class TregminePlayerListener implements Listener
                 player.sendMessage(ChatColor.DARK_GREEN + "Congratulations! " +
                                    "You are now a resident on Tregmine!");
             }
-
-            // Load inventory from DB - disabled until we know it's reliable
-            /*PlayerInventory inv = (PlayerInventory) player.getInventory();
-
-            DBInventoryDAO invDAO = new DBInventoryDAO(conn);
-
-            int invId = invDAO.getInventoryId(player.getId(), InventoryType.PLAYER);
-            if (invId != -1) {
-                Tregmine.LOGGER.info("Loaded inventory from DB");
-                inv.setContents(invDAO.getStacks(invId, inv.getSize()));
-            }
-
-            int armorId = invDAO.getInventoryId(player.getId(),
-                                                InventoryType.PLAYER_ARMOR);
-            if (armorId != -1) {
-                Tregmine.LOGGER.info("Loaded armor from DB");
-                inv.setArmorContents(invDAO.getStacks(armorId, 4));
-            }*/
 
             // Load motd
             IMotdDAO motdDAO = ctx.getMotdDAO();
@@ -462,7 +426,8 @@ public class TregminePlayerListener implements Listener
                     "in players map when quitting.");
             return;
         }
-
+        
+        player.saveInventory(player.getCurrentInventory());
         event.setQuitMessage(null);
 
         if (!player.isOp()) {

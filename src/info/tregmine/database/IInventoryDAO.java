@@ -1,14 +1,12 @@
 package info.tregmine.database;
 
-import java.util.Map;
+import info.tregmine.api.InventoryAccess;
+import info.tregmine.api.TregminePlayer;
+
 import java.util.List;
 
 import org.bukkit.Location;
-import org.bukkit.Server;
 import org.bukkit.inventory.ItemStack;
-
-import info.tregmine.api.TregminePlayer;
-import info.tregmine.api.InventoryAccess;
 
 public interface IInventoryDAO
 {
@@ -51,4 +49,22 @@ public interface IInventoryDAO
 
     public List<InventoryAccess> getAccessLog(int inventoryId,
                                               int count) throws DAOException;
+    
+    
+    public void saveInventory(TregminePlayer player,
+                                int inventoryID,
+                                String type) throws DAOException;
+    
+    public void loadInventory(TregminePlayer player,
+                                int inventoryID,
+                                String type) throws DAOException;
+    
+    public int fetchInventory(TregminePlayer player,
+                                String inventoryName,
+                                String type) throws DAOException;
+    
+    public void createInventory(TregminePlayer player,
+                                String inventoryName,
+                                String type) throws DAOException;
+    
 }
