@@ -136,7 +136,7 @@ public class GameMagic extends JavaPlugin implements Listener
                 new Runnable() {
             public void run() {
                 World world = GameMagic.this.getServer().getWorld("world");
-                Location loc = world.getSpawnLocation();
+                Location loc = world.getSpawnLocation().add(0.5, 0, 0.5);
 
                 FireworksFactory factory = new FireworksFactory();
                 factory.addColor(Color.BLUE);
