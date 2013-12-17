@@ -448,3 +448,5 @@ CREATE TABLE IF NOT EXISTS `playerinventory_item` (
   PRIMARY KEY (`item_id`),
   INDEX idx_inv (inventory_id)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+
+ALTER TABLE player ADD player_inventory VARCHAR (255);
