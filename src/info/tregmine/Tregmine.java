@@ -161,7 +161,6 @@ public class Tregmine extends JavaPlugin
         pluginMgm.registerEvents(new ToolCraft(this), this);
         pluginMgm.registerEvents(new LumberListener(this), this);
         pluginMgm.registerEvents(new VeinListener(this), this);
-        pluginMgm.registerEvents(new PortalListener(this), this);
 
         // Declaration of all commands
         getCommand("admins").setExecutor(
