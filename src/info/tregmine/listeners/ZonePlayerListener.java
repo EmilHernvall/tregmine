@@ -1,17 +1,21 @@
 package info.tregmine.listeners;
 
+import info.tregmine.Tregmine;
+import info.tregmine.api.Rank;
+import info.tregmine.api.TregminePlayer;
+import info.tregmine.api.util.ScoreboardClearTask;
+import info.tregmine.events.PlayerLotChangeEvent;
+import info.tregmine.quadtree.Point;
+import info.tregmine.zones.Lot;
+import info.tregmine.zones.Zone;
+import info.tregmine.zones.ZoneWorld;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -21,28 +25,11 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.hanging.HangingPlaceEvent;
-import org.bukkit.event.player.PlayerBucketEmptyEvent;
-import org.bukkit.event.player.PlayerChangedWorldEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
-import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scoreboard.DisplaySlot;
-import org.bukkit.scoreboard.Objective;
-import org.bukkit.scoreboard.Score;
-import org.bukkit.scoreboard.Scoreboard;
-import org.bukkit.scoreboard.ScoreboardManager;
+import org.bukkit.scoreboard.*;
 import org.bukkit.util.Vector;
-
-import info.tregmine.Tregmine;
-import info.tregmine.api.TregminePlayer;
-import info.tregmine.api.Rank;
-import info.tregmine.quadtree.Point;
-import info.tregmine.zones.Lot;
-import info.tregmine.zones.Zone;
-import info.tregmine.zones.ZoneWorld;
-import info.tregmine.api.util.ScoreboardClearTask;
 
 public class ZonePlayerListener implements Listener
 {
@@ -291,52 +278,31 @@ public class ZonePlayerListener implements Listener
 
     // For Lot Flag: Lot.Flags.PRIVATE;
     @EventHandler
-    public void onPlayerMoveLot(PlayerMoveEvent event)
+    public void onPlayerMoveLot(PlayerLotChangeEvent event)
     {
-        TregminePlayer player = plugin.getPlayer(event.getPlayer());
-        if (player == null) {
-            event.getPlayer().kickPlayer("Something went wrong");
-            Tregmine.LOGGER.info(event.getPlayer().getName() + " was not found " +
-                    "in players map (PlayerMoveEvent).");
+        if (!event.getNew().hasFlag(Lot.Flags.FLIGHT_ALLOWED) &&
+            !event.getPlayer().getRank().canModifyZones()) {
+
+            event.getPlayer().setFlying(false);
+        }
+
+        // Owner of the lot so bypasses private flag.
+        if (event.getNew().isOwner(event.getPlayer())) {
             return;
         }
 
-        ZoneWorld world = plugin.getWorld(player.getWorld());
-
-        Location movingFrom = event.getFrom();
-        Point oldPos =
-            new Point(movingFrom.getBlockX(), movingFrom.getBlockZ());
-
-        Location movingTo = event.getTo();
-        Point currentPos =
-            new Point(movingTo.getBlockX(), movingTo.getBlockZ());
-
-        Lot lot = world.findLot(currentPos);
-        if (lot == null) { // Not a lot so I dont care.
+        // Let admins bypass protection, but warn them just incase.
+        if (event.getPlayer().getRank().canModifyZones()) {
             return;
         }
 
-        // sneaky placement
-        if (lot.hasFlag(Lot.Flags.FLIGHT_ALLOWED) &&
-            !player.getRank().canModifyZones()) {
-
-            player.setFlying(false);
-        }
-
-        if (lot.isOwner(player)) { // Owner of the lot so bypasses private flag.
+        // If not private flagged lot, then return.
+        if (!event.getNew().hasFlag(Lot.Flags.PRIVATE)) {
             return;
         }
 
-        if (player.getRank().canModifyZones()) { // Let admins bypass protection, but warn them just incase.
-            return;
-        }
-
-        if (!lot.hasFlag(Lot.Flags.PRIVATE)) { // If not private flagged lot, then return.
-            return;
-        }
-
-        movePlayerBack(player, movingFrom, movingTo);
-        player.sendMessage(ChatColor.RED + "[" + lot.getName() + "] "
+        movePlayerBack(event.getPlayer(), event.getFrom(), event.getTo());
+        event.getPlayer().sendMessage(ChatColor.RED + "[" + event.getNew().getName() + "] "
                 + "This lot is private to it's owners! Please contact the lot owners.");
     }
 
@@ -403,9 +369,9 @@ public class ZonePlayerListener implements Listener
                         return;
                     }
                     else if (currentZone.hasFlag(Zone.Flags.REQUIRE_RESIDENCY) &&
-                             (player.getRank() == Rank.TOURIST ||
-                              player.getRank() == Rank.SETTLER ||
-                              player.getRank() == Rank.UNVERIFIED)) {
+                            (player.getRank() == Rank.TOURIST ||
+                             player.getRank() == Rank.SETTLER ||
+                             player.getRank() == Rank.UNVERIFIED)) {
                         blockedMessage(currentZone, player);
                         movePlayerBack(player, movingFrom, movingTo);
                         return;
@@ -607,7 +573,7 @@ public class ZonePlayerListener implements Listener
         player.sendMessage(ChatColor.RED + "[" + currentZone.getName() + "] "
                 + "You are banned from " + currentZone.getName() + ".");
     }
-    
+
     private void blockedMessage(Zone currentZone, TregminePlayer player)
     {
         player.sendMessage(ChatColor.RED + "[" + currentZone.getName() + "] "
