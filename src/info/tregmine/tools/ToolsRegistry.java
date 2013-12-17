@@ -70,6 +70,29 @@ public class ToolsRegistry
                        Material.DIAMOND_PICKAXE);
     
     /**
+     * Creates and returns an ItemStack for the token which will create an GravityGun tool
+     * @return ItemStack
+     */
+    public static ItemStack GravityGun() {
+        ItemStack Aoe = new ItemStack(Material.PAPER, 1);
+        ItemMeta meta = Aoe.getItemMeta();
+        
+        meta.setDisplayName(ChatColor.GREEN + "Token: GravityGun!");
+        
+        List<String> lores = new ArrayList<String>();
+        lores.add(ChatColor.AQUA + "Shapeless craft with a diamond hoe!");
+        lores.add(ChatColor.GOLD + "Diamond Hoe");
+        
+        meta.setLore(lores);
+        
+        Aoe.setItemMeta(meta);
+        return Aoe;
+    }
+    public final static String GravityGunLoreTag = ChatColor.GREEN + "[SpecialTool] Gravity Gun!";
+    public final static Set<Material> GravityGunAllowed =
+            EnumSet.of(Material.DIAMOND_HOE);
+    
+    /**
      * Creates and returns an ItemStack for the token which will create an Area of Effect tool
      * @return ItemStack
      */

@@ -65,6 +65,21 @@ public class ToolCraft implements Listener
                     success = true;
                 }
             }
+        } else if (items.contains(ToolsRegistry.GravityGun())){
+            for (ItemStack i : items){
+                if(ToolsRegistry.GravityGunAllowed.contains(i.getType())) {
+                    ItemMeta iMeta = i.getItemMeta();
+                    
+                    List<String> lore = new ArrayList<String>();
+                    lore.add(ToolsRegistry.GravityGunLoreTag);
+                    lore.add(ToolsRegistry.durabilityLoreTag);
+                    iMeta.setLore(lore);
+                    
+                    i.setItemMeta(iMeta);
+                    event.getInventory().setResult(i);
+                    success = true;
+                }
+            }
         } else if (items.contains(ToolsRegistry.AreaOfEffect())){
             for (ItemStack i : items){
                 if(ToolsRegistry.AreaOfEffectAllowed.contains(i.getType())) {
