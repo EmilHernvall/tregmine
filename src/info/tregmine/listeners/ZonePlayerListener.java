@@ -280,6 +280,10 @@ public class ZonePlayerListener implements Listener
     @EventHandler
     public void onPlayerMoveLot(PlayerLotChangeEvent event)
     {
+        if (event.getNew() == null) {
+            return;
+        }
+        
         if (!event.getNew().hasFlag(Lot.Flags.FLIGHT_ALLOWED) &&
             !event.getPlayer().getRank().canModifyZones()) {
 
