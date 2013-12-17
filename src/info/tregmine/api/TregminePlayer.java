@@ -117,6 +117,8 @@ public class TregminePlayer extends PlayerDelegate
         this.plugin = instance;
     }
 
+    public Tregmine getPlugin() { return plugin; }
+
     public void setId(int v) { this.id = v; }
     public int getId() { return id; }
 
