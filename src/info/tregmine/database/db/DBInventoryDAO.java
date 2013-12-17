@@ -457,7 +457,7 @@ public class DBInventoryDAO implements IInventoryDAO
                 if (!rs.next()) {
                     return -1;
                 }
-                return rs.getInt("inventory_id");
+                return rs.getInt("playerinventory_id");
             }
 
         } catch (SQLException e) {

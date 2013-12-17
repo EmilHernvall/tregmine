@@ -433,7 +433,7 @@ CREATE TABLE IF NOT EXISTS `playerinventory` (
   `player_id` int(10) NOT NULL,
   `playerinventory_name` varchar(255) DEFAULT NULL,
   `playerinventory_type` varchar(255) NOT NULL,
-  PRIMARY KEY (`inventory_id`),
+  PRIMARY KEY (`playerinventory_id`),
   INDEX idx_player (player_id)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
@@ -446,7 +446,7 @@ CREATE TABLE IF NOT EXISTS `playerinventory_item` (
   `item_meta` text,
   `item_count` int(10) DEFAULT NULL,
   PRIMARY KEY (`item_id`),
-  INDEX idx_inv (inventory_id)
+  INDEX idx_inv (playerinventory_id)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 ALTER TABLE player ADD player_inventory VARCHAR (255);
