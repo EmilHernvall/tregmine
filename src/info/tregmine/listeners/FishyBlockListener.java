@@ -441,8 +441,13 @@ public class FishyBlockListener implements Listener
                 MaterialData heldMaterial = heldItem.getData();
 
                 boolean match = false;
+                boolean all = false;
                 if (fishyMaterial.equals(heldMaterial)) {
                     match = true;
+                    
+                    if (player.isSneaking()) {
+                        all = true;
+                    }
 
                     if (fishyBlock.hasStoredEnchantments()) {
                         EnchantmentStorageMeta storageMeta = getStorageMeta(heldItem);
@@ -467,12 +472,46 @@ public class FishyBlockListener implements Listener
                                 "damaged items.");
                         return;
                     }
-
-                    fishyBlock.addAvailableInventory(heldItem.getAmount());
-                    player.setItemInHand(null);
-
+                    
+                    int allAmount = 0;
+                    boolean massEnchant = false;
+                    if (all) {
+                        for (ItemStack i : player.getInventory().getContents()) {
+                            boolean allow = true;
+                            if (i == null) {
+                                continue; // Get rid of NPE
+                            }
+                            if (i.getType().getMaxDurability() != 0 && i.getData().getData() != 0) {
+                                continue; // Ignore damaged items
+                            }
+                            if (!fishyMaterial.equals(i.getData())) {
+                                continue; // Ignore items that do not match
+                            }
+                            if (fishyBlock.hasStoredEnchantments()) {
+                                if (massEnchant == false) {
+                                    player.sendMessage(ChatColor.RED + 
+                                            "Mass Submition only works with non enchanted items and blocks.");
+                                    massEnchant = true;
+                                }
+                                continue;
+                            }
+                            if (i.getEnchantments().size() > 0) {
+                                continue;
+                            }
+                            if (!allow) {
+                                continue;
+                            }
+                            allAmount += i.getAmount();
+                            player.getInventory().remove(i);
+                        }
+                    } else {
+                        allAmount = heldItem.getAmount();
+                        player.setItemInHand(null);
+                    }
+                    
+                    fishyBlock.addAvailableInventory(allAmount);
                     player.sendMessage(ChatColor.GREEN + "" +
-                            heldItem.getAmount() + " items added to fishy block.");
+                            allAmount + " items added to fishy block.");
 
                     updateSign(player.getWorld(), fishyBlock);
 
@@ -482,7 +521,7 @@ public class FishyBlockListener implements Listener
                         fishyBlockDAO.insertTransaction(fishyBlock,
                                                         player,
                                                         TransactionType.DEPOSIT,
-                                                        heldItem.getAmount());
+                                                        allAmount);
                     } catch (DAOException e) {
                         throw new RuntimeException(e);
                     }
