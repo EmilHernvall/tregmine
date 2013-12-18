@@ -1,28 +1,25 @@
 package info.tregmine.database.db;
 
+import info.tregmine.api.InventoryAccess;
+import info.tregmine.api.TregminePlayer;
+import info.tregmine.database.DAOException;
+import info.tregmine.database.IInventoryDAO;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.List;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.World;
+import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.configuration.InvalidConfigurationException;
-
-import info.tregmine.api.TregminePlayer;
-import info.tregmine.api.InventoryAccess;
-import info.tregmine.database.IInventoryDAO;
-import info.tregmine.database.DAOException;
 
 public class DBInventoryDAO implements IInventoryDAO
 {
@@ -320,9 +317,10 @@ public class DBInventoryDAO implements IInventoryDAO
 
     @Override
     public void saveInventory(TregminePlayer player, int inventoryID, String type)
-            throws DAOException
+    throws DAOException
     {
-        String sqlDelete = "DELETE FROM playerInventory_items WHERE inventory_id = ?";
+        String sqlDelete = "DELETE FROM playerinventory_item " +
+                           "WHERE playerinventory_id = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(sqlDelete)) {
             stmt.setInt(1, inventoryID);
@@ -330,16 +328,17 @@ public class DBInventoryDAO implements IInventoryDAO
         } catch (SQLException e) {
             throw new DAOException(sqlDelete, e);
         }
-        
+
         ItemStack[] contents;
         if ("main".equalsIgnoreCase(type)) {
             contents = player.getInventory().getContents();
         } else {
             contents = player.getInventory().getArmorContents();
         }
-        
-        String sqlInsert = "INSERT INTO playerInventory_items (inventory_id, item_slot, " +
-            "item_material, item_data, item_meta, item_count, item_durability) ";
+
+        String sqlInsert = "INSERT INTO playerinventory_item (" +
+            "playerinventory_id, item_slot, item_material, item_data, " +
+            "item_meta, item_count, item_durability) ";
         sqlInsert += "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         try (PreparedStatement stmt = conn.prepareStatement(sqlInsert)) {
@@ -354,7 +353,6 @@ public class DBInventoryDAO implements IInventoryDAO
                 stmt.setInt(2, counter);
                 stmt.setInt(3, stack.getTypeId());
                 stmt.setInt(4, stack.getData().getData());
-                stmt.setShort(5, stack.getDurability());
                 if (stack.hasItemMeta()) {
                     YamlConfiguration config = new YamlConfiguration();
                     config.set("meta", stack.getItemMeta());
@@ -364,6 +362,7 @@ public class DBInventoryDAO implements IInventoryDAO
                     stmt.setString(5, "");
                 }
                 stmt.setInt(6, stack.getAmount());
+                stmt.setShort(7, stack.getDurability());
                 stmt.execute();
 
                 counter++;
@@ -375,15 +374,15 @@ public class DBInventoryDAO implements IInventoryDAO
 
     @Override
     public void loadInventory(TregminePlayer player, int inventoryID, String type)
-            throws DAOException
+    throws DAOException
     {
-        String sql = "SELECT * FROM playerInventory_items " +
-                "WHERE inventory_id = ?";
+        String sql = "SELECT * FROM playerinventory_item " +
+                "WHERE playerinventory_id = ?";
 
            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
                stmt.setInt(1, inventoryID);
                stmt.execute();
-        
+
                try (ResultSet rs = stmt.getResultSet()) {
                    while (rs.next()) {
                        int slot = rs.getInt("item_slot");
@@ -392,14 +391,14 @@ public class DBInventoryDAO implements IInventoryDAO
                        int count = rs.getInt("item_count");
                        String meta = rs.getString("item_meta");
                        short durability = rs.getShort("item_durability");
-        
+
                        ItemMeta metaObj = null;
                        if (!"".equals(meta)) {
                            YamlConfiguration config = new YamlConfiguration();
                            config.loadFromString(meta);
                            metaObj = (ItemMeta) config.get("meta");
                        }
-                       
+
                        ItemStack item = new ItemStack(materialId, count, (short) data);
                        if ("main".equalsIgnoreCase(type)) {
                            player.getInventory().setItem(slot, item);
@@ -441,43 +440,47 @@ public class DBInventoryDAO implements IInventoryDAO
 
     @Override
     public int fetchInventory(TregminePlayer player, String inventoryName, String type)
-            throws DAOException
+    throws DAOException
     {
-        String sql = "SELECT * FROM playerInventory " +
-                     "WHERE inventory_name = ? AND inventory_type = ? AND player_id = ?";
-        
+        String sql = "SELECT * FROM playerinventory " +
+                     "WHERE playerinventory_name = ? " +
+                     "AND playerinventory_type = ? " +
+                     "AND player_id = ?";
+
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, inventoryName);
             stmt.setString(2, type);
             stmt.setInt(3, player.getId());
             stmt.execute();
-            
+
             try (ResultSet rs = stmt.getResultSet()) {
                 if (!rs.next()) {
                     return -1;
                 }
-                return rs.getInt("inventory_id");
+                return rs.getInt("playerinventory_id");
             }
-            
+
         } catch (SQLException e) {
             throw new DAOException(sql, e);
         }
     }
 
     @Override
-    public void createInventory(TregminePlayer player, String inventoryName,
-            String type) throws DAOException
+    public void createInventory(TregminePlayer player,
+                                String inventoryName,
+                                String type)
+    throws DAOException
     {
-        String sql = "INSERT INTO playerInventory (player_id, inventory_name, inventory_type) " +
-                "VALUES(?,?,?)";
-   
-           try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-               stmt.setInt(1, player.getId());
-               stmt.setString(2, inventoryName);
-               stmt.setString(3, type);
-               stmt.execute();
-           } catch (SQLException e) {
-               throw new DAOException(sql, e);
-           }
+        String sql = "INSERT INTO playerinventory (player_id, " +
+            "playerinventory_name, playerinventory_type) VALUES (?,?,?)";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, player.getId());
+            stmt.setString(2, inventoryName);
+            stmt.setString(3, type);
+            stmt.execute();
+        } catch (SQLException e) {
+            throw new DAOException(sql, e);
+        }
     }
 }
