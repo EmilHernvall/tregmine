@@ -18,6 +18,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
@@ -228,5 +229,15 @@ public class PortalListener implements Listener
         task.start();
 
         block.setType(Material.AIR);
+    }
+    
+    public void clearUp(PlayerQuitEvent event) {
+        if (gravityTasks.containsKey(event.getPlayer())) {
+            GravityTask task = gravityTasks.get(event.getPlayer());
+            task.currentBlock.remove();
+            event.getPlayer().getWorld().getBlockAt(task.srcLocation).setType(task.material);
+            event.getPlayer().getWorld().getBlockAt(task.srcLocation).setData(task.data);
+            gravityTasks.remove(event.getPlayer());
+        }
     }
 }
