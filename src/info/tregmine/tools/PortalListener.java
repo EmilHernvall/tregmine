@@ -10,10 +10,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.FallingBlock;
-import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
@@ -146,13 +143,6 @@ public class PortalListener implements Listener
             return;
         }
 
-        Entity TNT = player.getWorld().spawnEntity(task.getDstLocation(), EntityType.PRIMED_TNT);
-        TNT.setVelocity(player.getLocation().getDirection().multiply(2));
-        
-        TNTPrimed tnt = (TNTPrimed) TNT;
-        
-        task.currentBlock.remove();
-        
         gravityTasks.remove(player);
         task.cancel();
         player.sendMessage(ChatColor.GREEN + "Successfully dropped block!");
@@ -173,9 +163,9 @@ public class PortalListener implements Listener
         }
 
         TregminePlayer p = plugin.getPlayer(event.getPlayer());
-        
+
         if (!p.getRank().canUseTools()) return;
-        
+
         List<String> lore = p.getItemInHand().getItemMeta().getLore();
         
         if (lore.isEmpty()) return;
