@@ -1,28 +1,25 @@
 package info.tregmine.database.db;
 
+import info.tregmine.api.InventoryAccess;
+import info.tregmine.api.TregminePlayer;
+import info.tregmine.database.DAOException;
+import info.tregmine.database.IInventoryDAO;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.List;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.World;
+import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.configuration.InvalidConfigurationException;
-
-import info.tregmine.api.TregminePlayer;
-import info.tregmine.api.InventoryAccess;
-import info.tregmine.database.IInventoryDAO;
-import info.tregmine.database.DAOException;
 
 public class DBInventoryDAO implements IInventoryDAO
 {
@@ -341,8 +338,8 @@ public class DBInventoryDAO implements IInventoryDAO
 
         String sqlInsert = "INSERT INTO playerinventory_item (" +
             "playerinventory_id, item_slot, item_material, item_data, " +
-            "item_meta, item_count) ";
-        sqlInsert += "VALUES (?, ?, ?, ?, ?, ?)";
+            "item_meta, item_count, item_durability) ";
+        sqlInsert += "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         try (PreparedStatement stmt = conn.prepareStatement(sqlInsert)) {
             int counter = 0;
@@ -365,6 +362,7 @@ public class DBInventoryDAO implements IInventoryDAO
                     stmt.setString(5, "");
                 }
                 stmt.setInt(6, stack.getAmount());
+                stmt.setShort(7, stack.getDurability());
                 stmt.execute();
 
                 counter++;
@@ -392,6 +390,7 @@ public class DBInventoryDAO implements IInventoryDAO
                        int data = rs.getInt("item_data");
                        int count = rs.getInt("item_count");
                        String meta = rs.getString("item_meta");
+                       short durability = rs.getShort("item_durability");
 
                        ItemMeta metaObj = null;
                        if (!"".equals(meta)) {
@@ -403,6 +402,7 @@ public class DBInventoryDAO implements IInventoryDAO
                        ItemStack item = new ItemStack(materialId, count, (short) data);
                        if ("main".equalsIgnoreCase(type)) {
                            player.getInventory().setItem(slot, item);
+                           player.getInventory().getItem(slot).setDurability(durability);
                            if (metaObj != null) {
                                player.getInventory().getItem(slot).setItemMeta(metaObj);
                            }
