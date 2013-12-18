@@ -10,7 +10,10 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.FallingBlock;
+import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
@@ -120,8 +123,7 @@ public class PortalListener implements Listener
         this.plugin = instance;
         this.gravityTasks = new HashMap<TregminePlayer, GravityTask>();
     }
-
-    @SuppressWarnings("deprecation")
+    
     @EventHandler
     public void dropBlock(PlayerInteractEvent event)
     {
@@ -143,6 +145,13 @@ public class PortalListener implements Listener
             return;
         }
 
+        Entity TNT = player.getWorld().spawnEntity(task.getDstLocation(), EntityType.PRIMED_TNT);
+        TNT.setVelocity(player.getLocation().getDirection().multiply(2));
+        
+        TNTPrimed tnt = (TNTPrimed) TNT;
+        
+        task.currentBlock.remove();
+        
         gravityTasks.remove(player);
         task.cancel();
         player.sendMessage(ChatColor.GREEN + "Successfully dropped block!");
@@ -161,7 +170,7 @@ public class PortalListener implements Listener
             !Material.DIAMOND_HOE.equals(event.getItem().getType())) {
             return;
         }
-        
+
         TregminePlayer p = plugin.getPlayer(event.getPlayer());
         
         if (!p.getRank().canUseTools()) return;
@@ -181,15 +190,33 @@ public class PortalListener implements Listener
             return;
         }
 
+        if (plugin.getBlessedBlocks().containsKey(block.getLocation())) {
+            p.sendMessage(ChatColor.RED + "This block is blessed!");
+            return;
+        }
+        
+        if (plugin.getFishyBlocks().containsKey(block.getLocation())) {
+            p.sendMessage(ChatColor.RED + "Can not move fishyblocks!");
+        }
+            
         if (!p.hasBlockPermission(block.getLocation(), false)) {
             p.sendMessage(ChatColor.RED + "Can not pick up from here!");
             return;
         }
 
         if (gravityTasks.containsKey(p)) {
-            p.sendMessage("You are already carrying a block, You're not that strong!");
+            p.sendMessage(ChatColor.RED + "You are already carrying a block, You're not that strong!");
             return;
         }
+
+        String[] durability = lore.get(1).split("/");
+        if (Integer.parseInt(durability[0]) == 0) {
+            p.sendMessage(ChatColor.RED + "You are out of durability, Try repairing!");
+            return;
+        }
+        
+        lore.remove(1);
+        lore.add(Integer.parseInt(durability[0]) - 1 + "/1000");
 
         GravityTask task = new GravityTask(p);
         task.setMaterial(block.getType());
