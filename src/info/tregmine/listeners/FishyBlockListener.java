@@ -495,6 +495,9 @@ public class FishyBlockListener implements Listener
                                 }
                                 continue;
                             }
+                            if (i.getEnchantments().size() > 0) {
+                                continue;
+                            }
                             if (!allow) {
                                 continue;
                             }
