@@ -15,8 +15,11 @@ public class Account
     private int id;
     private String player;
     private long balance;
+    private String pin;
     
     private int account_number;
+    
+    private boolean verified;
 
     public Account()
     {
@@ -43,7 +46,14 @@ public class Account
     
     public long getBalance(){ return balance; }
     public void setBalance(long balance){ this.balance = balance; }
+    
+    public String getPin(){ return pin; }
+    public void setPin(String pin){ this.pin = pin; }
 
     public int getAccountNumber(){ return account_number; }
     public void setAccountNumber(int account_number) { this.account_number = account_number; }
+
+	public boolean isVerified(){ return verified; }
+
+	public void setVerified(boolean verified){ this.verified = verified; }
 }
