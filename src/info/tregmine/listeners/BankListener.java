@@ -1,5 +1,7 @@
 package info.tregmine.listeners;
 
+import java.util.Map;
+
 import info.tregmine.Tregmine;
 import info.tregmine.api.Account;
 import info.tregmine.api.Bank;
@@ -11,16 +13,18 @@ import info.tregmine.database.IContext;
 import info.tregmine.database.IWalletDAO;
 import info.tregmine.quadtree.Point;
 import info.tregmine.zones.Lot;
-import info.tregmine.zones.ZoneWorld;
 import info.tregmine.zones.Lot.Flags;
+import info.tregmine.zones.ZoneWorld;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.event.Listener;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+
+import com.google.common.collect.Maps;
 
 public class BankListener implements Listener
 {
@@ -31,6 +35,8 @@ public class BankListener implements Listener
     {
         this.plugin = plugin;
     }
+    
+    Map<TregminePlayer, Account> accounts = Maps.newHashMap();
 
     @EventHandler
     public void onChat(AsyncPlayerChatEvent event)
@@ -52,13 +58,14 @@ public class BankListener implements Listener
                     + "if you do not have an account, a new one will be created.");
             player.sendMessage(ChatColor.GREEN + "[BANK] " + "Type \"balance\" to check your current balance");
             player.sendMessage(ChatColor.GREEN + "[BANK] " + "Type \"account x\" to switch account number");
+            player.sendMessage(ChatColor.GREEN + "[BANK] " + "Type \"pin [change|x]\" to verify or change your pin");
             return;
         }
         
         
-        
         if(args[0].equalsIgnoreCase("exit")){
             player.setChatState(ChatState.CHAT);
+            accounts.remove(player);
             return;
         }
         
@@ -66,7 +73,18 @@ public class BankListener implements Listener
             IBankDAO dao = ctx.getBankDAO();
             IWalletDAO wDao = ctx.getWalletDAO();
             Bank bank = dao.getBank(lot.getName());
-            Account acct = dao.getAccount(bank, player.getName());
+            Account acct;
+            if(accounts.containsKey(player)){
+            	acct = accounts.get(player);
+            }else{
+            	acct = dao.getAccount(bank, player.getName());
+            }
+            
+            if(!acct.isVerified()){
+            	player.sendMessage(ChatColor.RED + "[BANK] Please verify pin before continuing.");
+            	return;
+            }
+            
             if(args[0].equalsIgnoreCase("withdraw")){
                 if(args.length == 2){
                     try{
@@ -128,9 +146,34 @@ public class BankListener implements Listener
                     }catch(NumberFormatException e){
                         i = dao.getAccount(bank, player.getName()).getAccountNumber();
                     }
-                    acct = dao.getAccount(bank, i);
+                    accounts.put(player, dao.getAccount(bank, i));
                     player.sendMessage(ChatColor.GREEN + "[BANK] " + "Switched to account " + i);
+                    return;
                 }
+            }
+            
+            if(args[0].equalsIgnoreCase("pin")){
+            	if(args[1].equalsIgnoreCase("change")){
+            		String s = args[2];
+            		if(s.length() > 4){
+            			player.sendMessage(ChatColor.RED + "[BANK] Pin must be 4 digits long");
+            		}else{
+            			dao.setPin(acct, s);
+            			player.sendMessage(ChatColor.GREEN + "[BANK] Changed pin to " + ChatColor.GOLD + s);
+            		}
+            	}else{
+            		int i;
+            		try{
+            			i = Integer.parseInt(args[1]);
+            			if(i == Integer.parseInt(acct.getPin())){
+            				accounts.get(player).setVerified(true);
+            			}else{
+            				player.sendMessage(ChatColor.RED + "[BANK] Incorrect pin");
+            			}
+            		}catch(NumberFormatException e){
+            			player.sendMessage(ChatColor.RED + "[BANK] " + args[1] + " is not a number");
+            		}
+            	}
             }
             
         } catch (DAOException e) {
