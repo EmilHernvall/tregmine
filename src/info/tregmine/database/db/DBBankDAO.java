@@ -102,6 +102,7 @@ public class DBBankDAO implements IBankDAO
                     acct.setPlayer(rs.getString("player_name"));
                     acct.setBalance(rs.getLong("account_balance"));
                     acct.setAccountNumber(rs.getInt("account_number"));
+                    acct.setPin(rs.getString("account_pin"));
                     accounts.add(acct);
                 }
 
@@ -132,6 +133,7 @@ public class DBBankDAO implements IBankDAO
                     acct.setPlayer(player);
                     acct.setBalance(rs.getLong("account_balance"));
                     acct.setAccountNumber(rs.getInt("account_number"));
+                    acct.setPin(rs.getString("account_pin"));
                     return acct;
                 }
             }
@@ -158,7 +160,7 @@ public class DBBankDAO implements IBankDAO
                     acc.setBank(bank);
                     acc.setBalance(rs.getLong("account_balance"));
                     acc.setPlayer(rs.getString("player_name"));
-                    
+                    acc.setPin(rs.getString("account_pin"));
                     return acc;
                 }
             }
@@ -186,6 +188,20 @@ public class DBBankDAO implements IBankDAO
         }catch(SQLException e){
             throw new DAOException(sql, e);
         }
+    }
+    
+    @Override
+    public void setPin(Account acct, String pin)
+    throws DAOException
+    {
+    	String sql = "UPDATE bank_accounts SET account_pin = ? WHERE account_number = ?";
+    	try(PreparedStatement stm = conn.prepareStatement(sql)){
+    		stm.setString(1, pin);
+    		stm.setInt(2, acct.getAccountNumber());
+    		stm.execute();
+    	}catch(SQLException e){
+    		throw new DAOException(sql, e);
+    	}
     }
 
     @Override
