@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Random;
 
 import com.google.common.collect.Lists;
 
@@ -17,7 +18,9 @@ public class DBBankDAO implements IBankDAO
 {
 
     private Connection conn;
-
+    
+    private Random r = new Random(10);
+    
     public DBBankDAO(Connection conn)
     {
         this.conn = conn;
@@ -174,7 +177,8 @@ public class DBBankDAO implements IBankDAO
     public void createAccount(Account acct, String player, long amount)
     throws DAOException
     {
-        String sql = "INSERT INTO bank_accounts (bank_name, player_name, account_balance, account_number) VALUES (?,?,?,?)";
+        String sql = "INSERT INTO bank_accounts (bank_name, player_name, account_balance, account_number, account_pin) "
+        		+ "VALUES (?,?,?,?, ?)";
         
         try(PreparedStatement stm = conn.prepareStatement(sql)){
             if(getAccount(acct.getBank(), acct.getAccountNumber()) != null){
@@ -184,6 +188,14 @@ public class DBBankDAO implements IBankDAO
             stm.setString(2, player);
             stm.setLong(3, amount);
             stm.setInt(4, acct.getAccountNumber());
+            int i = 0;
+            String s = "";
+            while(i <= 3){
+            	s += String.valueOf(r.nextInt());
+            }
+            stm.setString(5, s);
+            
+            acct.setPin(s);
             stm.execute();
         }catch(SQLException e){
             throw new DAOException(sql, e);
