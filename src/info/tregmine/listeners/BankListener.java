@@ -78,14 +78,15 @@ public class BankListener implements Listener
             	acct = accounts.get(player);
             }else{
             	acct = dao.getAccount(bank, player.getName());
-            }
-            
-            if(!acct.isVerified()){
-            	player.sendMessage(ChatColor.RED + "[BANK] Please verify pin before continuing.");
-            	return;
+            	acct.setVerified(true);
+            	accounts.put(player, acct);
             }
             
             if(args[0].equalsIgnoreCase("withdraw")){
+            	if(!acct.isVerified()){
+                	player.sendMessage(ChatColor.RED + "[BANK] Please verify pin before continuing.");
+                	return;
+                }
                 if(args.length == 2){
                     try{
                         long amount = Long.parseLong(args[1]);
@@ -106,6 +107,10 @@ public class BankListener implements Listener
             }
             
             if(args[0].equalsIgnoreCase("deposit")){
+            	if(!acct.isVerified()){
+                	player.sendMessage(ChatColor.RED + "[BANK] Please verify pin before continuing.");
+                	return;
+                }
                 if(args.length == 2){
                     try{
                         long amount = Long.parseLong(args[1]);
@@ -133,6 +138,10 @@ public class BankListener implements Listener
             }
             
             if(args[0].equalsIgnoreCase("balance")){
+            	if(!acct.isVerified()){
+                	player.sendMessage(ChatColor.RED + "[BANK] Please verify pin before continuing.");
+                	return;
+                }
                 player.sendMessage(ChatColor.AQUA + "[BANK] " + "Your account balance is " + ChatColor.GOLD +
                         dao.getAccount(bank, player.getName()).getBalance() + ChatColor.AQUA + " tregs");
                 return;
@@ -162,6 +171,9 @@ public class BankListener implements Listener
             			player.sendMessage(ChatColor.GREEN + "[BANK] Changed pin to " + ChatColor.GOLD + s);
             		}
             	}else{
+            		if(acct.isVerified()){
+            			player.sendMessage(ChatColor.GREEN + "[BANK] No need, the account is verified");
+            		}
             		int i;
             		try{
             			i = Integer.parseInt(args[1]);
