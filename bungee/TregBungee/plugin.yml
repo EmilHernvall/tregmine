@@ -1,0 +1,8 @@
+main: info.tregmine.ServerJump.ServerJump
+author: TregmineDevTeam
+version: 1.7.2
+name: ServerJump
+commands:
+    hub:
+        description: Teleport to Hub
+        aliases: lobby
