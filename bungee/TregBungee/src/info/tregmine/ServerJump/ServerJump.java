@@ -38,10 +38,14 @@ public class ServerJump extends JavaPlugin implements Listener {
 	}
 
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
-		if ((commandLabel.equalsIgnoreCase("hub")) || (commandLabel.equalsIgnoreCase("lobby"))) {
-			final Player player = (Player)sender;
-			if (args.length == 0) {
-				sendPlayer(player);
+
+		if(sender instanceof Player){
+
+			if ((commandLabel.equalsIgnoreCase("hub")) || (commandLabel.equalsIgnoreCase("lobby"))) {
+				final Player player = (Player)sender;
+				if (args.length == 0) {
+					sendPlayer(player);
+				}
 			}
 		}
 		return false;
