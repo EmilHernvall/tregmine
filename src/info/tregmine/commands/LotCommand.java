@@ -155,13 +155,12 @@ public class LotCommand extends AbstractCommand
         try (IContext ctx = tregmine.createContext()) {
             IZonesDAO dao = ctx.getZonesDAO();
             dao.updateLotFlags(lot);
-            if(bank){
+            if (bank) {
                 IBankDAO bDao = ctx.getBankDAO();
-                Bank b = new Bank(lot.getName());
-                b.setLotId(lot.getId());
-                if(value){
+                Bank b = new Bank(lot.getId());
+                if (value) {
                     bDao.createBank(b);
-                }else{
+                } else {
                     bDao.deleteBank(b);
                 }
             }

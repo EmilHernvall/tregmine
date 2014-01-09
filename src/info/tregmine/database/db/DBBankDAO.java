@@ -16,33 +16,31 @@ import info.tregmine.database.IBankDAO;
 
 public class DBBankDAO implements IBankDAO
 {
-
     private Connection conn;
-    
-    private Random r = new Random(10);
-    
+    private Random r;
+
     public DBBankDAO(Connection conn)
     {
         this.conn = conn;
+        this.r = new Random();
     }
 
     @Override
-    public Bank getBank(String name)
+    public Bank getBank(int lotId)
     throws DAOException
     {
-        String sql = "SELECT * FROM banks WHERE bank_name = ? LIMIT 1";
+        String sql = "SELECT * FROM bank WHERE lot_id = ? LIMIT 1";
         Bank bank = null;
         try (PreparedStatement stm = conn.prepareStatement(sql)) {
-            stm.setString(1, name);
+            stm.setInt(1, lotId);
             stm.execute();
 
             ResultSet rs = stm.getResultSet();
 
             if (rs.next()) {
-                bank = new Bank(name);
+                bank = new Bank(rs.getInt("lot_id"));
                 bank.setId(rs.getInt("bank_id"));
                 bank.setAccounts(this.getAccounts(bank));
-                bank.setLotId(rs.getInt("lot_id"));
 
                 return bank;
             }
@@ -56,33 +54,33 @@ public class DBBankDAO implements IBankDAO
     @Override
     public int createBank(Bank bank) throws DAOException
     {
-        String sql = "INSERT INTO banks (bank_name, lot_id) VALUES (?, ?)";
+        String sql = "INSERT INTO bank (lot_id) VALUES (?)";
         try (PreparedStatement stm = conn.prepareStatement(sql)) {
-            stm.setString(1, bank.getName());
-            stm.setInt(2, bank.getLotId());
+            stm.setInt(1, bank.getLotId());
             stm.execute();
 
+            stm.executeQuery("SELECT LAST_INSERT_ID()");
             try (ResultSet rs = stm.getResultSet()) {
                 if (!rs.next()) {
                     return 0;
                 }
-                return rs.getInt("bank_id");
+                return rs.getInt(0);
             }
 
         } catch (SQLException e) {
             throw new DAOException(sql, e);
         }
     }
-    
+
     public void deleteBank(Bank bank)
     throws DAOException
     {
-        String sql = "DELETE FROM banks WHERE bank_id = ?";
-        
-        try(PreparedStatement stm = conn.prepareStatement(sql)){
+        String sql = "DELETE FROM bank WHERE bank_id = ?";
+
+        try (PreparedStatement stm = conn.prepareStatement(sql)){
             stm.setInt(1, bank.getId());
             stm.execute();
-        }catch(SQLException e){
+        } catch (SQLException e) {
             throw new DAOException(sql, e);
         }
     }
@@ -91,10 +89,10 @@ public class DBBankDAO implements IBankDAO
     public List<Account> getAccounts(Bank bank)
     throws DAOException
     {
-        String sql = "SELECT * FROM bank_accounts WHERE bank_name = ?";
+        String sql = "SELECT * FROM bank_account WHERE bank_id = ?";
         List<Account> accounts = Lists.newArrayList();
         try (PreparedStatement stm = conn.prepareStatement(sql)) {
-            stm.setString(1, bank.getName());
+            stm.setInt(1, bank.getId());
             stm.execute();
 
             try (ResultSet rs = stm.getResultSet()) {
@@ -102,7 +100,7 @@ public class DBBankDAO implements IBankDAO
                 while (rs.next()) {
                     Account acct = new Account();
                     acct.setBank(bank);
-                    acct.setPlayer(rs.getString("player_name"));
+                    acct.setPlayerId(rs.getInt("player_id"));
                     acct.setBalance(rs.getLong("account_balance"));
                     acct.setAccountNumber(rs.getInt("account_number"));
                     acct.setPin(rs.getString("account_pin"));
@@ -118,22 +116,22 @@ public class DBBankDAO implements IBankDAO
     }
 
     @Override
-    public Account getAccount(Bank bank, String player) 
+    public Account getAccountByPlayer(Bank bank, int player)
     throws DAOException
     {
-        String sql =
-                "SELECT * FROM bank_accounts WHERE bank_name = ? AND player_name = ?";
+        String sql = "SELECT * FROM bank_account " +
+            "WHERE bank_id = ? AND player_id = ?";
         Account acct = null;
         try (PreparedStatement stm = conn.prepareStatement(sql)) {
             stm.setInt(1, bank.getId());
-            stm.setString(2, player);
+            stm.setInt(2, player);
             stm.execute();
-            
-            try(ResultSet rs = stm.getResultSet()){
+
+            try (ResultSet rs = stm.getResultSet()) {
                 if (rs.next()) {
                     acct = new Account();
                     acct.setBank(bank);
-                    acct.setPlayer(player);
+                    acct.setPlayerId(rs.getInt("player_id"));
                     acct.setBalance(rs.getLong("account_balance"));
                     acct.setAccountNumber(rs.getInt("account_number"));
                     acct.setPin(rs.getString("account_pin"));
@@ -145,88 +143,91 @@ public class DBBankDAO implements IBankDAO
         }
         return null;
     }
-    
+
     public Account getAccount(Bank bank, int accNumber)
     throws DAOException
     {
-        String sql = "SELECT * FROM bank_accounts WHERE bank_name = ? AND account_number = ?";
+        String sql = "SELECT * FROM bank_account " +
+            "WHERE bank_id = ? AND account_number = ?";
         try(PreparedStatement stm = conn.prepareStatement(sql)){
-            stm.setString(1, bank.getName());
+            stm.setInt(1, bank.getId());
             stm.setInt(2, accNumber);
-            
+
             stm.execute();
-            
+
             try(ResultSet rs = stm.getResultSet()){
-                if(rs.next()){
+                if (rs.next()) {
                     Account acc = new Account();
                     acc.setAccountNumber(accNumber);
                     acc.setBank(bank);
                     acc.setBalance(rs.getLong("account_balance"));
-                    acc.setPlayer(rs.getString("player_name"));
+                    acc.setPlayerId(rs.getInt("player_id"));
                     acc.setPin(rs.getString("account_pin"));
                     return acc;
                 }
             }
-            
+
         } catch (SQLException e) {
             throw new DAOException(sql, e);
         }
         return null;
     }
-    
-    public void createAccount(Account acct, String player, long amount)
+
+    public void createAccount(Account acct, int playerId, long amount)
     throws DAOException
     {
-        String sql = "INSERT INTO bank_accounts (bank_name, player_name, account_balance, account_number, account_pin) "
-        		+ "VALUES (?,?,?,?, ?)";
-        
-        try(PreparedStatement stm = conn.prepareStatement(sql)){
-            if(getAccount(acct.getBank(), acct.getAccountNumber()) != null){
-                acct.setAccountNumber(acct.getAccountNumber() + 1);
-            }
-            stm.setString(1, acct.getBank().getName());
-            stm.setString(2, player);
+        if (getAccount(acct.getBank(), acct.getAccountNumber()) != null) {
+            acct.setAccountNumber(acct.getAccountNumber() + 1);
+        }
+
+        String sql = "INSERT INTO bank_account (bank_id, player_id, " +
+            "account_balance, account_number, account_pin) VALUES (?,?,?,?, ?)";
+
+        try (PreparedStatement stm = conn.prepareStatement(sql)) {
+            stm.setInt(1, acct.getBank().getId());
+            stm.setInt(2, playerId);
             stm.setLong(3, amount);
             stm.setInt(4, acct.getAccountNumber());
-            int i = 0;
             String s = "";
-            while(i <= 3){
-            	s += String.valueOf(r.nextInt());
+            for (int i = 0; i < 4; i++) {
+                s += String.valueOf(r.nextInt(10));
             }
             stm.setString(5, s);
-            
+
             acct.setPin(s);
             stm.execute();
         }catch(SQLException e){
             throw new DAOException(sql, e);
         }
     }
-    
+
     @Override
     public void setPin(Account acct, String pin)
     throws DAOException
     {
-    	String sql = "UPDATE bank_accounts SET account_pin = ? WHERE account_number = ?";
-    	try(PreparedStatement stm = conn.prepareStatement(sql)){
-    		stm.setString(1, pin);
-    		stm.setInt(2, acct.getAccountNumber());
-    		stm.execute();
-    	}catch(SQLException e){
-    		throw new DAOException(sql, e);
-    	}
+        String sql = "UPDATE bank_account SET account_pin = ? " +
+            "WHERE account_number = ?";
+        try (PreparedStatement stm = conn.prepareStatement(sql)) {
+            stm.setString(1, pin);
+            stm.setInt(2, acct.getAccountNumber());
+            stm.execute();
+        } catch(SQLException e) {
+            throw new DAOException(sql, e);
+        }
     }
 
     @Override
     public void deposit(Bank bank, Account acct, long amount)
     throws DAOException
     {
-        String sql = "UPDATE bank_accounts SET account_balance = ? WHERE bank_name = ? AND player_name = ?";
-        try(PreparedStatement stm = conn.prepareStatement(sql)){
-            stm.setLong(1, acct.getBalance() + amount);
-            stm.setString(2, bank.getName());
-            stm.setString(3, acct.getPlayer());
+        String sql = "UPDATE bank_account SET account_balance = account_balance + ? " +
+            "WHERE bank_id = ? AND player_id = ?";
+        try (PreparedStatement stm = conn.prepareStatement(sql)) {
+            stm.setLong(1, amount);
+            stm.setInt(2, bank.getId());
+            stm.setInt(3, acct.getPlayerId());
             stm.execute();
-        }catch(SQLException e){
+        } catch(SQLException e) {
             throw new DAOException(sql, e);
         }
     }
@@ -235,16 +236,21 @@ public class DBBankDAO implements IBankDAO
     public boolean withdraw(Bank bank, Account acct, long amount)
     throws DAOException
     {
-        if(acct.getBalance() - amount < 0)return false;
-        String sql = "UPDATE bank_accounts SET account_balance = ? WHERE bank_name = ? AND player_name = ?";
-        try(PreparedStatement stm = conn.prepareStatement(sql)){
-            stm.setLong(1, acct.getBalance() - amount);
-            stm.setString(2, bank.getName());
-            stm.setString(3, acct.getPlayer());
+        if (acct.getBalance() - amount < 0) {
+            return false;
+        }
+
+        String sql = "UPDATE bank_account SET account_balance = account_balance - ? " +
+            "WHERE bank_id = ? AND player_id = ?";
+        try (PreparedStatement stm = conn.prepareStatement(sql)) {
+            stm.setLong(1, amount);
+            stm.setInt(2, bank.getId());
+            stm.setInt(3, acct.getPlayerId());
             stm.execute();
-        }catch(SQLException e){
+        } catch (SQLException e) {
             throw new DAOException(sql, e);
         }
+
         return true;
     }
 
