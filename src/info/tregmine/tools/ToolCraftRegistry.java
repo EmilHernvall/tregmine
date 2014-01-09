@@ -19,12 +19,14 @@ public class ToolCraftRegistry
          * Lumberaxes: Axe's
          * Veinminer: Pickaxe's
          * Area of Effect: Shovel's and Pickaxe's
+         * Gravity : Diamond hoe
          */
         List<Material> items = new ArrayList<Material>();
         
         items.add(Material.DIAMOND_PICKAXE);
         items.add(Material.DIAMOND_AXE);
         items.add(Material.DIAMOND_SPADE);
+        items.add(Material.DIAMOND_HOE);
         
         items.add(Material.GOLD_PICKAXE);
         items.add(Material.GOLD_AXE);

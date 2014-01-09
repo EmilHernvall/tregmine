@@ -308,6 +308,12 @@ public enum Rank
         return this == JUNIOR_ADMIN ||
                this == SENIOR_ADMIN;
     }
+    
+    public boolean canChangeJackpot()
+    {
+        return this == JUNIOR_ADMIN ||
+               this == SENIOR_ADMIN;
+    }
 
     public boolean canSpawnMobs()
     {
