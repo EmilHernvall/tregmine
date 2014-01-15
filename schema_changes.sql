@@ -450,3 +450,23 @@ CREATE TABLE IF NOT EXISTS `playerinventory_item` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 ALTER TABLE player ADD player_inventory VARCHAR (255);
+
+CREATE TABLE bank (
+    bank_id INT UNSIGNED AUTO_INCREMENT,
+    lot_id INT UNSIGNED,
+    PRIMARY KEY (bank_id),
+    UNIQUE idx_lot (lot_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE bank_account (
+    account_id INT UNSIGNED AUTO_INCREMENT,
+    bank_id INT UNSIGNED,
+    player_id INT UNSIGNED,
+    account_balance INT UNSIGNED,
+    account_number INT UNSIGNED,
+    account_pin VARCHAR (10),
+    PRIMARY KEY (account_id),
+    INDEX idx_bank (bank_id, player_id),
+    UNIQUE idx_accountnum (account_number),
+    INDEX idx_accountnum2 (bank_id, account_number)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

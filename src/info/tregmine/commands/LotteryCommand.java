@@ -32,7 +32,8 @@ public class LotteryCommand extends AbstractCommand
     {
         NumberFormat format = NumberFormat.getNumberInstance();
         int size = lottery.size();
-        int amount = lottery.size() * 2000;
+        int jackpot = 0;
+        int amount = lottery.size() * 2000 + jackpot;
         boolean enough = true;
         boolean joined = true;
 
@@ -54,6 +55,8 @@ public class LotteryCommand extends AbstractCommand
                     ChatColor.YELLOW + size);
             player.sendMessage(ChatColor.RED + "Amount currently in lottery: " +
                     ChatColor.YELLOW + format.format(amount) + " Tregs");
+            player.sendMessage(ChatColor.RED + "Prize is including a: " +
+                    ChatColor.YELLOW + jackpot + "treg bonus!");
             player.sendMessage(ChatColor.RED + "Enough players for lottery (min 2): " +
                     ChatColor.YELLOW + enough);
             player.sendMessage(ChatColor.RED + "You are in lottery: " +
@@ -67,6 +70,18 @@ public class LotteryCommand extends AbstractCommand
                     ChatColor.YELLOW + "Quit the lottery before a winner is picked");
             player.sendMessage(ChatColor.RED + "/lottery choose - " +
                     ChatColor.YELLOW + "Randomly picks a winner");
+        }
+        
+        if (args.length == 2 && args[0].equalsIgnoreCase("jackpot")) {
+            if (player.getRank().canChangeJackpot()) {
+                try {
+                    jackpot = Integer.parseInt(args[1]);
+                    player.sendMessage(ChatColor.GREEN + "Changed jackpot to " + jackpot + "!");
+                } catch (NumberFormatException e) {
+                    player.sendMessage(ChatColor.AQUA + "Failed to change jackpot due to incorrect parameters!");
+                    e.printStackTrace();
+                }
+            }
         }
 
         if (args.length == 1) {

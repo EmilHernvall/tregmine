@@ -3,20 +3,24 @@ package info.tregmine.commands;
 import java.util.List;
 
 import static org.bukkit.ChatColor.*;
+
 import org.bukkit.block.Block;
+
 import info.tregmine.quadtree.Rectangle;
 import info.tregmine.quadtree.Point;
 import info.tregmine.quadtree.IntersectionException;
-
 import info.tregmine.Tregmine;
 import info.tregmine.database.DAOException;
+import info.tregmine.database.IBankDAO;
 import info.tregmine.database.IContext;
 import info.tregmine.database.IZonesDAO;
+import info.tregmine.api.Bank;
 import info.tregmine.api.TregminePlayer;
 import info.tregmine.api.Rank;
 import info.tregmine.zones.Zone;
 import info.tregmine.zones.ZoneWorld;
 import info.tregmine.zones.Lot;
+
 import org.bukkit.ChatColor;
 
 public class LotCommand extends AbstractCommand
@@ -120,13 +124,29 @@ public class LotCommand extends AbstractCommand
         }
 
         boolean value = Boolean.valueOf(args[3]);
+        boolean bank = false;
 
-        if (value) {
-            lot.setFlag(flag);
-            player.sendMessage(GREEN + "Added flag: " + flag.name());
-        } else {
-            lot.removeFlag(flag);
-            player.sendMessage(GREEN + "Removed flag: " + flag.name());
+        if(flag == Lot.Flags.BANK){
+            bank = true;
+            if(player.getRank().canEditBanks()){
+                if (value) {
+                    lot.setFlag(flag);
+                    player.sendMessage(GREEN + "Added flag: " + flag.name());
+                } else {
+                    lot.removeFlag(flag);
+                    player.sendMessage(GREEN + "Removed flag: " + flag.name());
+                }
+            }else{
+                player.sendMessage(ChatColor.RED + "Please see an admin to make a bank");
+            }
+        }else{
+            if (value) {
+                lot.setFlag(flag);
+                player.sendMessage(GREEN + "Added flag: " + flag.name());
+            } else {
+                lot.removeFlag(flag);
+                player.sendMessage(GREEN + "Removed flag: " + flag.name());
+            }
         }
 
         Tregmine.LOGGER.info("Setting " + flag.name() + " to " + value +
@@ -135,6 +155,15 @@ public class LotCommand extends AbstractCommand
         try (IContext ctx = tregmine.createContext()) {
             IZonesDAO dao = ctx.getZonesDAO();
             dao.updateLotFlags(lot);
+            if (bank) {
+                IBankDAO bDao = ctx.getBankDAO();
+                Bank b = new Bank(lot.getId());
+                if (value) {
+                    bDao.createBank(b);
+                } else {
+                    bDao.deleteBank(b);
+                }
+            }
         } catch (DAOException e) {
             throw new RuntimeException(e);
         }

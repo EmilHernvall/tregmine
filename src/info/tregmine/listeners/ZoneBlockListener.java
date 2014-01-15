@@ -1,12 +1,5 @@
 package info.tregmine.listeners;
 
-import info.tregmine.Tregmine;
-import info.tregmine.api.TregminePlayer;
-import info.tregmine.api.math.Distance;
-import info.tregmine.zones.Lot;
-import info.tregmine.zones.Zone;
-import info.tregmine.zones.ZoneWorld;
-
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.event.EventHandler;
@@ -16,6 +9,12 @@ import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 //import org.bukkit.entity.HumanEntity;
 //import org.bukkit.entity.Player;
+
+import info.tregmine.Tregmine;
+import info.tregmine.api.TregminePlayer;
+import info.tregmine.zones.Lot;
+import info.tregmine.zones.Zone;
+import info.tregmine.zones.ZoneWorld;
 
 public class ZoneBlockListener implements Listener
 {
@@ -88,23 +87,23 @@ public class ZoneBlockListener implements Listener
 
         event.setCancelled(true);
     }
-    
+
     // Keeps liquids in the zone/lot they were originally placed in.
     @EventHandler
     public void onLiquid(BlockFromToEvent event)
     {
         ZoneWorld world = plugin.getWorld(event.getBlock().getWorld());
-        
+
         Zone zone = world.findZone(event.getBlock().getLocation());
         Zone zoneTo = world.findZone(event.getToBlock().getLocation());
-        
+
         // If liquid flows into a zone from wilderness
         if (zone == null &&
                 zoneTo != null) {
             event.setCancelled(true);
             return;
         }
-        
+
         // If liquid flows from a zone into another zone
         if (zone != null &&
                 zoneTo != null &&
@@ -112,10 +111,10 @@ public class ZoneBlockListener implements Listener
             event.setCancelled(true);
             return;
         }
-        
+
         Lot lot = world.findLot(event.getBlock().getLocation());
         Lot lotTo = world.findLot(event.getToBlock().getLocation());
-        
+
         // If liquid flows from a lot into a lot
         if (lot != null &&
                 lotTo != null &&
@@ -123,14 +122,14 @@ public class ZoneBlockListener implements Listener
             event.setCancelled(true);
             return;
         }
-        
+
         // If liquid flows from a zone into a lot
         if (lot == null &&
                 lotTo != null) {
             event.setCancelled(true);
             return;
         }
-        
+
         // If liquid flows from a lot into a zone
         if (lot != null &&
                 lotTo == null) {

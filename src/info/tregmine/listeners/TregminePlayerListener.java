@@ -1,21 +1,13 @@
 package info.tregmine.listeners;
 
-import info.tregmine.Tregmine;
-import info.tregmine.api.Badge;
-import info.tregmine.api.PlayerBannedException;
-import info.tregmine.api.Rank;
-import info.tregmine.api.TregminePlayer;
-import info.tregmine.api.lore.Created;
-import info.tregmine.api.util.ScoreboardClearTask;
-import info.tregmine.commands.MentorCommand;
-import info.tregmine.database.*;
-import info.tregmine.quadtree.Point;
-import info.tregmine.zones.Lot;
-import info.tregmine.zones.ZoneWorld;
-
 import java.util.*;
 
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.SkullType;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Skull;
@@ -24,6 +16,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.event.player.PlayerLoginEvent.Result;
@@ -31,6 +24,31 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scoreboard.*;
 import org.kitteh.tag.PlayerReceiveNameTagEvent;
+
+import info.tregmine.Tregmine;
+import info.tregmine.api.Badge;
+import info.tregmine.api.PlayerBannedException;
+import info.tregmine.api.PlayerReport;
+import info.tregmine.api.Rank;
+import info.tregmine.api.TregminePlayer;
+import info.tregmine.api.lore.Created;
+import info.tregmine.api.math.MathUtil;
+import info.tregmine.api.util.ScoreboardClearTask;
+import info.tregmine.commands.MentorCommand;
+import info.tregmine.database.*;
+import info.tregmine.database.DAOException;
+import info.tregmine.database.IContext;
+import info.tregmine.database.IInventoryDAO;
+import info.tregmine.database.ILogDAO;
+import info.tregmine.database.IMentorLogDAO;
+import info.tregmine.database.IMotdDAO;
+import info.tregmine.database.IPlayerDAO;
+import info.tregmine.database.IPlayerReportDAO;
+import info.tregmine.database.IWalletDAO;
+import info.tregmine.quadtree.Point;
+import info.tregmine.zones.Lot;
+import info.tregmine.zones.ZoneWorld;
+import static info.tregmine.database.IInventoryDAO.InventoryType;
 
 public class TregminePlayerListener implements Listener
 {
@@ -146,11 +164,11 @@ public class TregminePlayerListener implements Listener
                 }
             }
         }
-        
+
         TregminePlayer p = plugin.getPlayer(player);
         p.saveInventory(p.getCurrentInventory());
     }
-    
+
     @EventHandler
     public void onPlayerRespawnSave(PlayerRespawnEvent event)
     {
@@ -286,9 +304,9 @@ public class TregminePlayerListener implements Listener
                 current.showPlayer(player);
             }
         }
-        
+
         player.loadInventory("survival", false);
-        
+
         // Hide currently invisible players from the player that just signed on
         for (TregminePlayer current : players) {
             if (current.hasFlag(TregminePlayer.Flags.INVISIBLE)) {
@@ -409,10 +427,10 @@ public class TregminePlayerListener implements Listener
         if (player.getKeyword() == null && player.getRank().mustUseKeyword()) {
             player.sendMessage(ChatColor.RED + "You have not set a keyword! DO SO NOW.");
         }
-        
+
         if (rank == Rank.DONATOR &&
                 !player.hasBadge(Badge.PHILANTROPIST)) {
-            player.awardBadgeLevel(Badge.PHILANTROPIST, 
+            player.awardBadgeLevel(Badge.PHILANTROPIST,
                     "For being a Tregmine donator!");
         }
     }
@@ -426,7 +444,7 @@ public class TregminePlayerListener implements Listener
                     "in players map when quitting.");
             return;
         }
-        
+
         player.saveInventory(player.getCurrentInventory());
         event.setQuitMessage(null);
 
@@ -496,33 +514,47 @@ public class TregminePlayerListener implements Listener
         }
     }
 
-	@EventHandler
-	public void onPlayerFlight(PlayerToggleFlightEvent event)
-	{
-		TregminePlayer player = plugin.getPlayer(event.getPlayer());
-		if(player.getRank().canModifyZones()) {
-			return;
-		}
-		
-		if (!player.getRank().canFly()) {
-			event.setCancelled(true);
-		}
+    /*@EventHandler
+    public void onDeath(PlayerDeathEvent event)
+    {
+        TregminePlayer player = plugin.getPlayer(event.getEntity());
+        try(IContext ctx = plugin.createContext()){
+            IWalletDAO dao = ctx.getWalletDAO();
+            dao.take(player, MathUtil.percentOf(dao.balance(player), 5));
+        } catch (DAOException e) {
+            e.printStackTrace();
+        }
+    }*/
 
-		if (player.hasFlag(TregminePlayer.Flags.HARDWARNED) ||
-				player.hasFlag(TregminePlayer.Flags.SOFTWARNED)) {
-			event.setCancelled(true);
-		}
+    @EventHandler
+    public void onPlayerFlight(PlayerToggleFlightEvent event)
+    {
+        TregminePlayer player = plugin.getPlayer(event.getPlayer());
+        if (player.getRank().canModifyZones()) {
+            return;
+        }
 
-		ZoneWorld world = plugin.getWorld(event.getPlayer().getLocation().getWorld());
-		Lot lot = world.findLot(new Point(event.getPlayer().getLocation().getBlockX(), event.getPlayer().getLocation().getBlockZ()));
-		if (lot == null) {
-			return;
-		}
+        if (!player.getRank().canFly()) {
+            event.setCancelled(true);
+        }
 
-		if (!lot.hasFlag(Lot.Flags.FLIGHT_ALLOWED)) {
-			event.setCancelled(true);
-		}
-	}
+        if (player.hasFlag(TregminePlayer.Flags.HARDWARNED) ||
+            player.hasFlag(TregminePlayer.Flags.SOFTWARNED)) {
+
+            event.setCancelled(true);
+        }
+
+        Location loc = player.getLocation();
+        ZoneWorld world = plugin.getWorld(loc.getWorld());
+        Lot lot = world.findLot(new Point(loc.getBlockX(), loc.getBlockZ()));
+        if (lot == null) {
+            return;
+        }
+
+        if (!lot.hasFlag(Lot.Flags.FLIGHT_ALLOWED)) {
+            event.setCancelled(true);
+        }
+    }
 
     @EventHandler
     public void onPlayerPickupItem(PlayerPickupItemEvent event)

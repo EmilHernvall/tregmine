@@ -308,6 +308,12 @@ public enum Rank
         return this == JUNIOR_ADMIN ||
                this == SENIOR_ADMIN;
     }
+    
+    public boolean canChangeJackpot()
+    {
+        return this == JUNIOR_ADMIN ||
+               this == SENIOR_ADMIN;
+    }
 
     public boolean canSpawnMobs()
     {
@@ -580,6 +586,14 @@ public enum Rank
         } else {
             return 100;
         }
+    }
+    
+    public boolean canEditBanks()
+    {
+        return (this == JUNIOR_ADMIN ||
+                this == SENIOR_ADMIN
+                /* || this == CODER */ ); //Possibly? :P
+                
     }
 
     public ChatColor getColor()
