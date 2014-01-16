@@ -4,7 +4,11 @@ import java.util.List;
 import java.text.NumberFormat;
 
 import static org.bukkit.ChatColor.*;
+
+import org.bukkit.Bukkit;
 import org.bukkit.Server;
+import org.bukkit.entity.Player;
+
 import info.tregmine.Tregmine;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
@@ -43,7 +47,9 @@ public class WalletCommand extends AbstractCommand
 
     private boolean tell(TregminePlayer player, String name)
     {
-        TregminePlayer target = tregmine.getPlayer(name);
+        Player delegate = Bukkit.getPlayer(name);
+        //This allows players to use partial names
+        TregminePlayer target = tregmine.getPlayer(delegate);
         if (target == null) {
             player.sendMessage(RED + "Usage: /wallet tell <player>");
             return true;
