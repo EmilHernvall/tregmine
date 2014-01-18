@@ -280,28 +280,20 @@ public class ZonePlayerListener implements Listener
     @EventHandler
     public void onPlayerMoveLot(PlayerLotChangeEvent event)
     {
-        if (event.getNew() == null) {
-            return;
-        }
-        
         if (!event.getNew().hasFlag(Lot.Flags.FLIGHT_ALLOWED) &&
             !event.getPlayer().getRank().canModifyZones()) {
-
             event.getPlayer().setFlying(false);
         }
 
-        // Owner of the lot so bypasses private flag.
-        if (event.getNew().isOwner(event.getPlayer())) {
+        if (event.getNew().isOwner(event.getPlayer())) { // Owner of the lot so bypasses private flag.
             return;
         }
 
-        // Let admins bypass protection, but warn them just incase.
-        if (event.getPlayer().getRank().canModifyZones()) {
+        if (event.getPlayer().getRank().canModifyZones()) { // Let admins bypass protection, but warn them just incase.
             return;
         }
 
-        // If not private flagged lot, then return.
-        if (!event.getNew().hasFlag(Lot.Flags.PRIVATE)) {
+        if (!event.getNew().hasFlag(Lot.Flags.PRIVATE)) { // If not private flagged lot, then return.
             return;
         }
 
@@ -372,9 +364,9 @@ public class ZonePlayerListener implements Listener
                         movePlayerBack(player, movingFrom, movingTo);
                         return;
                     }
-                    else if (currentZone.hasFlag(Zone.Flags.REQUIRE_RESIDENCY) &&
-                            (player.getRank() == Rank.TOURIST ||
-                             player.getRank() == Rank.SETTLER ||
+                    else if (currentZone.hasFlag(Zone.Flags.REQUIRE_RESIDENCY) && 
+                            (player.getRank() == Rank.TOURIST || 
+                             player.getRank() == Rank.SETTLER || 
                              player.getRank() == Rank.UNVERIFIED)) {
                         blockedMessage(currentZone, player);
                         movePlayerBack(player, movingFrom, movingTo);
@@ -407,12 +399,20 @@ public class ZonePlayerListener implements Listener
         }
     }
 
-
     @EventHandler
     public void onPlayerChangedWorld(PlayerChangedWorldEvent event)
     {
-        TregminePlayer player = plugin.getPlayer(event.getPlayer());
+        TregminePlayer player = plugin.getPlayer(event.getPlayer());        
         ZoneWorld world = plugin.getWorld(player.getWorld());
+        
+        World cWorld = player.getWorld();
+        if (    cWorld.equals(plugin.getServer().getWorld("world")) || 
+                cWorld.equals(plugin.getServer().getWorld("world_the_end")) || 
+                cWorld.equals(plugin.getServer().getWorld("world_nether"))) {
+            player.loadInventory("survival", true);
+        } else {
+            player.loadInventory(cWorld.getName(), true);
+        }
 
         Location movingTo = player.getLocation();
         Point currentPos =
@@ -577,7 +577,7 @@ public class ZonePlayerListener implements Listener
         player.sendMessage(ChatColor.RED + "[" + currentZone.getName() + "] "
                 + "You are banned from " + currentZone.getName() + ".");
     }
-
+    
     private void blockedMessage(Zone currentZone, TregminePlayer player)
     {
         player.sendMessage(ChatColor.RED + "[" + currentZone.getName() + "] "
