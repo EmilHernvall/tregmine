@@ -1,19 +1,17 @@
 package info.tregmine.commands;
 
+import static org.bukkit.ChatColor.*;
+import info.tregmine.Tregmine;
+import info.tregmine.api.*;
+import info.tregmine.api.math.MathUtil;
+import info.tregmine.zones.Zone;
+
 import java.util.List;
 
-import static org.bukkit.ChatColor.*;
-import org.bukkit.Server;
-import org.bukkit.World;
-import org.bukkit.scheduler.BukkitScheduler;
+import org.bukkit.*;
 import org.bukkit.entity.Horse;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
-
-import info.tregmine.Tregmine;
-import info.tregmine.api.TregminePlayer;
-import info.tregmine.api.Rank;
-import info.tregmine.api.math.MathUtil;
+import org.bukkit.potion.*;
+import org.bukkit.scheduler.BukkitScheduler;
 
 public class TeleportCommand extends AbstractCommand
 {
@@ -31,6 +29,36 @@ public class TeleportCommand extends AbstractCommand
         @Override
         public void run()
         {
+            if (to.getCurrentZone() != null) {
+                Zone toZone = to.getCurrentZone();
+                Zone.Permission fromPermission = toZone.getUser(from);
+                
+                if (toZone.getEnterDefault()) {
+                    if (fromPermission != null && fromPermission == Zone.Permission.Banned) { // Stop banned
+                        from.sendMessage(RED + "You are banned from the zone " + to.getChatName() + RED + " is in!");
+                        return;
+                    }
+                } else {
+                    if (from.getRank().canModifyZones()) { // Allow Admins
+                        
+                    }else if (fromPermission == null) { // If doesn't have banned/allowed/maker/owner then stop as they are not allowed in
+                        from.sendMessage(RED + "You are not allowed in the zone " + to.getChatName() + RED + " is in!");
+                        return;
+                    } else if (fromPermission == Zone.Permission.Banned) { // Stop banned, but let Allowed/Maker/Owner
+                        from.sendMessage(RED + "You are banned from the zone " + to.getChatName() + RED + " is in!");
+                        return;
+                    }
+                }
+            }
+            
+            // Check position hasn't changed since task started.
+            double distance = MathUtil.calcDistance2d(from.getLocation(), to.getLocation());
+            
+            if (distance > from.getRank().getTeleportDistanceLimit()) {
+                from.sendMessage(RED + "Your teleportation spell is not strong enough for this long distance!");
+                return;
+            }
+            
             Horse horse = null;
 
             if ((from.getVehicle() != null) && (from.getVehicle() instanceof Horse)){
