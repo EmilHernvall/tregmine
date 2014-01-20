@@ -481,8 +481,7 @@ public class TregminePlayer extends PlayerDelegate
         }
 
         if (lot == null &&
-                (perm == Zone.Permission.Allowed ||
-                 perm == Zone.Permission.Maker ||
+                (perm == Zone.Permission.Maker ||
                  perm == Zone.Permission.Owner)) { // If allowed/maker/owner and not in a lot : return true
             return true;
         }
