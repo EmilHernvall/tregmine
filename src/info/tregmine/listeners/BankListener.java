@@ -84,7 +84,8 @@ public class BankListener implements Listener
             player.sendMessage(ChatColor.GREEN + "[BANK] " +
                     "Type \"account x\" to switch account number");
             player.sendMessage(ChatColor.GREEN + "[BANK] " +
-                    "Type \"pin [change|x]\" to verify or change your pin");
+                    "Type \"pin [change|x]\" to verify or change your pin, \n" +
+                    "or just type \"pin\" to view your pin");
             return;
         }
         else if ("exit".equalsIgnoreCase(args[0])) {
