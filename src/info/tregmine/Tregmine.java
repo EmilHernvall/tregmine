@@ -138,7 +138,6 @@ public class Tregmine extends JavaPlugin
 
         // Register all listeners
         PluginManager pluginMgm = server.getPluginManager();
-        pluginMgm.registerEvents(new BankListener(this), this);
         pluginMgm.registerEvents(new BlessedBlockListener(this), this);
         pluginMgm.registerEvents(new BoxFillBlockListener(this), this);
         pluginMgm.registerEvents(new ChatListener(this), this);
@@ -165,6 +164,7 @@ public class Tregmine extends JavaPlugin
         pluginMgm.registerEvents(new VeinListener(this), this);
         pluginMgm.registerEvents(new CallEventListener(this), this);
         pluginMgm.registerEvents(new PortalListener(this), this);
+        pluginMgm.registerEvents(new BankListener(this), this);
 
         // Declaration of all commands
         getCommand("admins").setExecutor(

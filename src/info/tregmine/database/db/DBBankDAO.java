@@ -64,7 +64,7 @@ public class DBBankDAO implements IBankDAO
                 if (!rs.next()) {
                     return 0;
                 }
-                return rs.getInt(0);
+                return rs.getInt(1);
             }
 
         } catch (SQLException e) {
@@ -173,12 +173,30 @@ public class DBBankDAO implements IBankDAO
         return null;
     }
 
+    private int getMaxAccountNr(Bank bank)
+    throws DAOException
+    {
+        String sql = "SELECT coalesce(max(account_number), 0) FROM bank_account " +
+            "WHERE bank_id = ?";
+        try (PreparedStatement stm = conn.prepareStatement(sql)) {
+            stm.setInt(1, bank.getId());
+            stm.execute();
+
+            try (ResultSet rs = stm.getResultSet()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+        } catch (SQLException e) {
+            throw new DAOException(sql, e);
+        }
+        return 0;
+    }
+
     public void createAccount(Account acct, int playerId, long amount)
     throws DAOException
     {
-        if (getAccount(acct.getBank(), acct.getAccountNumber()) != null) {
-            acct.setAccountNumber(acct.getAccountNumber() + 1);
-        }
+        acct.setAccountNumber(getMaxAccountNr(acct.getBank()) + 1);
 
         String sql = "INSERT INTO bank_account (bank_id, player_id, " +
             "account_balance, account_number, account_pin) VALUES (?,?,?,?, ?)";

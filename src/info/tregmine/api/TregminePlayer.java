@@ -287,14 +287,14 @@ public class TregminePlayer extends PlayerDelegate
 
     public void setCurrentTexture(String url)
     {
-        if (url == null) {
+        /*if (url == null) {
             this.texture = "https://dl.dropbox.com/u/5405236/mc/df.zip";
         }
 
         if (!url.equals(this.texture)) {
             this.texture = url;
             setTexturePack(url);
-        }
+        }*/
     }
 
     public void setChatChannel(String v) { this.chatChannel = v; }
@@ -481,8 +481,7 @@ public class TregminePlayer extends PlayerDelegate
         }
 
         if (lot == null &&
-                (perm == Zone.Permission.Allowed ||
-                 perm == Zone.Permission.Maker ||
+                (perm == Zone.Permission.Maker ||
                  perm == Zone.Permission.Owner)) { // If allowed/maker/owner and not in a lot : return true
             return true;
         }

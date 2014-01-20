@@ -18,6 +18,8 @@ import info.tregmine.zones.ZoneWorld;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.Location;
+import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
@@ -29,13 +31,13 @@ import com.google.common.collect.Maps;
 public class BankListener implements Listener
 {
     private Tregmine plugin;
+    private Map<TregminePlayer, Account> accounts = Maps.newHashMap();
+    private Map<TregminePlayer, Location> bankingBlocks = Maps.newHashMap();
 
     public BankListener(Tregmine plugin)
     {
         this.plugin = plugin;
     }
-
-    Map<TregminePlayer, Account> accounts = Maps.newHashMap();
 
     @EventHandler
     public void onChat(AsyncPlayerChatEvent event)
@@ -45,9 +47,15 @@ public class BankListener implements Listener
             return;
         }
 
-        ZoneWorld world = plugin.getWorld(player.getWorld());
-        Point p =  new Point(player.getLocation().getBlockX(),
-                             player.getLocation().getBlockZ());
+        Location loc = bankingBlocks.get(player);
+        if (loc == null) {
+            player.setChatState(ChatState.CHAT);
+            return;
+        }
+
+        ZoneWorld world = plugin.getWorld(loc.getWorld());
+        Point p =  new Point(loc.getBlockX(),
+                             loc.getBlockZ());
         Lot lot = world.findLot(p);
         if (lot == null) {
             return;
@@ -82,6 +90,7 @@ public class BankListener implements Listener
         else if ("exit".equalsIgnoreCase(args[0])) {
             player.setChatState(ChatState.CHAT);
             accounts.remove(player);
+            bankingBlocks.remove(player);
             return;
         }
 
@@ -106,6 +115,11 @@ public class BankListener implements Listener
             }
 
             if ("withdraw".equalsIgnoreCase(args[0])) {
+                if (acct == null) {
+                    player.sendMessage(ChatColor.RED +
+                            "[BANK] Open an account by making an deposit.");
+                    return;
+                }
                 if (!acct.isVerified()) {
                     player.sendMessage(ChatColor.RED +
                             "[BANK] Please verify pin before continuing.");
@@ -147,7 +161,7 @@ public class BankListener implements Listener
                     return;
                 }
 
-                if (!acct.isVerified()) {
+                if (acct != null && !acct.isVerified()) {
                     player.sendMessage(ChatColor.RED +
                             "[BANK] Please verify pin before continuing.");
                     return;
@@ -202,6 +216,11 @@ public class BankListener implements Listener
                 return;
             }
             else if ("balance".equalsIgnoreCase(args[0])) {
+                if (acct == null) {
+                    player.sendMessage(ChatColor.RED +
+                            "[BANK] Open an account by making an deposit.");
+                    return;
+                }
                 if (!acct.isVerified()) {
                     player.sendMessage(ChatColor.RED + "[BANK] " +
                             "Please verify pin before continuing.");
@@ -228,13 +247,25 @@ public class BankListener implements Listener
                         i = acct.getAccountNumber();
                     }
 
-                    accounts.put(player, dao.getAccount(bank, i));
+                    Account newAccount = dao.getAccount(bank, i);
+                    if (newAccount == null) {
+                        player.sendMessage(ChatColor.GREEN + "[BANK] " +
+                                "No such account: " + i);
+                        return;
+                    }
+
+                    accounts.put(player, newAccount);
                     player.sendMessage(ChatColor.GREEN + "[BANK] " +
                             "Switched to account " + i);
                     return;
                 }
             }
             else if ("pin".equalsIgnoreCase(args[0])) {
+                if (acct == null) {
+                    player.sendMessage(ChatColor.RED +
+                            "[BANK] Open an account by making an deposit.");
+                    return;
+                }
                 if ("change".equalsIgnoreCase(args[1])) {
                     if (!acct.isVerified()){
                         player.sendMessage(ChatColor.RED + "[BANK] " +
@@ -248,6 +279,7 @@ public class BankListener implements Listener
                                 "Pin must be 4 digits long");
                     } else {
                         dao.setPin(acct, s);
+                        acct.setPin(s);
                         player.sendMessage(ChatColor.GREEN + "[BANK] " +
                                 "Changed pin to " + ChatColor.GOLD + s);
                     }
@@ -274,6 +306,11 @@ public class BankListener implements Listener
                     }
                 }
             }
+            else {
+                player.sendMessage(ChatColor.RED + "Unknown command: " + args[0]);
+                return;
+            }
+
 
         } catch (DAOException e) {
             throw new RuntimeException(e);
@@ -286,15 +323,17 @@ public class BankListener implements Listener
         if (event.getAction() != Action.RIGHT_CLICK_BLOCK) {
             return;
         }
-        if (event.getClickedBlock().getType() != Material.IRON_BLOCK) {
+
+        Block block = event.getClickedBlock();
+        if (block.getType() != Material.IRON_BLOCK) {
             return;
         }
 
         TregminePlayer player = plugin.getPlayer(event.getPlayer());
 
         ZoneWorld world = plugin.getWorld(player.getWorld());
-        Point p =  new Point(player.getLocation().getBlockX(),
-                             player.getLocation().getBlockZ());
+        Point p =  new Point(block.getLocation().getBlockX(),
+                             block.getLocation().getBlockZ());
         Lot lot = world.findLot(p);
         if (lot == null) {
             return;
@@ -307,6 +346,7 @@ public class BankListener implements Listener
                 player.setChatState(ChatState.BANK);
                 player.sendMessage(ChatColor.GREEN + "[BANK] " +
                         "You are now banking, type \"help\" for help");
+                bankingBlocks.put(player, block.getLocation());
             }
         }
     }
