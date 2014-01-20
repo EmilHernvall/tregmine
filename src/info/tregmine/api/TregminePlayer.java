@@ -287,14 +287,14 @@ public class TregminePlayer extends PlayerDelegate
 
     public void setCurrentTexture(String url)
     {
-        if (url == null) {
+        /*if (url == null) {
             this.texture = "https://dl.dropbox.com/u/5405236/mc/df.zip";
         }
 
         if (!url.equals(this.texture)) {
             this.texture = url;
             setTexturePack(url);
-        }
+        }*/
     }
 
     public void setChatChannel(String v) { this.chatChannel = v; }

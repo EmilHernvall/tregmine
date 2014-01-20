@@ -1,6 +1,7 @@
 package info.tregmine.listeners;
 
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
@@ -67,7 +68,7 @@ public class ChatListener implements Listener
                 if (player_keywords.size() > 0 && player_keywords != null) {
                     for (String keyword : player_keywords) {
                         if (text.toLowerCase().contains(keyword.toLowerCase())) {
-                            text = text.replaceAll(keyword,
+                            text = text.replaceAll(Pattern.quote(keyword),
                                     ChatColor.AQUA + keyword + txtColor);
                         }
                     }

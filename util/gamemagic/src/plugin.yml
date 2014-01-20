@@ -4,4 +4,4 @@ version: 1.0.0
 website: http://discourse.tregmine.info
 author: Ein Andersson, Emil Hernvall
 description: Tregmine
-depends: Tregmine
+depends: tregmine
