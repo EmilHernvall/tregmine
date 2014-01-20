@@ -47,9 +47,7 @@ public class WalletCommand extends AbstractCommand
 
     private boolean tell(TregminePlayer player, String name)
     {
-        Player delegate = Bukkit.getPlayer(name);
-        //This allows players to use partial names
-        TregminePlayer target = tregmine.getPlayer(delegate);
+        TregminePlayer target = tregmine.getPlayer(name);
         if (target == null) {
             player.sendMessage(RED + "Usage: /wallet tell <player>");
             return true;
