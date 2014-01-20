@@ -266,6 +266,16 @@ public class BankListener implements Listener
                             "[BANK] Open an account by making an deposit.");
                     return;
                 }
+                if(args.length == 1){
+                    if (acct.getPlayerId() != player.getId()) {
+                        player.sendMessage(ChatColor.RED
+                                + "[BANK] To recieve the pin from another player's account, "
+                                + " you must get it directly from that player.");
+                    }
+                    player.sendMessage(ChatColor.GREEN + "[BANK] + Your pin "
+                            + "number is " + ChatColor.GOLD + acct.getPin());
+                    return;
+                }
                 if ("change".equalsIgnoreCase(args[1])) {
                     if (!acct.isVerified()){
                         player.sendMessage(ChatColor.RED + "[BANK] " +
@@ -277,16 +287,19 @@ public class BankListener implements Listener
                     if (s.length() > 4) {
                         player.sendMessage(ChatColor.RED + "[BANK] " +
                                 "Pin must be 4 digits long");
+                        return;
                     } else {
                         dao.setPin(acct, s);
                         acct.setPin(s);
                         player.sendMessage(ChatColor.GREEN + "[BANK] " +
                                 "Changed pin to " + ChatColor.GOLD + s);
+                        return;
                     }
                 } else {
                     if (acct.isVerified()) {
                         player.sendMessage(ChatColor.GREEN + "[BANK] " +
                                 "No need, the account is verified");
+                        return;
                     }
 
                     int i;
@@ -342,6 +355,7 @@ public class BankListener implements Listener
         if (lot.hasFlag(Lot.Flags.BANK)) {
             if (player.getChatState() == ChatState.BANK){
                 player.setChatState(ChatState.CHAT);
+                player.sendMessage(ChatColor.GREEN + "You are now back in chat.");
             } else {
                 player.setChatState(ChatState.BANK);
                 player.sendMessage(ChatColor.GREEN + "[BANK] " +
