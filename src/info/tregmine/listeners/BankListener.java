@@ -188,7 +188,7 @@ public class BankListener implements Listener
 
                         player.sendMessage(ChatColor.AQUA + "[BANK] " +
                                 "You created a new account with a " +
-                                "balance of" + ChatColor.GOLD + amount +
+                                "balance of " + ChatColor.GOLD + amount +
                                 ChatColor.AQUA + " tregs");
                         player.sendMessage(ChatColor.GREEN + "[BANK] " +
                                 "Your account number is " +
