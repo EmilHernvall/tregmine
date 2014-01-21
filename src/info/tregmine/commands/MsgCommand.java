@@ -50,6 +50,8 @@ public class MsgCommand extends AbstractCommand
         
         String[] receivingPlayers = args[0].split(",");
         try (IContext ctx = tregmine.createContext()) {
+            IPlayerDAO playerDAO = ctx.getPlayerDAO();
+            
             for (String possiblePlayer : receivingPlayers) {
                 TregminePlayer receivingPlayer = tregmine.getPlayer(possiblePlayer);
                 if (receivingPlayer == null) {
@@ -58,8 +60,6 @@ public class MsgCommand extends AbstractCommand
                 }
                 
                 boolean ignored;
-
-                IPlayerDAO playerDAO = ctx.getPlayerDAO();
                 ignored = playerDAO.doesIgnore(receivingPlayer, player);
 
                 if (player.getRank().canNotBeIgnored()) ignored = false;
