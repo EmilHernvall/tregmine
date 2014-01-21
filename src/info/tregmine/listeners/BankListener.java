@@ -81,8 +81,9 @@ public class BankListener implements Listener
                     "if you do not have an account, a new one will be created.");
             player.sendMessage(ChatColor.GREEN + "[BANK] " +
                     "Type \"balance\" to check your current balance");
-            player.sendMessage(ChatColor.GREEN + "[BANK] " +
-                    "Type \"account x\" to switch account number");
+            player.sendMessage(ChatColor.GREEN + "[BANK] "
+                    + "Type \"account x\" to switch account number, \n"
+                    + "or type \"account\" to see your account number");
             player.sendMessage(ChatColor.GREEN + "[BANK] " +
                     "Type \"pin [change|x]\" to verify or change your pin, \n" +
                     "or just type \"pin\" to view your pin");
