@@ -81,10 +81,12 @@ public class BankListener implements Listener
                     "if you do not have an account, a new one will be created.");
             player.sendMessage(ChatColor.GREEN + "[BANK] " +
                     "Type \"balance\" to check your current balance");
+            player.sendMessage(ChatColor.GREEN + "[BANK] "
+                    + "Type \"account x\" to switch account number, \n"
+                    + "or type \"account\" to see your account number");
             player.sendMessage(ChatColor.GREEN + "[BANK] " +
-                    "Type \"account x\" to switch account number");
-            player.sendMessage(ChatColor.GREEN + "[BANK] " +
-                    "Type \"pin [change|x]\" to verify or change your pin");
+                    "Type \"pin [change|x]\" to verify or change your pin, \n" +
+                    "or just type \"pin\" to view your pin");
             return;
         }
         else if ("exit".equalsIgnoreCase(args[0])) {
@@ -186,7 +188,7 @@ public class BankListener implements Listener
 
                         player.sendMessage(ChatColor.AQUA + "[BANK] " +
                                 "You created a new account with a " +
-                                "balance of" + ChatColor.GOLD + amount +
+                                "balance of " + ChatColor.GOLD + amount +
                                 ChatColor.AQUA + " tregs");
                         player.sendMessage(ChatColor.GREEN + "[BANK] " +
                                 "Your account number is " +
@@ -266,6 +268,16 @@ public class BankListener implements Listener
                             "[BANK] Open an account by making an deposit.");
                     return;
                 }
+                if(args.length == 1){
+                    if (acct.getPlayerId() != player.getId()) {
+                        player.sendMessage(ChatColor.RED
+                                + "[BANK] To recieve the pin from another player's account, "
+                                + " you must get it directly from that player.");
+                    }
+                    player.sendMessage(ChatColor.GREEN + "[BANK] + Your pin "
+                            + "number is " + ChatColor.GOLD + acct.getPin());
+                    return;
+                }
                 if ("change".equalsIgnoreCase(args[1])) {
                     if (!acct.isVerified()){
                         player.sendMessage(ChatColor.RED + "[BANK] " +
@@ -277,16 +289,19 @@ public class BankListener implements Listener
                     if (s.length() > 4) {
                         player.sendMessage(ChatColor.RED + "[BANK] " +
                                 "Pin must be 4 digits long");
+                        return;
                     } else {
                         dao.setPin(acct, s);
                         acct.setPin(s);
                         player.sendMessage(ChatColor.GREEN + "[BANK] " +
                                 "Changed pin to " + ChatColor.GOLD + s);
+                        return;
                     }
                 } else {
                     if (acct.isVerified()) {
                         player.sendMessage(ChatColor.GREEN + "[BANK] " +
                                 "No need, the account is verified");
+                        return;
                     }
 
                     int i;
@@ -342,6 +357,7 @@ public class BankListener implements Listener
         if (lot.hasFlag(Lot.Flags.BANK)) {
             if (player.getChatState() == ChatState.BANK){
                 player.setChatState(ChatState.CHAT);
+                player.sendMessage(ChatColor.GREEN + "You are now back in chat.");
             } else {
                 player.setChatState(ChatState.BANK);
                 player.sendMessage(ChatColor.GREEN + "[BANK] " +

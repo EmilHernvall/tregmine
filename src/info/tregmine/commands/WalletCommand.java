@@ -4,7 +4,11 @@ import java.util.List;
 import java.text.NumberFormat;
 
 import static org.bukkit.ChatColor.*;
+
+import org.bukkit.Bukkit;
 import org.bukkit.Server;
+import org.bukkit.entity.Player;
+
 import info.tregmine.Tregmine;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
