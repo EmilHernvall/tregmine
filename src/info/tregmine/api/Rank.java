@@ -107,6 +107,12 @@ public enum Rank
                this == JUNIOR_ADMIN ||
                this == SENIOR_ADMIN;
     }
+    
+    public boolean canForceOpenChests()
+    {
+        return  this == JUNIOR_ADMIN ||
+                this == SENIOR_ADMIN;
+    }
 
     public boolean canSetWeather()
     {

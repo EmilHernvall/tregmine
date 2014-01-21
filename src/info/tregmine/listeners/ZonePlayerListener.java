@@ -17,6 +17,7 @@ import java.util.Random;
 
 import org.bukkit.*;
 import org.bukkit.block.Block;
+import org.bukkit.block.Chest;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -471,6 +472,28 @@ public class ZonePlayerListener implements Listener
                 welcomeMessage(currentZone, player, perm);
             }
             player.setCurrentZone(currentZone);
+        }
+    }
+    
+    public void inventoryOpening(PlayerInteractEvent event)
+    {
+        if (event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
+        if (event.getClickedBlock() == null || 
+                !event.getClickedBlock().getType().equals(Material.CHEST)) return;
+        
+        TregminePlayer player = plugin.getPlayer(event.getPlayer());
+        if (!player.getRank().canForceOpenChests()) return;
+        
+        if (event.getClickedBlock().getState() instanceof Chest) {
+            Chest chest = (Chest) event.getClickedBlock().getState();
+            
+            // Check the above block is solid, if it isn't then stop - This will stop forcing the
+            // chest when you can open it normally anyway.
+            Block blockAbove = player.getWorld().getBlockAt(chest.getLocation().add(new Vector(0, 1, 0)));
+            if (blockAbove == null || blockAbove.getType().isTransparent()) return;
+            
+            player.sendMessage(ChatColor.GREEN + "Force opened inventory!");
+            player.openInventory(chest.getBlockInventory());
         }
     }
 
