@@ -47,34 +47,38 @@ public class MsgCommand extends AbstractCommand
             // TODO: Error message...
             return true;
         }
-
-        TregminePlayer recvPlayer = tregmine.getPlayer(recv);
-        if (recvPlayer == null) {
-            player.sendNotification(Notification.COMMAND_FAIL, ChatColor.RED + "No player found by the name of " + args[0]);
-            return true;
-        }
         
-        boolean ignored;
+        String[] receivingPlayers = args[0].split(",");
         try (IContext ctx = tregmine.createContext()) {
-            IPlayerDAO playerDAO = ctx.getPlayerDAO();
-            ignored = playerDAO.doesIgnore(recvPlayer, player);
+            for (String possiblePlayer : receivingPlayers) {
+                TregminePlayer receivingPlayer = tregmine.getPlayer(possiblePlayer);
+                if (receivingPlayer == null) {
+                    player.sendNotification(Notification.COMMAND_FAIL, ChatColor.RED + "No player found by the name of " + args[0]);
+                    continue;
+                }
+                
+                boolean ignored;
+
+                IPlayerDAO playerDAO = ctx.getPlayerDAO();
+                ignored = playerDAO.doesIgnore(receivingPlayer, player);
+
+                if (player.getRank().canNotBeIgnored()) ignored = false;
+                if (ignored) continue;
+                
+                // Show message in senders terminal, as long as the recipient isn't
+                // invisible, to prevent /msg from giving away hidden players presence
+                if (!receivingPlayer.hasFlag(TregminePlayer.Flags.INVISIBLE) || player.getRank().canSeeHiddenInfo()) {
+                    player.sendMessage(GREEN + "(to) " + receivingPlayer.getChatName()
+                            + GREEN + ": " + message);
+                }
+                
+                // Send message to recipient
+                receivingPlayer.sendNotification(Notification.MESSAGE, GREEN + "(msg) " + player.getChatName() + GREEN
+                        + ": " + message);
+            }
         } catch (DAOException e) {
             throw new RuntimeException(e);
         }
-        if (player.getRank().canNotBeIgnored()) ignored = false;
-        if (ignored == true) return true;
-
-        // Show message in senders terminal, as long as the recipient isn't
-        // invisible, to prevent /msg from giving away hidden players presence
-        if (!recvPlayer.hasFlag(TregminePlayer.Flags.INVISIBLE) || player.getRank().canSeeHiddenInfo()) {
-            player.sendMessage(GREEN + "(to) " + recvPlayer.getChatName()
-                    + GREEN + ": " + message);
-        }
-
-        // Send message to recipient
-        recvPlayer.sendNotification(Notification.MESSAGE, GREEN + "(msg) " + player.getChatName() + GREEN
-                + ": " + message);
-
         return true;
     }
 }
