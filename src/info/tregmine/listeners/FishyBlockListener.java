@@ -735,12 +735,6 @@ public class FishyBlockListener implements Listener
         TregminePlayer player = plugin.getPlayer(event.getPlayer());
 
         Block block = event.getBlock();
-        if (block.getType() != Material.OBSIDIAN &&
-            block.getType() != Material.WALL_SIGN) {
-
-            return;
-        }
-
         Location loc = block.getLocation();
 
         Map<Location, FishyBlock> fishyBlocks = plugin.getFishyBlocks();
