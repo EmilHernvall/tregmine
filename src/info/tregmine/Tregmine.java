@@ -1,35 +1,29 @@
 package info.tregmine;
 
-import java.io.File;
-import java.io.IOException;
+import info.tregmine.api.*;
+import info.tregmine.commands.*;
+import info.tregmine.database.*;
+import info.tregmine.database.db.DBContextFactory;
+import info.tregmine.events.CallEventListener;
+import info.tregmine.listeners.*;
+import info.tregmine.quadtree.IntersectionException;
+import info.tregmine.tools.*;
+import info.tregmine.zones.*;
+
+import java.io.*;
 import java.net.InetAddress;
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.logging.*;
 
 import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.world.WorldSaveEvent;
-import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.maxmind.geoip.LookupService;
-
-import info.tregmine.api.*;
-import info.tregmine.commands.*;
-import info.tregmine.database.*;
-import info.tregmine.database.IInventoryDAO.InventoryType;
-import info.tregmine.database.db.DBContextFactory;
-import info.tregmine.events.CallEventListener;
-import info.tregmine.listeners.*;
-import info.tregmine.quadtree.IntersectionException;
-import info.tregmine.tools.*;
-import info.tregmine.zones.Lot;
-import info.tregmine.zones.Zone;
-import info.tregmine.zones.ZoneWorld;
 
 /**
  * @author Ein Andersson
@@ -269,6 +263,10 @@ public class Tregmine extends JavaPlugin
         getCommand("zone").setExecutor(new ZoneCommand(this, "zone"));
 
         ToolCraftRegistry.RegisterRecipes(getServer()); // Registers all tool recipes
+        
+        for (TregminePlayer player : getOnlinePlayers()) {
+            player.sendMessage(ChatColor.AQUA + "Tregmine successfully loaded. Version " + getDescription().getVersion());
+        }
     }
 
     // run when plugin is disabled
@@ -279,10 +277,6 @@ public class Tregmine extends JavaPlugin
 
         // Add a record of logout to db for all players
         for (TregminePlayer player : getOnlinePlayers()) {
-            player.sendMessage(ChatColor.AQUA
-                    + "Tregmine successfully unloaded. Version "
-                    + getDescription().getVersion());
-
             player.saveInventory(player.getCurrentInventory());
             removePlayer(player);
         }
