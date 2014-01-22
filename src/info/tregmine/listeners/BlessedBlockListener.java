@@ -174,15 +174,14 @@ public class BlessedBlockListener implements Listener
     @EventHandler
     public void onDoorBreak(EntityBreakDoorEvent event)
     {
-        Location l = event.getBlock().getLocation();
-        Entity e = event.getEntity();
+    	if (!(event.getEntity() instanceof Zombie)) {
+			return;
+    	}
 
         Map<Location, Integer> b = plugin.getBlessedBlocks();
 
-        if (b.containsKey(l)) {
-            if (e instanceof Zombie) {
-                event.setCancelled(true);
-            }
+        if (b.containsKey(event.getBlock().getLocation())) {
+        	event.setCancelled(true);
         }
     }
 
