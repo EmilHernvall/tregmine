@@ -414,6 +414,15 @@ public class ZonePlayerListener implements Listener
     {
         TregminePlayer player = plugin.getPlayer(event.getPlayer());
         ZoneWorld world = plugin.getWorld(player.getWorld());
+        World cWorld = player.getWorld();
+
+        if (    cWorld.equals(plugin.getServer().getWorld("world")) || 
+                cWorld.equals(plugin.getServer().getWorld("world_the_end")) || 
+                cWorld.equals(plugin.getServer().getWorld("world_nether"))) {
+            player.loadInventory("survival", true);
+        } else {
+            player.loadInventory(cWorld.getName(), true);
+        }
 
         Location movingTo = player.getLocation();
         Point currentPos =
