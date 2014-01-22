@@ -11,6 +11,7 @@ import java.util.Random;
 import java.util.Set;
 
 import org.apache.commons.lang.WordUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 
@@ -30,6 +31,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import com.google.common.collect.Lists;
 
@@ -44,17 +46,35 @@ public class RareDropListener implements Listener
 
     private Random random = new Random();
 
+    private class DropDelayTask extends BukkitRunnable
+    {
+
+        private TregminePlayer player;
+
+        public DropDelayTask(TregminePlayer player)
+        {
+            this.player = player;
+        }
+
+        @Override
+        public void run()
+        {
+            players.remove(player);
+        }
+
+    }
+
     /*
      * private Set<Material> swords = EnumSet.of(WOOD_SWORD, STONE_SWORD,
      * IRON_SWORD, GOLD_SWORD, DIAMOND_SWORD);
      */
 
+    private static final List<TregminePlayer> players = Lists.newArrayList();
+
     private Set<EntityType> mobs = EnumSet.of(EntityType.CREEPER,
-            EntityType.ENDERMAN, EntityType.SKELETON, EntityType.CAVE_SPIDER,
-            EntityType.ZOMBIE, EntityType.WITHER, EntityType.WITCH,
-            EntityType.BAT, EntityType.BLAZE, EntityType.GHAST,
-            EntityType.MAGMA_CUBE, EntityType.PIG_ZOMBIE, EntityType.SLIME,
-            EntityType.SPIDER);
+            EntityType.ENDERMAN, EntityType.WITHER, EntityType.WITCH,
+            EntityType.BAT, EntityType.GHAST, EntityType.MAGMA_CUBE,
+            EntityType.PIG_ZOMBIE, EntityType.SLIME);
 
     private Material[] leather_armor = { LEATHER_HELMET, LEATHER_CHESTPLATE,
             LEATHER_LEGGINGS, LEATHER_BOOTS };
@@ -133,19 +153,19 @@ public class RareDropListener implements Listener
                     { PROTECTION_FIRE, PROTECTION_FALL, PROTECTION_EXPLOSIONS,
                             WATER_WORKER, OXYGEN };
             int i = random.nextInt(99) + 1;
-            if(i <= 40){//40
+            if (i <= 40) {// 40
                 return ench[0];
             }
-            if(i > 40 && i <= 70){//30%
+            if (i > 40 && i <= 70) {// 30%
                 return ench[1];
             }
-            if(i > 70 && i <= 85){ //15
+            if (i > 70 && i <= 85) { // 15
                 return ench[2];
             }
-            if(i > 85 && i <= 95){ //10
+            if (i > 85 && i <= 95) { // 10
                 return ench[3];
             }
-            if(i > 95 && i <= 100){ //5
+            if (i > 95 && i <= 100) { // 5
                 return ench[4];
             }
         }
@@ -167,7 +187,9 @@ public class RareDropListener implements Listener
             return;
 
         TregminePlayer player = plugin.getPlayer((Player) damager);
-
+        if (players.contains(player)) {
+            return;
+        }
         int i = random.nextInt(99) + 1;
         if (i == 35) {
             LivingEntity ent = event.getEntity();
@@ -213,14 +235,15 @@ public class RareDropListener implements Listener
                     + Armor.getRandomByType(mat).toString());
             int armorBonus = random.nextInt(itemLevel) + 1;
             lore.add(ChatColor.GOLD + "Armor: " + ChatColor.WHITE + armorBonus);
-            
-            if((random.nextInt(99) + 1) == 50){
+
+            if ((random.nextInt(99) + 1) == 50) {
                 Enchantment e = this.getRandomEnchantment(stack);
                 boolean bool = e.canEnchantItem(stack);
-                do{
+                do {
                     e = getRandomEnchantment(stack);
-                }while(!bool);
-                stack.addEnchantment(e, (e.getMaxLevel() == 1 ? 1: e.getMaxLevel() - 1));
+                } while (!bool);
+                stack.addEnchantment(e,
+                        (e.getMaxLevel() == 1 ? 1 : e.getMaxLevel() - 1));
             }
         }
         else {
@@ -239,6 +262,10 @@ public class RareDropListener implements Listener
         player.getInventory().addItem(stack);
         player.sendMessage(ChatColor.GOLD
                 + "Congratulations, you've aquired an item from the rare drop table.");
+        players.add(player);
+
+        Bukkit.getScheduler().scheduleSyncDelayedTask(plugin,
+                new DropDelayTask(player), 20 * 60 * 5L);
     }
 
     private String material(ItemStack stack)
