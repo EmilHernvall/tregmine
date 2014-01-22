@@ -60,6 +60,7 @@ public class RareDropListener implements Listener
         public void run()
         {
             players.remove(player);
+            this.cancel();
         }
 
     }
