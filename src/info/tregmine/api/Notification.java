@@ -18,6 +18,7 @@ public enum Notification {
 	COMMAND_FAIL(Sound.CLICK),
 	MESSAGE(Sound.LEVEL_UP),
 	RANK_UP(Sound.FUSE),
+	RARE_DROP(Sound.ITEM_PICKUP),
 	SUMMON(Sound.PORTAL_TRAVEL),
 	WARP(Sound.ENDERMAN_TELEPORT);
 	

@@ -1,6 +1,7 @@
 package info.tregmine.listeners;
 
 import info.tregmine.Tregmine;
+import info.tregmine.api.Notification;
 import info.tregmine.api.TregminePlayer;
 import info.tregmine.api.lore.Lore.Armor;
 import info.tregmine.api.lore.Lore.Sword;
@@ -279,8 +280,8 @@ public class RareDropListener implements Listener
         meta.setLore(lore);
         stack.setItemMeta(meta);
         player.getInventory().addItem(stack);
-        player.sendMessage(ChatColor.GOLD
-                + "Congratulations, you've aquired an item from the rare drop table.");
+        player.sendNotification(Notification.RARE_DROP,
+                ChatColor.GOLD + "Congratulations, you've aquired an item from the rare drop table.");
         players.add(player);
 
         Bukkit.getScheduler().scheduleSyncDelayedTask(plugin,
