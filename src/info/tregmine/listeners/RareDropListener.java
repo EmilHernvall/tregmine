@@ -26,6 +26,8 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
@@ -172,6 +174,20 @@ public class RareDropListener implements Listener
         }
         return null;
     }
+    
+    @EventHandler
+    public void onSpawn(CreatureSpawnEvent event)
+    {
+        if(!mobs.contains(event.getEntityType())) 
+            return;
+        if(event.getSpawnReason() != SpawnReason.SPAWNER)
+            return;
+        LivingEntity ent = event.getEntity();
+        
+        ent.setCustomName("SPAWNED");
+        ent.setCustomNameVisible(false);
+        //This makes us able to read they're names in code but not in game
+    }
 
     @EventHandler
     public void onKill(EntityDeathEvent event)
@@ -179,12 +195,15 @@ public class RareDropListener implements Listener
         // To make sure it's a valid mob
         if (!this.mobs.contains(event.getEntityType()))
             return;
-        EntityDamageEvent cause = event.getEntity().getLastDamageCause();
+        LivingEntity ent = event.getEntity();
+        EntityDamageEvent cause = ent.getLastDamageCause();
         if (!(cause instanceof EntityDamageByEntityEvent))
             return;
         // these four lines make sure it was a player that killed the entity
         Entity damager = ((EntityDamageByEntityEvent) cause).getDamager();
         if (!(damager instanceof Player))
+            return;
+        if(ent.getCustomName().equalsIgnoreCase("SPAWNED"))
             return;
 
         TregminePlayer player = plugin.getPlayer((Player) damager);
@@ -193,7 +212,6 @@ public class RareDropListener implements Listener
         }
         int i = random.nextInt(99) + 1;
         if (i == 35) {
-            LivingEntity ent = event.getEntity();
             ent.getEquipment().setBootsDropChance(0.0F);
             ent.getEquipment().setLeggingsDropChance(0.0F);
             ent.getEquipment().setChestplateDropChance(0.0F);
