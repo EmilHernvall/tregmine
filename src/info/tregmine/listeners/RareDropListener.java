@@ -76,6 +76,7 @@ public class RareDropListener implements Listener
     private static final List<TregminePlayer> players = Lists.newArrayList();
 
     private Set<EntityType> mobs = EnumSet.of(EntityType.CREEPER,
+            EntityType.SKELETON, EntityType.ZOMBIE, EntityType.SPIDER,
             EntityType.ENDERMAN, EntityType.WITHER, EntityType.WITCH,
             EntityType.BAT, EntityType.GHAST, EntityType.MAGMA_CUBE,
             EntityType.PIG_ZOMBIE, EntityType.SLIME);
