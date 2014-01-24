@@ -443,7 +443,7 @@ public class TregminePlayer extends PlayerDelegate
             }
             
             if (zone.hasFlag(Zone.Flags.ADMIN_ONLY) && 
-                    (this.getRank() != Rank.JUNIOR_ADMIN || 
+                    (this.getRank() != Rank.JUNIOR_ADMIN && 
                     this.getRank() != Rank.SENIOR_ADMIN)) { // If zone has Admin Only and user is not admin
                 return false;
             }
