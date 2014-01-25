@@ -102,7 +102,6 @@ public class PortalListener implements Listener
             Material.IRON_DOOR_BLOCK,
             Material.DOUBLE_PLANT,
             Material.PISTON_EXTENSION,
-            Material.PISTON_EXTENSION,
             Material.BEDROCK,
             Material.ENDER_PORTAL_FRAME,
             Material.CHEST,
