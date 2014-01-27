@@ -494,6 +494,11 @@ public class TregminePlayerListener implements Listener
     public void onPlayerBlockMove(PlayerMoveBlockEvent event)
     {
         TregminePlayer player = event.getPlayer();
+        
+        if (player.getGameMode() == GameMode.CREATIVE) {
+            return;
+        }
+        
         double pickupDistance = player.getRank().getPickupDistance();
         List<Entity> entities = player.getNearbyEntities(pickupDistance, pickupDistance, pickupDistance);
         
