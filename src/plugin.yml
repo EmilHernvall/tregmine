@@ -17,6 +17,10 @@ commands:
     description: Send a message to all active guardians
     usage: /guardians message
     aliases: g
+  coders:
+    description: Send a message to all online coders
+    usage: /coders message
+    aliases: c
   creative:
     description: Switch to creative mode (admins and builders only)
     usage: /creative
