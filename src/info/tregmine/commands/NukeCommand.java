@@ -10,11 +10,11 @@ import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.entity.*;
 
-public class RemItemsCommand extends AbstractCommand
+public class NukeCommand extends AbstractCommand
 {
-    public RemItemsCommand(Tregmine tregmine)
+    public NukeCommand(Tregmine tregmine)
     {
-        super(tregmine, "remitems");
+        super(tregmine, "nuke");
     }
 
     @SuppressWarnings("deprecation")
