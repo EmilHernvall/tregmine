@@ -112,9 +112,6 @@ commands:
   normal:
     description: Become a normal player until you sign back on (admins, guardians and builders only)
     usage: /normal
-  nuke:
-    description: Kill all mobs on this map (admins and guardians only)
-    usage: /nuke
   password:
     description: Set your password
     usage: /password password
@@ -127,9 +124,9 @@ commands:
   regeneratechunk:
     description: Regenerate the current chunk (admin only)
     usage: /regeneratechunk
-  remitems:
-    description: remove all items in the specified radius
-    usage: /remitems radius
+  nuke:
+    description: Remove nearby arrows, mobs and items.
+    usage: /nuke
   repair:
     description: Repair special tools
     usage: /repair
