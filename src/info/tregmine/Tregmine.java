@@ -236,7 +236,6 @@ public class Tregmine extends JavaPlugin
         getCommand("pos").setExecutor(new PositionCommand(this));
         getCommand("quitmessage").setExecutor(new QuitMessageCommand(this));
         getCommand("regeneratechunk").setExecutor(new RegenerateChunkCommand(this));
-        getCommand("remitems").setExecutor(new RemItemsCommand(this));
         getCommand("repair").setExecutor(new ToolRepairCommand(this));
         getCommand("report").setExecutor(new ReportCommand(this));
         getCommand("say").setExecutor(new SayCommand(this));
