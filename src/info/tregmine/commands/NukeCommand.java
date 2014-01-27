@@ -158,27 +158,27 @@ public class NukeCommand extends AbstractCommand
     {
         if (entity instanceof Monster) {
             Monster monster = (Monster) entity;
-            monster.setHealth(0);
+            monster.remove();
         }
         else if (entity instanceof Animals) {
             Animals animal = (Animals) entity;
-            animal.setHealth(0);
+            animal.remove();
         }
         else if (entity instanceof Slime) {
             Slime slime = (Slime) entity;
-            slime.setHealth(0);
+            slime.remove();
         }
         else if (entity instanceof EnderDragon) {
             EnderDragon dragon = (EnderDragon) entity;
-            dragon.setHealth(0);
+            dragon.remove();
         }
         else if (entity instanceof Wither) {
             Wither wither = (Wither) entity;
-            wither.setHealth(0);
+            wither.remove();
         }
         else if (entity instanceof Ghast) {
             Ghast ghast = (Ghast) entity;
-            ghast.setHealth(0);
+            ghast.remove();
         }
     }
 
