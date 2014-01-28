@@ -2,6 +2,7 @@ package info.tregmine.api;
 
 import info.tregmine.Tregmine;
 import info.tregmine.api.encryption.BCrypt;
+import info.tregmine.api.returns.BooleanStringReturn;
 import info.tregmine.database.*;
 import info.tregmine.quadtree.Point;
 import info.tregmine.zones.*;
@@ -415,62 +416,62 @@ public class TregminePlayer extends PlayerDelegate
         }
     }
     
-    public boolean canBeHere(Location loc)
+    public BooleanStringReturn canBeHere(Location loc)
     {
         ZoneWorld world = plugin.getWorld(loc.getWorld());
         Zone zone = world.findZone(loc);
         Lot lot = world.findLot(loc);
         
         if (zone == null) { // Wilderness - Can be there
-            return true;
+            return new BooleanStringReturn(true, null);
         }
         
         if (this.getRank().canModifyZones()) { // Admins can be there
-            return true;
+            return new BooleanStringReturn(true, null);
         }
         
         Zone.Permission permission = zone.getUser(this);
         
         if (zone.getEnterDefault()) {
             if (permission != null && permission == Zone.Permission.Banned) { // Banned - Can not be there
-                return false;
+                return new BooleanStringReturn(false, ChatColor.RED + "[" + zone.getName() + "] You are banned from " + zone.getName());
             }
             
             if (zone.hasFlag(Zone.Flags.BLOCK_WARNED) && 
                     (this.hasFlag(TregminePlayer.Flags.HARDWARNED) || 
                     this.hasFlag(TregminePlayer.Flags.SOFTWARNED))) { // If zone has BlockWarned and user is warned
-                return false;
+                return new BooleanStringReturn(false, ChatColor.RED + "[" + zone.getName() + "] You must not be warned to be here!");
             }
             
             if (zone.hasFlag(Zone.Flags.ADMIN_ONLY) && 
-                    (this.getRank() != Rank.JUNIOR_ADMIN && 
+                    (this.getRank() != Rank.JUNIOR_ADMIN || 
                     this.getRank() != Rank.SENIOR_ADMIN)) { // If zone has Admin Only and user is not admin
-                return false;
+                return new BooleanStringReturn(false, ChatColor.RED + "[" + zone.getName() + "] You must be an admin to enter " + zone.getName());
             }
             
             if (zone.hasFlag(Zone.Flags.REQUIRE_RESIDENCY) && 
                     (this.getRank() == Rank.UNVERIFIED || 
                     this.getRank() == Rank.TOURIST || 
                     this.getRank() == Rank.SETTLER)) { // If zone has Require Residency and user is not resident yet
-                return false;
+                return new BooleanStringReturn(false, ChatColor.RED + "[" + zone.getName() + "] You must be atleast " + Rank.RESIDENT.getColor() + "Resident" + ChatColor.RED + zone.getName());
             }
         } else {
             if (permission == null) { // If no permission (Allowed, Maker, Owner, Banned) then stop
-                return false;
+                return new BooleanStringReturn(false, ChatColor.RED + "[" + zone.getName() + "] You are not allowed to enter " + zone.getName());
             }
             
             if (permission == Zone.Permission.Banned) { // If the permission is banned then stop
-                return false;
+                return new BooleanStringReturn(false, ChatColor.RED + "[" + zone.getName() + "] You are banned from " + zone.getName());
             }
         }
 
         if (lot != null && lot.hasFlag(Lot.Flags.PRIVATE)) { // If private lot
             if (!lot.isOwner(this)) { // If not owner - then stop
-                return false;
+                return new BooleanStringReturn(false, ChatColor.RED + "[" + zone.getName() + "] This lot is private!");
             }
         }
 
-        return true;
+        return new BooleanStringReturn(true, null);
     }
 
     /**
