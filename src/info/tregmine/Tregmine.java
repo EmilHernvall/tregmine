@@ -447,6 +447,7 @@ public class Tregmine extends JavaPlugin
 
             IPlayerDAO playerDAO = ctx.getPlayerDAO();
             playerDAO.updatePlayTime(player);
+            playerDAO.updateBadges(player);
         } catch (DAOException e) {
             throw new RuntimeException(e);
         }
