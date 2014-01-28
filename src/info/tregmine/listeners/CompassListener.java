@@ -2,6 +2,7 @@ package info.tregmine.listeners;
 
 import info.tregmine.Tregmine;
 import info.tregmine.api.*;
+import info.tregmine.api.returns.BooleanStringReturn;
 
 import org.bukkit.*;
 import org.bukkit.block.Block;
@@ -89,8 +90,10 @@ public class CompassListener implements Listener
                                                      target.getY() + 2,
                                                      target.getZ()));
             
-            if (!player.canBeHere(target.getLocation())) {
-                player.sendMessage(ChatColor.RED + "Insufficient Permission for this area!");
+            BooleanStringReturn returnValue = player.canBeHere(target.getLocation());
+            
+            if (!returnValue.getBoolean()) {
+                player.sendMessage(returnValue.getString());
                 return;
             }
 
