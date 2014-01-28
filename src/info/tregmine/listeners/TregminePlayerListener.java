@@ -505,6 +505,11 @@ public class TregminePlayerListener implements Listener
         for (Entity entity : entities) {
             if (entity instanceof Item) {
                 Item item = (Item) entity;
+                
+                if (item.getTicksLived() < item.getPickupDelay()) {
+                    return;
+                }
+                
                 HashMap<Integer, ItemStack> remaining = player.getInventory().addItem(item.getItemStack());
                 
                 if (remaining.size() > 0) {
