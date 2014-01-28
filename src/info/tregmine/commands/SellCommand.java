@@ -83,7 +83,7 @@ public class SellCommand extends AbstractCommand implements Listener
 
                 Material material = stack.getType();
                 int amount = stack.getAmount();
-                int value = itemDAO.getItemValue(material.getId());
+                int value = itemDAO.getItemValue(material.getId(), stack.getData().getData());
 
                 player.sendMessage(YELLOW + "[Sell] " + material.toString() +
                         ": " + amount + " * " + value + " = " + (amount*value) +
@@ -152,7 +152,7 @@ public class SellCommand extends AbstractCommand implements Listener
 
                     Material material = stack.getType();
                     int amount = stack.getAmount();
-                    int value = itemDAO.getItemValue(material.getId());
+                    int value = itemDAO.getItemValue(material.getId(), stack.getData().getData());
 
                     bid += amount * value;
                 }
