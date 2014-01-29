@@ -1,20 +1,14 @@
 package info.tregmine.listeners;
 
-import org.bukkit.ChatColor;
-import org.bukkit.World;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerAnimationEvent;
-import org.bukkit.event.player.PlayerAnimationType;
-import org.bukkit.inventory.ItemStack;
-
-import info.tregmine.api.TregminePlayer;
-import info.tregmine.api.TargetBlock;
 import info.tregmine.Tregmine;
+import info.tregmine.api.*;
+import info.tregmine.api.returns.BooleanStringReturn;
+
+import org.bukkit.*;
+import org.bukkit.block.Block;
+import org.bukkit.event.*;
+import org.bukkit.event.player.*;
+import org.bukkit.inventory.ItemStack;
 
 public class CompassListener implements Listener
 {
@@ -30,6 +24,7 @@ public class CompassListener implements Listener
         this.plugin = instance;
     }
 
+    @SuppressWarnings("deprecation")
     @EventHandler
     public void onPlayerAnimation(PlayerAnimationEvent event)
     {
@@ -94,6 +89,13 @@ public class CompassListener implements Listener
                                                      target.getX(),
                                                      target.getY() + 2,
                                                      target.getZ()));
+            
+            BooleanStringReturn returnValue = player.canBeHere(target.getLocation());
+            
+            if (!returnValue.getBoolean()) {
+                player.sendMessage(returnValue.getString());
+                return;
+            }
 
             if (mode == CompassMode.OnTop) {
                 int top = world.getHighestBlockYAt(target.getLocation());
