@@ -97,10 +97,10 @@ public class PortalListener implements Listener
         EnumSet.of(
             Material.BED,
             Material.WOOD_DOOR,
+            Material.WOODEN_DOOR,
             Material.IRON_DOOR,
             Material.IRON_DOOR_BLOCK,
             Material.DOUBLE_PLANT,
-            Material.PISTON_EXTENSION,
             Material.PISTON_EXTENSION,
             Material.BEDROCK,
             Material.ENDER_PORTAL_FRAME,
