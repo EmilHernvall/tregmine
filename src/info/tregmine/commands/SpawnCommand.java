@@ -15,7 +15,7 @@ public class SpawnCommand extends AbstractCommand
     @Override
     public boolean handlePlayer(TregminePlayer player, String[] args)
     {
-        player.teleportWithHorse(player.getworld().getSpawnLocation());
+        player.teleportWithHorse(player.getWorld().getSpawnLocation());
         return true;
     }
 }

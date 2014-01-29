@@ -28,13 +28,13 @@ public class TeleportCommand extends AbstractCommand
         @Override
         public void run()
         {
-            if (!from.canBeHere(to.getLocation())) {
+            if (!from.canBeHere(to.getLocation()).getBoolean()) {
                 from.sendMessage(RED + "You do not have permission for the location of " + to.getChatName());
                 return;
             }
             // Check position hasn't changed since task started.
             double distance = MathUtil.calcDistance2d(from.getLocation(), to.getLocation());
-            
+
             if (distance > from.getRank().getTeleportDistanceLimit()) {
                 from.sendMessage(RED + "Your teleportation spell is not strong enough for this long distance!");
                 return;
@@ -42,7 +42,7 @@ public class TeleportCommand extends AbstractCommand
 
             from.teleportWithHorse(to.getLocation());
             from.setNoDamageTicks(200);
-            
+
             if (!from.getRank().canDoHiddenTeleport()) {
                 to.sendMessage(AQUA + from.getName() + " teleported to you!");
                 PotionEffect ef =
