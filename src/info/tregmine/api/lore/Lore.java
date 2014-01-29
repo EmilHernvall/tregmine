@@ -65,7 +65,7 @@ public class Lore
         
         public static Sword getRandom()
         {
-            return swords.get(new Random().nextInt(Sword.values().length));
+            return swords.get(new Random().nextInt(Sword.values().length - 1));
         }
     }
 
@@ -145,7 +145,7 @@ public class Lore
                     armors.add(armor);
                 }
             }
-            return armors.get(new Random().nextInt(armors.size()));
+            return armors.get(new Random().nextInt(armors.size() -1));
         }
         
     }
@@ -178,7 +178,7 @@ public class Lore
 
         public static God getRandom()
         {
-            return gods.get(new Random().nextInt(God.values().length));
+            return gods.get(new Random().nextInt(God.values().length - 1));
         }
         
         public String toString()
