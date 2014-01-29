@@ -49,6 +49,9 @@ public class Tregmine extends JavaPlugin
     private Map<String, ZoneWorld> worlds;
     private Map<Integer, Zone> zones;
 
+    private List<String> insults;
+    private List<String> quitMessages;
+
     private Queue<TregminePlayer> mentors;
     private Queue<TregminePlayer> students;
 
@@ -111,7 +114,6 @@ public class Tregmine extends JavaPlugin
     {
         this.server = getServer();
 
-        // Load blessed blocks
         try (IContext ctx = contextFactory.createContext()) {
             IBlessedBlockDAO blessedBlockDAO = ctx.getBlessedBlockDAO();
             this.blessedBlocks = blessedBlockDAO.load(getServer());
@@ -122,6 +124,12 @@ public class Tregmine extends JavaPlugin
             this.fishyBlocks = fishyBlockDAO.loadFishyBlocks(getServer());
 
             LOGGER.info("Loaded " + fishyBlocks.size() + " fishy blocks");
+            
+            IMiscDAO miscDAO = ctx.getMiscDAO();
+            this.insults = miscDAO.loadInsults();
+            this.quitMessages = miscDAO.loadQuitMessages();
+
+            LOGGER.info("Loaded " + insults.size() + " insults and " + quitMessages.size() + " quit messages");
         } catch (DAOException e) {
             throw new RuntimeException(e);
         }
@@ -327,6 +335,16 @@ public class Tregmine extends JavaPlugin
     public Queue<TregminePlayer> getStudentQueue()
     {
         return students;
+    }
+    
+    public List<String> getInsults()
+    {
+        return insults;
+    }
+    
+    public List<String> getQuitMessages()
+    {
+        return quitMessages;
     }
 
     // ============================================================================

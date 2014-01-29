@@ -20,4 +20,5 @@ public interface IContext extends AutoCloseable
     public IWarpDAO getWarpDAO();
     public IZonesDAO getZonesDAO();
     public IEnchantmentDAO getEnchantmentDAO();
+    public IMiscDAO getMiscDAO();
 }
