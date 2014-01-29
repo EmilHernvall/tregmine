@@ -180,7 +180,7 @@ public class Tregmine extends JavaPlugin
                 @Override
                 public ChatColor getColor()
                 {
-                    return ChatColor.DARK_RED;
+                    return Rank.JUNIOR_ADMIN.getColor();
                 }
             });
 
@@ -196,7 +196,23 @@ public class Tregmine extends JavaPlugin
                 @Override
                 public ChatColor getColor()
                 {
-                    return ChatColor.DARK_BLUE;
+                    return Rank.GUARDIAN.getColor();
+                }
+            });
+        
+        getCommand("coders").setExecutor(
+            new NotifyCommand(this, "coders") {
+                @Override
+                public boolean isTarget(TregminePlayer player)
+                {
+                    return player.getRank() == Rank.CODER ||
+                           player.getRank() == Rank.JUNIOR_ADMIN ||
+                           player.getRank() == Rank.SENIOR_ADMIN;
+                }
+                @Override
+                public ChatColor getColor()
+                {
+                    return Rank.CODER.getColor();
                 }
             });
 
