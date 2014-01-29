@@ -18,12 +18,13 @@ public class DBItemDAO implements IItemDAO
     }
 
     @Override
-    public int getItemValue(int itemId) throws DAOException
+    public int getItemValue(int itemId, byte itemData) throws DAOException
     {
-        String sql = "SELECT * FROM item WHERE item_id = ?";
+        String sql = "SELECT * FROM item WHERE item_id = ? AND item_data = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, itemId);
+            stmt.setByte(2, itemData);
             stmt.execute();
 
             try (ResultSet rs = stmt.getResultSet()) {
