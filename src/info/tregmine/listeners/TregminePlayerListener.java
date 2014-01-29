@@ -1,22 +1,23 @@
 package info.tregmine.listeners;
 
-import java.util.*;
+import info.tregmine.Tregmine;
+import info.tregmine.api.*;
+import info.tregmine.api.lore.Created;
+import info.tregmine.api.util.ScoreboardClearTask;
+import info.tregmine.commands.MentorCommand;
+import info.tregmine.database.*;
+import info.tregmine.events.PlayerMoveBlockEvent;
+import info.tregmine.quadtree.Point;
+import info.tregmine.zones.*;
 
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.SkullType;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockState;
-import org.bukkit.block.Skull;
-import org.bukkit.entity.Item;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
+import java.util.*;
+import java.util.Map.Entry;
+
+import org.bukkit.*;
+import org.bukkit.block.*;
+import org.bukkit.entity.*;
+import org.bukkit.event.*;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.event.player.PlayerLoginEvent.Result;
@@ -24,31 +25,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scoreboard.*;
 import org.kitteh.tag.PlayerReceiveNameTagEvent;
-
-import info.tregmine.Tregmine;
-import info.tregmine.api.Badge;
-import info.tregmine.api.PlayerBannedException;
-import info.tregmine.api.PlayerReport;
-import info.tregmine.api.Rank;
-import info.tregmine.api.TregminePlayer;
-import info.tregmine.api.lore.Created;
-import info.tregmine.api.math.MathUtil;
-import info.tregmine.api.util.ScoreboardClearTask;
-import info.tregmine.commands.MentorCommand;
-import info.tregmine.database.*;
-import info.tregmine.database.DAOException;
-import info.tregmine.database.IContext;
-import info.tregmine.database.IInventoryDAO;
-import info.tregmine.database.ILogDAO;
-import info.tregmine.database.IMentorLogDAO;
-import info.tregmine.database.IMotdDAO;
-import info.tregmine.database.IPlayerDAO;
-import info.tregmine.database.IPlayerReportDAO;
-import info.tregmine.database.IWalletDAO;
-import info.tregmine.quadtree.Point;
-import info.tregmine.zones.Lot;
-import info.tregmine.zones.ZoneWorld;
-import static info.tregmine.database.IInventoryDAO.InventoryType;
 
 public class TregminePlayerListener implements Listener
 {
@@ -336,7 +312,7 @@ public class TregminePlayerListener implements Listener
 
         // Check if the player is allowed to fly
         if (player.hasFlag(TregminePlayer.Flags.HARDWARNED) ||
-				player.hasFlag(TregminePlayer.Flags.SOFTWARNED)) {
+                player.hasFlag(TregminePlayer.Flags.SOFTWARNED)) {
             player.sendMessage("You are warned and are not allowed to fly.");
             player.setAllowFlight(false);
         } else if (rank.canFly()) {
@@ -511,6 +487,39 @@ public class TregminePlayerListener implements Listener
         TregminePlayer player = this.plugin.getPlayer(event.getPlayer());
         if (player == null) {
             event.getPlayer().kickPlayer("error loading profile!");
+        }
+    }
+    
+    @EventHandler
+    public void onPlayerBlockMove(PlayerMoveBlockEvent event)
+    {
+        TregminePlayer player = event.getPlayer();
+        
+        if (player.getGameMode() == GameMode.CREATIVE) {
+            return;
+        }
+        
+        double pickupDistance = player.getRank().getPickupDistance();
+        List<Entity> entities = player.getNearbyEntities(pickupDistance, pickupDistance, pickupDistance);
+        
+        for (Entity entity : entities) {
+            if (entity instanceof Item) {
+                Item item = (Item) entity;
+                
+                if (item.getTicksLived() < item.getPickupDelay()) {
+                    return;
+                }
+                
+                HashMap<Integer, ItemStack> remaining = player.getInventory().addItem(item.getItemStack());
+                
+                if (remaining.size() > 0) {
+                    for (Entry<Integer, ItemStack> entry : remaining.entrySet()) {
+                        item.setItemStack(entry.getValue());
+                    }
+                } else {
+                    item.remove();
+                }
+            }
         }
     }
 
