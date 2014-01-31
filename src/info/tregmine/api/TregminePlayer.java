@@ -35,7 +35,8 @@ public class TregminePlayer extends PlayerDelegate
         FORCESHIELD,
         CHEST_LOG,
         HIDDEN_ANNOUNCEMENT,
-        CHANNEL_VIEW;
+        CHANNEL_VIEW,
+        WATCHING_CHUNKS;
     };
 
     // Persistent values
@@ -85,6 +86,9 @@ public class TregminePlayer extends PlayerDelegate
     private FishyBlock currentFishyBlock;
     private int fishyBuyCount;
 
+    // Chunk Watcher
+    private boolean newChunk = false;
+    
     private Tregmine plugin;
 
     public TregminePlayer(Player player, Tregmine instance)
@@ -203,6 +207,9 @@ public class TregminePlayer extends PlayerDelegate
     public void setPlayTime(int v) { this.playTime = v; }
     public int getPlayTime() { return playTime; }
 
+    public boolean getNewChunk() { return newChunk; }
+    public void setNewChunk(boolean value) { this.newChunk = value; }
+    
     // non-persistent state methods
 
     public boolean canMentor()
