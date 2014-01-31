@@ -13,6 +13,9 @@ commands:
   alert:
     description: Change your alerts (Cyan text in chat)
     usage: /alert
+  allclear:
+    description: Check if any blocks have been changed
+    usage: /allclear [radius]
   guardians:
     description: Send a message to all active guardians
     usage: /guardians message
