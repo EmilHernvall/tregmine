@@ -248,6 +248,9 @@ commands:
   hide:
     description: Hide logon message
     usage: /hide
+  watchchunks:
+    description: Informs the player when they load new and old chunks without spam
+    usage: /watchchunks on/off/status
   webkick:
     description: Kick <player> from web chat for 10 minutes
     usage: /webkick <player> <message>
