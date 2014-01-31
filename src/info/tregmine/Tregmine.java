@@ -1,5 +1,18 @@
 package info.tregmine;
 
+import java.io.*;
+import java.net.InetAddress;
+import java.util.*;
+import java.util.logging.*;
+
+import org.bukkit.*;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
+import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.java.JavaPlugin;
+
+import com.maxmind.geoip.LookupService;
+
 import info.tregmine.api.*;
 import info.tregmine.commands.*;
 import info.tregmine.database.*;
@@ -9,21 +22,6 @@ import info.tregmine.listeners.*;
 import info.tregmine.quadtree.IntersectionException;
 import info.tregmine.tools.*;
 import info.tregmine.zones.*;
-
-import java.io.*;
-import java.net.InetAddress;
-import java.util.*;
-import java.util.logging.*;
-
-import org.bukkit.*;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.world.WorldSaveEvent;
-import org.bukkit.plugin.PluginManager;
-import org.bukkit.plugin.java.JavaPlugin;
-
-import com.maxmind.geoip.LookupService;
 
 /**
  * @author Ein Andersson
@@ -169,6 +167,7 @@ public class Tregmine extends JavaPlugin
         pluginMgm.registerEvents(new BankListener(this), this);
         pluginMgm.registerEvents(new RareDropListener(this), this);
         pluginMgm.registerEvents(new DamageListener(this), this);
+        pluginMgm.registerEvents(new MiscListener(this), this);
 
         // Declaration of all commands
         getCommand("admins").setExecutor(
@@ -605,14 +604,5 @@ public class Tregmine extends JavaPlugin
     public Zone getZone(int zoneId)
     {
         return zones.get(zoneId);
-    }
-
-    // ============================================================================
-    // Auto Save Alert
-    // ============================================================================
-
-    @EventHandler
-    public void autoSave(WorldSaveEvent event){
-        Bukkit.broadcastMessage(ChatColor.DARK_RED + "Tregmine is saving, You may experience some slowness.");
     }
 }
