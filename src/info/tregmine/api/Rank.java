@@ -616,6 +616,11 @@ public enum Rank
                 /* || this == CODER */ ); //Possibly? :P
                 
     }
+    
+    public boolean canCheckBlocks()
+    {
+        return (this == JUNIOR_ADMIN || this == SENIOR_ADMIN);
+    }
 
     public ChatColor getColor()
     {
@@ -632,4 +637,5 @@ public enum Rank
 
         return null;
     }
+
 }
