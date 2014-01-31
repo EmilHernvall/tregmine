@@ -97,10 +97,10 @@ public class PortalListener implements Listener
         EnumSet.of(
             Material.BED,
             Material.WOOD_DOOR,
+            Material.WOODEN_DOOR,
             Material.IRON_DOOR,
             Material.IRON_DOOR_BLOCK,
             Material.DOUBLE_PLANT,
-            Material.PISTON_EXTENSION,
             Material.PISTON_EXTENSION,
             Material.BEDROCK,
             Material.ENDER_PORTAL_FRAME,
@@ -121,7 +121,7 @@ public class PortalListener implements Listener
         this.plugin = instance;
         this.gravityTasks = new HashMap<TregminePlayer, GravityTask>();
     }
-    
+
     @EventHandler
     public void dropBlock(PlayerInteractEvent event)
     {
@@ -167,7 +167,7 @@ public class PortalListener implements Listener
         if (!p.getRank().canUseTools()) return;
 
         List<String> lore = p.getItemInHand().getItemMeta().getLore();
-        
+
         if (lore.isEmpty()) return;
         if (!lore.get(0).equals(ToolsRegistry.GravityGunLoreTag)) return;
 
@@ -185,11 +185,11 @@ public class PortalListener implements Listener
             p.sendMessage(ChatColor.RED + "This block is blessed!");
             return;
         }
-        
+
         if (plugin.getFishyBlocks().containsKey(block.getLocation())) {
             p.sendMessage(ChatColor.RED + "Can not move fishyblocks!");
         }
-            
+
         if (!p.hasBlockPermission(block.getLocation(), false)) {
             p.sendMessage(ChatColor.RED + "Can not pick up from here!");
             return;
@@ -205,7 +205,7 @@ public class PortalListener implements Listener
             p.sendMessage(ChatColor.RED + "You are out of durability, Try repairing!");
             return;
         }
-        
+
         lore.remove(1);
         lore.add(Integer.parseInt(durability[0]) - 1 + "/1000");
 
@@ -220,7 +220,7 @@ public class PortalListener implements Listener
 
         block.setType(Material.AIR);
     }
-    
+
     public void clearUp(PlayerQuitEvent event) {
         if (gravityTasks.containsKey(event.getPlayer())) {
             GravityTask task = gravityTasks.get(event.getPlayer());

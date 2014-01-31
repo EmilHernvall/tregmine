@@ -19,6 +19,7 @@ public class CallEventListener implements Listener
         this.plugin = instance;
     }
     
+    // Triggers when a player changes lot
     @EventHandler
     public void PlayerLotChangeEventListener(PlayerMoveEvent event)
     {
@@ -62,6 +63,7 @@ public class CallEventListener implements Listener
         plugin.getServer().getPluginManager().callEvent(customEvent);
     }
     
+    // Triggers when the player changes zone
     @EventHandler
     public void PlayerZoneChangeEventListener(PlayerMoveEvent event)
     {
@@ -102,6 +104,28 @@ public class CallEventListener implements Listener
         }
         
         PlayerZoneChangeEvent customEvent = new PlayerZoneChangeEvent(event.getFrom(), event.getTo(), player, oldZone, newZone);
+        plugin.getServer().getPluginManager().callEvent(customEvent);
+    }
+    
+    // Triggers when a player moves position, not head.
+    @EventHandler
+    public void PlayerMoveBlockEventListener(PlayerMoveEvent event)
+    {
+        TregminePlayer player = plugin.getPlayer(event.getPlayer());
+        
+        if (player == null) {
+            event.getPlayer().kickPlayer("Something went wrong!");
+            Tregmine.LOGGER.info(event.getPlayer().getName() + " was not found in players map (PlayerMoveEvent).");
+            return;
+        }
+        
+        if (event.getFrom().getX() == event.getTo().getX() && 
+                event.getFrom().getY() == event.getTo().getY() && 
+                event.getFrom().getZ() == event.getTo().getZ()) {
+            return;
+        }
+        
+        PlayerMoveBlockEvent customEvent = new PlayerMoveBlockEvent(event.getFrom(), event.getTo(), player);
         plugin.getServer().getPluginManager().callEvent(customEvent);
     }
 }

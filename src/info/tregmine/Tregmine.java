@@ -1,35 +1,29 @@
 package info.tregmine;
 
-import java.io.File;
-import java.io.IOException;
+import info.tregmine.api.*;
+import info.tregmine.commands.*;
+import info.tregmine.database.*;
+import info.tregmine.database.db.DBContextFactory;
+import info.tregmine.events.CallEventListener;
+import info.tregmine.listeners.*;
+import info.tregmine.quadtree.IntersectionException;
+import info.tregmine.tools.*;
+import info.tregmine.zones.*;
+
+import java.io.*;
 import java.net.InetAddress;
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.logging.*;
 
 import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.world.WorldSaveEvent;
-import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.maxmind.geoip.LookupService;
-
-import info.tregmine.api.*;
-import info.tregmine.commands.*;
-import info.tregmine.database.*;
-import info.tregmine.database.IInventoryDAO.InventoryType;
-import info.tregmine.database.db.DBContextFactory;
-import info.tregmine.events.CallEventListener;
-import info.tregmine.listeners.*;
-import info.tregmine.quadtree.IntersectionException;
-import info.tregmine.tools.*;
-import info.tregmine.zones.Lot;
-import info.tregmine.zones.Zone;
-import info.tregmine.zones.ZoneWorld;
 
 /**
  * @author Ein Andersson
@@ -54,6 +48,9 @@ public class Tregmine extends JavaPlugin
 
     private Map<String, ZoneWorld> worlds;
     private Map<Integer, Zone> zones;
+
+    private List<String> insults;
+    private List<String> quitMessages;
 
     private Queue<TregminePlayer> mentors;
     private Queue<TregminePlayer> students;
@@ -117,7 +114,6 @@ public class Tregmine extends JavaPlugin
     {
         this.server = getServer();
 
-        // Load blessed blocks
         try (IContext ctx = contextFactory.createContext()) {
             IBlessedBlockDAO blessedBlockDAO = ctx.getBlessedBlockDAO();
             this.blessedBlocks = blessedBlockDAO.load(getServer());
@@ -128,6 +124,12 @@ public class Tregmine extends JavaPlugin
             this.fishyBlocks = fishyBlockDAO.loadFishyBlocks(getServer());
 
             LOGGER.info("Loaded " + fishyBlocks.size() + " fishy blocks");
+            
+            IMiscDAO miscDAO = ctx.getMiscDAO();
+            this.insults = miscDAO.loadInsults();
+            this.quitMessages = miscDAO.loadQuitMessages();
+
+            LOGGER.info("Loaded " + insults.size() + " insults and " + quitMessages.size() + " quit messages");
         } catch (DAOException e) {
             throw new RuntimeException(e);
         }
@@ -180,7 +182,7 @@ public class Tregmine extends JavaPlugin
                 @Override
                 public ChatColor getColor()
                 {
-                    return ChatColor.DARK_RED;
+                    return Rank.JUNIOR_ADMIN.getColor();
                 }
             });
 
@@ -196,7 +198,23 @@ public class Tregmine extends JavaPlugin
                 @Override
                 public ChatColor getColor()
                 {
-                    return ChatColor.DARK_BLUE;
+                    return Rank.GUARDIAN.getColor();
+                }
+            });
+        
+        getCommand("coders").setExecutor(
+            new NotifyCommand(this, "coders") {
+                @Override
+                public boolean isTarget(TregminePlayer player)
+                {
+                    return player.getRank() == Rank.CODER ||
+                           player.getRank() == Rank.JUNIOR_ADMIN ||
+                           player.getRank() == Rank.SENIOR_ADMIN;
+                }
+                @Override
+                public ChatColor getColor()
+                {
+                    return Rank.CODER.getColor();
                 }
             });
 
@@ -271,6 +289,10 @@ public class Tregmine extends JavaPlugin
         getCommand("zone").setExecutor(new ZoneCommand(this, "zone"));
 
         ToolCraftRegistry.RegisterRecipes(getServer()); // Registers all tool recipes
+        
+        for (TregminePlayer player : getOnlinePlayers()) {
+            player.sendMessage(ChatColor.AQUA + "Tregmine successfully loaded. Version " + getDescription().getVersion());
+        }
     }
 
     // run when plugin is disabled
@@ -281,10 +303,6 @@ public class Tregmine extends JavaPlugin
 
         // Add a record of logout to db for all players
         for (TregminePlayer player : getOnlinePlayers()) {
-            player.sendMessage(ChatColor.AQUA
-                    + "Tregmine successfully unloaded. Version "
-                    + getDescription().getVersion());
-
             player.saveInventory(player.getCurrentInventory());
             removePlayer(player);
         }
@@ -335,6 +353,16 @@ public class Tregmine extends JavaPlugin
     public Queue<TregminePlayer> getStudentQueue()
     {
         return students;
+    }
+    
+    public List<String> getInsults()
+    {
+        return insults;
+    }
+    
+    public List<String> getQuitMessages()
+    {
+        return quitMessages;
     }
 
     // ============================================================================
@@ -455,6 +483,7 @@ public class Tregmine extends JavaPlugin
 
             IPlayerDAO playerDAO = ctx.getPlayerDAO();
             playerDAO.updatePlayTime(player);
+            playerDAO.updateBadges(player);
         } catch (DAOException e) {
             throw new RuntimeException(e);
         }

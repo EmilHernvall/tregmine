@@ -2,25 +2,16 @@ package info.tregmine.api;
 
 import info.tregmine.Tregmine;
 import info.tregmine.api.encryption.BCrypt;
-import info.tregmine.database.DAOException;
-import info.tregmine.database.IContext;
-import info.tregmine.database.IInventoryDAO;
-import info.tregmine.database.IPlayerDAO;
+import info.tregmine.api.returns.BooleanStringReturn;
+import info.tregmine.database.*;
 import info.tregmine.quadtree.Point;
-import info.tregmine.zones.Lot;
-import info.tregmine.zones.Zone;
-import info.tregmine.zones.ZoneWorld;
+import info.tregmine.zones.*;
 
 import java.util.*;
 
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.block.Block;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Horse;
-import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
+import org.bukkit.entity.*;
 
 public class TregminePlayer extends PlayerDelegate
 {
@@ -423,6 +414,83 @@ public class TregminePlayer extends PlayerDelegate
         else {
             teleport(loc);
         }
+    }
+
+    public BooleanStringReturn canBeHere(Location loc)
+    {
+        ZoneWorld world = plugin.getWorld(loc.getWorld());
+        Zone zone = world.findZone(loc);
+        Lot lot = world.findLot(loc);
+
+        if (zone == null) { // Wilderness - Can be there
+            return new BooleanStringReturn(true, null);
+        }
+
+        if (this.getRank().canModifyZones()) { // Admins can be there
+            return new BooleanStringReturn(true, null);
+        }
+
+        Zone.Permission permission = zone.getUser(this);
+
+        if (zone.getEnterDefault()) {
+            // Banned - Can not be there
+            if (permission != null && permission == Zone.Permission.Banned) {
+                return new BooleanStringReturn(false, ChatColor.RED + "[" +
+                        zone.getName() + "] You are banned from " + zone.getName());
+            }
+
+            // If zone has BlockWarned and user is warned
+            if (zone.hasFlag(Zone.Flags.BLOCK_WARNED) &&
+                    (this.hasFlag(TregminePlayer.Flags.HARDWARNED) ||
+                    this.hasFlag(TregminePlayer.Flags.SOFTWARNED))) {
+                return new BooleanStringReturn(false, ChatColor.RED + "[" +
+                        zone.getName() + "] You must not be warned to be here!");
+            }
+
+            // If zone has Admin Only and user is not admin
+            if (zone.hasFlag(Zone.Flags.ADMIN_ONLY) &&
+                    (this.getRank() != Rank.JUNIOR_ADMIN ||
+                    this.getRank() != Rank.SENIOR_ADMIN)) {
+                return new BooleanStringReturn(false, ChatColor.RED + "[" +
+                        zone.getName() + "] You must be an admin to enter " +
+                        zone.getName());
+            }
+
+            // If zone has Require Residency and user is not resident yet
+            if (zone.hasFlag(Zone.Flags.REQUIRE_RESIDENCY) &&
+                    (this.getRank() == Rank.UNVERIFIED ||
+                    this.getRank() == Rank.TOURIST ||
+                    this.getRank() == Rank.SETTLER)) {
+                return new BooleanStringReturn(false, ChatColor.RED + "[" +
+                        zone.getName() + "] You must be atleast " +
+                        Rank.RESIDENT.getColor() + "Resident" + ChatColor.RED +
+                        zone.getName());
+            }
+        } else {
+            // If no permission (Allowed, Maker, Owner, Banned) then stop
+            if (permission == null) {
+                return new BooleanStringReturn(false, ChatColor.RED + "[" +
+                        zone.getName() + "] You are not allowed to enter " +
+                        zone.getName());
+            }
+
+            // If the permission is banned then stop
+            if (permission == Zone.Permission.Banned) {
+                return new BooleanStringReturn(false, ChatColor.RED + "[" +
+                        zone.getName() + "] You are banned from " + zone.getName());
+            }
+        }
+
+        // If private lot
+        if (lot != null && lot.hasFlag(Lot.Flags.PRIVATE)) {
+            // If not owner - then stop
+            if (!lot.isOwner(this)) {
+                return new BooleanStringReturn(false, ChatColor.RED + "[" +
+                        zone.getName() + "] This lot is private!");
+            }
+        }
+
+        return new BooleanStringReturn(true, null);
     }
 
     /**

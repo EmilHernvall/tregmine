@@ -1,0 +1,9 @@
+name: Portals
+version: 1.0
+main: info.tregmine.portals.Portals
+author: TregmineDevTeam
+description: Portal Plugin
+commands:
+  portal:
+    description: Cross server portal command
+    usage: /portal add|remove|trigger <server>

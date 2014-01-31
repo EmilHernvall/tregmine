@@ -2,35 +2,21 @@ package info.tregmine.listeners;
 
 //import java.util.Random;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.World;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Zombie;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
-import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.inventory.EntityEquipment;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.SkullMeta;
-//import org.bukkit.inventory.meta.ItemMeta;
-
 import info.tregmine.Tregmine;
-import info.tregmine.api.Insult;
 import info.tregmine.api.TregminePlayer;
 import info.tregmine.quadtree.Point;
-import info.tregmine.zones.Lot;
-import info.tregmine.zones.Zone;
-import info.tregmine.zones.ZoneWorld;
+import info.tregmine.zones.*;
+
+import java.util.*;
+
+import org.bukkit.*;
+import org.bukkit.entity.*;
+import org.bukkit.event.*;
+import org.bukkit.event.entity.*;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+import org.bukkit.inventory.*;
+import org.bukkit.inventory.meta.SkullMeta;
+//import org.bukkit.inventory.meta.ItemMeta;
 
 public class TauntListener implements Listener
 {
@@ -51,8 +37,10 @@ public class TauntListener implements Listener
         Player player = (Player) event.getEntity();
         PlayerDeathEvent e = (PlayerDeathEvent) event;
 
+        Random rand = new Random();
+        int msgIndex = rand.nextInt(plugin.getInsults().size());
         String death = ChatColor.DARK_GRAY + "DIED - " + player.getName() +
-                       " " + Insult.random();
+                       " " + plugin.getInsults().get(msgIndex);
 
         EntityDamageEvent damage = player.getLastDamageCause();
         DamageCause cause = damage.getCause();

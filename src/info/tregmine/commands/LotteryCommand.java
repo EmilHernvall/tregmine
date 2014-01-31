@@ -19,6 +19,7 @@ import info.tregmine.database.IWalletDAO;
 public class LotteryCommand extends AbstractCommand
 {
     public List<String> lottery;
+    public int jackpot = 0;
 
     public LotteryCommand(Tregmine tregmine)
     {
@@ -32,7 +33,6 @@ public class LotteryCommand extends AbstractCommand
     {
         NumberFormat format = NumberFormat.getNumberInstance();
         int size = lottery.size();
-        int jackpot = 0;
         int amount = lottery.size() * 2000 + jackpot;
         boolean enough = true;
         boolean joined = true;
@@ -56,7 +56,7 @@ public class LotteryCommand extends AbstractCommand
             player.sendMessage(ChatColor.RED + "Amount currently in lottery: " +
                     ChatColor.YELLOW + format.format(amount) + " Tregs");
             player.sendMessage(ChatColor.RED + "Prize is including a: " +
-                    ChatColor.YELLOW + jackpot + "treg bonus!");
+                    ChatColor.YELLOW + jackpot + " treg bonus!");
             player.sendMessage(ChatColor.RED + "Enough players for lottery (min 2): " +
                     ChatColor.YELLOW + enough);
             player.sendMessage(ChatColor.RED + "You are in lottery: " +

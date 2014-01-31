@@ -315,6 +315,7 @@ public class BankListener implements Listener
 
                     if (i == Integer.parseInt(acct.getPin())) {
                         accounts.get(player).setVerified(true);
+                        player.sendMessage(ChatColor.GREEN + "[BANK] Correct Pin");
                     } else {
                         player.sendMessage(ChatColor.RED +
                                 "[BANK] Incorrect pin");

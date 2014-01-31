@@ -1,0 +1,15 @@
+name: Hub
+version: 1.0
+main: info.tregmine.hub.Hub
+author: TregmineDevTeam
+description: Hub Plugin
+commands:
+  setspawn:
+    description: Sets the spawn of your current world
+    usage: /setspawn
+  spawn:
+    description: Teleport to the spawn of your current world
+    usage: /spawn
+  head:
+    description: Get specified player's head
+    usage: /head <player>

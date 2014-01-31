@@ -1,19 +1,16 @@
 package info.tregmine.commands;
 
+import static org.bukkit.ChatColor.*;
+import info.tregmine.Tregmine;
+import info.tregmine.api.*;
+import info.tregmine.api.math.MathUtil;
+
 import java.util.List;
 
-import static org.bukkit.ChatColor.*;
-import org.bukkit.Server;
-import org.bukkit.World;
-import org.bukkit.scheduler.BukkitScheduler;
+import org.bukkit.*;
 import org.bukkit.entity.Horse;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
-
-import info.tregmine.Tregmine;
-import info.tregmine.api.TregminePlayer;
-import info.tregmine.api.Rank;
-import info.tregmine.api.math.MathUtil;
+import org.bukkit.potion.*;
+import org.bukkit.scheduler.BukkitScheduler;
 
 public class TeleportCommand extends AbstractCommand
 {
@@ -31,22 +28,21 @@ public class TeleportCommand extends AbstractCommand
         @Override
         public void run()
         {
-            Horse horse = null;
+            if (!from.canBeHere(to.getLocation()).getBoolean()) {
+                from.sendMessage(RED + "You do not have permission for the location of " + to.getChatName());
+                return;
+            }
+            // Check position hasn't changed since task started.
+            double distance = MathUtil.calcDistance2d(from.getLocation(), to.getLocation());
 
-            if ((from.getVehicle() != null) && (from.getVehicle() instanceof Horse)){
-                horse = (Horse)from.getVehicle();
+            if (distance > from.getRank().getTeleportDistanceLimit()) {
+                from.sendMessage(RED + "Your teleportation spell is not strong enough for this long distance!");
+                return;
             }
 
-            if (horse != null){
-                horse.eject();
-                horse.teleport(to.getLocation());
-                from.teleport(to.getLocation());
-                horse.setPassenger(from.getDelegate());
-            } else {
-                from.teleport(to.getLocation());
-            }
-
+            from.teleportWithHorse(to.getLocation());
             from.setNoDamageTicks(200);
+
             if (!from.getRank().canDoHiddenTeleport()) {
                 to.sendMessage(AQUA + from.getName() + " teleported to you!");
                 PotionEffect ef =

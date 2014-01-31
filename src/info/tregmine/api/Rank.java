@@ -107,6 +107,12 @@ public enum Rank
                this == JUNIOR_ADMIN ||
                this == SENIOR_ADMIN;
     }
+    
+    public boolean canForceOpenChests()
+    {
+        return  this == JUNIOR_ADMIN ||
+                this == SENIOR_ADMIN;
+    }
 
     public boolean canSetWeather()
     {
@@ -585,6 +591,21 @@ public enum Rank
             return 500;
         } else {
             return 100;
+        }
+    }
+    
+    public double getPickupDistance()
+    {
+        if (this == JUNIOR_ADMIN || this == SENIOR_ADMIN) {
+            return 5;
+        } else if (this == GUARDIAN || this == CODER || this == BUILDER) {
+            return 4;
+        } else if (this == DONATOR) {
+            return 3;
+        } else if (this == RESIDENT) {
+            return 1.5;
+        } else {
+            return 1;
         }
     }
     

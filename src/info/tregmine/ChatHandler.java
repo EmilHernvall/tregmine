@@ -265,7 +265,7 @@ public class ChatHandler extends WebSocketHandler
         try {
             JSONObject obj = new JSONObject();
             obj.put("action", "msg");
-            obj.put("sender", sender.getRealName());
+            obj.put("sender", ChatColor.stripColor(sender.getChatName()));
             obj.put("rank", sender.getRank().toString());
             obj.put("channel", channel);
             obj.put("text", text);

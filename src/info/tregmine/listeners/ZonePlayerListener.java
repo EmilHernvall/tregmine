@@ -1,30 +1,21 @@
 package info.tregmine.listeners;
 
 import info.tregmine.Tregmine;
-import info.tregmine.api.Rank;
 import info.tregmine.api.TregminePlayer;
+import info.tregmine.api.returns.BooleanStringReturn;
 import info.tregmine.api.util.ScoreboardClearTask;
-import info.tregmine.events.PlayerLotChangeEvent;
+import info.tregmine.events.*;
 import info.tregmine.quadtree.Point;
-import info.tregmine.zones.Lot;
-import info.tregmine.zones.Zone;
-import info.tregmine.zones.ZoneWorld;
+import info.tregmine.zones.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 import org.bukkit.*;
-import org.bukkit.block.Block;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
+import org.bukkit.block.*;
+import org.bukkit.entity.*;
+import org.bukkit.event.*;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.hanging.HangingBreakByEntityEvent;
-import org.bukkit.event.hanging.HangingPlaceEvent;
+import org.bukkit.event.hanging.*;
 import org.bukkit.event.player.*;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.inventory.ItemStack;
@@ -276,7 +267,6 @@ public class ZonePlayerListener implements Listener
         player.teleportWithHorse(newPos);
     }
 
-    // For Lot Flag: Lot.Flags.PRIVATE;
     @EventHandler
     public void onPlayerMoveLot(PlayerLotChangeEvent event)
     {
@@ -284,193 +274,89 @@ public class ZonePlayerListener implements Listener
             return;
         }
         
+        TregminePlayer player = event.getPlayer();
+        
         if (!event.getNew().hasFlag(Lot.Flags.FLIGHT_ALLOWED) &&
-            !event.getPlayer().getRank().canModifyZones()) {
-
-            event.getPlayer().setFlying(false);
+            !player.getRank().canModifyZones()) 
+        {
+            player.setFlying(false);
         }
-
-        // Owner of the lot so bypasses private flag.
-        if (event.getNew().isOwner(event.getPlayer())) {
+        
+        BooleanStringReturn returnValue = player.canBeHere(event.getTo());
+        
+        if (!returnValue.getBoolean()) {
+            player.sendMessage(returnValue.getString());
+            movePlayerBack(player, event.getFrom(), event.getTo());
             return;
         }
-
-        // Let admins bypass protection, but warn them just incase.
-        if (event.getPlayer().getRank().canModifyZones()) {
-            return;
+        
+        if (event.getNew().hasFlag(Lot.Flags.PVP)) {
+            player.sendMessage(ChatColor.RED + "[" + event.getNew().getName() + "] " + "Warning! This is a PVP lot! Other players can damage or kill you here.");
         }
-
-        // If not private flagged lot, then return.
-        if (!event.getNew().hasFlag(Lot.Flags.PRIVATE)) {
-            return;
-        }
-
-        movePlayerBack(event.getPlayer(), event.getFrom(), event.getTo());
-        event.getPlayer().sendMessage(ChatColor.RED + "[" + event.getNew().getName() + "] "
-                + "This lot is private to it's owners! Please contact the lot owners.");
     }
-
+    
     @EventHandler
-    public void onPlayerMove(PlayerMoveEvent event)
+    public void onPlayerMoveZone(PlayerZoneChangeEvent event)
     {
-        TregminePlayer player = plugin.getPlayer(event.getPlayer());
-        if (player == null) {
-            event.getPlayer().kickPlayer("Something went wrong");
-            Tregmine.LOGGER.info(event.getPlayer().getName() + " was not found " +
-                    "in players map (PlayerMoveEvent).");
+        TregminePlayer player = event.getPlayer();
+
+        player.sendMessage(ChatColor.RED + "[" + event.getOld().getName() + "] " + event.getOld().getTextExit());
+        
+        BooleanStringReturn returnValue = player.canBeHere(event.getTo());
+        
+        if (!returnValue.getBoolean()) {
+            player.sendMessage(returnValue.getString());
+            movePlayerBack(player, event.getFrom(), event.getTo());
             return;
         }
-
-        ZoneWorld world = plugin.getWorld(player.getWorld());
-
-        Location movingFrom = event.getFrom();
-        Point oldPos =
-                new Point(movingFrom.getBlockX(), movingFrom.getBlockZ());
-
-        Location movingTo = event.getTo();
-        Point currentPos =
-                new Point(movingTo.getBlockX(), movingTo.getBlockZ());
-
-        Zone currentZone = player.getCurrentZone();
-        if (currentZone == null || !currentZone.contains(currentPos)) {
-
-            if (currentZone != null && currentZone.contains(oldPos)) {
-                player.setCurrentTexture("https://dl.dropbox.com/u/5405236/mc/df.zip");
-                player.sendMessage(ChatColor.RED + "[" + currentZone.getName()
-                        + "] " + currentZone.getTextExit());
-            }
-
-            currentZone = world.findZone(currentPos);
-            if (currentZone != null) {
-                Zone.Permission perm = currentZone.getUser(player);
-
-                // if anyone is allowed to enter by default...
-                if (currentZone.getEnterDefault()) {
-                    // ...we only need to reject banned players
-                    if (player.getRank().canModifyZones()) {
-                        // never applies to admins
-                    }
-                    else if (perm != null && perm == Zone.Permission.Banned) {
-                        bannedMessage(currentZone, player);
-                        player.teleport(player.getWorld().getSpawnLocation());
-                        // movePlayerBack(player, movingFrom, movingTo);
-                        return;
-                    }
-                    // If blockWarned is true, and they are either hardwarned
-                    // or softwarned then get them out of there with an error.
-                    else if (currentZone.hasFlag(Zone.Flags.BLOCK_WARNED) &&
-                            (player.hasFlag(TregminePlayer.Flags.HARDWARNED) ||
-                             player.hasFlag(TregminePlayer.Flags.SOFTWARNED))) {
-                        blockedMessage(currentZone, player);
-                        movePlayerBack(player, movingFrom, movingTo);
-                        return;
-                    }
-                    else if (currentZone.hasFlag(Zone.Flags.ADMIN_ONLY) &&
-                            (player.getRank() != Rank.JUNIOR_ADMIN &&
-                             player.getRank() != Rank.SENIOR_ADMIN)) {
-                        blockedMessage(currentZone, player);
-                        movePlayerBack(player, movingFrom, movingTo);
-                        return;
-                    }
-                    else if (currentZone.hasFlag(Zone.Flags.REQUIRE_RESIDENCY) &&
-                            (player.getRank() == Rank.TOURIST ||
-                             player.getRank() == Rank.SETTLER ||
-                             player.getRank() == Rank.UNVERIFIED)) {
-                        blockedMessage(currentZone, player);
-                        movePlayerBack(player, movingFrom, movingTo);
-                        return;
-                    }
-                }
-                // if this is a whitelist zone...
-                else {
-                    // ...reject people not in the user list, as well as banned
-                    // people
-                    if (player.getRank().canModifyZones()) {
-                        // never applies to admins
-                    }
-                    else if (perm == null) {
-                        disallowedMessage(currentZone, player);
-                        movePlayerBack(player, movingFrom, movingTo);
-                        return;
-                    }
-                    else if (perm == Zone.Permission.Banned) {
-                        bannedMessage(currentZone, player);
-                        player.teleport(player.getWorld().getSpawnLocation());
-                        return;
-                    }
-                }
-
-                welcomeMessage(currentZone, player, perm);
-
-            }
-            player.setCurrentZone(currentZone);
-        }
+        
+        player.setCurrentZone(event.getNew());
+        welcomeMessage(player.getCurrentZone(), player, event.getNew().getUser(player));
     }
-
 
     @EventHandler
     public void onPlayerChangedWorld(PlayerChangedWorldEvent event)
     {
         TregminePlayer player = plugin.getPlayer(event.getPlayer());
-        ZoneWorld world = plugin.getWorld(player.getWorld());
+        World cWorld = player.getWorld();
+
+        if (    cWorld.equals(plugin.getServer().getWorld("world")) || 
+                cWorld.equals(plugin.getServer().getWorld("world_the_end")) || 
+                cWorld.equals(plugin.getServer().getWorld("world_nether"))) {
+            player.loadInventory("survival", true);
+        } else {
+            player.loadInventory(cWorld.getName(), true);
+        }
 
         Location movingTo = player.getLocation();
-        Point currentPos =
-                new Point(movingTo.getBlockX(), movingTo.getBlockZ());
-
-        Zone currentZone = null;
-
-        if (currentZone == null || !currentZone.contains(currentPos)) {
-
-            currentZone = world.findZone(currentPos);
-            if (currentZone != null) {
-                Zone.Permission perm = currentZone.getUser(player);
-
-                if (currentZone.getEnterDefault()) {
-                    if (player.getRank().canModifyZones()) {
-                        // never applies to admins
-                    }
-                    else if (perm != null && perm == Zone.Permission.Banned) {
-                        bannedMessage(currentZone, player);
-                        player.teleport(this.plugin.getServer()
-                                .getWorld("world").getSpawnLocation());
-                        player.sendMessage(ChatColor.RED
-                                + "You are not allowed in this zone");
-                        return;
-                    }
-                }
-                else {
-                    if (player.getRank().canModifyZones()) {
-                        // never applies to admins
-                    }
-                    else if (perm == null) {
-                        disallowedMessage(currentZone, player);
-                        player.teleport(this.plugin.getServer()
-                                .getWorld("world").getSpawnLocation());
-                        player.sendMessage(ChatColor.RED
-                                + "You are not allowed in this zone");
-                        return;
-                    }
-                    else if (perm == Zone.Permission.Banned) {
-                        bannedMessage(currentZone, player);
-                        player.teleport(this.plugin.getServer()
-                                .getWorld("world").getSpawnLocation());
-                        player.sendMessage(ChatColor.RED
-                                + "You are not allowed in this zone");
-                        return;
-                    }
-                }
-
-                if (currentZone.isPvp() && !player.getRank().canModifyZones()) {
-                    player.teleport(this.plugin.getServer().getWorld("world")
-                            .getSpawnLocation());
-                    player.sendMessage(ChatColor.RED
-                            + "You are not allowed in this zone");
-                    return;
-                }
-                welcomeMessage(currentZone, player, perm);
-            }
-            player.setCurrentZone(currentZone);
+        BooleanStringReturn returnValue = player.canBeHere(movingTo);
+        
+        if (!returnValue.getBoolean()) {
+            player.sendMessage(returnValue.getString());
+            player.teleport(plugin.getServer().getWorld("world").getSpawnLocation());
+            return;
+        }
+    }
+    
+    public void inventoryOpening(PlayerInteractEvent event)
+    {
+        if (event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
+        if (event.getClickedBlock() == null || 
+                !event.getClickedBlock().getType().equals(Material.CHEST)) return;
+        
+        TregminePlayer player = plugin.getPlayer(event.getPlayer());
+        if (!player.getRank().canForceOpenChests()) return;
+        
+        if (event.getClickedBlock().getState() instanceof Chest) {
+            Chest chest = (Chest) event.getClickedBlock().getState();
+            
+            // Check the above block is solid, if it isn't then stop - This will stop forcing the
+            // chest when you can open it normally anyway.
+            Block blockAbove = player.getWorld().getBlockAt(chest.getLocation().add(new Vector(0, 1, 0)));
+            if (blockAbove == null || blockAbove.getType().isTransparent()) return;
+            
+            player.sendMessage(ChatColor.GREEN + "Force opened inventory!");
+            player.openInventory(chest.getBlockInventory());
         }
     }
 
@@ -483,8 +369,6 @@ public class ZonePlayerListener implements Listener
             return;
         }
 
-        Location src = event.getFrom();
-        World srcWorld = src.getWorld();
         Location dst = event.getTo();
         World dstWorld = dst.getWorld();
 
@@ -508,80 +392,14 @@ public class ZonePlayerListener implements Listener
             event.setCancelled(true);
             return;
         }
-
-        if (srcWorld.getName().equals(dstWorld.getName())) {
-            ZoneWorld world = plugin.getWorld(player.getWorld());
-
-            Point oldPos = new Point(src.getBlockX(), src.getBlockZ());
-            Point currentPos = new Point(dst.getBlockX(), dst.getBlockZ());
-
-            Zone currentZone = player.getCurrentZone();
-
-            if (currentZone == null || !currentZone.contains(currentPos)) {
-
-                if (currentZone != null && currentZone.contains(oldPos)) {
-                    player.setCurrentTexture("https://dl.dropbox.com/u/5405236/mc/df.zip");
-                    player.sendMessage(currentZone.getTextExit());
-                }
-
-                currentZone = world.findZone(currentPos);
-                if (currentZone != null) {
-                    Zone.Permission perm = currentZone.getUser(player);
-
-                    if (currentZone.getEnterDefault()) {
-                        if (player.getRank().canModifyZones()) {
-                            // never applies to admins
-                        }
-                        else if (perm != null && perm == Zone.Permission.Banned) {
-                            bannedMessage(currentZone, player);
-                            event.setCancelled(true);
-                            return;
-                        }
-                    }
-                    else {
-                        if (player.getRank().canModifyZones()) {
-                            // never applies to admins
-                        }
-                        else if (perm == null) {
-                            disallowedMessage(currentZone, player);
-                            event.setCancelled(true);
-                            return;
-                        }
-                        else if (perm == Zone.Permission.Banned) {
-                            bannedMessage(currentZone, player);
-                            event.setCancelled(true);
-                            return;
-                        }
-                    }
-
-                    if (currentZone.isPvp() && !player.getRank().canModifyZones()) {
-                        event.setCancelled(true);
-                        return;
-                    }
-
-                    welcomeMessage(currentZone, player, perm);
-                }
-                player.setCurrentZone(currentZone);
-            }
+        
+        BooleanStringReturn returnValue = player.canBeHere(dst);
+        
+        if (!returnValue.getBoolean()) {
+            player.sendMessage(returnValue.getString());
+            event.setCancelled(true);
+            return;
         }
-    }
-
-    private void disallowedMessage(Zone currentZone, TregminePlayer player)
-    {
-        player.sendMessage(ChatColor.RED + "[" + currentZone.getName() + "] "
-                + "You are not allowed in this zone. Contact the zone owner.");
-    }
-
-    private void bannedMessage(Zone currentZone, TregminePlayer player)
-    {
-        player.sendMessage(ChatColor.RED + "[" + currentZone.getName() + "] "
-                + "You are banned from " + currentZone.getName() + ".");
-    }
-
-    private void blockedMessage(Zone currentZone, TregminePlayer player)
-    {
-        player.sendMessage(ChatColor.RED + "[" + currentZone.getName() + "] "
-                + "You are blocked from " + currentZone.getName() + ".");
     }
 
     private void welcomeMessage(Zone currentZone, TregminePlayer player,
