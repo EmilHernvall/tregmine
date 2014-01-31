@@ -169,6 +169,7 @@ public class Tregmine extends JavaPlugin
         pluginMgm.registerEvents(new BankListener(this), this);
         pluginMgm.registerEvents(new RareDropListener(this), this);
         pluginMgm.registerEvents(new DamageListener(this), this);
+        pluginMgm.registerEvents(new ChunkListener(this), this);
 
         // Declaration of all commands
         getCommand("admins").setExecutor(
@@ -281,6 +282,7 @@ public class Tregmine extends JavaPlugin
         getCommand("update").setExecutor(new UpdateCommand(this));
         getCommand("vanish").setExecutor(new VanishCommand(this));
         getCommand("wallet").setExecutor(new WalletCommand(this));
+        getCommand("watchchunks").setExecutor(new WatchChunksCommand(this));
         getCommand("warn").setExecutor(new WarnCommand(this));
         getCommand("warp").setExecutor(new WarpCommand(this));
         getCommand("weather").setExecutor(new WeatherCommand(this));
