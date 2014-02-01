@@ -4,17 +4,12 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import org.bukkit.ChatColor;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.*;
 
-import info.tregmine.Tregmine;
-import info.tregmine.WebServer;
+import info.tregmine.*;
 import info.tregmine.api.TregminePlayer;
-import info.tregmine.database.DAOException;
-import info.tregmine.database.IContext;
-import info.tregmine.database.ILogDAO;
-import info.tregmine.database.IPlayerDAO;
+import info.tregmine.database.*;
+import info.tregmine.events.TregmineChatEvent;
 
 public class ChatListener implements Listener
 {
@@ -24,11 +19,11 @@ public class ChatListener implements Listener
     {
         this.plugin = instance;
     }
-
+    
     @EventHandler
-    public void onPlayerChat(AsyncPlayerChatEvent event)
+    public void onTregmineChat(TregmineChatEvent event)
     {
-        TregminePlayer sender = plugin.getPlayer(event.getPlayer());
+        TregminePlayer sender = event.getPlayer();
         if (sender.getChatState() != TregminePlayer.ChatState.CHAT) {
             return;
         }
@@ -101,8 +96,7 @@ public class ChatListener implements Listener
             throw new RuntimeException(e);
         }
 
-        Tregmine.LOGGER.info(channel + " <" + sender.getName() + "> " +
-                             event.getMessage());
+        Tregmine.LOGGER.info(channel + " <" + sender.getName() + "> " + event.getMessage());
 
         try (IContext ctx = plugin.createContext()) {
             ILogDAO logDAO = ctx.getLogDAO();
@@ -114,8 +108,6 @@ public class ChatListener implements Listener
         event.setCancelled(true);
 
         WebServer server = plugin.getWebServer();
-        server.executeChatAction(new WebServer.ChatMessage(sender,
-                                                           channel,
-                                                           event.getMessage()));
+        server.executeChatAction(new WebServer.ChatMessage(sender, channel, event.getMessage()));
     }
 }
