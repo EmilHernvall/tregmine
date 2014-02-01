@@ -73,13 +73,25 @@ public class ChatListener implements Listener
                 String toChan = to.getChatChannel();
                 if (senderChan.equalsIgnoreCase(toChan) ||
                     to.hasFlag(TregminePlayer.Flags.CHANNEL_VIEW)) {
-                    if ("GLOBAL".equalsIgnoreCase(senderChan)) {
-                        to.sendMessage("<" + sender.getChatName()
-                                + ChatColor.WHITE + "> " + txtColor + text);
-                    }
-                    else {
-                        to.sendMessage(channel + " <" + sender.getChatName()
-                                + ChatColor.WHITE + "> " + txtColor + text);
+
+                    if (event.isWebChat()) {
+                        if ("GLOBAL".equalsIgnoreCase(senderChan)) {
+                            to.sendMessage("(" + sender.getChatName()
+                                    + ChatColor.WHITE + ") " + txtColor + text);
+                        }
+                        else {
+                            to.sendMessage(channel + " (" + sender.getChatName()
+                                    + ChatColor.WHITE + ") " + txtColor + text);
+                        }
+                    } else {
+                        if ("GLOBAL".equalsIgnoreCase(senderChan)) {
+                            to.sendMessage("<" + sender.getChatName()
+                                    + ChatColor.WHITE + "> " + txtColor + text);
+                        }
+                        else {
+                            to.sendMessage(channel + " <" + sender.getChatName()
+                                    + ChatColor.WHITE + "> " + txtColor + text);
+                        }
                     }
                 }
 
@@ -96,7 +108,11 @@ public class ChatListener implements Listener
             throw new RuntimeException(e);
         }
 
-        Tregmine.LOGGER.info(channel + " <" + sender.getName() + "> " + event.getMessage());
+        if (event.isWebChat()) {
+            Tregmine.LOGGER.info(channel + " (" + sender.getName() + ") " + event.getMessage());
+        } else {
+            Tregmine.LOGGER.info(channel + " <" + sender.getName() + "> " + event.getMessage());
+        }
 
         try (IContext ctx = plugin.createContext()) {
             ILogDAO logDAO = ctx.getLogDAO();
