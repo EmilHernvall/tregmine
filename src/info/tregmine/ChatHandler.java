@@ -1,91 +1,23 @@
 package info.tregmine;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Queue;
-import java.util.Set;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
+import java.util.*;
 import java.util.logging.Level;
 
-import javax.crypto.spec.SecretKeySpec;
-import javax.crypto.Mac;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.json.JSONObject;
-import org.json.JSONException;
-
-import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.Request;
-import org.eclipse.jetty.websocket.server.WebSocketHandler;
-import org.eclipse.jetty.websocket.servlet.WebSocketServletFactory;
-import org.eclipse.jetty.websocket.api.WebSocketAdapter;
-import org.eclipse.jetty.websocket.api.RemoteEndpoint;
-import org.eclipse.jetty.websocket.api.UpgradeRequest;
-import org.eclipse.jetty.websocket.api.UpgradeResponse;
-import org.eclipse.jetty.websocket.api.Session;
-import org.eclipse.jetty.websocket.servlet.WebSocketCreator;
-import org.eclipse.jetty.io.EofException;
-
 import org.bukkit.ChatColor;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Event;
 import org.bukkit.event.Listener;
-import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.PluginManager;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.eclipse.jetty.websocket.api.*;
+import org.eclipse.jetty.websocket.server.WebSocketHandler;
+import org.eclipse.jetty.websocket.servlet.*;
+import org.json.*;
 
 import info.tregmine.api.TregminePlayer;
-import info.tregmine.database.DAOException;
-import info.tregmine.database.IContext;
-import info.tregmine.database.ILogDAO;
-import info.tregmine.database.IPlayerDAO;
+import info.tregmine.events.TregmineChatEvent;
 
 public class ChatHandler extends WebSocketHandler
     implements WebSocketCreator, Listener
 {
-    public static class WebChatEvent extends Event
-    {
-        private static final HandlerList handlers = new HandlerList();
-
-        private TregminePlayer player;
-        private String channel;
-        private String text;
-
-        public WebChatEvent(TregminePlayer player, String channel, String text)
-        {
-            this.player = player;
-            this.channel = channel;
-            this.text = text;
-        }
-
-        public TregminePlayer getSender() { return player; }
-        public String getChannel() { return channel; }
-        public String getText() { return text; }
-
-        @Override
-        public HandlerList getHandlers()
-        {
-            return handlers;
-        }
-
-        public static HandlerList getHandlerList()
-        {
-            return handlers;
-        }
-    }
-
     public static class ChatSocket extends WebSocketAdapter
     {
         private ChatHandler handler;
@@ -312,10 +244,8 @@ public class ChatHandler extends WebSocketHandler
                 if (text == null) {
                     return;
                 }
-
-                WebChatEvent event = new WebChatEvent(socket.getPlayer(),
-                                                      channel,
-                                                      text);
+                
+                TregmineChatEvent event = new TregmineChatEvent(socket.getPlayer(), text, channel, true);
                 pluginMgr.callEvent(event);
             }
             else if ("auth".equals(action)) {
@@ -369,65 +299,5 @@ public class ChatHandler extends WebSocketHandler
     public void configure(WebSocketServletFactory factory)
     {
         factory.setCreator(this);
-    }
-
-    @EventHandler
-    public void onWebChat(ChatHandler.WebChatEvent event)
-    {
-        WebServer server = tregmine.getWebServer();
-        TregminePlayer sender = event.getSender();
-
-        String channel = event.getChannel();
-
-        try (IContext ctx = tregmine.createContext()) {
-            IPlayerDAO playerDAO = ctx.getPlayerDAO();
-            for (TregminePlayer to : tregmine.getOnlinePlayers()) {
-                if (to.getChatState() == TregminePlayer.ChatState.SETUP) {
-                    continue;
-                }
-                if (!channel.equalsIgnoreCase(to.getChatChannel())) {
-                    continue;
-                }
-
-                if (!sender.getRank().canNotBeIgnored()) {
-                    if (playerDAO.doesIgnore(to, sender)) {
-                        continue;
-                    }
-                }
-
-                String text = event.getText();
-                for (TregminePlayer online : tregmine.getOnlinePlayers()) {
-                    if (text.contains(online.getName()) &&
-                        !online.hasFlag(TregminePlayer.Flags.INVISIBLE)) {
-
-                        text = text.replaceAll(online.getName(),
-                                online.getChatName() + ChatColor.WHITE);
-                    }
-                }
-
-                if ("global".equalsIgnoreCase(channel)) {
-                    to.sendMessage("(" + sender.getChatName() +
-                            ChatColor.WHITE + ") " + ChatColor.WHITE + text);
-                } else {
-                    to.sendMessage(channel + " (" + sender.getChatName() +
-                            ChatColor.WHITE + ") " + ChatColor.WHITE + text);
-                }
-            }
-        } catch (DAOException e) {
-            throw new RuntimeException(e);
-        }
-
-        server.executeChatAction(
-                new WebServer.ChatMessage(sender, channel, event.getText()));
-
-        Tregmine.LOGGER.info(channel +
-                " (" + sender.getRealName() + ") " + event.getText());
-
-        try (IContext ctx = tregmine.createContext()) {
-            ILogDAO logDAO = ctx.getLogDAO();
-            logDAO.insertChatMessage(sender, channel, event.getText());
-        } catch (DAOException e) {
-            throw new RuntimeException(e);
-        }
     }
 }
