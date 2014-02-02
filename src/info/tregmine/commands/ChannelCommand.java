@@ -17,35 +17,52 @@ public class ChannelCommand extends AbstractCommand
     @Override
     public boolean handlePlayer(TregminePlayer player, String[] args)
     {
-        if (args.length != 1) {
-            return false;
-        }
-
-        String channel = args[0];
-        String oldchannel = player.getChatChannel();
-
-        player.sendMessage(YELLOW + "You are now talking in channel " + channel
-                + ".");
-        player.sendMessage(YELLOW + "Write /channel global to switch to "
-                + "the global chat.");
-        player.setChatChannel(channel);
-
-        if (player.hasFlag(TregminePlayer.Flags.INVISIBLE)) return true; // Doesn't announce channel change if invisible.
+        String oldChannel = player.getChatChannel();
         
-        if (oldchannel.equalsIgnoreCase(channel)) {
-            return true;
+        switch(args.length) {
+            case 0:
+                player.sendMessage(ChatColor.RED + "Incorrect Syntax: /channel <channel name>");
+                return true;
+            case 1:
+                String newChannel = args[0];
+                
+                if (oldChannel.equalsIgnoreCase(newChannel)) {
+                    return true;
+                }
+
+                player.setChatChannel(newChannel);
+                player.sendMessage(YELLOW + "You are now talking in channel " + newChannel + ".");
+                player.sendMessage(YELLOW + "Write /channel global to switch to the global chat.");
+
+                if (player.hasFlag(TregminePlayer.Flags.INVISIBLE)) {
+                    return true;
+                }
+
+                sendChannelMessage(newChannel, player.getChatName() + ChatColor.YELLOW + 
+                        " has left channel " + oldChannel);
+                sendChannelMessage(oldChannel, player.getChatName() + ChatColor.YELLOW +
+                        " has joined channel " + newChannel);
+                return true;
+            case 2:
+                if (!player.getRank().canChannelView()) {
+                    return true;
+                }
+                
+                String channel = args[0];
+                String message = args[1];
+                
+                sendChannelMessage(channel, "<" + player.getChatName() + "> " + message);
+                return true;
         }
-        
-        for (TregminePlayer players : tregmine.getOnlinePlayers()) {
-            if (oldchannel.equalsIgnoreCase(players.getChatChannel())) {
-                players.sendMessage(player.getChatName() + ChatColor.YELLOW +
-                        " has left channel " + oldchannel);
-            } else if (channel.equalsIgnoreCase(players.getChatChannel())) {
-                players.sendMessage(player.getChatName() + ChatColor.YELLOW +
-                        " has joined channel " + channel);
+        return false;
+    }
+    
+    private void sendChannelMessage(String channel, String message)
+    {
+        for (TregminePlayer player : tregmine.getOnlinePlayers()) {
+            if (channel.equalsIgnoreCase(player.getChatChannel())) {
+                player.sendMessage(message);
             }
         }
-
-        return true;
     }
 }
