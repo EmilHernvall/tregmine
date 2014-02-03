@@ -64,8 +64,11 @@ public class DBMiscDAO implements IMiscDAO
     public boolean blocksWereChanged(Location start, int radius)
             throws DAOException
     {
-        String sql = "SELECT * FROM stats_blocks WHERE x BETWEEN ? AND ? AND y BETWEEN ? & ? AND z BETWEEN ? AND ? "
-                + "AND world = ?";
+        String sql = "SELECT * FROM stats_blocks " +
+		"WHERE (x BETWEEN ? AND ?) " +
+		"AND (y BETWEEN ? AND ?) " +
+		"AND (z BETWEEN ? AND ?) " + 
+		"AND world = ?";
         try(PreparedStatement stm = conn.prepareStatement(sql)){
             int x = start.getBlockX();
             int y = start.getBlockY();
