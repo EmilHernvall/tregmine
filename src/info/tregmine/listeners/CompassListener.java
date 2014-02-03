@@ -39,6 +39,11 @@ public class CompassListener implements Listener
         }
 
         World world = player.getWorld();
+        if (plugin.getRulelessWorld().getName().equalsIgnoreCase(world.getName()) &&
+                !player.getRank().canTeleportBetweenWorlds()) {
+            player.sendMessage(ChatColor.RED + "You can not use a compass in this world!");
+            return;
+        }
 
         if (player.getRank().canUseEnhancedCompass()) {
 
