@@ -563,6 +563,12 @@ public class TregminePlayerListener implements Listener
         if (!lot.hasFlag(Lot.Flags.FLIGHT_ALLOWED)) {
             event.setCancelled(true);
         }
+        
+        if (loc.getWorld().getName().equalsIgnoreCase(plugin.getRulelessWorld().getName()) &&
+                (!player.getRank().canBypassWorld() && player.getGameMode() != GameMode.CREATIVE)) {
+            player.setAllowFlight(false);
+            player.setFlying(false);
+        }
     }
 
     @EventHandler

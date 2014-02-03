@@ -327,6 +327,12 @@ public class ZonePlayerListener implements Listener
         } else {
             player.loadInventory(cWorld.getName(), true);
         }
+        
+        if (cWorld.getName().equalsIgnoreCase(plugin.getRulelessWorld().getName()) &&
+                (!player.getRank().canBypassWorld() && player.getGameMode() != GameMode.CREATIVE)) {
+            player.setAllowFlight(false);
+            player.setFlying(false);
+        }
 
         Location movingTo = player.getLocation();
         BooleanStringReturn returnValue = player.canBeHere(movingTo);
