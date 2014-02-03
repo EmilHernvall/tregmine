@@ -52,9 +52,11 @@ public class TeleportCommand extends AbstractCommand
         }
     }
 
+    private Tregmine tregmine;
     public TeleportCommand(Tregmine tregmine)
     {
         super(tregmine, "tp");
+        this.tregmine = tregmine;
     }
 
     @Override
@@ -103,6 +105,11 @@ public class TeleportCommand extends AbstractCommand
             !rank.canTeleportBetweenWorlds()) {
             player.sendMessage(RED + "The user is in another world called "
                     + BLUE + targetWorld.getName() + ".");
+        }
+        
+        if (tregmine.getRulelessWorld().getName().equalsIgnoreCase(sourceWorldName) && 
+                !rank.canTeleportBetweenWorlds()) {
+            player.sendMessage(RED + "Can not teleport in this world!");
         }
 
         double distance = MathUtil.calcDistance2d(player.getLocation(),
