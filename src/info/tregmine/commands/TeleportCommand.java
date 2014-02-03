@@ -110,6 +110,7 @@ public class TeleportCommand extends AbstractCommand
         if (tregmine.getRulelessWorld().getName().equalsIgnoreCase(sourceWorldName) && 
                 !rank.canTeleportBetweenWorlds()) {
             player.sendMessage(RED + "Can not teleport in this world!");
+            return true;
         }
 
         double distance = MathUtil.calcDistance2d(player.getLocation(),
