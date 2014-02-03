@@ -52,7 +52,7 @@ public class Tregmine extends JavaPlugin
 
     private Queue<TregminePlayer> mentors;
     private Queue<TregminePlayer> students;
-    
+
     private World rulelessWorld;
 
     private LookupService cl = null;
@@ -68,10 +68,6 @@ public class Tregmine extends JavaPlugin
         FileConfiguration config = getConfig();
 
         contextFactory = new DBContextFactory(config, this);
-        
-        WorldCreator hierarchyWorld = new WorldCreator(config.getString("world.name"));
-        hierarchyWorld.environment(World.Environment.NORMAL);
-        rulelessWorld = hierarchyWorld.createWorld();
 
         // Set up all data structures
         players = new HashMap<>();
@@ -118,6 +114,12 @@ public class Tregmine extends JavaPlugin
     {
         this.server = getServer();
 
+        FileConfiguration config = getConfig();
+
+        WorldCreator hierarchyWorld = new WorldCreator(config.getString("world.name"));
+        hierarchyWorld.environment(World.Environment.NORMAL);
+        rulelessWorld = hierarchyWorld.createWorld();
+
         try (IContext ctx = contextFactory.createContext()) {
             IBlessedBlockDAO blessedBlockDAO = ctx.getBlessedBlockDAO();
             this.blessedBlocks = blessedBlockDAO.load(getServer());
@@ -128,7 +130,7 @@ public class Tregmine extends JavaPlugin
             this.fishyBlocks = fishyBlockDAO.loadFishyBlocks(getServer());
 
             LOGGER.info("Loaded " + fishyBlocks.size() + " fishy blocks");
-            
+
             IMiscDAO miscDAO = ctx.getMiscDAO();
             this.insults = miscDAO.loadInsults();
             this.quitMessages = miscDAO.loadQuitMessages();
@@ -206,7 +208,7 @@ public class Tregmine extends JavaPlugin
                     return Rank.GUARDIAN.getColor();
                 }
             });
-        
+
         getCommand("coders").setExecutor(
             new NotifyCommand(this, "coders") {
                 @Override
@@ -296,7 +298,7 @@ public class Tregmine extends JavaPlugin
         getCommand("zone").setExecutor(new ZoneCommand(this, "zone"));
 
         ToolCraftRegistry.RegisterRecipes(getServer()); // Registers all tool recipes
-        
+
         for (TregminePlayer player : getOnlinePlayers()) {
             player.sendMessage(ChatColor.AQUA + "Tregmine successfully loaded. Version " + getDescription().getVersion());
         }
@@ -361,17 +363,17 @@ public class Tregmine extends JavaPlugin
     {
         return students;
     }
-    
+
     public List<String> getInsults()
     {
         return insults;
     }
-    
+
     public List<String> getQuitMessages()
     {
         return quitMessages;
     }
-    
+
     public World getRulelessWorld()
     {
         return rulelessWorld;
