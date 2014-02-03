@@ -52,6 +52,8 @@ public class Tregmine extends JavaPlugin
 
     private Queue<TregminePlayer> mentors;
     private Queue<TregminePlayer> students;
+    
+    private World rulelessWorld;
 
     private LookupService cl = null;
 
@@ -66,6 +68,10 @@ public class Tregmine extends JavaPlugin
         FileConfiguration config = getConfig();
 
         contextFactory = new DBContextFactory(config, this);
+        
+        WorldCreator hierarchyWorld = new WorldCreator(config.getString("world.name"));
+        hierarchyWorld.environment(World.Environment.NORMAL);
+        rulelessWorld = hierarchyWorld.createWorld();
 
         // Set up all data structures
         players = new HashMap<>();
@@ -219,7 +225,6 @@ public class Tregmine extends JavaPlugin
 
         getCommand("action").setExecutor(new ActionCommand(this));
         getCommand("alert").setExecutor(new AlertCommand(this));
-        getCommand("allclear").setExecutor(new CheckBlocksCommand(this));
         getCommand("badge").setExecutor(new BadgeCommand(this));
         getCommand("ban").setExecutor(new BanCommand(this));
         getCommand("bless").setExecutor(new BlessCommand(this));
@@ -364,6 +369,11 @@ public class Tregmine extends JavaPlugin
     public List<String> getQuitMessages()
     {
         return quitMessages;
+    }
+    
+    public World getRulelessWorld()
+    {
+        return rulelessWorld;
     }
 
     // ============================================================================
