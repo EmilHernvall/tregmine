@@ -20,27 +20,27 @@ public class TregmineChatEvent extends Event implements Cancellable
         this.channel = channel;
         this.web = web;
     }
-    
+
     public TregminePlayer getPlayer()
     {
         return player;
     }
-    
+
     public String getMessage()
     {
         return message;
     }
-    
+
     public String getChannel()
     {
         return channel;
     }
-    
+
     public boolean isWebChat()
     {
         return web;
     }
-    
+
     @Override
     public boolean isCancelled()
     {
@@ -59,4 +59,8 @@ public class TregmineChatEvent extends Event implements Cancellable
         return handlers;
     }
 
+    public static HandlerList getHandlerList()
+    {
+        return handlers;
+    }
 }
