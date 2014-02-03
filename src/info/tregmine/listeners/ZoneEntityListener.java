@@ -69,6 +69,10 @@ public class ZoneEntityListener implements Listener
         if (event.getEntity().getWorld().getName().matches("world_the_end")) {
             return;
         }
+        if (event.getEntity().getWorld().getName().equalsIgnoreCase(plugin.getRulelessWorld().getName())) {
+            return;
+        }
+        
         if (!(event instanceof EntityDamageByEntityEvent)) {
             return;
         }
@@ -123,6 +127,10 @@ public class ZoneEntityListener implements Listener
     @EventHandler
     public void onDamage(EntityDamageByEntityEvent e)
     {
+        if (e.getEntity().getWorld().getName().equalsIgnoreCase(plugin.getRulelessWorld().getName())) {
+            return;
+        }
+        
         Entity e1 = e.getEntity();
         Entity d1 = e.getDamager();
 
