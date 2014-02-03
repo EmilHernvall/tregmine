@@ -8,7 +8,7 @@ import info.tregmine.zones.ZoneWorld;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.*;
 
 public class CallEventListener implements Listener
 {
@@ -126,6 +126,22 @@ public class CallEventListener implements Listener
         }
         
         PlayerMoveBlockEvent customEvent = new PlayerMoveBlockEvent(event.getFrom(), event.getTo(), player);
+        plugin.getServer().getPluginManager().callEvent(customEvent);
+    }
+    
+    // Triggers on a server chat event
+    @EventHandler
+    public void TregmineChatEventListener(AsyncPlayerChatEvent event)
+    {
+        TregminePlayer player = plugin.getPlayer(event.getPlayer());
+        
+        if (player == null) {
+            event.getPlayer().kickPlayer("Something went wrong!");
+            Tregmine.LOGGER.info(event.getPlayer().getName() + " was not found in players map (PlayerMoveEvent).");
+            return;
+        }
+        
+        TregmineChatEvent customEvent = new TregmineChatEvent(player, event.getMessage(), player.getChatChannel(), false);
         plugin.getServer().getPluginManager().callEvent(customEvent);
     }
 }
