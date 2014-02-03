@@ -1,15 +1,5 @@
 package info.tregmine.listeners;
 
-import info.tregmine.Tregmine;
-import info.tregmine.api.*;
-import info.tregmine.api.lore.Created;
-import info.tregmine.api.util.ScoreboardClearTask;
-import info.tregmine.commands.MentorCommand;
-import info.tregmine.database.*;
-import info.tregmine.events.PlayerMoveBlockEvent;
-import info.tregmine.quadtree.Point;
-import info.tregmine.zones.*;
-
 import java.util.*;
 import java.util.Map.Entry;
 
@@ -25,6 +15,16 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scoreboard.*;
 import org.kitteh.tag.PlayerReceiveNameTagEvent;
+
+import info.tregmine.Tregmine;
+import info.tregmine.api.*;
+import info.tregmine.api.lore.Created;
+import info.tregmine.api.util.ScoreboardClearTask;
+import info.tregmine.commands.MentorCommand;
+import info.tregmine.database.*;
+import info.tregmine.events.PlayerMoveBlockEvent;
+import info.tregmine.quadtree.Point;
+import info.tregmine.zones.*;
 
 public class TregminePlayerListener implements Listener
 {
@@ -494,6 +494,13 @@ public class TregminePlayerListener implements Listener
     public void onPlayerBlockMove(PlayerMoveBlockEvent event)
     {
         TregminePlayer player = event.getPlayer();
+        
+        // To add player.hasBadge for a flight badge when made
+        if (player.getRank().canFly() && player.isFlying() && player.isSprinting()) {
+            player.setFlySpeed(0.7f); // To be balanced
+        } else {
+            player.setFlySpeed(0.1f); // 0.1 is default
+        }
         
         if (player.getGameMode() == GameMode.CREATIVE) {
             return;
