@@ -24,10 +24,6 @@ public class ChatListener implements Listener
     public void onTregmineChat(TregmineChatEvent event)
     {
         TregminePlayer sender = event.getPlayer();
-        if (sender.getChatState() != TregminePlayer.ChatState.CHAT) {
-            return;
-        }
-
         String channel = sender.getChatChannel();
 
         try (IContext ctx = plugin.createContext()) {
