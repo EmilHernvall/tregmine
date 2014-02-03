@@ -1,6 +1,8 @@
 package info.tregmine.gamemagic;
 
 import info.tregmine.Tregmine;
+import info.tregmine.api.math.MathUtil;
+import info.tregmine.events.PlayerMoveBlockEvent;
 
 import java.util.*;
 
@@ -263,6 +265,23 @@ public class GameMagic extends JavaPlugin implements Listener
 
         if (block.getType() == Material.OBSIDIAN) {
             event.setCancelled(false);
+        }
+    }
+    
+    @EventHandler
+    public void onPlayerMove(PlayerMoveBlockEvent event)
+    {
+        if (!event.getTo().getWorld().getName().equalsIgnoreCase(tregmine.getRulelessWorld().getName())) {
+            return;
+        }
+        double distance = MathUtil.calcDistance2d(event.getTo().getWorld().getSpawnLocation(), event.getTo());
+        
+        if (distance > 5000 && distance < 5010) { // If hitting the border
+            event.setCancelled(true);
+        } else if (distance >= 5010) { // If massively past the point, teleport them to spawn
+            event.getPlayer().teleport(event.getPlayer().getWorld().getSpawnLocation());
+        } else {
+            return;
         }
     }
 
