@@ -1,53 +1,21 @@
 package info.tregmine.gamemagic;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.TimeZone;
-import java.util.logging.Logger;
-import java.util.zip.CRC32;
+import info.tregmine.Tregmine;
 
-import org.bukkit.ChatColor;
-import org.bukkit.Chunk;
-import org.bukkit.Color;
-import org.bukkit.FireworkEffect;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.World;
-import org.bukkit.WorldCreator;
-import org.bukkit.block.Block;
-import org.bukkit.block.Sign;
+import java.util.*;
+
+import org.bukkit.*;
+import org.bukkit.block.*;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.block.BlockBurnEvent;
-import org.bukkit.event.block.BlockIgniteEvent;
-import org.bukkit.event.block.LeavesDecayEvent;
+import org.bukkit.event.*;
+import org.bukkit.event.block.*;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
-import org.bukkit.event.entity.CreatureSpawnEvent;
-import org.bukkit.event.entity.EntityExplodeEvent;
-import org.bukkit.event.player.PlayerBucketEmptyEvent;
-import org.bukkit.event.player.PlayerBucketFillEvent;
-import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerPickupItemEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.*;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
-
-import info.tregmine.Tregmine;
-import info.tregmine.api.TregminePlayer;
-import info.tregmine.commands.ActionCommand;
-import info.tregmine.api.*;
 
 public class GameMagic extends JavaPlugin implements Listener
 {
@@ -136,7 +104,7 @@ public class GameMagic extends JavaPlugin implements Listener
                 new Runnable() {
             public void run() {
                 World world = GameMagic.this.getServer().getWorld("world");
-                Location loc = world.getSpawnLocation().add(0.5, 0, 0.5);
+                Location loc = world.getSpawnLocation();
 
                 FireworksFactory factory = new FireworksFactory();
                 factory.addColor(Color.BLUE);
@@ -215,6 +183,9 @@ public class GameMagic extends JavaPlugin implements Listener
     @EventHandler
     public void onPlayerBucketEmpty(PlayerBucketEmptyEvent event)
     {
+        if (event.getBlockClicked().getWorld().getName().equalsIgnoreCase(tregmine.getRulelessWorld().getName())) {
+            return;
+        }
         if (event.getBucket() == Material.LAVA_BUCKET) {
             event.setCancelled(true);
         }
@@ -247,12 +218,18 @@ public class GameMagic extends JavaPlugin implements Listener
     @EventHandler
     public void onEntityExplode(EntityExplodeEvent event)
     {
+        if (event.getLocation().getWorld().getName().equalsIgnoreCase(tregmine.getRulelessWorld().getName())) {
+            return;
+        }
         event.setCancelled(true);
     }
 
     @EventHandler
     public void onBlockBurn(BlockBurnEvent event)
     {
+        if (event.getBlock().getWorld().getName().equalsIgnoreCase(tregmine.getRulelessWorld().getName())) {
+            return;
+        }
         event.setCancelled(true);
     }
 
@@ -273,6 +250,9 @@ public class GameMagic extends JavaPlugin implements Listener
     @EventHandler
     public void onBlockIgnite(BlockIgniteEvent event)
     {
+        if (event.getBlock().getWorld().getName().equalsIgnoreCase(tregmine.getRulelessWorld().getName())) {
+            return;
+        }
         event.setCancelled(true);
 
         Location l = event.getBlock().getLocation();
