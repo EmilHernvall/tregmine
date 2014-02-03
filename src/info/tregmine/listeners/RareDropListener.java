@@ -205,7 +205,7 @@ public class RareDropListener implements Listener
         Entity damager = ((EntityDamageByEntityEvent) cause).getDamager();
         if (!(damager instanceof Player))
             return;
-        if(ent.getCustomName().equalsIgnoreCase("SPAWNED"))
+        if(ent.getCustomName() != null && ent.getCustomName().equalsIgnoreCase("SPAWNED"))
             return;
 
         TregminePlayer player = plugin.getPlayer((Player) damager);
