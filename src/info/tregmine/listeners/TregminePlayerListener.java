@@ -49,42 +49,6 @@ public class TregminePlayerListener implements Listener
         }
     }
 
-    private final static String[] quitMessages =
-            new String[] {
-                    ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " deserted from the battlefield with a hearty good bye!",
-                    ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " stole the cookies and ran!",
-                    ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " was eaten by a teenage mutant ninja platypus!",
-                    ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " parachuted of the plane and into the unknown!",
-                    ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " was eaten by a teenage mutant ninja creeper!",
-                    ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " jumped off the plane with a cobble stone parachute!",
-                    ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " built Rome in one day and now deserves a break!",
-                    ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " will come back soon because Tregmine is awesome!",
-                    ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " leaves the light and enter darkness.",
-                    ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " disconnects from a better life.",
-                    ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " already miss the best friends in the world!",
-                    ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " will build something epic next time.",
-                    ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " is not banned... yet!",
-                    ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " has left our world!",
-                    ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " went to browse Tregmine's forums instead!",
-                    ChatColor.DARK_GRAY + "Quit - %s" + "'s" + ChatColor.DARK_GRAY + " CPU was killed by the Rendermen!",
-                    ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " logged out by accident!",
-                    ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " found the IRL warp!",
-                    ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " left the game due to IRL chunk error issues!",
-                    ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " left the Matrix. Say hi to Morpheus!",
-                    ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " disconnected? What is this!? Impossibru!",
-                    ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " found a lose cable and ate it.",
-                    ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " found the true END of minecraft.",
-                    ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " found love elswhere.",
-                    ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " rage quit the server.",
-                    ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " was not accidently banned by " + ChatColor.DARK_RED + "BlackX",
-                    ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " got " + ChatColor.WHITE + "TROLLED by " + ChatColor.DARK_RED + "TheScavenger101",
-                    ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " lost an epic rap battle with " + ChatColor.DARK_RED + "einand",
-                    ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " was bored to death by " + ChatColor.DARK_RED + "knipil",
-                    ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " went squid fishing with " + ChatColor.DARK_RED + "GeorgeBombadil",
-                    ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " shouldn't have joined a spelling bee with " + ChatColor.DARK_RED + "mejjad",
-                    ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " was paralyzed by a gaze from " + ChatColor.DARK_RED + "mksen",
-            };
-
     private Tregmine plugin;
     private Map<Item, TregminePlayer> droppedItems;
 

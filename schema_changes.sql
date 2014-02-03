@@ -470,3 +470,12 @@ CREATE TABLE bank_account (
     UNIQUE idx_accountnum (account_number),
     INDEX idx_accountnum2 (bank_id, account_number)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+ALTER TABLE item ADD item_data INT UNSIGNED DEFAULT 0 AFTER item_id;
+
+CREATE TABLE misc_message (
+    message_id INT UNSIGNED AUTO_INCREMENT,
+    message_type ENUM ('INSULT', 'QUIT'),
+    message_value TEXT,
+    PRIMARY KEY (message_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
