@@ -1,26 +1,23 @@
 package info.tregmine.commands;
 
+import static org.bukkit.ChatColor.*;
+
 import java.util.List;
 
-import static org.bukkit.ChatColor.*;
-import org.bukkit.Server;
-import org.bukkit.World;
-import org.bukkit.Location;
-import org.bukkit.Chunk;
-import org.bukkit.entity.Horse;
+import org.bukkit.*;
 
 import info.tregmine.Tregmine;
-import info.tregmine.database.DAOException;
-import info.tregmine.database.IContext;
-import info.tregmine.database.IHomeDAO;
 import info.tregmine.api.TregminePlayer;
 import info.tregmine.api.math.MathUtil;
+import info.tregmine.database.*;
 
 public class HomeCommand extends AbstractCommand
 {
+    private Tregmine tregmine;
     public HomeCommand(Tregmine tregmine)
     {
         super(tregmine, "home");
+        this.tregmine = tregmine;
     }
 
     private boolean teleport(TregminePlayer player, String name)
@@ -49,6 +46,11 @@ public class HomeCommand extends AbstractCommand
                         + "You can't use a home thats in another world!");
                 return true;
             }
+            
+            if (world.getName().equalsIgnoreCase(tregmine.getRulelessWorld().getName())) {
+                player.sendMessage(RED + "You can not teleport in this world!");
+                return true;
+            }
 
             player.teleportWithHorse(loc);
 
@@ -73,6 +75,11 @@ public class HomeCommand extends AbstractCommand
         World playerWorld = playerLoc.getWorld();
         if ("world_the_end".equalsIgnoreCase(playerWorld.getName())) {
             player.sendMessage(RED + "You can't set your home in The End");
+            return true;
+        }
+        
+        if (tregmine.getRulelessWorld().getName().equalsIgnoreCase(playerWorld.getName())) {
+            player.sendMessage(RED + "You can't set your home in this world!");
             return true;
         }
 
