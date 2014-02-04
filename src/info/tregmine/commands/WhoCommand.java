@@ -127,7 +127,7 @@ public class WhoCommand extends AbstractCommand
         List<TregminePlayer> players = tregmine.getOnlinePlayers();
         for (TregminePlayer online : players) {
             if (online.hasFlag(TregminePlayer.Flags.INVISIBLE)){
-                players.remove(online);
+                //players.remove(online);
                 continue;
             }
             sb.append(delim);

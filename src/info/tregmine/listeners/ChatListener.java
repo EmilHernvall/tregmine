@@ -46,10 +46,10 @@ public class ChatListener implements Listener
 
                 String text = event.getMessage();
                 for (TregminePlayer online : plugin.getOnlinePlayers()) {
-                    if (text.contains(online.getName()) &&
+                    if (text.contains(online.getRealName()) &&
                         !online.hasFlag(TregminePlayer.Flags.INVISIBLE)) {
 
-                        text = text.replaceAll(online.getName(),
+                        text = text.replaceAll(online.getRealName(),
                                                online.getChatName() + txtColor);
                     }
                 }
@@ -91,7 +91,7 @@ public class ChatListener implements Listener
                     }
                 }
 
-                if (text.contains(to.getName()) &&
+                if (text.contains(to.getRealName()) &&
                     "GLOBAL".equalsIgnoreCase(senderChan) &&
                     !"GLOBAL".equalsIgnoreCase(toChan)) {
 
@@ -105,9 +105,9 @@ public class ChatListener implements Listener
         }
 
         if (event.isWebChat()) {
-            Tregmine.LOGGER.info(channel + " (" + sender.getName() + ") " + event.getMessage());
+            Tregmine.LOGGER.info(channel + " (" + sender.getRealName() + ") " + event.getMessage());
         } else {
-            Tregmine.LOGGER.info(channel + " <" + sender.getName() + "> " + event.getMessage());
+            Tregmine.LOGGER.info(channel + " <" + sender.getRealName() + "> " + event.getMessage());
         }
 
         try (IContext ctx = plugin.createContext()) {
