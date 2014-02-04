@@ -106,7 +106,9 @@ public class TregminePlayerListener implements Listener
         }
 
         TregminePlayer p = plugin.getPlayer(player);
-        p.saveInventory(p.getCurrentInventory());
+        if (p.getCurrentInventory() != null) {
+            p.saveInventory(p.getCurrentInventory());
+        }
     }
 
     @EventHandler
