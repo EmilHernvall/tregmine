@@ -2,6 +2,8 @@ package info.tregmine.commands;
 
 import static org.bukkit.ChatColor.*;
 
+import java.util.List;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
@@ -53,12 +55,14 @@ public class MsgCommand extends AbstractCommand
             IPlayerDAO playerDAO = ctx.getPlayerDAO();
             
             for (String possiblePlayer : receivingPlayers) {
-                TregminePlayer receivingPlayer = tregmine.getPlayer(possiblePlayer);
-                if (receivingPlayer == null) {
-                    player.sendNotification(Notification.COMMAND_FAIL, ChatColor.RED + "No player found by the name of " + args[0]);
-                    continue;
+                List<TregminePlayer> candidates = tregmine.matchPlayer(possiblePlayer);
+                
+                if (candidates.size() != 1) {
+                    player.sendNotification(Notification.COMMAND_FAIL, ChatColor.RED + "No player found by the name of " + possiblePlayer);
                 }
                 
+                TregminePlayer receivingPlayer = candidates.get(0);
+
                 boolean ignored;
                 ignored = playerDAO.doesIgnore(receivingPlayer, player);
 
