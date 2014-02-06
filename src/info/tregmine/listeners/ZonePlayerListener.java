@@ -1,36 +1,25 @@
 package info.tregmine.listeners;
 
-import info.tregmine.Tregmine;
-import info.tregmine.api.Rank;
-import info.tregmine.api.TregminePlayer;
-import info.tregmine.api.util.ScoreboardClearTask;
-import info.tregmine.events.PlayerLotChangeEvent;
-import info.tregmine.quadtree.Point;
-import info.tregmine.zones.Lot;
-import info.tregmine.zones.Zone;
-import info.tregmine.zones.ZoneWorld;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 import org.bukkit.*;
-import org.bukkit.block.Block;
-import org.bukkit.block.Chest;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
+import org.bukkit.block.*;
+import org.bukkit.entity.*;
+import org.bukkit.event.*;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.hanging.HangingBreakByEntityEvent;
-import org.bukkit.event.hanging.HangingPlaceEvent;
+import org.bukkit.event.hanging.*;
 import org.bukkit.event.player.*;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scoreboard.*;
 import org.bukkit.util.Vector;
+
+import info.tregmine.Tregmine;
+import info.tregmine.api.*;
+import info.tregmine.api.util.ScoreboardClearTask;
+import info.tregmine.events.PlayerLotChangeEvent;
+import info.tregmine.quadtree.Point;
+import info.tregmine.zones.*;
 
 public class ZonePlayerListener implements Listener
 {
@@ -353,7 +342,7 @@ public class ZonePlayerListener implements Listener
                     }
                     else if (perm != null && perm == Zone.Permission.Banned) {
                         bannedMessage(currentZone, player);
-                        player.teleport(player.getWorld().getSpawnLocation());
+                        player.teleportWithHorse(player.getWorld().getSpawnLocation());
                         // movePlayerBack(player, movingFrom, movingTo);
                         return;
                     }
@@ -396,7 +385,7 @@ public class ZonePlayerListener implements Listener
                     }
                     else if (perm == Zone.Permission.Banned) {
                         bannedMessage(currentZone, player);
-                        player.teleport(player.getWorld().getSpawnLocation());
+                        player.teleportWithHorse(player.getWorld().getSpawnLocation());
                         return;
                     }
                 }
@@ -448,7 +437,7 @@ public class ZonePlayerListener implements Listener
                     }
                     else if (perm != null && perm == Zone.Permission.Banned) {
                         bannedMessage(currentZone, player);
-                        player.teleport(this.plugin.getServer()
+                        player.teleportWithHorse(this.plugin.getServer()
                                 .getWorld("world").getSpawnLocation());
                         player.sendMessage(ChatColor.RED
                                 + "You are not allowed in this zone");
@@ -461,7 +450,7 @@ public class ZonePlayerListener implements Listener
                     }
                     else if (perm == null) {
                         disallowedMessage(currentZone, player);
-                        player.teleport(this.plugin.getServer()
+                        player.teleportWithHorse(this.plugin.getServer()
                                 .getWorld("world").getSpawnLocation());
                         player.sendMessage(ChatColor.RED
                                 + "You are not allowed in this zone");
@@ -469,7 +458,7 @@ public class ZonePlayerListener implements Listener
                     }
                     else if (perm == Zone.Permission.Banned) {
                         bannedMessage(currentZone, player);
-                        player.teleport(this.plugin.getServer()
+                        player.teleportWithHorse(this.plugin.getServer()
                                 .getWorld("world").getSpawnLocation());
                         player.sendMessage(ChatColor.RED
                                 + "You are not allowed in this zone");
@@ -478,7 +467,7 @@ public class ZonePlayerListener implements Listener
                 }
 
                 if (currentZone.isPvp() && !player.getRank().canModifyZones()) {
-                    player.teleport(this.plugin.getServer().getWorld("world")
+                    player.teleportWithHorse(this.plugin.getServer().getWorld("world")
                             .getSpawnLocation());
                     player.sendMessage(ChatColor.RED
                             + "You are not allowed in this zone");
