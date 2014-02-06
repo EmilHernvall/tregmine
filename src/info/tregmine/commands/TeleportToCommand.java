@@ -34,7 +34,7 @@ public class TeleportToCommand extends AbstractCommand
         world.loadChunk(chunk);
 
         if (world.isChunkLoaded(chunk)) {
-            player.teleport(loc);
+            player.teleportWithHorse(loc);
         }
 
         return true;
