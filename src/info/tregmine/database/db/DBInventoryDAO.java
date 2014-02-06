@@ -332,6 +332,8 @@ public class DBInventoryDAO implements IInventoryDAO
         ItemStack[] contents;
         if ("main".equalsIgnoreCase(type)) {
             contents = player.getInventory().getContents();
+        } else if ("ender".equalsIgnoreCase(type)) {
+            contents = player.getEnderChest().getContents();
         } else {
             contents = player.getInventory().getArmorContents();
         }
@@ -405,6 +407,12 @@ public class DBInventoryDAO implements IInventoryDAO
                            player.getInventory().getItem(slot).setDurability(durability);
                            if (metaObj != null) {
                                player.getInventory().getItem(slot).setItemMeta(metaObj);
+                           }
+                       } else if ("ender".equalsIgnoreCase(type)) {
+                           player.getEnderChest().setItem(slot, item);
+                           player.getEnderChest().getItem(slot).setDurability(durability);
+                           if (metaObj != null) {
+                               player.getEnderChest().getItem(slot).setItemMeta(metaObj);
                            }
                        } else {
                            if (slot == 3) {
