@@ -1,36 +1,25 @@
 package info.tregmine.listeners;
 
-import info.tregmine.Tregmine;
-import info.tregmine.api.Rank;
-import info.tregmine.api.TregminePlayer;
-import info.tregmine.api.util.ScoreboardClearTask;
-import info.tregmine.events.PlayerLotChangeEvent;
-import info.tregmine.quadtree.Point;
-import info.tregmine.zones.Lot;
-import info.tregmine.zones.Zone;
-import info.tregmine.zones.ZoneWorld;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 import org.bukkit.*;
-import org.bukkit.block.Block;
-import org.bukkit.block.Chest;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
+import org.bukkit.block.*;
+import org.bukkit.entity.*;
+import org.bukkit.event.*;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.hanging.HangingBreakByEntityEvent;
-import org.bukkit.event.hanging.HangingPlaceEvent;
+import org.bukkit.event.hanging.*;
 import org.bukkit.event.player.*;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scoreboard.*;
 import org.bukkit.util.Vector;
+
+import info.tregmine.Tregmine;
+import info.tregmine.api.*;
+import info.tregmine.api.util.ScoreboardClearTask;
+import info.tregmine.events.PlayerLotChangeEvent;
+import info.tregmine.quadtree.Point;
+import info.tregmine.zones.*;
 
 public class ZonePlayerListener implements Listener
 {
@@ -415,13 +404,13 @@ public class ZonePlayerListener implements Listener
         TregminePlayer player = plugin.getPlayer(event.getPlayer());
         ZoneWorld world = plugin.getWorld(player.getWorld());
         World cWorld = player.getWorld();
+        
+        String[] worldNamePortions = cWorld.getName().split("_");
 
-        if (    cWorld.equals(plugin.getServer().getWorld("world")) || 
-                cWorld.equals(plugin.getServer().getWorld("world_the_end")) || 
-                cWorld.equals(plugin.getServer().getWorld("world_nether"))) {
+        if (worldNamePortions[0].equalsIgnoreCase("world")) {
             player.loadInventory("survival", true);
         } else {
-            player.loadInventory(cWorld.getName(), true);
+            player.loadInventory(worldNamePortions[0], true);
         }
         
         if (cWorld.getName().equalsIgnoreCase(plugin.getRulelessWorld().getName()) &&
