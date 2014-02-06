@@ -1,14 +1,14 @@
 package info.tregmine.listeners;
 
-import info.tregmine.Tregmine;
-import info.tregmine.api.*;
-import info.tregmine.api.returns.BooleanStringReturn;
-
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.event.*;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
+
+import info.tregmine.Tregmine;
+import info.tregmine.api.*;
+import info.tregmine.api.returns.BooleanStringReturn;
 
 public class CompassListener implements Listener
 {
@@ -74,7 +74,7 @@ public class CompassListener implements Listener
                         loc.setPitch(pitch);
                         loc.setYaw(yaw);
                         if (loc.getY() < 255) {
-                            player.teleport(loc);
+                            player.teleportWithHorse(loc);
                         }
                         break;
                     }
@@ -108,7 +108,7 @@ public class CompassListener implements Listener
                                 target.getX() + 0.5, top, target.getZ() + 0.5,
                                 player.getLocation().getYaw(),
                                 player.getLocation().getPitch());
-                player.teleport(loc);
+                player.teleportWithHorse(loc);
             }
             else if (mode == CompassMode.Precision) {
                 if ((b1.getType() == Material.AIR &&
@@ -122,7 +122,7 @@ public class CompassListener implements Listener
                                                 target.getZ() + 0.5,
                                                 player.getLocation().getYaw(),
                                                 player.getLocation().getPitch());
-                    player.teleport(loc);
+                    player.teleportWithHorse(loc);
                 }
                 else {
                     player.sendMessage(ChatColor.RED +
