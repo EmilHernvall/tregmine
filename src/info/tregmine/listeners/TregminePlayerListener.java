@@ -184,7 +184,7 @@ public class TregminePlayerListener implements Listener
         }
 
         if (player.getLocation().getWorld().getName().matches("world_the_end")) {
-            player.teleport(this.plugin.getServer().getWorld("world")
+            player.teleportWithHorse(this.plugin.getServer().getWorld("world")
                     .getSpawnLocation());
         }
 
