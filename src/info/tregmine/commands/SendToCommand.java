@@ -2,9 +2,8 @@ package info.tregmine.commands;
 
 import java.util.List;
 
-import org.bukkit.Server;
-import org.bukkit.World;
-import org.bukkit.Location;
+import org.bukkit.*;
+
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
 
@@ -42,7 +41,7 @@ public class SendToCommand extends AbstractCommand
         }
 
         Location cpspawn = world.getSpawnLocation();
-        victim.teleport(cpspawn);
+        victim.teleportWithHorse(cpspawn);
 
         return true;
     }
