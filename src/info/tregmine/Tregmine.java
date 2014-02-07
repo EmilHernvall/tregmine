@@ -171,6 +171,7 @@ public class Tregmine extends JavaPlugin
         pluginMgm.registerEvents(new LumberListener(this), this);
         pluginMgm.registerEvents(new VeinListener(this), this);
         pluginMgm.registerEvents(new CallEventListener(this), this);
+        pluginMgm.registerEvents(new WorldPortalListener(this), this);
         pluginMgm.registerEvents(new PortalListener(this), this);
         pluginMgm.registerEvents(new BankListener(this), this);
         pluginMgm.registerEvents(new RareDropListener(this), this);
