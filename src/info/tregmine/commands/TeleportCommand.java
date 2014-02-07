@@ -1,16 +1,16 @@
 package info.tregmine.commands;
 
 import static org.bukkit.ChatColor.*;
-import info.tregmine.Tregmine;
-import info.tregmine.api.*;
-import info.tregmine.api.math.MathUtil;
 
 import java.util.List;
 
 import org.bukkit.*;
-import org.bukkit.entity.Horse;
 import org.bukkit.potion.*;
 import org.bukkit.scheduler.BukkitScheduler;
+
+import info.tregmine.Tregmine;
+import info.tregmine.api.*;
+import info.tregmine.api.math.MathUtil;
 
 public class TeleportCommand extends AbstractCommand
 {
@@ -105,6 +105,7 @@ public class TeleportCommand extends AbstractCommand
             !rank.canTeleportBetweenWorlds()) {
             player.sendMessage(RED + "The user is in another world called "
                     + BLUE + targetWorld.getName() + ".");
+            return true;
         }
         
         if (tregmine.getRulelessWorld().getName().equalsIgnoreCase(sourceWorldName) && 
