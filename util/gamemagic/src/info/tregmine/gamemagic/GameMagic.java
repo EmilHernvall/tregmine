@@ -14,7 +14,6 @@ import org.bukkit.event.block.*;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.event.player.*;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.*;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
@@ -128,20 +127,11 @@ public class GameMagic extends JavaPlugin implements Listener
 
     private void gotoWorld(Player player, Location loc)
     {
-        Inventory inventory = player.getInventory();
-        for (int i = 0; i < inventory.getSize(); i++) {
-            if (inventory.getItem(i) != null) {
-                player.sendMessage(ChatColor.RED + "You are carrying too much " +
-                        "for the portal's magic to work.");
-                return;
-            }
-        }
-
         World world = loc.getWorld();
         Chunk chunk = world.getChunkAt(loc);
         world.loadChunk(chunk);
         if (world.isChunkLoaded(chunk)) {
-            player.teleport(loc);
+            tregmine.getPlayer(player).teleportWithHorse(loc);
             player.sendMessage(ChatColor.YELLOW + "Thanks for traveling with " +
                     "TregPort!");
         } else {
