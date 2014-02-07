@@ -467,33 +467,6 @@ public class TregminePlayerListener implements Listener
         } else {
             player.setFlySpeed(0.1f); // 0.1 is default
         }
-        
-        if (player.getGameMode() == GameMode.CREATIVE) {
-            return;
-        }
-        
-        double pickupDistance = player.getRank().getPickupDistance();
-        List<Entity> entities = player.getNearbyEntities(pickupDistance, pickupDistance, pickupDistance);
-        
-        for (Entity entity : entities) {
-            if (entity instanceof Item) {
-                Item item = (Item) entity;
-                
-                if (item.getTicksLived() < item.getPickupDelay()) {
-                    return;
-                }
-                
-                HashMap<Integer, ItemStack> remaining = player.getInventory().addItem(item.getItemStack());
-                
-                if (remaining.size() > 0) {
-                    for (Entry<Integer, ItemStack> entry : remaining.entrySet()) {
-                        item.setItemStack(entry.getValue());
-                    }
-                } else {
-                    item.remove();
-                }
-            }
-        }
     }
 
     /*@EventHandler
