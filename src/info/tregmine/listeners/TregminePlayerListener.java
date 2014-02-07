@@ -247,7 +247,14 @@ public class TregminePlayerListener implements Listener
             }
         }
 
-        player.loadInventory("survival", false);
+        World cWorld = player.getWorld();
+        String[] worldNamePortions = cWorld.getName().split("_");
+
+        if (worldNamePortions[0].equalsIgnoreCase("world")) {
+            player.loadInventory("survival", false);
+        } else {
+            player.loadInventory(worldNamePortions[0], false);
+        }
 
         // Hide currently invisible players from the player that just signed on
         for (TregminePlayer current : players) {
