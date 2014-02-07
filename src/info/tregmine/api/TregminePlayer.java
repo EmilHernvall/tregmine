@@ -1,17 +1,17 @@
 package info.tregmine.api;
 
+import java.util.*;
+
+import org.bukkit.*;
+import org.bukkit.block.Block;
+import org.bukkit.entity.*;
+
 import info.tregmine.Tregmine;
 import info.tregmine.api.encryption.BCrypt;
 import info.tregmine.api.returns.BooleanStringReturn;
 import info.tregmine.database.*;
 import info.tregmine.quadtree.Point;
 import info.tregmine.zones.*;
-
-import java.util.*;
-
-import org.bukkit.*;
-import org.bukkit.block.Block;
-import org.bukkit.entity.*;
 
 public class TregminePlayer extends PlayerDelegate
 {
@@ -645,7 +645,7 @@ public class TregminePlayer extends PlayerDelegate
             id3 = dao.fetchInventory(this, name, "main");
             while (id3 == -1) {
                 dao.createInventory(this, name, "main");
-                plugin.LOGGER.info("INVENTORY: Creating");
+                plugin.getLogger().info("INVENTORY: Creating");
                 id3 = dao.fetchInventory(this, name, "main");
                 this.saveInventory(name);
                 firstTime = true;
@@ -655,7 +655,7 @@ public class TregminePlayer extends PlayerDelegate
             id4 = dao.fetchInventory(this, name, "armour");
             while (id4 == -1) {
                 dao.createInventory(this, name, "armour");
-                plugin.LOGGER.info("INVENTORY: Creating");
+                plugin.getLogger().info("INVENTORY: Creating");
                 id4 = dao.fetchInventory(this, name, "armour");
                 firstTime = true;
             }
@@ -663,18 +663,30 @@ public class TregminePlayer extends PlayerDelegate
             if (firstTime) {
                 this.saveInventory(name);
             }
+            
+            int id5;
+            id5 = dao.fetchInventory(this, name, "ender");
+            while (id5 == -1) {
+                dao.createInventory(this, name, "ender");
+                plugin.getLogger().info("INVENTORY: Creating");
+                id5 = dao.fetchInventory(this, name, "ender");
+            }
 
             this.getInventory().clear();
             this.getInventory().setHelmet(null);
             this.getInventory().setChestplate(null);
             this.getInventory().setLeggings(null);
             this.getInventory().setBoots(null);
+            this.getEnderChest().clear();
 
             dao.loadInventory(this, id3, "main");
-            plugin.LOGGER.info("INVENTORY: Loading main inventory " + id3 + " (" + this.getName() + ")");
+            plugin.getLogger().info("INVENTORY: Loading main inventory " + id3 + " (" + this.getName() + ")");
 
             dao.loadInventory(this, id4, "armour");
-            plugin.LOGGER.info("INVENTORY: Loading armour inventory " + id4 + " (" + this.getName() + ")");
+            plugin.getLogger().info("INVENTORY: Loading armour inventory " + id4 + " (" + this.getName() + ")");
+            
+            dao.loadInventory(this, id5, "ender");
+            plugin.getLogger().info("INVENTORY: Loading ender inventory " + id5 + " (" + this.getName() + ")");
 
             this.currentInventory = name;
 
@@ -682,7 +694,7 @@ public class TregminePlayer extends PlayerDelegate
             playerDAO.updatePlayer(this);
 
         } catch (DAOException e) {
-            plugin.LOGGER.info("INVENTORY ERROR: Trying to load " + this.getName() + " inventory named: " + name);
+            plugin.getLogger().info("INVENTORY ERROR: Trying to load " + this.getName() + " inventory named: " + name);
             throw new RuntimeException(e);
         }
     }
@@ -705,26 +717,36 @@ public class TregminePlayer extends PlayerDelegate
             id = dao.fetchInventory(this, inventory, "main");
             while (id == -1) {
                 dao.createInventory(this, inventory, "main");
-                plugin.LOGGER.info("INVENTORY: Creating");
+                plugin.getLogger().info("INVENTORY: Creating");
                 id = dao.fetchInventory(this, inventory, "main");
             }
 
             dao.saveInventory(this, id, "main");
-            plugin.LOGGER.info("INVENTORY: Saving main inventory " + id + " (" + this.getName() + ")");
+            plugin.getLogger().info("INVENTORY: Saving main inventory " + id + " (" + this.getName() + ")");
 
             int id2;
             id2 = dao.fetchInventory(this, inventory, "armour");
             while (id2 == -1) {
                 dao.createInventory(this, inventory, "armour");
-                plugin.LOGGER.info("INVENTORY: Creating");
+                plugin.getLogger().info("INVENTORY: Creating");
                 id2 = dao.fetchInventory(this, inventory, "armour");
             }
 
             dao.saveInventory(this, id2, "armour");
-            plugin.LOGGER.info("INVENTORY: Saving armour inventory " + id2 + " (" + this.getName() + ")");
-
+            plugin.getLogger().info("INVENTORY: Saving armour inventory " + id2 + " (" + this.getName() + ")");
+            
+            int id3;
+            id3 = dao.fetchInventory(this, inventory, "ender");
+            while (id3 == -1) {
+                dao.createInventory(this, inventory, "ender");
+                plugin.getLogger().info("INVENTORY: Creating");
+                id3 = dao.fetchInventory(this, inventory, "ender");
+            }
+            
+            dao.saveInventory(this, id3, "ender");
+            plugin.getLogger().info("INVENTORY: Saving ender inventory " + id3 + " (" + this.getName() + ")");
         } catch (DAOException e) {
-            plugin.LOGGER.info("INVENTORY ERROR: Trying to save " + this.getName() + " inventory named: " + name);
+            plugin.getLogger().info("INVENTORY ERROR: Trying to save " + this.getName() + " inventory named: " + name);
             throw new RuntimeException(e);
         }
     }
