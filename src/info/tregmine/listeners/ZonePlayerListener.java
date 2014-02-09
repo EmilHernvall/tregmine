@@ -404,13 +404,13 @@ public class ZonePlayerListener implements Listener
         TregminePlayer player = plugin.getPlayer(event.getPlayer());
         ZoneWorld world = plugin.getWorld(player.getWorld());
         World cWorld = player.getWorld();
+        
+        String[] worldNamePortions = cWorld.getName().split("_");
 
-        if (    cWorld.equals(plugin.getServer().getWorld("world")) || 
-                cWorld.equals(plugin.getServer().getWorld("world_the_end")) || 
-                cWorld.equals(plugin.getServer().getWorld("world_nether"))) {
+        if (worldNamePortions[0].equalsIgnoreCase("world")) {
             player.loadInventory("survival", true);
         } else {
-            player.loadInventory(cWorld.getName(), true);
+            player.loadInventory(worldNamePortions[0], true);
         }
         
         if (cWorld.getName().equalsIgnoreCase(plugin.getRulelessWorld().getName()) &&

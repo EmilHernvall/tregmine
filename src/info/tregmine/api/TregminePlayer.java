@@ -410,8 +410,16 @@ public class TregminePlayer extends PlayerDelegate
 
     public void teleportWithHorse(Location loc)
     {
+        World cWorld = loc.getWorld();
+        String[] worldNamePortions = cWorld.getName().split("_");
+        
         Entity v = getVehicle();
         if (v != null && v instanceof Horse) {
+            if (!worldNamePortions[0].equalsIgnoreCase("world")) {
+                this.sendMessage(ChatColor.RED + "Can not teleport with horse! Sorry!");
+                return;
+            }
+            
             Horse horse = (Horse)v;
             horse.eject();
             horse.teleport(loc);
@@ -420,6 +428,12 @@ public class TregminePlayer extends PlayerDelegate
         }
         else {
             teleport(loc);
+        }
+
+        if (worldNamePortions[0].equalsIgnoreCase("world")) {
+            this.loadInventory("survival", true);
+        } else {
+            this.loadInventory(worldNamePortions[0], true);
         }
     }
 
