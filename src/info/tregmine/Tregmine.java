@@ -54,6 +54,8 @@ public class Tregmine extends JavaPlugin
     private Queue<TregminePlayer> students;
 
     private World rulelessWorld;
+    private World rulelessWorldNether;
+    private World rulelessWorldEnd;
 
     private LookupService cl = null;
 
@@ -119,6 +121,14 @@ public class Tregmine extends JavaPlugin
         WorldCreator hierarchyWorld = new WorldCreator(config.getString("world.name"));
         hierarchyWorld.environment(World.Environment.NORMAL);
         rulelessWorld = hierarchyWorld.createWorld();
+        
+        // Minecraft Portals should handle these
+        WorldCreator hierarchyWorldNether = new WorldCreator(config.getString("world.name") + "_nether");
+        hierarchyWorldNether.environment(World.Environment.NETHER);
+        rulelessWorldNether = hierarchyWorldNether.createWorld();
+        WorldCreator hierarchyWorldEnd = new WorldCreator(config.getString("world.name") + "_the_end");
+        hierarchyWorldEnd.environment(World.Environment.THE_END);
+        rulelessWorldEnd = hierarchyWorldEnd.createWorld();
 
         try (IContext ctx = contextFactory.createContext()) {
             IBlessedBlockDAO blessedBlockDAO = ctx.getBlessedBlockDAO();
@@ -376,10 +386,9 @@ public class Tregmine extends JavaPlugin
         return quitMessages;
     }
 
-    public World getRulelessWorld()
-    {
-        return rulelessWorld;
-    }
+    public World getRulelessWorld() { return rulelessWorld; }
+    public World getRulelessNether() { return rulelessWorldNether; }
+    public World getRulelessEnd() { return rulelessWorldEnd; }
 
     // ============================================================================
     // Player methods
