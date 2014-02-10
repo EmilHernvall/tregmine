@@ -41,14 +41,7 @@ public class MsgCommand extends AbstractCommand
         }
 
         Server server = player.getServer();
-        String recvPattern = args[0];
         String message = argsToMessage(args);
-
-        Player recv = server.getPlayer(recvPattern);
-        if (recv == null) {
-            // TODO: Error message...
-            return true;
-        }
         
         String[] receivingPlayers = args[0].split(",");
         try (IContext ctx = tregmine.createContext()) {
