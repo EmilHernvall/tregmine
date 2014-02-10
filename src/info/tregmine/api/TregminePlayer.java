@@ -674,7 +674,7 @@ public class TregminePlayer extends PlayerDelegate
                 firstTime = true;
             }
 
-            if (firstTime) {
+            if (firstTime && this.getWorld() != plugin.getRulelessWorld()) {
                 this.saveInventory(name);
             }
             
