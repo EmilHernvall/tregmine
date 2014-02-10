@@ -53,6 +53,7 @@ public class WorldPortalListener implements Listener{
             player.teleportWithHorse(newWorld.getSpawnLocation());
             player.sendMessage(ChatColor.GOLD + "[PORTAL] " + ChatColor.GREEN + "Teleporting to " + worldName + " world!");
         }
+        player.setFireTicks(0);
     }
     
     public boolean frameCheck(TregminePlayer p, int x1, int x2, int z1, int z2, Material portal)
