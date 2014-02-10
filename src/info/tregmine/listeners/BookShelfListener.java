@@ -30,33 +30,23 @@
 
 package info.tregmine.listeners;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+
+import org.bukkit.*;
+import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
+import org.bukkit.event.*;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.player.*;
+import org.bukkit.inventory.*;
+import org.bukkit.inventory.meta.BookMeta;
 
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
-import info.tregmine.database.DAOException;
-import info.tregmine.database.IContext;
-import info.tregmine.database.IInventoryDAO;
+import info.tregmine.database.*;
 import info.tregmine.database.IInventoryDAO.ChangeType;
 import info.tregmine.database.IInventoryDAO.InventoryType;
-
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.player.PlayerEditBookEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.BookMeta;
-
-import static org.bukkit.event.inventory.InventoryType.CHEST;;
 
 public class BookShelfListener implements Listener
 {
@@ -73,34 +63,44 @@ public class BookShelfListener implements Listener
         inventories = new HashMap<>();
     }
 
-    @EventHandler(priority=EventPriority.HIGH)
-    public void onOpen(PlayerInteractEvent event)
+    @EventHandler
+    public void bookshelfOpen(PlayerInteractEvent event)
     {
-        if(event.isCancelled() || event.getPlayer().getItemInHand().getType() == Material.BONE){
+        if(event.isCancelled() || event.getPlayer().getItemInHand().getType().equals(Material.BONE)){
             return;
         }
-        if(event.getAction() != Action.RIGHT_CLICK_BLOCK)return;
+        
+        if (event.getAction() != Action.RIGHT_CLICK_BLOCK) {
+            return;
+        }
+        
         Block block = event.getClickedBlock();
-        if(block.getType() != Material.BOOKSHELF)return;
+        
+        if (block.getType().equals(Material.BOOKSHELF)) {
+            return;
+        }
+        
         TregminePlayer player = plugin.getPlayer(event.getPlayer());
         Location loc = block.getLocation();
-        try(IContext ctx = plugin.createContext()){
+        
+        try (IContext ctx = plugin.createContext()) {
             IInventoryDAO dao = ctx.getInventoryDAO();
             int id = dao.getInventoryId(loc);
+            
             if(id == -1){
                 id = dao.insertInventory(player, loc, InventoryType.BLOCK);
             }
 
-            Inventory inv = plugin.getServer().createInventory(null, CHEST);
+            Inventory inv = plugin.getServer().createInventory(null, 9, "Bookshelf");
             inv.setContents(dao.getStacks(id, inv.getSize()));
             player.openInventory(inv);
 
             openInventories.put(player, inv);
-            //invIds.put(player, id);
             locations.put(inv, loc);
             inventories.put(loc, inv.getContents());
+            
             event.setCancelled(true);
-        }catch(DAOException e){
+        } catch (DAOException e) {
             throw new RuntimeException(e);
         }
     }
@@ -112,7 +112,7 @@ public class BookShelfListener implements Listener
 
         Inventory inv = openInventories.get(player);
 
-        if(inv == null){
+        if (inv == null) {
             return;
         }
 
@@ -121,15 +121,14 @@ public class BookShelfListener implements Listener
                 "x=" + loc.getBlockX() + " " +
                 "y=" + loc.getBlockY() + " " +
                 "z=" + loc.getBlockZ());
+        
         ItemStack[] stacks = inv.getContents();
-
         ItemStack[] oldContents = inventories.get(loc);
         ItemStack[] currentContents = stacks;
 
         assert oldContents.length == currentContents.length;
 
-
-        try(IContext ctx = plugin.createContext()){
+        try (IContext ctx = plugin.createContext()) {
             IInventoryDAO dao = ctx.getInventoryDAO();
             int id = dao.getInventoryId(loc);
             dao.insertStacks(id, stacks);
@@ -137,6 +136,7 @@ public class BookShelfListener implements Listener
             for (int i = 0; i < oldContents.length; i++) {
                 ItemStack a = oldContents[i];
                 ItemStack b = currentContents[i];
+                
                 if (a == null && b == null) {
                     continue;
                 }
@@ -158,9 +158,8 @@ public class BookShelfListener implements Listener
             }
 
             openInventories.remove(player);
-            //invIds.remove(player);
             locations.remove(inv);
-        }catch(DAOException e){
+        } catch (DAOException e) {
             throw new RuntimeException(e);
         }
     }
@@ -169,9 +168,10 @@ public class BookShelfListener implements Listener
     public void onSignBook(PlayerEditBookEvent event)
     {
         TregminePlayer player = plugin.getPlayer(event.getPlayer());
-        if(event.isSigning()){
+        
+        if (event.isSigning()) {
             BookMeta meta = event.getNewBookMeta();
-            meta.setAuthor(player.getNameColor() + player.getName());
+            meta.setAuthor(player.getChatName());
             event.setNewBookMeta(meta);
         }
     }
