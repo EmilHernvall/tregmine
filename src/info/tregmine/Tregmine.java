@@ -119,6 +119,14 @@ public class Tregmine extends JavaPlugin
         WorldCreator hierarchyWorld = new WorldCreator(config.getString("world.name"));
         hierarchyWorld.environment(World.Environment.NORMAL);
         rulelessWorld = hierarchyWorld.createWorld();
+        
+        // Minecraft Portals should handle these
+        WorldCreator hierarchyWorldNether = new WorldCreator(config.getString("world.name") + "_nether");
+        hierarchyWorldNether.environment(World.Environment.NETHER);
+        hierarchyWorldNether.createWorld();
+        WorldCreator hierarchyWorldEnd = new WorldCreator(config.getString("world.name") + "_the_end");
+        hierarchyWorldEnd.environment(World.Environment.THE_END);
+        hierarchyWorldEnd.createWorld();
 
         try (IContext ctx = contextFactory.createContext()) {
             IBlessedBlockDAO blessedBlockDAO = ctx.getBlessedBlockDAO();
