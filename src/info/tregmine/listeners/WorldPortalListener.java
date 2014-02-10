@@ -6,7 +6,7 @@ import info.tregmine.api.TregminePlayer;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.event.*;
-import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.*;
 
 public class WorldPortalListener implements Listener{
     private Tregmine plugin;
@@ -23,7 +23,9 @@ public class WorldPortalListener implements Listener{
         Block in = event.getTo().getBlock();
         
         // Simply add another line changing frame, under, world and name to add a new portal! (Similar to end portal)
-        handlePortal(player, Material.OBSIDIAN, Material.OBSIDIAN, plugin.getRulelessWorld(), "anarchy", in, under);
+        handlePortal(player, Material.OBSIDIAN, Material.EMERALD_BLOCK, plugin.getRulelessWorld(), "anarchy", in, under);
+        handlePortal(player, Material.OBSIDIAN, Material.OBSIDIAN, plugin.getRulelessNether(), "anarchy nether", in, under);
+        handlePortal(player, Material.OBSIDIAN, Material.ENDER_STONE, plugin.getRulelessEnd(), "anarchy end", in, under);
     }
 
     public void handlePortal(TregminePlayer player, Material underType, Material frame, World newWorld, String worldName, Block in, Block under)
