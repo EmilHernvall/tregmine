@@ -661,7 +661,6 @@ public class TregminePlayer extends PlayerDelegate
                 dao.createInventory(this, name, "main");
                 plugin.getLogger().info("INVENTORY: Creating");
                 id3 = dao.fetchInventory(this, name, "main");
-                this.saveInventory(name);
                 firstTime = true;
             }
 
@@ -680,6 +679,7 @@ public class TregminePlayer extends PlayerDelegate
                 dao.createInventory(this, name, "ender");
                 plugin.getLogger().info("INVENTORY: Creating");
                 id5 = dao.fetchInventory(this, name, "ender");
+                firstTime = true;
             }
 
             if (firstTime && this.getWorld() != plugin.getRulelessWorld()) {
