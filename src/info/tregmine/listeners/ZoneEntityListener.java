@@ -69,9 +69,6 @@ public class ZoneEntityListener implements Listener
         if (event.getEntity().getWorld().getName().matches("world_the_end")) {
             return;
         }
-        if (event.getEntity().getWorld().getName().equalsIgnoreCase(plugin.getRulelessWorld().getName())) {
-            return;
-        }
         
         if (!(event instanceof EntityDamageByEntityEvent)) {
             return;
@@ -97,6 +94,10 @@ public class ZoneEntityListener implements Listener
 
         Zone currentZone = player.updateCurrentZone();
         if (currentZone == null) {
+            if (event.getEntity().getWorld().getName().equalsIgnoreCase(plugin.getRulelessWorld().getName())) {
+                return;
+            }
+            
             event.setCancelled(true);
             return;
         }
