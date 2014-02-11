@@ -462,12 +462,12 @@ public class TregminePlayerListener implements Listener
             event.getPlayer().kickPlayer("error loading profile!");
         }
     }
-    
+
     @EventHandler
     public void onPlayerBlockMove(PlayerMoveBlockEvent event)
     {
         TregminePlayer player = event.getPlayer();
-        
+
         // To add player.hasBadge for a flight badge when made
         if (player.getRank().canFly() && player.isFlying() && player.isSprinting()) {
             player.setFlySpeed(0.7f); // To be balanced
@@ -522,6 +522,12 @@ public class TregminePlayerListener implements Listener
 
         if (!lot.hasFlag(Lot.Flags.FLIGHT_ALLOWED)) {
             event.setCancelled(true);
+        }
+
+        if (loc.getWorld().getName().equalsIgnoreCase(plugin.getRulelessWorld().getName()) &&
+                (!player.getRank().canBypassWorld() && player.getGameMode() != GameMode.CREATIVE)) {
+            player.setAllowFlight(false);
+            player.setFlying(false);
         }
     }
 
