@@ -24,7 +24,7 @@ public class WorldPortalListener implements Listener{
         
         // Simply add another line changing frame, under, world and name to add a new portal! (Similar to end portal)
         handlePortal(player, Material.OBSIDIAN, Material.EMERALD_BLOCK, plugin.getRulelessWorld(), "anarchy", in, under);
-        handlePortal(player, Material.OBSIDIAN, Material.OBSIDIAN, plugin.getRulelessNether(), "anarchy nether", in, under);
+        handlePortal(player, Material.OBSIDIAN, Material.NETHERRACK, plugin.getRulelessNether(), "anarchy nether", in, under);
         handlePortal(player, Material.OBSIDIAN, Material.ENDER_STONE, plugin.getRulelessEnd(), "anarchy end", in, under);
     }
 
