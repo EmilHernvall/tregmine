@@ -187,7 +187,7 @@ public class Tregmine extends JavaPlugin
         pluginMgm.registerEvents(new RareDropListener(this), this);
         pluginMgm.registerEvents(new DamageListener(this), this);
         pluginMgm.registerEvents(new ChunkListener(this), this);
-        pluginMgm.registerEvents(new BookShelfListener(this), this);
+        //pluginMgm.registerEvents(new BookShelfListener(this), this);
 
         // Declaration of all commands
         getCommand("admins").setExecutor(
@@ -308,6 +308,7 @@ public class Tregmine extends JavaPlugin
         getCommand("webkick").setExecutor(new WebKickCommand(this));
         getCommand("who").setExecutor(new WhoCommand(this));
         getCommand("zone").setExecutor(new ZoneCommand(this, "zone"));
+        getCommand("chunkcount").setExecutor(new ChunkCountCommand(this));
 
         ToolCraftRegistry.RegisterRecipes(getServer()); // Registers all tool recipes
 

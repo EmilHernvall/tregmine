@@ -509,6 +509,12 @@ public enum Rank
                this == SENIOR_ADMIN;
     }
 
+    public boolean canGetChunkInfo()
+    {
+        return this == JUNIOR_ADMIN ||
+               this == SENIOR_ADMIN;
+    }
+
     public int getTeleportTimeout()
     {
         if (this == CODER ||
