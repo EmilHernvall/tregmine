@@ -257,3 +257,6 @@ commands:
   webkick:
     description: Kick <player> from web chat for 10 minutes
     usage: /webkick <player> <message>
+  chunkcount:
+    description: See number of chunks in each world
+    usage: /chunkcount
