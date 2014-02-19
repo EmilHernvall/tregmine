@@ -118,15 +118,20 @@ public class Tregmine extends JavaPlugin
 
         FileConfiguration config = getConfig();
 
-        WorldCreator hierarchyWorld = new WorldCreator(config.getString("world.name"));
+        String anarchyName = config.getString("world.name");
+        if (anarchyName == null) {
+            anarchyName = "anarchy";
+        }
+
+        WorldCreator hierarchyWorld = new WorldCreator(anarchyName);
         hierarchyWorld.environment(World.Environment.NORMAL);
         rulelessWorld = hierarchyWorld.createWorld();
-        
+
         // Minecraft Portals should handle these
-        WorldCreator hierarchyWorldNether = new WorldCreator(config.getString("world.name") + "_nether");
+        WorldCreator hierarchyWorldNether = new WorldCreator(anarchyName + "_nether");
         hierarchyWorldNether.environment(World.Environment.NETHER);
         rulelessWorldNether = hierarchyWorldNether.createWorld();
-        WorldCreator hierarchyWorldEnd = new WorldCreator(config.getString("world.name") + "_the_end");
+        WorldCreator hierarchyWorldEnd = new WorldCreator(anarchyName + "_the_end");
         hierarchyWorldEnd.environment(World.Environment.THE_END);
         rulelessWorldEnd = hierarchyWorldEnd.createWorld();
 
@@ -187,7 +192,7 @@ public class Tregmine extends JavaPlugin
         pluginMgm.registerEvents(new RareDropListener(this), this);
         pluginMgm.registerEvents(new DamageListener(this), this);
         pluginMgm.registerEvents(new ChunkListener(this), this);
-        //pluginMgm.registerEvents(new BookShelfListener(this), this);
+        pluginMgm.registerEvents(new MiscListener(this), this);
 
         // Declaration of all commands
         getCommand("admins").setExecutor(
