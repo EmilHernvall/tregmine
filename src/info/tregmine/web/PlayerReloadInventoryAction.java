@@ -61,28 +61,25 @@ public class PlayerReloadInventoryAction implements WebHandler.Action
     @Override
     public void queryGameState(Tregmine tregmine)
     {
-        TregminePlayer subject = tregmine.getPlayerOffline(subjectId);
+        TregminePlayer subject = tregmine.getPlayer(subjectId);
         if (subject == null) {
             status = false;
-            error = "Subject not found.";
+            error = "Subject not found or not online.";
             return;
         }
 
-        TregminePlayer issuer = tregmine.getPlayer(issuerId);
-        if (issuer == null) {
-            issuer = tregmine.getPlayerOffline(issuerId);
-        }
-        
+        TregminePlayer issuer = tregmine.getPlayerOffline(issuerId);
+
         if (subject.isOnline()) {
             subject.loadInventory(subject.getCurrentInventory(), false);
         }
-        
-        Tregmine.LOGGER.info(subject.getChatName() + "'s inventory was reloaded by " +
-                             issuer.getChatName() + " (from web)");
+
+        Tregmine.LOGGER.info(subject.getRealName() + "'s inventory was reloaded by " +
+                             issuer.getRealName() + " (from web)");
 
         Server server = tregmine.getServer();
-        server.broadcastMessage(issuer.getChatName() + AQUA + " reloaded "
-                + subject.getChatName() + AQUA + "'s inventory");
+        server.broadcastMessage(issuer.getRealName() + AQUA + " reloaded "
+                + subject.getRealName() + AQUA + "'s inventory");
     }
 
     @Override
