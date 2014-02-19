@@ -1,19 +1,13 @@
 package info.tregmine;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
+import java.util.*;
+import java.util.concurrent.*;
 import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.handler.HandlerList;
-import org.eclipse.jetty.server.handler.ContextHandler;
-import org.eclipse.jetty.server.ServerConnector;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.PluginManager;
+import org.eclipse.jetty.server.*;
+import org.eclipse.jetty.server.handler.*;
 
 import info.tregmine.api.TregminePlayer;
 import info.tregmine.web.*;
@@ -166,6 +160,7 @@ public class WebServer implements Runnable
             webHandler.addAction(new AuthAction.Factory());
             webHandler.addAction(new PlayerKickAction.Factory());
             webHandler.addAction(new PlayerListAction.Factory());
+            webHandler.addAction(new PlayerReloadInventoryAction.Factory());
             webHandler.addAction(new QueryLogAction.Factory());
             webHandler.addAction(new VersionAction.Factory());
 
