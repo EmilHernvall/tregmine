@@ -34,6 +34,8 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.metadata.MetadataValue;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import com.google.common.collect.Lists;
@@ -186,9 +188,7 @@ public class RareDropListener implements Listener
             return;
         LivingEntity ent = event.getEntity();
         
-        ent.setCustomName("SPAWNED");
-        ent.setCustomNameVisible(false);
-        //This makes us able to read they're names in code but not in game
+        ent.setMetadata("spawned", new FixedMetadataValue(plugin, true));
     }
 
     @EventHandler
@@ -205,8 +205,15 @@ public class RareDropListener implements Listener
         Entity damager = ((EntityDamageByEntityEvent) cause).getDamager();
         if (!(damager instanceof Player))
             return;
-        if(ent.getCustomName() != null && ent.getCustomName().equalsIgnoreCase("SPAWNED"))
-            return;
+        
+        
+        if(ent.hasMetadata("spawned")){
+            for(MetadataValue value: ent.getMetadata("spawned")){
+                if(value.asBoolean()){
+                    return;
+                }
+            }
+        }
 
         TregminePlayer player = plugin.getPlayer((Player) damager);
         if (players.contains(player)) {
