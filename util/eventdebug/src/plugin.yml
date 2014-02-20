@@ -1,0 +1,9 @@
+name: EventDebugger
+main: info.tregmine.debug.EventDebug
+version: 1.0.0
+description: Plugin for helpful debugging of Bukkit Events
+
+commands:
+  debug:
+    description: Toggle your opt-in status for debug messages
+    usage: /debug
