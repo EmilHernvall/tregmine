@@ -137,14 +137,8 @@ public class InventoryListener implements Listener
         }
 
         if (!openInventories.containsKey(loc)) {
-            Tregmine.LOGGER.info("Inventory location not found.");
             return;
         }
-
-        Tregmine.LOGGER.info(player.getRealName() + " closed inventory: " +
-                             "x=" + loc.getBlockX() + " " +
-                             "y=" + loc.getBlockY() + " " +
-                             "z=" + loc.getBlockZ());
 
         ItemStack[] oldContents = openInventories.get(loc);
         ItemStack[] currentContents = inv.getContents();
@@ -157,7 +151,6 @@ public class InventoryListener implements Listener
             // Find inventory id, or create a new row if none exists
             int id = invDAO.getInventoryId(loc);
             if (id == -1) {
-                Tregmine.LOGGER.warning("Inventory id " + id + " not found!");
                 return;
             }
 
@@ -170,9 +163,6 @@ public class InventoryListener implements Listener
                 }
 
                 if (a == null || b == null || !a.equals(b)) {
-                    Tregmine.LOGGER.info("Slot " + i + " changed. Was " +
-                        a + " and is " + b);
-
                     // Removed
                     if (a != null) {
                         invDAO.insertChangeLog(player, id, i, a, ChangeType.REMOVE);
