@@ -88,7 +88,7 @@ public class TregminePlayer extends PlayerDelegate
 
     // Chunk Watcher
     private boolean newChunk = false;
-    
+
     private Tregmine plugin;
 
     public TregminePlayer(Player player, Tregmine instance)
@@ -209,7 +209,7 @@ public class TregminePlayer extends PlayerDelegate
 
     public boolean getNewChunk() { return newChunk; }
     public void setNewChunk(boolean value) { this.newChunk = value; }
-    
+
     // non-persistent state methods
 
     public boolean canMentor()
@@ -412,14 +412,14 @@ public class TregminePlayer extends PlayerDelegate
     {
         World cWorld = loc.getWorld();
         String[] worldNamePortions = cWorld.getName().split("_");
-        
+
         Entity v = getVehicle();
         if (v != null && v instanceof Horse) {
             if (!worldNamePortions[0].equalsIgnoreCase("world")) {
                 this.sendMessage(ChatColor.RED + "Can not teleport with horse! Sorry!");
                 return;
             }
-            
+
             Horse horse = (Horse)v;
             horse.eject();
             horse.teleport(loc);
@@ -672,7 +672,7 @@ public class TregminePlayer extends PlayerDelegate
                 id4 = dao.fetchInventory(this, name, "armour");
                 firstTime = true;
             }
-            
+
             int id5;
             id5 = dao.fetchInventory(this, name, "ender");
             while (id5 == -1) {
@@ -694,13 +694,8 @@ public class TregminePlayer extends PlayerDelegate
             this.getEnderChest().clear();
 
             dao.loadInventory(this, id3, "main");
-            plugin.getLogger().info("INVENTORY: Loading main inventory " + id3 + " (" + this.getName() + ")");
-
             dao.loadInventory(this, id4, "armour");
-            plugin.getLogger().info("INVENTORY: Loading armour inventory " + id4 + " (" + this.getName() + ")");
-            
             dao.loadInventory(this, id5, "ender");
-            plugin.getLogger().info("INVENTORY: Loading ender inventory " + id5 + " (" + this.getName() + ")");
 
             this.currentInventory = name;
 
@@ -736,7 +731,6 @@ public class TregminePlayer extends PlayerDelegate
             }
 
             dao.saveInventory(this, id, "main");
-            plugin.getLogger().info("INVENTORY: Saving main inventory " + id + " (" + this.getName() + ")");
 
             int id2;
             id2 = dao.fetchInventory(this, inventory, "armour");
@@ -747,8 +741,7 @@ public class TregminePlayer extends PlayerDelegate
             }
 
             dao.saveInventory(this, id2, "armour");
-            plugin.getLogger().info("INVENTORY: Saving armour inventory " + id2 + " (" + this.getName() + ")");
-            
+
             int id3;
             id3 = dao.fetchInventory(this, inventory, "ender");
             while (id3 == -1) {
@@ -756,9 +749,8 @@ public class TregminePlayer extends PlayerDelegate
                 plugin.getLogger().info("INVENTORY: Creating");
                 id3 = dao.fetchInventory(this, inventory, "ender");
             }
-            
+
             dao.saveInventory(this, id3, "ender");
-            plugin.getLogger().info("INVENTORY: Saving ender inventory " + id3 + " (" + this.getName() + ")");
         } catch (DAOException e) {
             plugin.getLogger().info("INVENTORY ERROR: Trying to save " + this.getName() + " inventory named: " + name);
             throw new RuntimeException(e);
