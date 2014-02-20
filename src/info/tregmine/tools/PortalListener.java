@@ -221,7 +221,9 @@ public class PortalListener implements Listener
         block.setType(Material.AIR);
     }
 
-    public void clearUp(PlayerQuitEvent event) {
+    @EventHandler
+    public void clearUp(PlayerQuitEvent event)
+    {
         if (gravityTasks.containsKey(event.getPlayer())) {
             GravityTask task = gravityTasks.get(event.getPlayer());
             task.currentBlock.remove();
