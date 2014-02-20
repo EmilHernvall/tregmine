@@ -64,6 +64,9 @@ public class VeinListener implements Listener
         if (heldItem.getItemMeta() == null) {
             return;
         }
+        if (heldItem.getItemMeta().getLore() == null) {
+            return;
+        }
 
         List<String> lore = heldItem.getItemMeta().getLore();
         if (lore.isEmpty()) {
