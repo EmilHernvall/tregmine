@@ -188,6 +188,7 @@ public class PortalListener implements Listener
 
         if (plugin.getFishyBlocks().containsKey(block.getLocation())) {
             p.sendMessage(ChatColor.RED + "Can not move fishyblocks!");
+            return;
         }
 
         if (!p.hasBlockPermission(block.getLocation(), false)) {
