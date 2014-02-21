@@ -32,7 +32,7 @@ public class BankListener implements Listener
 {
     private Tregmine plugin;
     private Map<TregminePlayer, Account> accounts = Maps.newHashMap();
-    private Map<TregminePlayer, Location> bankingBlocks = Maps.newHashMap();
+    private Map<TregminePlayer, Bank> bankingPlayers = Maps.newHashMap();
 
     public BankListener(Tregmine plugin)
     {
@@ -47,21 +47,9 @@ public class BankListener implements Listener
             return;
         }
 
-        Location loc = bankingBlocks.get(player);
-        if (loc == null) {
+        Bank bank = bankingPlayers.get(player);
+        if (bank == null) {
             player.setChatState(ChatState.CHAT);
-            return;
-        }
-
-        ZoneWorld world = plugin.getWorld(loc.getWorld());
-        Point p =  new Point(loc.getBlockX(),
-                             loc.getBlockZ());
-        Lot lot = world.findLot(p);
-        if (lot == null) {
-            return;
-        }
-
-        if (!lot.hasFlag(Flags.BANK)) {
             return;
         }
 
@@ -92,22 +80,17 @@ public class BankListener implements Listener
         else if ("exit".equalsIgnoreCase(args[0])) {
             player.setChatState(ChatState.CHAT);
             accounts.remove(player);
-            bankingBlocks.remove(player);
+            bankingPlayers.remove(player);
             return;
         }
 
         try (IContext ctx = plugin.createContext()) {
             IBankDAO dao = ctx.getBankDAO();
             IWalletDAO wDao = ctx.getWalletDAO();
-            Bank bank = dao.getBank(lot.getId());
+
             Account acct;
             if (accounts.containsKey(player)) {
                 acct = accounts.get(player);
-                if (acct.isVerified()) {
-                    acct = dao.getAccount(bank, acct.getAccountNumber());
-                    acct.setVerified(true);
-                }
-                accounts.put(player, acct);
             } else {
                 acct = dao.getAccountByPlayer(bank, player.getId());
                 if (acct != null) {
@@ -131,7 +114,7 @@ public class BankListener implements Listener
                 if (args.length == 2) {
                     try {
                         long amount = Long.parseLong(args[1]);
-                        if (dao.withdraw(bank, acct, amount)) {
+                        if (dao.withdraw(bank, acct, player.getId(), amount)) {
                             wDao.add(player, amount);
 
                             // update local object
@@ -178,38 +161,39 @@ public class BankListener implements Listener
                     return;
                 }
 
+                if (acct == null) {
+                    acct = new Account();
+                    acct.setBank(bank);
+                    acct.setPlayerId(player.getId());
+                    acct.setVerified(true);
+                    dao.createAccount(acct, player.getId());
+                    accounts.put(player, acct);
+
+                    player.sendMessage(ChatColor.AQUA + "[BANK] " +
+                            "You created a new account with a " +
+                            "balance of " + ChatColor.GOLD + amount +
+                            ChatColor.AQUA + " tregs");
+                    player.sendMessage(ChatColor.GREEN + "[BANK] " +
+                            "Your account number is " +
+                            ChatColor.GOLD + acct.getAccountNumber());
+                    player.sendMessage(ChatColor.GREEN + "[BANK] " +
+                            "Your pin number is " + ChatColor.GOLD +
+                            acct.getPin() + ChatColor.GREEN +
+                            " WRITE IT DOWN!");
+                }
+
                 if (wDao.take(player, amount)) {
-                    if (acct == null) {
-                        acct = new Account();
-                        acct.setBank(bank);
-                        acct.setPlayerId(player.getId());
-                        dao.createAccount(acct, player.getId(), amount);
-                        accounts.put(player, acct);
+                    dao.deposit(bank, acct, player.getId(), amount);
 
-                        player.sendMessage(ChatColor.AQUA + "[BANK] " +
-                                "You created a new account with a " +
-                                "balance of " + ChatColor.GOLD + amount +
-                                ChatColor.AQUA + " tregs");
-                        player.sendMessage(ChatColor.GREEN + "[BANK] " +
-                                "Your account number is " +
-                                ChatColor.GOLD + acct.getAccountNumber());
-                        player.sendMessage(ChatColor.GREEN + "[BANK] " +
-                                "Your pin number is " + ChatColor.GOLD +
-                                acct.getPin() + ChatColor.GREEN +
-                                " WRITE IT DOWN!");
-                    } else {
-                        dao.deposit(bank, acct, amount);
+                    // update local object
+                    acct = dao.getAccount(bank, acct.getAccountNumber());
+                    acct.setVerified(true);
+                    accounts.put(player, acct);
 
-                        // update local object
-                        acct = dao.getAccount(bank, acct.getAccountNumber());
-                        acct.setVerified(true);
-                        accounts.put(player, acct);
-
-                        player.sendMessage(ChatColor.AQUA + "[BANK] " +
-                                "You deposited " + ChatColor.GOLD +
-                                amount + ChatColor.AQUA + " tregs " +
-                                "into your account");
-                    }
+                    player.sendMessage(ChatColor.AQUA + "[BANK] " +
+                            "You deposited " + ChatColor.GOLD +
+                            amount + ChatColor.AQUA + " tregs " +
+                            "into your account");
                 } else{
                     player.sendMessage(ChatColor.RED + "[BANK] " +
                             "You do not have enough money to deposit that much.");
@@ -355,16 +339,38 @@ public class BankListener implements Listener
             return;
         }
 
-        if (lot.hasFlag(Lot.Flags.BANK)) {
-            if (player.getChatState() == ChatState.BANK){
+        if (!lot.hasFlag(Lot.Flags.BANK)) {
+            return;
+        }
+
+        try (IContext ctx = plugin.createContext()) {
+            IBankDAO dao = ctx.getBankDAO();
+            Bank bank = dao.getBank(lot.getId());
+            if (bank == null) {
+                Tregmine.LOGGER.info("Warning! No bank found for " + lot.getId() +
+                        "even though bank flag is set.");
+                return;
+            }
+
+            Bank currentBank = bankingPlayers.get(player);
+            if (player.getChatState() == ChatState.BANK &&
+                currentBank != null &&
+                currentBank.getId() == bank.getId()) {
+
                 player.setChatState(ChatState.CHAT);
                 player.sendMessage(ChatColor.GREEN + "You are now back in chat.");
+                bankingPlayers.remove(player);
+                accounts.remove(player);
             } else {
+                String name = lot.getName().split("\\.")[0];
                 player.setChatState(ChatState.BANK);
                 player.sendMessage(ChatColor.GREEN + "[BANK] " +
-                        "You are now banking, type \"help\" for help");
-                bankingBlocks.put(player, block.getLocation());
+                        "Welcome to " + name + "! Type \"help\" for help.");
+                bankingPlayers.put(player, bank);
+                accounts.remove(player);
             }
+        } catch (DAOException e) {
+            throw new RuntimeException(e);
         }
     }
 
