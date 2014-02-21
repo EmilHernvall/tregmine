@@ -99,6 +99,7 @@ public class DBBankDAO implements IBankDAO
 
                 while (rs.next()) {
                     Account acct = new Account();
+                    acct.setId(rs.getInt("account_id"));
                     acct.setBank(bank);
                     acct.setPlayerId(rs.getInt("player_id"));
                     acct.setBalance(rs.getLong("account_balance"));
@@ -130,6 +131,7 @@ public class DBBankDAO implements IBankDAO
             try (ResultSet rs = stm.getResultSet()) {
                 if (rs.next()) {
                     acct = new Account();
+                    acct.setId(rs.getInt("account_id"));
                     acct.setBank(bank);
                     acct.setPlayerId(rs.getInt("player_id"));
                     acct.setBalance(rs.getLong("account_balance"));
@@ -158,6 +160,7 @@ public class DBBankDAO implements IBankDAO
             try(ResultSet rs = stm.getResultSet()){
                 if (rs.next()) {
                     Account acc = new Account();
+                    acc.setId(rs.getInt("account_id"));
                     acc.setAccountNumber(accNumber);
                     acc.setBank(bank);
                     acc.setBalance(rs.getLong("account_balance"));
@@ -193,10 +196,16 @@ public class DBBankDAO implements IBankDAO
         return 0;
     }
 
-    public void createAccount(Account acct, int playerId, long amount)
+    public void createAccount(Account acct, int playerId)
     throws DAOException
     {
         acct.setAccountNumber(getMaxAccountNr(acct.getBank()) + 1);
+
+        String s = "";
+        for (int i = 0; i < 4; i++) {
+            s += String.valueOf(r.nextInt(10));
+        }
+        acct.setPin(s);
 
         String sql = "INSERT INTO bank_account (bank_id, player_id, " +
             "account_balance, account_number, account_pin) VALUES (?,?,?,?, ?)";
@@ -204,17 +213,21 @@ public class DBBankDAO implements IBankDAO
         try (PreparedStatement stm = conn.prepareStatement(sql)) {
             stm.setInt(1, acct.getBank().getId());
             stm.setInt(2, playerId);
-            stm.setLong(3, amount);
+            stm.setLong(3, 0);
             stm.setInt(4, acct.getAccountNumber());
-            String s = "";
-            for (int i = 0; i < 4; i++) {
-                s += String.valueOf(r.nextInt(10));
-            }
-            stm.setString(5, s);
-
-            acct.setPin(s);
+            stm.setString(5, acct.getPin());
             stm.execute();
-        }catch(SQLException e){
+
+            stm.executeQuery("SELECT LAST_INSERT_ID()");
+
+            try (ResultSet rs = stm.getResultSet()) {
+                if (!rs.next()) {
+                    throw new DAOException("Failed to get insert_id!", sql);
+                }
+
+                acct.setId(rs.getInt(1));
+            }
+        } catch(SQLException e) {
             throw new DAOException(sql, e);
         }
     }
@@ -235,38 +248,68 @@ public class DBBankDAO implements IBankDAO
     }
 
     @Override
-    public void deposit(Bank bank, Account acct, long amount)
+    public void deposit(Bank bank, Account acct, int playerId, long amount)
     throws DAOException
     {
-        String sql = "UPDATE bank_account SET account_balance = account_balance + ? " +
-            "WHERE bank_id = ? AND player_id = ?";
-        try (PreparedStatement stm = conn.prepareStatement(sql)) {
+        String sqlAcc = "UPDATE bank_account SET " +
+                        "account_balance = account_balance + ? " +
+                        "WHERE bank_id = ? AND player_id = ?";
+        try (PreparedStatement stm = conn.prepareStatement(sqlAcc)) {
             stm.setLong(1, amount);
             stm.setInt(2, bank.getId());
             stm.setInt(3, acct.getPlayerId());
             stm.execute();
         } catch(SQLException e) {
-            throw new DAOException(sql, e);
+            throw new DAOException(sqlAcc, e);
+        }
+
+        String sqlTransaction = "INSERT INTO bank_transaction(account_id, " +
+                                "player_id, transaction_type, " +
+                                "transaction_amount, transaction_timestamp) ";
+        sqlTransaction += "VALUES (?, ?, ?, ?, unix_timestamp())";
+        try (PreparedStatement stm = conn.prepareStatement(sqlTransaction)) {
+            stm.setInt(1, acct.getId());
+            stm.setInt(2, playerId);
+            stm.setString(3, "deposit");
+            stm.setLong(4, amount);
+            stm.execute();
+        } catch(SQLException e) {
+            throw new DAOException(sqlTransaction, e);
         }
     }
 
     @Override
-    public boolean withdraw(Bank bank, Account acct, long amount)
+    public boolean withdraw(Bank bank, Account acct, int playerId, long amount)
     throws DAOException
     {
         if (acct.getBalance() - amount < 0) {
             return false;
         }
 
-        String sql = "UPDATE bank_account SET account_balance = account_balance - ? " +
-            "WHERE bank_id = ? AND player_id = ?";
-        try (PreparedStatement stm = conn.prepareStatement(sql)) {
+        String sqlAcc = "UPDATE bank_account SET " +
+                        "account_balance = account_balance - ? " +
+                        "WHERE bank_id = ? AND player_id = ?";
+        try (PreparedStatement stm = conn.prepareStatement(sqlAcc)) {
             stm.setLong(1, amount);
             stm.setInt(2, bank.getId());
             stm.setInt(3, acct.getPlayerId());
             stm.execute();
         } catch (SQLException e) {
-            throw new DAOException(sql, e);
+            throw new DAOException(sqlAcc, e);
+        }
+
+        String sqlTransaction = "INSERT INTO bank_transaction(account_id, " +
+                                "player_id, transaction_type, " +
+                                "transaction_amount, transaction_timestamp) ";
+        sqlTransaction += "VALUES (?, ?, ?, ?, unix_timestamp())";
+        try (PreparedStatement stm = conn.prepareStatement(sqlTransaction)) {
+            stm.setInt(1, acct.getId());
+            stm.setInt(2, playerId);
+            stm.setString(3, "withdrawal");
+            stm.setLong(4, amount);
+            stm.execute();
+        } catch(SQLException e) {
+            throw new DAOException(sqlTransaction, e);
         }
 
         return true;
