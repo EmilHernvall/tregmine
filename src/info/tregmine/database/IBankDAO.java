@@ -16,7 +16,7 @@ public interface IBankDAO
     public Account getAccount(Bank bank, int accNumber) throws DAOException;
     public void setPin(Account acct, String pin) throws DAOException;
 
-    public void createAccount(Account acct, int playerId, long amount) throws DAOException;
-    public void deposit(Bank bank, Account acct, long amount) throws DAOException;
-    public boolean withdraw(Bank bank, Account acct, long amount) throws DAOException;
+    public void createAccount(Account acct, int playerId) throws DAOException;
+    public void deposit(Bank bank, Account acct, int playerId, long amount) throws DAOException;
+    public boolean withdraw(Bank bank, Account acct, int playerId, long amount) throws DAOException;
 }
