@@ -14,6 +14,7 @@ and tools in this repository:
 
  * blocklog - Logs changes to blocks, the log can be accessed with paper
  * delegate_gen - Generates a class from an interface that can be extended.
+ * eventdebug - Development tool for when Bukkit events get triggered.
  * gamemagic - Stuff specific to the main tregmine world
  * world_importer - Tool for transitioning from the old tregmine database
  format.
