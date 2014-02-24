@@ -1,46 +1,47 @@
 package info.tregmine.blocklog;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import info.tregmine.Tregmine;
+import info.tregmine.api.*;
+import info.tregmine.database.*;
+import info.tregmine.database.db.DBContext;
+
+import java.sql.*;
 import java.text.SimpleDateFormat;
+import java.util.*;
 import java.util.Date;
-import java.util.TimeZone;
+import java.util.Map.Entry;
 import java.util.zip.CRC32;
 
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.block.Block;
-import org.bukkit.Location;
-import org.bukkit.ChatColor;
-import org.bukkit.event.block.Action;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.event.Listener;
-import org.bukkit.event.EventHandler;
+import org.bukkit.event.*;
+import org.bukkit.event.block.*;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.plugin.PluginManager;
-import org.bukkit.plugin.Plugin;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.*;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockPlaceEvent;
-
-import info.tregmine.Tregmine;
-import info.tregmine.database.DAOException;
-import info.tregmine.database.IContext;
-import info.tregmine.database.IContextFactory;
-import info.tregmine.database.db.DBContext;
-import info.tregmine.database.db.DBContextFactory;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class BlockLog extends JavaPlugin
 {
     private static class BlockLogListener implements Listener
     {
+        // For Anarchy
+        private static final Material[] protectedBlocks = {
+            Material.STONE, Material.DIRT, Material.GRASS
+        };
+        
         private IContextFactory ctxFactory;
+        private Tregmine tregmine;
+        private BlockLog plugin;
+        private Map<TregminePlayer, Integer> timedOut;
 
-        public BlockLogListener(Tregmine tregmine)
+        public BlockLogListener(Tregmine tregmine, BlockLog blocklog)
         {
             this.ctxFactory = tregmine.getContextFactory();
+            this.tregmine = tregmine;
+            this.plugin = blocklog;
         }
 
         private static long locationChecksum(Location loc)
@@ -54,26 +55,71 @@ public class BlockLog extends JavaPlugin
         @EventHandler
         public void onPlayerInteract(PlayerInteractEvent event)
         {
-            Player player = event.getPlayer();
+            final TregminePlayer player = tregmine.getPlayer(event.getPlayer());
             ItemStack inHand = player.getItemInHand();
-            if (inHand.getTypeId() != Material.PAPER.getId()) {
+            
+            if (!inHand.getType().equals(Material.PAPER)) {
                 return;
             }
+            
             if (event.getAction() != Action.RIGHT_CLICK_BLOCK) {
                 return;
             }
 
             Location loc = event.getClickedBlock().getLocation();
             long checksum = locationChecksum(loc);
-
-            //String timezone = tregminePlayer.getTimezone();
             String world = loc.getWorld().getName();
+            
+            if (world.equalsIgnoreCase(tregmine.getRulelessWorld().getName()) ||
+                    world.equalsIgnoreCase(tregmine.getRulelessNether().getName()) ||
+                    world.equalsIgnoreCase(tregmine.getRulelessEnd().getName())) {
+                
+                Material blockType = event.getClickedBlock().getType();
+                if (blockType == null) {
+                    return;
+                }
+                
+                boolean success = true;
+                
+                for (Material mat : protectedBlocks) {
+                    if (blockType.equals(mat)) {
+                        success = false;
+                    }
+                }
+                
+                if (!success) {
+                    player.sendMessage(ChatColor.RED + "You can not paper this block!");
+                    return;
+                }
+                
+                for (Entry<TregminePlayer, Integer> p : timedOut.entrySet()) {
+                    if (p.getKey().equals(player)) {
+                        player.sendMessage(ChatColor.RED + "Your paper is timed out, Try again in " + p.getValue() + "!");
+                        return;
+                    }
+                }
+                
+                Integer timeout = 5; // seconds
+                timedOut.put(player, timeout);
+                
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        for (Entry<TregminePlayer, Integer> p : timedOut.entrySet()) {
+                            if (p.getValue() <= 0) {
+                                timedOut.remove(player);
+                                player.sendMessage(ChatColor.GREEN + "Safe to use paper again!");
+                            }
+                            p.setValue(p.getValue() - 1);
+                        }
+                    }
+                }.runTaskTimer(plugin, 10L, 10L);
+            }
 
             SimpleDateFormat dfm = new SimpleDateFormat("dd/MM/yy hh:mm:ss a");
-            //dfm.setTimeZone(TimeZone.getTimeZone(timezone));
 
             try (IContext ctx = ctxFactory.createContext()) {
-                Connection conn = ((DBContext)ctx).getConnection();
+                Connection conn = ((DBContext) ctx).getConnection();
 
                 String sql = "SELECT * FROM stats_blocks ";
                 sql += "WHERE checksum = ? AND world = ? ";
@@ -186,6 +232,6 @@ public class BlockLog extends JavaPlugin
             }
         }
 
-        pluginMgm.registerEvents(new BlockLogListener(tregmine), this);
+        pluginMgm.registerEvents(new BlockLogListener(tregmine, this), this);
     }
 }
