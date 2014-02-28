@@ -512,6 +512,8 @@ public class TregminePlayerListener implements Listener
                 (!player.getRank().canBypassWorld() && player.getGameMode() != GameMode.CREATIVE)) {
             player.setAllowFlight(false);
             player.setFlying(false);
+            event.setCancelled(true);
+            return;
         }
         
         ZoneWorld world = plugin.getWorld(loc.getWorld());
