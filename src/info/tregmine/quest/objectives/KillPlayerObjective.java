@@ -8,9 +8,9 @@ public class KillPlayerObjective extends Objective
     
     private final TregminePlayer target;
     
-    public KillPlayerObjective(TregminePlayer holder, TregminePlayer target)
+    public KillPlayerObjective(TregminePlayer target)
     {
-        super(ObjectiveType.KILL_PLAYER, holder);
+        super(ObjectiveType.KILL_PLAYER);
         
         this.target = target;
     }
