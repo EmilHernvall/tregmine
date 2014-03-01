@@ -29,9 +29,11 @@ public class KillMobObjective extends Objective
         return amount;
     }
     
-    public void remove(int x)
+    public int remove(int x)
     {
         this.amount = amount - x < 0 ? 0 : amount - x;
+        
+        return this.amount;
     }
 
 
