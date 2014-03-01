@@ -1,7 +1,5 @@
 package info.tregmine.quest;
 
-import info.tregmine.api.TregminePlayer;
-
 public abstract class Objective
 {
     
@@ -28,12 +26,10 @@ public abstract class Objective
     }
     
     private final ObjectiveType objectiveType;
-    private final TregminePlayer objectiveHolder;
     
-    public Objective(ObjectiveType type, TregminePlayer player)
+    public Objective(ObjectiveType type)
     {
         this.objectiveType = type;
-        this.objectiveHolder = player;
     }
 
     public ObjectiveType getObjectiveType()
@@ -41,11 +37,6 @@ public abstract class Objective
         return objectiveType;
     }
 
-    public TregminePlayer getObjectiveHolder()
-    {
-        return objectiveHolder;
-    }
-    
     public abstract String toString();
     
 }

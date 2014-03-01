@@ -2,7 +2,6 @@ package info.tregmine.quest.objectives;
 
 import org.bukkit.entity.EntityType;
 
-import info.tregmine.api.TregminePlayer;
 import info.tregmine.quest.Objective;
 
 public class KillMobObjective extends Objective
@@ -11,9 +10,9 @@ public class KillMobObjective extends Objective
     private int amount;
     
     
-    public KillMobObjective(TregminePlayer holder, EntityType type, int amount)
+    public KillMobObjective(EntityType type, int amount)
     {
-        super(ObjectiveType.KILL_MOB, holder);
+        super(ObjectiveType.KILL_MOB);
         
         this.type = type;
         this.amount = amount;

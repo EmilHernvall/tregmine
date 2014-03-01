@@ -2,7 +2,6 @@ package info.tregmine.quest.objectives;
 
 import org.bukkit.Material;
 
-import info.tregmine.api.TregminePlayer;
 import info.tregmine.quest.Objective;
 
 public class CollectItemObjective extends Objective
@@ -11,9 +10,9 @@ public class CollectItemObjective extends Objective
     private final Material itemType;
     private final int amount;
     
-    public CollectItemObjective(TregminePlayer holder, Material itemType, int amount)
+    public CollectItemObjective(Material itemType, int amount)
     {
-        super(ObjectiveType.COLLECT_ITEM, holder);
+        super(ObjectiveType.COLLECT_ITEM);
         
         this.itemType = itemType;
         this.amount = amount;

@@ -2,16 +2,15 @@ package info.tregmine.quest.objectives;
 
 import org.bukkit.Location;
 
-import info.tregmine.api.TregminePlayer;
 import info.tregmine.quest.Objective;
 
 public class GotoLocationObjective extends Objective
 {
     private final Location location;
     
-    public GotoLocationObjective(TregminePlayer holder, Location loc)
+    public GotoLocationObjective(Location loc)
     {
-        super(ObjectiveType.GO_TO_LOCATION, holder);
+        super(ObjectiveType.GO_TO_LOCATION);
         
         this.location = loc;
     }
