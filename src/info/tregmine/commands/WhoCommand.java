@@ -13,6 +13,8 @@ import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
 import info.tregmine.database.ILogDAO;
 import info.tregmine.database.IWalletDAO;
+import org.bukkit.World;
+import org.bukkit.entity.Player;
 
 public class WhoCommand extends AbstractCommand
 {
@@ -143,12 +145,43 @@ public class WhoCommand extends AbstractCommand
         return true;
     }
 
+	private boolean whoWorld(TregminePlayer player)
+	{
+		for (World world : player.getServer().getWorlds()) {
+			if (world.getPlayers().size() > 0) {
+				StringBuilder sb = new StringBuilder();
+				String delim = "";
+
+				for (Player pl : world.getPlayers()) {
+					TregminePlayer p = tregmine.getPlayer(pl);
+					if (p.hasFlag(TregminePlayer.Flags.INVISIBLE)) {
+						continue;
+					}
+
+					sb.append(delim);
+					sb.append(p.getChatName());
+					delim = ChatColor.WHITE + ", ";
+				}
+
+				String playerList = sb.toString();
+
+				player.sendMessage(padString(DARK_PURPLE + "Player List for World: " + world.getName(), 55));
+				player.sendMessage(playerList);
+			}
+		}
+
+		return true;
+	}
+
     @Override
     public boolean handlePlayer(TregminePlayer player, String[] args)
     {
         if (args.length == 0) {
             return who(player);
         }
+		else if (args.length == 1 && "world".equalsIgnoreCase(args[0])) {
+			return whoWorld(player);
+		}
         else if (args.length > 0) {
             if (!player.getRank().canSeeHiddenInfo()) {
                 return true;
