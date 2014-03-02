@@ -20,13 +20,13 @@ public class SpawnCommand extends AbstractCommand
 	{
 		private TregminePlayer player;
 		private Location loc;
-		private Location oldLocation;
+		private final Location oldLocation;
 
-		public SpawnTask(TregminePlayer player, Location loc)
+		public SpawnTask(TregminePlayer player, Location loc, Location oldLocation)
 		{
 			this.player = player;
 			this.loc = loc;
-			this.oldLocation = player.getLocation();
+			this.oldLocation = oldLocation;
 		}
 
 		@Override
@@ -64,7 +64,7 @@ public class SpawnCommand extends AbstractCommand
 			player.sendMessage(ChatColor.RED + "Teleporting to spawn... Please wait 30 seconds.");
 			player.sendMessage(ChatColor.DARK_BLUE + "Oh, and don't move! Moving will stop the teleportation.");
 			BukkitScheduler scheduler = plugin.getServer().getScheduler();
-			scheduler.scheduleSyncDelayedTask(tregmine, new SpawnTask(player, player.getWorld().getSpawnLocation()), 20*30);
+			scheduler.scheduleSyncDelayedTask(tregmine, new SpawnTask(player, player.getWorld().getSpawnLocation(), player.getLocation()), 20*30);
 			return true;
 		}
         player.teleportWithHorse(player.getWorld().getSpawnLocation());
