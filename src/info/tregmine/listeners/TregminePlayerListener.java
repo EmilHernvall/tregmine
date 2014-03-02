@@ -473,9 +473,9 @@ public class TregminePlayerListener implements Listener
     {
         TregminePlayer player = event.getPlayer();
 
-		if (	player.getWorld().getName().equalsIgnoreCase(plugin.getRulelessWorld().getName()) ||
+		if (	(player.getWorld().getName().equalsIgnoreCase(plugin.getRulelessWorld().getName()) ||
 				player.getWorld().getName().equalsIgnoreCase(plugin.getRulelessEnd().getName()) ||
-				player.getWorld().getName().equalsIgnoreCase(plugin.getRulelessNether().getName()) &&
+				player.getWorld().getName().equalsIgnoreCase(plugin.getRulelessNether().getName())) &&
 				player.isFlying()) {
 			player.sendMessage(ChatColor.RED + "Flying in Anarchy will get you banned!" + ChatColor.DARK_RED + " Disabled.");
 			player.setAllowFlight(false);
