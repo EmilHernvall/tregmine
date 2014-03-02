@@ -32,7 +32,9 @@ public class SpawnCommand extends AbstractCommand
 		@Override
 		public void run()
 		{
-			if (oldLocation != player.getLocation()) {
+			if (oldLocation.getBlockX() != player.getLocation().getBlockX() &&
+					oldLocation.getBlockY() != player.getLocation().getBlockY() &&
+					oldLocation.getBlockZ() != player.getLocation().getBlockZ()) {
 				player.sendMessage(ChatColor.RED + "Teleportation stopped! You moved...");
 				return;
 			}
