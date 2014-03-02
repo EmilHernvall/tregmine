@@ -10,16 +10,25 @@ import info.tregmine.database.IPlayerDAO;
 
 public class FlyCommand extends AbstractCommand
 {
+	private Tregmine tregmine;
     public FlyCommand(Tregmine tregmine)
     {
         super(tregmine, "fly");
+		this.tregmine = tregmine;
     }
     
     @Override
     public boolean handlePlayer(TregminePlayer player, String args[])
     {
         if(!player.getRank().canFly()) return false;
-        
+
+		if (	player.getWorld().getName().equalsIgnoreCase(tregmine.getRulelessWorld().getName()) ||
+				player.getWorld().getName().equalsIgnoreCase(tregmine.getRulelessEnd().getName()) ||
+				player.getWorld().getName().equalsIgnoreCase(tregmine.getRulelessNether().getName())) {
+			player.sendMessage(ChatColor.RED + "Flying in Anarchy will get you banned!" + ChatColor.DARK_RED + " Disabled.");
+			return false;
+		}
+
         if ( player.hasFlag(TregminePlayer.Flags.FLY_ENABLED) ) {
             player.sendMessage(ChatColor.YELLOW +
                     "Flying Disabled!");

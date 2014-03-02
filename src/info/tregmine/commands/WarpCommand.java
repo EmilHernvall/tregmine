@@ -2,6 +2,7 @@ package info.tregmine.commands;
 
 import static org.bukkit.ChatColor.*;
 
+import info.tregmine.api.Rank;
 import org.bukkit.ChatColor;
 import org.bukkit.Server;
 import org.bukkit.World;
@@ -94,6 +95,15 @@ public class WarpCommand extends AbstractCommand
         Location warpPoint = warp.getLocation();
 
         World world = warpPoint.getWorld();
+
+		if (	world.getName().equalsIgnoreCase(tregmine.getRulelessWorld().getName()) ||
+				world.getName().equalsIgnoreCase(tregmine.getRulelessEnd().getName()) ||
+				world.getName().equalsIgnoreCase(tregmine.getRulelessNether().getName()) &&
+				!player.getRank().canBypassWorld()) {
+
+			player.sendMessage(RED + "No warping in Anarchy!" + DARK_RED + " Disabled.");
+			return false;
+		}
 
         player.sendMessage(AQUA + "You started teleport to " + DARK_GREEN
                 + name + AQUA + " in " + BLUE + world.getName() + ".");

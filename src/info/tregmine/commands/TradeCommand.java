@@ -6,6 +6,7 @@ import java.util.HashMap;
 
 import static org.bukkit.ChatColor.*;
 
+import info.tregmine.events.TregminePortalEvent;
 import org.bukkit.Server;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -401,4 +402,29 @@ public class TradeCommand extends AbstractCommand implements Listener
                     + player.getChatName() + WHITE + "> " + text);
         }
     }
+
+	@EventHandler
+	public void onPortalUsage(TregminePortalEvent event)
+	{
+		TradeContext ctx = activeTrades.get(event.getPlayer());
+		if (ctx == null) {
+			return;
+		}
+
+		TregminePlayer first = ctx.firstPlayer;
+		TregminePlayer second = ctx.secondPlayer;
+
+		first.setChatState(TregminePlayer.ChatState.CHAT);
+		second.setChatState(TregminePlayer.ChatState.CHAT);
+
+		activeTrades.remove(first);
+		activeTrades.remove(second);
+
+		if (ctx.state == TradeState.ITEM_SELECT) {
+			first.closeInventory();
+		}
+
+		first.sendMessage(YELLOW + "[Trade] Trade ended due to portal use! Now that was silly...");
+		second.sendMessage(YELLOW + "[Trade] Trade ended due to portal use! Now that was silly...");
+	}
 }

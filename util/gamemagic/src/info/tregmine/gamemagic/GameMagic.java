@@ -1,6 +1,7 @@
 package info.tregmine.gamemagic;
 
 import info.tregmine.Tregmine;
+import info.tregmine.api.TregminePlayer;
 import info.tregmine.api.math.MathUtil;
 import info.tregmine.events.PlayerMoveBlockEvent;
 
@@ -17,6 +18,8 @@ import org.bukkit.event.player.*;
 import org.bukkit.plugin.*;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
+import org.bukkit.util.*;
+import org.bukkit.util.Vector;
 
 public class GameMagic extends JavaPlugin implements Listener
 {
@@ -175,9 +178,11 @@ public class GameMagic extends JavaPlugin implements Listener
     @EventHandler
     public void onPlayerBucketEmpty(PlayerBucketEmptyEvent event)
     {
-        if (event.getBlockClicked().getWorld().getName().equalsIgnoreCase(tregmine.getRulelessWorld().getName())) {
-            return;
-        }
+		if (	event.getBlockClicked().getWorld().getName().equalsIgnoreCase(tregmine.getRulelessWorld().getName()) ||
+				event.getBlockClicked().getWorld().getName().equalsIgnoreCase(tregmine.getRulelessEnd().getName()) ||
+				event.getBlockClicked().getWorld().getName().equalsIgnoreCase(tregmine.getRulelessNether().getName())) {
+			return;
+		}
         if (event.getBucket() == Material.LAVA_BUCKET) {
             event.setCancelled(true);
         }
@@ -210,18 +215,22 @@ public class GameMagic extends JavaPlugin implements Listener
     @EventHandler
     public void onEntityExplode(EntityExplodeEvent event)
     {
-        if (event.getLocation().getWorld().getName().equalsIgnoreCase(tregmine.getRulelessWorld().getName())) {
-            return;
-        }
+		if (	event.getLocation().getWorld().getName().equalsIgnoreCase(tregmine.getRulelessWorld().getName()) ||
+				event.getLocation().getWorld().getName().equalsIgnoreCase(tregmine.getRulelessEnd().getName()) ||
+				event.getLocation().getWorld().getName().equalsIgnoreCase(tregmine.getRulelessNether().getName())) {
+			return;
+		}
         event.setCancelled(true);
     }
 
     @EventHandler
     public void onBlockBurn(BlockBurnEvent event)
     {
-        if (event.getBlock().getWorld().getName().equalsIgnoreCase(tregmine.getRulelessWorld().getName())) {
-            return;
-        }
+		if (	event.getBlock().getWorld().getName().equalsIgnoreCase(tregmine.getRulelessWorld().getName()) ||
+				event.getBlock().getWorld().getName().equalsIgnoreCase(tregmine.getRulelessEnd().getName()) ||
+				event.getBlock().getWorld().getName().equalsIgnoreCase(tregmine.getRulelessNether().getName())) {
+			return;
+		}
         event.setCancelled(true);
     }
 
@@ -242,9 +251,11 @@ public class GameMagic extends JavaPlugin implements Listener
     @EventHandler
     public void onBlockIgnite(BlockIgniteEvent event)
     {
-        if (event.getBlock().getWorld().getName().equalsIgnoreCase(tregmine.getRulelessWorld().getName())) {
-            return;
-        }
+		if (	event.getBlock().getWorld().getName().equalsIgnoreCase(tregmine.getRulelessWorld().getName()) ||
+				event.getBlock().getWorld().getName().equalsIgnoreCase(tregmine.getRulelessEnd().getName()) ||
+				event.getBlock().getWorld().getName().equalsIgnoreCase(tregmine.getRulelessNether().getName())) {
+			return;
+		}
         event.setCancelled(true);
 
         Location l = event.getBlock().getLocation();
@@ -265,15 +276,39 @@ public class GameMagic extends JavaPlugin implements Listener
             return;
         }
         double distance = MathUtil.calcDistance2d(event.getTo().getWorld().getSpawnLocation(), event.getTo());
-        
-        if (distance > 5000 && distance < 5010) { // If hitting the border
-            event.setCancelled(true);
-        } else if (distance >= 5010) { // If massively past the point, teleport them to spawn
+        TregminePlayer player = event.getPlayer();
+
+        if (distance > 5000 && distance < 5050) { // If hitting the border
+            movePlayerBack(player, event.getFrom(), event.getTo());
+        } else if (distance >= 5050) { // If massively past the point, teleport them to spawn
             event.getPlayer().teleport(event.getPlayer().getWorld().getSpawnLocation());
         } else {
             return;
         }
     }
+
+	private void movePlayerBack(TregminePlayer player, Location movingFrom, Location movingTo)
+	{
+		Vector a = new org.bukkit.util.Vector(movingFrom.getX(),
+				movingFrom.getY(),
+				movingFrom.getZ());
+
+		Vector b = new org.bukkit.util.Vector(movingTo.getX(),
+				movingTo.getY(),
+				movingTo.getZ());
+
+		Vector diff = b.subtract(a);
+		diff = diff.multiply(-5);
+
+		Vector newPosVector = a.add(diff);
+
+		Location newPos = new Location(player.getWorld(),
+				newPosVector.getX(),
+				newPosVector.getY(),
+				newPosVector.getZ());
+
+		player.teleportWithHorse(newPos);
+	}
 
     @EventHandler
     public void onUseElevator(PlayerInteractEvent event)

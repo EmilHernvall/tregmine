@@ -9,6 +9,8 @@ import info.tregmine.database.*;
 import java.util.HashMap;
 import java.util.Map;
 
+import info.tregmine.events.TregminePortalEvent;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
@@ -179,7 +181,8 @@ public class SellCommand extends AbstractCommand implements Listener
             inventories.remove(player);
         }
     }
-    
+
+	@EventHandler
     public void sellPlayerDeath(PlayerDeathEvent event)
     {
         TregminePlayer player = tregmine.getPlayer(event.getEntity());
@@ -187,5 +190,17 @@ public class SellCommand extends AbstractCommand implements Listener
         
         player.setChatState(TregminePlayer.ChatState.CHAT);
         inventories.remove(player);
+		player.sendMessage(ChatColor.RED + "You just lost your /sell inventory! Now that was silly...");
     }
+
+	@EventHandler
+	public void sellPlayerPortal(TregminePortalEvent event)
+	{
+		TregminePlayer player = event.getPlayer();
+		if(!inventories.containsKey(player)) return;
+
+		player.setChatState(TregminePlayer.ChatState.CHAT);
+		inventories.remove(player);
+		player.sendMessage(ChatColor.RED + "You just lost your /sell inventory! Now that was silly...");
+	}
 }
