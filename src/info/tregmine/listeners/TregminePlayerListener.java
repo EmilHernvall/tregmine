@@ -397,7 +397,6 @@ public class TregminePlayerListener implements Listener
 		if (player.isCombatLogged()) {
 			player.setHealth(0);
 			Tregmine.LOGGER.info(event.getPlayer().getName() + " just combat logged... What a fool!");
-			return;
 		}
 
         player.saveInventory(player.getCurrentInventory());
