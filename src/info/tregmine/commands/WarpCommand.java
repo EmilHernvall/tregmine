@@ -98,7 +98,8 @@ public class WarpCommand extends AbstractCommand
 
 		if (	world.getName().equalsIgnoreCase(tregmine.getRulelessWorld().getName()) ||
 				world.getName().equalsIgnoreCase(tregmine.getRulelessEnd().getName()) ||
-				world.getName().equalsIgnoreCase(tregmine.getRulelessNether().getName())) {
+				world.getName().equalsIgnoreCase(tregmine.getRulelessNether().getName()) &&
+				!player.getRank().canBypassWorld()) {
 
 			player.sendMessage(RED + "No warping in Anarchy!" + DARK_RED + " Disabled.");
 			return false;
