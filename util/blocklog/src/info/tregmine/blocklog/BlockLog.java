@@ -91,13 +91,16 @@ public class BlockLog extends JavaPlugin
                     player.sendMessage(ChatColor.RED + "You can not paper this block!");
                     return;
                 }
-                
-                for (Entry<TregminePlayer, Integer> p : timedOut.entrySet()) {
-                    if (p.getKey().equals(player)) {
-                        player.sendMessage(ChatColor.RED + "Your paper is timed out, Try again in " + p.getValue() + "!");
-                        return;
-                    }
-                }
+
+				if (timedOut != null && !timedOut.isEmpty()) {
+					for (Entry<TregminePlayer, Integer> p : timedOut.entrySet()) {
+						if (p.getKey().equals(player)) {
+							player.sendMessage(ChatColor.RED + "Your paper is timed out, Try again in " + p.getValue() + "!");
+							return;
+						}
+					}
+				}
+
                 
                 Integer timeout = 5; // seconds
                 timedOut.put(player, timeout);
