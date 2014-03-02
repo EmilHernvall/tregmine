@@ -35,7 +35,7 @@ public class BlockLog extends JavaPlugin
         private IContextFactory ctxFactory;
         private Tregmine tregmine;
         private BlockLog plugin;
-        private Map<TregminePlayer, Integer> timedOut;
+        private Map<TregminePlayer, Integer> timedOut = new HashMap<>();
 
         public BlockLogListener(Tregmine tregmine, BlockLog blocklog)
         {
