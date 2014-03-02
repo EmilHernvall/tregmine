@@ -69,6 +69,7 @@ public class TregminePlayer extends PlayerDelegate
     private TregminePlayer mentor;
     private TregminePlayer student;
     private String currentInventory;
+	private int combatLog;
 
     // Player state for block fill
     private Block fillBlock1 = null;
@@ -367,6 +368,16 @@ public class TregminePlayer extends PlayerDelegate
 
     public void setFishyBuyCount(int v) { this.fishyBuyCount = v; }
     public int getFishyBuyCount() { return fishyBuyCount; }
+
+	public void setCombatLog(int value) { this.combatLog = value; }
+	public int getCombatLog() { return combatLog; }
+	public boolean isCombatLogged() {
+		if (combatLog > 0) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 
     // convenience methods
     public void hidePlayer(TregminePlayer player)

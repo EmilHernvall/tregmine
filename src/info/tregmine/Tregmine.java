@@ -22,6 +22,7 @@ import info.tregmine.listeners.*;
 import info.tregmine.quadtree.IntersectionException;
 import info.tregmine.tools.*;
 import info.tregmine.zones.*;
+import org.bukkit.scheduler.BukkitScheduler;
 
 /**
  * @author Ein Andersson
@@ -320,6 +321,22 @@ public class Tregmine extends JavaPlugin
         for (TregminePlayer player : getOnlinePlayers()) {
             player.sendMessage(ChatColor.AQUA + "Tregmine successfully loaded. Version " + getDescription().getVersion());
         }
+
+		BukkitScheduler scheduler = getServer().getScheduler();
+		scheduler.scheduleSyncRepeatingTask(this,
+				new Runnable() {
+					public void run() {
+						for (TregminePlayer player : getOnlinePlayers()) {
+							if (player.getCombatLog() > 0) {
+								player.setCombatLog(player.getCombatLog() - 1);
+
+								if (player.getCombatLog() == 0) {
+									player.sendMessage(ChatColor.GREEN + "Combat log has warn off... Safe to log off!");
+								}
+							}
+						}
+					}
+				}, 20L, 20L);
     }
 
     // run when plugin is disabled
