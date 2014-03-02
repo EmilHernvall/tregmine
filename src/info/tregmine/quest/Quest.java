@@ -73,7 +73,7 @@ public class Quest
         return objectives;
     }
     
-    public List<Objective> getObjetives(ObjectiveType type)
+    public List<? extends Objective> getObjetives(ObjectiveType type)
     {
         List<Objective> objectives = Lists.newArrayList();
         for(Objective obj: getObjectives())
