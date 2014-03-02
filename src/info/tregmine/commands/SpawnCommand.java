@@ -54,6 +54,10 @@ public class SpawnCommand extends AbstractCommand
 				player.getWorld().getName().equalsIgnoreCase(tregmine.getRulelessEnd().getName()) ||
 				player.getWorld().getName().equalsIgnoreCase(tregmine.getRulelessNether().getName()) &&
 						!player.getRank().canBypassWorld()) {
+			if (player.isCombatLogged()) {
+				player.sendMessage(ChatColor.RED + "You are combat logged... Please wait!");
+				return true;
+			}
 
 			player.sendMessage(ChatColor.RED + "Teleporting to spawn... Please wait 30 seconds.");
 			player.sendMessage(ChatColor.DARK_BLUE + "Oh, and don't move! Moving will stop the teleportation.");
