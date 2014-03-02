@@ -3,6 +3,7 @@ package info.tregmine.listeners;
 import java.util.EnumSet;
 import java.util.Set;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
@@ -94,9 +95,11 @@ public class ZoneEntityListener implements Listener
 
         Zone currentZone = player.updateCurrentZone();
         if (currentZone == null) {
-            if (event.getEntity().getWorld().getName().equalsIgnoreCase(plugin.getRulelessWorld().getName())) {
-                return;
-            }
+			if (	event.getEntity().getWorld().getName().equalsIgnoreCase(plugin.getRulelessWorld().getName()) ||
+					event.getEntity().getWorld().getName().equalsIgnoreCase(plugin.getRulelessEnd().getName()) ||
+					event.getEntity().getWorld().getName().equalsIgnoreCase(plugin.getRulelessNether().getName())) {
+				return;
+			}
             
             event.setCancelled(true);
             return;
@@ -128,10 +131,6 @@ public class ZoneEntityListener implements Listener
     @EventHandler
     public void onDamage(EntityDamageByEntityEvent e)
     {
-        if (e.getEntity().getWorld().getName().equalsIgnoreCase(plugin.getRulelessWorld().getName())) {
-            return;
-        }
-        
         Entity e1 = e.getEntity();
         Entity d1 = e.getDamager();
 
@@ -148,6 +147,11 @@ public class ZoneEntityListener implements Listener
 
                 Zone currentZone = player.updateCurrentZone();
                 if (currentZone == null) {
+					if (	e.getEntity().getWorld().getName().equalsIgnoreCase(plugin.getRulelessWorld().getName()) ||
+							e.getEntity().getWorld().getName().equalsIgnoreCase(plugin.getRulelessEnd().getName()) ||
+							e.getEntity().getWorld().getName().equalsIgnoreCase(plugin.getRulelessNether().getName())) {
+						return;
+					}
                     e.setCancelled(true);
                     return;
                 }
