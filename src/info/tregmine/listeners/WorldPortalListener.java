@@ -3,6 +3,7 @@ package info.tregmine.listeners;
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
 
+import info.tregmine.events.TregminePortalEvent;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.event.*;
@@ -47,9 +48,11 @@ public class WorldPortalListener implements Listener{
         }
 
         if (player.getWorld().getName().equalsIgnoreCase(newWorld.getName())) {
+			plugin.getServer().getPluginManager().callEvent(new TregminePortalEvent(player.getWorld(), plugin.getServer().getWorld("world"), player));
             player.teleportWithHorse(plugin.getServer().getWorld("world").getSpawnLocation());
             player.sendMessage(ChatColor.GOLD + "[PORTAL] " + ChatColor.GREEN + "Teleporting to main world!");
         } else {
+			plugin.getServer().getPluginManager().callEvent(new TregminePortalEvent(player.getWorld(), newWorld, player));
             player.teleportWithHorse(newWorld.getSpawnLocation());
             player.sendMessage(ChatColor.GOLD + "[PORTAL] " + ChatColor.GREEN + "Teleporting to " + worldName + " world!");
         }
