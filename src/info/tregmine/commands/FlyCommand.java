@@ -22,9 +22,10 @@ public class FlyCommand extends AbstractCommand
     {
         if(!player.getRank().canFly()) return false;
 
-		if (	player.getWorld().getName().equalsIgnoreCase(tregmine.getRulelessWorld().getName()) ||
+		if (	(player.getWorld().getName().equalsIgnoreCase(tregmine.getRulelessWorld().getName()) ||
 				player.getWorld().getName().equalsIgnoreCase(tregmine.getRulelessEnd().getName()) ||
-				player.getWorld().getName().equalsIgnoreCase(tregmine.getRulelessNether().getName())) {
+				player.getWorld().getName().equalsIgnoreCase(tregmine.getRulelessNether().getName())) &&
+				player.getRank().canBypassWorld()) {
 			player.sendMessage(ChatColor.RED + "Flying in Anarchy will get you banned!" + ChatColor.DARK_RED + " Disabled.");
 
 			for (TregminePlayer p : tregmine.getOnlinePlayers()) {
