@@ -1,5 +1,7 @@
 package info.tregmine.quest;
 
+import info.tregmine.quest.Objective.ObjectiveType;
+
 import java.util.List;
 
 import com.google.common.collect.Lists;
@@ -68,6 +70,19 @@ public class Quest
 
     public List<Objective> getObjectives()
     {
+        return objectives;
+    }
+    
+    public List<Objective> getObjetives(ObjectiveType type)
+    {
+        List<Objective> objectives = Lists.newArrayList();
+        for(Objective obj: getObjectives())
+        {
+            if(obj.getObjectiveType() != type){
+                continue;
+            }
+            objectives.add(obj);
+        }
         return objectives;
     }
     
