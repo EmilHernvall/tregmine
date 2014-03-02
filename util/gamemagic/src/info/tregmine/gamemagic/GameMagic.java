@@ -175,9 +175,11 @@ public class GameMagic extends JavaPlugin implements Listener
     @EventHandler
     public void onPlayerBucketEmpty(PlayerBucketEmptyEvent event)
     {
-        if (event.getBlockClicked().getWorld().getName().equalsIgnoreCase(tregmine.getRulelessWorld().getName())) {
-            return;
-        }
+		if (	event.getBlockClicked().getWorld().getName().equalsIgnoreCase(tregmine.getRulelessWorld().getName()) ||
+				event.getBlockClicked().getWorld().getName().equalsIgnoreCase(tregmine.getRulelessEnd().getName()) ||
+				event.getBlockClicked().getWorld().getName().equalsIgnoreCase(tregmine.getRulelessNether().getName())) {
+			return;
+		}
         if (event.getBucket() == Material.LAVA_BUCKET) {
             event.setCancelled(true);
         }
@@ -210,18 +212,22 @@ public class GameMagic extends JavaPlugin implements Listener
     @EventHandler
     public void onEntityExplode(EntityExplodeEvent event)
     {
-        if (event.getLocation().getWorld().getName().equalsIgnoreCase(tregmine.getRulelessWorld().getName())) {
-            return;
-        }
+		if (	event.getLocation().getWorld().getName().equalsIgnoreCase(tregmine.getRulelessWorld().getName()) ||
+				event.getLocation().getWorld().getName().equalsIgnoreCase(tregmine.getRulelessEnd().getName()) ||
+				event.getLocation().getWorld().getName().equalsIgnoreCase(tregmine.getRulelessNether().getName())) {
+			return;
+		}
         event.setCancelled(true);
     }
 
     @EventHandler
     public void onBlockBurn(BlockBurnEvent event)
     {
-        if (event.getBlock().getWorld().getName().equalsIgnoreCase(tregmine.getRulelessWorld().getName())) {
-            return;
-        }
+		if (	event.getBlock().getWorld().getName().equalsIgnoreCase(tregmine.getRulelessWorld().getName()) ||
+				event.getBlock().getWorld().getName().equalsIgnoreCase(tregmine.getRulelessEnd().getName()) ||
+				event.getBlock().getWorld().getName().equalsIgnoreCase(tregmine.getRulelessNether().getName())) {
+			return;
+		}
         event.setCancelled(true);
     }
 
@@ -242,9 +248,11 @@ public class GameMagic extends JavaPlugin implements Listener
     @EventHandler
     public void onBlockIgnite(BlockIgniteEvent event)
     {
-        if (event.getBlock().getWorld().getName().equalsIgnoreCase(tregmine.getRulelessWorld().getName())) {
-            return;
-        }
+		if (	event.getBlock().getWorld().getName().equalsIgnoreCase(tregmine.getRulelessWorld().getName()) ||
+				event.getBlock().getWorld().getName().equalsIgnoreCase(tregmine.getRulelessEnd().getName()) ||
+				event.getBlock().getWorld().getName().equalsIgnoreCase(tregmine.getRulelessNether().getName())) {
+			return;
+		}
         event.setCancelled(true);
 
         Location l = event.getBlock().getLocation();
