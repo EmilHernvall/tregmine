@@ -29,7 +29,7 @@ public class FlyCommand extends AbstractCommand
 
 			for (TregminePlayer p : tregmine.getOnlinePlayers()) {
 				if (p.getRank().canBypassWorld()) {
-					p.sendMessage(player.getChatName() + ChatColor.YELLOW + " is flying in anarchy! Plugin disabled it for you...");
+					p.sendMessage(player.getChatName() + ChatColor.YELLOW + " attempted to fly in anarchy! Plugin disabled it for you...");
 				}
 			}
 
