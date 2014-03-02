@@ -29,7 +29,7 @@ public class BlockLog extends JavaPlugin
     {
         // For Anarchy
         private static final Material[] protectedBlocks = {
-            Material.STONE, Material.DIRT, Material.GRASS
+            Material.STONE, Material.DIRT, Material.GRASS, Material.SAND, Material.NETHERRACK, Material.ENDER_STONE
         };
         
         private IContextFactory ctxFactory;
@@ -114,6 +114,12 @@ public class BlockLog extends JavaPlugin
                         }
                     }
                 }.runTaskTimer(plugin, 10L, 10L);
+
+				if (inHand.getAmount() > 1) {
+					inHand.setAmount(inHand.getAmount() - 1);
+				} else {
+					player.getInventory().remove(inHand);
+				}
             }
 
             SimpleDateFormat dfm = new SimpleDateFormat("dd/MM/yy hh:mm:ss a");
