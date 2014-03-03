@@ -1,20 +1,22 @@
 package info.tregmine.listeners;
 
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockFromToEvent;
-import org.bukkit.event.block.BlockPlaceEvent;
-//import org.bukkit.entity.HumanEntity;
-//import org.bukkit.entity.Player;
-
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
 import info.tregmine.zones.Lot;
 import info.tregmine.zones.Zone;
 import info.tregmine.zones.ZoneWorld;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockFromToEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+
+//import org.bukkit.entity.HumanEntity;
+//import org.bukkit.entity.Player;
 
 public class ZoneBlockListener implements Listener
 {
@@ -99,6 +101,29 @@ public class ZoneBlockListener implements Listener
         }*/
 
         event.setCancelled(true);
+    }
+
+    // Stops trampling of crops
+    @EventHandler
+    public void onBlockTrample(PlayerInteractEvent event)
+    {
+        // Check it's a physical event (by moving)
+        if (event.getAction() != Action.PHYSICAL) {
+            return;
+        }
+
+        // Check it's farmland (otherwise it would stop pressure plates and such)
+        if (event.getClickedBlock() == null || !event.getClickedBlock().getType().equals(Material.DIRT)) {
+            return;
+        }
+
+        TregminePlayer player = plugin.getPlayer(event.getPlayer());
+        Location location = event.getClickedBlock().getLocation();
+
+        // Check for block permission
+        if (!player.hasBlockPermission(location, true)) {
+            event.setCancelled(true);
+        }
     }
 
     // Keeps liquids in the zone/lot they were originally placed in.
