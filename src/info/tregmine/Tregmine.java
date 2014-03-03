@@ -136,6 +136,12 @@ public class Tregmine extends JavaPlugin
         hierarchyWorldEnd.environment(World.Environment.THE_END);
         rulelessWorldEnd = hierarchyWorldEnd.createWorld();
 
+		WorldCreator gameWorld = new WorldCreator("game");
+		gameWorld.environment(World.Environment.NORMAL);
+		gameWorld.generateStructures(false);
+		gameWorld.type(WorldType.FLAT);
+		gameWorld.createWorld();
+
         try (IContext ctx = contextFactory.createContext()) {
             IBlessedBlockDAO blessedBlockDAO = ctx.getBlessedBlockDAO();
             this.blessedBlocks = blessedBlockDAO.load(getServer());
