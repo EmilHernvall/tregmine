@@ -1,11 +1,21 @@
 package info.tregmine.database.db;
 
 import com.google.common.collect.Lists;
+import de.ntcomputer.minecraft.controllablemobs.api.ControllableMob;
+import de.ntcomputer.minecraft.controllablemobs.api.ControllableMobs;
+import info.tregmine.Tregmine;
 import info.tregmine.api.Account;
 import info.tregmine.api.Bank;
+import info.tregmine.commands.BankCommand;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IBankDAO;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.Server;
+import org.bukkit.World;
+import org.bukkit.entity.Villager;
+import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.scheduler.BukkitScheduler;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -14,6 +24,8 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
+
+import static org.bukkit.ChatColor.AQUA;
 
 public class DBBankDAO implements IBankDAO
 {
@@ -317,15 +329,22 @@ public class DBBankDAO implements IBankDAO
     }
 
     @Override
-    public void addBanker(Bank bank, UUID uuid, String name)
+    public void addBanker(Bank bank, Villager villager)
     throws DAOException
     {
-        String sql = "INSERT INTO bank_bankers (bank_id, banker_id, banker_name) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO bank_bankers (bank_id, banker_id, banker_name, banker_x, banker_y, banker_z, banker_world) VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+        UUID uuid = villager.getUniqueId();
+        String name = villager.getCustomName();
 
         try (PreparedStatement stm = conn.prepareStatement(sql)) {
             stm.setInt(1, bank.getId());
             stm.setString(2, uuid.toString());
             stm.setString(3, ChatColor.stripColor(name));
+            stm.setInt(4, villager.getLocation().getBlockX());
+            stm.setInt(5, villager.getLocation().getBlockY());
+            stm.setInt(6, villager.getLocation().getBlockZ());
+            stm.setString(7, villager.getLocation().getWorld().getName());
             stm.execute();
         } catch (SQLException e) {
             throw new DAOException(sql, e);
@@ -344,6 +363,58 @@ public class DBBankDAO implements IBankDAO
         } catch (SQLException e) {
             throw new DAOException(sql, e);
         }
+    }
+
+    @Override
+    public int loadBankers(Server server, Tregmine plugin) throws DAOException
+    {
+            String sql = "SELECT * FROM bank_bankers";
+
+            int counter = 0;
+
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.execute();
+
+                try (ResultSet rs = stmt.getResultSet()) {
+                    while (rs.next()) {
+                        UUID id = UUID.fromString(rs.getString("banker_id"));
+
+                        String worldName = rs.getString("banker_world");
+                        int blockX = rs.getInt("banker_x");
+                        int blockY = rs.getInt("banker_y");
+                        int blockZ = rs.getInt("banker_z");
+
+                        World world = server.getWorld(worldName);
+                        Location bankerLoc = new Location(world, blockX, blockY, blockZ);
+
+                        for (Villager villager : world.getEntitiesByClass(Villager.class)) {
+                            if (villager.getUniqueId().equals(id)) {
+
+                                villager.setCustomName(AQUA + rs.getString("banker_name"));
+                                villager.setProfession(Villager.Profession.LIBRARIAN);
+                                villager.setAgeLock(true);
+                                villager.setCustomNameVisible(true);
+                                villager.setMetadata("banker", new FixedMetadataValue(plugin, true));
+
+                                villager.teleport(bankerLoc);
+
+                                ControllableMob<Villager> cVillager = ControllableMobs.putUnderControl(villager, true);
+
+                                cVillager.getAttributes().getMaxHealthAttribute().setBasisValue(100.0);
+
+                                BukkitScheduler scheduler = server.getScheduler();
+                                scheduler.runTaskTimerAsynchronously(plugin, new BankCommand.VillagerReturn(cVillager, bankerLoc), 0L, 20L);
+                            }
+                        }
+
+                        counter++;
+                    }
+                }
+            } catch (SQLException e) {
+                throw new DAOException(sql, e);
+            }
+
+            return counter;
     }
 
     @Override

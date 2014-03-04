@@ -34,7 +34,7 @@ import static org.bukkit.ChatColor.*;
 
 public class BankCommand extends AbstractCommand implements Listener
 {
-    private static class VillagerReturn implements Runnable
+    public static class VillagerReturn implements Runnable
     {
         private ControllableMob<Villager> entity;
         private final Location loc;
@@ -181,7 +181,7 @@ public class BankCommand extends AbstractCommand implements Listener
                 IBankDAO bankDAO = ctx.getBankDAO();
                 Bank bank = bankDAO.getBank(zone.getId());
 
-                bankDAO.addBanker(bank, villager.getUniqueId(), villager.getCustomName());
+                bankDAO.addBanker(bank, villager);
 
             } catch (DAOException e) {
                 throw new RuntimeException(e);

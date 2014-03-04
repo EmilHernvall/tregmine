@@ -160,6 +160,11 @@ public class Tregmine extends JavaPlugin
             this.quitMessages = miscDAO.loadQuitMessages();
 
             LOGGER.info("Loaded " + insults.size() + " insults and " + quitMessages.size() + " quit messages");
+
+            IBankDAO bankDAO = ctx.getBankDAO();
+            int count = bankDAO.loadBankers(getServer(), this);
+
+            LOGGER.info("Loaded " + count + " bankers!");
         } catch (DAOException e) {
             throw new RuntimeException(e);
         }
