@@ -1,18 +1,19 @@
 package info.tregmine.database.db;
 
+import com.google.common.collect.Lists;
+import info.tregmine.api.Account;
+import info.tregmine.api.Bank;
+import info.tregmine.database.DAOException;
+import info.tregmine.database.IBankDAO;
+import org.bukkit.ChatColor;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Random;
-
-import com.google.common.collect.Lists;
-
-import info.tregmine.api.Account;
-import info.tregmine.api.Bank;
-import info.tregmine.database.DAOException;
-import info.tregmine.database.IBankDAO;
+import java.util.UUID;
 
 public class DBBankDAO implements IBankDAO
 {
@@ -29,7 +30,7 @@ public class DBBankDAO implements IBankDAO
     public Bank getBank(int lotId)
     throws DAOException
     {
-        String sql = "SELECT * FROM bank WHERE lot_id = ? LIMIT 1";
+        String sql = "SELECT * FROM bank WHERE zone_id = ? LIMIT 1";
         Bank bank = null;
         try (PreparedStatement stm = conn.prepareStatement(sql)) {
             stm.setInt(1, lotId);
@@ -38,7 +39,7 @@ public class DBBankDAO implements IBankDAO
             ResultSet rs = stm.getResultSet();
 
             if (rs.next()) {
-                bank = new Bank(rs.getInt("lot_id"));
+                bank = new Bank(rs.getInt("zone_id"));
                 bank.setId(rs.getInt("bank_id"));
                 bank.setAccounts(this.getAccounts(bank));
 
@@ -54,9 +55,9 @@ public class DBBankDAO implements IBankDAO
     @Override
     public int createBank(Bank bank) throws DAOException
     {
-        String sql = "INSERT INTO bank (lot_id) VALUES (?)";
+        String sql = "INSERT INTO bank (zone_id) VALUES (?)";
         try (PreparedStatement stm = conn.prepareStatement(sql)) {
-            stm.setInt(1, bank.getLotId());
+            stm.setInt(1, bank.getZoneId());
             stm.execute();
 
             stm.executeQuery("SELECT LAST_INSERT_ID()");
@@ -313,6 +314,58 @@ public class DBBankDAO implements IBankDAO
         }
 
         return true;
+    }
+
+    @Override
+    public void addBanker(Bank bank, UUID uuid, String name)
+    throws DAOException
+    {
+        String sql = "INSERT INTO bank_bankers (bank_id, banker_id, banker_name) VALUES (?, ?, ?)";
+
+        try (PreparedStatement stm = conn.prepareStatement(sql)) {
+            stm.setInt(1, bank.getId());
+            stm.setString(2, uuid.toString());
+            stm.setString(3, ChatColor.stripColor(name));
+            stm.execute();
+        } catch (SQLException e) {
+            throw new DAOException(sql, e);
+        }
+    }
+
+    @Override
+    public void deleteBanker(UUID uuid)
+            throws DAOException
+    {
+        String sql = "DELETE FROM bank_bankers WHERE banker_id = ?";
+
+        try (PreparedStatement stm = conn.prepareStatement(sql)) {
+            stm.setString(1, uuid.toString());
+            stm.execute();
+        } catch (SQLException e) {
+            throw new DAOException(sql, e);
+        }
+    }
+
+    @Override
+    public boolean isBanker(Bank bank, UUID uniqueId)
+    throws DAOException
+    {
+        String sql = "SELECT * FROM bank_bankers WHERE bank_id = ? AND banker_id = ?";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, bank.getId());
+            stmt.setString(2, uniqueId.toString());
+            stmt.execute();
+
+            try (ResultSet rs = stmt.getResultSet()) {
+                if (!rs.next()) {
+                    return false;
+                }
+                return true;
+            }
+        } catch (SQLException e) {
+            throw new DAOException(sql, e);
+        }
     }
 
 }

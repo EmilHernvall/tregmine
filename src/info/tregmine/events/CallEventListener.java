@@ -5,10 +5,11 @@ import info.tregmine.api.TregminePlayer;
 import info.tregmine.zones.Lot;
 import info.tregmine.zones.Zone;
 import info.tregmine.zones.ZoneWorld;
-
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.*;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 
 public class CallEventListener implements Listener
 {
@@ -130,11 +131,11 @@ public class CallEventListener implements Listener
     }
 
     // Triggers on a server chat event
-    @EventHandler
+    @EventHandler (priority = EventPriority.HIGHEST)
     public void TregmineChatEventListener(AsyncPlayerChatEvent event)
     {
         TregminePlayer player = plugin.getPlayer(event.getPlayer());
-        if (player.getChatState() != TregminePlayer.ChatState.CHAT) {
+        if (!(player.getChatState().equals(TregminePlayer.ChatState.CHAT))) {
             return;
         }
 

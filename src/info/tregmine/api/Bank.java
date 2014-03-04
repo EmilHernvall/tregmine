@@ -1,31 +1,26 @@
 package info.tregmine.api;
 
-import java.util.List;
-
 import com.google.common.collect.Lists;
 
-/**
- * @author Robert Catron
- * @since 12/7/2013
- * @see Account
- */
+import java.util.List;
+
 public class Bank
 {
     private int id;
-    private int lotId;
+    private int zoneId;
 
     private List<Account> accounts;
 
-    public Bank(int lotId)
+    public Bank(int zoneId)
     {
-        this.lotId = lotId;
+        this.zoneId = zoneId;
 
         accounts = Lists.newArrayList();
     }
 
-    public Bank(int id, int lotId)
+    public Bank(int id, int zoneId)
     {
-        this(lotId);
+        this(zoneId);
         this.id = id;
     }
 
@@ -34,8 +29,8 @@ public class Bank
     public int getId(){ return this.id; }
     public void setId(int id){ this.id = id; }
 
-    public int getLotId(){ return lotId; }
-    public void setLotId(int id){ this.lotId = id; }
+    public int getZoneId(){ return zoneId; }
+    public void setZoneId(int id){ this.zoneId = id; }
 
     public List<Account> getAccounts(){ return accounts; }
     public void setAccounts(List<Account> accounts){ this.accounts = accounts; }

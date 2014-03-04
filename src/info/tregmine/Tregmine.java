@@ -1,18 +1,6 @@
 package info.tregmine;
 
-import java.io.*;
-import java.net.InetAddress;
-import java.util.*;
-import java.util.logging.*;
-
-import org.bukkit.*;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
-import org.bukkit.plugin.PluginManager;
-import org.bukkit.plugin.java.JavaPlugin;
-
 import com.maxmind.geoip.LookupService;
-
 import info.tregmine.api.*;
 import info.tregmine.commands.*;
 import info.tregmine.database.*;
@@ -21,8 +9,22 @@ import info.tregmine.events.CallEventListener;
 import info.tregmine.listeners.*;
 import info.tregmine.quadtree.IntersectionException;
 import info.tregmine.tools.*;
-import info.tregmine.zones.*;
+import info.tregmine.zones.Lot;
+import info.tregmine.zones.Zone;
+import info.tregmine.zones.ZoneWorld;
+import org.bukkit.*;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
+import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author Ein Andersson
@@ -254,6 +256,7 @@ public class Tregmine extends JavaPlugin
         getCommand("allclear").setExecutor(new CheckBlocksCommand(this));
         getCommand("badge").setExecutor(new BadgeCommand(this));
         getCommand("ban").setExecutor(new BanCommand(this));
+        getCommand("bank").setExecutor(new BankCommand(this));
         getCommand("bless").setExecutor(new BlessCommand(this));
         getCommand("blockhere").setExecutor(new BlockHereCommand(this));
         getCommand("brush").setExecutor(new BrushCommand(this));
@@ -340,6 +343,9 @@ public class Tregmine extends JavaPlugin
 									player.sendMessage(ChatColor.GREEN + "Combat log has warn off... Safe to log off!");
 								}
 							}
+                            if (player.getVillagerTime() > 0) {
+                                player.setVillagerTimer(player.getVillagerTime() - 1);
+                            }
 						}
 					}
 				}, 20L, 20L);

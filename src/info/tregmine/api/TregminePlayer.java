@@ -1,17 +1,25 @@
 package info.tregmine.api;
 
-import java.util.*;
-
-import org.bukkit.*;
-import org.bukkit.block.Block;
-import org.bukkit.entity.*;
-
 import info.tregmine.Tregmine;
 import info.tregmine.api.encryption.BCrypt;
 import info.tregmine.api.returns.BooleanStringReturn;
-import info.tregmine.database.*;
+import info.tregmine.database.DAOException;
+import info.tregmine.database.IContext;
+import info.tregmine.database.IInventoryDAO;
+import info.tregmine.database.IPlayerDAO;
 import info.tregmine.quadtree.Point;
-import info.tregmine.zones.*;
+import info.tregmine.zones.Lot;
+import info.tregmine.zones.Zone;
+import info.tregmine.zones.ZoneWorld;
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Horse;
+import org.bukkit.entity.Player;
+
+import java.util.*;
 
 public class TregminePlayer extends PlayerDelegate
 {
@@ -70,6 +78,7 @@ public class TregminePlayer extends PlayerDelegate
     private TregminePlayer student;
     private String currentInventory;
 	private int combatLog;
+    private int villagerTimer;
 
     // Player state for block fill
     private Block fillBlock1 = null;
@@ -378,6 +387,9 @@ public class TregminePlayer extends PlayerDelegate
 			return false;
 		}
 	}
+
+    public void setVillagerTimer(int value) { this.villagerTimer = value; }
+    public int getVillagerTime() { return villagerTimer; }
 
     // convenience methods
     public void hidePlayer(TregminePlayer player)

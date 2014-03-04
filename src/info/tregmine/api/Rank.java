@@ -650,4 +650,9 @@ public enum Rank
         return null;
     }
 
+    // Banks
+    public boolean canBuildBanks() {
+        return this == JUNIOR_ADMIN ||
+               this == SENIOR_ADMIN;
+    }
 }
