@@ -149,7 +149,7 @@ public class BankCommand extends AbstractCommand implements Listener
                     }
                 }
 
-                if (!walletDAO.take(player, bankerCost) && !firstTime) {
+                if (!firstTime && !walletDAO.take(player, bankerCost)) {
                     player.sendMessage(RED + "Requires " + bankerCost + "tregs to make another banker!");
                     player.sendMessage(AQUA + "You do not have enough money to proceed!");
                     return true;
