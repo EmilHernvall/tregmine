@@ -475,11 +475,11 @@ public class BankCommand extends AbstractCommand implements Listener
                 account = accounts.get(player);
             } else {
                 account = bankDAO.getAccountByPlayer(bank, player.getId());
-                account.setVerified(true);
-            }
-
-            if (account == null) {
-                newAccount = true;
+                if (account == null) {
+                    newAccount = true;
+                } else {
+                    account.setVerified(true);
+                }
             }
 
             balance = ctx.getWalletDAO().balance(player);
