@@ -57,7 +57,7 @@ public class LumberListener implements Listener
         }
 
         List<String> lore = player.getItemInHand().getItemMeta().getLore();
-        if (lore.isEmpty()) {
+        if (lore == null || lore.isEmpty()) {
             return;
         }
         if (!lore.get(0).equals(ToolsRegistry.LumberAxeLoreTag)) {
