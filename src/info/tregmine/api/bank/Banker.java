@@ -93,6 +93,7 @@ public class Banker {
     public Villager getVillager() { return banker.getEntity(); }
 
     public Bank getBank() { return bank; }
+    public Zone getZone() { return plugin.getZone(bank.getZoneId()); }
 
     public boolean isSame(Villager villager)
     {

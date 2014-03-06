@@ -135,6 +135,13 @@ public class Interfaces {
     // OUTPOST INTERFACES
 
 
+    // MISC INTERFACES
+    public void bank_misc_register(TregminePlayer player, Zone zone)
+    {
+        // TODO: Interface to get admins to make a zone a bank
+    }
+
+
 
     // PRIVATE FUNCTIONS
     private String getLocationString(Location loc)

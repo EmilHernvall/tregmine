@@ -9,6 +9,7 @@ import info.tregmine.api.bank.Interfaces;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IBankDAO;
 import info.tregmine.database.IContext;
+import info.tregmine.zones.Zone;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Villager;
@@ -119,8 +120,18 @@ public class BankerListener implements Listener {
                 return;
             }
 
-            // If item is a diamond
-            interfaces.bank_banker_owner(player, banker);
+            // If item is a diamond && owner of the zone that owns the banker
+            if (banker.getZone().getUser(player).equals(Zone.Permission.Owner)) {
+                interfaces.bank_banker_owner(player, banker);
+                return;
+            }
+
+            player.sendMessage(DARK_GRAY + ChatColor.stripColor(villager.getCustomName()) +
+                    GRAY + ": " + RED + "Only owners of " + banker.getZone().getName() + " can modify me!");
+
+            plugin.getBankersInUse().put(player, banker);
+            plugin.getAccountsInUse().put(player, account);
+
         } catch (DAOException e) {
             throw new RuntimeException(e);
         }

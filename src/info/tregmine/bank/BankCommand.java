@@ -5,6 +5,7 @@ import info.tregmine.api.TregminePlayer;
 import info.tregmine.api.bank.Account;
 import info.tregmine.api.bank.Bank;
 import info.tregmine.api.bank.Banker;
+import info.tregmine.api.bank.Interfaces;
 import info.tregmine.commands.AbstractCommand;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IBankDAO;
@@ -13,615 +14,516 @@ import info.tregmine.database.IWalletDAO;
 import info.tregmine.zones.Zone;
 import info.tregmine.zones.ZoneWorld;
 import org.bukkit.Location;
-import org.bukkit.entity.Villager;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.bukkit.metadata.FixedMetadataValue;
-import org.bukkit.plugin.PluginManager;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import static org.bukkit.ChatColor.*;
 
 public class BankCommand extends AbstractCommand implements Listener
 {
     private Tregmine plugin;
-    private Map<TregminePlayer, Villager> bankersInUse = new HashMap<>();
-    private Map<TregminePlayer, Account> accounts = new HashMap<>();
 
     // Prices and other configuration variables
     private int creationCost = 1000000; // Price to enable a zone to have a bank with one banker.
     private int bankerCost = 100000; // Price for additional bankers.
     private int outpostCost = 100000; // Price for an outpost (ATM) bank.
-    private int rightLine = 55; // Interface configuration
-    private int villagerTimeout = 60; // How long it takes for a villager to tell a customer to go
 
     public BankCommand(Tregmine tregmine)
     {
         super(tregmine, "bank");
         this.plugin = tregmine;
-
-        PluginManager pluginMgm = tregmine.getServer().getPluginManager();
-        pluginMgm.registerEvents(this, tregmine);
     }
 
     @Override
     public boolean handlePlayer(TregminePlayer player, String args[])
     {
-        if (args.length == 1 && "make".equalsIgnoreCase(args[0])) {
-            if (!player.getRank().canBuildBanks()) {
-                player.sendMessage(RED + "Please get an administrator to add a banker!");
-                return true;
-            }
-
-            ZoneWorld world = plugin.getWorld(player.getWorld());
-            Zone zone = world.findZone(player.getLocation());
-
-            if (zone == null) {
-                player.sendMessage(RED + "You can not make a bank in the wilderness!");
-                return true;
-            }
-
-            boolean firstTime = false;
-            Bank bank;
-            try (IContext ctx = plugin.createContext()) {
-
-                IBankDAO bankDAO = ctx.getBankDAO();
-                IWalletDAO walletDAO = ctx.getWalletDAO();
-
-                bank = bankDAO.getBank(zone.getId());
-
-                if (bank == null) {
-                    if (walletDAO.take(player, creationCost)) {
-                        bank = new Bank(zone.getId());
-                        bankDAO.createBank(bank);
-                        plugin.getLogger().info("Bank created at zone: " + zone.getName());
-                        player.sendMessage(GREEN + "Bank created at zone: " + zone.getName());
-                        firstTime = true;
-                    } else {
-                        player.sendMessage(RED + "No bank already made! Requires " + creationCost + "tregs to make!");
-                        player.sendMessage(AQUA + "You do not have enough money to proceed!");
-                        return true;
-                    }
-                }
-
-                if (!walletDAO.take(player, bankerCost) && !firstTime) {
-                    player.sendMessage(RED + "Requires " + bankerCost + "tregs to make another banker!");
-                    player.sendMessage(AQUA + "You do not have enough money to proceed!");
-                    return true;
-                }
-            } catch (DAOException e) {
-                throw new RuntimeException(e);
-            }
-
-            Banker banker = new Banker(plugin, player.getLocation(), bank);
-            Villager villager = banker.getVillager();
-
-            player.sendMessage(GREEN + "New banker added at: " + getLocationString(villager.getLocation()));
-
-            try (IContext ctx = plugin.createContext()) {
-
-                IBankDAO bankDAO = ctx.getBankDAO();
-                bankDAO.addBanker(bank, villager);
-
-            } catch (DAOException e) {
-                throw new RuntimeException(e);
-            }
-
-            return true;
+        if        (args.length == 2 && "internalCommand".equalsIgnoreCase(args[0]) && "make".equalsIgnoreCase(args[1])) {
+            return command_makeBanker(player);
         } else if (args.length == 2 && "internalCommand".equalsIgnoreCase(args[0]) && "quit".equalsIgnoreCase(args[1])) {
-            if (bankersInUse.containsKey(player)) {
-                player.setChatState(TregminePlayer.ChatState.CHAT);
-                bankersInUse.remove(player);
-                player.setVillagerTimer(0);
-                player.sendMessage(AQUA + "You are no longer talking to the banker!");
-            } else {
-                player.sendMessage(AQUA + "You were not talking to a banker...");
-            }
-
-            return true;
+            return command_quitBank(player);
         } else if (args.length == 2 && "internalCommand".equalsIgnoreCase(args[0]) && "create".equalsIgnoreCase(args[1])) {
-            if (bankersInUse.containsKey(player)) {
-                player.setVillagerTimer(villagerTimeout);
-                createAccount(player);
-            } else {
-                player.sendMessage(AQUA + "You are not talking to a banker...");
-            }
-
-            return true;
-        } else if ((args.length == 2 && "internalCommand".equalsIgnoreCase(args[0]) && "commands".equalsIgnoreCase(args[1])) ||
-                    (args.length == 1 && "help".equalsIgnoreCase(args[0]))) {
-            if (bankersInUse.containsKey(player)) {
-                player.setVillagerTimer(villagerTimeout);
-            } else {
-                player.sendMessage(AQUA + "You are not talking to a banker...");
-            }
-
-            return true;
+            return command_createAccount(player);
+        } else if (args.length == 2 && "internalCommand".equalsIgnoreCase(args[0]) && "register".equalsIgnoreCase(args[1])) {
+            return command_makeBank(player);
         } else if (args.length >= 2 && "deposit".equalsIgnoreCase(args[0])) {
-            if (bankersInUse.containsKey(player)) {
-                if (args.length != 3) {
-                    try {
-                        long depositAmount = Long.parseLong(args[1]);
-
-                        player.setVillagerTimer(villagerTimeout);
-                        depositMoney(player, depositAmount);
-                    } catch (NumberFormatException e) {
-                        player.sendMessage(RED + "Incorrect value: " + args[1]);
-                    }
-                } else {
-                    player.sendMessage(RED + "Wrong syntax: /bank deposit <amount>");
-                }
-            } else {
-                player.sendMessage(AQUA + "You are not talking to a banker...");
-            }
-
-            return true;
+            return command_depositMoney(player, args);
         } else if (args.length >= 2 && "withdraw".equalsIgnoreCase(args[0])) {
-            if (bankersInUse.containsKey(player)) {
-                if (args.length != 3) {
-                    try {
-                        long withdrawAmount = Long.parseLong(args[1]);
-
-                        player.setVillagerTimer(villagerTimeout);
-                        withdrawMoney(player, withdrawAmount);
-                    } catch (NumberFormatException e) {
-                        player.sendMessage(RED + "Incorrect value: " + args[1]);
-                    }
-                } else {
-                    player.sendMessage(RED + "Wrong syntax: /bank withdraw <amount>");
-                }
-            } else {
-                player.sendMessage(AQUA + "You are not talking to a banker...");
-            }
-
-            return true;
+            return command_withdrawMoney(player, args);
         } else if (args.length >= 2 && "change_pin".equalsIgnoreCase(args[0])) {
-            if (bankersInUse.containsKey(player)) {
-                if (args.length != 4) {
-                    try {
-                        // This will give the error if they are not both numbers
-                        Long.parseLong(args[1]);
-                        Long.parseLong(args[2]);
-
-                        player.setVillagerTimer(villagerTimeout);
-                        changePin(player, args[1], args[2]);
-                    } catch (NumberFormatException e) {
-                        player.sendMessage(RED + "Incorrect value: " + args[1] + " or " + args[2]);
-                    }
-                } else {
-                    player.sendMessage(RED + "Wrong syntax: /bank change_pin <old pin> <new pin>");
-                }
-            } else {
-                player.sendMessage(AQUA + "You are not talking to a banker...");
-            }
-
-            return true;
+            return command_changePin(player, args);
         } else if (args.length == 2 && "change_acc".equalsIgnoreCase(args[0])) {
-            if (bankersInUse.containsKey(player)) {
-                accountChanger(player, args[1]);
-            } else {
-                player.sendMessage(AQUA + "You are not talking to a banker...");
-            }
-
-            return true;
+            return command_changeAccount(player, args);
         } else if (args.length == 2 && "verify".equalsIgnoreCase(args[0])) {
-            if (bankersInUse.containsKey(player)) {
-                verifyAccount(player, args[1]);
-            } else {
-                player.sendMessage(AQUA + "You are not talking to a banker...");
-            }
+            return command_verifyAccount(player, args);
+        } else if (args.length == 1 && "help".equalsIgnoreCase(args[0])) {
+            return command_viewCommands(player);
+        } else {
+            player.sendMessage(AQUA + "Use /bank help - To receive all the command help!");
+            return true;
+        }
+    }
 
+    private boolean command_makeBanker(TregminePlayer player)
+    {
+        if (!player.getRank().canBuildBanks()) {
+            player.sendMessage(RED + "Only administrators can add bankers!");
             return true;
         }
 
+        ZoneWorld world = plugin.getWorld(player.getWorld());
+        Zone zone = world.findZone(player.getLocation());
+
+        if (zone == null) {
+            player.sendMessage(RED + "You can not make a bank in the wilderness!");
+            return true;
+        }
+
+        try (IContext ctx = plugin.createContext()) {
+
+            IBankDAO bankDAO = ctx.getBankDAO();
+            IWalletDAO walletDAO = ctx.getWalletDAO();
+            Interfaces interfaces = new Interfaces();
+
+            Bank bank = bankDAO.getBank(zone.getId());
+
+            // If bank doesn't exist
+            if (bank == null) {
+                interfaces.bank_misc_register(player, zone);
+                return true;
+            }
+
+            if (!walletDAO.take(player, bankerCost)) {
+                player.sendMessage(RED + "You do not have sufficient money to create a banker, " + bankerCost + " tregs!");
+                return true;
+            }
+
+            Banker banker = new Banker(plugin, player.getLocation(), bank);
+            player.sendMessage(GREEN + "New banker added at: " + getLocationString(banker.getLocation()));
+
+            bankDAO.addBanker(banker);
+        } catch (DAOException e) {
+            throw new RuntimeException(e);
+        }
 
         return true;
     }
 
-    @EventHandler
-    public void villagerInteract(PlayerInteractEntityEvent event)
+    private boolean command_makeBank(TregminePlayer player)
     {
-        if (!(event.getRightClicked() instanceof Villager)) {
-            return;
-        }
-
-        Villager villager = (Villager) event.getRightClicked();
-        TregminePlayer player = plugin.getPlayer(event.getPlayer());
-
-        for (TregminePlayer entry : bankersInUse.keySet()) {
-            if (entry.getVillagerTime() == 0) {
-                bankersInUse.remove(entry);
-                accounts.remove(player);
-            }
-        }
-
-        if (bankersInUse.containsValue(villager) && !bankersInUse.containsKey(player)) {
-            event.setCancelled(true);
-            player.sendMessage(RED + "Someone is already using this banker! Please wait...");
-            return;
-        }
-
-        if (bankersInUse.containsKey(player)) {
-            if (!(bankersInUse.get(player).getUniqueId().equals(villager.getUniqueId()))) {
-                event.setCancelled(true);
-                String name = bankersInUse.get(player).getCustomName();
-                player.sendMessage(RED + "You are already talking with " + name);
-                return;
-            }
+        if (!player.getRank().canBuildBanks()) {
+            player.sendMessage(RED + "Only administrators can add bankers!");
+            return true;
         }
 
         ZoneWorld world = plugin.getWorld(player.getWorld());
-        Zone zone = world.findZone(villager.getLocation());
+        Zone zone = world.findZone(player.getLocation());
 
         if (zone == null) {
-            if (villager.hasMetadata("banker")) {
-                player.sendMessage(RED + "There shouldn't be a villager in the wilderness!");
-                player.sendMessage(AQUA + "Please contact an administrator if this is a mistake...");
-                return;
-            }
-            return;
+            player.sendMessage(RED + "You can not make a bank in the wilderness!");
+            return true;
         }
 
-        Bank bank;
         try (IContext ctx = plugin.createContext()) {
 
             IBankDAO bankDAO = ctx.getBankDAO();
-            bank = bankDAO.getBank(zone.getId());
+            IWalletDAO walletDAO = ctx.getWalletDAO();
+            Bank bank = bankDAO.getBank(zone.getId());
 
-            if (bank == null && villager.hasMetadata("banker")) {
-                player.sendMessage(RED + "This zone is not a registered bank!");
-                player.sendMessage(AQUA + "Please contact an administrator if this is a mistake...");
-                return;
+            // If bank exists
+            if (bank != null) {
+                player.sendMessage(RED + "This zone is already a bank! You don't need to re-register it...");
+                return true;
             }
 
+            if (!walletDAO.take(player, creationCost)) {
+                player.sendMessage(RED + "You do not have sufficient money to create a bank, " + bankerCost + " tregs!");
+                return true;
+            }
+
+            bank = new Bank(zone.getId());
+            bankDAO.createBank(bank);
+
+            player.sendMessage(GREEN + "Bank has been successfully made in the zone: " + zone.getName() + "!");
         } catch (DAOException e) {
             throw new RuntimeException(e);
         }
 
-        // Check MetaData for Banker - If not know as a banker
-        // Check the database to see if they actually are
-        if (!(villager.hasMetadata("banker"))) {
+        return true;
+    }
+
+    private boolean command_quitBank(TregminePlayer player)
+    {
+        if (plugin.getBankersInUse().containsKey(player)) {
+            player.setChatState(TregminePlayer.ChatState.CHAT);
+
+            plugin.getBankersInUse().remove(player);
+            plugin.getAccountsInUse().remove(player);
+
+            player.setVillagerTimer(0);
+
+            // TODO: Fetch current banker and have custom chat
+            player.sendMessage(AQUA + "You are no longer talking to the banker!");
+        } else {
+            player.sendMessage(RED + "You were not talking to a banker...");
+        }
+
+        return true;
+    }
+
+    private boolean command_createAccount(TregminePlayer player)
+    {
+        if (plugin.getBankersInUse().containsKey(player)) {
+
             try (IContext ctx = plugin.createContext()) {
 
                 IBankDAO bankDAO = ctx.getBankDAO();
-                if (bankDAO.isBanker(bank, villager.getUniqueId())) {
-                    villager.setMetadata("banker", new FixedMetadataValue(plugin, true));
-                } else {
-                    return;
+                ZoneWorld world = plugin.getWorld(player.getWorld());
+                Zone zone = world.findZone(player.getLocation());
+                Bank bank = bankDAO.getBank(zone.getId());
+
+                Account account = plugin.getAccountsInUse().get(player);
+
+                if (account != null) {
+                    player.sendMessage(RED + "Something went wrong... Please try again later!");
+                    return true;
                 }
+
+                account = bankDAO.getAccountByPlayer(bank, player.getId());
+
+                if (account != null) {
+                    player.sendMessage(RED + "You already have an account!");
+                    return true;
+                }
+
+                // If they have gotten this far, then we have determined that they don't
+                // have an account. So let's remove the null account, and make a new one
+
+                plugin.getAccountsInUse().remove(player);
+
+                account = new Account();
+                account.setBank(bank);
+                account.setPlayerId(player.getId());
+                account.setVerified(true);
+
+                bankDAO.createAccount(account, player.getId());
+
+                player.sendMessage(GREEN + "Successfully created an account!");
+                player.sendMessage(AQUA + "Your pin is: " + account.getPin() + "! Keep it safe...");
+
+                player.setVillagerTimer(plugin.getBankTimeoutCounter());
+
             } catch (DAOException e) {
                 throw new RuntimeException(e);
             }
+
+        } else {
+            player.sendMessage(RED + "You were not talking to a banker...");
         }
 
-        event.setCancelled(true);
-        player.setChatState(TregminePlayer.ChatState.BANK);
-        player.setVillagerTimer(villagerTimeout);
+        return true;
+    }
 
-        String bankName = zone.getName();
+    private boolean command_viewCommands(TregminePlayer player)
+    {
+        Interfaces interfaces = new Interfaces();
+        interfaces.bank_banker_commands(player);
 
-        Account account;
-        long balance;
-        boolean newAccount = false;
-        try (IContext ctx = plugin.createContext()) {
+        return true;
+    }
 
-            IBankDAO bankDAO = ctx.getBankDAO();
+    private boolean command_withdrawMoney(TregminePlayer player, String[] args)
+    {
+        if (plugin.getBankersInUse().containsKey(player)) {
+            if (args.length != 3) {
+                try {
+                    long withdrawAmount = Long.parseLong(args[1]);
 
-            if (accounts.containsKey(player)) {
-                account = accounts.get(player);
-            } else {
-                account = bankDAO.getAccountByPlayer(bank, player.getId());
-                if (account == null) {
-                    newAccount = true;
-                } else {
-                    account.setVerified(true);
+                    player.setVillagerTimer(plugin.getBankTimeoutCounter());
+
+                    try (IContext ctx = plugin.createContext()) {
+
+                        IBankDAO bankDAO = ctx.getBankDAO();
+                        IWalletDAO walletDAO = ctx.getWalletDAO();
+                        Account account;
+
+                        ZoneWorld world = plugin.getWorld(player.getWorld());
+                        Zone zone = world.findZone(player.getLocation());
+                        Bank bank = bankDAO.getBank(zone.getId());
+
+                        if (!(plugin.getAccountsInUse().containsKey(player))) {
+                            player.sendMessage(RED + "An error occured... Your account settings have not been found.");
+                            return true;
+                        }
+
+                        account = plugin.getAccountsInUse().get(player);
+
+                        if (account == null) {
+                            player.sendMessage(RED + "An error occured... You don't haven account!");
+                            return true;
+                        }
+
+                        if (!(account.isVerified())) {
+                            player.sendMessage(RED + "Please verify your account first!");
+                            player.sendMessage(AQUA + "Do this with /bank verify <pin number>");
+                            return true;
+                        }
+
+                        if (bankDAO.withdraw(bank, account, player.getId(), withdrawAmount)) {
+                            walletDAO.add(player, withdrawAmount);
+
+                            account.setBalance(account.getBalance() - withdrawAmount);
+
+                            player.sendMessage(GREEN + "You deposited " + withdrawAmount + " tregs!");
+                            player.sendMessage(DARK_GREEN + "Wallet balance: " + walletDAO.balance(player) + " tregs.");
+                            player.sendMessage(DARK_GREEN + "Bank balance: " + account.getBalance() + " tregs.");
+                        } else {
+                            player.sendMessage(RED + "You do not have that much money!");
+                        }
+
+                    } catch (DAOException e) {
+                        throw new RuntimeException(e);
+                    }
+                } catch (NumberFormatException e) {
+                    player.sendMessage(RED + "Incorrect value: " + args[1]);
                 }
+            } else {
+                player.sendMessage(RED + "Wrong syntax: /bank withdraw <amount>");
             }
-
-            balance = ctx.getWalletDAO().balance(player);
-        } catch (DAOException e) {
-            throw new RuntimeException(e);
-        }
-
-        if (newAccount) {
-
-
-
         } else {
-
-
-
+            player.sendMessage(RED + "You were not talking to a banker...");
         }
 
-        bankersInUse.put(player, villager);
-        accounts.put(player, account);
+        return true;
     }
 
-    private String padString(String str, int len, String character)
+    private boolean command_depositMoney(TregminePlayer player, String[] args)
     {
-        int diff = len - (str.length() + 2);
+        if (plugin.getBankersInUse().containsKey(player)) {
+            if (args.length != 3) {
+                try {
+                    long depositAmount = Long.parseLong(args[1]);
 
-        if (diff % 2 == 1) {
-            str = " " + str + "  ";
-            diff--;
+                    player.setVillagerTimer(plugin.getBankTimeoutCounter());
+
+                    try (IContext ctx = plugin.createContext()) {
+
+                        IBankDAO bankDAO = ctx.getBankDAO();
+                        IWalletDAO walletDAO = ctx.getWalletDAO();
+                        Account account;
+
+                        ZoneWorld world = plugin.getWorld(player.getWorld());
+                        Zone zone = world.findZone(player.getLocation());
+                        Bank bank = bankDAO.getBank(zone.getId());
+
+                        if (!(plugin.getAccountsInUse().containsKey(player))) {
+                            player.sendMessage(RED + "An error occured... Your account settings have not been found.");
+                            return true;
+                        }
+
+                        account = plugin.getAccountsInUse().get(player);
+
+                        if (account == null) {
+                            player.sendMessage(RED + "An error occured... You don't haven account!");
+                            return true;
+                        }
+
+                        if (!(account.isVerified())) {
+                            player.sendMessage(RED + "Please verify your account first!");
+                            player.sendMessage(AQUA + "Do this with /bank verify <pin number>");
+                            return true;
+                        }
+
+                        if (walletDAO.take(player, depositAmount)) {
+                            bankDAO.deposit(bank, account, player.getId(), depositAmount);
+
+                            account.setBalance(account.getBalance() + depositAmount);
+
+                            player.sendMessage(GREEN + "You deposited " + depositAmount + " tregs!");
+                            player.sendMessage(DARK_GREEN + "Wallet balance: " + walletDAO.balance(player) + " tregs.");
+                            player.sendMessage(DARK_GREEN + "Bank balance: " + account.getBalance() + " tregs.");
+                        } else {
+                            player.sendMessage(RED + "You do not have that much money!");
+                        }
+                    } catch (DAOException e) {
+                        throw new RuntimeException(e);
+                    }
+                } catch (NumberFormatException e) {
+                    player.sendMessage(RED + "Incorrect value: " + args[1]);
+                }
+            } else {
+                player.sendMessage(RED + "Wrong syntax: /bank deposit <amount>");
+            }
         } else {
-            str = " " + str + " ";
+            player.sendMessage(RED + "You were not talking to a banker...");
         }
 
-        int side = diff/2;
-
-        StringBuilder buf = new StringBuilder();
-        for (int i = 0; i < side; i++) {
-            buf.append(character);
-        }
-
-        return DARK_GRAY + buf.toString() + str + DARK_GRAY + buf.toString();
+        return true;
     }
 
-    private void accountChanger(TregminePlayer player, String accountNumberValue)
+    private boolean command_changePin(TregminePlayer player, String[] args)
     {
-        try (IContext ctx = plugin.createContext()) {
+        if (plugin.getBankersInUse().containsKey(player)) {
+            if (args.length != 4) {
+                try {
+                    // These few lines are pretty redundant, but is the only real way I thought off
+                    // it converts them to longs to see if they are numbers, if not throw the exception
+                    // and then convert them back to string, as that's what we store our pins as
+                    long one = Long.parseLong(args[1]);
+                    long two = Long.parseLong(args[2]);
 
-            IBankDAO bankDAO = ctx.getBankDAO();
-            Account account;
+                    String oldPin = String.valueOf(one);
+                    String newPin = String.valueOf(two);
 
-            ZoneWorld world = plugin.getWorld(player.getWorld());
-            Zone zone = world.findZone(player.getLocation());
-            Bank bank = bankDAO.getBank(zone.getId());
+                    player.setVillagerTimer(plugin.getBankTimeoutCounter());
 
-            int accountNumber;
-            try {
-                accountNumber = Integer.parseInt(accountNumberValue);
-            } catch (NumberFormatException ex) {
-                player.sendMessage(RED + "An invalid parameter was passed: " + accountNumberValue + "!");
-                return;
+                    try (IContext ctx = plugin.createContext()) {
+
+                        IBankDAO bankDAO = ctx.getBankDAO();
+                        Account account;
+
+                        if (!(plugin.getAccountsInUse().containsKey(player))) {
+                            player.sendMessage(RED + "An error occured... Your account settings have not been found.");
+                            return true;
+                        }
+
+                        account = plugin.getAccountsInUse().get(player);
+
+                        if (account == null) {
+                            player.sendMessage(RED + "An error occured... You don't haven account!");
+                            return true;
+                        }
+
+                        // No need to check if account is verified, as they need the old pin to be able to change the pin
+
+                        if (!(oldPin.equalsIgnoreCase(account.getPin()))) {
+                            player.sendMessage(RED + "Your old pin is incorrect!");
+                            return true;
+                        }
+
+                        if (newPin.length() != 4) {
+                            player.sendMessage(RED + "Your new pin must be atleast 4 characters!");
+                            return true;
+                        }
+
+                        bankDAO.setPin(account, newPin);
+                        account.setPin(newPin);
+
+                        player.sendMessage(GREEN + "You have changed your pin to " + newPin + "!");
+                    } catch (DAOException e) {
+                        throw new RuntimeException(e);
+                    }
+                } catch (NumberFormatException e) {
+                    player.sendMessage(RED + "Incorrect value: " + args[1] + " or " + args[2]);
+                }
+            } else {
+                player.sendMessage(RED + "Wrong syntax: /bank change_pin <old pin> <new pin>");
             }
-
-            account = bankDAO.getAccount(bank, accountNumber);
-
-            if (account == null) {
-                player.sendMessage(RED + "An error occured... This account doens't exist!");
-                return;
-            }
-
-            if (!(accounts.containsKey(player))) {
-                player.sendMessage(RED + "Please talk to a banker before changing accounts!");
-                return;
-            }
-
-            accounts.remove(player);
-            account.setVerified(false);
-            accounts.put(player, account);
-
-            player.sendMessage(GREEN + "Success! You have changed to account: " + account.getId());
-            player.sendMessage(AQUA + "Please verify the account pin with: /bank verify <pin number>");
-
-        } catch (DAOException e) {
-            throw new RuntimeException(e);
+        } else {
+            player.sendMessage(RED + "You were not talking to a banker...");
         }
+
+        return true;
+    }
+
+    private boolean command_changeAccount(TregminePlayer player, String[] args)
+    {
+        if (plugin.getBankersInUse().containsKey(player)) {
+            try (IContext ctx = plugin.createContext()) {
+
+                IBankDAO bankDAO = ctx.getBankDAO();
+                Account account;
+
+                ZoneWorld world = plugin.getWorld(player.getWorld());
+                Zone zone = world.findZone(player.getLocation());
+                Bank bank = bankDAO.getBank(zone.getId());
+
+                int accountNumber;
+
+                try {
+                    accountNumber = Integer.parseInt(args[1]);
+                } catch (NumberFormatException ex) {
+                    player.sendMessage(RED + "An invalid parameter was passed: " + args[1] + "!");
+                    return true;
+                }
+
+                account = bankDAO.getAccount(bank, accountNumber);
+
+                if (account == null) {
+                    player.sendMessage(RED + "An error occured... This account doens't exist!");
+                    return true;
+                }
+
+                if (!(plugin.getAccountsInUse().containsKey(player))) {
+                    player.sendMessage(RED + "Please talk to a banker before changing accounts!");
+                    return true;
+                }
+
+                plugin.getAccountsInUse().remove(player);
+
+                account.setVerified(false);
+
+                plugin.getAccountsInUse().put(player, account);
+
+                player.sendMessage(GREEN + "Success! You have changed to account: " + account.getId());
+                player.sendMessage(AQUA + "Please verify the account pin with: /bank verify <pin number>");
+            } catch (DAOException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            player.sendMessage(RED + "You were not talking to a banker...");
+        }
+
+        return true;
+    }
+
+    private boolean command_verifyAccount(TregminePlayer player, String[] args)
+    {
+        if (plugin.getBankersInUse().containsKey(player)) {
+            try (IContext ctx = plugin.createContext()) {
+
+                IBankDAO bankDAO = ctx.getBankDAO();
+                Account account;
+
+                ZoneWorld world = plugin.getWorld(player.getWorld());
+                Zone zone = world.findZone(player.getLocation());
+                Bank bank = bankDAO.getBank(zone.getId());
+
+                if (!(plugin.getAccountsInUse().containsKey(player))) {
+                    player.sendMessage(RED + "An error occured... Your account settings have not been found.");
+                    return true;
+                }
+
+                account = plugin.getAccountsInUse().get(player);
+
+                if (account == null) {
+                    player.sendMessage(RED + "An error occured... You don't have an account!");
+                    return true;
+                }
+
+                if (account.isVerified()) {
+                    player.sendMessage(AQUA + "You are already verified!");
+                    return true;
+                }
+
+                if (!(args[1].equalsIgnoreCase(account.getPin()))) {
+                    player.sendMessage(RED + "You entered the incorrect pin!");
+                    plugin.getLogger().info(player.getRealName() + " used the incorrect pin to access account " + account.getId());
+                    return true;
+                }
+
+                account.setVerified(true);
+                player.sendMessage(GREEN + "Your account has been verified!");
+            } catch (DAOException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            player.sendMessage(RED + "You were not talking to a banker...");
+        }
+
+        return true;
     }
 
     private String getLocationString(Location loc)
     {
         return "X: " + loc.getBlockX() + ", Y: " + loc.getBlockY() + ", Z: " + loc.getBlockZ() + ".";
-    }
-
-    private void depositMoney(TregminePlayer player, long amount)
-    {
-        try (IContext ctx = plugin.createContext()) {
-
-            IBankDAO bankDAO = ctx.getBankDAO();
-            IWalletDAO walletDAO = ctx.getWalletDAO();
-            Account account;
-
-            ZoneWorld world = plugin.getWorld(player.getWorld());
-            Zone zone = world.findZone(player.getLocation());
-            Bank bank = bankDAO.getBank(zone.getId());
-
-            if (!(accounts.containsKey(player))) {
-                player.sendMessage(RED + "An error occured... Your account settings have not been found.");
-                return;
-            }
-
-            account = accounts.get(player);
-
-            if (account == null) {
-                player.sendMessage(RED + "An error occured... You don't haven account!");
-                return;
-            }
-
-            if (!(account.isVerified())) {
-                player.sendMessage(RED + "Please verify your account first!");
-                player.sendMessage(AQUA + "Do this with /bank verify <pin number>");
-                return;
-            }
-
-            if (walletDAO.take(player, amount)) {
-                bankDAO.deposit(bank, account, player.getId(), amount);
-
-                account.setBalance(account.getBalance() + amount);
-
-                player.sendMessage(GREEN + "You deposited " + amount + " tregs!");
-                player.sendMessage(DARK_GREEN + "Wallet balance: " + walletDAO.balance(player) + " tregs.");
-                player.sendMessage(DARK_GREEN + "Bank balance: " + account.getBalance() + " tregs.");
-            } else {
-                player.sendMessage(RED + "You do not have that much money!");
-            }
-        } catch (DAOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private void withdrawMoney(TregminePlayer player, long amount)
-    {
-        try (IContext ctx = plugin.createContext()) {
-
-            IBankDAO bankDAO = ctx.getBankDAO();
-            IWalletDAO walletDAO = ctx.getWalletDAO();
-            Account account;
-
-            ZoneWorld world = plugin.getWorld(player.getWorld());
-            Zone zone = world.findZone(player.getLocation());
-            Bank bank = bankDAO.getBank(zone.getId());
-
-            if (!(accounts.containsKey(player))) {
-                player.sendMessage(RED + "An error occured... Your account settings have not been found.");
-                return;
-            }
-
-            account = accounts.get(player);
-
-            if (account == null) {
-                player.sendMessage(RED + "An error occured... You don't haven account!");
-                return;
-            }
-
-            if (!(account.isVerified())) {
-                player.sendMessage(RED + "Please verify your account first!");
-                player.sendMessage(AQUA + "Do this with /bank verify <pin number>");
-                return;
-            }
-
-            if (bankDAO.withdraw(bank, account, player.getId(), amount)) {
-                walletDAO.add(player, amount);
-
-                account.setBalance(account.getBalance() - amount);
-
-                player.sendMessage(GREEN + "You deposited " + amount + " tregs!");
-                player.sendMessage(DARK_GREEN + "Wallet balance: " + walletDAO.balance(player) + " tregs.");
-                player.sendMessage(DARK_GREEN + "Bank balance: " + account.getBalance() + " tregs.");
-            } else {
-                player.sendMessage(RED + "You do not have that much money!");
-            }
-
-        } catch (DAOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private void changePin(TregminePlayer player, String oldPin, String newPin)
-    {
-        try (IContext ctx = plugin.createContext()) {
-
-            IBankDAO bankDAO = ctx.getBankDAO();
-            Account account;
-
-            ZoneWorld world = plugin.getWorld(player.getWorld());
-            Zone zone = world.findZone(player.getLocation());
-            Bank bank = bankDAO.getBank(zone.getId());
-
-            if (!(accounts.containsKey(player))) {
-                player.sendMessage(RED + "An error occured... Your account settings have not been found.");
-                return;
-            }
-
-            account = accounts.get(player);
-
-            if (account == null) {
-                player.sendMessage(RED + "An error occured... You don't haven account!");
-                return;
-            }
-
-            // No need to check if account is verified, as they need the old pin to be able to change the pin
-
-            if (!(oldPin.equalsIgnoreCase(account.getPin()))) {
-                player.sendMessage(RED + "Your old pin is incorrect!");
-                return;
-            }
-
-            if (newPin.length() != 4) {
-                player.sendMessage(RED + "Your new pin must be atleast 4 characters!");
-                return;
-            }
-
-            bankDAO.setPin(account, newPin);
-            account.setPin(newPin);
-
-            player.sendMessage(GREEN + "You have changed your pin to " + newPin + "!");
-        } catch (DAOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private void createAccount(TregminePlayer player)
-    {
-        try (IContext ctx = plugin.createContext()) {
-
-            IBankDAO bankDAO = ctx.getBankDAO();
-            Account account;
-
-            ZoneWorld world = plugin.getWorld(player.getWorld());
-            Zone zone = world.findZone(player.getLocation());
-            Bank bank = bankDAO.getBank(zone.getId());
-
-            account = bankDAO.getAccountByPlayer(bank, player.getId());
-
-            if (account != null) {
-                player.sendMessage(RED + "You already have an account... What happened!?");
-                return;
-            }
-
-            account = new Account();
-            account.setBank(bank);
-            account.setPlayerId(player.getId());
-            account.setVerified(true);
-
-            bankDAO.createAccount(account, player.getId());
-
-            player.sendMessage(GREEN + "Successfully created an account!");
-            player.sendMessage(AQUA + "Your pin is: " + account.getPin() + "! Keep it safe...");
-
-            player.setChatState(TregminePlayer.ChatState.CHAT);
-            bankersInUse.remove(player);
-
-            player.sendMessage(AQUA + "Come back later if you want to deal with real money!");
-        } catch (DAOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private void verifyAccount(TregminePlayer player, String pin)
-    {
-        try (IContext ctx = plugin.createContext()) {
-
-            IBankDAO bankDAO = ctx.getBankDAO();
-            Account account;
-
-            ZoneWorld world = plugin.getWorld(player.getWorld());
-            Zone zone = world.findZone(player.getLocation());
-            Bank bank = bankDAO.getBank(zone.getId());
-
-            if (!(accounts.containsKey(player))) {
-                player.sendMessage(RED + "An error occured... Your account settings have not been found.");
-                return;
-            }
-
-            account = accounts.get(player);
-
-            if (account == null) {
-                player.sendMessage(RED + "An error occured... You don't have an account!");
-                return;
-            }
-
-            if (account.isVerified()) {
-                player.sendMessage(AQUA + "You are already verified!");
-                return;
-            }
-
-            if (!(pin.equalsIgnoreCase(account.getPin()))) {
-                player.sendMessage(RED + "You entered the incorrect pin!");
-                plugin.getLogger().info(player.getRealName() + " used the incorrect pin to access account " + account.getId());
-                return;
-            }
-
-            account.setVerified(true);
-            player.sendMessage(GREEN + "Your account has been verified!");
-
-        } catch (DAOException e) {
-            throw new RuntimeException(e);
-        }
     }
 }
