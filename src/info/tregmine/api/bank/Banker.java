@@ -35,7 +35,7 @@ public class Banker {
         LivingEntity ent = (LivingEntity) sLoc.getWorld().spawnEntity(sLoc, EntityType.VILLAGER);
         Villager villager = (Villager) ent;
 
-        villager.setCustomName(AQUA + "Banker " + bankerName);
+        villager.setCustomName(AQUA + bankerName);
         villager.setProfession(profession);
         villager.setAgeLock(true);
         villager.setCustomNameVisible(true);
@@ -58,7 +58,7 @@ public class Banker {
     // Constructor as called by the banker creation command. Default settings.
     public Banker(Tregmine plugin, Location sLoc, Bank bank)
     {
-        this(plugin, sLoc, bank, Villager.Profession.LIBRARIAN, getRandomBanker());
+        this(plugin, sLoc, bank, Villager.Profession.LIBRARIAN, "Banker " + getRandomBanker());
     }
 
     // Constructor as called by the database if the banker has not been modified.

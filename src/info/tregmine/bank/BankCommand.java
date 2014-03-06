@@ -180,14 +180,7 @@ public class BankCommand extends AbstractCommand implements Listener
                 Zone zone = world.findZone(player.getLocation());
                 Bank bank = bankDAO.getBank(zone.getId());
 
-                Account account = plugin.getAccountsInUse().get(player);
-
-                if (account != null) {
-                    player.sendMessage(RED + "Something went wrong... Please try again later!");
-                    return true;
-                }
-
-                account = bankDAO.getAccountByPlayer(bank, player.getId());
+                Account account = bankDAO.getAccountByPlayer(bank, player.getId());
 
                 if (account != null) {
                     player.sendMessage(RED + "You already have an account!");
@@ -362,7 +355,7 @@ public class BankCommand extends AbstractCommand implements Listener
     private boolean command_changePin(TregminePlayer player, String[] args)
     {
         if (plugin.getBankersInUse().containsKey(player)) {
-            if (args.length != 4) {
+            if (args.length != 3) {
                 try {
                     // These few lines are pretty redundant, but is the only real way I thought off
                     // it converts them to longs to see if they are numbers, if not throw the exception
@@ -406,6 +399,7 @@ public class BankCommand extends AbstractCommand implements Listener
 
                         bankDAO.setPin(account, newPin);
                         account.setPin(newPin);
+                        account.setVerified(false);
 
                         player.sendMessage(GREEN + "You have changed your pin to " + newPin + "!");
                     } catch (DAOException e) {
@@ -427,6 +421,9 @@ public class BankCommand extends AbstractCommand implements Listener
     private boolean command_changeAccount(TregminePlayer player, String[] args)
     {
         if (plugin.getBankersInUse().containsKey(player)) {
+
+            player.setVillagerTimer(plugin.getBankTimeoutCounter());
+
             try (IContext ctx = plugin.createContext()) {
 
                 IBankDAO bankDAO = ctx.getBankDAO();
@@ -478,6 +475,9 @@ public class BankCommand extends AbstractCommand implements Listener
     private boolean command_verifyAccount(TregminePlayer player, String[] args)
     {
         if (plugin.getBankersInUse().containsKey(player)) {
+
+            player.setVillagerTimer(plugin.getBankTimeoutCounter());
+
             try (IContext ctx = plugin.createContext()) {
 
                 IBankDAO bankDAO = ctx.getBankDAO();

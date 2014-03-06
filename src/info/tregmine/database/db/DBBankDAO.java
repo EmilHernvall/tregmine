@@ -397,13 +397,19 @@ public class DBBankDAO implements IBankDAO
                         }
 
                         Bank bank = this.getBank(zone.getId());
+                        boolean found = false;
 
                         for (Villager villager : world.getEntitiesByClass(Villager.class)) {
                             if (villager.getUniqueId().equals(id)) {
                                 // Remove villager because the banker constructor creates a new one.
                                 villager.remove();
                                 new Banker(plugin, bankerLoc, bank, rs.getString("banker_name"));
+                                found = true;
                             }
+                        }
+
+                        if (!found) {
+                            new Banker(plugin, bankerLoc, bank, rs.getString("banker_name"));
                         }
 
                         counter++;

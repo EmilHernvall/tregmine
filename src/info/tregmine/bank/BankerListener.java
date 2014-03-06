@@ -108,8 +108,14 @@ public class BankerListener implements Listener {
 
                 if (account == null) {
                     interfaces.bank_banker_create(player, banker);
+                    plugin.getBankersInUse().put(player, banker);
+                    plugin.getAccountsInUse().put(player, account);
                     return;
                 }
+            }
+
+            if (account != null && account.getPlayerId() == player.getId()) {
+                account.setVerified(true);
             }
 
             ItemStack item = player.getItemInHand();
@@ -117,20 +123,21 @@ public class BankerListener implements Listener {
             // If no item or item isn't diamond.
             if (item == null || !item.getType().equals(Material.DIAMOND)) {
                 interfaces.bank_banker_main(player, account, banker);
+                plugin.getBankersInUse().put(player, banker);
+                plugin.getAccountsInUse().put(player, account);
                 return;
             }
 
             // If item is a diamond && owner of the zone that owns the banker
             if (banker.getZone().getUser(player).equals(Zone.Permission.Owner)) {
                 interfaces.bank_banker_owner(player, banker);
+                plugin.getBankersInUse().put(player, banker);
+                plugin.getAccountsInUse().put(player, account);
                 return;
             }
 
             player.sendMessage(DARK_GRAY + ChatColor.stripColor(villager.getCustomName()) +
                     GRAY + ": " + RED + "Only owners of " + banker.getZone().getName() + " can modify me!");
-
-            plugin.getBankersInUse().put(player, banker);
-            plugin.getAccountsInUse().put(player, account);
 
         } catch (DAOException e) {
             throw new RuntimeException(e);

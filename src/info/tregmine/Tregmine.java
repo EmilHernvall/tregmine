@@ -104,6 +104,12 @@ public class Tregmine extends JavaPlugin
 
         zones = new HashMap<>();
 
+        bankBankers = new HashMap<>();
+        bankOutposts = new HashMap<>();
+        bankBankersInUse = new HashMap<>();
+        bankOutpostsInUse = new HashMap<>();
+        bankAccountsInUse = new HashMap<>();
+
         Player[] players = getServer().getOnlinePlayers();
         for (Player player : players) {
             try {

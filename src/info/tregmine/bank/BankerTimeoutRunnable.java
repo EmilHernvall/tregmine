@@ -27,6 +27,9 @@ public class BankerTimeoutRunnable implements Runnable {
                             ChatColor.GRAY + ": " + ChatColor.RED + "Your time has expired with me!");
 
                     plugin.getBankersInUse().remove(player);
+                    plugin.getAccountsInUse().remove(player);
+
+                    player.setChatState(TregminePlayer.ChatState.CHAT);
 
                     // TODO: (Nearyby players) Message: "Banker <name> just became available!"
                 }

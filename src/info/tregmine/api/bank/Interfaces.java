@@ -2,6 +2,9 @@ package info.tregmine.api.bank;
 
 import com.tregmine.chat.TregMessage;
 import info.tregmine.api.TregminePlayer;
+import info.tregmine.database.DAOException;
+import info.tregmine.database.IContext;
+import info.tregmine.database.IWalletDAO;
 import info.tregmine.zones.Zone;
 import info.tregmine.zones.ZoneWorld;
 import org.bukkit.Location;
@@ -58,7 +61,14 @@ public class Interfaces {
         ZoneWorld world = player.getPlugin().getWorld(player.getWorld());
         Zone zone = world.findZone(villager.getLocation());
         String bankName = zone.getName();
-        long balance = account.getBalance();
+
+        long balance;
+        try (IContext ctx = player.getPlugin().createContext()) {
+            IWalletDAO walletDAO = ctx.getWalletDAO();
+            balance = walletDAO.balance(player);
+        } catch (DAOException e) {
+            throw new RuntimeException(e);
+        }
 
         player.sendMessage(padString("[ " + AQUA + bankName + DARK_GRAY + " ]", rightLine, "*"));
         player.sendMessage(padString("You are talking to " + villager.getCustomName() + "!", rightLine, " "));
