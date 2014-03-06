@@ -2,6 +2,11 @@ package info.tregmine;
 
 import com.maxmind.geoip.LookupService;
 import info.tregmine.api.*;
+import info.tregmine.api.bank.Account;
+import info.tregmine.api.bank.Banker;
+import info.tregmine.api.bank.Outposts;
+import info.tregmine.bank.BankCommand;
+import info.tregmine.bank.BankerTimeoutRunnable;
 import info.tregmine.commands.*;
 import info.tregmine.database.*;
 import info.tregmine.database.db.DBContextFactory;
@@ -61,6 +66,14 @@ public class Tregmine extends JavaPlugin
     private World rulelessWorldEnd;
 
     private LookupService cl = null;
+
+    // Bank Lists/Maps/Variables/Configurarables
+    private Map<Location, Banker> bankBankers;
+    private Map<Location, Outposts> bankOutposts;
+    private Map<TregminePlayer, Banker> bankBankersInUse;
+    private Map<TregminePlayer, Outposts> bankOutpostsInUse;
+    private Map<TregminePlayer, Account> bankAccountsInUse;
+    private int bankTimeoutCounter = 60; // Seconds
 
     @Override
     public void onLoad()
@@ -347,12 +360,10 @@ public class Tregmine extends JavaPlugin
 									player.sendMessage(ChatColor.GREEN + "Combat log has warn off... Safe to log off!");
 								}
 							}
-                            if (player.getVillagerTime() > 0) {
-                                player.setVillagerTimer(player.getVillagerTime() - 1);
-                            }
 						}
 					}
 				}, 20L, 20L);
+        scheduler.scheduleSyncRepeatingTask(this, new BankerTimeoutRunnable(this), 20L, 20L);
     }
 
     // run when plugin is disabled
@@ -390,6 +401,17 @@ public class Tregmine extends JavaPlugin
     {
         return contextFactory.createContext();
     }
+
+    // ============================================================================
+    // Bank methods
+    // ============================================================================
+
+    public Map<TregminePlayer, Banker>    getBankersInUse() { return bankBankersInUse;  }
+    public Map<TregminePlayer, Account>  getAccountsInUse() { return bankAccountsInUse; }
+    public Map<TregminePlayer, Outposts> getOutpostsInUse() { return bankOutpostsInUse; }
+    public Map<Location, Outposts>            getOutposts() { return bankOutposts;      }
+    public Map<Location, Banker>               getBankers() { return bankBankers;       }
+    public int                      getBankTimeoutCounter() { return bankTimeoutCounter; }
 
     // ============================================================================
     // Data structure accessors

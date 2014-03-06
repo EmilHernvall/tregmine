@@ -1,8 +1,8 @@
 package info.tregmine.database;
 
 import info.tregmine.Tregmine;
-import info.tregmine.api.Account;
-import info.tregmine.api.Bank;
+import info.tregmine.api.bank.Account;
+import info.tregmine.api.bank.Bank;
 import org.bukkit.Server;
 import org.bukkit.entity.Villager;
 

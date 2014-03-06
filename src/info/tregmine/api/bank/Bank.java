@@ -1,4 +1,4 @@
-package info.tregmine.api;
+package info.tregmine.api.bank;
 
 import com.google.common.collect.Lists;
 
