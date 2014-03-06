@@ -11,13 +11,14 @@ import static org.bukkit.ChatColor.*;
 
 public class Interfaces {
 
-    private Interfaces(){}
+    public Interfaces(){}
 
     private int rightLine = 55;
 
     // BANKERS
-    public void bank_banker_create(TregminePlayer player, Villager villager)
+    public void bank_banker_create(TregminePlayer player, Banker banker)
     {
+        Villager villager = banker.getVillager();
         ZoneWorld world = player.getPlugin().getWorld(player.getWorld());
         Zone zone = world.findZone(villager.getLocation());
         String bankName = zone.getName();
@@ -50,8 +51,9 @@ public class Interfaces {
         player.sendMessage(padString("[ * ]", rightLine, "*"));
     }
 
-    public void bank_banker_main(TregminePlayer player, Account account, Villager villager)
+    public void bank_banker_main(TregminePlayer player, Account account, Banker banker)
     {
+        Villager villager = banker.getVillager();
         Bank bank = account.getBank();
         ZoneWorld world = player.getPlugin().getWorld(player.getWorld());
         Zone zone = world.findZone(villager.getLocation());
@@ -125,7 +127,7 @@ public class Interfaces {
         player.sendMessage(padString("[ * ]", rightLine, "*"));
     }
 
-    public void bank_banker_owner(TregminePlayer player)
+    public void bank_banker_owner(TregminePlayer player, Banker banker)
     {
 
     }

@@ -2,13 +2,20 @@ package info.tregmine.bank;
 
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
+import info.tregmine.api.bank.Account;
 import info.tregmine.api.bank.Bank;
 import info.tregmine.api.bank.Banker;
+import info.tregmine.api.bank.Interfaces;
+import info.tregmine.database.DAOException;
+import info.tregmine.database.IBankDAO;
+import info.tregmine.database.IContext;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.entity.Villager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
+import org.bukkit.inventory.ItemStack;
 
 import static org.bukkit.ChatColor.*;
 
@@ -87,6 +94,35 @@ public class BankerListener implements Listener {
         player.setChatState(TregminePlayer.ChatState.BANK);
         player.setVillagerTimer(plugin.getBankTimeoutCounter());
 
+        try (IContext ctx = plugin.createContext()) {
 
+            Interfaces interfaces = new Interfaces();
+            IBankDAO bankDAO = ctx.getBankDAO();
+            Account account;
+
+            if (plugin.getAccountsInUse().containsKey(player)) {
+                account = plugin.getAccountsInUse().get(player);
+            } else {
+                account = bankDAO.getAccountByPlayer(bank, player.getId());
+
+                if (account == null) {
+                    interfaces.bank_banker_create(player, banker);
+                    return;
+                }
+            }
+
+            ItemStack item = player.getItemInHand();
+
+            // If no item or item isn't diamond.
+            if (item == null || !item.getType().equals(Material.DIAMOND)) {
+                interfaces.bank_banker_main(player, account, banker);
+                return;
+            }
+
+            // If item is a diamond
+            interfaces.bank_banker_owner(player, banker);
+        } catch (DAOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

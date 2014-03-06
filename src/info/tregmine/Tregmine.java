@@ -5,8 +5,7 @@ import info.tregmine.api.*;
 import info.tregmine.api.bank.Account;
 import info.tregmine.api.bank.Banker;
 import info.tregmine.api.bank.Outposts;
-import info.tregmine.bank.BankCommand;
-import info.tregmine.bank.BankerTimeoutRunnable;
+import info.tregmine.bank.*;
 import info.tregmine.commands.*;
 import info.tregmine.database.*;
 import info.tregmine.database.db.DBContextFactory;
@@ -273,7 +272,6 @@ public class Tregmine extends JavaPlugin
         getCommand("allclear").setExecutor(new CheckBlocksCommand(this));
         getCommand("badge").setExecutor(new BadgeCommand(this));
         getCommand("ban").setExecutor(new BanCommand(this));
-        getCommand("bank").setExecutor(new BankCommand(this));
         getCommand("bless").setExecutor(new BlessCommand(this));
         getCommand("blockhere").setExecutor(new BlockHereCommand(this));
         getCommand("brush").setExecutor(new BrushCommand(this));
@@ -343,6 +341,12 @@ public class Tregmine extends JavaPlugin
         getCommand("chunkcount").setExecutor(new ChunkCountCommand(this));
 
         ToolCraftRegistry.RegisterRecipes(getServer()); // Registers all tool recipes
+
+        // Banks
+        getCommand("bank").setExecutor(new BankCommand(this));
+        pluginMgm.registerEvents(new BankerListener(this), this);
+        pluginMgm.registerEvents(new BankerDamageListener(this), this);
+        pluginMgm.registerEvents(new BankerTimeoutListener(this), this);
 
         for (TregminePlayer player : getOnlinePlayers()) {
             player.sendMessage(ChatColor.AQUA + "Tregmine successfully loaded. Version " + getDescription().getVersion());
