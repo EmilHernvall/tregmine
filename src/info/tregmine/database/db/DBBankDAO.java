@@ -1,21 +1,19 @@
 package info.tregmine.database.db;
 
 import com.google.common.collect.Lists;
-import de.ntcomputer.minecraft.controllablemobs.api.ControllableMob;
-import de.ntcomputer.minecraft.controllablemobs.api.ControllableMobs;
 import info.tregmine.Tregmine;
-import info.tregmine.api.Account;
-import info.tregmine.api.Bank;
-import info.tregmine.commands.BankCommand;
+import info.tregmine.api.bank.Account;
+import info.tregmine.api.bank.Bank;
+import info.tregmine.api.bank.Banker;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IBankDAO;
+import info.tregmine.zones.Zone;
+import info.tregmine.zones.ZoneWorld;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.entity.Villager;
-import org.bukkit.metadata.FixedMetadataValue;
-import org.bukkit.scheduler.BukkitScheduler;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -24,8 +22,6 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
-
-import static org.bukkit.ChatColor.AQUA;
 
 public class DBBankDAO implements IBankDAO
 {
@@ -329,10 +325,13 @@ public class DBBankDAO implements IBankDAO
     }
 
     @Override
-    public void addBanker(Bank bank, Villager villager)
+    public void addBanker(Banker banker)
     throws DAOException
     {
         String sql = "INSERT INTO bank_bankers (bank_id, banker_id, banker_name, banker_x, banker_y, banker_z, banker_world) VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+        Villager villager = banker.getVillager();
+        Bank bank = banker.getBank();
 
         UUID uuid = villager.getUniqueId();
         String name = villager.getCustomName();
@@ -387,24 +386,32 @@ public class DBBankDAO implements IBankDAO
                         World world = server.getWorld(worldName);
                         Location bankerLoc = new Location(world, blockX, blockY, blockZ);
 
+                        ZoneWorld zWorld = plugin.getWorld(bankerLoc.getWorld());
+                        Zone zone = zWorld.findZone(bankerLoc);
+
+                        // TODO: Change this to pull zoneID from DB (and store zoneID)
+                        if (zone == null) {
+                            // Should never occur
+                            plugin.getLogger().info("BANKER ISSUE: Banker could not load, Zone was not found at location:" + bankerLoc.toString());
+                            continue;
+                        }
+
+                        Bank bank = this.getBank(zone.getId());
+                        boolean found = false;
+
                         for (Villager villager : world.getEntitiesByClass(Villager.class)) {
                             if (villager.getUniqueId().equals(id)) {
-
-                                villager.setCustomName(AQUA + rs.getString("banker_name"));
-                                villager.setProfession(Villager.Profession.LIBRARIAN);
-                                villager.setAgeLock(true);
-                                villager.setCustomNameVisible(true);
-                                villager.setMetadata("banker", new FixedMetadataValue(plugin, true));
-
-                                villager.teleport(bankerLoc);
-
-                                ControllableMob<Villager> cVillager = ControllableMobs.putUnderControl(villager, true);
-
-                                cVillager.getAttributes().getMaxHealthAttribute().setBasisValue(100.0);
-
-                                BukkitScheduler scheduler = server.getScheduler();
-                                scheduler.runTaskTimerAsynchronously(plugin, new BankCommand.VillagerReturn(cVillager, bankerLoc), 0L, 20L);
+                                // Remove villager because the banker constructor creates a new one.
+                                villager.remove();
+                                Banker b = new Banker(plugin, bankerLoc, bank, rs.getString("banker_name"));
+                                b.setLocation(bankerLoc);
+                                found = true;
                             }
+                        }
+
+                        if (!found) {
+                            Banker b = new Banker(plugin, bankerLoc, bank, rs.getString("banker_name"));
+                            b.setLocation(bankerLoc);
                         }
 
                         counter++;

@@ -1,4 +1,4 @@
-package info.tregmine.api;
+package info.tregmine.api.bank;
 
 public class Account
 {
