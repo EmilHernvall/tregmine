@@ -32,6 +32,8 @@ public class BankerTimeoutListener implements Listener {
         }
 
         plugin.getBankersInUse().remove(player);
+        plugin.getAccountsInUse().remove(player);
+
         player.sendMessage(RED + "You are no longer talking to a banker! You moved too far away.");
         player.setChatState(TregminePlayer.ChatState.CHAT);
     }
