@@ -2,6 +2,10 @@ package info.tregmine;
 
 import com.maxmind.geoip.LookupService;
 import info.tregmine.api.*;
+import info.tregmine.api.bank.Account;
+import info.tregmine.api.bank.Banker;
+import info.tregmine.api.bank.Outposts;
+import info.tregmine.bank.*;
 import info.tregmine.commands.*;
 import info.tregmine.database.*;
 import info.tregmine.database.db.DBContextFactory;
@@ -62,6 +66,14 @@ public class Tregmine extends JavaPlugin
 
     private LookupService cl = null;
 
+    // Bank Lists/Maps/Variables/Configurarables
+    private Map<Location, Banker> bankBankers;
+    private Map<Location, Outposts> bankOutposts;
+    private Map<TregminePlayer, Banker> bankBankersInUse;
+    private Map<TregminePlayer, Outposts> bankOutpostsInUse;
+    private Map<TregminePlayer, Account> bankAccountsInUse;
+    private int bankTimeoutCounter = 60; // Seconds
+
     @Override
     public void onLoad()
     {
@@ -91,6 +103,12 @@ public class Tregmine extends JavaPlugin
             });
 
         zones = new HashMap<>();
+
+        bankBankers = new HashMap<>();
+        bankOutposts = new HashMap<>();
+        bankBankersInUse = new HashMap<>();
+        bankOutpostsInUse = new HashMap<>();
+        bankAccountsInUse = new HashMap<>();
 
         Player[] players = getServer().getOnlinePlayers();
         for (Player player : players) {
@@ -260,7 +278,6 @@ public class Tregmine extends JavaPlugin
         getCommand("allclear").setExecutor(new CheckBlocksCommand(this));
         getCommand("badge").setExecutor(new BadgeCommand(this));
         getCommand("ban").setExecutor(new BanCommand(this));
-        getCommand("bank").setExecutor(new BankCommand(this));
         getCommand("bless").setExecutor(new BlessCommand(this));
         getCommand("blockhere").setExecutor(new BlockHereCommand(this));
         getCommand("brush").setExecutor(new BrushCommand(this));
@@ -331,6 +348,12 @@ public class Tregmine extends JavaPlugin
 
         ToolCraftRegistry.RegisterRecipes(getServer()); // Registers all tool recipes
 
+        // Banks
+        getCommand("bank").setExecutor(new BankCommand(this));
+        pluginMgm.registerEvents(new BankerListener(this), this);
+        pluginMgm.registerEvents(new BankerDamageListener(this), this);
+        pluginMgm.registerEvents(new BankerTimeoutListener(this), this);
+
         for (TregminePlayer player : getOnlinePlayers()) {
             player.sendMessage(ChatColor.AQUA + "Tregmine successfully loaded. Version " + getDescription().getVersion());
         }
@@ -347,12 +370,10 @@ public class Tregmine extends JavaPlugin
 									player.sendMessage(ChatColor.GREEN + "Combat log has warn off... Safe to log off!");
 								}
 							}
-                            if (player.getVillagerTime() > 0) {
-                                player.setVillagerTimer(player.getVillagerTime() - 1);
-                            }
 						}
 					}
 				}, 20L, 20L);
+        scheduler.scheduleSyncRepeatingTask(this, new BankerTimeoutRunnable(this), 20L, 20L);
     }
 
     // run when plugin is disabled
@@ -390,6 +411,17 @@ public class Tregmine extends JavaPlugin
     {
         return contextFactory.createContext();
     }
+
+    // ============================================================================
+    // Bank methods
+    // ============================================================================
+
+    public Map<TregminePlayer, Banker>    getBankersInUse() { return bankBankersInUse;  }
+    public Map<TregminePlayer, Account>  getAccountsInUse() { return bankAccountsInUse; }
+    public Map<TregminePlayer, Outposts> getOutpostsInUse() { return bankOutpostsInUse; }
+    public Map<Location, Outposts>            getOutposts() { return bankOutposts;      }
+    public Map<Location, Banker>               getBankers() { return bankBankers;       }
+    public int                      getBankTimeoutCounter() { return bankTimeoutCounter; }
 
     // ============================================================================
     // Data structure accessors
