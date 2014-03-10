@@ -401,15 +401,14 @@ public class DBBankDAO implements IBankDAO
 
                         for (Villager villager : world.getEntitiesByClass(Villager.class)) {
                             if (villager.getUniqueId().equals(id)) {
-                                // Remove villager because the banker constructor creates a new one.
-                                villager.remove();
-                                Banker b = new Banker(plugin, bankerLoc, bank, rs.getString("banker_name"));
+                                Banker b = new Banker(plugin, bankerLoc, bank, villager);
                                 b.setLocation(bankerLoc);
                                 found = true;
                             }
                         }
 
                         if (!found) {
+                            // TODO: Update database "banker_id" to use the newly spawned bankers UUID
                             Banker b = new Banker(plugin, bankerLoc, bank, rs.getString("banker_name"));
                             b.setLocation(bankerLoc);
                         }
@@ -436,10 +435,7 @@ public class DBBankDAO implements IBankDAO
             stmt.execute();
 
             try (ResultSet rs = stmt.getResultSet()) {
-                if (!rs.next()) {
-                    return false;
-                }
-                return true;
+                return rs.next();
             }
         } catch (SQLException e) {
             throw new DAOException(sql, e);
