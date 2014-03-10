@@ -64,9 +64,26 @@ public class Banker {
     }
 
     // Constructor as called by the database if the banker has not been modified.
-    public Banker(Tregmine plugin, Location sLoc, Bank bank, String bankerName)
+    public Banker(Tregmine plugin, Location sLoc, Bank bank, String name)
     {
-        this(plugin, sLoc, bank, Villager.Profession.LIBRARIAN, bankerName);
+        this(plugin, sLoc, bank, Villager.Profession.LIBRARIAN, name);
+    }
+
+    public Banker(Tregmine plugin, Bank bank, Villager villager)
+    {
+        ControllableMob<Villager> cVillager = ControllableMobs.putUnderControl(villager, true);
+        cVillager.getAttributes().getMaxHealthAttribute().setBasisValue(100.0);
+
+        this.loc = villager.getLocation();
+        this.banker = cVillager;
+        this.plugin = plugin;
+        this.bank = bank;
+        this.villagerCore = villager;
+
+        plugin.getBankers().put(this.loc, this);
+
+        BukkitScheduler scheduler = plugin.getServer().getScheduler();
+        this.returnTask = scheduler.runTaskTimerAsynchronously(plugin, new BankerReturnRunnable(this), 0L, 20L);
     }
 
     // Location methods.
