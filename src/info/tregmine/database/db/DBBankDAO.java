@@ -403,13 +403,15 @@ public class DBBankDAO implements IBankDAO
                             if (villager.getUniqueId().equals(id)) {
                                 // Remove villager because the banker constructor creates a new one.
                                 villager.remove();
-                                new Banker(plugin, bankerLoc, bank, rs.getString("banker_name"));
+                                Banker b = new Banker(plugin, bankerLoc, bank, rs.getString("banker_name"));
+                                b.setLocation(bankerLoc);
                                 found = true;
                             }
                         }
 
                         if (!found) {
-                            new Banker(plugin, bankerLoc, bank, rs.getString("banker_name"));
+                            Banker b = new Banker(plugin, bankerLoc, bank, rs.getString("banker_name"));
+                            b.setLocation(bankerLoc);
                         }
 
                         counter++;

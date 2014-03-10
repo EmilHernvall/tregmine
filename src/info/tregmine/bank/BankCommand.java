@@ -355,7 +355,7 @@ public class BankCommand extends AbstractCommand implements Listener
     private boolean command_changePin(TregminePlayer player, String[] args)
     {
         if (plugin.getBankersInUse().containsKey(player)) {
-            if (args.length != 3) {
+            if (args.length == 3) {
                 try {
                     // These few lines are pretty redundant, but is the only real way I thought off
                     // it converts them to longs to see if they are numbers, if not throw the exception
@@ -451,6 +451,11 @@ public class BankCommand extends AbstractCommand implements Listener
 
                 if (!(plugin.getAccountsInUse().containsKey(player))) {
                     player.sendMessage(RED + "Please talk to a banker before changing accounts!");
+                    return true;
+                }
+
+                if (plugin.getAccountsInUse().containsValue(account)) {
+                    player.sendMessage(RED + "Somebody is already accessing this account! Please wait a little longer...");
                     return true;
                 }
 

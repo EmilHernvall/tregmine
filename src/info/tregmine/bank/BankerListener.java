@@ -105,17 +105,28 @@ public class BankerListener implements Listener {
                 account = plugin.getAccountsInUse().get(player);
             } else {
                 account = bankDAO.getAccountByPlayer(bank, player.getId());
+            }
 
-                if (account == null) {
-                    interfaces.bank_banker_create(player, banker);
-                    plugin.getBankersInUse().put(player, banker);
-                    plugin.getAccountsInUse().put(player, account);
-                    return;
-                }
+            if (account == null) {
+                interfaces.bank_banker_create(player, banker);
+                plugin.getBankersInUse().put(player, banker);
+                plugin.getAccountsInUse().put(player, account);
+                return;
             }
 
             if (account != null && account.getPlayerId() == player.getId()) {
                 account.setVerified(true);
+            }
+
+            if (plugin.getAccountsInUse().containsValue(account)) {
+                // If we are at this point in the code, then we haven't added the account to the
+                // lists in the main class. So lets check if it already exists, and stop them
+                // if it does!
+                player.sendMessage(DARK_GRAY + ChatColor.stripColor(villager.getCustomName()) +
+                        GRAY + ": " + RED + "Somebody is already accessing your account! Please wait a little longer...");
+                player.setVillagerTimer(0);
+                player.setChatState(TregminePlayer.ChatState.CHAT);
+                return;
             }
 
             ItemStack item = player.getItemInHand();

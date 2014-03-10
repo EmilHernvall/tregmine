@@ -25,6 +25,7 @@ public class Banker {
     // Variables
     private Location loc;
     private ControllableMob<Villager> banker;
+    private Villager villagerCore;
     private BukkitTask returnTask;
     private Tregmine plugin;
     private Bank bank;
@@ -44,15 +45,16 @@ public class Banker {
         ControllableMob<Villager> cVillager = ControllableMobs.putUnderControl(villager, true);
         cVillager.getAttributes().getMaxHealthAttribute().setBasisValue(100.0);
 
-        BukkitScheduler scheduler = plugin.getServer().getScheduler();
-
-        this.returnTask = scheduler.runTaskTimerAsynchronously(plugin, new BankerReturnRunnable(this), 0L, 20L);
         this.loc = sLoc;
         this.banker = cVillager;
         this.plugin = plugin;
         this.bank = bank;
+        this.villagerCore = villager;
 
         plugin.getBankers().put(sLoc, this);
+
+        BukkitScheduler scheduler = plugin.getServer().getScheduler();
+        this.returnTask = scheduler.runTaskTimerAsynchronously(plugin, new BankerReturnRunnable(this), 0L, 20L);
     }
 
     // Constructor as called by the banker creation command. Default settings.
@@ -89,7 +91,12 @@ public class Banker {
         return true;
     }
 
-    public ControllableMob<Villager> getBanker() { return banker; }
+    public ControllableMob<Villager> getBanker()
+    {
+        this.banker = ControllableMobs.getOrPutUnderControl(villagerCore, true);
+        return banker;
+    }
+
     public Villager getVillager() { return banker.getEntity(); }
 
     public Bank getBank() { return bank; }
