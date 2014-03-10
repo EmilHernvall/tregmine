@@ -30,7 +30,6 @@ public class Banker {
     private Tregmine plugin;
     private Bank bank;
 
-    // Constructor as called by the database if the banker has been modified.
     public Banker(Tregmine plugin, Location sLoc, Bank bank, Villager.Profession profession, String bankerName)
     {
         LivingEntity ent = (LivingEntity) sLoc.getWorld().spawnEntity(sLoc, EntityType.VILLAGER);
@@ -57,16 +56,31 @@ public class Banker {
         this.returnTask = scheduler.runTaskTimerAsynchronously(plugin, new BankerReturnRunnable(this), 0L, 20L);
     }
 
-    // Constructor as called by the banker creation command. Default settings.
+    public Banker(Tregmine plugin, Location sLoc, Bank bank, Villager villager)
+    {
+        ControllableMob<Villager> cVillager = ControllableMobs.putUnderControl(villager, true);
+        cVillager.getAttributes().getMaxHealthAttribute().setBasisValue(100.0);
+
+        this.loc = sLoc;
+        this.banker = cVillager;
+        this.plugin = plugin;
+        this.bank = bank;
+        this.villagerCore = villager;
+
+        plugin.getBankers().put(sLoc, this);
+
+        BukkitScheduler scheduler = plugin.getServer().getScheduler();
+        this.returnTask = scheduler.runTaskTimerAsynchronously(plugin, new BankerReturnRunnable(this), 0L, 20L);
+    }
+
     public Banker(Tregmine plugin, Location sLoc, Bank bank)
     {
         this(plugin, sLoc, bank, Villager.Profession.LIBRARIAN, "Banker " + getRandomBanker());
     }
 
-    // Constructor as called by the database if the banker has not been modified.
-    public Banker(Tregmine plugin, Location sLoc, Bank bank, String bankerName)
+    public Banker(Tregmine plugin, Location sLoc, Bank bank, String name)
     {
-        this(plugin, sLoc, bank, Villager.Profession.LIBRARIAN, bankerName);
+        this(plugin, sLoc, bank, Villager.Profession.LIBRARIAN, name);
     }
 
     // Location methods.
