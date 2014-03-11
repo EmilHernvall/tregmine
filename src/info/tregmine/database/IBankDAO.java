@@ -28,4 +28,5 @@ public interface IBankDAO
     public void deleteBanker(UUID uuid) throws DAOException;
     public int loadBankers(Server server, Tregmine plugin) throws DAOException;
     public boolean isBanker(Bank bank, UUID uniqueId) throws DAOException;
+    public void updateBanker(Banker banker) throws DAOException;
 }

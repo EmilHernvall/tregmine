@@ -44,6 +44,8 @@ public class BankCommand extends AbstractCommand implements Listener
             return command_createAccount(player);
         } else if (args.length == 2 && "internalCommand".equalsIgnoreCase(args[0]) && "register".equalsIgnoreCase(args[1])) {
             return command_makeBank(player);
+        } else if (args.length == 2 && "internalCommand".equalsIgnoreCase(args[0]) && "location".equalsIgnoreCase(args[1])) {
+            return command_changeLocation(player);
         } else if (args.length >= 2 && "deposit".equalsIgnoreCase(args[0])) {
             return command_depositMoney(player, args);
         } else if (args.length >= 2 && "withdraw".equalsIgnoreCase(args[0])) {
@@ -98,7 +100,7 @@ public class BankCommand extends AbstractCommand implements Listener
                 return true;
             }
 
-            Banker banker = new Banker(plugin, player.getLocation(), bank);
+            Banker banker = new Banker(plugin, 0, player.getLocation(), bank);
             player.sendMessage(GREEN + "New banker added at: " + getLocationString(banker.getLocation()));
 
             bankDAO.addBanker(banker);
@@ -539,6 +541,36 @@ public class BankCommand extends AbstractCommand implements Listener
         Interfaces interfaces = new Interfaces();
         interfaces.bank_misc_register(player, creationCost, bankerCost);
 
+        return true;
+    }
+
+    private boolean command_changeLocation(TregminePlayer player)
+    {
+        if (!plugin.getBankersInUse().containsKey(player)) {
+            player.sendMessage(RED + "You are not talking to a banker!");
+            return true;
+        }
+
+        Banker banker = plugin.getBankersInUse().get(player);
+
+        if (banker == null) {
+            player.sendMessage(RED + "An error occured, please try later!");
+            return true;
+        }
+
+        if (banker.getZone().getUser(player) != Zone.Permission.Owner) {
+            player.sendMessage(RED + "You do not have sufficient permissions!");
+            return true;
+        }
+
+        // At this point we have established they have the right permissions
+        // and we have the banker thus a lot of other information
+
+        // Set the bankers location
+        banker.setLocation(player.getLocation());
+
+        // And lets save the banker
+        banker.saveBanker();
         return true;
     }
 

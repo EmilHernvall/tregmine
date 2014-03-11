@@ -4,6 +4,9 @@ import de.ntcomputer.minecraft.controllablemobs.api.ControllableMob;
 import de.ntcomputer.minecraft.controllablemobs.api.ControllableMobs;
 import info.tregmine.Tregmine;
 import info.tregmine.bank.BankerReturnRunnable;
+import info.tregmine.database.DAOException;
+import info.tregmine.database.IBankDAO;
+import info.tregmine.database.IContext;
 import info.tregmine.zones.Zone;
 import info.tregmine.zones.ZoneWorld;
 import org.bukkit.Location;
@@ -29,8 +32,9 @@ public class Banker {
     private BukkitTask returnTask;
     private Tregmine plugin;
     private Bank bank;
+    private int banker_id;
 
-    public Banker(Tregmine plugin, Location sLoc, Bank bank, Villager.Profession profession, String bankerName)
+    public Banker(Tregmine plugin, int banker_id, Location sLoc, Bank bank, Villager.Profession profession, String bankerName)
     {
         LivingEntity ent = (LivingEntity) sLoc.getWorld().spawnEntity(sLoc, EntityType.VILLAGER);
         Villager villager = (Villager) ent;
@@ -49,6 +53,7 @@ public class Banker {
         this.plugin = plugin;
         this.bank = bank;
         this.villagerCore = villager;
+        this.banker_id = banker_id;
 
         plugin.getBankers().put(sLoc, this);
 
@@ -56,7 +61,7 @@ public class Banker {
         this.returnTask = scheduler.runTaskTimerAsynchronously(plugin, new BankerReturnRunnable(this), 0L, 20L);
     }
 
-    public Banker(Tregmine plugin, Location sLoc, Bank bank, Villager villager)
+    public Banker(Tregmine plugin, int banker_id, Location sLoc, Bank bank, Villager villager)
     {
         ControllableMob<Villager> cVillager = ControllableMobs.putUnderControl(villager, true);
         cVillager.getAttributes().getMaxHealthAttribute().setBasisValue(100.0);
@@ -66,6 +71,7 @@ public class Banker {
         this.plugin = plugin;
         this.bank = bank;
         this.villagerCore = villager;
+        this.banker_id = banker_id;
 
         plugin.getBankers().put(sLoc, this);
 
@@ -73,14 +79,14 @@ public class Banker {
         this.returnTask = scheduler.runTaskTimerAsynchronously(plugin, new BankerReturnRunnable(this), 0L, 20L);
     }
 
-    public Banker(Tregmine plugin, Location sLoc, Bank bank)
+    public Banker(Tregmine plugin, int id, Location sLoc, Bank bank)
     {
-        this(plugin, sLoc, bank, Villager.Profession.LIBRARIAN, "Banker " + getRandomBanker());
+        this(plugin, id, sLoc, bank, Villager.Profession.LIBRARIAN, "Banker " + getRandomBanker());
     }
 
-    public Banker(Tregmine plugin, Location sLoc, Bank bank, String name)
+    public Banker(Tregmine plugin, int id, Location sLoc, Bank bank, String name)
     {
-        this(plugin, sLoc, bank, Villager.Profession.LIBRARIAN, name);
+        this(plugin, id, sLoc, bank, Villager.Profession.LIBRARIAN, name);
     }
 
     // Location methods.
@@ -98,11 +104,22 @@ public class Banker {
 
         returnTask.cancel();
 
+        this.loc = newLoc;
         banker.getEntity().teleport(newLoc);
 
         BukkitScheduler scheduler = plugin.getServer().getScheduler();
         this.returnTask = scheduler.runTaskTimerAsynchronously(plugin, new BankerReturnRunnable(this), 0L, 20L);
         return true;
+    }
+
+    public void saveBanker()
+    {
+        try (IContext ctx = plugin.createContext()) {
+            IBankDAO bankDAO = ctx.getBankDAO();
+            bankDAO.updateBanker(this);
+        } catch (DAOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public ControllableMob<Villager> getBanker()
@@ -112,6 +129,9 @@ public class Banker {
     }
 
     public Villager getVillager() { return banker.getEntity(); }
+
+    public int getBankerId() { return banker_id; }
+    public void setBankerId(int value) { this.banker_id = value; }
 
     public Bank getBank() { return bank; }
     public Zone getZone() { return plugin.getZone(bank.getZoneId()); }
