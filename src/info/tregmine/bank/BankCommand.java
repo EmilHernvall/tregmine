@@ -56,6 +56,8 @@ public class BankCommand extends AbstractCommand implements Listener
             return command_verifyAccount(player, args);
         } else if (args.length == 1 && "help".equalsIgnoreCase(args[0])) {
             return command_viewCommands(player);
+        } else if (args.length == 1 && "admin".equalsIgnoreCase(args[0])) {
+            return command_adminBanker(player);
         } else {
             player.sendMessage(AQUA + "Use /bank help - To receive all the command help!");
             return true;
@@ -87,7 +89,7 @@ public class BankCommand extends AbstractCommand implements Listener
 
             // If bank doesn't exist
             if (bank == null) {
-                interfaces.bank_misc_register(player, zone);
+                player.sendMessage(RED + "This zone is not a bank! Please run: \"/bank admin\" to fix that.");
                 return true;
             }
 
@@ -523,6 +525,19 @@ public class BankCommand extends AbstractCommand implements Listener
         } else {
             player.sendMessage(RED + "You were not talking to a banker...");
         }
+
+        return true;
+    }
+
+    private boolean command_adminBanker(TregminePlayer player)
+    {
+        if (!player.getRank().canBuildBanks()) {
+            player.sendMessage(RED + "You are not an administrator!");
+            return true;
+        }
+
+        Interfaces interfaces = new Interfaces();
+        interfaces.bank_misc_register(player, creationCost, bankerCost);
 
         return true;
     }

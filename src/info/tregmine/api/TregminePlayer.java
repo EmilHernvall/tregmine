@@ -388,6 +388,11 @@ public class TregminePlayer extends PlayerDelegate
 		}
 	}
 
+    public ZoneWorld getZoneWorld()
+    {
+        return this.plugin.getWorld(this.getWorld());
+    }
+
     public void setVillagerTimer(int value) { this.villagerTimer = value; }
     public int getVillagerTime() { return villagerTimer; }
 

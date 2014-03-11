@@ -3,11 +3,11 @@ package info.tregmine.api.bank;
 import com.tregmine.chat.TregMessage;
 import info.tregmine.api.TregminePlayer;
 import info.tregmine.database.DAOException;
+import info.tregmine.database.IBankDAO;
 import info.tregmine.database.IContext;
 import info.tregmine.database.IWalletDAO;
 import info.tregmine.zones.Zone;
 import info.tregmine.zones.ZoneWorld;
-import org.bukkit.Location;
 import org.bukkit.entity.Villager;
 
 import static org.bukkit.ChatColor.*;
@@ -34,13 +34,13 @@ public class Interfaces {
 
         player.sendMessage(padString("[ * ]", rightLine, "*"));
 
-        new TregMessage(" Yes, I would like to make an account!")
+        new TregMessage(" I would like to make an account!")
                 .color(DARK_PURPLE)
                 .command("/bank internalCommand create")
                 .tooltip(DARK_PURPLE + "Click to create an account at this bank!")
                 .send(player);
 
-        new TregMessage(" Yes, but I would not like an account!")
+        new TregMessage(" I would not like an account!")
                 .color(DARK_PURPLE)
                 .command("/bank internalCommand quit")
                 .tooltip(DARK_PURPLE + "Clicking this will end your session with the banker!")
@@ -146,17 +146,57 @@ public class Interfaces {
 
 
     // MISC INTERFACES
-    public void bank_misc_register(TregminePlayer player, Zone zone)
+    public void bank_misc_register(TregminePlayer player, int bankPrice, int bankerPrice)
     {
-        // TODO: Interface to get admins to make a zone a bank
-    }
+        ZoneWorld world = player.getZoneWorld();
+        Zone zone = world.findZone(player.getLocation());
 
+        if (zone == null) {
+            player.sendMessage(RED + "Ensure you are in a zone first!");
+            return;
+        }
 
+        String bankName = zone.getName();
+        boolean bankAtZone = true;
 
-    // PRIVATE FUNCTIONS
-    private String getLocationString(Location loc)
-    {
-        return "X: " + loc.getBlockX() + ", Y: " + loc.getBlockY() + ", Z: " + loc.getBlockZ() + ".";
+        try (IContext ctx = player.getPlugin().createContext()) {
+
+            IBankDAO bankDAO = ctx.getBankDAO();
+            Bank bank = bankDAO.getBank(zone.getId());
+
+            if (bank == null) {
+                bankAtZone = false;
+            }
+
+        } catch (DAOException e) {
+            throw new RuntimeException(e);
+        }
+
+        player.sendMessage(padString("[ " + AQUA + bankName + DARK_GRAY + " ]", rightLine, "*"));
+        player.sendMessage(padString("Welcome to the administrators interface!", rightLine, " "));
+        player.sendMessage(padString("[ * ]", rightLine, "*"));
+
+        if (!bankAtZone) {
+            new TregMessage(" Click here to register this zone...")
+                    .color(DARK_PURPLE)
+                    .suggest("/bank internalCommand register")
+                    .tooltip(DARK_PURPLE + "This action costs " + bankPrice + " tregs!")
+                    .send(player);
+        } else {
+            new TregMessage(" Click here to register this zone...")
+                    .color(DARK_RED)
+                    .style(STRIKETHROUGH)
+                    .tooltip(DARK_PURPLE + "Zone is already registered!")
+                    .send(player);
+        }
+
+        new TregMessage(" Click here to add a banker...")
+                .color(DARK_PURPLE)
+                .command("/bank internalCommand make")
+                .tooltip(DARK_PURPLE + "This action costs " + bankerPrice + " tregs!")
+                .send(player);
+
+        player.sendMessage(padString("[ * ]", rightLine, "*"));
     }
 
     private String padString(String str, int len, String character)
