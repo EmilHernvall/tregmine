@@ -328,7 +328,7 @@ public class DBBankDAO implements IBankDAO
     public void addBanker(Banker banker)
     throws DAOException
     {
-        String sql = "INSERT INTO bank_bankers (bank_id, banker_id, banker_name, banker_x, banker_y, banker_z, banker_world) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO bank_bankers (bank_id, banker_uuid, banker_name, banker_x, banker_y, banker_z, banker_world) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         Villager villager = banker.getVillager();
         Bank bank = banker.getBank();
@@ -345,6 +345,16 @@ public class DBBankDAO implements IBankDAO
             stm.setInt(6, villager.getLocation().getBlockZ());
             stm.setString(7, villager.getLocation().getWorld().getName());
             stm.execute();
+
+            stm.executeQuery("SELECT LAST_INSERT_ID()");
+
+            try (ResultSet rs = stm.getResultSet()) {
+                if (!rs.next()) {
+                    throw new DAOException("Failed to get player id", sql);
+                }
+
+                banker.setBankerId(rs.getInt(1));
+            }
         } catch (SQLException e) {
             throw new DAOException(sql, e);
         }
@@ -376,7 +386,8 @@ public class DBBankDAO implements IBankDAO
 
                 try (ResultSet rs = stmt.getResultSet()) {
                     while (rs.next()) {
-                        UUID id = UUID.fromString(rs.getString("banker_id"));
+                        UUID id = UUID.fromString(rs.getString("banker_uuid"));
+                        int banker_id = rs.getInt("banker_id");
 
                         String worldName = rs.getString("banker_world");
                         int blockX = rs.getInt("banker_x");
@@ -401,16 +412,16 @@ public class DBBankDAO implements IBankDAO
 
                         for (Villager villager : world.getEntitiesByClass(Villager.class)) {
                             if (villager.getUniqueId().equals(id)) {
-                                Banker b = new Banker(plugin, bankerLoc, bank, villager);
+                                Banker b = new Banker(plugin, banker_id, bankerLoc, bank, villager);
                                 b.setLocation(bankerLoc);
                                 found = true;
                             }
                         }
 
                         if (!found) {
-                            // TODO: Update database "banker_id" to use the newly spawned bankers UUID
-                            Banker b = new Banker(plugin, bankerLoc, bank, rs.getString("banker_name"));
+                            Banker b = new Banker(plugin, banker_id, bankerLoc, bank, rs.getString("banker_name"));
                             b.setLocation(bankerLoc);
+                            updateBanker(b); // Lets save the banker, as this will update the UUID
                         }
 
                         counter++;
@@ -427,7 +438,7 @@ public class DBBankDAO implements IBankDAO
     public boolean isBanker(Bank bank, UUID uniqueId)
     throws DAOException
     {
-        String sql = "SELECT * FROM bank_bankers WHERE bank_id = ? AND banker_id = ?";
+        String sql = "SELECT * FROM bank_bankers WHERE bank_id = ? AND banker_uuid = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, bank.getId());
@@ -437,6 +448,26 @@ public class DBBankDAO implements IBankDAO
             try (ResultSet rs = stmt.getResultSet()) {
                 return rs.next();
             }
+        } catch (SQLException e) {
+            throw new DAOException(sql, e);
+        }
+    }
+
+    @Override
+    public void updateBanker(Banker banker)
+    throws DAOException
+    {
+        String sql = "UPDATE player SET banker_uuid = ?, banker_name = ?, banker_x = ?, banker_y = ?, banker_z = ? " +
+                "WHERE banker_id = ?";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, banker.getVillager().getUniqueId().toString());
+            stmt.setString(2, ChatColor.stripColor(banker.getVillager().getCustomName()));
+            stmt.setInt(3, banker.getLocation().getBlockX());
+            stmt.setInt(4, banker.getLocation().getBlockY());
+            stmt.setInt(5, banker.getLocation().getBlockZ());
+            stmt.setInt(6, banker.getBankerId());
+            stmt.execute();
         } catch (SQLException e) {
             throw new DAOException(sql, e);
         }
