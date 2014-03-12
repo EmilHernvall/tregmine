@@ -457,7 +457,7 @@ public class DBBankDAO implements IBankDAO
     public void updateBanker(Banker banker)
     throws DAOException
     {
-        String sql = "UPDATE player SET banker_uuid = ?, banker_name = ?, banker_x = ?, banker_y = ?, banker_z = ? " +
+        String sql = "UPDATE bank_bankers SET banker_uuid = ?, banker_name = ?, banker_x = ?, banker_y = ?, banker_z = ? " +
                 "WHERE banker_id = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
