@@ -61,21 +61,27 @@ public class GameMagic extends JavaPlugin implements Listener
         alpha.environment(World.Environment.NORMAL);
         alpha.createWorld();
 
-        WorldCreator elva = new WorldCreator("elva");
-        elva.environment(World.Environment.NORMAL);
-        elva.createWorld();
+        //WorldCreator elva = new WorldCreator("elva");
+        //elva.environment(World.Environment.NORMAL);
+        //elva.createWorld();
 
-        WorldCreator treton = new WorldCreator("treton");
-        treton.environment(World.Environment.NORMAL);
-        treton.createWorld();
+        //WorldCreator treton = new WorldCreator("treton");
+        //treton.environment(World.Environment.NORMAL);
+        //treton.createWorld();
 
-        WorldCreator einhome = new WorldCreator("einhome");
-        einhome.environment(World.Environment.NORMAL);
-        einhome.createWorld();
+        //WorldCreator einhome = new WorldCreator("einhome");
+        //einhome.environment(World.Environment.NORMAL);
+        //einhome.createWorld();
 
         WorldCreator citadel = new WorldCreator("citadel");
         citadel.environment(World.Environment.NORMAL);
         citadel.createWorld();
+
+        WorldCreator gameWorld = new WorldCreator("game");
+        gameWorld.environment(World.Environment.NORMAL);
+        gameWorld.generateStructures(false);
+        gameWorld.type(WorldType.FLAT);
+        gameWorld.createWorld();
 
         // Portal in tower of einhome
         portalLookup.put(-1488547832, "world");
