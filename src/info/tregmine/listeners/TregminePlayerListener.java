@@ -106,6 +106,11 @@ public class TregminePlayerListener implements Listener
         }
 
         TregminePlayer p = plugin.getPlayer(player);
+        if (p == null) {
+            Tregmine.LOGGER.info(player.getName() + " was not found in player map.");
+            return;
+        }
+
         if (p.getCurrentInventory() != null) {
             p.saveInventory(p.getCurrentInventory());
         }
