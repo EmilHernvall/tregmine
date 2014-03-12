@@ -38,6 +38,9 @@ commands:
   ban:
     description: Ban the specified player
     usage: /ban player
+  bank:
+    description: Universal Bank Command
+    usage: /bank
   badge:
     description: All commands for badges
     usage: /badge

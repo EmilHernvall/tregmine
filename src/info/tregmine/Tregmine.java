@@ -1,19 +1,11 @@
 package info.tregmine;
 
-import java.io.*;
-import java.net.InetAddress;
-import java.util.*;
-import java.util.logging.*;
-
-import org.bukkit.*;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
-import org.bukkit.plugin.PluginManager;
-import org.bukkit.plugin.java.JavaPlugin;
-
 import com.maxmind.geoip.LookupService;
-
 import info.tregmine.api.*;
+import info.tregmine.api.bank.Account;
+import info.tregmine.api.bank.Banker;
+import info.tregmine.api.bank.Outposts;
+import info.tregmine.bank.*;
 import info.tregmine.commands.*;
 import info.tregmine.database.*;
 import info.tregmine.database.db.DBContextFactory;
@@ -21,8 +13,22 @@ import info.tregmine.events.CallEventListener;
 import info.tregmine.listeners.*;
 import info.tregmine.quadtree.IntersectionException;
 import info.tregmine.tools.*;
-import info.tregmine.zones.*;
+import info.tregmine.zones.Lot;
+import info.tregmine.zones.Zone;
+import info.tregmine.zones.ZoneWorld;
+import org.bukkit.*;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
+import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author Ein Andersson
@@ -60,6 +66,14 @@ public class Tregmine extends JavaPlugin
 
     private LookupService cl = null;
 
+    // Bank Lists/Maps/Variables/Configurarables
+    private Map<Location, Banker> bankBankers;
+    private Map<Location, Outposts> bankOutposts;
+    private Map<TregminePlayer, Banker> bankBankersInUse;
+    private Map<TregminePlayer, Outposts> bankOutpostsInUse;
+    private Map<TregminePlayer, Account> bankAccountsInUse;
+    private int bankTimeoutCounter = 60; // Seconds
+
     @Override
     public void onLoad()
     {
@@ -89,6 +103,12 @@ public class Tregmine extends JavaPlugin
             });
 
         zones = new HashMap<>();
+
+        bankBankers = new HashMap<>();
+        bankOutposts = new HashMap<>();
+        bankBankersInUse = new HashMap<>();
+        bankOutpostsInUse = new HashMap<>();
+        bankAccountsInUse = new HashMap<>();
 
         Player[] players = getServer().getOnlinePlayers();
         for (Player player : players) {
@@ -158,6 +178,11 @@ public class Tregmine extends JavaPlugin
             this.quitMessages = miscDAO.loadQuitMessages();
 
             LOGGER.info("Loaded " + insults.size() + " insults and " + quitMessages.size() + " quit messages");
+
+            IBankDAO bankDAO = ctx.getBankDAO();
+            int count = bankDAO.loadBankers(getServer(), this);
+
+            LOGGER.info("Loaded " + count + " bankers!");
         } catch (DAOException e) {
             throw new RuntimeException(e);
         }
@@ -195,7 +220,6 @@ public class Tregmine extends JavaPlugin
         pluginMgm.registerEvents(new CallEventListener(this), this);
         pluginMgm.registerEvents(new WorldPortalListener(this), this);
         pluginMgm.registerEvents(new PortalListener(this), this);
-        pluginMgm.registerEvents(new BankListener(this), this);
         pluginMgm.registerEvents(new RareDropListener(this), this);
         pluginMgm.registerEvents(new DamageListener(this), this);
         pluginMgm.registerEvents(new ChunkListener(this), this);
@@ -324,6 +348,12 @@ public class Tregmine extends JavaPlugin
 
         ToolCraftRegistry.RegisterRecipes(getServer()); // Registers all tool recipes
 
+        // Banks
+        getCommand("bank").setExecutor(new BankCommand(this));
+        pluginMgm.registerEvents(new BankerListener(this), this);
+        pluginMgm.registerEvents(new BankerDamageListener(this), this);
+        pluginMgm.registerEvents(new BankerTimeoutListener(this), this);
+
         for (TregminePlayer player : getOnlinePlayers()) {
             player.sendMessage(ChatColor.AQUA + "Tregmine successfully loaded. Version " + getDescription().getVersion());
         }
@@ -343,6 +373,7 @@ public class Tregmine extends JavaPlugin
 						}
 					}
 				}, 20L, 20L);
+        scheduler.scheduleSyncRepeatingTask(this, new BankerTimeoutRunnable(this), 20L, 20L);
     }
 
     // run when plugin is disabled
@@ -380,6 +411,17 @@ public class Tregmine extends JavaPlugin
     {
         return contextFactory.createContext();
     }
+
+    // ============================================================================
+    // Bank methods
+    // ============================================================================
+
+    public Map<TregminePlayer, Banker>    getBankersInUse() { return bankBankersInUse;  }
+    public Map<TregminePlayer, Account>  getAccountsInUse() { return bankAccountsInUse; }
+    public Map<TregminePlayer, Outposts> getOutpostsInUse() { return bankOutpostsInUse; }
+    public Map<Location, Outposts>            getOutposts() { return bankOutposts;      }
+    public Map<Location, Banker>               getBankers() { return bankBankers;       }
+    public int                      getBankTimeoutCounter() { return bankTimeoutCounter; }
 
     // ============================================================================
     // Data structure accessors

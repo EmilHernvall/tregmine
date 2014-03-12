@@ -1,18 +1,27 @@
 package info.tregmine.database.db;
 
+import com.google.common.collect.Lists;
+import info.tregmine.Tregmine;
+import info.tregmine.api.bank.Account;
+import info.tregmine.api.bank.Bank;
+import info.tregmine.api.bank.Banker;
+import info.tregmine.database.DAOException;
+import info.tregmine.database.IBankDAO;
+import info.tregmine.zones.Zone;
+import info.tregmine.zones.ZoneWorld;
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.Server;
+import org.bukkit.World;
+import org.bukkit.entity.Villager;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Random;
-
-import com.google.common.collect.Lists;
-
-import info.tregmine.api.Account;
-import info.tregmine.api.Bank;
-import info.tregmine.database.DAOException;
-import info.tregmine.database.IBankDAO;
+import java.util.UUID;
 
 public class DBBankDAO implements IBankDAO
 {
@@ -29,7 +38,7 @@ public class DBBankDAO implements IBankDAO
     public Bank getBank(int lotId)
     throws DAOException
     {
-        String sql = "SELECT * FROM bank WHERE lot_id = ? LIMIT 1";
+        String sql = "SELECT * FROM bank WHERE zone_id = ? LIMIT 1";
         Bank bank = null;
         try (PreparedStatement stm = conn.prepareStatement(sql)) {
             stm.setInt(1, lotId);
@@ -38,7 +47,7 @@ public class DBBankDAO implements IBankDAO
             ResultSet rs = stm.getResultSet();
 
             if (rs.next()) {
-                bank = new Bank(rs.getInt("lot_id"));
+                bank = new Bank(rs.getInt("zone_id"));
                 bank.setId(rs.getInt("bank_id"));
                 bank.setAccounts(this.getAccounts(bank));
 
@@ -54,9 +63,9 @@ public class DBBankDAO implements IBankDAO
     @Override
     public int createBank(Bank bank) throws DAOException
     {
-        String sql = "INSERT INTO bank (lot_id) VALUES (?)";
+        String sql = "INSERT INTO bank (zone_id) VALUES (?)";
         try (PreparedStatement stm = conn.prepareStatement(sql)) {
-            stm.setInt(1, bank.getLotId());
+            stm.setInt(1, bank.getZoneId());
             stm.execute();
 
             stm.executeQuery("SELECT LAST_INSERT_ID()");
@@ -313,6 +322,155 @@ public class DBBankDAO implements IBankDAO
         }
 
         return true;
+    }
+
+    @Override
+    public void addBanker(Banker banker)
+    throws DAOException
+    {
+        String sql = "INSERT INTO bank_bankers (bank_id, banker_uuid, banker_name, banker_x, banker_y, banker_z, banker_world) VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+        Villager villager = banker.getVillager();
+        Bank bank = banker.getBank();
+
+        UUID uuid = villager.getUniqueId();
+        String name = villager.getCustomName();
+
+        try (PreparedStatement stm = conn.prepareStatement(sql)) {
+            stm.setInt(1, bank.getId());
+            stm.setString(2, uuid.toString());
+            stm.setString(3, ChatColor.stripColor(name));
+            stm.setInt(4, villager.getLocation().getBlockX());
+            stm.setInt(5, villager.getLocation().getBlockY());
+            stm.setInt(6, villager.getLocation().getBlockZ());
+            stm.setString(7, villager.getLocation().getWorld().getName());
+            stm.execute();
+
+            stm.executeQuery("SELECT LAST_INSERT_ID()");
+
+            try (ResultSet rs = stm.getResultSet()) {
+                if (!rs.next()) {
+                    throw new DAOException("Failed to get player id", sql);
+                }
+
+                banker.setBankerId(rs.getInt(1));
+            }
+        } catch (SQLException e) {
+            throw new DAOException(sql, e);
+        }
+    }
+
+    @Override
+    public void deleteBanker(UUID uuid)
+            throws DAOException
+    {
+        String sql = "DELETE FROM bank_bankers WHERE banker_id = ?";
+
+        try (PreparedStatement stm = conn.prepareStatement(sql)) {
+            stm.setString(1, uuid.toString());
+            stm.execute();
+        } catch (SQLException e) {
+            throw new DAOException(sql, e);
+        }
+    }
+
+    @Override
+    public int loadBankers(Server server, Tregmine plugin) throws DAOException
+    {
+            String sql = "SELECT * FROM bank_bankers";
+
+            int counter = 0;
+
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.execute();
+
+                try (ResultSet rs = stmt.getResultSet()) {
+                    while (rs.next()) {
+                        UUID id = UUID.fromString(rs.getString("banker_uuid"));
+                        int banker_id = rs.getInt("banker_id");
+
+                        String worldName = rs.getString("banker_world");
+                        int blockX = rs.getInt("banker_x");
+                        int blockY = rs.getInt("banker_y");
+                        int blockZ = rs.getInt("banker_z");
+
+                        World world = server.getWorld(worldName);
+                        Location bankerLoc = new Location(world, blockX, blockY, blockZ);
+
+                        ZoneWorld zWorld = plugin.getWorld(bankerLoc.getWorld());
+                        Zone zone = zWorld.findZone(bankerLoc);
+
+                        // TODO: Change this to pull zoneID from DB (and store zoneID)
+                        if (zone == null) {
+                            // Should never occur
+                            plugin.getLogger().info("BANKER ISSUE: Banker could not load, Zone was not found at location:" + bankerLoc.toString());
+                            continue;
+                        }
+
+                        Bank bank = this.getBank(zone.getId());
+                        boolean found = false;
+
+                        for (Villager villager : world.getEntitiesByClass(Villager.class)) {
+                            if (villager.getUniqueId().equals(id)) {
+                                Banker b = new Banker(plugin, banker_id, bankerLoc, bank, villager);
+                                b.setLocation(bankerLoc);
+                                found = true;
+                            }
+                        }
+
+                        if (!found) {
+                            Banker b = new Banker(plugin, banker_id, bankerLoc, bank, rs.getString("banker_name"));
+                            b.setLocation(bankerLoc);
+                            updateBanker(b); // Lets save the banker, as this will update the UUID
+                        }
+
+                        counter++;
+                    }
+                }
+            } catch (SQLException e) {
+                throw new DAOException(sql, e);
+            }
+
+            return counter;
+    }
+
+    @Override
+    public boolean isBanker(Bank bank, UUID uniqueId)
+    throws DAOException
+    {
+        String sql = "SELECT * FROM bank_bankers WHERE bank_id = ? AND banker_uuid = ?";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, bank.getId());
+            stmt.setString(2, uniqueId.toString());
+            stmt.execute();
+
+            try (ResultSet rs = stmt.getResultSet()) {
+                return rs.next();
+            }
+        } catch (SQLException e) {
+            throw new DAOException(sql, e);
+        }
+    }
+
+    @Override
+    public void updateBanker(Banker banker)
+    throws DAOException
+    {
+        String sql = "UPDATE bank_bankers SET banker_uuid = ?, banker_name = ?, banker_x = ?, banker_y = ?, banker_z = ? " +
+                "WHERE banker_id = ?";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, banker.getVillager().getUniqueId().toString());
+            stmt.setString(2, ChatColor.stripColor(banker.getVillager().getCustomName()));
+            stmt.setInt(3, banker.getLocation().getBlockX());
+            stmt.setInt(4, banker.getLocation().getBlockY());
+            stmt.setInt(5, banker.getLocation().getBlockZ());
+            stmt.setInt(6, banker.getBankerId());
+            stmt.execute();
+        } catch (SQLException e) {
+            throw new DAOException(sql, e);
+        }
     }
 
 }

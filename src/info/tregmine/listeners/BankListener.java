@@ -1,24 +1,20 @@
 package info.tregmine.listeners;
 
-import java.util.Map;
-
+import com.google.common.collect.Maps;
 import info.tregmine.Tregmine;
-import info.tregmine.api.Account;
-import info.tregmine.api.Bank;
 import info.tregmine.api.TregminePlayer;
 import info.tregmine.api.TregminePlayer.ChatState;
+import info.tregmine.api.bank.Account;
+import info.tregmine.api.bank.Bank;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IBankDAO;
 import info.tregmine.database.IContext;
 import info.tregmine.database.IWalletDAO;
 import info.tregmine.quadtree.Point;
 import info.tregmine.zones.Lot;
-import info.tregmine.zones.Lot.Flags;
 import info.tregmine.zones.ZoneWorld;
-
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -26,7 +22,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-import com.google.common.collect.Maps;
+import java.util.Map;
 
 public class BankListener implements Listener
 {
