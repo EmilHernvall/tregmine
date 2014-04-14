@@ -286,6 +286,7 @@ public class Tregmine extends JavaPlugin
         getCommand("normal").setExecutor(new NormalCommand(this));
         getCommand("nuke").setExecutor(new NukeCommand(this));
         getCommand("password").setExecutor(new PasswordCommand(this));
+        getCommand("pkill").setExecutor(new PKillCommand(this));
         getCommand("pos").setExecutor(new PositionCommand(this));
         getCommand("quitmessage").setExecutor(new QuitMessageCommand(this));
         getCommand("regeneratechunk").setExecutor(new RegenerateChunkCommand(this));
