@@ -31,7 +31,8 @@ public class TregmineBlockListener implements Listener
             Material.GOLD_ORE,
             Material.LAPIS_ORE,
             Material.QUARTZ_ORE,
-            Material.REDSTONE_ORE);
+            Material.REDSTONE_ORE,
+            Material.MOB_SPAWNER);
 
     private Tregmine plugin;
 
