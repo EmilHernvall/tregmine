@@ -14,7 +14,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-
+import org.bukkit.potion.*;
 //import org.bukkit.entity.HumanEntity;
 //import org.bukkit.entity.Player;
 
@@ -63,6 +63,7 @@ public class ZoneBlockListener implements Listener
         }*/
 
         event.setCancelled(true);
+        player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_DIGGING, 5, 2));
     }
 
     @EventHandler
