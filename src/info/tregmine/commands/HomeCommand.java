@@ -83,16 +83,6 @@ public class HomeCommand extends AbstractCommand
             return true;
         }
 
-        Server server = tregmine.getServer();
-        World mainWorld = server.getWorld("world");
-        if (MathUtil.calcDistance2d(mainWorld.getSpawnLocation(), player.getLocation()) < 700) {
-
-            player.sendMessage(RED
-                    + "Telogric lift malfunctioned. Teleportation "
-                    + "failed, to close to spawn.");
-            return true;
-        }
-
         try (IContext ctx = tregmine.createContext()) {
             IHomeDAO homeDAO = ctx.getHomeDAO();
             List<String> homes = homeDAO.getHomeNames(player.getId());
