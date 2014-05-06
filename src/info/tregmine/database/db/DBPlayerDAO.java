@@ -48,7 +48,11 @@ public class DBPlayerDAO implements IPlayerDAO
 
                 player = new TregminePlayer(rs.getString("player_name"), plugin);
                 player.setId(rs.getInt("player_id"));
-                player.setStoredUuid(UUID.fromString(rs.getString("player_uuid")));
+
+                String uniqueIdStr = rs.getString("player_uuid");
+                if (uniqueIdStr != null) {
+                    player.setStoredUuid(UUID.fromString(uniqueIdStr));
+                }
                 player.setPasswordHash(rs.getString("player_password"));
                 player.setRank(Rank.fromString(rs.getString("player_rank")));
 
