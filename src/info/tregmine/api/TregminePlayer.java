@@ -41,6 +41,7 @@ public class TregminePlayer extends PlayerDelegate
 
     // Persistent values
     private int id = 0;
+    private UUID storedUuid = null;
     private String name = null;
     private String realName = null;
     private String password = null;
@@ -120,6 +121,9 @@ public class TregminePlayer extends PlayerDelegate
 
     public void setId(int v) { this.id = v; }
     public int getId() { return id; }
+
+    public void setStoredUuid(UUID v) { this.storedUuid = v; }
+    public UUID getStoredUuid() { return storedUuid; }
 
     public String getChatName()
     {

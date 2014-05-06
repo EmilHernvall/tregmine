@@ -136,11 +136,11 @@ public class Tregmine extends JavaPlugin
         hierarchyWorldEnd.environment(World.Environment.THE_END);
         rulelessWorldEnd = hierarchyWorldEnd.createWorld();
 
-		WorldCreator gameWorld = new WorldCreator("game");
-		gameWorld.environment(World.Environment.NORMAL);
-		gameWorld.generateStructures(false);
-		gameWorld.type(WorldType.FLAT);
-		gameWorld.createWorld();
+        WorldCreator gameWorld = new WorldCreator("game");
+        gameWorld.environment(World.Environment.NORMAL);
+        gameWorld.generateStructures(false);
+        gameWorld.type(WorldType.FLAT);
+        gameWorld.createWorld();
 
         try (IContext ctx = contextFactory.createContext()) {
             IBlessedBlockDAO blessedBlockDAO = ctx.getBlessedBlockDAO();
@@ -328,21 +328,22 @@ public class Tregmine extends JavaPlugin
             player.sendMessage(ChatColor.AQUA + "Tregmine successfully loaded. Version " + getDescription().getVersion());
         }
 
-		BukkitScheduler scheduler = getServer().getScheduler();
-		scheduler.scheduleSyncRepeatingTask(this,
-				new Runnable() {
-					public void run() {
-						for (TregminePlayer player : getOnlinePlayers()) {
-							if (player.getCombatLog() > 0) {
-								player.setCombatLog(player.getCombatLog() - 1);
+        BukkitScheduler scheduler = getServer().getScheduler();
+        scheduler.scheduleSyncRepeatingTask(this,
+            new Runnable() {
+                public void run() {
+                    for (TregminePlayer player : getOnlinePlayers()) {
+                        if (player.getCombatLog() > 0) {
+                            player.setCombatLog(player.getCombatLog() - 1);
 
-								if (player.getCombatLog() == 0) {
-									player.sendMessage(ChatColor.GREEN + "Combat log has warn off... Safe to log off!");
-								}
-							}
-						}
-					}
-				}, 20L, 20L);
+                            if (player.getCombatLog() == 0) {
+                                player.sendMessage(ChatColor.GREEN +
+                                    "Combat log has warn off... Safe to log off!");
+                            }
+                        }
+                    }
+                }
+            }, 20L, 20L);
     }
 
     // run when plugin is disabled

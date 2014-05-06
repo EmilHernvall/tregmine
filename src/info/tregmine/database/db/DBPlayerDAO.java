@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.EnumMap;
+import java.util.UUID;
 
 import org.bukkit.entity.Player;
 
@@ -47,9 +48,10 @@ public class DBPlayerDAO implements IPlayerDAO
 
                 player = new TregminePlayer(rs.getString("player_name"), plugin);
                 player.setId(rs.getInt("player_id"));
+                player.setStoredUuid(UUID.fromString(rs.getString("player_uuid")));
                 player.setPasswordHash(rs.getString("player_password"));
                 player.setRank(Rank.fromString(rs.getString("player_rank")));
-                
+
                 if (rs.getString("player_inventory") == null) {
                     player.setCurrentInventory("survival");
                 } else {
@@ -108,9 +110,10 @@ public class DBPlayerDAO implements IPlayerDAO
                 }
 
                 player.setId(rs.getInt("player_id"));
+                player.setStoredUuid(wrap.getUniqueId());
                 player.setPasswordHash(rs.getString("player_password"));
                 player.setRank(Rank.fromString(rs.getString("player_rank")));
-                
+
                 if (rs.getString("player_inventory") == null) {
                     player.setCurrentInventory("survival");
                 } else {
@@ -167,14 +170,16 @@ public class DBPlayerDAO implements IPlayerDAO
     @Override
     public TregminePlayer createPlayer(Player wrap) throws DAOException
     {
-        String sql = "INSERT INTO player (player_name, player_rank, player_keywords) VALUE (?, ?, ?)";
+        String sql = "INSERT INTO player (player_uuid, player_name, player_rank, player_keywords) VALUE (?, ?, ?, ?)";
 
         TregminePlayer player = new TregminePlayer(wrap, plugin);
+        player.setStoredUuid(player.getUniqueId());
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, player.getName());
-            stmt.setString(2, player.getRank().toString());
-            stmt.setString(3, player.getRealName());
+            stmt.setString(1, player.getUniqueId().toString());
+            stmt.setString(2, player.getName());
+            stmt.setString(3, player.getRank().toString());
+            stmt.setString(4, player.getRealName());
             stmt.execute();
 
             stmt.executeQuery("SELECT LAST_INSERT_ID()");
@@ -248,8 +253,8 @@ public class DBPlayerDAO implements IPlayerDAO
     @Override
     public void updatePlayer(TregminePlayer player) throws DAOException
     {
-        String sql = "UPDATE player SET player_password = ?, player_rank = ?, " +
-            "player_flags = ?, player_inventory = ? ";
+        String sql = "UPDATE player SET player_uuid = ?, player_password = ?, " +
+            "player_rank = ?, player_flags = ?, player_inventory = ? ";
         sql += "WHERE player_id = ?";
 
         int flags = 0;
@@ -258,11 +263,12 @@ public class DBPlayerDAO implements IPlayerDAO
         }
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, player.getPasswordHash());
-            stmt.setString(2, player.getRank().toString());
-            stmt.setInt(3, flags);
-            stmt.setString(4, player.getCurrentInventory());
-            stmt.setInt(5, player.getId());
+            stmt.setString(1, player.getStoredUuid().toString());
+            stmt.setString(2, player.getPasswordHash());
+            stmt.setString(3, player.getRank().toString());
+            stmt.setInt(4, flags);
+            stmt.setString(5, player.getCurrentInventory());
+            stmt.setInt(6, player.getId());
             stmt.execute();
         } catch (SQLException e) {
             throw new DAOException(sql, e);

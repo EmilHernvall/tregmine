@@ -51,7 +51,7 @@ public class DBContextFactory implements IContextFactory
         ds.setMaxActive(5);
         ds.setMaxIdle(5);
         ds.setDefaultAutoCommit(true);
-        
+
         this.plugin = instance;
     }
 

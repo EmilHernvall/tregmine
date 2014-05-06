@@ -495,3 +495,4 @@ CREATE TABLE bank_transaction (
 ) ENGINE=InnoDB;
 
 ALTER TABLE bank_account DROP INDEX idx_accountnum;
+ALTER TABLE player ADD COLUMN player_uuid CHAR (43) AFTER player_id;
