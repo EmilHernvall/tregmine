@@ -113,8 +113,18 @@ public class DBPlayerDAO implements IPlayerDAO
                     return null;
                 }
 
+                UUID uniqueId = null;
+                if (wrap != null) {
+                    uniqueId = wrap.getUniqueId();
+                } else {
+                    String uniqueIdStr = rs.getString("player_uuid");
+                    if (uniqueIdStr != null) {
+                        player.setStoredUuid(UUID.fromString(uniqueIdStr));
+                    }
+                }
+
                 player.setId(rs.getInt("player_id"));
-                player.setStoredUuid(wrap.getUniqueId());
+                player.setStoredUuid(uniqueId);
                 player.setPasswordHash(rs.getString("player_password"));
                 player.setRank(Rank.fromString(rs.getString("player_rank")));
 
