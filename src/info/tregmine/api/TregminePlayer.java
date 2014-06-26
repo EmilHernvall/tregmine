@@ -71,6 +71,7 @@ public class TregminePlayer extends PlayerDelegate
     private TregminePlayer student;
     private String currentInventory;
 	private int combatLog;
+	private String lastMessenger;
 
     // Player state for block fill
     private Block fillBlock1 = null;
@@ -92,6 +93,7 @@ public class TregminePlayer extends PlayerDelegate
     private boolean newChunk = false;
 
     private Tregmine plugin;
+    
 
     public TregminePlayer(Player player, Tregmine instance)
     {
@@ -771,5 +773,16 @@ public class TregminePlayer extends PlayerDelegate
             throw new RuntimeException(e);
         }
     }
+
+    public String getLastMessenger()
+    {
+        return lastMessenger;
+    }
+
+    public void setLastMessenger(String messenger)
+    {
+        this.lastMessenger = messenger;
+    }
+
 
 }
