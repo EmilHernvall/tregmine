@@ -130,7 +130,7 @@ public class CallEventListener implements Listener
     }
 
     // Triggers on a server chat event
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void TregmineChatEventListener(AsyncPlayerChatEvent event)
     {
         TregminePlayer player = plugin.getPlayer(event.getPlayer());
