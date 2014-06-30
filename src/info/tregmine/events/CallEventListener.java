@@ -135,6 +135,7 @@ public class CallEventListener implements Listener
     {
         TregminePlayer player = plugin.getPlayer(event.getPlayer());
         if (player.getChatState() != TregminePlayer.ChatState.CHAT) {
+            event.setCancelled(true);
             return;
         }
 
