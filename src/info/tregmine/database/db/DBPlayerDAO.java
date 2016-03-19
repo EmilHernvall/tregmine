@@ -398,34 +398,35 @@ public class DBPlayerDAO implements IPlayerDAO
     @Override
     public boolean doesIgnore(TregminePlayer player, TregminePlayer victim) throws DAOException
     {
-        String sql = "SELECT * FROM player " +
-                "WHERE player_id = ? ";
-
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, player.getId());
-            stmt.execute();
-
-            try (ResultSet rs = stmt.getResultSet()) {
-                if(!rs.next()) return false;
-
-                String stringofignored = rs.getString("player_ignore");
-                String[] strings = stringofignored.split(",");
-
-                List<String> playerignore = new ArrayList<String>();
-                for (String i : strings){
-                    if("".equalsIgnoreCase(i)) continue;
-                    playerignore.add(i);
-                }
-
-                if (playerignore.contains(victim.getRealName())) {
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-        } catch (SQLException e) {
-            throw new DAOException(sql, e);
-        }
+    	return false;
+//        String sql = "SELECT * FROM player " +
+//                "WHERE player_id = ? ";
+//
+//        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+//            stmt.setInt(1, player.getId());
+//            stmt.execute();
+//
+//            try (ResultSet rs = stmt.getResultSet()) {
+//                if(!rs.next()) return false;
+//
+//                String stringofignored = rs.getString("player_ignore");
+//                String[] strings = stringofignored.split(",");
+//
+//                List<String> playerignore = new ArrayList<String>();
+//                for (String i : strings){
+//                    if("".equalsIgnoreCase(i)) continue;
+//                    playerignore.add(i);
+//                }
+//
+//                if (playerignore.contains(victim.getRealName())) {
+//                    return true;
+//                } else {
+//                    return false;
+//                }
+//            }
+//        } catch (SQLException e) {
+//            throw new DAOException(sql, e);
+//        }
     }
 
     @Override
