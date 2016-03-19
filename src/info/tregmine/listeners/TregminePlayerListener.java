@@ -223,20 +223,22 @@ public class TregminePlayerListener implements Listener
     public void onPlayerJoin(PlayerJoinEvent event)
     {
         event.setJoinMessage(null);
-
+        
         TregminePlayer player = plugin.getPlayer(event.getPlayer());
+        
         if (player == null) {
             event.getPlayer().kickPlayer("error loading profile!");
             return;
         }
-
+        player.sendMessage(ChatColor.GOLD + "Welcome to Tregmine 2! There are ONE change(s)");
+        player.sendMessage(ChatColor.GOLD + "Keywords have been removed. Please don't try to use them.");
         Rank rank = player.getRank();
 
         // Handle invisibility, if set
         List<TregminePlayer> players = plugin.getOnlinePlayers();
         if (player.hasFlag(TregminePlayer.Flags.INVISIBLE)) {
             player.sendMessage(ChatColor.YELLOW + "You are now invisible!");
-
+           
             // Hide the new player from all existing players
             for (TregminePlayer current : players) {
                 if (!current.getRank().canVanish()) {
