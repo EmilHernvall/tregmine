@@ -1,6 +1,9 @@
 package info.tregmine.commands;
 
 import static org.bukkit.ChatColor.*;
+
+import java.util.Collection;
+
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 
@@ -40,7 +43,7 @@ public class ActionCommand extends AbstractCommand
         String channel = player.getChatChannel();
         String msg = argsToMessage(args);
 
-        Player[] players = server.getOnlinePlayers();
+        Collection<? extends Player> players = server.getOnlinePlayers();
         for (Player tp : players) {
             TregminePlayer to = tregmine.getPlayer(tp);
             if (!channel.equals(to.getChatChannel())) {

@@ -14,13 +14,13 @@ import org.bukkit.Sound;
  */
 public enum Notification {
 	NONE(null),//Place holder for just a message
-	BLESS(Sound.CHEST_CLOSE), //to keep it related to chests ect..
-	COMMAND_FAIL(Sound.CLICK),
-	MESSAGE(Sound.LEVEL_UP),
-	RANK_UP(Sound.FUSE),
-	RARE_DROP(Sound.ITEM_PICKUP),
-	SUMMON(Sound.PORTAL_TRAVEL),
-	WARP(Sound.ENDERMAN_TELEPORT);
+	BLESS(Sound.BLOCK_CHEST_CLOSE), //to keep it related to chests ect..
+	COMMAND_FAIL(Sound.BLOCK_LEVER_CLICK),
+	MESSAGE(Sound.ENTITY_PLAYER_LEVELUP),
+	RANK_UP(Sound.BLOCK_PISTON_CONTRACT),
+	RARE_DROP(Sound.ENTITY_ITEM_PICKUP),
+	SUMMON(Sound.BLOCK_PORTAL_TRAVEL),
+	WARP(Sound.ENTITY_ENDERMEN_TELEPORT);
 	
 	
 	private final Sound sound;

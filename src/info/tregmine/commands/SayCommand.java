@@ -1,6 +1,9 @@
 package info.tregmine.commands;
 
 import static org.bukkit.ChatColor.*;
+
+import java.util.Collection;
+
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 
@@ -42,7 +45,7 @@ public class SayCommand extends AbstractCommand
 
         LOGGER.info(player.getName() + ": <GOD> " + msg);
 
-        Player[] players = server.getOnlinePlayers();
+        Collection<? extends Player> players = server.getOnlinePlayers();
         for (Player p : players) {
             TregminePlayer current = tregmine.getPlayer((p.getName()));
             if (current.getRank().canBeGod()) {

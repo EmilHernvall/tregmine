@@ -646,7 +646,7 @@ public class TregminePlayerListener implements Listener
     {
         // Identify all guardians and categorize them based on their current
         // state
-        Player[] players = plugin.getServer().getOnlinePlayers();
+        Collection<?extends Player> players = plugin.getServer().getOnlinePlayers();
         Set<TregminePlayer> guardians = new HashSet<TregminePlayer>();
         List<TregminePlayer> activeGuardians = new ArrayList<TregminePlayer>();
         List<TregminePlayer> inactiveGuardians =
@@ -683,7 +683,7 @@ public class TregminePlayerListener implements Listener
         Collections.sort(inactiveGuardians, new RankComparator(true));
         Collections.sort(queuedGuardians, new RankComparator());
 
-        int idealCount = (int) Math.ceil(Math.sqrt(players.length) / 2);
+        int idealCount = (int) Math.ceil(Math.sqrt(players.size()) / 2);
         // There are not enough guardians active, we need to activate a few more
         if (activeGuardians.size() <= idealCount) {
             // Make a pool of every "willing" guardian currently online

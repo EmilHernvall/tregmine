@@ -2,6 +2,7 @@ package info.tregmine.commands;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -178,7 +179,7 @@ public class BrushCommand extends AbstractCommand implements Listener
             return;
         }
 
-        Location l = p.getDelegate().getTargetBlock(null, 0).getLocation();
+        Location l = p.getDelegate().getTargetBlock((Set<Material>) null, 0).getLocation();
         Tregmine.LOGGER.info("Brush " + i.get(1) + " at " + l);
         List<Block> sphere = makeSphere(l, radius);
 

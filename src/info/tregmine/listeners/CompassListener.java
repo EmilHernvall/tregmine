@@ -1,5 +1,7 @@
 package info.tregmine.listeners;
 
+import java.util.Set;
+
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.event.*;
@@ -83,7 +85,7 @@ public class CompassListener implements Listener
         }
         else if (player.getRank().canUseCompass()) {
 
-            Block target = player.getDelegate().getTargetBlock(null, 300);
+            Block target = player.getDelegate().getTargetBlock((Set<Material>) null, 300);
 
             Block b1 = world.getBlockAt(new Location(player.getWorld(),
                                                      target.getX(),
