@@ -90,8 +90,8 @@ public class Tregmine extends JavaPlugin
 
         zones = new HashMap<>();
 
-        Player[] players = getServer().getOnlinePlayers();
-        for (Player player : players) {
+        Collection<? extends Player> player = getServer().getOnlinePlayers();
+        for (Collection player : players) {
             try {
                 TregminePlayer tp =
                     addPlayer(player, player.getAddress().getAddress());
