@@ -141,6 +141,10 @@ commands:
   repair:
     description: Repair special tools
     usage: /repair
+  reply:
+    description: Reply to the last message you received
+    usage: /reply <message>
+    aliases: [r]
   report:
     description: Adds a report to the players record
     usage: /report player message

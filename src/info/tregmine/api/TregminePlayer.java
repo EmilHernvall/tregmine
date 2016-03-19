@@ -71,6 +71,7 @@ public class TregminePlayer extends PlayerDelegate
     private TregminePlayer student;
     private String currentInventory;
 	private int combatLog;
+	private String lastMessenger;
 
     // Player state for block fill
     private Block fillBlock1 = null;
@@ -770,6 +771,13 @@ public class TregminePlayer extends PlayerDelegate
             plugin.getLogger().info("INVENTORY ERROR: Trying to save " + this.getName() + " inventory named: " + name);
             throw new RuntimeException(e);
         }
+    }
+    
+    public String getLastMessenger(){
+    	return lastMessenger;
+    }
+    public void setLastMessenger(String messenger){
+    	this.lastMessenger = messenger;
     }
 
 }
