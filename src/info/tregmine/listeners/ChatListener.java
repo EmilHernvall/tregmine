@@ -7,6 +7,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.event.*;
 
 import info.tregmine.*;
+import info.tregmine.api.Rank;
 import info.tregmine.api.TregminePlayer;
 import info.tregmine.database.*;
 import info.tregmine.events.TregmineChatEvent;
@@ -40,9 +41,12 @@ public class ChatListener implements Listener
                 }
 
                 ChatColor txtColor = ChatColor.WHITE;
-                if (sender.equals(to)) {
+                if (sender.getRank() == Rank.JUNIOR_ADMIN || sender.getRank() == Rank.SENIOR_ADMIN){
+                	txtColor = ChatColor.LIGHT_PURPLE;
+                }else if(sender.getRank() != Rank.JUNIOR_ADMIN && sender.getRank() != Rank.SENIOR_ADMIN){
+                	if (sender.equals(to)) {
                     txtColor = ChatColor.GRAY;
-                }
+                }}
 
                 String text = event.getMessage();
                 for (TregminePlayer online : plugin.getOnlinePlayers()) {
