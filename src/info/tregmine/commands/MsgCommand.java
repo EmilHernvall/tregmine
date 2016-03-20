@@ -36,6 +36,7 @@ public class MsgCommand extends AbstractCommand
     @Override
     public boolean handlePlayer(TregminePlayer player, String[] args)
     {
+    	
         if (args.length < 2) {
             return false;
         }
@@ -68,7 +69,7 @@ public class MsgCommand extends AbstractCommand
                     player.sendMessage(GREEN + "(to) " + receivingPlayer.getChatName()
                             + GREEN + ": " + message);
                 }
-                
+                receivingPlayer.setLastMessenger(player.getName());
                 // Send message to recipient
                 receivingPlayer.sendNotification(Notification.MESSAGE, GREEN + "(msg) " + player.getChatName() + GREEN
                         + ": " + message);
