@@ -223,20 +223,22 @@ public class TregminePlayerListener implements Listener
     public void onPlayerJoin(PlayerJoinEvent event)
     {
         event.setJoinMessage(null);
-
+        
         TregminePlayer player = plugin.getPlayer(event.getPlayer());
+        
         if (player == null) {
             event.getPlayer().kickPlayer("error loading profile!");
             return;
         }
-
+        player.sendMessage(ChatColor.GOLD + "Welcome to Tregmine 2! There are ONE change(s)");
+        player.sendMessage(ChatColor.GOLD + "Keywords have been removed. Please don't try to use them.");
         Rank rank = player.getRank();
 
         // Handle invisibility, if set
         List<TregminePlayer> players = plugin.getOnlinePlayers();
         if (player.hasFlag(TregminePlayer.Flags.INVISIBLE)) {
             player.sendMessage(ChatColor.YELLOW + "You are now invisible!");
-
+           
             // Hide the new player from all existing players
             for (TregminePlayer current : players) {
                 if (!current.getRank().canVanish()) {
@@ -377,10 +379,10 @@ public class TregminePlayerListener implements Listener
                     "Type /mentor to offer your services!");
             }
         }
-
-        if (player.getKeyword() == null && player.getRank().mustUseKeyword()) {
-            player.sendMessage(ChatColor.RED + "You have not set a keyword! DO SO NOW.");
-        }
+// Feature has been removed.
+//        if (player.getKeyword() == null && player.getRank().mustUseKeyword()) {
+//            player.sendMessage(ChatColor.RED + "You have not set a keyword! DO SO NOW.");
+//        }
 
         if (rank == Rank.DONATOR &&
                 !player.hasBadge(Badge.PHILANTROPIST)) {
@@ -646,7 +648,7 @@ public class TregminePlayerListener implements Listener
     {
         // Identify all guardians and categorize them based on their current
         // state
-        Player[] players = plugin.getServer().getOnlinePlayers();
+        Collection<?extends Player> players = plugin.getServer().getOnlinePlayers();
         Set<TregminePlayer> guardians = new HashSet<TregminePlayer>();
         List<TregminePlayer> activeGuardians = new ArrayList<TregminePlayer>();
         List<TregminePlayer> inactiveGuardians =
@@ -683,7 +685,7 @@ public class TregminePlayerListener implements Listener
         Collections.sort(inactiveGuardians, new RankComparator(true));
         Collections.sort(queuedGuardians, new RankComparator());
 
-        int idealCount = (int) Math.ceil(Math.sqrt(players.length) / 2);
+        int idealCount = (int) Math.ceil(Math.sqrt(players.size()) / 2);
         // There are not enough guardians active, we need to activate a few more
         if (activeGuardians.size() <= idealCount) {
             // Make a pool of every "willing" guardian currently online

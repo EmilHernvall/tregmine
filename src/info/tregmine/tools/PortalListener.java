@@ -56,7 +56,7 @@ public class PortalListener implements Listener
             int distance = 5;
             Block block = null;
             while (distance > 0) {
-                block = player.getDelegate().getTargetBlock(null, distance);
+                block = player.getDelegate().getTargetBlock((Set<Material>) null, distance);
                 if (block.getType().equals(Material.AIR)) {
                     break;
                 }

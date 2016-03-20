@@ -1,5 +1,7 @@
 package info.tregmine.commands;
 
+import static org.bukkit.ChatColor.GREEN;
+
 import java.util.List;
 
 import org.bukkit.*;
@@ -36,8 +38,8 @@ public class SendToCommand extends AbstractCommand
         Server server = tregmine.getServer();
         World world = server.getWorld(args[1]);
         if (world == null) {
-            // TODO: error message
-            return false;
+        	player.sendMessage(ChatColor.RED + "That world does not exist.");
+            return true;
         }
 
         Location cpspawn = world.getSpawnLocation();

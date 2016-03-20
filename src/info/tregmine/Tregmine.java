@@ -90,16 +90,16 @@ public class Tregmine extends JavaPlugin
 
         zones = new HashMap<>();
 
-        Player[] players = getServer().getOnlinePlayers();
-        for (Player player : players) {
+        Collection<? extends Player> players = Bukkit.getServer().getOnlinePlayers();
+        for (Player player01 : players) {
             try {
                 TregminePlayer tp =
-                    addPlayer(player, player.getAddress().getAddress());
+                    addPlayer(player01, player01.getAddress().getAddress());
                 if (tp.getRank() == Rank.TOURIST) {
                     students.offer(tp);
                 }
             } catch (PlayerBannedException e) {
-                player.kickPlayer(e.getMessage());
+                player01.kickPlayer(e.getMessage());
             }
         }
 
@@ -291,7 +291,9 @@ public class Tregmine extends JavaPlugin
         getCommand("regeneratechunk").setExecutor(new RegenerateChunkCommand(this));
         getCommand("remitems").setExecutor(new RemItemsCommand(this));
         getCommand("repair").setExecutor(new ToolRepairCommand(this));
+        getCommand("reply").setExecutor(new ReplyCommand(this));
         getCommand("report").setExecutor(new ReportCommand(this));
+        getCommand("rname").setExecutor(new ResetNameCommand(this));
         getCommand("say").setExecutor(new SayCommand(this));
         getCommand("seen").setExecutor(new SeenCommand(this));
         getCommand("sell").setExecutor(new SellCommand(this));
@@ -504,9 +506,9 @@ public class Tregmine extends JavaPlugin
             }
 
             int onlinePlayerCount = 0;
-            Player[] onlinePlayers = getServer().getOnlinePlayers();
+            Collection<? extends Player> onlinePlayers = getServer().getOnlinePlayers();
             if (onlinePlayers != null) {
-                onlinePlayerCount = onlinePlayers.length;
+                onlinePlayerCount = onlinePlayers.size();
             }
 
             ILogDAO logDAO = ctx.getLogDAO();
@@ -528,9 +530,9 @@ public class Tregmine extends JavaPlugin
     {
         try (IContext ctx = contextFactory.createContext()) {
             int onlinePlayerCount = 0;
-            Player[] onlinePlayers = getServer().getOnlinePlayers();
+            Collection<?extends Player> onlinePlayers = Bukkit.getServer().getOnlinePlayers();
             if (onlinePlayers != null) {
-                onlinePlayerCount = onlinePlayers.length;
+                onlinePlayerCount = onlinePlayers.size();
             }
 
             ILogDAO logDAO = ctx.getLogDAO();

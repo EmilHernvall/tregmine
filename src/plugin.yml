@@ -1,9 +1,9 @@
 name: tregmine
 main: info.tregmine.Tregmine
-version: 2.0.0
+version: 3.1.0
 website: http://tregmine.info
-author: Ein Andersson, Emil Hernvall, Josh Morgan, James Sherlock, Rob Catron, Joe Notaro
-description: Tregmine
+author: Ein Andersson, Emil Hernvall, Josh Morgan, James Sherlock, Rob Catron, Joe Notaro, Eric Rabil
+description: Tregmine Revived
 loadbefore: [BlockLog,GameMagic]
 
 commands:
@@ -141,9 +141,16 @@ commands:
   repair:
     description: Repair special tools
     usage: /repair
+  reply:
+    description: Reply to the last message you received
+    usage: /reply <message>
+    aliases: [r]
   report:
     description: Adds a report to the players record
     usage: /report player message
+  rname:
+    description: Resets the players nickname
+    usage: /rname
   say:
     description: Speak as god (admins only)
     usage: /say message

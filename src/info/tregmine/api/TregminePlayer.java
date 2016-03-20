@@ -47,6 +47,7 @@ public class TregminePlayer extends PlayerDelegate
     private String password = null;
     private String keyword = null;
     private Rank rank = Rank.UNVERIFIED;
+    private ChatColor rankcolor = null;
     private ChatColor color = ChatColor.WHITE;
     private String quitMessage = null;
     private int guardianRank = 0;
@@ -71,6 +72,7 @@ public class TregminePlayer extends PlayerDelegate
     private TregminePlayer student;
     private String currentInventory;
 	private int combatLog;
+	private String lastMessenger;
 
     // Player state for block fill
     private Block fillBlock1 = null;
@@ -109,7 +111,7 @@ public class TregminePlayer extends PlayerDelegate
     public TregminePlayer(String name, Tregmine instance)
     {
         super(null);
-
+        
         this.name = name;
         this.realName = name;
         this.flags = EnumSet.noneOf(Flags.class);
@@ -197,7 +199,7 @@ public class TregminePlayer extends PlayerDelegate
 
     public String getKeyword() { return keyword; }
     public void setKeyword(String v) { this.keyword = v; }
-
+    
     public Rank getRank() { return rank; }
     public void setRank(Rank v)
     {
@@ -266,10 +268,20 @@ public class TregminePlayer extends PlayerDelegate
             case QUEUED:
                 return ChatColor.GOLD;
             default:
-            }
-        }
+            }}
 
         return rank.getColor();
+    }
+    public ChatColor RankColor(){
+    	// Gives admins, guardians a chat color
+    	if(rank == Rank.GUARDIAN){
+    		return ChatColor.GREEN;
+    	}else if(rank == Rank.JUNIOR_ADMIN || rank == Rank.SENIOR_ADMIN){
+    		return ChatColor.GOLD;
+    	}else{
+    		return ChatColor.GRAY;
+    	}
+    	
     }
 
     public void setCurrentZone(Zone zone) { this.currentZone = zone; }
@@ -770,6 +782,13 @@ public class TregminePlayer extends PlayerDelegate
             plugin.getLogger().info("INVENTORY ERROR: Trying to save " + this.getName() + " inventory named: " + name);
             throw new RuntimeException(e);
         }
+    }
+    
+    public String getLastMessenger(){
+    	return lastMessenger;
+    }
+    public void setLastMessenger(String messenger){
+    	this.lastMessenger = messenger;
     }
 
 }

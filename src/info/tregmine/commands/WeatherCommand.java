@@ -22,6 +22,7 @@ public class WeatherCommand extends AbstractCommand
             return true;
         }
         if (args.length != 1) {
+        	player.sendMessage("/weather <downfall or clear>");
             player.resetPlayerWeather();
             return true;
         }
