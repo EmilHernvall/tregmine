@@ -18,7 +18,8 @@ public class TeleportToCommand extends AbstractCommand
     public boolean handlePlayer(TregminePlayer player, String[] args)
     {
         if (args.length != 3) {
-            return false;
+        	player.sendMessage(ChatColor.RED + "Incorrect parameters passed!");
+			return true;
         }
         if (!player.getRank().canTeleportToPlayers()) {
             return true;
