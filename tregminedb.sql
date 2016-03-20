@@ -1,3 +1,21 @@
+-- phpMyAdmin SQL Dump
+-- version 4.5.1
+-- http://www.phpmyadmin.net
+--
+-- Host: 127.0.0.1
+-- Generation Time: Mar 20, 2016 at 02:02 AM
+-- Server version: 10.1.9-MariaDB
+-- PHP Version: 5.6.15
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
 --
 -- Database: `tregmine`
 --
@@ -248,7 +266,7 @@ CREATE TABLE `player` (
   `player_rank` enum('unverified','tourist','settler','resident','donator','guardian','builder','coder','junior_admin','senior_admin') COLLATE utf8_swedish_ci DEFAULT 'unverified',
   `player_flags` int(10) UNSIGNED DEFAULT NULL,
   `player_keywords` text COLLATE utf8_swedish_ci NOT NULL,
-  `player_ignore` text COLLATE utf8_swedish_ci,
+  `player_ignore` text COLLATE utf8_swedish_ci NOT NULL,
   `player_uuid` char(43) COLLATE utf8_swedish_ci NOT NULL,
   `player_inventory` varchar(255) COLLATE utf8_swedish_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
@@ -264,6 +282,23 @@ CREATE TABLE `playerinventory` (
   `player_id` int(10) NOT NULL,
   `playerinventory_name` varchar(255) DEFAULT NULL,
   `playerinventory_type` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `playerinventory_item`
+--
+
+CREATE TABLE `playerinventory_item` (
+  `item_id` int(10) NOT NULL,
+  `playerinventory_id` int(10) DEFAULT NULL,
+  `item_slot` int(10) DEFAULT NULL,
+  `item_material` int(10) DEFAULT NULL,
+  `item_data` int(11) DEFAULT NULL,
+  `item_meta` text,
+  `item_count` int(10) DEFAULT NULL,
+  `item_durability` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -723,6 +758,13 @@ ALTER TABLE `playerinventory`
   ADD KEY `idx_player` (`player_id`);
 
 --
+-- Indexes for table `playerinventory_item`
+--
+ALTER TABLE `playerinventory_item`
+  ADD PRIMARY KEY (`item_id`),
+  ADD KEY `idx_inv` (`playerinventory_id`);
+
+--
 -- Indexes for table `player_badge`
 --
 ALTER TABLE `player_badge`
@@ -888,7 +930,7 @@ ALTER TABLE `zone_user`
 -- AUTO_INCREMENT for table `blessedblock`
 --
 ALTER TABLE `blessedblock`
-  MODIFY `blessedblock_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `blessedblock_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT for table `donation`
 --
@@ -913,27 +955,27 @@ ALTER TABLE `fishyblock_transaction`
 -- AUTO_INCREMENT for table `inventory`
 --
 ALTER TABLE `inventory`
-  MODIFY `inventory_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `inventory_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT for table `inventory_accesslog`
 --
 ALTER TABLE `inventory_accesslog`
-  MODIFY `accesslog_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `accesslog_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 --
 -- AUTO_INCREMENT for table `inventory_changelog`
 --
 ALTER TABLE `inventory_changelog`
-  MODIFY `changelog_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `changelog_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT for table `inventory_item`
 --
 ALTER TABLE `inventory_item`
-  MODIFY `item_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `item_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT for table `item`
 --
 ALTER TABLE `item`
-  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=396;
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `mentorlog`
 --
@@ -948,12 +990,17 @@ ALTER TABLE `motd`
 -- AUTO_INCREMENT for table `player`
 --
 ALTER TABLE `player`
-  MODIFY `player_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `player_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT for table `playerinventory`
 --
 ALTER TABLE `playerinventory`
-  MODIFY `playerinventory_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1220;
+  MODIFY `playerinventory_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4098;
+--
+-- AUTO_INCREMENT for table `playerinventory_item`
+--
+ALTER TABLE `playerinventory_item`
+  MODIFY `item_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=287;
 --
 -- AUTO_INCREMENT for table `player_badge`
 --
@@ -963,7 +1010,7 @@ ALTER TABLE `player_badge`
 -- AUTO_INCREMENT for table `player_chatlog`
 --
 ALTER TABLE `player_chatlog`
-  MODIFY `chatlog_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `chatlog_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=61;
 --
 -- AUTO_INCREMENT for table `player_givelog`
 --
@@ -973,27 +1020,27 @@ ALTER TABLE `player_givelog`
 -- AUTO_INCREMENT for table `player_home`
 --
 ALTER TABLE `player_home`
-  MODIFY `home_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `home_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `player_login`
 --
 ALTER TABLE `player_login`
-  MODIFY `login_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `login_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=61;
 --
 -- AUTO_INCREMENT for table `player_orelog`
 --
 ALTER TABLE `player_orelog`
-  MODIFY `orelog_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `orelog_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT for table `player_report`
 --
 ALTER TABLE `player_report`
-  MODIFY `report_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `report_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 --
 -- AUTO_INCREMENT for table `player_transaction`
 --
 ALTER TABLE `player_transaction`
-  MODIFY `transaction_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `transaction_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT for table `player_webcookie`
 --
@@ -1008,12 +1055,12 @@ ALTER TABLE `shorturl`
 -- AUTO_INCREMENT for table `trade`
 --
 ALTER TABLE `trade`
-  MODIFY `trade_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `trade_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT for table `trade_item`
 --
 ALTER TABLE `trade_item`
-  MODIFY `item_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `item_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `version`
 --
@@ -1023,12 +1070,12 @@ ALTER TABLE `version`
 -- AUTO_INCREMENT for table `warp`
 --
 ALTER TABLE `warp`
-  MODIFY `warp_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `warp_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `warp_log`
 --
 ALTER TABLE `warp_log`
-  MODIFY `log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT for table `zone`
 --
