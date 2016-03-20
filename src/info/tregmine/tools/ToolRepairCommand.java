@@ -6,6 +6,8 @@ import info.tregmine.commands.AbstractCommand;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
 import info.tregmine.database.IWalletDAO;
+import net.minecraft.server.v1_9_R1.Blocks;
+import net.minecraft.server.v1_9_R1.Items;
 
 import java.util.List;
 
@@ -22,6 +24,8 @@ public class ToolRepairCommand  extends AbstractCommand
     @Override
     public boolean handlePlayer(TregminePlayer player, String args[])
     {
+    	try (IContext dbCtx = tregmine.createContext()){
+    	if(player.getItemInHand().getItemMeta().getLore() != null){
         List<String> lore = player.getItemInHand().getItemMeta().getLore();
         
         if (!lore.get(1).equalsIgnoreCase("0/1000")) {
@@ -29,8 +33,8 @@ public class ToolRepairCommand  extends AbstractCommand
             return true;
         }
         
-        try (IContext dbCtx = tregmine.createContext()) {
-            IWalletDAO walletDAO = dbCtx.getWalletDAO();
+        try (IContext dbCtx1 = tregmine.createContext()) {
+            IWalletDAO walletDAO = dbCtx1.getWalletDAO();
             
             if (walletDAO.take(player, 10000)) {
                 lore.remove(1);
@@ -50,6 +54,15 @@ public class ToolRepairCommand  extends AbstractCommand
         } catch (DAOException e) {
             throw new RuntimeException(e);
         }
+    	}else{
+    		player.sendMessage(ChatColor.RED + "You can't repair that!");
+    		return true;
+    	}
+    	}catch (DAOException e){
+    		player.sendMessage(ChatColor.RED + "Something bad happened! D:");
+    		return true;
+    	}
+    	}
     }
 
-}
+

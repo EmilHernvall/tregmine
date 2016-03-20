@@ -36,7 +36,10 @@ public class SayCommand extends AbstractCommand
         if (!player.getRank().canBeGod()) {
             return true;
         }
-
+        if(args.length == 0){
+        	player.sendMessage(RED + "WHERE ARE YOUR ARGUMENTS????!!!!");
+        	return true;
+        }
         Server server = player.getServer();
         String msg = argsToMessage(args);
 

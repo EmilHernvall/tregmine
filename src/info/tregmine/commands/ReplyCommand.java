@@ -85,6 +85,8 @@ public class ReplyCommand extends AbstractCommand
                 throw new RuntimeException(e);
             }
 
+        }else{
+        	player.sendMessage(ChatColor.RED + "You need to type a message!");
         }
         return true;
     }
