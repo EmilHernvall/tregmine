@@ -420,6 +420,11 @@ public class TregminePlayerListener implements Listener
             }
             plugin.getServer().broadcastMessage(message);
         }
+        String suffix = "";
+        if(player.getQuitMessage().length() != 0){
+        	suffix = "[" + player.getQuitMessage() + "]";
+        }
+        Bukkit.broadcastMessage(ChatColor.YELLOW + player.getChatName() + " has left the game " + suffix);
 
         // Look if there are any students being mentored by the exiting player
         if (player.getStudent() != null) {
