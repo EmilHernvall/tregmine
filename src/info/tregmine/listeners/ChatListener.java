@@ -115,8 +115,8 @@ public class ChatListener implements Listener
         }
 
         try (IContext ctx = plugin.createContext()) {
-            ILogDAO logDAO = ctx.getLogDAO();
-            logDAO.insertChatMessage(sender, channel, event.getMessage());
+            //ILogDAO logDAO = ctx.getLogDAO();
+            //logDAO.insertChatMessage(sender, channel, event.getMessage());
         } catch (DAOException e) {
             throw new RuntimeException(e);
         }
