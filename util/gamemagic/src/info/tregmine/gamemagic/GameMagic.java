@@ -109,20 +109,20 @@ public class GameMagic extends JavaPlugin implements Listener
         portalLookup.put(1112623336, "elva");
 
         // Shoot fireworks at spawn
-        BukkitScheduler scheduler = getServer().getScheduler();
-        scheduler.scheduleSyncRepeatingTask(this,
-                new Runnable() {
-            public void run() {
-                World world = GameMagic.this.getServer().getWorld("world");
-                Location loc = world.getSpawnLocation().add(0.5, 0, 0.5);
-
-                FireworksFactory factory = new FireworksFactory();
-                factory.addColor(Color.BLUE);
-                factory.addColor(Color.YELLOW);
-                factory.addType(FireworkEffect.Type.STAR);
-                factory.shot(loc);
-            }
-        }, 100L, 200L);
+//        BukkitScheduler scheduler = getServer().getScheduler();
+//        scheduler.scheduleSyncRepeatingTask(this,
+//                new Runnable() {
+//            public void run() {
+//                World world = GameMagic.this.getServer().getWorld("world");
+//                Location loc = world.getSpawnLocation().add(0.5, 0, 0.5);
+//
+//                FireworksFactory factory = new FireworksFactory();
+//                factory.addColor(Color.BLUE);
+//                factory.addColor(Color.YELLOW);
+//                factory.addType(FireworkEffect.Type.STAR);
+//                factory.shot(loc);
+//            }
+//        }, 100L, 200L);
     }
 
     public static int locationChecksum(Location loc)
