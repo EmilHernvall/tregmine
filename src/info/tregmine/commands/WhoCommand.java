@@ -8,7 +8,9 @@ import java.util.Set;
 import org.bukkit.ChatColor;
 
 import info.tregmine.Tregmine;
+import info.tregmine.api.Rank;
 import info.tregmine.api.TregminePlayer;
+import info.tregmine.api.TregminePlayer.Flags;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
 import info.tregmine.database.ILogDAO;
@@ -35,7 +37,12 @@ public class WhoCommand extends AbstractCommand
         TregminePlayer whoPlayer = candidates.get(0);
 
         if (whoPlayer == null) {
+        	player.sendMessage(RED + "That player is not online right now.");
             return true;
+        }
+        if(whoPlayer.isOnline() != true){
+        	player.sendMessage(RED + "That player is not online right now.");
+        	return true;
         }
 
         double X = whoPlayer.getLocation().getX();
@@ -89,6 +96,11 @@ public class WhoCommand extends AbstractCommand
             player.sendMessage(GOLD + "Level: " + GRAY + whoPlayer.getLevel());
             if (aliasList != null) {
                 player.sendMessage(GOLD + "Aliases: " + aliasList);
+            }
+            if(whoPlayer.hasFlag(Flags.INVISIBLE)){
+            	if(player.getRank() == Rank.JUNIOR_ADMIN || player.getRank() == Rank.SENIOR_ADMIN){
+            	player.sendMessage(BLUE + "This player is invisible.");
+            	}
             }
             player.sendMessage(DARK_GRAY + "*************************************" +
                                "*****************");
