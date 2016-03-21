@@ -415,8 +415,8 @@ public class TregminePlayerListener implements Listener
                 message = player.getChatName() + " quit: " + ChatColor.YELLOW + player.getQuitMessage();
             } else {
                 Random rand = new Random();
-                int msgIndex = rand.nextInt(plugin.getQuitMessages().size());
-                message = ChatColor.GRAY + "Quit: " + player.getChatName() + ChatColor.GRAY + " " + plugin.getQuitMessages().get(msgIndex);
+//                int msgIndex = rand.nextInt(plugin.getQuitMessages().size());
+//                message = ChatColor.GRAY + "Quit: " + player.getChatName() + ChatColor.GRAY + " " + plugin.getQuitMessages().get(msgIndex);
             }
             plugin.getServer().broadcastMessage(message);
         }
