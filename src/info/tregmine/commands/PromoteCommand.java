@@ -5,10 +5,13 @@ import static org.bukkit.ChatColor.*;
 import java.util.List;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+
 import info.tregmine.Tregmine;
 import info.tregmine.api.Rank;
 import info.tregmine.api.TregminePlayer;
 import info.tregmine.api.TregminePlayer.Flags;
+import info.tregmine.commands.NotifyCommand;
 
 
 public class PromoteCommand extends AbstractCommand{
@@ -32,6 +35,7 @@ public class PromoteCommand extends AbstractCommand{
 //					return true;
 //				}
 //			}
+			
 			return true;
 		}
 		//This player is a senior admin and is allowed to promote. Continue.

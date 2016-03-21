@@ -127,7 +127,7 @@ public class Tregmine extends JavaPlugin
         WorldCreator hierarchyWorld = new WorldCreator(anarchyName);
         hierarchyWorld.environment(World.Environment.NORMAL);
         rulelessWorld = hierarchyWorld.createWorld();
-
+        
         // Minecraft Portals should handle these
         WorldCreator hierarchyWorldNether = new WorldCreator(anarchyName + "_nether");
         hierarchyWorldNether.environment(World.Environment.NETHER);
@@ -135,6 +135,16 @@ public class Tregmine extends JavaPlugin
         WorldCreator hierarchyWorldEnd = new WorldCreator(anarchyName + "_the_end");
         hierarchyWorldEnd.environment(World.Environment.THE_END);
         rulelessWorldEnd = hierarchyWorldEnd.createWorld();
+        
+        List<?> configWorlds = getConfig().getList("worlds.names");
+        String[] worlds = configWorlds.toArray(new String[configWorlds.size()]);
+        for(String worldName : worlds){
+        	WorldCreator addWorld = new WorldCreator(worldName);
+        	addWorld.environment(World.Environment.NORMAL);
+        	addWorld.generateStructures(false);
+        	addWorld.type(WorldType.FLAT);
+        	addWorld.createWorld();
+        }
 
         WorldCreator gameWorld = new WorldCreator("game");
         gameWorld.environment(World.Environment.NORMAL);

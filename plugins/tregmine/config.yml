@@ -2,12 +2,27 @@ api:
   signing-key: your-strong-random-key-here
   port: 9192
 db:
-  url: jdbc:mysql://localhost:3306/tregmine?autoReconnect=true
-  user: tregmine
-  password: tregmine
+  url: jdbc:mysql://10.10.0.5:3306/tregmine?autoReconnect=true
+  user: server
+  password: C8y9AWhLT5rz4Xwn
 support:
   user: tregmine.info@gmail.com
   password: will message you
   to: 
     - jm109876543210@gmail.com
     - aderyn@gmail.com
+#Worlds -- DO NOT ADD THE FOLLOWING: world, world_nether, world_the_end, game,
+#anarchy, anarchy_nether, anarchy_the_end -- You have been warned.
+worlds:
+  names:
+    - vanilla
+    - treton.old
+    - treton
+    - skyland
+    - elva
+    - einhome
+    - ChildsPlay
+    - alpha
+    - citadel
+#Rank Chat Colors
+#Coming soon :-)
