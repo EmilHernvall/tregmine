@@ -415,11 +415,16 @@ public class TregminePlayerListener implements Listener
                 message = player.getChatName() + " quit: " + ChatColor.YELLOW + player.getQuitMessage();
             } else {
                 Random rand = new Random();
-                int msgIndex = rand.nextInt(plugin.getQuitMessages().size());
-                message = ChatColor.GRAY + "Quit: " + player.getChatName() + ChatColor.GRAY + " " + plugin.getQuitMessages().get(msgIndex);
+//                int msgIndex = rand.nextInt(plugin.getQuitMessages().size());
+//                message = ChatColor.GRAY + "Quit: " + player.getChatName() + ChatColor.GRAY + " " + plugin.getQuitMessages().get(msgIndex);
             }
             plugin.getServer().broadcastMessage(message);
         }
+        String suffix = "";
+        if(player.getQuitMessage().length() != 0){
+        	suffix = "[" + player.getQuitMessage() + "]";
+        }
+        Bukkit.broadcastMessage(ChatColor.YELLOW + player.getChatName() + " has left the game " + suffix);
 
         // Look if there are any students being mentored by the exiting player
         if (player.getStudent() != null) {

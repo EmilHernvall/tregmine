@@ -127,7 +127,7 @@ public class Tregmine extends JavaPlugin
         WorldCreator hierarchyWorld = new WorldCreator(anarchyName);
         hierarchyWorld.environment(World.Environment.NORMAL);
         rulelessWorld = hierarchyWorld.createWorld();
-
+        
         // Minecraft Portals should handle these
         WorldCreator hierarchyWorldNether = new WorldCreator(anarchyName + "_nether");
         hierarchyWorldNether.environment(World.Environment.NETHER);
@@ -135,6 +135,16 @@ public class Tregmine extends JavaPlugin
         WorldCreator hierarchyWorldEnd = new WorldCreator(anarchyName + "_the_end");
         hierarchyWorldEnd.environment(World.Environment.THE_END);
         rulelessWorldEnd = hierarchyWorldEnd.createWorld();
+        
+        List<?> configWorlds = getConfig().getList("worlds.names");
+        String[] worlds = configWorlds.toArray(new String[configWorlds.size()]);
+        for(String worldName : worlds){
+        	WorldCreator addWorld = new WorldCreator(worldName);
+        	addWorld.environment(World.Environment.NORMAL);
+        	addWorld.generateStructures(false);
+        	addWorld.type(WorldType.FLAT);
+        	addWorld.createWorld();
+        }
 
         WorldCreator gameWorld = new WorldCreator("game");
         gameWorld.environment(World.Environment.NORMAL);
@@ -250,6 +260,7 @@ public class Tregmine extends JavaPlugin
             });
 
         getCommand("action").setExecutor(new ActionCommand(this));
+        getCommand("afk").setExecutor(new AfkCommand(this));
         getCommand("alert").setExecutor(new AlertCommand(this));
         getCommand("allclear").setExecutor(new CheckBlocksCommand(this));
         getCommand("badge").setExecutor(new BadgeCommand(this));
@@ -287,6 +298,7 @@ public class Tregmine extends JavaPlugin
         getCommand("nuke").setExecutor(new NukeCommand(this));
         getCommand("password").setExecutor(new PasswordCommand(this));
         getCommand("pos").setExecutor(new PositionCommand(this));
+        getCommand("promote").setExecutor(new PromoteCommand(this));
         getCommand("quitmessage").setExecutor(new QuitMessageCommand(this));
         getCommand("regeneratechunk").setExecutor(new RegenerateChunkCommand(this));
         getCommand("remitems").setExecutor(new RemItemsCommand(this));
@@ -300,6 +312,7 @@ public class Tregmine extends JavaPlugin
         getCommand("sendto").setExecutor(new SendToCommand(this));
         getCommand("setbiome").setExecutor(new SetBiomeCommand(this));
         getCommand("setspawner").setExecutor(new SetSpawnerCommand(this));
+        getCommand("skipmentor").setExecutor(new SkipMentorCommand(this));
         getCommand("spawn").setExecutor(new SpawnCommand(this));
         getCommand("summon").setExecutor(new SummonCommand(this));
         getCommand("support").setExecutor(new SupportCommand(this));

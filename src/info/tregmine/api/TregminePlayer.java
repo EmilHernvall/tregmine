@@ -84,6 +84,9 @@ public class TregminePlayer extends PlayerDelegate
     private Block zoneBlock2 = null;
     private int zoneBlockCounter = 0;
     private int targetZoneId = 0;
+    
+    // Player state for activity
+    private boolean afk = false;
 
     // Fishy Block state
     private FishyBlock newFishyBlock;
@@ -169,6 +172,8 @@ public class TregminePlayer extends PlayerDelegate
     public boolean hasFlag(Flags flag) { return flags.contains(flag); }
 
     public boolean hasBadge(Badge badge) { return badges.containsKey(badge); }
+    
+
 
     public void setBadges(Map<Badge, Integer> v) { this.badges = v; }
     public Map<Badge, Integer> getBadges() { return badges; }
@@ -789,6 +794,13 @@ public class TregminePlayer extends PlayerDelegate
     }
     public void setLastMessenger(String messenger){
     	this.lastMessenger = messenger;
+    }
+    
+    public boolean isAfk(){
+    	return this.afk;
+    }
+    public void setAfk(Boolean value){
+    	this.afk = value;
     }
 
 }
