@@ -48,6 +48,7 @@ public class SkipMentorCommand extends AbstractCommand{
 			player.sendMessage(RED + "The player specified has been hardwarned and is not eligible for promotion.");
 			return true;
 		}
+		if(user.getRank() == Rank.UNVERIFIED || user.getRank() == Rank.TOURIST){
 		//Any other errors have now been checked and dealt with. Promote the user.
 		try (IContext ctx = tregmine.createContext()) {
             user.setRank(Rank.SETTLER);
@@ -61,6 +62,11 @@ public class SkipMentorCommand extends AbstractCommand{
         }
 		player.sendMessage(GREEN + player.getChatName() + " has skipped mentoring.");
 		return true;
+		}else{
+			player.sendMessage(RED + "This player cannot skip mentoring because their rank does not qualify them.");
+			return true;
+		}
+		
 	}
 
 }
