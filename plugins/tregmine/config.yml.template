@@ -4,7 +4,7 @@ api:
 db:
   url: jdbc:mysql://10.10.0.5:3306/tregmine?autoReconnect=true
   user: server
-  password: C8y9AWhLT5rz4Xwn
+  password: server
 support:
   user: tregmine.info@gmail.com
   password: will message you
