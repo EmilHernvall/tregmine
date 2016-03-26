@@ -8,6 +8,8 @@ import java.util.logging.*;
 import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.server.ServerListPingEvent;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -59,6 +61,7 @@ public class Tregmine extends JavaPlugin
     private World rulelessWorldEnd;
 
     private LookupService cl = null;
+    private Tregmine plugin;
 
     @Override
     public void onLoad()
@@ -116,31 +119,50 @@ public class Tregmine extends JavaPlugin
     public void onEnable()
     {
         this.server = getServer();
-
+        plugin = this;
         FileConfiguration config = getConfig();
-
-        String anarchyName = config.getString("world.name");
-        if (anarchyName == null) {
-            anarchyName = "anarchy";
+        Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this,  new Lag(), 100L, 1L);
+        List<?> configWorlds = getConfig().getList("worlds.names");
+        if(getConfig().getString("worlds.enabled") == "true"){
+        String[] worlds = configWorlds.toArray(new String[configWorlds.size()]);
+        for(String worldName : worlds){
+        	if(worldName.contains("the_end") || worldName.contains("nether")){
+        		//Do nothing
+        	}else{
+        	WorldCreator addWorld = new WorldCreator(worldName);
+        	addWorld.environment(World.Environment.NORMAL);
+        	addWorld.generateStructures(false);
+        	addWorld.type(WorldType.FLAT);
+        	addWorld.createWorld();
+        	}
         }
-
-        WorldCreator hierarchyWorld = new WorldCreator(anarchyName);
-        hierarchyWorld.environment(World.Environment.NORMAL);
-        rulelessWorld = hierarchyWorld.createWorld();
-
-        // Minecraft Portals should handle these
-        WorldCreator hierarchyWorldNether = new WorldCreator(anarchyName + "_nether");
-        hierarchyWorldNether.environment(World.Environment.NETHER);
-        rulelessWorldNether = hierarchyWorldNether.createWorld();
-        WorldCreator hierarchyWorldEnd = new WorldCreator(anarchyName + "_the_end");
-        hierarchyWorldEnd.environment(World.Environment.THE_END);
-        rulelessWorldEnd = hierarchyWorldEnd.createWorld();
-
-        WorldCreator gameWorld = new WorldCreator("game");
-        gameWorld.environment(World.Environment.NORMAL);
-        gameWorld.generateStructures(false);
-        gameWorld.type(WorldType.FLAT);
-        gameWorld.createWorld();
+        
+        for(String worldName : worlds){
+        	if(!worldName.contains("the_end")){
+        		//Do nothing
+        	}else{
+        	WorldCreator addWorld = new WorldCreator(worldName);
+        	addWorld.environment(World.Environment.THE_END);
+        	addWorld.generateStructures(false);
+        	addWorld.type(WorldType.FLAT);
+        	addWorld.createWorld();
+        	}
+        }
+        for(String worldName : worlds){
+        	if(!worldName.contains("nether")){
+        		//Do nothing
+        	}else{
+        	WorldCreator addWorld = new WorldCreator(worldName);
+        	addWorld.environment(World.Environment.NETHER);
+        	addWorld.generateStructures(false);
+        	addWorld.type(WorldType.FLAT);
+        	addWorld.createWorld();
+        	}
+        }
+        LOGGER.info("" + configWorlds.size() + " extra worlds attempted to load.");
+        }else{
+        	LOGGER.info("Loaded 0 extra world(s).");
+        }
 
         try (IContext ctx = contextFactory.createContext()) {
             IBlessedBlockDAO blessedBlockDAO = ctx.getBlessedBlockDAO();
@@ -156,7 +178,8 @@ public class Tregmine extends JavaPlugin
             IMiscDAO miscDAO = ctx.getMiscDAO();
             this.insults = miscDAO.loadInsults();
             this.quitMessages = miscDAO.loadQuitMessages();
-
+            if(insults.size() == 0){insults.add(0, "NO DEATH MESSAGES IN DATABASE. SEE TREGMINE WIKI FOR INFO");}
+            if(quitMessages.size() == 0){quitMessages.add(0, "NO QUIT MESSAGES IN DATABASE. SEE TREGMINE WIKI FOR INFO.");}
             LOGGER.info("Loaded " + insults.size() + " insults and " + quitMessages.size() + " quit messages");
         } catch (DAOException e) {
             throw new RuntimeException(e);
@@ -250,6 +273,7 @@ public class Tregmine extends JavaPlugin
             });
 
         getCommand("action").setExecutor(new ActionCommand(this));
+        getCommand("afk").setExecutor(new AfkCommand(this));
         getCommand("alert").setExecutor(new AlertCommand(this));
         getCommand("allclear").setExecutor(new CheckBlocksCommand(this));
         getCommand("badge").setExecutor(new BadgeCommand(this));
@@ -287,6 +311,7 @@ public class Tregmine extends JavaPlugin
         getCommand("nuke").setExecutor(new NukeCommand(this));
         getCommand("password").setExecutor(new PasswordCommand(this));
         getCommand("pos").setExecutor(new PositionCommand(this));
+        getCommand("promote").setExecutor(new PromoteCommand(this));
         getCommand("quitmessage").setExecutor(new QuitMessageCommand(this));
         getCommand("regeneratechunk").setExecutor(new RegenerateChunkCommand(this));
         getCommand("remitems").setExecutor(new RemItemsCommand(this));
@@ -300,15 +325,18 @@ public class Tregmine extends JavaPlugin
         getCommand("sendto").setExecutor(new SendToCommand(this));
         getCommand("setbiome").setExecutor(new SetBiomeCommand(this));
         getCommand("setspawner").setExecutor(new SetSpawnerCommand(this));
+        getCommand("skipmentor").setExecutor(new SkipMentorCommand(this));
         getCommand("spawn").setExecutor(new SpawnCommand(this));
         getCommand("summon").setExecutor(new SummonCommand(this));
         getCommand("support").setExecutor(new SupportCommand(this));
         getCommand("survival").setExecutor(new GameModeCommand(this, "survival", GameMode.SURVIVAL));
+        getCommand("staffnews").setExecutor(new StaffNewsCommand(this));
         getCommand("testfill").setExecutor(new FillCommand(this, "testfill"));
         getCommand("time").setExecutor(new TimeCommand(this));
         getCommand("tool").setExecutor(new ToolSpawnCommand(this));
         getCommand("town").setExecutor(new ZoneCommand(this, "town"));
         getCommand("tp").setExecutor(new TeleportCommand(this));
+        getCommand("tps").setExecutor(new TpsCommand(this));
         getCommand("tpshield").setExecutor(new TeleportShieldCommand(this));
         getCommand("tpto").setExecutor(new TeleportToCommand(this));
         getCommand("trade").setExecutor(new TradeCommand(this));
@@ -348,6 +376,7 @@ public class Tregmine extends JavaPlugin
             }, 20L, 20L);
     }
 
+
     // run when plugin is disabled
     @Override
     public void onDisable()
@@ -366,6 +395,99 @@ public class Tregmine extends JavaPlugin
         catch (Exception e) {
             LOGGER.log(Level.WARNING, "Failed to start web server!", e);
         }
+    }
+    
+    public String parseColors(String rawText){
+    	String text = rawText;
+    		if (text.contains("#r") || text.contains("#R")) {
+        		text = text.replaceAll("#R", ChatColor.RESET + "");
+                text = text.replaceAll("#r", ChatColor.RESET + "");
+            }
+        	if (text.contains("#0")) {
+
+                text = text.replaceAll("#0", ChatColor.BLACK + "");
+            }
+            if (text.contains("#1")) {
+
+                text = text.replaceAll("#1", ChatColor.DARK_BLUE + "");
+            }
+            if (text.contains("#2")) {
+
+                text = text.replaceAll("#2", ChatColor.DARK_GREEN + "");
+            }
+            if (text.contains("#3")) {
+
+                text = text.replaceAll("#3", ChatColor.DARK_AQUA + "");
+            }
+            if (text.contains("#4")) {
+
+                text = text.replaceAll("#4", ChatColor.DARK_RED + "");
+            }
+            if (text.contains("#5")) {
+
+                text = text.replaceAll("#5", ChatColor.DARK_PURPLE + "");
+            }
+            if (text.contains("#6")) {
+
+                text = text.replaceAll("#6", ChatColor.GOLD + "");
+            }
+            if (text.contains("#7")) {
+
+                text = text.replaceAll("#7", ChatColor.GRAY + "");
+            }
+            if (text.contains("#8")) {
+
+                text = text.replaceAll("#8", ChatColor.DARK_GRAY + "");
+            }
+            if (text.contains("#9")) {
+
+                text = text.replaceAll("#9", ChatColor.BLUE + "");
+            }
+            if (text.contains("#a") || text.contains("#A")) {
+            	text = text.replaceAll("#A", ChatColor.GREEN + "");
+                text = text.replaceAll("#a", ChatColor.GREEN + "");
+            }
+            if (text.contains("#b") || text.contains("#B")) {
+                text = text.replaceAll("#B", ChatColor.AQUA + "");
+                text = text.replaceAll("#b", ChatColor.AQUA + "");
+            }
+            if (text.contains("#c") || text.contains("#C")) {
+                text = text.replaceAll("#C", ChatColor.RED + "");
+                text = text.replaceAll("#c", ChatColor.RED + "");
+            }
+            if (text.contains("#d") || text.contains("#D")) {
+                text = text.replaceAll("#D", ChatColor.LIGHT_PURPLE + "");
+                text = text.replaceAll("#d", ChatColor.LIGHT_PURPLE + "");
+            }
+            if (text.contains("#e") || text.contains("#E")) {
+                text = text.replaceAll("#E", ChatColor.YELLOW + "");
+                text = text.replaceAll("#e", ChatColor.YELLOW + "");
+            }
+            if (text.contains("#f") || text.contains("#F")) {
+                text = text.replaceAll("#F", ChatColor.WHITE + "");
+                text = text.replaceAll("#f", ChatColor.WHITE + "");
+            }
+            if (text.contains("#k") || text.contains("#K")) {
+                text = text.replaceAll("#K", ChatColor.MAGIC + "");
+                text = text.replaceAll("#k", ChatColor.MAGIC + "");
+            }
+            if (text.contains("#l") || text.contains("#L")) {
+                text = text.replaceAll("#L", ChatColor.BOLD + "");
+                text = text.replaceAll("#l", ChatColor.BOLD + "");
+            }
+            if (text.contains("#m") || text.contains("#M")) {
+                text = text.replaceAll("#M", ChatColor.STRIKETHROUGH + "");
+                text = text.replaceAll("#m", ChatColor.STRIKETHROUGH + "");
+            }
+            if (text.contains("#n") || text.contains("#N")) {
+                text = text.replaceAll("#N", ChatColor.UNDERLINE + "");
+                text = text.replaceAll("#n", ChatColor.UNDERLINE + "");
+            }
+            if (text.contains("#o") || text.contains("#O")) {
+                text = text.replaceAll("#O", ChatColor.ITALIC + "");
+                text = text.replaceAll("#o", ChatColor.ITALIC + "");
+            }
+    	return text;
     }
 
     public WebServer getWebServer()

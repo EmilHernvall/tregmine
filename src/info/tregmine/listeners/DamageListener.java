@@ -98,7 +98,11 @@ public class DamageListener implements Listener
 
         ItemStack[] armor = player.getEquipment().getArmorContents();
         int armorBonus = 0;
+        if(!armor.equals(null)){
         for (ItemStack item : armor) {
+        	if(item == null){
+        		
+        	}else{
             if (!item.hasItemMeta()) {
                 continue;
             }
@@ -131,6 +135,8 @@ public class DamageListener implements Listener
                 newDamage = 0;
             }
             event.setDamage(newDamage);
+        	}
+        }
         }
     }
 

@@ -37,7 +37,25 @@ CREATE TABLE `blessedblock` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
+CREATE TABLE bank (
+    bank_id INT UNSIGNED AUTO_INCREMENT,
+    lot_id INT UNSIGNED,
+    PRIMARY KEY (bank_id),
+    UNIQUE idx_lot (lot_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+CREATE TABLE bank_account (
+    account_id INT UNSIGNED AUTO_INCREMENT,
+    bank_id INT UNSIGNED,
+    player_id INT UNSIGNED,
+    account_balance INT UNSIGNED,
+    account_number INT UNSIGNED,
+    account_pin VARCHAR (10),
+    PRIMARY KEY (account_id),
+    INDEX idx_bank (bank_id, player_id),
+    UNIQUE idx_accountnum (account_number),
+    INDEX idx_accountnum2 (bank_id, account_number)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 --
 -- Table structure for table `donation`
 --
@@ -266,7 +284,7 @@ CREATE TABLE `player` (
   `player_rank` enum('unverified','tourist','settler','resident','donator','guardian','builder','coder','junior_admin','senior_admin') COLLATE utf8_swedish_ci DEFAULT 'unverified',
   `player_flags` int(10) UNSIGNED DEFAULT NULL,
   `player_keywords` text COLLATE utf8_swedish_ci NOT NULL,
-  `player_ignore` text COLLATE utf8_swedish_ci NOT NULL,
+  `player_ignore` text COLLATE utf8_swedish_ci DEFAULT NULL,
   `player_uuid` char(43) COLLATE utf8_swedish_ci NOT NULL,
   `player_inventory` varchar(255) COLLATE utf8_swedish_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
@@ -483,6 +501,19 @@ CREATE TABLE `stats_blocks` (
   `blockid` double NOT NULL,
   `world` varchar(16) NOT NULL DEFAULT 'world'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `staffnews`
+--
+
+CREATE TABLE `staffnews` (
+  `id` int(10) NOT NULL,
+  `username` varchar(64) NOT NULL,
+  `text` text NOT NULL,
+  `timestamp` int(16) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -1099,3 +1130,50 @@ ALTER TABLE `zone_rect`
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
+-- I didn't feel like making it look pretty.
+ALTER TABLE `staffnews`
+  ADD PRIMARY KEY (`id`);
+
+ALTER TABLE `staffnews`
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  
+INSERT INTO `enchantment` (`enchantment_name`, `enchantment_title`) VALUES
+('ARROW_DAMAGE', 'Power'),
+('ARROW_FIRE', 'Flame'),
+('ARROW_INFINITE', 'Infinity'),
+('ARROW_KNOCKBACK', 'Punch'),
+('DAMAGE_ALL', 'Sharpness'),
+('DAMAGE_ARTHROPODS', 'Bane of Arthropods'),
+('DAMAGE_UNDEAD', 'Smite'),
+('DIG_SPEED', 'Efficiency'),
+('DURABILITY', 'Unbreaking'),
+('FIRE_ASPECT', 'Fire Aspect'),
+('KNOCKBACK', 'Knockback'),
+('LOOT_BONUS_BLOCKS', 'Fortune'),
+('LOOT_BONUS_MOBS', 'Looting'),
+('OXYGEN', 'Respiration'),
+('PROTECTION_ENVIRONMENTAL', 'Protection'),
+('PROTECTION_EXPLOSIONS', 'Blast Protection'),
+('PROTECTION_FIRE', 'Fire Protection'),
+('PROTECTION_PROJECTILE', 'Projectile Protection'),
+('PROTECTION_FALL', 'Feather Falling'),
+('SILK_TOUCH', 'Silk Touch'),
+('THORNS', 'Thorns'),
+('WATER_WORKER', 'Aqua Affinity');
+
+CREATE TABLE bank_transaction (
+    transaction_id INT UNSIGNED AUTO_INCREMENT,
+    account_id INT UNSIGNED NOT NULL,
+    player_id INT UNSIGNED NOT NULL,
+    transaction_type ENUM ('deposit', 'withdrawal') NOT NULL,
+    transaction_amount INT UNSIGNED NOT NULL,
+    transaction_timestamp INT UNSIGNED NOT NULL,
+    PRIMARY KEY (transaction_id),
+    INDEX idx_account (account_id, transaction_timestamp),
+    INDEX idx_player (player_id, transaction_timestamp)
+) ENGINE=InnoDB;
+ALTER TABLE bank_account DROP INDEX idx_accountnum;
+
+INSERT INTO `motd` (`motd_timestamp`, `motd_message`) VALUES
+(unix_timestamp(), 'Welcome to Tregmine 2! :)');

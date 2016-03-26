@@ -70,61 +70,61 @@ public class BlockLog extends JavaPlugin
             long checksum = locationChecksum(loc);
             String world = loc.getWorld().getName();
 
-            if ((world.equalsIgnoreCase(tregmine.getRulelessWorld().getName()) ||
-                 world.equalsIgnoreCase(tregmine.getRulelessNether().getName()) ||
-                 world.equalsIgnoreCase(tregmine.getRulelessEnd().getName())) &&
-                !player.getRank().canBypassWorld()) {
-
-                Material blockType = event.getClickedBlock().getType();
-                if (blockType == null) {
-                    return;
-                }
-
-                boolean success = true;
-
-                for (Material mat : protectedBlocks) {
-                    if (blockType.equals(mat)) {
-                        success = false;
-                    }
-                }
-
-                if (!success) {
-                    player.sendMessage(ChatColor.RED + "You can not paper this block!");
-                    return;
-                }
-
-                if (timedOut != null && !timedOut.isEmpty()) {
-                    for (Entry<TregminePlayer, Integer> p : timedOut.entrySet()) {
-                        if (p.getKey().equals(player)) {
-                            player.sendMessage(ChatColor.RED + "Your paper is timed out, Try again in " + p.getValue() + "!");
-                            return;
-                        }
-                    }
-                }
-
-
-                Integer timeout = 5; // seconds
-                timedOut.put(player, timeout);
-
-                new BukkitRunnable() {
-                    @Override
-                    public void run() {
-                        for (Entry<TregminePlayer, Integer> p : timedOut.entrySet()) {
-                            if (p.getValue() <= 0) {
-                                timedOut.remove(player);
-                                player.sendMessage(ChatColor.GREEN + "Safe to use paper again!");
-                            }
-                            p.setValue(p.getValue() - 1);
-                        }
-                    }
-                }.runTaskTimer(plugin, 10L, 10L);
-
-                if (inHand.getAmount() > 1) {
-                    inHand.setAmount(inHand.getAmount() - 1);
-                } else {
-                    player.getInventory().remove(inHand);
-                }
-            }
+//            if ((world.equalsIgnoreCase(tregmine.getRulelessWorld().getName()) ||
+//                 world.equalsIgnoreCase(tregmine.getRulelessNether().getName()) ||
+//                 world.equalsIgnoreCase(tregmine.getRulelessEnd().getName())) &&
+//                !player.getRank().canBypassWorld()) {
+//
+//                Material blockType = event.getClickedBlock().getType();
+//                if (blockType == null) {
+//                    return;
+//                }
+//
+//                boolean success = true;
+//
+//                for (Material mat : protectedBlocks) {
+//                    if (blockType.equals(mat)) {
+//                        success = false;
+//                    }
+//                }
+//
+//                if (!success) {
+//                    player.sendMessage(ChatColor.RED + "You can not paper this block!");
+//                    return;
+//                }
+//
+//                if (timedOut != null && !timedOut.isEmpty()) {
+//                    for (Entry<TregminePlayer, Integer> p : timedOut.entrySet()) {
+//                        if (p.getKey().equals(player)) {
+//                            player.sendMessage(ChatColor.RED + "Your paper is timed out, Try again in " + p.getValue() + "!");
+//                            return;
+//                        }
+//                    }
+//                }
+//
+//
+//                Integer timeout = 5; // seconds
+//                timedOut.put(player, timeout);
+//
+//                new BukkitRunnable() {
+//                    @Override
+//                    public void run() {
+//                        for (Entry<TregminePlayer, Integer> p : timedOut.entrySet()) {
+//                            if (p.getValue() <= 0) {
+//                                timedOut.remove(player);
+//                                player.sendMessage(ChatColor.GREEN + "Safe to use paper again!");
+//                            }
+//                            p.setValue(p.getValue() - 1);
+//                        }
+//                    }
+//                }.runTaskTimer(plugin, 10L, 10L);
+//
+//                if (inHand.getAmount() > 1) {
+//                    inHand.setAmount(inHand.getAmount() - 1);
+//                } else {
+//                    player.getInventory().remove(inHand);
+//                }
+//            }
 
             SimpleDateFormat dfm = new SimpleDateFormat("dd/MM/yy hh:mm:ss a");
 

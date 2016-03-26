@@ -17,32 +17,30 @@ public class KeywordCommand extends AbstractCommand
     @Override
     public boolean handlePlayer(TregminePlayer player, String[] args)
     {
-    	player.sendMessage(RED + "This command is disabled.");
-    	return true;
-//        if (args.length != 1) {
-//            return false;
-//        }
-//
-//        String keyword = args[0];
-//
-//        if (keyword.length() < 1) {
-//            player.sendMessage(RED + "Your keyword must be at least "
-//                    + "1 characters long.");
-//            return true;
-//        }
-//
-//        player.setKeyword(keyword.toLowerCase());
-//        player.sendMessage(YELLOW
-//                + "From now on you can only log in by using ip "
-//                + keyword.toLowerCase() + ".mc.tregmine.info");
-//
-//        try (IContext ctx = tregmine.createContext()) {
-//            IPlayerDAO playerDAO = ctx.getPlayerDAO();
-//            playerDAO.updatePlayerKeyword(player);
-//        } catch (DAOException e) {
-//            throw new RuntimeException(e);
-//        }
-//
-//        return true;
+        if (args.length != 1) {
+            return false;
+        }
+
+        String keyword = args[0];
+
+        if (keyword.length() < 1) {
+            player.sendMessage(RED + "Your keyword must be at least "
+                    + "1 characters long.");
+            return true;
+        }
+
+        player.setKeyword(keyword.toLowerCase());
+        player.sendMessage(YELLOW
+                + "From now on you can only log in by using ip "
+                + keyword.toLowerCase() + ".mc.rabil.org");
+
+        try (IContext ctx = tregmine.createContext()) {
+            IPlayerDAO playerDAO = ctx.getPlayerDAO();
+            playerDAO.updatePlayerKeyword(player);
+        } catch (DAOException e) {
+            throw new RuntimeException(e);
+        }
+
+        return true;
     }
 }

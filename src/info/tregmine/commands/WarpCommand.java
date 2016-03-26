@@ -96,15 +96,6 @@ public class WarpCommand extends AbstractCommand
 
         World world = warpPoint.getWorld();
 
-		if (	world.getName().equalsIgnoreCase(tregmine.getRulelessWorld().getName()) ||
-				world.getName().equalsIgnoreCase(tregmine.getRulelessEnd().getName()) ||
-				world.getName().equalsIgnoreCase(tregmine.getRulelessNether().getName()) &&
-				!player.getRank().canBypassWorld()) {
-
-			player.sendMessage(RED + "No warping in Anarchy!" + DARK_RED + " Disabled.");
-			return false;
-		}
-
         player.sendMessage(AQUA + "You started teleport to " + DARK_GREEN
                 + name + AQUA + " in " + BLUE + world.getName() + ".");
         LOGGER.info("[warp] + <" + player.getName() + "> " + name + ":"

@@ -42,7 +42,7 @@ public class MsgCommand extends AbstractCommand
         }
 
         Server server = player.getServer();
-        String message = argsToMessage(args);
+        String message = tregmine.parseColors(argsToMessage(args));
         
         String[] receivingPlayers = args[0].split(",");
         try (IContext ctx = tregmine.createContext()) {

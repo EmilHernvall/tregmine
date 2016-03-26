@@ -41,7 +41,7 @@ public class SayCommand extends AbstractCommand
         	return true;
         }
         Server server = player.getServer();
-        String msg = argsToMessage(args);
+        String msg = tregmine.parseColors(argsToMessage(args));
 
         server.broadcastMessage("<" + RED + "GOD" + WHITE + "> " + LIGHT_PURPLE
                 + msg);

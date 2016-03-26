@@ -1,0 +1,7 @@
+name: BlockLog
+main: info.tregmine.blocklog.BlockLog
+version: 1.0.0
+website: http://tregmine.info
+author: Ein Andersson, Emil Hernvall
+description: Tregmine
+depends: tregmine

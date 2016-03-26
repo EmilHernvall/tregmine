@@ -22,22 +22,6 @@ public class FlyCommand extends AbstractCommand
     {
         if (!player.getRank().canFly()) return false;
 
-        if ((player.getWorld().getName().equalsIgnoreCase(tregmine.getRulelessWorld().getName()) ||
-             player.getWorld().getName().equalsIgnoreCase(tregmine.getRulelessEnd().getName()) ||
-             player.getWorld().getName().equalsIgnoreCase(tregmine.getRulelessNether().getName())) &&
-            !player.getRank().canBypassWorld()) {
-
-            player.sendMessage(ChatColor.RED + "Flying in Anarchy will get you banned!" + ChatColor.DARK_RED + " Disabled.");
-
-            for (TregminePlayer p : tregmine.getOnlinePlayers()) {
-                if (p.getRank().canBypassWorld()) {
-                    p.sendMessage(player.getChatName() + ChatColor.YELLOW + " attempted to fly in anarchy! Plugin disabled it for you...");
-                }
-            }
-
-            return false;
-        }
-
         if ( player.hasFlag(TregminePlayer.Flags.FLY_ENABLED) ) {
             player.sendMessage(ChatColor.YELLOW +
                     "Flying Disabled!");

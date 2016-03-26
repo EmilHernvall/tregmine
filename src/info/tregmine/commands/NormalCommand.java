@@ -19,6 +19,10 @@ public class NormalCommand extends AbstractCommand
     @Override
     public boolean handlePlayer(TregminePlayer player, String[] args)
     {
+    	if(true != false){
+    	player.sendMessage(RED + "I disabled this command for bug reasons..");
+    	return true;
+    	}
         if (player.getRank() == Rank.JUNIOR_ADMIN ||
             player.getRank() == Rank.SENIOR_ADMIN) {
             player.setRank(Rank.DONATOR);

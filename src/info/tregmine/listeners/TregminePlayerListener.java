@@ -1,5 +1,9 @@
 package info.tregmine.listeners;
 
+import static org.bukkit.ChatColor.GREEN;
+import static org.bukkit.ChatColor.ITALIC;
+import static org.bukkit.ChatColor.RESET;
+
 import java.util.*;
 import java.util.Map.Entry;
 
@@ -196,12 +200,12 @@ public class TregminePlayerListener implements Listener
         if (player.getKeyword() != null) {
             String keyword =
                     player.getKeyword()
-                            + ".mc.tregmine.info:25565".toLowerCase();
+                            + ".mc.rabil.org:25565".toLowerCase();
             Tregmine.LOGGER.warning("host: " + event.getHostname());
             Tregmine.LOGGER.warning("keyword:" + keyword);
 
             if (keyword.equals(event.getHostname().toLowerCase())
-                    || keyword.matches("mc.tregmine.info")) {
+                    || keyword.matches("mc.rabil.org")) {
                 Tregmine.LOGGER.warning(player.getName()
                         + " keyword :: success");
             }
@@ -230,9 +234,31 @@ public class TregminePlayerListener implements Listener
             event.getPlayer().kickPlayer("error loading profile!");
             return;
         }
-        player.sendMessage(ChatColor.GOLD + "Welcome to Tregmine 2! There are ONE change(s)");
-        player.sendMessage(ChatColor.GOLD + "Keywords have been removed. Please don't try to use them.");
         Rank rank = player.getRank();
+        if(player.getIsStaff()){
+        	List<StaffNews> news = null;
+        	try (IContext ctx = this.plugin.createContext()) {
+                IStaffNewsDAO newsDAO = ctx.getNewsByUploader();
+                news = newsDAO.getStaffNews();
+                
+            } catch (DAOException e) {
+                throw new RuntimeException(e);
+            }
+        	if(news == null){
+        		player.sendMessage(ChatColor.BLUE + "There's no messages on the staff board at this time.");
+        		
+        	}else{
+        		//There's messages :)
+        		for(StaffNews singleNews : news){
+        			String username = singleNews.getUsername();
+        			String text = singleNews.getText();
+        			long timestamp = singleNews.getDate();
+        			int id = singleNews.getId();
+        			player.sendMessage(ChatColor.GREEN + "There is a message from " + ChatColor.RESET + ChatColor.BLUE + username);
+        			player.sendMessage(ChatColor.GOLD + text);
+        		}
+        	}
+        }
 
         // Handle invisibility, if set
         List<TregminePlayer> players = plugin.getOnlinePlayers();
@@ -418,7 +444,7 @@ public class TregminePlayerListener implements Listener
                 int msgIndex = rand.nextInt(plugin.getQuitMessages().size());
                 message = ChatColor.GRAY + "Quit: " + player.getChatName() + ChatColor.GRAY + " " + plugin.getQuitMessages().get(msgIndex);
             }
-            plugin.getServer().broadcastMessage(message);
+            Bukkit.broadcastMessage(message);
         }
 
         // Look if there are any students being mentored by the exiting player
@@ -470,8 +496,8 @@ public class TregminePlayerListener implements Listener
     public void onPlayerMove(PlayerMoveEvent event)
     {
         TregminePlayer player = this.plugin.getPlayer(event.getPlayer());
-        if (player == null) {
-            event.getPlayer().kickPlayer("error loading profile!");
+        if(player.isAfk()){
+        	player.setAfk(false);
         }
     }
 
@@ -480,21 +506,21 @@ public class TregminePlayerListener implements Listener
     {
         TregminePlayer player = event.getPlayer();
 
-		if (	(player.getWorld().getName().equalsIgnoreCase(plugin.getRulelessWorld().getName()) ||
-				player.getWorld().getName().equalsIgnoreCase(plugin.getRulelessEnd().getName()) ||
-				player.getWorld().getName().equalsIgnoreCase(plugin.getRulelessNether().getName())) &&
-				player.isFlying() &&
-				!player.getRank().canBypassWorld()) {
-			player.sendMessage(ChatColor.RED + "Flying in Anarchy will get you banned!" + ChatColor.DARK_RED + " Disabled.");
-			player.setAllowFlight(false);
-			player.setFlying(false);
-
-			for (TregminePlayer p : plugin.getOnlinePlayers()) {
-				if (p.getRank().canBypassWorld()) {
-					p.sendMessage(player.getChatName() + ChatColor.YELLOW + " is flying in anarchy! Plugin disabled it for you...");
-				}
-			}
-		}
+//		if (	(player.getWorld().getName().equalsIgnoreCase(plugin.getRulelessWorld().getName()) ||
+//				player.getWorld().getName().equalsIgnoreCase(plugin.getRulelessEnd().getName()) ||
+//				player.getWorld().getName().equalsIgnoreCase(plugin.getRulelessNether().getName())) &&
+//				player.isFlying() &&
+//				!player.getRank().canBypassWorld()) {
+//			player.sendMessage(ChatColor.RED + "Flying in Anarchy will get you banned!" + ChatColor.DARK_RED + " Disabled.");
+//			player.setAllowFlight(false);
+//			player.setFlying(false);
+//
+//			for (TregminePlayer p : plugin.getOnlinePlayers()) {
+//				if (p.getRank().canBypassWorld()) {
+//					p.sendMessage(player.getChatName() + ChatColor.YELLOW + " is flying in anarchy! Plugin disabled it for you...");
+//				}
+//			}
+//		}
 
         // To add player.hasBadge for a flight badge when made
         if (player.getRank().canFly() && player.isFlying() && player.isSprinting()) {
@@ -535,12 +561,7 @@ public class TregminePlayerListener implements Listener
         }
 
         Location loc = player.getLocation();
-        
-        if (loc.getWorld().getName().equalsIgnoreCase(plugin.getRulelessWorld().getName()) &&
-                (!player.getRank().canBypassWorld() && player.getGameMode() != GameMode.CREATIVE)) {
-            player.setAllowFlight(false);
-            player.setFlying(false);
-        }
+       
         
         ZoneWorld world = plugin.getWorld(loc.getWorld());
         Lot lot = world.findLot(new Point(loc.getBlockX(), loc.getBlockZ()));
@@ -552,11 +573,7 @@ public class TregminePlayerListener implements Listener
             event.setCancelled(true);
         }
 
-        if (loc.getWorld().getName().equalsIgnoreCase(plugin.getRulelessWorld().getName()) &&
-                (!player.getRank().canBypassWorld() && player.getGameMode() != GameMode.CREATIVE)) {
-            player.setAllowFlight(false);
-            player.setFlying(false);
-        }
+
     }
 
     @EventHandler

@@ -123,7 +123,7 @@ public class PlayerLookupListener implements Listener
                         continue;
                     }
                     current.sendMessage(ChatColor.YELLOW
-                            + "This player have also used names: " + aliasList);
+                            + "This player has also used names: " + aliasList);
                 }
             }
         } catch (DAOException e) {

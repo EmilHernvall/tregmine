@@ -103,7 +103,7 @@ public class MentorCommand extends AbstractCommand
                 return true;
             }
 
-            int timeRemaining = Math.max(60*15 - student.getPlayTime()
+            int timeRemaining = Math.max(60*5 - student.getPlayTime()
                                                - student.getTimeOnline(), 0);
             if (timeRemaining > 0) {
                 player.sendMessage(RED + student.getChatName() + RED + " has " +

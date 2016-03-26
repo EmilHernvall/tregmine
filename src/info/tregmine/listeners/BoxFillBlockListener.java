@@ -5,6 +5,8 @@ import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import info.tregmine.api.TregminePlayer;
@@ -17,6 +19,57 @@ public class BoxFillBlockListener implements Listener
     public BoxFillBlockListener(Tregmine tregmine)
     {
         this.plugin = tregmine;
+    }
+    
+    @EventHandler
+    public void onBlockDamage(BlockDamageEvent event){
+
+        TregminePlayer player = plugin.getPlayer(event.getPlayer());
+        if (!player.getRank().canFill()) {
+            return;
+        }
+
+        if (player.getItemInHand().getType() != Material.WOOD_SPADE) {
+            return;
+        }else{
+        event.setCancelled(true);
+        }
+        Block block = event.getBlock();
+        int count;
+
+        try {
+            count = player.getFillBlockCounter();
+        } catch (Exception e) {
+            count = 0;
+        }
+    	player.setFillBlock1(block);
+        event.getPlayer().sendMessage("First block set");
+        player.setFillBlockCounter(1);
+    }
+    @EventHandler
+    public void onBlockBreak(BlockBreakEvent event){
+
+        TregminePlayer player = plugin.getPlayer(event.getPlayer());
+        if (!player.getRank().canFill()) {
+            return;
+        }
+
+        if (player.getItemInHand().getType() != Material.WOOD_SPADE) {
+            return;
+        }else{
+        event.setCancelled(true);
+        }
+        Block block = event.getBlock();
+        int count;
+
+        try {
+            count = player.getFillBlockCounter();
+        } catch (Exception e) {
+            count = 0;
+        }
+    	player.setFillBlock1(block);
+        event.getPlayer().sendMessage("First block set");
+        player.setFillBlockCounter(1);
     }
 
     @EventHandler
@@ -43,18 +96,10 @@ public class BoxFillBlockListener implements Listener
         } catch (Exception e) {
             count = 0;
         }
+            
 
-        if (count == 0) {
-            player.setFillBlock1(block);
-            player.setFillBlock2(null);
-            event.getPlayer().sendMessage("First block set");
-            player.setFillBlockCounter(1);
-        }
-
-        if (count == 1) {
             player.setFillBlock2(block);
             event.getPlayer().sendMessage("Second block set");
             player.setFillBlockCounter(0);
-        }
     }
 }

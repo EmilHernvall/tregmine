@@ -2,7 +2,7 @@ Tregmine 2
 ========
 
 This is the rabil.org [Tregmine 2] tregmine plugin. Pull requests are appreciated :-)
-
+Don't ask why the plugin version is 3.X but its called Tregmine 2.
 Index
 -----
 
@@ -27,13 +27,15 @@ Installation has been simplified with Tregmine 2.
 All you need to do is copy the contents of the plugins folder into your server plugins folder, and import tregminedb.sql.
 NOTE: You *MUST* configure the SQL settings in config.yml __at the minimum__ in order for the plugin to function.
 
-Authors
+Current Coders
 -------
-
+ * Robby Catron <rcatron10@gmail.com> - Current maintainer
+ * Eric Rabil <ericjrabil@gmail.com> - Current maintainer
+ 
+Special Thanks To
+------------
  * Ein Andersson - Original author
  * Emil Hernvall
  * Josh Morgan
- * Robby Catron <rcatron10@gmail.com> - Current maintainer
  * Joe Notaro
  * James Sherlock
- * Eric Rabil <ericjrabil@gmail.com> - Current maintainer

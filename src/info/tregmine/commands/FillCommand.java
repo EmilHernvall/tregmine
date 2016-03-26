@@ -64,6 +64,7 @@ public class FillCommand extends AbstractCommand
     		return true;
     	}
         if (!player.getRank().canFill()) {
+        	player.nopermsMessage(false, "/fill");
             return true;
         }
 

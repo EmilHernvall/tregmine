@@ -33,14 +33,7 @@ public class ZoneBlockListener implements Listener
         TregminePlayer player = plugin.getPlayer(event.getPlayer());
 
         Location location = event.getBlock().getLocation();
-
-		if (	location.getWorld().getName().equalsIgnoreCase(plugin.getRulelessWorld().getName()) ||
-				location.getWorld().getName().equalsIgnoreCase(plugin.getRulelessEnd().getName()) ||
-				location.getWorld().getName().equalsIgnoreCase(plugin.getRulelessNether().getName())) {
-			if (player.hasBlockPermission(location, false)) return;
-		} else {
 			if (player.hasBlockPermission(location, true)) return;
-		}
 
         /*if (!player.getRank().canBuild() &&
                 player.getMentor() != null) {
@@ -72,14 +65,7 @@ public class ZoneBlockListener implements Listener
         TregminePlayer player = plugin.getPlayer(event.getPlayer());
 
         Location location = event.getBlock().getLocation();
-
-		if (	location.getWorld().getName().equalsIgnoreCase(plugin.getRulelessWorld().getName()) ||
-				location.getWorld().getName().equalsIgnoreCase(plugin.getRulelessEnd().getName()) ||
-				location.getWorld().getName().equalsIgnoreCase(plugin.getRulelessNether().getName())) {
-			if (player.hasBlockPermission(location, false)) return;
-		} else {
 			if (player.hasBlockPermission(location, true)) return;
-		}
 
         /*if (!player.getRank().canBuild() &&
                 player.getMentor() != null) {

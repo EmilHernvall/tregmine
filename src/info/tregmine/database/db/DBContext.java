@@ -131,4 +131,9 @@ public class DBContext implements IContext
     {
         return new DBMiscDAO(conn);
     }
+
+	@Override
+	public IStaffNewsDAO getNewsByUploader() {
+		return new DBNewsDAO(conn);
+	}
 }

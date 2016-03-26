@@ -53,21 +53,6 @@ public class SpawnCommand extends AbstractCommand
     @Override
     public boolean handlePlayer(TregminePlayer player, String[] args)
     {
-		if (	(player.getWorld().getName().equalsIgnoreCase(tregmine.getRulelessWorld().getName()) ||
-				player.getWorld().getName().equalsIgnoreCase(tregmine.getRulelessEnd().getName()) ||
-				player.getWorld().getName().equalsIgnoreCase(tregmine.getRulelessNether().getName())) &&
-				!player.getRank().canBypassWorld()) {
-			if (player.isCombatLogged()) {
-				player.sendMessage(ChatColor.RED + "You are combat logged... Please wait!");
-				return true;
-			}
-
-			player.sendMessage(ChatColor.RED + "Teleporting to spawn... Please wait 30 seconds.");
-			player.sendMessage(ChatColor.DARK_BLUE + "Oh, and don't move! Moving will stop the teleportation.");
-			BukkitScheduler scheduler = plugin.getServer().getScheduler();
-			scheduler.scheduleSyncDelayedTask(tregmine, new SpawnTask(player, player.getWorld().getSpawnLocation(), player.getLocation()), 20*30);
-			return true;
-		}
         player.teleportWithHorse(player.getWorld().getSpawnLocation());
         return true;
     }

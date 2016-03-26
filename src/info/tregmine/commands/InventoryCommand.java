@@ -17,6 +17,10 @@ public class InventoryCommand extends AbstractCommand
     @Override
     public boolean handlePlayer(TregminePlayer player, String[] args)
     {
+    	if(args.length == 0){
+    		
+    		return true;
+    	}
         if (!player.getRank().canInspectInventories()) {
             return true;
         }

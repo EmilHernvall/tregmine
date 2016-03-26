@@ -16,6 +16,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockBurnEvent;
 import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.block.BlockSpreadEvent;
 import org.bukkit.event.block.LeavesDecayEvent;
 
 import info.tregmine.Tregmine;
@@ -23,6 +24,7 @@ import info.tregmine.api.TregminePlayer;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
 import info.tregmine.database.ILogDAO;
+import net.minecraft.server.v1_9_R1.BlockFire;
 
 public class TregmineBlockListener implements Listener
 {
@@ -51,6 +53,19 @@ public class TregmineBlockListener implements Listener
                 return;
             }
         }
+    }
+    
+    @EventHandler
+    public void onBlockBurn(BlockBurnEvent event){
+    	event.setCancelled(true);
+    }
+    
+    @EventHandler
+    public void onBlockSpread(BlockSpreadEvent event){
+    	Material sourceblock = event.getSource().getType();
+    	if(sourceblock == Material.FIRE){
+    		event.setCancelled(true);
+    	}
     }
 
     @EventHandler

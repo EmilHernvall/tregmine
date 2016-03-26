@@ -2,8 +2,8 @@ package info.tregmine.christmas.populators;
 
 import java.util.Random;
 
-import net.minecraft.server.v1_7_R1.NBTTagCompound;
-import net.minecraft.server.v1_7_R1.NBTTagList;
+import net.minecraft.server.v1_9_R1.NBTTagCompound;
+import net.minecraft.server.v1_9_R1.NBTTagList;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
@@ -13,7 +13,7 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
-import org.bukkit.craftbukkit.v1_7_R1.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_9_R1.inventory.CraftItemStack;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Skeleton;
 import org.bukkit.entity.Witch;
