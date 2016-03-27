@@ -25,9 +25,13 @@ public class CreateWarpCommand extends AbstractCommand
         if (!player.getRank().canCreateWarps()) {
             return true;
         }
+        
 
         String name = args[0];
-
+        if(name.equalsIgnoreCase("irl")){
+        	player.sendMessage(ChatColor.RED + "Warp already exists!");
+        	return true;
+        }
         try (IContext ctx = tregmine.createContext()) {
             IWarpDAO warpDAO = ctx.getWarpDAO();
 

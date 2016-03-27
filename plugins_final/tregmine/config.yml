@@ -1,0 +1,26 @@
+general:
+  motd: "#b#lIt's Tregmine!"
+  life-log: true
+api:
+  signing-key: your-strong-random-key-here
+  port: 9192
+db:
+  url: jdbc:mysql://10.10.0.5:3306/tregmine_test?autoReconnect=true
+  user: server
+  password: server
+support:
+  user: tregmine.info@gmail.com
+  password: will message you
+  to: 
+    - email@emil.athisemail
+donotevertouch:
+#Possible types: re ; be ; te ; bl ; gm
+  type: re
+#Worlds -- DO NOT ADD THE FOLLOWING: world, world_nether, world_the_end, game,
+#anarchy, anarchy_nether, anarchy_the_end -- You have been warned.
+worlds:
+# Set enabled to true to run the worlds API -- If its true and theres no worlds in names, it will crash.
+  enabled: false
+  names:
+#Rank Chat Colors
+#Coming soon :-)

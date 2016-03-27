@@ -794,4 +794,7 @@ public class Tregmine extends JavaPlugin
     {
         return zones.get(zoneId);
     }
+    public String getPluginFolder(){
+    	return this.getDataFolder().getAbsolutePath();
+    }
 }

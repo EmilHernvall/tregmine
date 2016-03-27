@@ -60,6 +60,7 @@ public class CallEventListener implements Listener
 			extraText = ChatColor.DARK_RED + "" + ChatColor.BOLD + " YOU DID SOMETHING WRONG.";
 		}
 		event.setMotd(ChatColor.GOLD + "" + ChatColor.BOLD + "Tregmine " + plugin.getDescription().getVersion() + extraText + "\n" + ChatColor.RESET + "" + ChatColor.translateAlternateColorCodes('#', plugin.getConfig().getString("general.motd")));
+		
 	}
     // Triggers when a player changes lot
     @EventHandler

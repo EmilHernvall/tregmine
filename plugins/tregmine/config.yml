@@ -1,5 +1,6 @@
 general:
-  motd: "#b#lWe're back kids!"
+  motd: "#b#lIt's Tregmine!"
+  life-log: true
 api:
   signing-key: your-strong-random-key-here
   port: 9192
