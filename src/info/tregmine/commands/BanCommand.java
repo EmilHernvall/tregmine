@@ -14,9 +14,11 @@ import info.tregmine.database.IPlayerReportDAO;
 
 public class BanCommand extends AbstractCommand
 {
+	private Tregmine plugin;
     public BanCommand(Tregmine tregmine)
     {
         super(tregmine, "ban");
+        plugin = tregmine;
     }
 
     private String argsToMessage(String[] args)
@@ -53,7 +55,7 @@ public class BanCommand extends AbstractCommand
 
         TregminePlayer victim = candidates.get(0);
 
-        victim.kickPlayer("Banned by " + player.getName() + ": " + message);
+        victim.kickPlayer(plugin, "Banned by " + player.getName() + ": " + message);
 
         try (IContext ctx = tregmine.createContext()) {
             PlayerReport report = new PlayerReport();

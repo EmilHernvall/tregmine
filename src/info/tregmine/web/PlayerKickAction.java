@@ -84,7 +84,7 @@ public class PlayerKickAction implements WebHandler.Action
             issuer = tregmine.getPlayerOffline(issuerId);
         }
 
-        subject.kickPlayer("Kicked by " + issuer.getChatName() + ": " + message);
+        subject.kickPlayer(tregmine, "Kicked by " + issuer.getChatName() + ": " + message);
 
         Tregmine.LOGGER.info(subject.getChatName() + " was kicked by " +
                              issuer.getChatName() + " (from web)");

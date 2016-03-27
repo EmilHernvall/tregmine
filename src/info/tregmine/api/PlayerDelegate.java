@@ -8,7 +8,6 @@ import info.tregmine.Tregmine;
 public abstract class PlayerDelegate
 {
     private org.bukkit.entity.Player delegate;
-    private Tregmine plugin;
 
     protected PlayerDelegate(org.bukkit.entity.Player d)
     {
@@ -321,11 +320,11 @@ public abstract class PlayerDelegate
         delegate.sendRawMessage(p0);
     }
 
-    public void kickPlayer(java.lang.String p0)
+    public void kickPlayer(Tregmine instance, java.lang.String p0)
     {
         checkState();
         //delegate.kickPlayer(p0);
-        Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable(){
+        Bukkit.getScheduler().scheduleSyncDelayedTask(instance, new Runnable(){
 
 			@Override
 			public void run() {

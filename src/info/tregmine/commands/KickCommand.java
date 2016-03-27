@@ -13,9 +13,11 @@ import info.tregmine.database.IPlayerReportDAO;
 
 public class KickCommand extends AbstractCommand
 {
+	private Tregmine plugin;
     public KickCommand(Tregmine tregmine)
     {
         super(tregmine, "kick");
+        plugin = tregmine;
     }
 
     private String argsToMessage(String[] args)
@@ -55,7 +57,7 @@ public class KickCommand extends AbstractCommand
         server.broadcastMessage(player.getChatName() + AQUA + " kicked "
                 + victim.getChatName() + AQUA + ": " + message);
         LOGGER.info(victim.getName() + " kicked by " + player.getName());
-        victim.kickPlayer("kicked by " + player.getName() + ": " + message);
+        victim.kickPlayer(plugin, "kicked by " + player.getName() + ": " + message);
 
         try (IContext ctx = tregmine.createContext()) {
             PlayerReport report = new PlayerReport();
@@ -90,7 +92,7 @@ public class KickCommand extends AbstractCommand
         TregminePlayer victim = candidates.get(0);
 
         server.broadcastMessage("GOD kicked " + victim.getChatName() + ".");
-        victim.kickPlayer("kicked by GOD.");
+        victim.kickPlayer(plugin, "kicked by GOD.");
 
         return true;
     }
