@@ -120,7 +120,6 @@ public class Tregmine extends JavaPlugin
     {
         this.server = getServer();
         plugin = this;
-        pluginStatic = this;
         FileConfiguration config = getConfig();
         Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this,  new Lag(), 100L, 1L);
         List<?> configWorlds = getConfig().getList("worlds.names");
