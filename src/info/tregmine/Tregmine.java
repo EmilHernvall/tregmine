@@ -62,7 +62,6 @@ public class Tregmine extends JavaPlugin
 
     private LookupService cl = null;
     public Tregmine plugin;
-    private static Tregmine pluginStatic;
 
     @Override
     public void onLoad()
@@ -558,9 +557,6 @@ public class Tregmine extends JavaPlugin
         } catch (PlayerBannedException e) {
             player.kickPlayer(plugin, e.getMessage());
         }
-    }
-    public static Tregmine getStaticTregmine(){
-    	return pluginStatic;
     }
     public Tregmine getTregmine(){
     	return plugin;
