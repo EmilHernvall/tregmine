@@ -66,5 +66,26 @@
             </manifest>
         </jar>
     </target>
-
+    <target name="finalize">
+	    <delete>
+		   <fileset dir="plugins_final">
+		      <include name="*"/>
+			  <include name="*/**"/>
+		   </fileset>
+		</delete>
+		<copy todir="plugins_final">
+		   <fileset dir="plugins">
+		      <include name="*"/>
+			  <include name="**/*"/>
+		   </fileset>
+		   <fileset dir="./">
+		      <include name="tregmine.jar"/>
+		   </fileset>
+		</copy>
+			  
+        <zip destfile="tregmine.zip">
+            <zipfileset dir="plugins_final" includes="*"/>
+			<zipfileset dir="plugins_final" includes="*/*"/>
+        </zip>
+    </target>
 </project>

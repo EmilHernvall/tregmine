@@ -1,0 +1,5 @@
+To compile plugin, first run
+ant jar
+then run
+ant finalize
+this will generate tregmine.zip -- extract this into your plugins folder and profit :)
