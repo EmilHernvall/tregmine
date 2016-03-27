@@ -192,18 +192,11 @@ public class InventoryListener implements Listener
             Logger.global.info("Time recording chest: " + totalTime);
             // Store contents
             long startPoint = System.currentTimeMillis();
-            
-            Runnable runnable = new Runnable(){
-            	@Override
-            	public void run(){
-            		try{
-            		invDAO.insertStacks(id, currentContents);
-            		}catch(DAOException e){
-            			throw new RuntimeException(e);
-            		}
-            	}
-            };
-            Bukkit.getScheduler().runTaskAsynchronously(plugin, runnable);
+    		try{
+    		invDAO.insertStacks(id, currentContents);
+    		}catch(DAOException e){
+    			throw new RuntimeException(e);
+    		}
             long endPoint = System.currentTimeMillis() - startPoint;
             Logger.global.info("Time inserting into SQL: " + endPoint);
         }
