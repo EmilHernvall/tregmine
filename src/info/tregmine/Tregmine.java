@@ -61,7 +61,8 @@ public class Tregmine extends JavaPlugin
     private World rulelessWorldEnd;
 
     private LookupService cl = null;
-    private Tregmine plugin;
+    public Tregmine plugin;
+    private static Tregmine pluginStatic;
 
     @Override
     public void onLoad()
@@ -120,6 +121,7 @@ public class Tregmine extends JavaPlugin
     {
         this.server = getServer();
         plugin = this;
+        pluginStatic = this;
         FileConfiguration config = getConfig();
         Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this,  new Lag(), 100L, 1L);
         List<?> configWorlds = getConfig().getList("worlds.names");
@@ -398,6 +400,7 @@ public class Tregmine extends JavaPlugin
     }
     
     public String parseColors(String rawText){
+    	//Deprecated because I realized ChatColor.translateAlternative exists...
     	String text = rawText;
     		if (text.contains("#r") || text.contains("#R")) {
         		text = text.replaceAll("#R", ChatColor.RESET + "");
@@ -553,8 +556,14 @@ public class Tregmine extends JavaPlugin
         try {
             addPlayer(player.getDelegate(), player.getAddress().getAddress());
         } catch (PlayerBannedException e) {
-            player.kickPlayer(e.getMessage());
+            player.kickPlayer(plugin, e.getMessage());
         }
+    }
+    public static Tregmine getStaticTregmine(){
+    	return pluginStatic;
+    }
+    public Tregmine getTregmine(){
+    	return plugin;
     }
 
     public List<TregminePlayer> getOnlinePlayers()
