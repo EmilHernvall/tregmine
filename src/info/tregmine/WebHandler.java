@@ -130,8 +130,8 @@ public class WebHandler extends AbstractHandler implements Listener
                        HttpServletResponse response)
         throws IOException, ServletException
     {
-        //System.out.println("Servlet path: " + baseRequest.getServletPath());
-        //System.out.println("Path info: " + baseRequest.getPathInfo());
+        System.out.println("Servlet path: " + baseRequest.getServletPath());
+        System.out.println("Path info: " + baseRequest.getPathInfo());
 
         baseRequest.setHandled(true);
         response.setContentType("application/json;charset=utf-8");
