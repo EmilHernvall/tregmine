@@ -62,6 +62,11 @@ public enum Rank
                this == SENIOR_ADMIN;
     }
 
+    public boolean canPKill()
+    {
+	return this == SENIOR_ADMIN;
+    }
+
     public boolean canSetBiome()
     {
         return this == BUILDER ||
