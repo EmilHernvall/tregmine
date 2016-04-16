@@ -4,6 +4,7 @@ import static org.bukkit.ChatColor.*;
 
 import java.util.Collection;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 
@@ -41,7 +42,7 @@ public class SayCommand extends AbstractCommand
         	return true;
         }
         Server server = player.getServer();
-        String msg = tregmine.parseColors(argsToMessage(args));
+        String msg = ChatColor.translateAlternateColorCodes('#', argsToMessage(args));
 
         server.broadcastMessage("<" + RED + "GOD" + WHITE + "> " + LIGHT_PURPLE
                 + msg);

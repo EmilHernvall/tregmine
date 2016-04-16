@@ -500,12 +500,6 @@ public class ZonePlayerListener implements Listener
         } else {
             player.loadInventory(worldNamePortions[0], true);
         }
-        
-        if (cWorld.getName().equalsIgnoreCase(plugin.getRulelessWorld().getName()) &&
-                (!player.getRank().canBypassWorld() && player.getGameMode() != GameMode.CREATIVE)) {
-            player.setAllowFlight(false);
-            player.setFlying(false);
-        }
 
         Location movingTo = player.getLocation();
         Point currentPos =
@@ -778,7 +772,7 @@ public class ZonePlayerListener implements Listener
 
         if (currentZone.hasPublicProfile()){
             player.sendMessage(ChatColor.DARK_RED + currentZone.getName() + " has a public profile! You can view it here:");
-            player.sendMessage(ChatColor.GRAY + "http://treg.co/index.php/zone/profile?id=" + currentZone.getId());
+            player.sendMessage(ChatColor.GRAY + plugin.getConfig().getString("general.url") + "/index.php/zone/profile?id=" + currentZone.getId());
         }
 
         if (perm != null) {

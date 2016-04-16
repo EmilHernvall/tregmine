@@ -42,10 +42,12 @@ public class CallEventListener implements Listener
     // Triggers when a player pings the server
 	@EventHandler
 	public void onServerListPing(ServerListPingEvent event){
-		Logger.global.info("A player pinged the server!");
+		if(plugin.getLockdown()){
+			event.setMotd(ChatColor.GOLD + plugin.getConfig().getString("general.servername") + ChatColor.RED + " is on lockdown.\n" + ChatColor.RED + "Only staff can join.");	
+		}else{
+		if(plugin.getConfig().getBoolean("general.motd.lineoneauto")){
 		String extraText = "";
-		String type = plugin.getConfig().getString("donotevertouch.type");
-		Logger.global.info("Type = " + type);
+		String type = plugin.releaseType;
 		if(type.contains("re")){
 			extraText = ChatColor.GREEN + " Release";
 		}else if(type.contains("be")){
@@ -59,9 +61,13 @@ public class CallEventListener implements Listener
 		}else{
 			extraText = ChatColor.DARK_RED + "" + ChatColor.BOLD + " YOU DID SOMETHING WRONG.";
 		}
-		event.setMotd(ChatColor.GOLD + "" + ChatColor.BOLD + "Tregmine " + plugin.getDescription().getVersion() + extraText + "\n" + ChatColor.RESET + "" + ChatColor.translateAlternateColorCodes('#', plugin.getConfig().getString("general.motd")));
-		
+		event.setMotd(ChatColor.GOLD + "" + ChatColor.BOLD + "Tregmine " + plugin.getDescription().getVersion() + extraText + "\n" + ChatColor.RESET + "" + ChatColor.translateAlternateColorCodes('#', plugin.getConfig().getString("general.motd.linetwo")));
+		}else{
+			event.setMotd(ChatColor.translateAlternateColorCodes('#', plugin.getConfig().getString("general.motd.lineone")) + "\n" + ChatColor.RESET + "" + ChatColor.translateAlternateColorCodes('#', plugin.getConfig().getString("general.motd.linetwo")));
+			
+		}
 	}
+}
     // Triggers when a player changes lot
     @EventHandler
     public void PlayerLotChangeEventListener(PlayerMoveEvent event)

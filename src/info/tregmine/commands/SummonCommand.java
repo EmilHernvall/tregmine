@@ -30,6 +30,9 @@ public class SummonCommand extends AbstractCommand
         }
 
         TregminePlayer victim = candidates.get(0);
+        if(victim.getIsStaff()){
+            victim.setLastPos(victim.getLocation());
+        }
 
         // Mentors can summon their students, but nobody else. In those cases,
         // you need the canSummon-permission.

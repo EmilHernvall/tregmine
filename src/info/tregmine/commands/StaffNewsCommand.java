@@ -54,7 +54,7 @@ public boolean handlePlayer(TregminePlayer player, String[] args){
     } catch (DAOException e) {
         throw new RuntimeException(e);
     }
-	player.sendMessage(BLUE + "Attempted. See database");
+	player.sendMessage(BLUE + "I DID IT STFU");
 	return true;
 }
 

@@ -20,8 +20,9 @@ public enum Notification {
 	RANK_UP(Sound.BLOCK_PISTON_CONTRACT),
 	RARE_DROP(Sound.ENTITY_ITEM_PICKUP),
 	SUMMON(Sound.BLOCK_PORTAL_TRAVEL),
-	WARP(Sound.ENTITY_ENDERMEN_TELEPORT);
-	
+	WARP(Sound.ENTITY_ENDERMEN_TELEPORT),
+	MAIL(Sound.BLOCK_NOTE_PLING),
+	UNBLESS(Sound.BLOCK_CHEST_OPEN);
 	
 	private final Sound sound;
 	
@@ -34,6 +35,7 @@ public enum Notification {
 	 * @return The sound of the notification
 	 */
 	public Sound getSound() {
+		
 		return sound;
 	}
 }

@@ -154,7 +154,7 @@ public class ActionCommand extends AbstractCommand
             if (player.getRank().canNotBeIgnored()) ignored = false;
             if (ignored == true) continue;
 
-            to.sendMessage("* " + player.getChatName() + " " + WHITE + msg);
+            to.sendMessage("%CHAT%" + "* " + player.getChatName() + " " + WHITE + msg);
         }
 
         return true;

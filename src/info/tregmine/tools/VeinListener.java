@@ -30,6 +30,7 @@ public class VeinListener implements Listener
         this.plugin = instance;
     }
 
+    
     @SuppressWarnings({ "deprecation", "static-access" })
     @EventHandler
     public void VeinMiner(BlockBreakEvent event)
@@ -51,9 +52,6 @@ public class VeinListener implements Listener
             return;
         }
         if (!player.getRank().canUseTools()) {
-            return;
-        }
-        if (!player.isSneaking()) {
             return;
         }
         if (player.getItemInHand() == null) {

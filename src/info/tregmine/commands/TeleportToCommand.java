@@ -24,6 +24,9 @@ public class TeleportToCommand extends AbstractCommand
         if (!player.getRank().canTeleportToPlayers()) {
             return true;
         }
+        if(player.getIsStaff()){
+        player.setLastPos(player.getLocation());
+        }
 
         int x = 0;
         int y = 0;

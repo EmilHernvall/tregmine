@@ -33,7 +33,7 @@ public class PlayerLookupListener implements Listener
     {
         TregminePlayer player = plugin.getPlayer(event.getPlayer());
         if (player == null) {
-            event.getPlayer().kickPlayer("Something went wrong");
+            event.getPlayer().kickPlayer(ChatColor.RED + "Something went wrong");
             Tregmine.LOGGER.info(event.getPlayer().getName() + " was not found " +
                     "in players map.");
             return;
@@ -72,26 +72,19 @@ public class PlayerLookupListener implements Listener
                     if (to.getRank().canSeeHiddenInfo()) {
                         if (player.getCountry() != null) {
                             to.sendMessage(
-                                    ChatColor.DARK_AQUA + "Welcome " + player.getChatName() +
-                                    ChatColor.DARK_AQUA + " from " + player.getCountry() + "!");
-                            to.sendMessage(
-                                    player.getChatName() + ChatColor.DARK_AQUA + " is invisible!");
+                            		"Welcome " + player.getChatName() + " from " + player.getCountry() + "!");
+                            to.sendMessage(player.getChatName() + ChatColor.DARK_AQUA + " is invisible!");
                         } else {
-                            to.sendMessage(
-                                    ChatColor.DARK_AQUA + "Welcome " + player.getChatName());
-                            to.sendMessage(
-                                    player.getChatName() + ChatColor.DARK_AQUA + " is invisible!");
+                            to.sendMessage(ChatColor.DARK_AQUA + "Welcome " + player.getChatName());
+                            to.sendMessage(player.getChatName() + ChatColor.DARK_AQUA + " is invisible!");
                         }
                     }
                 }
             } else {
                 if (player.getCountry() != null && !player.hasFlag(TregminePlayer.Flags.HIDDEN_LOCATION)) {
-                    plugin.getServer().broadcastMessage(
-                        ChatColor.DARK_AQUA + "Welcome " + player.getChatName() +
-                        ChatColor.DARK_AQUA + " from " + player.getCountry() + "!");
+                    plugin.getServer().broadcastMessage(ChatColor.DARK_AQUA + "Welcome " + player.getChatName() + ChatColor.DARK_AQUA + " from " + player.getCountry() + "!");
                 } else {
-                    plugin.getServer().broadcastMessage(
-                        ChatColor.DARK_AQUA + "Welcome " + player.getChatName());
+                    plugin.getServer().broadcastMessage(ChatColor.DARK_AQUA + "Welcome " + player.getChatName());
                 }
             }
         }
@@ -122,8 +115,6 @@ public class PlayerLookupListener implements Listener
                             player.hasFlag(TregminePlayer.Flags.HIDDEN_LOCATION)){
                         continue;
                     }
-                    current.sendMessage(ChatColor.YELLOW
-                            + "This player has also used names: " + aliasList);
                 }
             }
         } catch (DAOException e) {

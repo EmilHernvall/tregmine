@@ -78,6 +78,7 @@ public class BankListener implements Listener
             return;
         }
         else if ("exit".equalsIgnoreCase(args[0])) {
+        	player.sendMessage("Thanks for stopping by, you're now in chat!");
             player.setChatState(ChatState.CHAT);
             accounts.remove(player);
             bankingPlayers.remove(player);
@@ -316,7 +317,48 @@ public class BankListener implements Listener
             throw new RuntimeException(e);
         }
     }
+    @EventHandler
+    public void onPunchInteract(PlayerInteractEvent event)
+    {
+    	if(event.getAction() != Action.LEFT_CLICK_BLOCK){
+    		return;
+    	}
+    	Block block = event.getClickedBlock();
+    	if(block.getType() != Material.IRON_BLOCK){
+    		return;
+    	}
+    	TregminePlayer player = plugin.getPlayer(event.getPlayer());
 
+        ZoneWorld world = plugin.getWorld(player.getWorld());
+        Point p =  new Point(block.getLocation().getBlockX(),
+                             block.getLocation().getBlockZ());
+        Lot lot = world.findLot(p);
+        if (lot == null) {
+            return;
+        }
+
+        if (!lot.hasFlag(Lot.Flags.BANK)) {
+            return;
+        }
+        try (IContext ctx = plugin.createContext()) {
+        IBankDAO dao = ctx.getBankDAO();
+        Bank bank = dao.getBank(lot.getId());
+        Bank currentBank = bankingPlayers.get(player);
+    	if (player.getChatState() == ChatState.BANK &&
+                currentBank != null &&
+                currentBank.getId() == bank.getId()) {
+
+                player.setChatState(ChatState.CHAT);
+                player.sendMessage(ChatColor.GREEN + "Thanks for stopping by, you're now in chat!");
+                bankingPlayers.remove(player);
+                accounts.remove(player);
+        }else{
+        	player.sendMessage(ChatColor.RED + "You cannot left click until you are in the bank.");
+        }
+        } catch (DAOException e) {
+            throw new RuntimeException(e);
+        }
+    }
     @EventHandler
     public void onInteract(PlayerInteractEvent event)
     {
@@ -356,11 +398,8 @@ public class BankListener implements Listener
             if (player.getChatState() == ChatState.BANK &&
                 currentBank != null &&
                 currentBank.getId() == bank.getId()) {
-
-                player.setChatState(ChatState.CHAT);
-                player.sendMessage(ChatColor.GREEN + "You are now back in chat.");
-                bankingPlayers.remove(player);
-                accounts.remove(player);
+            	//Moved
+            	return;
             } else {
                 String name = lot.getName().split("\\.")[0];
                 player.setChatState(ChatState.BANK);

@@ -136,4 +136,19 @@ public class DBContext implements IContext
 	public IStaffNewsDAO getNewsByUploader() {
 		return new DBNewsDAO(conn);
 	}
+	
+	@Override
+	public IMailDAO getMailDAO(){
+		return new DBMailDAO(conn);
+	}
+
+	@Override
+	public IBlockDAO getBlockDAO() {
+		return new DBBlockDAO(conn);
+	}
+
+	@Override
+	public IHandbookDAO getHandbookDAO() {
+		return new DBHandbookDAO(conn);
+	}
 }

@@ -2,6 +2,7 @@
 package info.tregmine.api;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 
 import info.tregmine.Tregmine;
 
@@ -1168,10 +1169,37 @@ public abstract class PlayerDelegate
         return delegate.beginConversation(p0);
     }
 
-    public void sendMessage(java.lang.String p0)
+    public void sendTrueMsg(java.lang.String p0, Tregmine instance)
     {
+    	boolean lockdown = instance.getLockdown();
+    	String n = instance.getConfig().getString("general.servername");
         checkState();
-        delegate.sendMessage(p0);
+        ChatColor color = null;
+        if(lockdown){
+        	color = ChatColor.RED;
+        }else{
+        	color = ChatColor.GOLD;
+        }
+        if(p0.startsWith("%internal%")){
+        	String message = p0.replace("%internal%", "");
+        	delegate.sendMessage(color + "[Internal]" + ChatColor.RESET + " > " + message);
+        }
+        else if(p0.startsWith("%CHAT%")){
+        	String message = p0.replace("%CHAT%", "");
+        	delegate.sendMessage(message);
+        }
+        else if(p0.startsWith("%chat")){
+        	String message = p0.replace("%chat", "");
+        	delegate.sendMessage(message);
+        }
+        else if(p0.startsWith("%warning%")){
+        	String message = p0.replace("%warning%", "");
+        	delegate.sendMessage(ChatColor.RED + "[Warning]" + ChatColor.RESET + " > " + message);
+        }
+        else{
+    		delegate.sendMessage(p0.replace(ChatColor.GOLD + "[Tregmine]" + ChatColor.RESET + " > ", ""));
+        }
+
     }
 
     public void sendMessage(java.lang.String[] p0)

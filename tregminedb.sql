@@ -3,8 +3,8 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 20, 2016 at 02:02 AM
--- Server version: 10.1.9-MariaDB
+-- Generation Time: Apr 16, 2016 at 01:40 AM
+-- Server version: 5.7.11-log
 -- PHP Version: 5.6.15
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -17,8 +17,49 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `tregmine`
+-- Database: `tregmine_temp`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `bank`
+--
+
+CREATE TABLE `bank` (
+  `bank_id` int(10) UNSIGNED NOT NULL,
+  `lot_id` int(10) UNSIGNED DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `bank_account`
+--
+
+CREATE TABLE `bank_account` (
+  `account_id` int(10) UNSIGNED NOT NULL,
+  `bank_id` int(10) UNSIGNED DEFAULT NULL,
+  `player_id` int(10) UNSIGNED DEFAULT NULL,
+  `account_balance` int(10) UNSIGNED DEFAULT NULL,
+  `account_number` int(10) UNSIGNED DEFAULT NULL,
+  `account_pin` varchar(10) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `bank_transaction`
+--
+
+CREATE TABLE `bank_transaction` (
+  `transaction_id` int(10) UNSIGNED NOT NULL,
+  `account_id` int(10) UNSIGNED NOT NULL,
+  `player_id` int(10) UNSIGNED NOT NULL,
+  `transaction_type` enum('deposit','withdrawal') NOT NULL,
+  `transaction_amount` int(10) UNSIGNED NOT NULL,
+  `transaction_timestamp` int(10) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -33,29 +74,40 @@ CREATE TABLE `blessedblock` (
   `blessedblock_x` int(11) DEFAULT NULL,
   `blessedblock_y` int(11) DEFAULT NULL,
   `blessedblock_z` int(11) DEFAULT NULL,
-  `blessedblock_world` varchar(32) CHARACTER SET utf8 COLLATE utf8_swedish_ci DEFAULT NULL
+  `blessedblock_world` varchar(32) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
-CREATE TABLE bank (
-    bank_id INT UNSIGNED AUTO_INCREMENT,
-    lot_id INT UNSIGNED,
-    PRIMARY KEY (bank_id),
-    UNIQUE idx_lot (lot_id)
+
+--
+-- Table structure for table `block_prices`
+--
+
+CREATE TABLE `block_prices` (
+  `blockid` double NOT NULL,
+  `price` int(8) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE bank_account (
-    account_id INT UNSIGNED AUTO_INCREMENT,
-    bank_id INT UNSIGNED,
-    player_id INT UNSIGNED,
-    account_balance INT UNSIGNED,
-    account_number INT UNSIGNED,
-    account_pin VARCHAR (10),
-    PRIMARY KEY (account_id),
-    INDEX idx_bank (bank_id, player_id),
-    UNIQUE idx_accountnum (account_number),
-    INDEX idx_accountnum2 (bank_id, account_number)
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `block_stats`
+--
+
+CREATE TABLE `block_stats` (
+  `checksum` double NOT NULL,
+  `player` varchar(46) NOT NULL,
+  `x` double NOT NULL,
+  `y` double NOT NULL,
+  `z` double NOT NULL,
+  `time` double NOT NULL,
+  `status` tinyint(1) NOT NULL,
+  `blockid` double NOT NULL,
+  `world` varchar(16) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
 --
 -- Table structure for table `donation`
 --
@@ -154,10 +206,10 @@ CREATE TABLE `inventory` (
   `inventory_x` int(11) DEFAULT NULL,
   `inventory_y` int(11) DEFAULT NULL,
   `inventory_z` int(11) DEFAULT NULL,
-  `inventory_world` varchar(32) COLLATE utf8_swedish_ci DEFAULT NULL,
-  `inventory_player` varchar(32) COLLATE utf8_swedish_ci DEFAULT NULL,
-  `inventory_type` enum('block','player','player_armor') COLLATE utf8_swedish_ci DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
+  `inventory_world` varchar(32) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `inventory_player` varchar(32) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `inventory_type` enum('block','player','player_armor') COLLATE utf8_unicode_ci DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -203,9 +255,9 @@ CREATE TABLE `inventory_item` (
   `item_slot` int(10) UNSIGNED DEFAULT NULL,
   `item_material` int(10) UNSIGNED DEFAULT NULL,
   `item_data` int(11) DEFAULT NULL,
-  `item_meta` text CHARACTER SET utf8,
+  `item_meta` text COLLATE utf8_unicode_ci,
   `item_count` int(10) UNSIGNED DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -221,9 +273,11 @@ CREATE TABLE `item` (
   `enchantable` enum('no','yes') NOT NULL DEFAULT 'no',
   `sellable` enum('no','yes') NOT NULL DEFAULT 'no',
   `item_value` int(255) NOT NULL DEFAULT '0',
+  `mine_value` int(8) NOT NULL DEFAULT '0',
   `auctionable` enum('no','yes') NOT NULL DEFAULT 'no',
   `link` varchar(255) NOT NULL,
-  `round` enum('no','yes') NOT NULL DEFAULT 'no'
+  `round` enum('no','yes') NOT NULL DEFAULT 'no',
+  `item_sign` text
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -252,8 +306,9 @@ CREATE TABLE `mentorlog` (
 
 CREATE TABLE `misc_message` (
   `message_type` varchar(256) NOT NULL,
-  `message_value` varchar(256) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `message_value` varchar(256) NOT NULL,
+  `id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -265,7 +320,7 @@ CREATE TABLE `motd` (
   `motd_id` int(10) UNSIGNED NOT NULL,
   `motd_timestamp` int(10) UNSIGNED NOT NULL,
   `motd_message` text CHARACTER SET utf8
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -275,19 +330,19 @@ CREATE TABLE `motd` (
 
 CREATE TABLE `player` (
   `player_id` int(10) UNSIGNED NOT NULL,
-  `player_name` varchar(46) COLLATE utf8_swedish_ci DEFAULT NULL,
-  `player_password` varchar(64) COLLATE utf8_swedish_ci DEFAULT NULL,
-  `player_email` varchar(255) COLLATE utf8_swedish_ci DEFAULT NULL,
-  `player_confirmed` enum('0','1') COLLATE utf8_swedish_ci DEFAULT '0',
+  `player_name` varchar(46) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `player_password` varchar(64) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `player_email` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `player_confirmed` enum('0','1') COLLATE utf8_unicode_ci DEFAULT '0',
   `player_created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `player_wallet` bigint(20) DEFAULT '50000',
-  `player_rank` enum('unverified','tourist','settler','resident','donator','guardian','builder','coder','junior_admin','senior_admin') COLLATE utf8_swedish_ci DEFAULT 'unverified',
+  `player_rank` enum('unverified','tourist','settler','resident','donator','guardian','builder','coder','junior_admin','senior_admin') COLLATE utf8_unicode_ci DEFAULT 'unverified',
   `player_flags` int(10) UNSIGNED DEFAULT NULL,
-  `player_keywords` text COLLATE utf8_swedish_ci NOT NULL,
-  `player_ignore` text COLLATE utf8_swedish_ci DEFAULT NULL,
-  `player_uuid` char(43) COLLATE utf8_swedish_ci NOT NULL,
-  `player_inventory` varchar(255) COLLATE utf8_swedish_ci DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
+  `player_keywords` text COLLATE utf8_unicode_ci NOT NULL,
+  `player_ignore` text COLLATE utf8_unicode_ci,
+  `player_uuid` char(43) COLLATE utf8_unicode_ci NOT NULL,
+  `player_inventory` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -345,7 +400,7 @@ CREATE TABLE `player_chatlog` (
   `chatlog_timestamp` int(10) UNSIGNED DEFAULT NULL,
   `chatlog_channel` varchar(64) CHARACTER SET utf8 DEFAULT NULL,
   `chatlog_message` varchar(255) CHARACTER SET utf8 DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -362,7 +417,7 @@ CREATE TABLE `player_givelog` (
   `givelog_meta` text CHARACTER SET utf8,
   `givelog_count` int(10) UNSIGNED DEFAULT NULL,
   `givelog_timestamp` int(10) UNSIGNED DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -373,15 +428,15 @@ CREATE TABLE `player_givelog` (
 CREATE TABLE `player_home` (
   `home_id` int(10) UNSIGNED NOT NULL,
   `player_id` int(10) UNSIGNED DEFAULT NULL,
-  `home_name` varchar(32) COLLATE utf8_swedish_ci DEFAULT NULL,
+  `home_name` varchar(32) COLLATE utf8_unicode_ci DEFAULT NULL,
   `home_x` double DEFAULT NULL,
   `home_y` double DEFAULT NULL,
   `home_z` double DEFAULT NULL,
   `home_pitch` double DEFAULT NULL,
   `home_yaw` double DEFAULT NULL,
-  `home_world` varchar(32) COLLATE utf8_swedish_ci DEFAULT NULL,
+  `home_world` varchar(32) COLLATE utf8_unicode_ci DEFAULT NULL,
   `home_time` double DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -394,12 +449,27 @@ CREATE TABLE `player_login` (
   `player_id` int(10) UNSIGNED DEFAULT NULL,
   `login_timestamp` int(10) UNSIGNED DEFAULT NULL,
   `login_action` enum('login','logout') CHARACTER SET utf8 DEFAULT NULL,
-  `login_country` varchar(100) COLLATE utf8_swedish_ci DEFAULT NULL,
-  `login_city` varchar(100) COLLATE utf8_swedish_ci DEFAULT NULL,
-  `login_ip` varchar(15) COLLATE utf8_swedish_ci DEFAULT NULL,
-  `login_hostname` varchar(100) COLLATE utf8_swedish_ci DEFAULT NULL,
+  `login_country` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `login_city` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `login_ip` varchar(15) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `login_hostname` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   `login_onlineplayers` int(10) UNSIGNED DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `player_mail`
+--
+
+CREATE TABLE `player_mail` (
+  `sender_name` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
+  `receiver_name` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
+  `message` text COLLATE utf8_unicode_ci NOT NULL,
+  `deleted` varchar(5) COLLATE utf8_unicode_ci NOT NULL,
+  `mail_id` int(11) NOT NULL,
+  `timestamp` date DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -415,8 +485,8 @@ CREATE TABLE `player_orelog` (
   `orelog_x` int(11) DEFAULT NULL,
   `orelog_y` int(11) DEFAULT NULL,
   `orelog_z` int(11) DEFAULT NULL,
-  `orelog_world` varchar(255) CHARACTER SET utf8 DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
+  `orelog_world` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -426,10 +496,10 @@ CREATE TABLE `player_orelog` (
 
 CREATE TABLE `player_property` (
   `player_id` int(10) UNSIGNED NOT NULL DEFAULT '0',
-  `property_key` varchar(255) COLLATE utf8_swedish_ci NOT NULL DEFAULT '',
-  `property_value` varchar(255) COLLATE utf8_swedish_ci DEFAULT NULL,
+  `property_key` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `property_value` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `property_created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -442,10 +512,10 @@ CREATE TABLE `player_report` (
   `subject_id` int(10) UNSIGNED NOT NULL,
   `issuer_id` int(10) UNSIGNED NOT NULL,
   `report_action` enum('kick','softwarn','hardwarn','ban','comment') CHARACTER SET utf8 NOT NULL,
-  `report_message` text COLLATE utf8_swedish_ci NOT NULL,
+  `report_message` text COLLATE utf8_unicode_ci NOT NULL,
   `report_timestamp` int(10) UNSIGNED NOT NULL,
   `report_validuntil` int(10) UNSIGNED DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -459,7 +529,7 @@ CREATE TABLE `player_transaction` (
   `recipient_id` int(10) UNSIGNED DEFAULT NULL,
   `transaction_timestamp` int(10) UNSIGNED DEFAULT NULL,
   `transaction_amount` int(10) UNSIGNED DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -482,7 +552,31 @@ CREATE TABLE `player_webcookie` (
 CREATE TABLE `shorturl` (
   `urlID` int(11) NOT NULL,
   `link` varchar(256) CHARACTER SET utf8 NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `staffnews`
+--
+
+CREATE TABLE `staffnews` (
+  `id` int(10) NOT NULL,
+  `username` varchar(64) NOT NULL,
+  `text` text NOT NULL,
+  `timestamp` int(16) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `staff_handbook`
+--
+
+CREATE TABLE `staff_handbook` (
+  `rulenum` varchar(4) DEFAULT NULL,
+  `rule` varchar(128) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -505,19 +599,6 @@ CREATE TABLE `stats_blocks` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `staffnews`
---
-
-CREATE TABLE `staffnews` (
-  `id` int(10) NOT NULL,
-  `username` varchar(64) NOT NULL,
-  `text` text NOT NULL,
-  `timestamp` int(16) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `trade`
 --
 
@@ -527,7 +608,7 @@ CREATE TABLE `trade` (
   `recipient_id` int(10) UNSIGNED DEFAULT NULL,
   `trade_timestamp` int(10) UNSIGNED DEFAULT NULL,
   `trade_amount` int(10) UNSIGNED DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -542,7 +623,7 @@ CREATE TABLE `trade_item` (
   `item_data` int(11) DEFAULT NULL,
   `item_meta` text CHARACTER SET utf8,
   `item_count` int(10) UNSIGNED DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -564,14 +645,15 @@ CREATE TABLE `version` (
 
 CREATE TABLE `warp` (
   `warp_id` int(10) UNSIGNED NOT NULL,
-  `warp_name` varchar(45) COLLATE utf8_swedish_ci DEFAULT NULL,
+  `warp_name` varchar(45) COLLATE utf8_unicode_ci DEFAULT NULL,
   `warp_x` double DEFAULT NULL,
   `warp_y` double DEFAULT NULL,
   `warp_z` double DEFAULT NULL,
   `warp_pitch` double DEFAULT NULL,
   `warp_yaw` double DEFAULT NULL,
-  `warp_world` varchar(45) COLLATE utf8_swedish_ci DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
+  `warp_world` varchar(45) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `hidden` varchar(5) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'false'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -594,21 +676,21 @@ CREATE TABLE `warp_log` (
 
 CREATE TABLE `zone` (
   `zone_id` int(11) NOT NULL,
-  `zone_world` varchar(50) COLLATE utf8_swedish_ci NOT NULL DEFAULT 'world',
-  `zone_name` varchar(32) COLLATE utf8_swedish_ci NOT NULL,
-  `zone_enterdefault` enum('0','1') COLLATE utf8_swedish_ci NOT NULL DEFAULT '1',
-  `zone_placedefault` enum('0','1') COLLATE utf8_swedish_ci NOT NULL DEFAULT '1',
-  `zone_destroydefault` enum('0','1') COLLATE utf8_swedish_ci NOT NULL DEFAULT '1',
-  `zone_pvp` enum('0','1') COLLATE utf8_swedish_ci NOT NULL DEFAULT '0',
-  `zone_hostiles` enum('0','1') COLLATE utf8_swedish_ci DEFAULT '1',
-  `zone_communist` enum('0','1') COLLATE utf8_swedish_ci DEFAULT '0',
-  `zone_publicprofile` enum('0','1') COLLATE utf8_swedish_ci DEFAULT '0',
-  `zone_entermessage` varchar(250) COLLATE utf8_swedish_ci NOT NULL,
-  `zone_exitmessage` varchar(250) COLLATE utf8_swedish_ci NOT NULL,
-  `zone_texture` text COLLATE utf8_swedish_ci,
-  `zone_owner` varchar(24) COLLATE utf8_swedish_ci DEFAULT NULL,
+  `zone_world` varchar(50) CHARACTER SET utf8 COLLATE utf8_swedish_ci NOT NULL DEFAULT 'world',
+  `zone_name` varchar(32) CHARACTER SET utf8 COLLATE utf8_swedish_ci NOT NULL,
+  `zone_enterdefault` enum('0','1') CHARACTER SET utf8 COLLATE utf8_swedish_ci NOT NULL DEFAULT '1',
+  `zone_placedefault` enum('0','1') CHARACTER SET utf8 COLLATE utf8_swedish_ci NOT NULL DEFAULT '1',
+  `zone_destroydefault` enum('0','1') CHARACTER SET utf8 COLLATE utf8_swedish_ci NOT NULL DEFAULT '1',
+  `zone_pvp` enum('0','1') CHARACTER SET utf8 COLLATE utf8_swedish_ci NOT NULL DEFAULT '0',
+  `zone_hostiles` enum('0','1') CHARACTER SET utf8 COLLATE utf8_swedish_ci DEFAULT '1',
+  `zone_communist` enum('0','1') CHARACTER SET utf8 COLLATE utf8_swedish_ci DEFAULT '0',
+  `zone_publicprofile` enum('0','1') CHARACTER SET utf8 COLLATE utf8_swedish_ci DEFAULT '0',
+  `zone_entermessage` varchar(250) CHARACTER SET utf8 COLLATE utf8_swedish_ci NOT NULL,
+  `zone_exitmessage` varchar(250) CHARACTER SET utf8 COLLATE utf8_swedish_ci NOT NULL,
+  `zone_texture` text CHARACTER SET utf8 COLLATE utf8_swedish_ci,
+  `zone_owner` varchar(24) CHARACTER SET utf8 COLLATE utf8_swedish_ci DEFAULT NULL,
   `zone_flags` int(10) UNSIGNED DEFAULT '0'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -683,6 +765,29 @@ CREATE TABLE `zone_user` (
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `bank`
+--
+ALTER TABLE `bank`
+  ADD PRIMARY KEY (`bank_id`),
+  ADD UNIQUE KEY `idx_lot` (`lot_id`);
+
+--
+-- Indexes for table `bank_account`
+--
+ALTER TABLE `bank_account`
+  ADD PRIMARY KEY (`account_id`),
+  ADD KEY `idx_bank` (`bank_id`,`player_id`),
+  ADD KEY `idx_accountnum2` (`bank_id`,`account_number`);
+
+--
+-- Indexes for table `bank_transaction`
+--
+ALTER TABLE `bank_transaction`
+  ADD PRIMARY KEY (`transaction_id`),
+  ADD KEY `idx_account` (`account_id`,`transaction_timestamp`),
+  ADD KEY `idx_player` (`player_id`,`transaction_timestamp`);
 
 --
 -- Indexes for table `blessedblock`
@@ -769,6 +874,12 @@ ALTER TABLE `mentorlog`
   ADD UNIQUE KEY `idx_mentor` (`mentor_id`,`student_id`);
 
 --
+-- Indexes for table `misc_message`
+--
+ALTER TABLE `misc_message`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `motd`
 --
 ALTER TABLE `motd`
@@ -831,6 +942,12 @@ ALTER TABLE `player_login`
   ADD KEY `player_idx` (`player_id`,`login_timestamp`);
 
 --
+-- Indexes for table `player_mail`
+--
+ALTER TABLE `player_mail`
+  ADD UNIQUE KEY `mail_id` (`mail_id`);
+
+--
 -- Indexes for table `player_orelog`
 --
 ALTER TABLE `player_orelog`
@@ -873,6 +990,12 @@ ALTER TABLE `player_webcookie`
 ALTER TABLE `shorturl`
   ADD PRIMARY KEY (`urlID`),
   ADD UNIQUE KEY `urlID` (`urlID`);
+
+--
+-- Indexes for table `staffnews`
+--
+ALTER TABLE `staffnews`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `stats_blocks`
@@ -958,10 +1081,25 @@ ALTER TABLE `zone_user`
 --
 
 --
+-- AUTO_INCREMENT for table `bank`
+--
+ALTER TABLE `bank`
+  MODIFY `bank_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `bank_account`
+--
+ALTER TABLE `bank_account`
+  MODIFY `account_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `bank_transaction`
+--
+ALTER TABLE `bank_transaction`
+  MODIFY `transaction_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
 -- AUTO_INCREMENT for table `blessedblock`
 --
 ALTER TABLE `blessedblock`
-  MODIFY `blessedblock_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `blessedblock_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `donation`
 --
@@ -986,52 +1124,57 @@ ALTER TABLE `fishyblock_transaction`
 -- AUTO_INCREMENT for table `inventory`
 --
 ALTER TABLE `inventory`
-  MODIFY `inventory_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `inventory_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3354;
 --
 -- AUTO_INCREMENT for table `inventory_accesslog`
 --
 ALTER TABLE `inventory_accesslog`
-  MODIFY `accesslog_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `accesslog_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9175;
 --
 -- AUTO_INCREMENT for table `inventory_changelog`
 --
 ALTER TABLE `inventory_changelog`
-  MODIFY `changelog_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `changelog_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9255;
 --
 -- AUTO_INCREMENT for table `inventory_item`
 --
 ALTER TABLE `inventory_item`
-  MODIFY `item_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `item_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=75488;
 --
 -- AUTO_INCREMENT for table `item`
 --
 ALTER TABLE `item`
-  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=399;
 --
 -- AUTO_INCREMENT for table `mentorlog`
 --
 ALTER TABLE `mentorlog`
-  MODIFY `mentorlog_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `mentorlog_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+--
+-- AUTO_INCREMENT for table `misc_message`
+--
+ALTER TABLE `misc_message`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=346;
 --
 -- AUTO_INCREMENT for table `motd`
 --
 ALTER TABLE `motd`
-  MODIFY `motd_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `motd_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT for table `player`
 --
 ALTER TABLE `player`
-  MODIFY `player_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `player_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=60;
 --
 -- AUTO_INCREMENT for table `playerinventory`
 --
 ALTER TABLE `playerinventory`
-  MODIFY `playerinventory_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4098;
+  MODIFY `playerinventory_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9245;
 --
 -- AUTO_INCREMENT for table `playerinventory_item`
 --
 ALTER TABLE `playerinventory_item`
-  MODIFY `item_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=287;
+  MODIFY `item_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=498587;
 --
 -- AUTO_INCREMENT for table `player_badge`
 --
@@ -1041,57 +1184,67 @@ ALTER TABLE `player_badge`
 -- AUTO_INCREMENT for table `player_chatlog`
 --
 ALTER TABLE `player_chatlog`
-  MODIFY `chatlog_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=61;
+  MODIFY `chatlog_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12020;
 --
 -- AUTO_INCREMENT for table `player_givelog`
 --
 ALTER TABLE `player_givelog`
-  MODIFY `givelog_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `givelog_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=109;
 --
 -- AUTO_INCREMENT for table `player_home`
 --
 ALTER TABLE `player_home`
-  MODIFY `home_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `home_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50;
 --
 -- AUTO_INCREMENT for table `player_login`
 --
 ALTER TABLE `player_login`
-  MODIFY `login_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=61;
+  MODIFY `login_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1604;
+--
+-- AUTO_INCREMENT for table `player_mail`
+--
+ALTER TABLE `player_mail`
+  MODIFY `mail_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 --
 -- AUTO_INCREMENT for table `player_orelog`
 --
 ALTER TABLE `player_orelog`
-  MODIFY `orelog_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `orelog_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1827;
 --
 -- AUTO_INCREMENT for table `player_report`
 --
 ALTER TABLE `player_report`
-  MODIFY `report_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `report_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT for table `player_transaction`
 --
 ALTER TABLE `player_transaction`
-  MODIFY `transaction_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `transaction_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `player_webcookie`
 --
 ALTER TABLE `player_webcookie`
-  MODIFY `webcookie_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `webcookie_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 --
 -- AUTO_INCREMENT for table `shorturl`
 --
 ALTER TABLE `shorturl`
   MODIFY `urlID` int(11) NOT NULL AUTO_INCREMENT;
 --
+-- AUTO_INCREMENT for table `staffnews`
+--
+ALTER TABLE `staffnews`
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT;
+--
 -- AUTO_INCREMENT for table `trade`
 --
 ALTER TABLE `trade`
-  MODIFY `trade_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `trade_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `trade_item`
 --
 ALTER TABLE `trade_item`
-  MODIFY `item_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `item_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `version`
 --
@@ -1101,79 +1254,32 @@ ALTER TABLE `version`
 -- AUTO_INCREMENT for table `warp`
 --
 ALTER TABLE `warp`
-  MODIFY `warp_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `warp_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=283;
 --
 -- AUTO_INCREMENT for table `warp_log`
 --
 ALTER TABLE `warp_log`
-  MODIFY `log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1135;
 --
 -- AUTO_INCREMENT for table `zone`
 --
 ALTER TABLE `zone`
-  MODIFY `zone_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `zone_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1039;
 --
 -- AUTO_INCREMENT for table `zone_lot`
 --
 ALTER TABLE `zone_lot`
-  MODIFY `lot_id` int(10) NOT NULL AUTO_INCREMENT;
+  MODIFY `lot_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13140;
 --
 -- AUTO_INCREMENT for table `zone_profile`
 --
 ALTER TABLE `zone_profile`
-  MODIFY `profile_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `profile_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=158;
 --
 -- AUTO_INCREMENT for table `zone_rect`
 --
 ALTER TABLE `zone_rect`
-  MODIFY `rect_id` int(10) NOT NULL AUTO_INCREMENT;
+  MODIFY `rect_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1036;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-
--- I didn't feel like making it look pretty.
-ALTER TABLE `staffnews`
-  ADD PRIMARY KEY (`id`);
-
-ALTER TABLE `staffnews`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
-  
-INSERT INTO `enchantment` (`enchantment_name`, `enchantment_title`) VALUES
-('ARROW_DAMAGE', 'Power'),
-('ARROW_FIRE', 'Flame'),
-('ARROW_INFINITE', 'Infinity'),
-('ARROW_KNOCKBACK', 'Punch'),
-('DAMAGE_ALL', 'Sharpness'),
-('DAMAGE_ARTHROPODS', 'Bane of Arthropods'),
-('DAMAGE_UNDEAD', 'Smite'),
-('DIG_SPEED', 'Efficiency'),
-('DURABILITY', 'Unbreaking'),
-('FIRE_ASPECT', 'Fire Aspect'),
-('KNOCKBACK', 'Knockback'),
-('LOOT_BONUS_BLOCKS', 'Fortune'),
-('LOOT_BONUS_MOBS', 'Looting'),
-('OXYGEN', 'Respiration'),
-('PROTECTION_ENVIRONMENTAL', 'Protection'),
-('PROTECTION_EXPLOSIONS', 'Blast Protection'),
-('PROTECTION_FIRE', 'Fire Protection'),
-('PROTECTION_PROJECTILE', 'Projectile Protection'),
-('PROTECTION_FALL', 'Feather Falling'),
-('SILK_TOUCH', 'Silk Touch'),
-('THORNS', 'Thorns'),
-('WATER_WORKER', 'Aqua Affinity');
-
-CREATE TABLE bank_transaction (
-    transaction_id INT UNSIGNED AUTO_INCREMENT,
-    account_id INT UNSIGNED NOT NULL,
-    player_id INT UNSIGNED NOT NULL,
-    transaction_type ENUM ('deposit', 'withdrawal') NOT NULL,
-    transaction_amount INT UNSIGNED NOT NULL,
-    transaction_timestamp INT UNSIGNED NOT NULL,
-    PRIMARY KEY (transaction_id),
-    INDEX idx_account (account_id, transaction_timestamp),
-    INDEX idx_player (player_id, transaction_timestamp)
-) ENGINE=InnoDB;
-ALTER TABLE bank_account DROP INDEX idx_accountnum;
-
-INSERT INTO `motd` (`motd_timestamp`, `motd_message`) VALUES
-(unix_timestamp(), 'Welcome to Tregmine 2! :)');

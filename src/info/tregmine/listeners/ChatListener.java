@@ -12,10 +12,12 @@ import java.util.regex.Pattern;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.event.*;
 
 import info.tregmine.*;
 import info.tregmine.api.ListStore;
+import info.tregmine.api.Notification;
 import info.tregmine.api.Rank;
 import info.tregmine.api.TregminePlayer;
 import info.tregmine.database.*;
@@ -66,12 +68,19 @@ public class ChatListener implements Listener
 
                 String text = event.getMessage();
                 for (TregminePlayer online : plugin.getOnlinePlayers()) {
+                	
                     if (text.contains(online.getRealName()) &&
                         !online.hasFlag(TregminePlayer.Flags.INVISIBLE)) {
-
+                    	if(text.toLowerCase().contains("@" + online.getRealName())){
+                    		String newName = online.getChatName();
+                        	text = text.replaceAll("@" + online.getRealName(), ChatColor.ITALIC + "@" + online.getName());
+                        }else{
                         text = text.replaceAll(online.getRealName(),
                                                online.getChatName() + txtColor);
+                        }
+                        online.sendNotification(Notification.MESSAGE);
                     }
+                    
                 }
                 if(sender.getRank() != Rank.RESIDENT && sender.getRank() != Rank.SETTLER && sender.getRank() != Rank.TOURIST && sender.getRank() != Rank.UNVERIFIED){
             	text = ChatColor.translateAlternateColorCodes('#', text);
@@ -83,11 +92,40 @@ public class ChatListener implements Listener
                 if (player_keywords.size() > 0 && player_keywords != null) {
                     for (String keyword : player_keywords) {
                         if (text.toLowerCase().contains(keyword.toLowerCase())) {
+                        	if(text.toLowerCase().contains("@" + keyword.toLowerCase())){
+                            	text = text.replaceAll("@" + keyword.toLowerCase(), ChatColor.GOLD + "" + ChatColor.ITALIC + "@" + ChatColor.GOLD + ChatColor.ITALIC + keyword.toLowerCase());
+                            }else{
                             text = text.replaceAll(Pattern.quote(keyword),
                                     ChatColor.AQUA + keyword + txtColor);
+                            }
                         }
                     }
                 }
+                
+                String frontBracket = "";
+                String endBracket = "";
+                if(!event.isWebChat()){
+                if(sender.isOp() || sender.getGameMode() == GameMode.CREATIVE){
+                	if(sender.isOp() && sender.getGameMode() == GameMode.CREATIVE){
+                		frontBracket = ChatColor.BLACK + "<" + ChatColor.RESET;
+                		endBracket = ChatColor.YELLOW + "> " + ChatColor.RESET;
+                	}else if(sender.isOp()){
+                		frontBracket = ChatColor.BLACK + "<" + ChatColor.RESET;
+                		endBracket = ChatColor.BLACK + "> " + ChatColor.RESET;
+                	}else if(sender.getGameMode() == GameMode.CREATIVE){
+                		frontBracket = ChatColor.YELLOW + "<" + ChatColor.RESET;
+                		endBracket = ChatColor.YELLOW + "> " + ChatColor.RESET;
+                	}
+                	
+                }else{
+                	frontBracket = "<";
+                	endBracket = ChatColor.WHITE + "> ";
+                }
+                }else{
+                	frontBracket = "<";
+                	endBracket = ChatColor.WHITE + "> ";
+                }
+               
 
                 String senderChan = sender.getChatChannel();
                 String toChan = to.getChatChannel();
@@ -96,21 +134,21 @@ public class ChatListener implements Listener
 
                     if (event.isWebChat()) {
                         if ("GLOBAL".equalsIgnoreCase(senderChan)) {
-                            to.sendMessage("(" + sender.getChatName()
+                            to.sendMessage("%CHAT%" + "(" + sender.getChatName()
                                     + ChatColor.WHITE + ") " + txtColor + text);
                         }
                         else {
-                            to.sendMessage(channel + " (" + sender.getChatName()
+                            to.sendMessage("%CHAT%" + channel + " (" + sender.getChatName()
                                     + ChatColor.WHITE + ") " + txtColor + text);
                         }
                     } else {
                         if ("GLOBAL".equalsIgnoreCase(senderChan)) {
-                            to.sendMessage("<" + sender.getChatName()
-                                    + ChatColor.WHITE + "> " + txtColor + text);
+                            to.sendMessage("%CHAT%" + frontBracket + sender.getChatName()
+                                    + ChatColor.WHITE + endBracket + txtColor + text);
                         }
                         else {
-                            to.sendMessage(channel + " <" + sender.getChatName()
-                                    + ChatColor.WHITE + "> " + txtColor + text);
+                            to.sendMessage("%CHAT%" + channel + frontBracket + sender.getChatName()
+                                    + ChatColor.WHITE + endBracket + txtColor + text);
                         }
                     }
                 }
@@ -142,7 +180,6 @@ public class ChatListener implements Listener
         }
 
         //event.setCancelled(true);
-
         WebServer server = plugin.getWebServer();
         server.executeChatAction(new WebServer.ChatMessage(sender, channel, event.getMessage()));
         if(plugin.getConfig().getString("general.life-log") == "true"){

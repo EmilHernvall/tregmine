@@ -29,7 +29,7 @@ public class GameModeCommand extends AbstractCommand
         }
         String additional = "";
         player.setGameMode(mode);
-        if(mode == GameMode.SURVIVAL){
+        if(mode == GameMode.SURVIVAL && !player.isOp()){
         	player.getInventory().clear();
         	additional = "Your inventory has been cleared.";
         }

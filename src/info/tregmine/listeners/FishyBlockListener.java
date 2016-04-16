@@ -468,7 +468,6 @@ public class FishyBlockListener implements Listener
                                                 heldItem.getEnchantments());
                     }
                 }
-
                 // Add to block inventory
                 if (match) {
                     Material type = heldMaterial.getItemType();
@@ -656,8 +655,8 @@ public class FishyBlockListener implements Listener
             }
             // This is when the player sets the type of the fishy block
             else if (newFishyBlock != null &&
-                     loc.equals(newFishyBlock.getBlockLocation())) {
-
+                     loc.equals(newFishyBlock.getBlockLocation()) && heldItem.getType() != Material.AIR) {
+            	
                 if (player.getGameMode() == GameMode.CREATIVE) {
                     player.sendMessage(ChatColor.RED + "Cannot use fishy blocks " +
                             "whilst in creative mode.");
@@ -699,7 +698,10 @@ public class FishyBlockListener implements Listener
                         "This fishy block will sell " +
                         material.getItemType().toString() + ":" +
                         material.getData() + ".");
-                } else {
+                }else if(heldItem.getType() == Material.AIR){
+                	return;
+                }
+                else {
                     player.sendMessage(ChatColor.GREEN +
                         "This fishy block will sell " +
                         material.getItemType().toString() + ".");

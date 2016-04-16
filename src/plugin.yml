@@ -1,9 +1,9 @@
 name: tregmine
 main: info.tregmine.Tregmine
-version: 3.2.8
+version: 3.5.1
 website: http://tregmine.info
 author: Ein Andersson, Emil Hernvall, Josh Morgan, James Sherlock, Rob Catron, Joe Notaro, Eric Rabil
-description: Tregmine Revived
+description: Tregmine Plugin
 loadbefore: [BlockLog,GameMagic]
 
 commands:
@@ -20,6 +20,9 @@ commands:
   allclear:
     description: Check if any blocks have been changed
     usage: /allclear [radius]
+  back:
+    description: Teleport to your previous location
+    usage: /back
   guardians:
     description: Send a message to all active guardians
     usage: /guardians message
@@ -53,6 +56,9 @@ commands:
   brush:
     description: Create a brush
     usage: /brush <material> <radius>
+  buytool:
+    description: Buy a tool
+    usage: /buytool <lumber,vein>
   cname:
     description: Change your name and color (admin only)
     usage: /cname color new_name
@@ -83,6 +89,9 @@ commands:
   forceblock:
     description: Stop people forcing you into channels
     usage: /forceblock <on/off/status>
+  freeze:
+    description: Freeze a specified player
+    usage: /freeze <player>
   give:
     description: Give a user an item (admin only)
     usage: /give player item amount data
@@ -106,10 +115,16 @@ commands:
     usage: /keyword keyword
   kick:
     description: Kick a player (admins and guardians only)
-    usage: /unkown
+    usage: /kick player
+  lockdown:
+    description: Lock the server (admins only)
+    usage: /lockdown on|off
   lot:
     description: Manage your lot
     usage: /lot
+  mail:
+    description: Send mail to players, offline or online
+    usage: /mail read|send|delete|total|tbt
   mentor:
     description: Make yourself available for mentoring (residents and above)
     usage: /mentor queue|complete|cancel
@@ -135,6 +150,9 @@ commands:
   promote:
     description: Promotes a user
     usage: /promote
+  property:
+    description: Updates a player property (admin only)
+    usage: /property <player> <key> <value>
   quitmessage:
     description: Set a quit message (donators only)
     usage: /quitmessage <message>
@@ -154,6 +172,9 @@ commands:
   report:
     description: Adds a report to the players record
     usage: /report player message
+  resetlore:
+    description: Reset a lore for an item accidentally flagged as creative or spawned [IM_NOT_ERIC OR OPS ONLY]
+    usage: /resetlore
   rname:
     description: Resets the players nickname
     usage: /rname
@@ -166,6 +187,9 @@ commands:
   sell:
     description: Sell stuff to the central bank
     usage: /sell
+  sendback:
+    description: Send a player to their previous location (admins only)
+    usage: /sendback player
   sendto:
     description: Send a player to another world (admins only)
     usage: /sendto player world
@@ -189,6 +213,9 @@ commands:
     description: Send support message
     usage: /support message
     aliases: sup
+  staffbook:
+    description: Gives the guidelines for staff to follow
+    usage: /staffbook
   staffnews:
     description: Add a message to the staff message board
     usage: /staffnews <message>
@@ -233,6 +260,9 @@ commands:
   update:
     description: See what was last updated!
     usage: /update [version number]
+  undercoverboss:
+    description: Go undercover!
+    usage: /undercoverboss <guardian, donator, resident>
   vanish:
     description: Become invisible (admin only)
     usage: /vanish <on|off>

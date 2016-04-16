@@ -139,9 +139,6 @@ public class WebServer implements Runnable
             String apiKey = config.getString("api.signing-key", "");
             int apiPort = config.getInt("api.port", 9192);
 
-            Tregmine.LOGGER.info("API Key: " + apiKey);
-            Tregmine.LOGGER.info("API Port: " + apiPort);
-
             HandlerList handlers = new HandlerList();
 
             // Start chat handler and bind to /chat
@@ -160,6 +157,7 @@ public class WebServer implements Runnable
             webHandler.addAction(new AuthAction.Factory());
             webHandler.addAction(new PlayerKickAction.Factory());
             webHandler.addAction(new PlayerListAction.Factory());
+            webHandler.addAction(new PushNotificationAction.Factory());
             webHandler.addAction(new PlayerReloadInventoryAction.Factory());
             webHandler.addAction(new QueryLogAction.Factory());
             webHandler.addAction(new VersionAction.Factory());
@@ -171,7 +169,7 @@ public class WebServer implements Runnable
 
             // Start server at apiPort
             webServer = new Server();
-
+            
             ServerConnector connector = new ServerConnector(webServer);
             connector.setPort(apiPort);
             connector.setReuseAddress(true);

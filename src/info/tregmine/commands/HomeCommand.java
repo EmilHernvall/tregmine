@@ -250,6 +250,7 @@ public class HomeCommand extends AbstractCommand
             player.sendMessage(RED + "Incorrect Usage:");
             player.sendMessage(RED + "/home go <home name> - To go to a home");
             player.sendMessage(RED + "/home save <home name> - To save a home");
+            player.sendMessage(RED + "/home list - To list your homes");
         }
 
         return true;

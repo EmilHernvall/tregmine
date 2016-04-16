@@ -148,6 +148,9 @@ public class MentorCommand extends AbstractCommand
 
     public static void findMentor(Tregmine plugin, TregminePlayer student)
     {
+    	if(student.getRank() != Rank.UNVERIFIED && student.getRank() != Rank.TOURIST){
+    		return;
+    	}
         Queue<TregminePlayer> mentors = plugin.getMentorQueue();
         TregminePlayer mentor = mentors.poll();
         if (mentor != null) {

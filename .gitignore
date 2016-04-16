@@ -8,6 +8,8 @@ make.log
 .classpath
 .project
 .settings
+tregmine.jar
 /misc
 /bin
+/dist
 build.bat

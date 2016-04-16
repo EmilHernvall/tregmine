@@ -1,7 +1,10 @@
 package info.tregmine.database.db;
 
 import info.tregmine.api.InventoryAccess;
+import info.tregmine.api.Tools;
 import info.tregmine.api.TregminePlayer;
+import info.tregmine.Tregmine;
+import info.tregmine.api.Coloring;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IInventoryDAO;
 
@@ -214,6 +217,23 @@ public class DBInventoryDAO implements IInventoryDAO
                 stmt.setInt(2, counter);
                 stmt.setInt(3, stack.getTypeId());
                 stmt.setInt(4, stack.getData().getData());
+                if(stack.hasItemMeta() && stack.getItemMeta().getLore() != null){
+                ItemMeta meta = stack.getItemMeta();
+                List<String> lores = meta.getLore();
+                if(lores.size() <= 0){
+                	
+                }else{
+                Coloring color = new Coloring();
+                for(String lore : lores){
+                	System.out.println(lore);
+                	String v = color.reverseChatColor(lore, '#');
+                	lores.remove(lore);
+                	lores.add(v);
+                }
+                meta.setLore(lores);
+                stack.setItemMeta(meta);
+                }
+                }
                 if (stack.hasItemMeta()) {
                     YamlConfiguration config = new YamlConfiguration();
                     config.set("meta", stack.getItemMeta());
@@ -251,6 +271,8 @@ public class DBInventoryDAO implements IInventoryDAO
                     int data = rs.getInt("item_data");
                     int count = rs.getInt("item_count");
                     String meta = rs.getString("item_meta");
+                    Tools tool = new Tools();
+                    meta = tool.reverseColorCodes(meta);
 
                     ItemMeta metaObj = null;
                     if (!"".equals(meta)) {
@@ -392,6 +414,7 @@ public class DBInventoryDAO implements IInventoryDAO
                        int data = rs.getInt("item_data");
                        int count = rs.getInt("item_count");
                        String meta = rs.getString("item_meta");
+                       meta = meta.replace("Â", "");
                        short durability = rs.getShort("item_durability");
 
                        ItemMeta metaObj = null;

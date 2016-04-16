@@ -81,6 +81,9 @@ public class PromoteCommand extends AbstractCommand{
 		//Any other errors have now been checked and dealt with. Promote the user.
 		try (IContext ctx = tregmine.createContext()) {
             user.setRank(rank);
+            if(rank != Rank.SENIOR_ADMIN && rank != Rank.GUARDIAN && rank != Rank.JUNIOR_ADMIN){
+            	user.setStaff(false);
+            }
             user.setMentor(null);
 
             IPlayerDAO playerDAO = ctx.getPlayerDAO();
@@ -89,8 +92,7 @@ public class PromoteCommand extends AbstractCommand{
         } catch (DAOException e) {
             throw new RuntimeException(e);
         }
-		user.sendMessage(BLUE + "You were promoted to " + newrank + " by " + player.getChatName());
-		Bukkit.broadcastMessage("" + BLUE + ITALIC + user.getChatName() + RESET + GREEN + " has been promoted to " + RESET + BLUE + ITALIC + newrank + "!");
+		Bukkit.broadcastMessage("" + BLUE + ITALIC + user.getChatName() + RESET + GREEN + " has been promoted to " + RESET + BLUE + ITALIC + sayrank + "!");
 		return true;
 	}
 

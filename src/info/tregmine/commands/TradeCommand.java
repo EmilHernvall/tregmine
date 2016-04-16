@@ -8,6 +8,7 @@ import static org.bukkit.ChatColor.*;
 
 import info.tregmine.events.TregminePortalEvent;
 import org.bukkit.Server;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -34,6 +35,8 @@ import info.tregmine.api.math.MathUtil;
 public class TradeCommand extends AbstractCommand implements Listener
 {
     String tradePre = YELLOW + "[Trade] ";
+    String type = "";
+    boolean isIllegal = false;
 
     private enum TradeState {
         ITEM_SELECT, BID, CONSIDER_BID;
@@ -118,9 +121,15 @@ public class TradeCommand extends AbstractCommand implements Listener
         player.sendMessage(YELLOW + "[Trade] You are now trading with "
                 + target.getChatName() + YELLOW + ". What do you want "
                 + "to offer?");
-
+        String extra = "";
+        if(isIllegal){
+        	extra = ChatColor.RED + "[Trade] Warning! " + player.getChatName() + " has sent an item that has the " + type + " flag! This means you cannot sell it, use it to buy tools, and using it to craft will result in the product being flagged as well.";
+        }
         target.sendMessage(YELLOW + "[Trade] You are now in a trade with "
                 + player.getChatName() + YELLOW + ". To exit, type \"quit\".");
+        if(isIllegal){
+        	target.sendMessage(extra);
+        }
 
         return true;
     }
@@ -141,6 +150,19 @@ public class TradeCommand extends AbstractCommand implements Listener
         player.sendMessage("[Trade] You are offering: ");
 
         ItemStack[] contents = ctx.inventory.getContents();
+        for(ItemStack i : contents){
+        	if(i == null && i.hasItemMeta()){
+        		//ABORT!
+        	}
+        	if(!isIllegal && i.getType() != Material.AIR){
+        	ItemMeta im = i.getItemMeta();
+        	List<String> lore = im.getLore();
+        	if(lore.get(0).contains("CREATIVE") || lore.get(0).contains("SURVIVAL")){
+        		isIllegal = true;
+        		type = lore.get(0);
+        	}
+        	}
+        }
         for (ItemStack stack : contents) {
             if (stack == null) {
                 continue;

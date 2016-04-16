@@ -32,8 +32,7 @@ public class MsgCommand extends AbstractCommand
 
         return buf.toString();
     }
-
-    @Override
+	@Override
     public boolean handlePlayer(TregminePlayer player, String[] args)
     {
     	
@@ -42,7 +41,7 @@ public class MsgCommand extends AbstractCommand
         }
 
         Server server = player.getServer();
-        String message = tregmine.parseColors(argsToMessage(args));
+        String message = ChatColor.translateAlternateColorCodes('#', argsToMessage(args));
         
         String[] receivingPlayers = args[0].split(",");
         try (IContext ctx = tregmine.createContext()) {
@@ -66,12 +65,12 @@ public class MsgCommand extends AbstractCommand
                 // Show message in senders terminal, as long as the recipient isn't
                 // invisible, to prevent /msg from giving away hidden players presence
                 if (!receivingPlayer.hasFlag(TregminePlayer.Flags.INVISIBLE) || player.getRank().canSeeHiddenInfo()) {
-                    player.sendMessage(GREEN + "(to) " + receivingPlayer.getChatName()
+                    player.sendMessage("%CHAT%" + GREEN + "(to) " + receivingPlayer.getChatName()
                             + GREEN + ": " + message);
                 }
                 receivingPlayer.setLastMessenger(player.getName());
                 // Send message to recipient
-                receivingPlayer.sendNotification(Notification.MESSAGE, GREEN + "(msg) " + player.getChatName() + GREEN
+                receivingPlayer.sendNotification(Notification.MESSAGE, "%CHAT%" + GREEN + "(msg) " + player.getChatName() + GREEN
                         + ": " + message);
             }
         } catch (DAOException e) {

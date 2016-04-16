@@ -7,6 +7,7 @@ import info.tregmine.api.TregminePlayer;
 import info.tregmine.database.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import info.tregmine.events.TregminePortalEvent;
@@ -22,6 +23,7 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.PluginManager;
 
 public class SellCommand extends AbstractCommand implements Listener
@@ -41,6 +43,10 @@ public class SellCommand extends AbstractCommand implements Listener
     @Override
     public boolean handlePlayer(TregminePlayer player, String[] args)
     {
+    	if(this.tregmine.getConfig().getBoolean("general.economy.minefortregs")){
+    		player.sendMessage(ChatColor.RED + "The server has decided to use the mining system to obtain tregs.");
+    		return true;
+    	}
         if (player.getChatState() != TregminePlayer.ChatState.CHAT) {
             player.sendMessage(RED + "A trade is already in progress!");
             return true;
@@ -86,7 +92,18 @@ public class SellCommand extends AbstractCommand implements Listener
                 Material material = stack.getType();
                 int amount = stack.getAmount();
                 int value = itemDAO.getItemValue(material.getId(), stack.getData().getData());
-
+                
+                //Check if the item is illegal :)
+                if(stack.hasItemMeta()){
+                ItemMeta meta = stack.getItemMeta();
+                List<String> lore = meta.getLore();
+                if(lore.get(0).contains("CREATIVE") || lore.get(0).contains("SURVIVAL")){
+                	player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "You CANNOT sell illegal items. The value for the " + material.toString() + " has been set to 0.");
+                	amount = 0;
+                	value = 0;
+                }
+                }
+                
                 player.sendMessage(YELLOW + "[Sell] " + material.toString() +
                         ": " + amount + " * " + value + " = " + (amount*value) +
                         " tregs");
