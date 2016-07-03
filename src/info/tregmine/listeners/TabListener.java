@@ -29,9 +29,6 @@ public class TabListener implements Listener//, TabCompleter
     public void tabcomplete(PlayerChatTabCompleteEvent e) {
 
         TregminePlayer p = plugin.getPlayer(e.getPlayer());
-        if (p.getRank().canGetTrueTab()) {
-            return;
-        }
 
         e.getTabCompletions().clear();
         String[] args = e.getChatMessage().split(" ");
@@ -47,10 +44,13 @@ public class TabListener implements Listener//, TabCompleter
                 nonOps.add(player.getName());
             }
         }
-
         for (String name : nonOps) {
             if (name.toLowerCase().startsWith(args[args.length - 1].toLowerCase())) {
                 result.add(name);
+            }
+            String tagged = "@" + name;
+            if(tagged.toLowerCase().startsWith(args[args.length - 1].toLowerCase())){
+            	result.add(tagged);
             }
         }
 

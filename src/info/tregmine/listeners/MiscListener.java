@@ -20,10 +20,11 @@ public class MiscListener implements Listener
     @EventHandler
     public void autoSave(WorldSaveEvent event) 
     {
-        if ("world".equals(event.getWorld().getName())) {
-            Bukkit.broadcastMessage(ChatColor.DARK_RED + "Tregmine is saving, You may experience some slowness.");
-        }
-    }
+    	if("world".equals(event.getWorld().getName())){
+    	String n = plugin.getConfig().getString("general.servername");
+            Bukkit.broadcastMessage(ChatColor.GOLD + n + ChatColor.DARK_RED +" is saving, You may experience some slowness.");
+    	}
+	}
 
     /*@EventHandler
     public void onUnloadChunk(ChunkUnloadEvent event) 

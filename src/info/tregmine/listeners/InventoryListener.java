@@ -3,16 +3,21 @@ package info.tregmine.listeners;
 import info.tregmine.Tregmine;
 import info.tregmine.api.InventoryAccess;
 import info.tregmine.api.TregminePlayer;
+import info.tregmine.api.lore.Created;
 import info.tregmine.database.*;
 import info.tregmine.database.IInventoryDAO.ChangeType;
 import info.tregmine.database.IInventoryDAO.InventoryType;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.DoubleChest;
@@ -24,6 +29,8 @@ import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class InventoryListener implements Listener
 {
@@ -39,6 +46,7 @@ public class InventoryListener implements Listener
     @EventHandler
     public void onInventoryOpen(InventoryOpenEvent event)
     {
+    	long start = System.currentTimeMillis();
         if (!(event.getPlayer() instanceof Player)) {
             return;
         }
@@ -122,13 +130,45 @@ public class InventoryListener implements Listener
         TregminePlayer player = plugin.getPlayer((Player)event.getPlayer());
 
         Inventory inv = event.getInventory();
+        for (ItemStack item : player.getInventory().getContents()) {
+            if (item != null) {
+                ItemMeta meta = item.getItemMeta();
+                if(meta.hasLore()){
+                	List<String> lore = meta.getLore();
+                	List<String> newlore = new ArrayList<String>();
+                	for(String a : lore){
+                		newlore.add(a.replace("Ã", ""));
+                	}
+                	meta.setLore(newlore);
+                    item.setItemMeta(meta);
+                }
+            }
+        }
+    	if(player.getGameMode() == GameMode.CREATIVE){
+        for (ItemStack item : player.getInventory().getContents()) {
+            if (item != null) {
+                ItemMeta meta = item.getItemMeta();
+                List<String> lore = new ArrayList<String>();
+                lore.add(Created.CREATIVE.toColorString());
+                TregminePlayer p = this.plugin.getPlayer(player.getName());
+                lore.add(ChatColor.WHITE + "by: " + p.getChatName());
+                lore.add(ChatColor.WHITE + "Value: " + ChatColor.MAGIC
+                        + "0000" + ChatColor.RESET + ChatColor.WHITE
+                        + " Treg");
+                meta.setLore(lore);
+                item.setItemMeta(meta);
+            }
+        }
+    	}
         InventoryHolder holder = inv.getHolder();
         Location loc = null;
         if (holder instanceof BlockState) {
+
             BlockState block = (BlockState)holder;
             loc = block.getLocation();
         }
         else if (holder instanceof DoubleChest) {
+        	
             DoubleChest block = (DoubleChest)holder;
             loc = block.getLocation();
         }
@@ -139,12 +179,11 @@ public class InventoryListener implements Listener
         if (!openInventories.containsKey(loc)) {
             return;
         }
+        
 
         ItemStack[] oldContents = openInventories.get(loc);
         ItemStack[] currentContents = inv.getContents();
-
-        assert oldContents.length == currentContents.length;
-
+        
         try (IContext ctx = plugin.createContext()) {
             IInventoryDAO invDAO = ctx.getInventoryDAO();
 
@@ -153,8 +192,9 @@ public class InventoryListener implements Listener
             if (id == -1) {
                 return;
             }
-
+            
             // Store all changes
+            long logChestTime = System.currentTimeMillis();
             for (int i = 0; i < oldContents.length; i++) {
                 ItemStack a = oldContents[i];
                 ItemStack b = currentContents[i];
@@ -174,39 +214,20 @@ public class InventoryListener implements Listener
                     }
                 }
             }
-
+            long totalTime = System.currentTimeMillis() - logChestTime;
             // Store contents
-            invDAO.insertStacks(id, currentContents);
+            long startPoint = System.currentTimeMillis();
+    		try{
+    		invDAO.insertStacks(id, currentContents);
+    		}catch(DAOException e){
+    			throw new RuntimeException(e);
+    		}
+            long endPoint = System.currentTimeMillis() - startPoint;
         }
         catch (DAOException e) {
             throw new RuntimeException(e);
         }
 
         openInventories.remove(loc);
-
-        /*Player player = (Player) event.getPlayer();
-        if (player.getGameMode() == GameMode.CREATIVE) {
-            for (ItemStack item : player.getInventory().getContents()) {
-                if (item != null) {
-                    ItemMeta meta = item.getItemMeta();
-                    List<String> lore = new ArrayList<String>();
-                    lore.add(Created.CREATIVE.toColorString());
-                    TregminePlayer p = this.plugin.getPlayer(player);
-                    lore.add(ChatColor.WHITE + "by: " + p.getChatName());
-                    lore.add(ChatColor.WHITE + "Value: " + ChatColor.MAGIC
-                            + "0000" + ChatColor.RESET + ChatColor.WHITE
-                            + " Treg");
-                    meta.setLore(lore);
-                    item.setItemMeta(meta);
-                }
-            }
-        }*/
     }
-
-    /*@EventHandler
-    public void onInventoryCreative(InventoryCreativeEvent event)
-    {
-        Tregmine.LOGGER.info("InventoryCreative");
-        Tregmine.LOGGER.info(event.getInventory().getHolder().toString());
-    }*/
 }

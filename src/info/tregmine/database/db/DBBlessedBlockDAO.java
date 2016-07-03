@@ -31,6 +31,42 @@ public class DBBlessedBlockDAO implements IBlessedBlockDAO
                 loc.getBlockY() + "," +
                 loc.getWorld().getName()).hashCode();
     }
+    
+    @Override
+    public void delete(Location loc) throws DAOException{
+    	String sql = "DELETE FROM blessedblock WHERE blessedblock_x = ? AND blessedblock_y = ? AND blessedblock_z = ?";
+    	try(PreparedStatement stmt = conn.prepareStatement(sql)){
+    		stmt.setInt(1, loc.getBlockX());
+    		stmt.setInt(2, loc.getBlockY());
+    		stmt.setInt(3, loc.getBlockZ());
+    		stmt.execute();
+    	} catch (SQLException e) {
+			e.printStackTrace();
+		}
+    }
+    
+    @Override
+    public int owner(Location loc) throws DAOException{
+		int id = -1;
+		String sql = "SELECT * FROM blessedblock WHERE blessedblock_x = ? AND blessedblock_y = ? AND blessedblock_z = ?";
+		try(PreparedStatement stmt = conn.prepareStatement(sql)){
+    		stmt.setInt(1, loc.getBlockX());
+    		stmt.setInt(2, loc.getBlockY());
+    		stmt.setInt(3, loc.getBlockZ());
+    		stmt.execute();
+    		ResultSet results = stmt.getResultSet();
+    		try (ResultSet rs = stmt.getResultSet()) {
+                if (!rs.next()) {
+                    return -1;
+                }
+                return rs.getInt("player_id");
+                
+    		}
+    	} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return id;
+    }
 
     @Override
     public void insert(TregminePlayer player, Location loc)

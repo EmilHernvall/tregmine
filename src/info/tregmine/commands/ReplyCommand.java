@@ -78,9 +78,10 @@ public class ReplyCommand extends AbstractCommand
                 }
 
                 // Send message to recipient
-                receivingPlayer.sendNotification(Notification.MESSAGE, GREEN
+                receivingPlayer.sendNotification(Notification.MESSAGE,GREEN
                         + "(msg) " + player.getChatName() + GREEN + ": "
                         + message);
+                receivingPlayer.setLastMessenger(player.getName());
             } catch (DAOException e) {
                 throw new RuntimeException(e);
             }

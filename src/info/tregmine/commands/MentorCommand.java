@@ -103,7 +103,7 @@ public class MentorCommand extends AbstractCommand
                 return true;
             }
 
-            int timeRemaining = Math.max(60*15 - student.getPlayTime()
+            int timeRemaining = Math.max(60*5 - student.getPlayTime()
                                                - student.getTimeOnline(), 0);
             if (timeRemaining > 0) {
                 player.sendMessage(RED + student.getChatName() + RED + " has " +
@@ -148,6 +148,9 @@ public class MentorCommand extends AbstractCommand
 
     public static void findMentor(Tregmine plugin, TregminePlayer student)
     {
+    	if(student.getRank() != Rank.UNVERIFIED && student.getRank() != Rank.TOURIST){
+    		return;
+    	}
         Queue<TregminePlayer> mentors = plugin.getMentorQueue();
         TregminePlayer mentor = mentors.poll();
         if (mentor != null) {

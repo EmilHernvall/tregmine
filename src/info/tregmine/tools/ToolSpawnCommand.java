@@ -19,7 +19,9 @@ public class ToolSpawnCommand extends AbstractCommand
     @Override
     public boolean handlePlayer(TregminePlayer player, String args[])
     {
-        if (!player.getRank().canSpawnTools()) return true;
+        if (!player.getRank().canSpawnTools()){ 
+        	player.nopermsMessage(false, "tool");
+        	return true;}
         if (args.length != 1) {
             player.sendMessage(ChatColor.RED + "Usage: /tool <lumber/vein/gravity>");
             return true;

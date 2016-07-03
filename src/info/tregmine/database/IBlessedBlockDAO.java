@@ -15,4 +15,8 @@ public interface IBlessedBlockDAO
 
     public Map<Location, Integer> load(Server server)
     throws DAOException;
+
+	void delete(Location loc) throws DAOException;
+
+	int owner(Location loc) throws DAOException;
 }

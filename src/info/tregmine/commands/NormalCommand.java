@@ -4,9 +4,11 @@ import static org.bukkit.ChatColor.*;
 
 import java.util.Collection;
 
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
+import info.tregmine.api.TregminePlayer.GuardianState;
 import info.tregmine.api.Rank;
 
 public class NormalCommand extends AbstractCommand
@@ -21,13 +23,26 @@ public class NormalCommand extends AbstractCommand
     {
         if (player.getRank() == Rank.JUNIOR_ADMIN ||
             player.getRank() == Rank.SENIOR_ADMIN) {
-            player.setRank(Rank.DONATOR);
-            player.setTemporaryChatName(GOLD + player.getName());
-            player.sendMessage(YELLOW + "You are no longer admin, until you "
-                    + "reconnect!");
+        	String requestedRank = args[0];
+        	if(requestedRank.equalsIgnoreCase("donator")){
+        		player.setTemporaryRank(Rank.DONATOR);
+                player.setTemporaryChatName(GOLD + player.getName());
+                player.sendMessage(YELLOW + "You are now donator until you reconnect.");
+                return true;
+        	}else if(requestedRank.equalsIgnoreCase("guardian")){
+        		player.setTemporaryRank(Rank.GUARDIAN);
+                player.setTemporaryChatName(BLUE + player.getName());
+                player.setGuardianState(GuardianState.ACTIVE);
+                player.sendMessage(YELLOW + "You are now guardian until you reconnect.");
+        		return true;
+        	}else{
+        		player.sendMessage(ChatColor.RED + "Arguments must be /normal <guardian, donator>");
+        		return true;
+        	}
+            
         }
         else if (player.getRank() == Rank.BUILDER) {
-            player.setRank(Rank.DONATOR);
+            player.setTemporaryRank(Rank.DONATOR);
             player.setTemporaryChatName(GOLD + player.getName());
             player.sendMessage(YELLOW + "You are no longer builder, until you "
                     + "reconnect!");

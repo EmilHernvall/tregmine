@@ -2,6 +2,8 @@ package info.tregmine.commands;
 
 import static org.bukkit.ChatColor.*;
 
+import org.bukkit.Bukkit;
+
 import info.tregmine.api.Rank;
 import org.bukkit.ChatColor;
 import org.bukkit.Server;
@@ -24,6 +26,7 @@ import info.tregmine.api.Warp;
 
 public class WarpCommand extends AbstractCommand
 {
+	private Tregmine plugin;
     private static class WarpTask implements Runnable
     {
         private TregminePlayer player;
@@ -63,6 +66,7 @@ public class WarpCommand extends AbstractCommand
     public WarpCommand(Tregmine tregmine)
     {
         super(tregmine, "warp");
+        plugin = tregmine;
     }
 
     @Override
@@ -74,6 +78,11 @@ public class WarpCommand extends AbstractCommand
 
         Server server = tregmine.getServer();
         String name = args[0];
+        if(name.equalsIgnoreCase("irl")){
+        	player.kickPlayer(plugin, "Welcome to IRL.");
+        	Bukkit.broadcastMessage(ChatColor.GOLD + player.getChatName() + " found the IRL warp!");
+        	return true;
+        }
 
         Warp warp = null;
         try (IContext ctx = tregmine.createContext()) {
@@ -95,15 +104,6 @@ public class WarpCommand extends AbstractCommand
         Location warpPoint = warp.getLocation();
 
         World world = warpPoint.getWorld();
-
-		if (	world.getName().equalsIgnoreCase(tregmine.getRulelessWorld().getName()) ||
-				world.getName().equalsIgnoreCase(tregmine.getRulelessEnd().getName()) ||
-				world.getName().equalsIgnoreCase(tregmine.getRulelessNether().getName()) &&
-				!player.getRank().canBypassWorld()) {
-
-			player.sendMessage(RED + "No warping in Anarchy!" + DARK_RED + " Disabled.");
-			return false;
-		}
 
         player.sendMessage(AQUA + "You started teleport to " + DARK_GREEN
                 + name + AQUA + " in " + BLUE + world.getName() + ".");

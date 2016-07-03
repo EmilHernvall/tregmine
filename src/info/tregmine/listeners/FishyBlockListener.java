@@ -48,24 +48,27 @@ public class FishyBlockListener implements Listener
             player.getChatState() != TregminePlayer.ChatState.FISHY_BUY) {
             return;
         }
-
+        String message = event.getMessage();
+        event.setMessage("%cancel%");
+        event.setFormat("");
         event.setCancelled(true);
-
         Map<Location, FishyBlock> fishyBlocks = plugin.getFishyBlocks();
 
-        String text = event.getMessage().trim();
+        String text = message.trim();
         String[] textSplit = text.split(" ");
 
         player.sendMessage(ChatColor.YELLOW + "[FISHY] " +
                 ChatColor.WHITE + "<" +
                 player.getChatName() +
                 ChatColor.WHITE + "> " + text);
+        event.setCancelled(true);
 
         if (player.getChatState() == TregminePlayer.ChatState.FISHY_SETUP) {
 
             FishyBlock newFishyBlock = player.getNewFishyBlock();
             if (newFishyBlock == null) {
                 player.setChatState(TregminePlayer.ChatState.CHAT);
+                event.setCancelled(true);
                 return;
             }
 
@@ -89,7 +92,7 @@ public class FishyBlockListener implements Listener
 
                     player.setNewFishyBlock(null);
                     player.setChatState(TregminePlayer.ChatState.CHAT);
-
+                    event.setCancelled(true);
                     // Create info sign
                     World world = player.getWorld();
                     updateSign(world, newFishyBlock);
@@ -140,6 +143,7 @@ public class FishyBlockListener implements Listener
                         cost + " tregs.");
 
                 player.setChatState(TregminePlayer.ChatState.CHAT);
+                event.setCancelled(true);
                 player.setCurrentFishyBlock(null);
 
                 updateSign(player.getWorld(), fishyBlock);
@@ -198,7 +202,7 @@ public class FishyBlockListener implements Listener
 
                 player.setChatState(TregminePlayer.ChatState.CHAT);
                 player.setCurrentFishyBlock(null);
-
+                event.setCancelled(true);
                 updateSign(player.getWorld(), fishyBlock);
 
                 try (IContext ctx = plugin.createContext()) {
@@ -216,6 +220,7 @@ public class FishyBlockListener implements Listener
                 player.sendMessage(ChatColor.GREEN +
                     "Quitting without action.");
                 player.setChatState(TregminePlayer.ChatState.CHAT);
+                event.setCancelled(true);
                 player.setCurrentFishyBlock(null);
             }
             else {
@@ -330,13 +335,14 @@ public class FishyBlockListener implements Listener
                 player.setCurrentFishyBlock(null);
                 player.setFishyBuyCount(0);
                 player.setChatState(TregminePlayer.ChatState.CHAT);
-
+                event.setCancelled(true);
                 updateSign(player.getWorld(), fishyBlock);
             }
             else if ("quit".equalsIgnoreCase(textSplit[0])) {
                 player.sendMessage(ChatColor.GREEN +
                     "Quitting without buying.");
                 player.setChatState(TregminePlayer.ChatState.CHAT);
+                event.setCancelled(true);
                 player.setCurrentFishyBlock(null);
             }
             else {
@@ -462,7 +468,6 @@ public class FishyBlockListener implements Listener
                                                 heldItem.getEnchantments());
                     }
                 }
-
                 // Add to block inventory
                 if (match) {
                     Material type = heldMaterial.getItemType();
@@ -650,8 +655,8 @@ public class FishyBlockListener implements Listener
             }
             // This is when the player sets the type of the fishy block
             else if (newFishyBlock != null &&
-                     loc.equals(newFishyBlock.getBlockLocation())) {
-
+                     loc.equals(newFishyBlock.getBlockLocation()) && heldItem.getType() != Material.AIR) {
+            	
                 if (player.getGameMode() == GameMode.CREATIVE) {
                     player.sendMessage(ChatColor.RED + "Cannot use fishy blocks " +
                             "whilst in creative mode.");
@@ -693,7 +698,10 @@ public class FishyBlockListener implements Listener
                         "This fishy block will sell " +
                         material.getItemType().toString() + ":" +
                         material.getData() + ".");
-                } else {
+                }else if(heldItem.getType() == Material.AIR){
+                	return;
+                }
+                else {
                     player.sendMessage(ChatColor.GREEN +
                         "This fishy block will sell " +
                         material.getItemType().toString() + ".");
@@ -784,8 +792,10 @@ public class FishyBlockListener implements Listener
             if (currentFishyBlock.getId() == fishyBlock.getId()) {
                 player.setCurrentFishyBlock(null);
                 player.setChatState(TregminePlayer.ChatState.CHAT);
+                event.setCancelled(true);
             }
         }
+        event.setCancelled(true);
     }
 
     @SuppressWarnings("deprecation")
@@ -928,4 +938,5 @@ public class FishyBlockListener implements Listener
 
         return match;
     }
+
 }

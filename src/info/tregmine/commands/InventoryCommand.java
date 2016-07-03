@@ -17,6 +17,13 @@ public class InventoryCommand extends AbstractCommand
     @Override
     public boolean handlePlayer(TregminePlayer player, String[] args)
     {
+    	if(args.length == 0){
+    		player.sendMessage(ChatColor.RED + "Incorrect usage:");
+            player.sendMessage(ChatColor.AQUA + "/inv inspect <name> - Inspect someones inventory");
+            player.sendMessage(ChatColor.AQUA + "/inv reload <name> <true/false> - Reload inventory, optional save");
+            player.sendMessage(ChatColor.AQUA + "/inv save - Save your current inventory to database");
+    		return true;
+    	}
         if (!player.getRank().canInspectInventories()) {
             return true;
         }

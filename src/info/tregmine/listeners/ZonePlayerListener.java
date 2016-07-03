@@ -1,12 +1,15 @@
 package info.tregmine.listeners;
 
 import java.util.*;
+import java.util.logging.Logger;
 
 import org.bukkit.*;
 import org.bukkit.block.*;
 import org.bukkit.entity.*;
 import org.bukkit.event.*;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.event.hanging.*;
 import org.bukkit.event.player.*;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
@@ -69,7 +72,108 @@ public class ZonePlayerListener implements Listener
             event.setCancelled(true);
         }
     }
+    @EventHandler
+    public void onBlockBreak(BlockBreakEvent event){
+    	TregminePlayer player = plugin.getPlayer(event.getPlayer());
+    	if(player == null){
+    		return;
+    	}
+    	ItemStack item = player.getItemInHand();
+    	if (item.getType() == Material.STICK) {
+    		event.setCancelled(true);
+    	
+    	Block block = event.getBlock();
+    	Point currentPos = new Point(block.getX(), block.getZ());
+    	ZoneWorld world = plugin.getWorld(block.getWorld());
+    	Zone zone = world.findZone(currentPos);
+    	Lot lot = world.findLot(currentPos);
+    	// within a zone, lots can be created by zone owners or people with
+        // the zones permission.
+        String type = null;
+        if (zone != null) {
+            Zone.Permission perm = zone.getUser(player);
+            if (perm != Zone.Permission.Owner &&
+                !player.getRank().canModifyZones()) {
 
+                return;
+            }
+            if (lot != null) {
+                player.sendMessage("This lot is called " + lot.getName() + ".");
+                return;
+            }
+            type = "lot";
+        }
+        // outside of a zone
+        else {
+            // outside of any existing zone, this can only be used by people
+            // with zones permission.
+            if (!player.getRank().canModifyZones()) {
+                return;
+            }
+            type = "zone";
+        }
+        player.setZoneBlock1(block);
+        event.getPlayer().sendMessage(
+                "First block set of new " + type + ".");
+        if (zone != null) {
+            player.setTargetZoneId(zone.getId());
+        }
+        else {
+            player.setTargetZoneId(0);
+        }}
+    }
+    @EventHandler
+    public void onBlockDamage(BlockDamageEvent event){
+    	TregminePlayer player = plugin.getPlayer(event.getPlayer());
+    	if(player == null){
+    		return;
+    	}
+    	ItemStack item = player.getItemInHand();
+    	if (item.getType() == Material.STICK) {
+    		event.setCancelled(true);
+    	Block block = event.getBlock();
+    	Point currentPos = new Point(block.getX(), block.getZ());
+    	ZoneWorld world = plugin.getWorld(block.getWorld());
+    	Zone zone = world.findZone(currentPos);
+    	Lot lot = world.findLot(currentPos);
+    	// within a zone, lots can be created by zone owners or people with
+        // the zones permission.
+        String type = null;
+        if (zone != null) {
+            Zone.Permission perm = zone.getUser(player);
+            if (perm != Zone.Permission.Owner &&
+                !player.getRank().canModifyZones()) {
+
+                return;
+            }
+            if (lot != null) {
+                player.sendMessage("This lot is called " + lot.getName() + ".");
+                return;
+            }
+            type = "lot";
+        }
+        // outside of a zone
+        else {
+            // outside of any existing zone, this can only be used by people
+            // with zones permission.
+            if (!player.getRank().canModifyZones()) {
+                return;
+            }
+            type = "zone";
+        }
+
+        
+        player.setZoneBlock1(block);
+        event.getPlayer().sendMessage(
+                "First block set of new " + type + ".");
+        if (zone != null) {
+            player.setTargetZoneId(zone.getId());
+        }
+        else {
+            player.setTargetZoneId(0);
+        }
+    	}
+    }
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event)
     {
@@ -143,31 +247,15 @@ public class ZonePlayerListener implements Listener
             } catch (Exception e) {
                 count = 0;
             }
-
-            if (count == 0) {
-                player.setZoneBlock1(block);
-                player.setZoneBlock2(null);
-                event.getPlayer().sendMessage(
-                        "First block set of new " + type + ".");
-                player.setZoneBlockCounter(1);
-                if (zone != null) {
-                    player.setTargetZoneId(zone.getId());
-                }
-                else {
-                    player.setTargetZoneId(0);
-                }
+            int zf = player.getTargetZoneId();
+            if (zf != 0 && zf != zone.getId()) {
+                player.sendMessage("The full extent of the lot must be in the same zone.");
+                return;
             }
-            else if (count == 1) {
-                int zf = player.getTargetZoneId();
-                if (zf != 0 && zf != zone.getId()) {
-                    player.sendMessage("The full extent of the lot must be in the same zone.");
-                    return;
-                }
 
-                player.setZoneBlock2(block);
-                player.sendMessage("Second block set of new " + type + ".");
-                player.setZoneBlockCounter(0);
-            }
+            player.setZoneBlock2(block);
+            player.sendMessage("Second block set of new " + type + ".");
+
         }
     }
 
@@ -411,12 +499,6 @@ public class ZonePlayerListener implements Listener
             player.loadInventory("survival", true);
         } else {
             player.loadInventory(worldNamePortions[0], true);
-        }
-        
-        if (cWorld.getName().equalsIgnoreCase(plugin.getRulelessWorld().getName()) &&
-                (!player.getRank().canBypassWorld() && player.getGameMode() != GameMode.CREATIVE)) {
-            player.setAllowFlight(false);
-            player.setFlying(false);
         }
 
         Location movingTo = player.getLocation();
@@ -690,7 +772,7 @@ public class ZonePlayerListener implements Listener
 
         if (currentZone.hasPublicProfile()){
             player.sendMessage(ChatColor.DARK_RED + currentZone.getName() + " has a public profile! You can view it here:");
-            player.sendMessage(ChatColor.GRAY + "http://treg.co/index.php/zone/profile?id=" + currentZone.getId());
+            player.sendMessage(ChatColor.GRAY + plugin.getConfig().getString("general.url") + "/index.php/zone/profile?id=" + currentZone.getId());
         }
 
         if (perm != null) {

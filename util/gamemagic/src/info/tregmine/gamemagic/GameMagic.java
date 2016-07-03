@@ -56,10 +56,6 @@ public class GameMagic extends JavaPlugin implements Listener
         pluginMgm.registerEvents(new Gates(this), this);
         pluginMgm.registerEvents(new ButtonListener(this), this);
         pluginMgm.registerEvents(new SpongeCouponListener(this), this);
-        
-        WorldCreator alpha = new WorldCreator("alpha");
-        alpha.environment(World.Environment.NORMAL);
-        alpha.createWorld();
 
         //WorldCreator elva = new WorldCreator("elva");
         //elva.environment(World.Environment.NORMAL);
@@ -72,16 +68,6 @@ public class GameMagic extends JavaPlugin implements Listener
         //WorldCreator einhome = new WorldCreator("einhome");
         //einhome.environment(World.Environment.NORMAL);
         //einhome.createWorld();
-
-        WorldCreator citadel = new WorldCreator("citadel");
-        citadel.environment(World.Environment.NORMAL);
-        citadel.createWorld();
-
-        WorldCreator gameWorld = new WorldCreator("game");
-        gameWorld.environment(World.Environment.NORMAL);
-        gameWorld.generateStructures(false);
-        gameWorld.type(WorldType.FLAT);
-        gameWorld.createWorld();
 
         // Portal in tower of einhome
         portalLookup.put(-1488547832, "world");
@@ -109,20 +95,20 @@ public class GameMagic extends JavaPlugin implements Listener
         portalLookup.put(1112623336, "elva");
 
         // Shoot fireworks at spawn
-        BukkitScheduler scheduler = getServer().getScheduler();
-        scheduler.scheduleSyncRepeatingTask(this,
-                new Runnable() {
-            public void run() {
-                World world = GameMagic.this.getServer().getWorld("world");
-                Location loc = world.getSpawnLocation().add(0.5, 0, 0.5);
-
-                FireworksFactory factory = new FireworksFactory();
-                factory.addColor(Color.BLUE);
-                factory.addColor(Color.YELLOW);
-                factory.addType(FireworkEffect.Type.STAR);
-                factory.shot(loc);
-            }
-        }, 100L, 200L);
+//        BukkitScheduler scheduler = getServer().getScheduler();
+//        scheduler.scheduleSyncRepeatingTask(this,
+//                new Runnable() {
+//            public void run() {
+//                World world = GameMagic.this.getServer().getWorld("world");
+//                Location loc = world.getSpawnLocation().add(0.5, 0, 0.5);
+//
+//                FireworksFactory factory = new FireworksFactory();
+//                factory.addColor(Color.BLUE);
+//                factory.addColor(Color.YELLOW);
+//                factory.addType(FireworkEffect.Type.STAR);
+//                factory.shot(loc);
+//            }
+//        }, 100L, 200L);
     }
 
     public static int locationChecksum(Location loc)
@@ -184,11 +170,6 @@ public class GameMagic extends JavaPlugin implements Listener
     @EventHandler
     public void onPlayerBucketEmpty(PlayerBucketEmptyEvent event)
     {
-		if (	event.getBlockClicked().getWorld().getName().equalsIgnoreCase(tregmine.getRulelessWorld().getName()) ||
-				event.getBlockClicked().getWorld().getName().equalsIgnoreCase(tregmine.getRulelessEnd().getName()) ||
-				event.getBlockClicked().getWorld().getName().equalsIgnoreCase(tregmine.getRulelessNether().getName())) {
-			return;
-		}
         if (event.getBucket() == Material.LAVA_BUCKET) {
             event.setCancelled(true);
         }
@@ -221,22 +202,12 @@ public class GameMagic extends JavaPlugin implements Listener
     @EventHandler
     public void onEntityExplode(EntityExplodeEvent event)
     {
-		if (	event.getLocation().getWorld().getName().equalsIgnoreCase(tregmine.getRulelessWorld().getName()) ||
-				event.getLocation().getWorld().getName().equalsIgnoreCase(tregmine.getRulelessEnd().getName()) ||
-				event.getLocation().getWorld().getName().equalsIgnoreCase(tregmine.getRulelessNether().getName())) {
-			return;
-		}
         event.setCancelled(true);
     }
 
     @EventHandler
     public void onBlockBurn(BlockBurnEvent event)
     {
-		if (	event.getBlock().getWorld().getName().equalsIgnoreCase(tregmine.getRulelessWorld().getName()) ||
-				event.getBlock().getWorld().getName().equalsIgnoreCase(tregmine.getRulelessEnd().getName()) ||
-				event.getBlock().getWorld().getName().equalsIgnoreCase(tregmine.getRulelessNether().getName())) {
-			return;
-		}
         event.setCancelled(true);
     }
 
@@ -257,13 +228,6 @@ public class GameMagic extends JavaPlugin implements Listener
     @EventHandler
     public void onBlockIgnite(BlockIgniteEvent event)
     {
-		if (	event.getBlock().getWorld().getName().equalsIgnoreCase(tregmine.getRulelessWorld().getName()) ||
-				event.getBlock().getWorld().getName().equalsIgnoreCase(tregmine.getRulelessEnd().getName()) ||
-				event.getBlock().getWorld().getName().equalsIgnoreCase(tregmine.getRulelessNether().getName())) {
-			return;
-		}
-        event.setCancelled(true);
-
         Location l = event.getBlock().getLocation();
         Block block =
                 event.getBlock()
@@ -278,19 +242,7 @@ public class GameMagic extends JavaPlugin implements Listener
     @EventHandler
     public void onPlayerMove(PlayerMoveBlockEvent event)
     {
-        if (!event.getTo().getWorld().getName().equalsIgnoreCase(tregmine.getRulelessWorld().getName())) {
-            return;
-        }
-        double distance = MathUtil.calcDistance2d(event.getTo().getWorld().getSpawnLocation(), event.getTo());
-        TregminePlayer player = event.getPlayer();
-
-        if (distance > 5000 && distance < 5050) { // If hitting the border
-            movePlayerBack(player, event.getFrom(), event.getTo());
-        } else if (distance >= 5050) { // If massively past the point, teleport them to spawn
-            event.getPlayer().teleport(event.getPlayer().getWorld().getSpawnLocation());
-        } else {
-            return;
-        }
+//Deprecated.
     }
 
 	private void movePlayerBack(TregminePlayer player, Location movingFrom, Location movingTo)

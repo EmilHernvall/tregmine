@@ -20,6 +20,8 @@ public interface IPlayerDAO
     public void updatePlayTime(TregminePlayer player) throws DAOException;
     public void updatePlayerInfo(TregminePlayer player) throws DAOException;
     public void updatePlayer(TregminePlayer player) throws DAOException;
+    public void updateProperty(TregminePlayer player, String key, String value)
+            throws DAOException;
 
     public List<String> getKeywords(TregminePlayer to) throws DAOException;
     public void updateKeywords(TregminePlayer player, List<String> update) throws DAOException;

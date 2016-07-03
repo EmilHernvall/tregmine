@@ -90,23 +90,11 @@ public class ZoneEntityListener implements Listener
         TregminePlayer player =
                 plugin.getPlayer((Player) event.getEntity());
 
-		if (	event.getEntity().getWorld().getName().equalsIgnoreCase(plugin.getRulelessWorld().getName()) ||
-				event.getEntity().getWorld().getName().equalsIgnoreCase(plugin.getRulelessEnd().getName()) ||
-				event.getEntity().getWorld().getName().equalsIgnoreCase(plugin.getRulelessNether().getName())) {
-			player.setCombatLog(10);
-			player.sendMessage(ChatColor.RED + "You have been combat logged! Do NOT log out! 10 seconds remaining...");
-		}
-
         Location location = player.getLocation();
         Point pos = new Point(location.getBlockX(), location.getBlockZ());
 
         Zone currentZone = player.updateCurrentZone();
         if (currentZone == null) {
-			if (	event.getEntity().getWorld().getName().equalsIgnoreCase(plugin.getRulelessWorld().getName()) ||
-					event.getEntity().getWorld().getName().equalsIgnoreCase(plugin.getRulelessEnd().getName()) ||
-					event.getEntity().getWorld().getName().equalsIgnoreCase(plugin.getRulelessNether().getName())) {
-				return;
-			}
             
             event.setCancelled(true);
             return;
@@ -157,11 +145,6 @@ public class ZoneEntityListener implements Listener
 
                 Zone currentZone = player.updateCurrentZone();
                 if (currentZone == null) {
-					if (	e.getEntity().getWorld().getName().equalsIgnoreCase(plugin.getRulelessWorld().getName()) ||
-							e.getEntity().getWorld().getName().equalsIgnoreCase(plugin.getRulelessEnd().getName()) ||
-							e.getEntity().getWorld().getName().equalsIgnoreCase(plugin.getRulelessNether().getName())) {
-						return;
-					}
                     e.setCancelled(true);
                     return;
                 }

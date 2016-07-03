@@ -8,7 +8,9 @@ import java.util.Set;
 import org.bukkit.ChatColor;
 
 import info.tregmine.Tregmine;
+import info.tregmine.api.Rank;
 import info.tregmine.api.TregminePlayer;
+import info.tregmine.api.TregminePlayer.Flags;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
 import info.tregmine.database.ILogDAO;
@@ -35,7 +37,12 @@ public class WhoCommand extends AbstractCommand
         TregminePlayer whoPlayer = candidates.get(0);
 
         if (whoPlayer == null) {
+        	player.sendMessage(RED + "That player is not online right now.");
             return true;
+        }
+        if(whoPlayer.isOnline() != true){
+        	player.sendMessage(RED + "That player is not online right now.");
+        	return true;
         }
 
         double X = whoPlayer.getLocation().getX();
@@ -73,24 +80,29 @@ public class WhoCommand extends AbstractCommand
 
             long balance = walletDAO.balance(whoPlayer);
 
-            player.sendMessage(DARK_GRAY + "******************** " + DARK_PURPLE +
+            player.sendMessage("%CHAT%" + DARK_GRAY + "******************** " + DARK_PURPLE +
                     "PLAYER INFO" + DARK_GRAY + " ********************");
-            player.sendMessage(GOLD + "Player: " + GRAY + whoPlayer.getChatName());
-            player.sendMessage(GOLD + "World: " + GRAY + whoPlayer.getWorld().getName());
-            player.sendMessage(GOLD + "Coords: " + GRAY + X2 + ", " + Y2 + ", " + Z2);
-            player.sendMessage(GOLD + "Channel: " + GRAY + whoPlayer.getChatChannel());
-            player.sendMessage(GOLD + "Wallet: " + GRAY + balance + " Tregs.");
-            player.sendMessage(GOLD + "Health: " + GRAY + whoPlayer.getHealth());
-            player.sendMessage(GOLD + "Country: " + GRAY + whoPlayer.getCountry());
-            player.sendMessage(GOLD + "City: " + GRAY + whoPlayer.getCity());
-            player.sendMessage(GOLD + "IP Address: " + GRAY + whoPlayer.getIp());
-            player.sendMessage(GOLD + "Port: " + GRAY + whoPlayer.getAddress().getPort());
-            player.sendMessage(GOLD + "Gamemode: " + GRAY + whoPlayer.getGameMode().toString().toLowerCase());
-            player.sendMessage(GOLD + "Level: " + GRAY + whoPlayer.getLevel());
+            player.sendMessage("%CHAT%" + GOLD + "Player: " + GRAY + whoPlayer.getChatName());
+            player.sendMessage("%CHAT%" + GOLD + "World: " + GRAY + whoPlayer.getWorld().getName());
+            player.sendMessage("%CHAT%" + GOLD + "Coords: " + GRAY + X2 + ", " + Y2 + ", " + Z2);
+            player.sendMessage("%CHAT%" + GOLD + "Channel: " + GRAY + whoPlayer.getChatChannel());
+            player.sendMessage("%CHAT%" + GOLD + "Wallet: " + GRAY + balance + " Tregs.");
+            player.sendMessage("%CHAT%" + GOLD + "Health: " + GRAY + whoPlayer.getHealth());
+            player.sendMessage("%CHAT%" + GOLD + "Country: " + GRAY + whoPlayer.getCountry());
+            player.sendMessage("%CHAT%" + GOLD + "City: " + GRAY + whoPlayer.getCity());
+            player.sendMessage("%CHAT%" + GOLD + "IP Address: " + GRAY + whoPlayer.getIp());
+            player.sendMessage("%CHAT%" + GOLD + "Port: " + GRAY + whoPlayer.getAddress().getPort());
+            player.sendMessage("%CHAT%" + GOLD + "Gamemode: " + GRAY + whoPlayer.getGameMode().toString().toLowerCase());
+            player.sendMessage("%CHAT%" + GOLD + "Level: " + GRAY + whoPlayer.getLevel());
             if (aliasList != null) {
-                player.sendMessage(GOLD + "Aliases: " + aliasList);
+                player.sendMessage("%CHAT%" + GOLD + "Aliases: " + aliasList);
             }
-            player.sendMessage(DARK_GRAY + "*************************************" +
+            if(whoPlayer.hasFlag(Flags.INVISIBLE)){
+            	if(player.getRank() == Rank.JUNIOR_ADMIN || player.getRank() == Rank.SENIOR_ADMIN){
+            	player.sendMessage("%CHAT%" + BLUE + "This player is invisible.");
+            	}
+            }
+            player.sendMessage("%CHAT%" + DARK_GRAY + "*************************************" +
                                "*****************");
 
             LOGGER.info(player.getName() + " used /who on player " +

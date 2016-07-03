@@ -1,5 +1,12 @@
 package info.tregmine.api;
 
+import static org.bukkit.ChatColor.BLUE;
+import static org.bukkit.ChatColor.GRAY;
+import static org.bukkit.ChatColor.GREEN;
+import static org.bukkit.ChatColor.ITALIC;
+import static org.bukkit.ChatColor.RED;
+import static org.bukkit.ChatColor.RESET;
+
 import java.util.*;
 
 import org.bukkit.*;
@@ -38,6 +45,9 @@ public class TregminePlayer extends PlayerDelegate
         CHANNEL_VIEW,
         WATCHING_CHUNKS;
     };
+    public enum Settings {
+    	NOAFKKICK;
+    }
 
     // Persistent values
     private int id = 0;
@@ -47,13 +57,17 @@ public class TregminePlayer extends PlayerDelegate
     private String password = null;
     private String keyword = null;
     private Rank rank = Rank.UNVERIFIED;
+    private boolean Staff = false;
     private ChatColor rankcolor = null;
     private ChatColor color = ChatColor.WHITE;
     private String quitMessage = null;
     private int guardianRank = 0;
     private int playTime = 0;
     private Set<Flags> flags;
+    private Set<Settings> settings;
     private Map<Badge, Integer> badges;
+    private Location lastpos = null;
+    
 
     // One-time state
     private String chatChannel = "GLOBAL";
@@ -72,7 +86,9 @@ public class TregminePlayer extends PlayerDelegate
     private TregminePlayer student;
     private String currentInventory;
 	private int combatLog;
+	private long lastOnlineActivity;
 	private String lastMessenger;
+	private boolean AfkKick = true;
 
     // Player state for block fill
     private Block fillBlock1 = null;
@@ -84,6 +100,10 @@ public class TregminePlayer extends PlayerDelegate
     private Block zoneBlock2 = null;
     private int zoneBlockCounter = 0;
     private int targetZoneId = 0;
+    
+    // Player state for activity
+    private boolean afk = false;
+    private boolean isFrozen = false;
 
     // Fishy Block state
     private FishyBlock newFishyBlock;
@@ -92,6 +112,10 @@ public class TregminePlayer extends PlayerDelegate
 
     // Chunk Watcher
     private boolean newChunk = false;
+    
+    //Ranks
+    private boolean isTemporaryRank = false;
+    private Rank temporaryRank = null;
 
     private Tregmine plugin;
 
@@ -104,6 +128,7 @@ public class TregminePlayer extends PlayerDelegate
         this.loginTime = new Date();
 
         this.flags = EnumSet.noneOf(Flags.class);
+        this.settings = EnumSet.noneOf(Settings.class);
         this.badges = new EnumMap<Badge, Integer>(Badge.class);
         this.plugin = instance;
     }
@@ -115,6 +140,7 @@ public class TregminePlayer extends PlayerDelegate
         this.name = name;
         this.realName = name;
         this.flags = EnumSet.noneOf(Flags.class);
+        this.settings = EnumSet.noneOf(Settings.class);
         this.badges = new EnumMap<Badge, Integer>(Badge.class);
         this.plugin = instance;
     }
@@ -130,6 +156,39 @@ public class TregminePlayer extends PlayerDelegate
     public String getChatName()
     {
         return name;
+    }
+    
+    //Intercept sent messages for miscellaneous purposes
+    public void sendMessage(String v){
+    	String text = v;
+    	this.sendTrueMsg(v, plugin);
+    	
+    }
+    public boolean getAfkKick(){
+    	return AfkKick;
+    }
+    public void setAfkKick(boolean a){
+    	this.AfkKick = a;
+    }
+    public long getLastOnlineActivity(){
+    	return lastOnlineActivity;
+    }
+    public void setLastOnlineActivity(long a){
+    	lastOnlineActivity = a;
+    }
+    public void checkActivity(){
+    	long autoafkkick = plugin.getConfig().getInt("general.afk.timeout");
+    	if(autoafkkick > 0 && lastOnlineActivity > 0 && (lastOnlineActivity + (autoafkkick * 1000)) < System.currentTimeMillis() && this.AfkKick == true){
+    		String reason = ChatColor.RED + "You were kicked from " + ChatColor.GOLD + plugin.getConfig().getString("general.servername") + ChatColor.RED + " for idling longer than " + autoafkkick + " seconds.";
+    		this.lastOnlineActivity = 0;
+    		this.kickPlayer(this.plugin, reason);
+    		Bukkit.broadcastMessage(ChatColor.GRAY + this.getChatName() + " was kicked for idling longer than 15 minutes.");
+    	}
+    	long autoafk = plugin.getConfig().getLong("general.afk.autoafk");
+    	if(!isAfk() && autoafk > 0 && lastOnlineActivity + autoafk * 1000 < System.currentTimeMillis()){
+    		setAfk(true);
+    	}
+    	
     }
 
     public String getRealName()
@@ -150,6 +209,12 @@ public class TregminePlayer extends PlayerDelegate
             }
         }
     }
+    public void setLastPos(Location pos){
+    	this.lastpos = pos;
+    }
+    public Location getLastPos(){
+    	return this.lastpos;
+    }
 
     public void setPassword(String newPassword)
     {
@@ -163,12 +228,26 @@ public class TregminePlayer extends PlayerDelegate
     {
         return BCrypt.checkpw(attempt, password);
     }
+    public boolean getFrozen(){
+    	return isFrozen;
+    }
+    public void setFrozen(boolean v){
+    	isFrozen = v;
+    }
 
     public void setFlag(Flags flag) { flags.add(flag); }
     public void removeFlag(Flags flag) { flags.remove(flag); }
+    @Deprecated
+    public void setSetting(Settings a) {settings.add(a);}
+    @Deprecated
+    public void removeSetting(Settings a){settings.remove(a);}
     public boolean hasFlag(Flags flag) { return flags.contains(flag); }
+    @Deprecated
+    public boolean hasSetting(Settings a) {return settings.contains(a); }
 
     public boolean hasBadge(Badge badge) { return badges.containsKey(badge); }
+    
+
 
     public void setBadges(Map<Badge, Integer> v) { this.badges = v; }
     public Map<Badge, Integer> getBadges() { return badges; }
@@ -196,16 +275,74 @@ public class TregminePlayer extends PlayerDelegate
                     ChatColor.GOLD + badge.getName() + "badge of honor: " + message);
         }
     }
-
+    public void nopermsMessage(Boolean alertStaff, String command)
+    {
+    	if(alertStaff){
+    		sendMessage(ChatColor.RED + "You are not authorized to perform the command \"/" + command + "\" Online administrators have been notified.");
+    		for (TregminePlayer to : plugin.getOnlinePlayers()) {
+				if(to != null){
+				if(to.getRank() == Rank.JUNIOR_ADMIN || to.getRank() == Rank.SENIOR_ADMIN){
+					to.sendMessage(RED + "The following is an automated message generated by the server.");
+					to.sendMessage(RED + "-----------------------------------------------------");
+					to.sendMessage(RED + "A player without the permission to do so has attempted to perform a forbidden command.");
+					to.sendMessage(RED + getRealName() + " has attempted to use the \"/" + command + "\" command.");
+				}
+				}
+			}
+    	}else{
+    		sendMessage(ChatColor.RED + "You are not authorized to perform the command \"/" + command + "\"");
+    	}
+//    	sendMessage(ChatColor.RED + "You are not authorized to perform this command.");
+    }
+    
+    @Deprecated
+    public void invalidArgsMessage(String args){
+    	sendMessage(ChatColor.RED + "Invalid arguments! Use " + args);
+    }
+    
+    @Deprecated
+    public void commandDisabledMessage(String command){
+    	sendMessage(ChatColor.RED + "Sorry, but " + command + " has been disabled.");
+    }
+    
     public String getKeyword() { return keyword; }
     public void setKeyword(String v) { this.keyword = v; }
     
-    public Rank getRank() { return rank; }
+    public Rank getRank() {
+    	if(isTemporaryRank){
+    		return temporaryRank;
+    	}else{
+    		return rank;
+    	}
+    	}
+    public Rank getTrueRank(){
+    	return rank;
+    }
+    
+    public boolean getIsStaff() { return Staff; }
+    public boolean getIsAdmin(){
+    	boolean isStaff = false;
+    	if(rank == Rank.JUNIOR_ADMIN || rank == Rank.SENIOR_ADMIN || isOp()){
+        	isStaff = true;
+        }
+    	return isStaff;
+    }
     public void setRank(Rank v)
     {
         this.rank = v;
-
+        if(v == Rank.GUARDIAN || v == Rank.JUNIOR_ADMIN || v == Rank.SENIOR_ADMIN || v == Rank.CODER){
+        	this.Staff = true;
+        }
         setTemporaryChatName(getNameColor() + getRealName());
+    }
+    public void setTemporaryRank(Rank v)
+    {
+    	this.temporaryRank = v;
+    	this.isTemporaryRank = true;
+    	if(v == Rank.GUARDIAN || v == Rank.JUNIOR_ADMIN || v == Rank.SENIOR_ADMIN || v == Rank.CODER){
+        	this.Staff = true;
+        }
+    	setTemporaryChatName(getNameColor() + getRealName());
     }
 
     public void setGuardianRank(int v) { this.guardianRank = v; }
@@ -234,12 +371,19 @@ public class TregminePlayer extends PlayerDelegate
     {
         return guardianState;
     }
+    
+    public boolean isHidden(){
+    	return this.hasFlag(Flags.INVISIBLE);
+    }
 
     public void setGuardianState(GuardianState v)
     {
         this.guardianState = v;
 
         setTemporaryChatName(getNameColor() + getRealName());
+    }
+    public void setStaff(boolean v){
+    	this.Staff = v;
     }
 
     public void setQuitMessage(String v) { this.quitMessage = v; }
@@ -421,18 +565,30 @@ public class TregminePlayer extends PlayerDelegate
      */
     public void sendNotification(Notification notif, String message)
     {
+    	boolean sendMsg = true;
+    	if(message == "%cancel%"){
+    		sendMsg = false;
+    	}
         if (notif != null && notif != Notification.NONE) {
             if (!message.equalsIgnoreCase("") && message != null) {
                 playSound(getLocation(), notif.getSound(), 2F, 1F);
+                if(sendMsg){
                 sendMessage(message);
+                }
             }
         } else {
             if (!message.equalsIgnoreCase("") && message != null) {
-                sendMessage(message);
+            	if(sendMsg){
+                    sendMessage(message);
+                    }
             } else {
                 throw new IllegalArgumentException("Parameters can not both be null");
             }
         }
+    }
+    public void sendNotification(Notification notif)
+    {
+            playSound(getLocation(), notif.getSound(), 2F, 1F);
     }
 
     public void teleportWithHorse(Location loc)
@@ -709,7 +865,7 @@ public class TregminePlayer extends PlayerDelegate
                 firstTime = true;
             }
 
-            if (firstTime && this.getWorld() != plugin.getRulelessWorld()) {
+            if (firstTime) {
                 this.saveInventory(name);
             }
 
@@ -789,6 +945,29 @@ public class TregminePlayer extends PlayerDelegate
     }
     public void setLastMessenger(String messenger){
     	this.lastMessenger = messenger;
+    }
+    
+    public boolean isAfk(){
+    	return this.afk;
+    }
+    public void setAfk(boolean value){
+    	if(this.isHidden()){
+    		return;
+    	}
+    	if(value == true){
+    		this.afk = true;
+    		Bukkit.broadcastMessage(ITALIC + getChatName() + RESET + BLUE + " is now afk.");
+			String oldname = getChatName();
+			setTemporaryChatName(GRAY + "[AFK] " + RESET + oldname);
+    	}else if(value == false){
+    		final long currentTime = System.currentTimeMillis();
+    		this.setLastOnlineActivity(currentTime);
+    		this.afk = false;
+			setTemporaryChatName(getNameColor() + getRealName());
+			Bukkit.broadcastMessage(ITALIC + getChatName() + RESET + GREEN + " is no longer afk.");
+    	}else{
+    		return;
+    	}
     }
 
 }

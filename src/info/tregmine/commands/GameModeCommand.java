@@ -27,20 +27,14 @@ public class GameModeCommand extends AbstractCommand
         if (!player.getRank().canUseCreative()) {
             return true;
         }
-
-		if (	(player.getWorld().getName().equalsIgnoreCase(tregmine.getRulelessWorld().getName()) ||
-				player.getWorld().getName().equalsIgnoreCase(tregmine.getRulelessEnd().getName()) ||
-				player.getWorld().getName().equalsIgnoreCase(tregmine.getRulelessNether().getName())) &&
-				player.getRank() == Rank.BUILDER) {
-
-			player.sendMessage(RED + "Builders can not be in creative!" + DARK_RED + " Disabled.");
-			player.setGameMode(GameMode.SURVIVAL);
-			return false;
-		}
-
+        String additional = "";
         player.setGameMode(mode);
+        if(mode == GameMode.SURVIVAL && !player.isOp()){
+        	player.getInventory().clear();
+        	additional = "Your inventory has been cleared.";
+        }
         player.sendMessage(YELLOW + "You are now in "
-                + mode.toString().toLowerCase() + " mode.");
+                + mode.toString().toLowerCase() + " mode. " + additional);
 
         if (player.getRank().canFly()) {
             player.setAllowFlight(true);

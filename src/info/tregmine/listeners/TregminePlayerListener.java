@@ -1,5 +1,10 @@
 package info.tregmine.listeners;
 
+import static org.bukkit.ChatColor.GREEN;
+import static org.bukkit.ChatColor.ITALIC;
+import static org.bukkit.ChatColor.RESET;
+
+import java.io.File;
 import java.util.*;
 import java.util.Map.Entry;
 
@@ -8,6 +13,7 @@ import org.bukkit.block.*;
 import org.bukkit.entity.*;
 import org.bukkit.event.*;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.event.player.PlayerLoginEvent.Result;
@@ -91,16 +97,27 @@ public class TregminePlayerListener implements Listener
         if (player.getGameMode() == GameMode.CREATIVE) {
             for (ItemStack item : player.getInventory().getContents()) {
                 if (item != null) {
+                	if(item.hasItemMeta()){
                     ItemMeta meta = item.getItemMeta();
+                    List<String> oldlore = meta.getLore();
+                    String line2 = "";
+                    if(oldlore != null){
+                    line2 = oldlore.get(1).replace("Â", "");
+                    }
                     List<String> lore = new ArrayList<String>();
                     lore.add(Created.CREATIVE.toColorString());
                     TregminePlayer p = this.plugin.getPlayer(player);
-                    lore.add(ChatColor.WHITE + "by: " + p.getChatName());
+                    if(line2.contains("by: ") && !line2.contains(p.getChatName())){
+                    	lore.add(line2 + ", " + p.getChatName());
+                    }else{
+                    	lore.add(ChatColor.WHITE + "by: " + p.getChatName());
+                    }
                     lore.add(ChatColor.WHITE + "Value: " + ChatColor.MAGIC
                             + "0000" + ChatColor.RESET + ChatColor.WHITE
                             + " Treg");
                     meta.setLore(lore);
                     item.setItemMeta(meta);
+                	}
                 }
             }
         }
@@ -171,11 +188,13 @@ public class TregminePlayerListener implements Listener
     @EventHandler
     public void onPlayerLogin(PlayerLoginEvent event)
     {
+    	
         TregminePlayer player;
+        
         try {
             player = plugin.addPlayer(event.getPlayer(), event.getAddress());
             if (player == null) {
-                event.disallow(Result.KICK_OTHER, "Something went wrong");
+                event.disallow(Result.KICK_OTHER, ChatColor.RED + "Something went wrong");
                 return;
             }
         }
@@ -192,22 +211,33 @@ public class TregminePlayerListener implements Listener
             player.teleportWithHorse(this.plugin.getServer().getWorld("world")
                     .getSpawnLocation());
         }
-
+        if(plugin.getLockdown() && !event.getPlayer().isOp()){
+        
+        		if(!player.getIsStaff()){
+        			event.disallow(Result.KICK_OTHER, ChatColor.GOLD + "Tregmine " + ChatColor.RED + "is on lockdown, only staff can join. Check the forums for more info.");
+                	return;
+        		}
+        	
+        }
+        
         if (player.getKeyword() != null) {
+        	String url = plugin.getConfig().getString("general.url").replace("http://", "").replace("https://", "") + ":" + Bukkit.getPort();
+        	String urlnoport = plugin.getConfig().getString("general.url").replace("http://", "").replace("https://", "");
+        	
             String keyword =
                     player.getKeyword()
-                            + ".mc.tregmine.info:25565".toLowerCase();
+                            + url.toLowerCase();
             Tregmine.LOGGER.warning("host: " + event.getHostname());
             Tregmine.LOGGER.warning("keyword:" + keyword);
 
             if (keyword.equals(event.getHostname().toLowerCase())
-                    || keyword.matches("mc.tregmine.info")) {
+                    || keyword.matches(urlnoport)) {
                 Tregmine.LOGGER.warning(player.getName()
                         + " keyword :: success");
             }
             else {
                 Tregmine.LOGGER.warning(player.getName() + " keyword :: faild");
-                event.disallow(Result.KICK_BANNED, "Wrong keyword!");
+                event.disallow(Result.KICK_BANNED, ChatColor.RED + "Wrong keyword!");
             }
         }
         else {
@@ -223,16 +253,52 @@ public class TregminePlayerListener implements Listener
     public void onPlayerJoin(PlayerJoinEvent event)
     {
         event.setJoinMessage(null);
-        
         TregminePlayer player = plugin.getPlayer(event.getPlayer());
         
         if (player == null) {
             event.getPlayer().kickPlayer("error loading profile!");
             return;
         }
-        player.sendMessage(ChatColor.GOLD + "Welcome to Tregmine 2! There are ONE change(s)");
-        player.sendMessage(ChatColor.GOLD + "Keywords have been removed. Please don't try to use them.");
         Rank rank = player.getRank();
+        
+        if(player.getIsStaff()){
+        	List<StaffNews> news = null;
+        	try (IContext ctx = this.plugin.createContext()) {
+                IStaffNewsDAO newsDAO = ctx.getNewsByUploader();
+                news = newsDAO.getStaffNews();
+                
+            } catch (DAOException e) {
+                throw new RuntimeException(e);
+            }
+        	if(news == null){
+        	}else{
+        		//There's messages :)
+        		for(StaffNews singleNews : news){
+        			String username = singleNews.getUsername();
+        			String text = singleNews.getText();
+        			long timestamp = singleNews.getDate();
+        			int id = singleNews.getId();
+        			player.sendMessage("%CHAT%" + ChatColor.GREEN + "There is a message from " + ChatColor.RESET + ChatColor.BLUE + username);
+        			player.sendMessage("%CHAT%" + ChatColor.GOLD + text);
+        		}
+        	}
+        }
+        List<String[]> mail = new ArrayList<String[]>();
+        try (IContext ctx = this.plugin.createContext()) {
+            IMailDAO maildao = ctx.getMailDAO();
+            int total = maildao.getMailTotal(player.getName());
+            if(total != 0){
+            	String suffix = "";
+            	if(total == 1){
+            		suffix = "message";
+            	}else{
+            		suffix = "messages";
+            	}
+            	player.sendMessage("%internal%" + ChatColor.AQUA + "You have " + total + " " + suffix + " -- Type /mail read to view them.");
+            }
+        } catch (DAOException e) {
+            throw new RuntimeException(e);
+        }
 
         // Handle invisibility, if set
         List<TregminePlayer> players = plugin.getOnlinePlayers();
@@ -379,15 +445,15 @@ public class TregminePlayerListener implements Listener
                     "Type /mentor to offer your services!");
             }
         }
-// Feature has been removed.
-//        if (player.getKeyword() == null && player.getRank().mustUseKeyword()) {
-//            player.sendMessage(ChatColor.RED + "You have not set a keyword! DO SO NOW.");
-//        }
 
         if (rank == Rank.DONATOR &&
                 !player.hasBadge(Badge.PHILANTROPIST)) {
             player.awardBadgeLevel(Badge.PHILANTROPIST,
                     "For being a Tregmine donator!");
+        }
+        if(plugin.getTotalPlayersJoined() == 0){
+        	plugin.setTotalPlayersJoined(plugin.getTotalPlayersJoined() + 1);
+        	player.sendMessage("%warning%" + "You are the first person to join the server since it last restarted, which means you are prone to experiencing bugs. Please re-log.");
         }
     }
 
@@ -418,7 +484,7 @@ public class TregminePlayerListener implements Listener
                 int msgIndex = rand.nextInt(plugin.getQuitMessages().size());
                 message = ChatColor.GRAY + "Quit: " + player.getChatName() + ChatColor.GRAY + " " + plugin.getQuitMessages().get(msgIndex);
             }
-            plugin.getServer().broadcastMessage(message);
+            Bukkit.broadcastMessage(message);
         }
 
         // Look if there are any students being mentored by the exiting player
@@ -470,8 +536,11 @@ public class TregminePlayerListener implements Listener
     public void onPlayerMove(PlayerMoveEvent event)
     {
         TregminePlayer player = this.plugin.getPlayer(event.getPlayer());
-        if (player == null) {
-            event.getPlayer().kickPlayer("error loading profile!");
+        if(player.getFrozen()){
+        	event.setCancelled(true);
+        }
+        if(player.isAfk()){
+        	player.setAfk(false);
         }
     }
 
@@ -479,22 +548,6 @@ public class TregminePlayerListener implements Listener
     public void onPlayerBlockMove(PlayerMoveBlockEvent event)
     {
         TregminePlayer player = event.getPlayer();
-
-		if (	(player.getWorld().getName().equalsIgnoreCase(plugin.getRulelessWorld().getName()) ||
-				player.getWorld().getName().equalsIgnoreCase(plugin.getRulelessEnd().getName()) ||
-				player.getWorld().getName().equalsIgnoreCase(plugin.getRulelessNether().getName())) &&
-				player.isFlying() &&
-				!player.getRank().canBypassWorld()) {
-			player.sendMessage(ChatColor.RED + "Flying in Anarchy will get you banned!" + ChatColor.DARK_RED + " Disabled.");
-			player.setAllowFlight(false);
-			player.setFlying(false);
-
-			for (TregminePlayer p : plugin.getOnlinePlayers()) {
-				if (p.getRank().canBypassWorld()) {
-					p.sendMessage(player.getChatName() + ChatColor.YELLOW + " is flying in anarchy! Plugin disabled it for you...");
-				}
-			}
-		}
 
         // To add player.hasBadge for a flight badge when made
         if (player.getRank().canFly() && player.isFlying() && player.isSprinting()) {
@@ -504,17 +557,12 @@ public class TregminePlayerListener implements Listener
         }
     }
 
-    /*@EventHandler
+    @EventHandler
     public void onDeath(PlayerDeathEvent event)
     {
         TregminePlayer player = plugin.getPlayer(event.getEntity());
-        try(IContext ctx = plugin.createContext()){
-            IWalletDAO dao = ctx.getWalletDAO();
-            dao.take(player, MathUtil.percentOf(dao.balance(player), 5));
-        } catch (DAOException e) {
-            e.printStackTrace();
-        }
-    }*/
+        player.setLastPos(player.getLocation());
+    }
 
     @EventHandler
     public void onPlayerFlight(PlayerToggleFlightEvent event)
@@ -535,12 +583,7 @@ public class TregminePlayerListener implements Listener
         }
 
         Location loc = player.getLocation();
-        
-        if (loc.getWorld().getName().equalsIgnoreCase(plugin.getRulelessWorld().getName()) &&
-                (!player.getRank().canBypassWorld() && player.getGameMode() != GameMode.CREATIVE)) {
-            player.setAllowFlight(false);
-            player.setFlying(false);
-        }
+       
         
         ZoneWorld world = plugin.getWorld(loc.getWorld());
         Lot lot = world.findLot(new Point(loc.getBlockX(), loc.getBlockZ()));
@@ -552,11 +595,7 @@ public class TregminePlayerListener implements Listener
             event.setCancelled(true);
         }
 
-        if (loc.getWorld().getName().equalsIgnoreCase(plugin.getRulelessWorld().getName()) &&
-                (!player.getRank().canBypassWorld() && player.getGameMode() != GameMode.CREATIVE)) {
-            player.setAllowFlight(false);
-            player.setFlying(false);
-        }
+
     }
 
     @EventHandler

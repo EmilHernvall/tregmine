@@ -72,7 +72,31 @@ public class BlessedBlockListener implements Listener
     {
         Block block = event.getClickedBlock();
         TregminePlayer player = plugin.getPlayer(event.getPlayer());
-
+        if(event.getAction() == Action.RIGHT_CLICK_BLOCK && player.getItemInHand().getType() == Material.FEATHER && player.getRank().canBless() && ALLOWED_MATERIALS.contains(block.getType())){
+        	Location loc = block.getLocation();
+        	
+        	try (IContext ctx = plugin.createContext()) {
+                IBlessedBlockDAO blessDAO = ctx.getBlessedBlockDAO();
+                int owner = blessDAO.owner(loc);
+                if(owner == -1){
+                	return;
+                }
+                TregminePlayer blockOwner = plugin.getPlayer(owner);
+                if(blockOwner.isOnline()){
+                    blockOwner.sendMessage(ChatColor.AQUA + "One of your blocks at X" + loc.getBlockX() + " Y" + loc.getBlockY() + " Z" + loc.getBlockZ() + " has been unblessed by " + player.getChatName());
+                }
+                IWalletDAO walletDAO = ctx.getWalletDAO();
+                walletDAO.add(blockOwner, 25000);
+                blessDAO.delete(loc);
+                player.sendMessage(ChatColor.AQUA + "You unblessed a block at X" + loc.getBlockX() + " Y" + loc.getBlockY() + " Z" + loc.getBlockZ() + "");
+                Map<Location, Integer> blessedBlocks = plugin.getBlessedBlocks();
+                blessedBlocks.remove(loc, blockOwner.getId());
+                event.setCancelled(true);
+            } catch (DAOException e) {
+                throw new RuntimeException(e);
+            }
+        	
+        }
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK &&
             player.getItemInHand().getType() == Material.BONE &&
             player.getRank().canBless() &&

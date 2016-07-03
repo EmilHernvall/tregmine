@@ -7,6 +7,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
+import info.tregmine.api.Rank;
 
 public class RegenerateChunkCommand extends AbstractCommand
 {
@@ -18,8 +19,8 @@ public class RegenerateChunkCommand extends AbstractCommand
     @Override
     public boolean handlePlayer(TregminePlayer player, String[] args)
     {
-        if (!player.isOp()) {
-            return false;
+        if (player.getRank() != Rank.SENIOR_ADMIN){
+        	return false;
         }
         if (player.getFillBlock1() == null){
         	player.sendMessage(ChatColor.RED + "You haven't made a selection! [Wand is the wooden shovel]");

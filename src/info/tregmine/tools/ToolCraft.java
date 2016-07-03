@@ -1,6 +1,7 @@
 package info.tregmine.tools;
 
 import info.tregmine.Tregmine;
+import info.tregmine.api.lore.Created;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -96,6 +97,7 @@ public class ToolCraft implements Listener
                 }
             }
         } else {
+        	
             return;
         }
         

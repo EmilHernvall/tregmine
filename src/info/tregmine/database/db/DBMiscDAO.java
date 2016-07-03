@@ -5,12 +5,12 @@ import info.tregmine.database.*;
 import java.sql.*;
 import java.util.*;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 
 public class DBMiscDAO implements IMiscDAO
 {
     private Connection conn;
-
     public DBMiscDAO(Connection conn)
     {
         this.conn = conn;
@@ -28,7 +28,7 @@ public class DBMiscDAO implements IMiscDAO
             
             try (ResultSet rs = stmt.getResultSet()) {
                 while (rs.next()) {
-                    insults.add(rs.getString("message_value"));
+            		insults.add(ChatColor.translateAlternateColorCodes('#', rs.getString("message_value")));
                 }
             }
         } catch (SQLException e) {

@@ -46,11 +46,6 @@ public class HomeCommand extends AbstractCommand
                         + "You can't use a home thats in another world!");
                 return true;
             }
-            
-            if (world.getName().equalsIgnoreCase(tregmine.getRulelessWorld().getName())) {
-                player.sendMessage(RED + "You can not teleport in this world!");
-                return true;
-            }
 
             player.teleportWithHorse(loc);
 
@@ -75,11 +70,6 @@ public class HomeCommand extends AbstractCommand
         World playerWorld = playerLoc.getWorld();
         if ("world_the_end".equalsIgnoreCase(playerWorld.getName())) {
             player.sendMessage(RED + "You can't set your home in The End");
-            return true;
-        }
-        
-        if (tregmine.getRulelessWorld().getName().equalsIgnoreCase(playerWorld.getName())) {
-            player.sendMessage(RED + "You can't set your home in this world!");
             return true;
         }
 
@@ -260,6 +250,7 @@ public class HomeCommand extends AbstractCommand
             player.sendMessage(RED + "Incorrect Usage:");
             player.sendMessage(RED + "/home go <home name> - To go to a home");
             player.sendMessage(RED + "/home save <home name> - To save a home");
+            player.sendMessage(RED + "/home list - To list your homes");
         }
 
         return true;

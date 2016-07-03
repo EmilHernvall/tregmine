@@ -5,6 +5,7 @@ import info.tregmine.api.TregminePlayer;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -45,9 +46,6 @@ public class LumberListener implements Listener
         if (!player.getRank().canUseTools()) {
             return;
         }
-        if (!player.isSneaking()) {
-            return;
-        }
         if (player.getItemInHand() == null) {
             return;
         }
@@ -55,7 +53,6 @@ public class LumberListener implements Listener
         if (player.getItemInHand().getItemMeta() == null) {
             return;
         }
-
         List<String> lore = player.getItemInHand().getItemMeta().getLore();
         if (lore == null || lore.isEmpty()) {
             return;
