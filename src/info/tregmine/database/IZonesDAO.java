@@ -1,12 +1,10 @@
 package info.tregmine.database;
 
-import java.util.List;
-import java.util.Map;
-
 import info.tregmine.quadtree.Rectangle;
-
-import info.tregmine.zones.Zone;
 import info.tregmine.zones.Lot;
+import info.tregmine.zones.Zone;
+
+import java.util.List;
 
 public interface IZonesDAO
 {
@@ -40,4 +38,6 @@ public interface IZonesDAO
     public void deleteLotUsers(int lotId) throws DAOException;
 
     public void deleteLotUser(int lotId, int userId) throws DAOException;
+
+    public int getLotMainOwner(int lotId) throws DAOException;
 }

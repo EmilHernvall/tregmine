@@ -454,4 +454,26 @@ public class DBZonesDAO implements IZonesDAO
             throw new DAOException(sql, e);
         }
     }
+    
+    @Override
+    public int getLotMainOwner(int lotId) throws DAOException
+    {
+        String sql = "SELECT * FROM zone_lotuser " +
+                "WHERE lot_id = ? LIMIT 1";
+        
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, lotId);
+            stmt.execute();
+            
+            try (ResultSet rs = stmt.getResultSet()) {
+                if (rs.next()) {
+                    return rs.getInt("user_id");
+                } else {
+                    return 0;
+                }
+            }
+        } catch (SQLException e) {
+            throw new DAOException(sql, e);
+        }
+    }
 }
