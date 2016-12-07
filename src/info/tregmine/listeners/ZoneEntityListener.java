@@ -56,6 +56,8 @@ public class ZoneEntityListener implements Listener
         if (zone == null || zone.hasHostiles()) {
             return;
         }
+        
+        if (event.getSpawnReason() != SpawnReason.NATURAL) return;
 
         if (!allowedMobs.contains(event.getEntityType()) &&
             event.getSpawnReason() == SpawnReason.NATURAL) {
