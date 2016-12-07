@@ -1,5 +1,6 @@
 package info.tregmine.commands;
 
+import org.bukkit.Util;
 import org.bukkit.block.Block;
 import org.bukkit.Material;
 import info.tregmine.Tregmine;
@@ -19,7 +20,7 @@ public class BlockHereCommand extends AbstractCommand
             return true;
         }
 
-        Block block = player.getWorld().getBlockAt(player.getLocation());
+        Block block = player.getWorld().getBlockAt(player.getLocation().subtract(new Vector(0, 1, 0)));
         block.setType(Material.DIRT);
 
         return true;
