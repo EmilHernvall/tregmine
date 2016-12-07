@@ -396,6 +396,7 @@ public enum Rank
     public boolean canSummon()
     {
         return this == CODER ||
+               this == GUARDIAN ||
                this == JUNIOR_ADMIN ||
                this == SENIOR_ADMIN;
     }
