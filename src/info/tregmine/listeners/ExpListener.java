@@ -115,7 +115,7 @@ public class ExpListener implements Listener
 
         int level = Integer.parseInt(splitLore[2])+1;
 
-        if (level > 30) {
+        if (level - 1 > 30) {
             player.sendMessage(ChatColor.AQUA +
                     "XP in a bottle is capped at 30 levels per bottle!");
             return;
